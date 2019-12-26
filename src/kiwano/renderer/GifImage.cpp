@@ -79,6 +79,13 @@ namespace kiwano
 		return decoder_ != nullptr;
 	}
 
+	GifImage::Frame GifImage::GetFrame(uint32_t index)
+	{
+		Frame frame;
+		Renderer::instance().CreateGifImageFrame(frame, *this, index);
+		return frame;
+	}
+
 	HRESULT GifImage::GetGlobalMetadata()
 	{
 		HRESULT hr = decoder_ ? S_OK : E_FAIL;

@@ -24,8 +24,11 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(GifImage);
+
 	// GIF Í¼Ïñ
 	class KGE_API GifImage
+		: public ObjectBase
 	{
 	public:
 		GifImage();
@@ -40,11 +43,11 @@ namespace kiwano
 
 		bool IsValid() const;
 
-		inline uint32_t GetWidthInPixels() const	{ return width_in_pixels_; }
+		uint32_t GetWidthInPixels() const;
 
-		inline uint32_t GetHeightInPixels() const	{ return height_in_pixels_; }
+		uint32_t GetHeightInPixels() const;
 
-		inline uint32_t GetFramesCount() const		{ return frames_count_; }
+		uint32_t GetFramesCount() const;
 
 	public:
 		enum class DisposalType
@@ -58,16 +61,18 @@ namespace kiwano
 		struct Frame
 		{
 			Duration delay;
-			Texture raw;
+			TexturePtr raw;
 			Rect rect;
 			DisposalType disposal_type;
 
-			Frame() : disposal_type(DisposalType::Unknown) {}
+			Frame();
 		};
 
-		inline ComPtr<IWICBitmapDecoder> GetDecoder() const			{ return decoder_; }
+		Frame GetFrame(uint32_t index);
 
-		inline void SetDecoder(ComPtr<IWICBitmapDecoder> decoder)	{ decoder_ = decoder; }
+		ComPtr<IWICBitmapDecoder> GetDecoder() const;
+
+		void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
 
 	private:
 		HRESULT GetGlobalMetadata();
@@ -79,4 +84,34 @@ namespace kiwano
 
 		ComPtr<IWICBitmapDecoder> decoder_;
 	};
+
+	inline GifImage::Frame::Frame()
+		: disposal_type(DisposalType::Unknown)
+	{
+	}
+
+	inline uint32_t GifImage::GetWidthInPixels() const
+	{
+		return width_in_pixels_;
+	}
+
+	inline uint32_t GifImage::GetHeightInPixels() const
+	{
+		return height_in_pixels_;
+	}
+
+	inline uint32_t GifImage::GetFramesCount() const
+	{
+		return frames_count_;
+	}
+
+	inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
+	{
+		return decoder_;
+	}
+
+	inline void GifImage::SetDecoder(ComPtr<IWICBitmapDecoder> decoder)
+	{
+		decoder_ = decoder;
+	}
 }

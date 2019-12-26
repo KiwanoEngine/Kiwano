@@ -64,7 +64,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 构造GIF精灵
 		/// @param gif GIF图片
-		GifSprite(GifImage gif);
+		GifSprite(GifImagePtr gif);
 
 		/// \~chinese
 		/// @brief 加载GIF图片
@@ -79,7 +79,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 加载GIF图片
 		/// @param gif GIF图片
-		bool Load(GifImage gif);
+		bool Load(GifImagePtr gif);
 
 		/// \~chinese
 		/// @brief 设置 GIF 动画循环次数
@@ -95,7 +95,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置 GIF 图像
-		void SetGifImage(GifImage const& gif);
+		void SetGifImage(GifImagePtr gif);
 
 		/// \~chinese
 		/// @brief 重新播放 GIF 动画
@@ -111,7 +111,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取 GIF 图片
-		GifImage const& GetGifImage() const;
+		GifImagePtr GetGifImage() const;
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -158,9 +158,9 @@ namespace kiwano
 		Duration			frame_elapsed_;
 		LoopDoneCallback	loop_cb_;
 		DoneCallback		done_cb_;
-		GifImage			gif_;
+		GifImagePtr			gif_;
 		GifImage::Frame		frame_;
-		Texture				saved_frame_;
+		TexturePtr			saved_frame_;
 		TextureRenderTarget	frame_rt_;
 	};
 
@@ -176,7 +176,7 @@ namespace kiwano
 
 	inline GifSprite::DoneCallback		GifSprite::GetDoneCallback() const							{ return done_cb_; }
 
-	inline GifImage const&				GifSprite::GetGifImage() const								{ return gif_; }
+	inline GifImagePtr					GifSprite::GetGifImage() const								{ return gif_; }
 
 	inline bool							GifSprite::IsLastFrame() const								{ return (next_index_ == 0); }
 

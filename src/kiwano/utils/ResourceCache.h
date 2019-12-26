@@ -66,7 +66,7 @@ namespace kiwano
 		bool AddObjectBase(String const& id, ObjectBasePtr obj);
 
 		// 添加 GIF 图像
-		bool AddGifImage(String const& id, GifImage const& gif);
+		bool AddGifImage(String const& id, GifImagePtr gif);
 
 		// 添加 GIF 图像
 		bool AddGifImage(String const& id, String const& file_path);
@@ -81,7 +81,7 @@ namespace kiwano
 		FrameSequencePtr GetFrameSequence(String const& id) const;
 
 		// 获取 GIF 图像
-		GifImage GetGifImage(String const& id) const;
+		GifImagePtr GetGifImage(String const& id) const;
 
 		// 获取字体集
 		FontCollection GetFontCollection(String const& id) const;
@@ -108,7 +108,6 @@ namespace kiwano
 
 	private:
 		UnorderedMap<String, ObjectBasePtr>		object_cache_;
-		UnorderedMap<String, GifImage>			gif_cache_;
 		UnorderedMap<String, FontCollection>	font_collection_cache_;
 	};
 }

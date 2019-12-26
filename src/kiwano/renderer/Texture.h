@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/renderer/win32/D2DDeviceResources.h>
+#include <kiwano/core/ObjectBase.h>
 
 namespace kiwano
 {
@@ -33,9 +34,11 @@ namespace kiwano
 		Nearest,	// 最邻近插值
 	};
 
+	KGE_DECLARE_SMART_PTR(Texture);
 
 	// 纹理
 	class KGE_API Texture
+		: public ObjectBase
 	{
 	public:
 		Texture();
@@ -89,10 +92,10 @@ namespace kiwano
 		InterpolationMode GetBitmapInterpolationMode() const;
 
 		// 拷贝位图内存
-		void CopyFrom(Texture const& copy_from);
+		void CopyFrom(TexturePtr copy_from);
 
 		// 拷贝位图内存
-		void CopyFrom(Texture const& copy_from, Rect const& src_rect, Point const& dest_point);
+		void CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point);
 
 		// 设置像素插值方式
 		void SetInterpolationMode(InterpolationMode mode);

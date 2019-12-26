@@ -56,7 +56,7 @@ namespace kiwano
 		/// @brief 构建图像帧
 		/// @param texture 纹理
 		explicit Frame(
-			Texture const& texture
+			TexturePtr texture
 		);
 
 		/// \~chinese
@@ -84,7 +84,7 @@ namespace kiwano
 		/// @brief 设置纹理
 		/// @param texture 纹理
 		void SetTexture(
-			Texture const& texture
+			TexturePtr texture
 		);
 
 		/// \~chinese
@@ -109,10 +109,10 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取纹理
-		Texture const& GetTexture() const;
+		TexturePtr GetTexture() const;
 
 	private:
-		Texture texture_;
+		TexturePtr texture_;
 		Rect crop_rect_;
 	};
 
@@ -122,5 +122,5 @@ namespace kiwano
 	inline Size				Frame::GetSize() const		{ return crop_rect_.GetSize(); }
 	inline Point			Frame::GetCropPoint() const { return crop_rect_.GetLeftTop(); }
 	inline Rect const&		Frame::GetCropRect() const	{ return crop_rect_; }
-	inline Texture const&	Frame::GetTexture() const	{ return texture_; }
+	inline TexturePtr		Frame::GetTexture() const	{ return texture_; }
 }

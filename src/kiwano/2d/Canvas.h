@@ -111,7 +111,7 @@ namespace kiwano
 		/// @param texture 纹理
 		/// @param src_rect 纹理裁剪区域
 		/// @param dest_rect 绘制目标区域
-		void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr);
+		void DrawTexture(TexturePtr texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr);
 
 		/// \~chinese
 		/// @brief 绘制文字布局
@@ -259,7 +259,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 导出纹理
-		Texture ExportToTexture() const;
+		TexturePtr ExportToTexture() const;
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -276,7 +276,7 @@ namespace kiwano
 		GeometrySink		geo_sink_;
 
 		mutable bool		cache_expired_;
-		mutable Texture		texture_cached_;
+		mutable TexturePtr	texture_cached_;
 		mutable TextureRenderTarget	rt_;
 	};
 

@@ -451,7 +451,8 @@ namespace kiwano
 
 					if (SUCCEEDED(hr))
 					{
-						frame.raw.SetBitmap(raw_bitmap);
+						frame.raw = new Texture;
+						frame.raw->SetBitmap(raw_bitmap);
 					}
 				}
 			}

@@ -30,10 +30,10 @@ namespace kiwano
 		friend Singleton<TextureCache>;
 
 	public:
-		Texture AddOrGetTexture(String const& file_path);
-		Texture AddOrGetTexture(Resource const& res);
-		GifImage AddOrGetGifImage(String const& file_path);
-		GifImage AddOrGetGifImage(Resource const& res);
+		TexturePtr AddOrGetTexture(String const& file_path);
+		TexturePtr AddOrGetTexture(Resource const& res);
+		GifImagePtr AddOrGetGifImage(String const& file_path);
+		GifImagePtr AddOrGetGifImage(Resource const& res);
 
 		void RemoveTexture(String const& file_path);
 		void RemoveTexture(Resource const& res);
@@ -48,10 +48,10 @@ namespace kiwano
 		virtual ~TextureCache();
 
 	private:
-		using TextureMap = UnorderedMap<size_t, Texture>;
+		using TextureMap = UnorderedMap<size_t, TexturePtr>;
 		TextureMap texture_cache_;
 
-		using GifImageMap = UnorderedMap<size_t, GifImage>;
+		using GifImageMap = UnorderedMap<size_t, GifImagePtr>;
 		GifImageMap gif_texture_cache_;
 	};
 }

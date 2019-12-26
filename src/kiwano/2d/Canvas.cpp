@@ -53,11 +53,11 @@ namespace kiwano
 	{
 		UpdateCache();
 		
-		if (texture_cached_.IsValid())
+		if (texture_cached_ && texture_cached_->IsValid())
 		{
 			PrepareRender(rt);
 
-			Rect bitmap_rect(0.f, 0.f, texture_cached_.GetWidth(), texture_cached_.GetHeight());
+			Rect bitmap_rect(0.f, 0.f, texture_cached_->GetWidth(), texture_cached_->GetHeight());
 			rt->DrawTexture(texture_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
@@ -245,9 +245,9 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	void Canvas::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
+	void Canvas::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* dest_rect)
 	{
-		if (texture.IsValid())
+		if (texture)
 		{
 			rt_.DrawTexture(texture, src_rect, dest_rect);
 			cache_expired_ = true;
@@ -330,7 +330,7 @@ namespace kiwano
 		cache_expired_ = true;
 	}
 
-	Texture Canvas::ExportToTexture() const
+	TexturePtr Canvas::ExportToTexture() const
 	{
 		UpdateCache();
 		return texture_cached_;

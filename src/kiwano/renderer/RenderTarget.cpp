@@ -333,12 +333,12 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
+	void RenderTarget::DrawTexture(TexturePtr texture, Rect const& src_rect, Rect const& dest_rect)
 	{
 		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
+	void RenderTarget::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* dest_rect)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -346,14 +346,19 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (SUCCEEDED(hr) && texture.IsValid())
+		if (!texture)
 		{
-			auto mode = (texture.GetBitmapInterpolationMode() == InterpolationMode::Linear)
+			hr = E_INVALIDARG;
+		}
+
+		if (SUCCEEDED(hr) && texture->IsValid())
+		{
+			auto mode = (texture->GetBitmapInterpolationMode() == InterpolationMode::Linear)
 				? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
 				: D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
 			render_target_->DrawBitmap(
-				texture.GetBitmap().get(),
+				texture->GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
 				opacity_,
 				mode,
@@ -713,9 +718,10 @@ namespace kiwano
 	{
 	}
 
-	Texture TextureRenderTarget::GetOutput()
+	TexturePtr TextureRenderTarget::GetOutput()
 	{
 		HRESULT hr = E_FAIL;
+		TexturePtr output;
 
 		if (GetRenderTarget())
 		{
@@ -729,13 +735,14 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					return Texture(bitmap);
+					output = new Texture;
+					output->SetBitmap(bitmap);
 				}
 			}
 		}
 
 		ThrowIfFailed(hr);
-		return Texture();
+		return output;
 	}
 
 }

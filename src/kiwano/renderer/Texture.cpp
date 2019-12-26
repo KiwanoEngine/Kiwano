@@ -131,23 +131,23 @@ namespace kiwano
 		return interpolation_mode_;
 	}
 
-	void Texture::CopyFrom(Texture const& copy_from)
+	void Texture::CopyFrom(TexturePtr copy_from)
 	{
-		if (IsValid() && copy_from.IsValid())
+		if (IsValid() && copy_from)
 		{
-			HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from.GetBitmap().get(), nullptr);
+			HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
 			ThrowIfFailed(hr);
 		}
 	}
 
-	void Texture::CopyFrom(Texture const& copy_from, Rect const& src_rect, Point const& dest_point)
+	void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point)
 	{
-		if (IsValid() && copy_from.IsValid())
+		if (IsValid() && copy_from)
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(
 				&D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)),
-				copy_from.GetBitmap().get(),
+				copy_from->GetBitmap().get(),
 				&D2D1::RectU(
 					uint32_t(src_rect.GetLeft()),
 					uint32_t(src_rect.GetTop()),

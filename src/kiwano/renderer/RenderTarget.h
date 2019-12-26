@@ -106,13 +106,13 @@ namespace kiwano
 		);
 
 		void DrawTexture(
-			Texture const& texture,
+			TexturePtr texture,
 			Rect const& src_rect,
 			Rect const& dest_rect
 		);
 
 		void DrawTexture(
-			Texture const& texture,
+			TexturePtr texture,
 			const Rect* src_rect = nullptr,
 			const Rect* dest_rect = nullptr
 		);
@@ -241,6 +241,6 @@ namespace kiwano
 	public:
 		TextureRenderTarget();
 
-		Texture GetOutput();
+		TexturePtr GetOutput();
 	};
 }

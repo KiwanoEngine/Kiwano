@@ -296,11 +296,11 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResourceCache::AddGifImage(String const& id, GifImage const& gif)
+	bool ResourceCache::AddGifImage(String const& id, GifImagePtr gif)
 	{
-		if (gif.IsValid())
+		if (gif && gif->IsValid())
 		{
-			gif_cache_.insert(std::make_pair(id, gif));
+			object_cache_.insert(std::make_pair(id, gif));
 			return true;
 		}
 		return false;
@@ -308,8 +308,8 @@ namespace kiwano
 
 	bool ResourceCache::AddGifImage(String const& id, String const& file_path)
 	{
-		GifImage gif;
-		if (gif.Load(file_path))
+		GifImagePtr gif = new (std::nothrow) GifImage;
+		if (gif && gif->Load(file_path))
 		{
 			return AddGifImage(id, gif);
 		}
@@ -336,12 +336,9 @@ namespace kiwano
 		return Get<FrameSequence>(id);
 	}
 
-	GifImage ResourceCache::GetGifImage(String const& id) const
+	GifImagePtr ResourceCache::GetGifImage(String const& id) const
 	{
-		auto iter = gif_cache_.find(id);
-		if (iter != gif_cache_.end())
-			return iter->second;
-		return GifImage();
+		return Get<GifImage>(id);
 	}
 
 	FontCollection ResourceCache::GetFontCollection(String const& id) const
@@ -360,7 +357,6 @@ namespace kiwano
 	void ResourceCache::Clear()
 	{
 		object_cache_.clear();
-		gif_cache_.clear();
 		font_collection_cache_.clear();
 	}
 
