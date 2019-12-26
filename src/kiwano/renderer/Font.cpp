@@ -19,25 +19,48 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/Renderer.h>
 
 namespace kiwano
 {
-	Font::Font(String const& family, float size, uint32_t weight, bool italic)
-		: family(family)
-		, size(size)
-		, weight(weight)
-		, italic(italic)
-		, collection()
+	Font::Font()
 	{
 	}
 
-	Font::Font(FontCollection collection, String const& family, float size, uint32_t weight, bool italic)
-		: family(family)
-		, size(size)
-		, weight(weight)
-		, italic(italic)
-		, collection(collection)
+	Font::Font(String const& font_file)
 	{
+		Load(font_file);
+	}
+
+	Font::Font(Resource const& font_resource)
+	{
+		Load(font_resource);
+	}
+
+	bool Font::Load(String const& font_file)
+	{
+		try
+		{
+			Renderer::instance().CreateFontCollection(*this, { font_file });
+		}
+		catch (std::runtime_error&)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	bool Font::Load(Resource const& font_resource)
+	{
+		try
+		{
+			Renderer::instance().CreateFontCollection(*this, { font_resource });
+		}
+		catch (std::runtime_error&)
+		{
+			return false;
+		}
+		return true;
 	}
 
 }

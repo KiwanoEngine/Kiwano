@@ -333,12 +333,12 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawTexture(TexturePtr texture, Rect const& src_rect, Rect const& dest_rect)
+	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
 	{
 		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* dest_rect)
+	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -346,19 +346,14 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!texture)
+		if (SUCCEEDED(hr) && texture.IsValid())
 		{
-			hr = E_INVALIDARG;
-		}
-
-		if (SUCCEEDED(hr) && texture->IsValid())
-		{
-			auto mode = (texture->GetBitmapInterpolationMode() == InterpolationMode::Linear)
+			auto mode = (texture.GetBitmapInterpolationMode() == InterpolationMode::Linear)
 				? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
 				: D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
 			render_target_->DrawBitmap(
-				texture->GetBitmap().get(),
+				texture.GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
 				opacity_,
 				mode,
@@ -381,13 +376,14 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
+			const TextStyle& style = layout.GetStyle();
 			text_renderer_->SetTextStyle(
 				opacity_,
-				DX::ConvertToColorF(layout.GetTextStyle().color),
-				layout.GetTextStyle().outline,
-				DX::ConvertToColorF(layout.GetTextStyle().outline_color),
-				layout.GetTextStyle().outline_width,
-				GetStrokeStyle(layout.GetTextStyle().outline_stroke).get()
+				DX::ConvertToColorF(style.color),
+				style.outline,
+				DX::ConvertToColorF(style.outline_color),
+				style.outline_width,
+				GetStrokeStyle(style.outline_stroke).get()
 			);
 
 			hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), offset.x, offset.y);

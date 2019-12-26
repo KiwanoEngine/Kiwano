@@ -19,10 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/renderer/Font.h>
-#include <kiwano/renderer/Color.h>
 #include <kiwano/math/math.h>
 #include <kiwano/core/Resource.h>
+#include <kiwano/core/win32/ComPtr.hpp>
+#include <kiwano/renderer/Color.h>
 #include <dwrite.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
@@ -216,7 +216,12 @@ namespace kiwano
 
 		virtual HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
-			_In_ Font const& font
+			_In_ String const& family,
+			_In_ ComPtr<IDWriteFontCollection> collection,
+			_In_ DWRITE_FONT_WEIGHT weight,
+			_In_ DWRITE_FONT_STYLE style,
+			_In_ DWRITE_FONT_STRETCH stretch,
+			_In_ FLOAT font_size
 		) = 0;
 
 		virtual HRESULT CreateTextLayout(

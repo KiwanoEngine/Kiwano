@@ -140,6 +140,10 @@ namespace kiwano
 			SetEventType(KGE_EVENT(_EventTy));
 		}
 
+		/// \~chinese
+		/// @brief 接收消息
+		void Receive(Event& evt);
+
 	private:
 		bool		running_;
 		bool		removeable_;
@@ -191,6 +195,14 @@ namespace kiwano
 	inline void EventListener::SetEventType(EventType const& type)
 	{
 		type_ = type;
+	}
+
+	inline void EventListener::Receive(Event& evt)
+	{
+		if (type_ == evt.GetType() && callback_)
+		{
+			callback_(evt);
+		}
 	}
 
 }

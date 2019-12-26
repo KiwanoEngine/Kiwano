@@ -199,11 +199,6 @@ namespace kiwano
 		void SetStrokeStyle(StrokeStyle stroke_style);
 
 		/// \~chinese
-		/// @brief 设置文字字体
-		/// @param font 文字字体
-		void SetTextFont(Font const& font);
-
-		/// \~chinese
 		/// @brief 设置文字画刷样式
 		/// @param text_style 文字画刷样式
 		void SetTextStyle(TextStyle const& text_style);
@@ -270,7 +265,6 @@ namespace kiwano
 		float				stroke_width_;
 		Color				fill_color_;
 		Color				stroke_color_;
-		Font				text_font_;
 		TextStyle			text_style_;
 		StrokeStyle			stroke_style_;
 		GeometrySink		geo_sink_;

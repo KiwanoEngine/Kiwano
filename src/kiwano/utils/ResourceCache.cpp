@@ -22,9 +22,6 @@
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/FileSystem.h>
-#include <kiwano/renderer/GifImage.h>
-#include <kiwano/renderer/FontCollection.h>
-
 
 namespace kiwano
 {
@@ -187,29 +184,6 @@ namespace kiwano
 		return false;
 	}
 
-	bool ResourceCache::AddFrame(String const& id, String const& file_path)
-	{
-		FramePtr ptr = new (std::nothrow) Frame;
-		if (ptr)
-		{
-			if (ptr->Load(file_path))
-			{
-				return AddFrame(id, ptr);
-			}
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddFrame(String const & id, FramePtr frame)
-	{
-		if (frame)
-		{
-			object_cache_.insert(std::make_pair(id, frame));
-			return true;
-		}
-		return false;
-	}
-
 	size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
 	{
 		if (files.empty())
@@ -233,7 +207,7 @@ namespace kiwano
 		if (!frames.empty())
 		{
 			FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-			return AddFrameSequence(id, fs);
+			return AddObject(id, fs);
 		}
 		return 0;
 	}
@@ -273,20 +247,10 @@ namespace kiwano
 		}
 
 		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-		return AddFrameSequence(id, fs);
+		return AddObject(id, fs);
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
-	{
-		if (frames)
-		{
-			object_cache_.insert(std::make_pair(id, frames));
-			return frames->GetFrames().size();
-		}
-		return 0;
-	}
-
-	bool ResourceCache::AddObjectBase(String const& id, ObjectBasePtr obj)
+	bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)
 	{
 		if (obj)
 		{
@@ -294,59 +258,6 @@ namespace kiwano
 			return true;
 		}
 		return false;
-	}
-
-	bool ResourceCache::AddGifImage(String const& id, GifImagePtr gif)
-	{
-		if (gif && gif->IsValid())
-		{
-			object_cache_.insert(std::make_pair(id, gif));
-			return true;
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddGifImage(String const& id, String const& file_path)
-	{
-		GifImagePtr gif = new (std::nothrow) GifImage;
-		if (gif && gif->Load(file_path))
-		{
-			return AddGifImage(id, gif);
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddFontCollection(String const& id, FontCollection const& collection)
-	{
-		if (collection.IsValid())
-		{
-			font_collection_cache_.insert(std::make_pair(id, collection));
-			return true;
-		}
-		return false;
-	}
-
-	FramePtr ResourceCache::GetFrame(String const & id) const
-	{
-		return Get<Frame>(id);
-	}
-
-	FrameSequencePtr ResourceCache::GetFrameSequence(String const & id) const
-	{
-		return Get<FrameSequence>(id);
-	}
-
-	GifImagePtr ResourceCache::GetGifImage(String const& id) const
-	{
-		return Get<GifImage>(id);
-	}
-
-	FontCollection ResourceCache::GetFontCollection(String const& id) const
-	{
-		auto iter = font_collection_cache_.find(id);
-		if (iter != font_collection_cache_.end())
-			return iter->second;
-		return FontCollection();
 	}
 
 	void ResourceCache::Remove(String const & id)
@@ -357,7 +268,14 @@ namespace kiwano
 	void ResourceCache::Clear()
 	{
 		object_cache_.clear();
-		font_collection_cache_.clear();
+	}
+
+	ObjectBasePtr ResourceCache::Get(String const& id) const
+	{
+		auto iter = object_cache_.find(id);
+		if (iter == object_cache_.end())
+			return nullptr;
+		return (*iter).second;
 	}
 
 }
@@ -378,13 +296,21 @@ namespace kiwano
 			if (type && (*type) == L"gif")
 			{
 				// GIF image
-				return loader->AddGifImage(*id, gdata->path + (*file));
+				GifImagePtr gif = new (std::nothrow) GifImage;
+				if (gif && gif->Load(gdata->path + (*file)))
+				{
+					return loader->AddObject(*id, gif);
+				}
 			}
 
 			if (file && !(*file).empty())
 			{
 				// Simple image
-				return loader->AddFrame(*id, gdata->path + (*file));
+				FramePtr frame = new (std::nothrow) Frame;
+				if (frame && frame->Load(gdata->path + (*file)))
+				{
+					return loader->AddObject(*id, frame);
+				}
 			}
 			return false;
 		}
@@ -407,7 +333,7 @@ namespace kiwano
 					}
 				}
 				FrameSequencePtr frame_seq = new FrameSequence(frames);
-				return !!loader->AddFrameSequence(*id, frame_seq);
+				return !!loader->AddObject(*id, frame_seq);
 			}
 			return false;
 		}
@@ -429,30 +355,27 @@ namespace kiwano
 					else
 					{
 						// Simple image
-						return loader->AddFrame(*id, gdata->path + (*file));
+						FramePtr frame = new (std::nothrow) Frame;
+						if (frame && frame->Load(gdata->path + (*file)))
+						{
+							return loader->AddObject(*id, frame);
+						}
 					}
 				}
 			}
 			return false;
 		}
 
-		bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<String>* files)
+		bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file)
 		{
 			if (!gdata || !id) return false;
 
-			// Font Collection
-			if (files)
+			if (file)
 			{
-				Vector<String> files_copy(*files);
-				for (auto& file : files_copy)
+				FontPtr font = new (std::nothrow) Font;
+				if (font && font->Load(gdata->path + (*file)))
 				{
-					file = gdata->path + file;
-				}
-
-				FontCollection collection;
-				if (collection.Load(files_copy))
-				{
-					return loader->AddFontCollection(*id, collection);
+					return loader->AddObject(*id, font);
 				}
 			}
 			return false;
@@ -512,20 +435,13 @@ namespace kiwano
 			{
 				for (const auto& font : json_data[L"fonts"])
 				{
-					String id;
+					const String *id = nullptr, *file = nullptr;
 
-					if (font.count(L"id")) id = font[L"id"].as_string();
-					if (font.count(L"files"))
-					{
-						Vector<String> files;
-						files.reserve(font[L"files"].size());
-						for (const auto& file : font[L"files"])
-						{
-							files.push_back(file.as_string());
-						}
-						if (!LoadFontsFromData(loader, &global_data, &id, &files))
-							return false;
-					}
+					if (font.count(L"id")) id = &font[L"id"].as_string();
+					if (font.count(L"file")) file = &font[L"file"].as_string();
+
+					if (!LoadFontsFromData(loader, &global_data, id, file))
+						return false;
 				}
 			}
 			return true;
@@ -587,18 +503,11 @@ namespace kiwano
 			{
 				for (auto font = fonts->FirstChildElement(); font; font = font->NextSiblingElement())
 				{
-					String id;
+					String id, file;
 					if (auto attr = font->Attribute(L"id")) id.assign(attr);
+					if (auto attr = font->Attribute(L"file")) file.assign(attr);
 
-					Vector<String> files_arr;
-					for (auto file = font->FirstChildElement(); file; file = file->NextSiblingElement())
-					{
-						if (auto path = file->Attribute(L"path"))
-						{
-							files_arr.push_back(path);
-						}
-					}
-					if (!LoadFontsFromData(loader, &global_data, &id, &files_arr))
+					if (!LoadFontsFromData(loader, &global_data, &id, &file))
 						return false;
 				}
 			}

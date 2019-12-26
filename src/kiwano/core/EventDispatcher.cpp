@@ -33,9 +33,9 @@ namespace kiwano
 		{
 			next = listener->next_item();
 
-			if (listener->IsRunning() && listener->type_ == evt.GetType())
+			if (listener->IsRunning())
 			{
-				listener->callback_(evt);
+				listener->Receive(evt);
 			}
 
 			if (listener->IsRemoveable())

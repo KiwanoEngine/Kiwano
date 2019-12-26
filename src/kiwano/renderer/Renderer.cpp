@@ -577,7 +577,7 @@ namespace kiwano
 		}
 	}
 
-	void Renderer::CreateFontCollection(FontCollection& collection, Vector<String> const& file_paths)
+	void Renderer::CreateFontCollection(Font& font, Vector<String> const& file_paths)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -620,18 +620,15 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					collection.SetFontCollection(font_collection);
+					font.SetCollection(font_collection);
 				}
 			}
 		}
 
-		if (FAILED(hr))
-		{
-			KGE_WARN(L"Load font failed with HRESULT of %08X!", hr);
-		}
+		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateFontCollection(FontCollection& collection, Vector<Resource> const& res_arr)
+	void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -658,18 +655,15 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					collection.SetFontCollection(font_collection);
+					font.SetCollection(font_collection);
 				}
 			}
 		}
 
-		if (FAILED(hr))
-		{
-			KGE_WARN(L"Load font failed with HRESULT of %08X!", hr);
-		}
+		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextFormat(TextFormat& format, Font const& font)
+	void Renderer::CreateTextFormat(TextLayout& layout)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -680,18 +674,28 @@ namespace kiwano
 		ComPtr<IDWriteTextFormat> output;
 		if (SUCCEEDED(hr))
 		{
-			hr = d2d_res_->CreateTextFormat(output, font);
+			const TextStyle& style = layout.GetStyle();
+
+			hr = d2d_res_->CreateTextFormat(
+				output,
+				style.font_family,
+				style.font ? style.font->GetCollection() : nullptr,
+				DWRITE_FONT_WEIGHT(style.font_weight),
+				style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH_NORMAL,
+				style.font_size
+			);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			format.SetTextFormat(output);
+			layout.SetTextFormat(output);
 		}
 
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextLayout(TextLayout& layout, String const& text, TextFormat const& format)
+	void Renderer::CreateTextLayout(TextLayout& layout)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -704,8 +708,8 @@ namespace kiwano
 		{
 			hr = d2d_res_->CreateTextLayout(
 				output,
-				text,
-				format.GetTextFormat()
+				layout.GetText(),
+				layout.GetTextFormat()
 			);
 		}
 

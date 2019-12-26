@@ -89,11 +89,11 @@ namespace kiwano
 
 	void GifSprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_.raw && frame_.raw->IsValid() && CheckVisibilty(rt))
+		if (frame_to_render_ && CheckVisibilty(rt))
 		{
 			PrepareRender(rt);
 
-			rt->DrawTexture(frame_.raw, &frame_.rect, nullptr);
+			rt->DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
 		}
 	}
 
@@ -188,13 +188,16 @@ namespace kiwano
 				loop_count_++;
 			}
 
-			frame_rt_.DrawTexture(frame_.raw, nullptr, &frame_.rect);
+			if (frame_.raw)
+			{
+				frame_rt_.DrawTexture(*frame_.raw, nullptr, &frame_.rect);
+			}
+
 			frame_rt_.EndDraw();
 
-			TexturePtr frame_to_render = frame_rt_.GetOutput();
-			if (frame_to_render)
+			frame_to_render_ = frame_rt_.GetOutput();
+			if (frame_to_render_)
 			{
-				frame_.raw = frame_to_render;
 				next_index_ = (++next_index_) % gif_->GetFramesCount();
 			}
 		}

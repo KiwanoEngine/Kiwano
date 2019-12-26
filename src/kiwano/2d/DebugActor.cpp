@@ -20,6 +20,7 @@
 
 #include <kiwano/2d/DebugActor.h>
 #include <kiwano/renderer/Renderer.h>
+#include <kiwano/core/Logger.h>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")
@@ -57,13 +58,10 @@ namespace kiwano
 		debug_text_->SetPosition(Point{ 10, 10 });
 		this->AddChild(debug_text_);
 
-		Font font;
-		font.family = L"Arial";
-		font.size = 16.f;
-		font.weight = FontWeight::Normal;
-		debug_text_->SetFont(font);
-
 		TextStyle style;
+		style.font_family = L"Arial";
+		style.font_size = 16.f;
+		style.font_weight = FontWeight::Normal;
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
 

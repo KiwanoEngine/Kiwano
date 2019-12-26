@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -201,9 +198,6 @@
     <ClInclude Include="..\..\src\kiwano\renderer\RenderTarget.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\renderer\FontCollection.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Transform.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -269,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\RefCounter.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\TextStyle.hpp">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -405,9 +402,6 @@
       <Filter>renderer\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\renderer\RenderTarget.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\renderer\FontCollection.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp">

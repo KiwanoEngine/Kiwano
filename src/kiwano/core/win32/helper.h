@@ -28,12 +28,12 @@ namespace kiwano
 	{
 		if (FAILED(hr))
 		{
-			KGE_ERROR(L"Fatal error with HRESULT of %08X", hr);
+			KGE_ERROR(L"Failed with HRESULT of %08X", hr);
 
 			StackWalker{}.ShowCallstack();
 
 			static char buffer[1024 + 1];
-			sprintf_s(buffer, "Fatal error with HRESULT of %08X", hr);
+			sprintf_s(buffer, "Failed with HRESULT of %08X", hr);
 			throw std::runtime_error(buffer);
 		}
 	}

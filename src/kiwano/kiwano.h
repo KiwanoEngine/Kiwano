@@ -79,11 +79,8 @@
 
 
 #include <kiwano/2d/Transform.h>
-#include <kiwano/2d/TextStyle.hpp>
-
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
-
 #include <kiwano/2d/action/Action.h>
 #include <kiwano/2d/action/ActionGroup.h>
 #include <kiwano/2d/action/ActionTween.h>
@@ -92,9 +89,7 @@
 #include <kiwano/2d/action/Animation.h>
 #include <kiwano/2d/action/ActionHelper.h>
 #include <kiwano/2d/action/ActionManager.h>
-
 #include <kiwano/2d/Transition.h>
-
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Layer.h>

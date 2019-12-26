@@ -58,7 +58,7 @@ namespace kiwano
 			PrepareRender(rt);
 
 			Rect bitmap_rect(0.f, 0.f, texture_cached_->GetWidth(), texture_cached_->GetHeight());
-			rt->DrawTexture(texture_cached_, bitmap_rect, bitmap_rect);
+			rt->DrawTexture(*texture_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
 
@@ -80,11 +80,6 @@ namespace kiwano
 	void Canvas::SetStrokeStyle(StrokeStyle stroke_style)
 	{
 		stroke_style_ = stroke_style;
-	}
-
-	void Canvas::SetTextFont(Font const& font)
-	{
-		text_font_ = font;
 	}
 
 	void Canvas::SetTextStyle(TextStyle const & text_style)
@@ -249,7 +244,7 @@ namespace kiwano
 	{
 		if (texture)
 		{
-			rt_.DrawTexture(texture, src_rect, dest_rect);
+			rt_.DrawTexture(*texture, src_rect, dest_rect);
 			cache_expired_ = true;
 		}
 	}
@@ -259,7 +254,9 @@ namespace kiwano
 		if (text.empty())
 			return;
 
-		TextLayout layout(text, text_font_, text_style_);
+		TextLayout layout;
+		layout.SetStyle(text_style_);
+		layout.SetText(text);
 		DrawTextLayout(layout, point);
 	}
 

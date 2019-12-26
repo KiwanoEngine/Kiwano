@@ -19,51 +19,50 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/renderer/FontCollection.h>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/win32/ComPtr.hpp>
+#include <kiwano/core/Resource.h>
+#include <dwrite.h>
 
 namespace kiwano
 {
-	// 字体粗细值
-	struct FontWeight
-	{
-		enum Value : uint32_t
-		{
-			Thin		= 100U,
-			ExtraLight	= 200U,
-			Light		= 300U,
-			Normal		= 400U,
-			Medium		= 500U,
-			Bold		= 700U,
-			ExtraBold	= 800U,
-			Black		= 900U,
-			ExtraBlack	= 950U
-		};
-	};
+	KGE_DECLARE_SMART_PTR(Font);
+
+	class Renderer;
 
 	// 字体
 	class Font
+		: public ObjectBase
 	{
-	public:
-		String			family;		// 字体族
-		float			size;		// 字号
-		uint32_t		weight;		// 粗细值
-		bool			italic;		// 是否斜体
-		FontCollection	collection;	// 字体集
+		friend class Renderer;
 
 	public:
-		Font(
-			String const&	family	= L"",
-			float			size	= 18,
-			uint32_t		weight	= FontWeight::Normal,
-			bool			italic	= false
-		);
+		Font();
 
-		Font(
-			FontCollection	collection,
-			String const&	family	= L"",
-			float			size	= 18,
-			uint32_t		weight	= FontWeight::Normal,
-			bool			italic	= false
-		);
+		Font(String const& font_file);
+
+		Font(Resource const& font_resource);
+
+		bool Load(String const& font_file);
+
+		bool Load(Resource const& font_resource);
+
+	private:
+		ComPtr<IDWriteFontCollection> GetCollection() const;
+
+		void SetCollection(ComPtr<IDWriteFontCollection> collection);
+
+	private:
+		ComPtr<IDWriteFontCollection> collection_;
 	};
+
+	inline ComPtr<IDWriteFontCollection> Font::GetCollection() const
+	{
+		return collection_;
+	}
+
+	inline void Font::SetCollection(ComPtr<IDWriteFontCollection> collection)
+	{
+		collection_ = collection;
+	}
 }

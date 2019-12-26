@@ -23,6 +23,8 @@
 #include <kiwano/renderer/win32/FontCollectionLoader.h>
 #include <kiwano/renderer/RenderTarget.h>
 #include <kiwano/renderer/GifImage.h>
+#include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/TextStyle.hpp>
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "win32/D3D10DeviceResources.h"
@@ -99,24 +101,21 @@ namespace kiwano
 		);
 
 		void CreateFontCollection(
-			FontCollection& collection,
+			Font& font,
 			Vector<String> const& file_paths
 		);
 
 		void CreateFontCollection(
-			FontCollection& collection,
+			Font& font,
 			Vector<Resource> const& res_arr
 		);
 
 		void CreateTextFormat(
-			TextFormat& format,
-			Font const& font
+			TextLayout& layout
 		);
 
 		void CreateTextLayout(
-			TextLayout& layout,
-			String const& text,
-			TextFormat const& format
+			TextLayout& layout
 		);
 
 		void CreateLineGeometry(

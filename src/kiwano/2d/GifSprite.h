@@ -161,6 +161,7 @@ namespace kiwano
 		GifImagePtr			gif_;
 		GifImage::Frame		frame_;
 		TexturePtr			saved_frame_;
+		TexturePtr			frame_to_render_;
 		TextureRenderTarget	frame_rt_;
 	};
 

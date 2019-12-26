@@ -65,7 +65,12 @@ namespace kiwano
 
 		HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
-			_In_ Font const& font
+			_In_ String const& family,
+			_In_ ComPtr<IDWriteFontCollection> collection,
+			_In_ DWRITE_FONT_WEIGHT weight,
+			_In_ DWRITE_FONT_STYLE style,
+			_In_ DWRITE_FONT_STRETCH stretch,
+			_In_ FLOAT font_size
 		) override;
 
 		HRESULT CreateTextLayout(
@@ -435,19 +440,20 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ Font const & font)
+	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ String const& family, _In_ ComPtr<IDWriteFontCollection> collection,
+		_In_ DWRITE_FONT_WEIGHT weight, _In_ DWRITE_FONT_STYLE style, _In_ DWRITE_FONT_STRETCH stretch, _In_ FLOAT font_size)
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
 
 		ComPtr<IDWriteTextFormat> output;
 		HRESULT hr = dwrite_factory_->CreateTextFormat(
-			font.family.c_str(),
-			font.collection.GetFontCollection().get(),
-			DWRITE_FONT_WEIGHT(font.weight),
-			font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			font.size,
+			family.c_str(),
+			collection.get(),
+			weight,
+			style,
+			stretch,
+			font_size,
 			L"",
 			&output
 		);

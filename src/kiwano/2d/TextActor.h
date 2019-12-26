@@ -45,46 +45,33 @@ namespace kiwano
 		TextActor();
 
 		/// \~chinese
-		/// @brief 构建空的文本角色
+		/// @brief 构建文本角色
 		/// @param text 文字内容
 		explicit TextActor(const String& text);
 
 		/// \~chinese
-		/// @brief 构建空的文本角色
-		/// @param text 文字内容
-		/// @param font 字体
-		TextActor(const String& text, const Font& font);
-
-		/// \~chinese
-		/// @brief 构建空的文本角色
+		/// @brief 构建文本角色
 		/// @param text 文字内容
 		/// @param style 文本样式
 		TextActor(const String& text, const TextStyle& style);
-
-		/// \~chinese
-		/// @brief 构建空的文本角色
-		/// @param text 文字内容
-		/// @param font 字体
-		/// @param style 文本样式
-		TextActor(const String& text, const Font& font, const TextStyle& style);
 
 		virtual ~TextActor();
 
 		/// \~chinese
 		/// @brief 获取文本
-		String const& GetText() const;
-
-		/// \~chinese
-		/// @brief 获取字体
-		Font GetFont() const;
+		const String& GetText() const;
 
 		/// \~chinese
 		/// @brief 获取文本样式
-		TextStyle GetStyle() const;
+		const TextStyle& GetStyle() const;
 
 		/// \~chinese
 		/// @brief 获取文本布局
-		TextLayout GetLayout() const;
+		const TextLayout& GetLayout() const;
+
+		/// \~chinese
+		/// @brief 获取字体
+		FontPtr GetFont() const;
 
 		/// \~chinese
 		/// @brief 设置文本
@@ -96,7 +83,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置字体
-		void SetFont(const Font& font);
+		void SetFont(FontPtr font);
 
 		/// \~chinese
 		/// @brief 设置字体族
@@ -104,9 +91,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置字号（默认值为 18）
-		void SetFontSize(
-			float size
-		);
+		void SetFontSize(float size);
 
 		/// \~chinese
 		/// @brief 设置字体粗细值（默认值为 FontWeight::Normal）
@@ -133,16 +118,8 @@ namespace kiwano
 		void SetAlignment(TextAlign align);
 
 		/// \~chinese
-		/// @brief 设置下划线（默认值为 false）
-		void SetUnderline(bool underline);
-
-		/// \~chinese
-		/// @brief 设置删除线（默认值为 false）
-		void SetStrikethrough(bool strikethrough);
-
-		/// \~chinese
 		/// @brief 设置是否显示描边
-		void SetOutline(bool outline);
+		void SetOutline(bool enable);
 
 		/// \~chinese
 		/// @brief 设置描边颜色
@@ -157,12 +134,16 @@ namespace kiwano
 		void SetOutlineStroke(StrokeStyle outline_stroke);
 
 		/// \~chinese
-		/// @brief 更新文本布局
-		void UpdateLayout();
+		/// @brief 设置是否显示下划线（默认值为 false）
+		void SetUnderline(bool enable);
 
 		/// \~chinese
-		/// @brief 设置默认字体
-		static void SetDefaultFont(Font const& font);
+		/// @brief 设置是否显示删除线（默认值为 false）
+		void SetStrikethrough(bool enable);
+
+		/// \~chinese
+		/// @brief 更新文本布局
+		void UpdateLayout();
 
 		/// \~chinese
 		/// @brief 设置默认文字样式
@@ -171,21 +152,114 @@ namespace kiwano
 		void OnRender(RenderTarget* rt) override;
 
 	private:
-		bool		format_dirty_;
-		bool		layout_dirty_;
 		TextLayout	text_layout_;
-		String		text_;
-		Font		font_;
 	};
 
 	/** @} */
 
-	inline String const&	TextActor::GetText() const		{ return text_; }
+	inline const String& TextActor::GetText() const
+	{
+		return text_layout_.GetText();
+	}
 
-	inline Font				TextActor::GetFont() const		{ return font_; }
+	inline FontPtr TextActor::GetFont() const
+	{
+		return text_layout_.GetStyle().font;
+	}
 
-	inline TextStyle		TextActor::GetStyle() const		{ return text_layout_.GetTextStyle(); }
+	inline const TextStyle& TextActor::GetStyle() const
+	{
+		return text_layout_.GetStyle();
+	}
 
-	inline TextLayout		TextActor::GetLayout() const	{ return text_layout_; }
+	inline const TextLayout& TextActor::GetLayout() const
+	{
+		return text_layout_;
+	}
+
+	inline void TextActor::SetText(String const& text)
+	{
+		text_layout_.SetText(text);
+	}
+
+	inline void TextActor::SetStyle(const TextStyle& style)
+	{
+		text_layout_.SetStyle(style);
+	}
+
+	inline void TextActor::SetFont(FontPtr font)
+	{
+		text_layout_.SetFont(font);
+	}
+
+	inline void TextActor::SetFontFamily(String const& family)
+	{
+		text_layout_.SetFontFamily(family);
+	}
+
+	inline void TextActor::SetFontSize(float size)
+	{
+		text_layout_.SetFontSize(size);
+	}
+
+	inline void TextActor::SetFontWeight(uint32_t weight)
+	{
+		text_layout_.SetFontWeight(weight);
+	}
+
+	inline void TextActor::SetItalic(bool italic)
+	{
+		text_layout_.SetItalic(italic);
+	}
+
+	inline void TextActor::SetWrapWidth(float wrap_width)
+	{
+		text_layout_.SetWrapWidth(wrap_width);
+	}
+
+	inline void TextActor::SetLineSpacing(float line_spacing)
+	{
+		text_layout_.SetLineSpacing(line_spacing);
+	}
+
+	inline void TextActor::SetAlignment(TextAlign align)
+	{
+		text_layout_.SetAlignment(align);
+	}
+
+	inline void TextActor::SetUnderline(bool enable)
+	{
+		text_layout_.SetUnderline(enable, 0, text_layout_.GetText().length());
+	}
+
+	inline void TextActor::SetStrikethrough(bool enable)
+	{
+		text_layout_.SetStrikethrough(enable, 0, text_layout_.GetText().length());
+	}
+
+	inline void TextActor::SetColor(Color const& color)
+	{
+		text_layout_.SetColor(color);
+	}
+
+	inline void TextActor::SetOutline(bool enable)
+	{
+		text_layout_.SetOutline(enable);
+	}
+
+	inline void TextActor::SetOutlineColor(Color const& outline_color)
+	{
+		text_layout_.SetOutlineColor(outline_color);
+	}
+
+	inline void TextActor::SetOutlineWidth(float outline_width)
+	{
+		text_layout_.SetOutlineWidth(outline_width);
+	}
+
+	inline void TextActor::SetOutlineStroke(StrokeStyle outline_stroke)
+	{
+		text_layout_.SetOutlineStroke(outline_stroke);
+	}
 
 }

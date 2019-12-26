@@ -35,6 +35,7 @@ namespace kiwano
 		: type_(type)
 		, callback_(callback)
 		, running_(true)
+		, removeable_(false)
 	{
 	}
 
