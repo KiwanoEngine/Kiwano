@@ -398,7 +398,7 @@ namespace kiwano
 
 		virtual void Render(RenderTarget* rt);
 
-		virtual void PrepareRender(RenderTarget* rt);
+		virtual void PrepareToRender(RenderTarget* rt);
 
 		virtual void RenderBorder(RenderTarget* rt);
 

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano/renderer/win32/TextRenderer.h>
 
 namespace kiwano
@@ -26,21 +27,19 @@ namespace kiwano
 		: public ITextRenderer
 	{
 	public:
-		TextRenderer(
-			ID2D1RenderTarget* pRT
-		);
+		TextRenderer();
 
 		~TextRenderer();
 
-		STDMETHOD(CreateDeviceResources)();
+		STDMETHOD(CreateDeviceResources)(
+			_In_ ID2D1RenderTarget* pRT
+			);
 
-		STDMETHOD_(void, SetTextStyle)(
-			_In_ float opacity,
-			_In_ CONST D2D1_COLOR_F &fillColor,
-			_In_ BOOL outline,
-			_In_ CONST D2D1_COLOR_F &outlineColor,
-			_In_ float outlineWidth,
-			_In_ ID2D1StrokeStyle* outlineJoin
+		STDMETHOD_(void, SetStyle)(
+			_In_opt_ ID2D1Brush* pFillBrush,
+			_In_opt_ ID2D1Brush* pOutlineBrush,
+			float fOutlineWidth,
+			_In_opt_ ID2D1StrokeStyle* pStrokeStyle
 			);
 
 		STDMETHOD(DrawGlyphRun)(
@@ -103,15 +102,13 @@ namespace kiwano
 		);
 
 	private:
-		unsigned long			cRefCount_;
-		D2D1_COLOR_F			sFillColor_;
-		D2D1_COLOR_F			sOutlineColor_;
-		float					fOutlineWidth;
-		BOOL					bShowOutline_;
-		ID2D1Factory*			pFactory_;
-		ID2D1RenderTarget*		pRT_;
-		ID2D1SolidColorBrush*	pBrush_;
-		ID2D1StrokeStyle*		pCurrStrokeStyle_;
+		unsigned long				cRefCount_;
+		float						fOutlineWidth_;
+		ComPtr<ID2D1Factory>		pFactory_;
+		ComPtr<ID2D1RenderTarget>	pRT_;
+		ComPtr<ID2D1Brush>			pFillBrush_;
+		ComPtr<ID2D1Brush>			pOutlineBrush_;
+		ComPtr<ID2D1StrokeStyle>	pCurrStrokeStyle_;
 	};
 
 	HRESULT ITextRenderer::Create(
@@ -122,10 +119,10 @@ namespace kiwano
 
 		if (ppTextRenderer)
 		{
-			TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer(pRT);
+			TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer;
 			if (pTextRenderer)
 			{
-				hr = pTextRenderer->CreateDeviceResources();
+				hr = pTextRenderer->CreateDeviceResources(pRT);
 
 				if (SUCCEEDED(hr))
 				{
@@ -145,63 +142,46 @@ namespace kiwano
 		return hr;
 	}
 
-	TextRenderer::TextRenderer(ID2D1RenderTarget* pRT)
+	TextRenderer::TextRenderer()
 		: cRefCount_(0)
-		, pFactory_(NULL)
-		, pRT_(pRT)
-		, pBrush_(NULL)
-		, sFillColor_()
-		, sOutlineColor_()
-		, fOutlineWidth(1)
-		, bShowOutline_(TRUE)
-		, pCurrStrokeStyle_(NULL)
+		, fOutlineWidth_(1)
 	{
 		if (pRT_)
 		{
-			pRT_->AddRef();
-			pRT_->GetFactory(&pFactory_);
+			
 		}
 	}
 
 	TextRenderer::~TextRenderer()
 	{
-		DX::SafeRelease(pFactory_);
-		DX::SafeRelease(pRT_);
-		DX::SafeRelease(pBrush_);
 	}
 
-	STDMETHODIMP TextRenderer::CreateDeviceResources()
+	STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1RenderTarget* pRT)
 	{
-		HRESULT hr = S_OK;
+		HRESULT hr = E_FAIL;
 
-		DX::SafeRelease(pBrush_);
+		pFactory_.reset();
+		pRT_.reset();
 
-		if (pRT_)
+		if (pRT)
 		{
-			hr = pRT_->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				&pBrush_
-			);
+			pRT_ = pRT;
+			pRT_->GetFactory(&pFactory_);
+			hr = S_OK;
 		}
-
 		return hr;
 	}
 
-	STDMETHODIMP_(void) TextRenderer::SetTextStyle(
-        _In_ float opacity,
-        _In_ CONST D2D1_COLOR_F &fillColor,
-        _In_ BOOL outline,
-        _In_ CONST D2D1_COLOR_F &outlineColor,
-        _In_ float outlineWidth,
-        _In_ ID2D1StrokeStyle* outlineJoin)
+	STDMETHODIMP_(void) TextRenderer::SetStyle(
+		_In_opt_ ID2D1Brush* pFillBrush,
+		_In_opt_ ID2D1Brush* pOutlineBrush,
+        float fOutlineWidth,
+		_In_opt_ ID2D1StrokeStyle* pStrokeStyle)
 	{
-		sFillColor_ = fillColor;
-		bShowOutline_ = outline;
-		sOutlineColor_ = outlineColor;
-		fOutlineWidth = outlineWidth;
-		pCurrStrokeStyle_ = outlineJoin;
-
-		if (pBrush_) pBrush_->SetOpacity(opacity);
+		pFillBrush_ = pFillBrush;
+		pOutlineBrush_ = pOutlineBrush;
+		fOutlineWidth_ = fOutlineWidth;
+		pCurrStrokeStyle_ = pStrokeStyle;
 	}
 
 	STDMETHODIMP TextRenderer::DrawGlyphRun(
@@ -220,11 +200,11 @@ namespace kiwano
 
 		HRESULT hr = S_OK;
 
-		if (bShowOutline_)
+		if (pOutlineBrush_)
 		{
-			ID2D1GeometrySink* pSink = NULL;
-			ID2D1PathGeometry* pPathGeometry = NULL;
-			ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+			ComPtr<ID2D1GeometrySink> pSink;
+			ComPtr<ID2D1PathGeometry> pPathGeometry;
+			ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
 
 			hr = pFactory_->CreatePathGeometry(
 				&pPathGeometry
@@ -246,7 +226,7 @@ namespace kiwano
 						glyphRun->glyphCount,
 						glyphRun->isSideways,
 						glyphRun->bidiLevel % 2,
-						pSink
+						pSink.get()
 					);
 				}
 
@@ -266,7 +246,7 @@ namespace kiwano
 					if (SUCCEEDED(hr))
 					{
 						hr = pFactory_->CreateTransformedGeometry(
-							pPathGeometry,
+							pPathGeometry.get(),
 							&matrix,
 							&pTransformedGeometry
 						);
@@ -274,31 +254,23 @@ namespace kiwano
 
 					if (SUCCEEDED(hr))
 					{
-						pBrush_->SetColor(sOutlineColor_);
-
 						pRT_->DrawGeometry(
-							pTransformedGeometry,
-							pBrush_,
-							fOutlineWidth * 2,  // twice width for widening
-							pCurrStrokeStyle_
+							pTransformedGeometry.get(),
+							pOutlineBrush_.get(),
+							fOutlineWidth_ * 2,  // twice width for widening
+							pCurrStrokeStyle_.get()
 						);
 					}
 				}
 			}
-
-			DX::SafeRelease(pPathGeometry);
-			DX::SafeRelease(pSink);
-			DX::SafeRelease(pTransformedGeometry);
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && pFillBrush_)
 		{
-			pBrush_->SetColor(sFillColor_);
-
 			pRT_->DrawGlyphRun(
 				D2D1::Point2F(baselineOriginX, baselineOriginY),
 				glyphRun,
-				pBrush_
+				pFillBrush_.get()
 			);
 		}
 		return hr;
@@ -323,7 +295,7 @@ namespace kiwano
 			underline->offset + underline->thickness
 		);
 
-		ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+		ComPtr<ID2D1RectangleGeometry> pRectangleGeometry;
 		hr = pFactory_->CreateRectangleGeometry(
 			&rect,
 			&pRectangleGeometry
@@ -335,41 +307,33 @@ namespace kiwano
 			baselineOriginX, baselineOriginY
 		);
 
-		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+		ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
 		if (SUCCEEDED(hr))
 		{
 			hr = pFactory_->CreateTransformedGeometry(
-				pRectangleGeometry,
+				pRectangleGeometry.get(),
 				&matrix,
 				&pTransformedGeometry
 			);
 		}
 
-		if (SUCCEEDED(hr) && bShowOutline_)
+		if (SUCCEEDED(hr) && pOutlineBrush_)
 		{
-			pBrush_->SetColor(sOutlineColor_);
-
 			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth * 2,
-				pCurrStrokeStyle_
+				pTransformedGeometry.get(),
+				pOutlineBrush_.get(),
+				fOutlineWidth_ * 2,
+				pCurrStrokeStyle_.get()
 			);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			pBrush_->SetColor(sFillColor_);
-
 			pRT_->FillGeometry(
-				pTransformedGeometry,
-				pBrush_
+				pTransformedGeometry.get(),
+				pFillBrush_.get()
 			);
 		}
-
-		DX::SafeRelease(pRectangleGeometry);
-		DX::SafeRelease(pTransformedGeometry);
-
 		return S_OK;
 	}
 
@@ -392,7 +356,7 @@ namespace kiwano
 			strikethrough->offset + strikethrough->thickness
 		);
 
-		ID2D1RectangleGeometry* pRectangleGeometry = NULL;
+		ComPtr<ID2D1RectangleGeometry> pRectangleGeometry;
 		hr = pFactory_->CreateRectangleGeometry(
 			&rect,
 			&pRectangleGeometry
@@ -404,41 +368,33 @@ namespace kiwano
 			baselineOriginX, baselineOriginY
 		);
 
-		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
+		ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
 		if (SUCCEEDED(hr))
 		{
 			hr = pFactory_->CreateTransformedGeometry(
-				pRectangleGeometry,
+				pRectangleGeometry.get(),
 				&matrix,
 				&pTransformedGeometry
 			);
 		}
 
-		if (SUCCEEDED(hr) && bShowOutline_)
+		if (SUCCEEDED(hr) && pOutlineBrush_)
 		{
-			pBrush_->SetColor(sOutlineColor_);
-
 			pRT_->DrawGeometry(
-				pTransformedGeometry,
-				pBrush_,
-				fOutlineWidth * 2,
-				pCurrStrokeStyle_
+				pTransformedGeometry.get(),
+				pOutlineBrush_.get(),
+				fOutlineWidth_ * 2,
+				pCurrStrokeStyle_.get()
 			);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			pBrush_->SetColor(sFillColor_);
-
 			pRT_->FillGeometry(
-				pTransformedGeometry,
-				pBrush_
+				pTransformedGeometry.get(),
+				pFillBrush_.get()
 			);
 		}
-
-		DX::SafeRelease(pRectangleGeometry);
-		DX::SafeRelease(pTransformedGeometry);
-
 		return S_OK;
 	}
 

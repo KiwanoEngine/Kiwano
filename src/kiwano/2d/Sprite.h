@@ -41,33 +41,6 @@ namespace kiwano
 	public:
 		Sprite();
 
-		/// \~chinese
-		/// @brief 从本地图片构造精灵
-		/// @param file_path 本地图片路径
-		explicit Sprite(String const& file_path);
-
-		/// \~chinese
-		/// @brief 从图片资源构造精灵
-		/// @param res 图片资源
-		explicit Sprite(Resource const& res);
-
-		/// \~chinese
-		/// @brief 从图像帧构造精灵
-		/// @param[in] frame 图像帧
-		explicit Sprite(FramePtr frame);
-
-		/// \~chinese
-		/// @brief 从本地图片构造精灵并裁剪
-		/// @param file_path 本地图片路径
-		/// @param crop_rect 裁剪矩形
-		Sprite(String const& file_path, Rect const& crop_rect);
-
-		/// \~chinese
-		/// @brief 从图片资源构造精灵并裁剪
-		/// @param res 图片资源
-		/// @param crop_rect 裁剪矩形
-		Sprite(Resource const& res, Rect const& crop_rect);
-
 		virtual ~Sprite();
 
 		/// \~chinese
@@ -95,6 +68,9 @@ namespace kiwano
 		void SetFrame(FramePtr frame);
 
 		void OnRender(RenderTarget* rt) override;
+
+	protected:
+		bool CheckVisibilty(RenderTarget* rt) const override;
 
 	private:
 		FramePtr frame_;

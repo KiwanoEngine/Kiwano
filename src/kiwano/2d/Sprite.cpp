@@ -27,34 +27,6 @@ namespace kiwano
 	{
 	}
 
-	Sprite::Sprite(String const& file_path)
-	{
-		Load(file_path);
-	}
-
-	Sprite::Sprite(String const& file_path, Rect const& crop_rect)
-	{
-		Load(file_path);
-		SetCropRect(crop_rect);
-	}
-
-	Sprite::Sprite(Resource const& res)
-	{
-		Load(res);
-	}
-
-	Sprite::Sprite(Resource const& res, const Rect& crop_rect)
-	{
-		Load(res);
-		SetCropRect(crop_rect);
-	}
-
-	Sprite::Sprite(FramePtr frame)
-		: frame_(nullptr)
-	{
-		SetFrame(frame);
-	}
-
 	Sprite::~Sprite()
 	{
 	}
@@ -104,11 +76,11 @@ namespace kiwano
 
 	void Sprite::OnRender(RenderTarget* rt)
 	{
-		if (frame_ && CheckVisibilty(rt))
-		{
-			PrepareRender(rt);
+		rt->DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds(), GetDisplayedOpacity());
+	}
 
-			rt->DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
-		}
+	bool Sprite::CheckVisibilty(RenderTarget* rt) const
+	{
+		return frame_ && frame_->IsValid() && Actor::CheckVisibilty(rt);
 	}
 }

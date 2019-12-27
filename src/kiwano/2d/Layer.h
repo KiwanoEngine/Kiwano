@@ -82,48 +82,12 @@ namespace kiwano
 		/// @brief 获取图层区域
 		LayerArea const& GetArea() const;
 
-		/// \~chinese
-		/// @brief 重载该函数以处理鼠标按下消息
-		/// @param btn 鼠标按键键值
-		/// @param pos 鼠标位置
-		virtual void OnMouseButtonDown(MouseButton::Value btn, Point const& pos) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理鼠标抬起消息
-		/// @param btn 鼠标按键键值
-		/// @param pos 鼠标位置
-		virtual void OnMouseButtonUp(MouseButton::Value btn, Point const& pos) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理鼠标移动消息
-		/// @param pos 鼠标位置
-		virtual void OnMouseMoved(Point const& pos) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理鼠标滚轮消息
-		virtual void OnMouseWheel(float wheel) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理键盘按键按下消息
-		/// @param key 键盘按键键值
-		virtual void OnKeyDown(KeyCode::Value key) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理键盘按键抬起消息
-		/// @param key 键盘按键键值
-		virtual void OnKeyUp(KeyCode::Value key) {}
-
-		/// \~chinese
-		/// @brief 重载该函数以处理键盘字符消息
-		/// @param c 字符
-		virtual void OnChar(char c) {}
-
 		void Dispatch(Event& evt) override;
 
 	protected:
 		void Render(RenderTarget* rt) override;
 
-		void HandleMessages(Event& evt);
+		bool CheckVisibilty(RenderTarget* rt) const override;
 
 	private:
 		bool		swallow_;

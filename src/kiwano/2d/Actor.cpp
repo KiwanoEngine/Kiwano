@@ -93,7 +93,11 @@ namespace kiwano
 
 		if (children_.empty())
 		{
-			OnRender(rt);
+			if (CheckVisibilty(rt))
+			{
+				PrepareToRender(rt);
+				OnRender(rt);
+			}
 		}
 		else
 		{
@@ -108,7 +112,11 @@ namespace kiwano
 				child = child->next_item().get();
 			}
 
-			OnRender(rt);
+			if (CheckVisibilty(rt))
+			{
+				PrepareToRender(rt);
+				OnRender(rt);
+			}
 
 			while (child)
 			{
@@ -118,10 +126,9 @@ namespace kiwano
 		}
 	}
 
-	void Actor::PrepareRender(RenderTarget* rt)
+	void Actor::PrepareToRender(RenderTarget* rt)
 	{
 		rt->SetTransform(transform_matrix_);
-		rt->SetOpacity(displayed_opacity_);
 	}
 
 	void Actor::RenderBorder(RenderTarget* rt)
@@ -132,10 +139,10 @@ namespace kiwano
 
 			rt->SetTransform(transform_matrix_);
 
-			rt->SetDefaultBrushColor(Color(Color::Red, .4f));
+			rt->SetCurrentBrush(GetStage()->GetBorderFillBrush());
 			rt->FillRectangle(bounds);
 
-			rt->SetDefaultBrushColor(Color(Color::Red, .8f));
+			rt->SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
 			rt->DrawRectangle(bounds, 2.f);
 		}
 
@@ -150,7 +157,15 @@ namespace kiwano
 		if (dirty_visibility_)
 		{
 			dirty_visibility_ = false;
-			visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+
+			if (size_.IsOrigin())
+			{
+				visible_in_rt_ = false;
+			}
+			else
+			{
+				visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+			}
 		}
 		return visible_in_rt_;
 	}

@@ -98,8 +98,12 @@ namespace kiwano
 		void SetFontWeight(uint32_t weight);
 
 		/// \~chinese
-		/// @brief 设置文字颜色（默认值为 Color::White）
-		void SetColor(Color const& color);
+		/// @brief 设置文字填充画刷
+		void SetFillBrush(BrushPtr brush);
+
+		/// \~chinese
+		/// @brief 设置文字填充颜色（默认值为 Color::White）
+		void SetFillColor(Color const& color);
 
 		/// \~chinese
 		/// @brief 设置文字斜体（默认值为 false）
@@ -118,19 +122,19 @@ namespace kiwano
 		void SetAlignment(TextAlign align);
 
 		/// \~chinese
-		/// @brief 设置是否显示描边
-		void SetOutline(bool enable);
+		/// @brief 设置文字描边画刷
+		void SetOutlineBrush(BrushPtr brush);
 
 		/// \~chinese
-		/// @brief 设置描边颜色
+		/// @brief 设置文字描边颜色
 		void SetOutlineColor(Color const& outline_color);
 
 		/// \~chinese
-		/// @brief 设置描边线宽
+		/// @brief 设置文字描边线宽
 		void SetOutlineWidth(float outline_width);
 
 		/// \~chinese
-		/// @brief 设置描边线相交样式
+		/// @brief 设置文字描边线相交样式
 		void SetOutlineStroke(StrokeStyle outline_stroke);
 
 		/// \~chinese
@@ -142,14 +146,15 @@ namespace kiwano
 		void SetStrikethrough(bool enable);
 
 		/// \~chinese
-		/// @brief 更新文本布局
-		void UpdateLayout();
-
-		/// \~chinese
 		/// @brief 设置默认文字样式
 		static void SetDefaultStyle(TextStyle const& style);
 
 		void OnRender(RenderTarget* rt) override;
+
+		void OnUpdate(Duration dt) override;
+
+	protected:
+		bool CheckVisibilty(RenderTarget* rt) const override;
 
 	private:
 		TextLayout	text_layout_;
@@ -237,14 +242,19 @@ namespace kiwano
 		text_layout_.SetStrikethrough(enable, 0, text_layout_.GetText().length());
 	}
 
-	inline void TextActor::SetColor(Color const& color)
+	inline void TextActor::SetFillBrush(BrushPtr brush)
 	{
-		text_layout_.SetColor(color);
+		text_layout_.SetFillBrush(brush);
 	}
 
-	inline void TextActor::SetOutline(bool enable)
+	inline void TextActor::SetFillColor(Color const& color)
 	{
-		text_layout_.SetOutline(enable);
+		text_layout_.SetFillColor(color);
+	}
+
+	inline void TextActor::SetOutlineBrush(BrushPtr brush)
+	{
+		text_layout_.SetOutlineBrush(brush);
 	}
 
 	inline void TextActor::SetOutlineColor(Color const& outline_color)

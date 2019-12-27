@@ -35,7 +35,7 @@ namespace kiwano
 
 		void ImGuiLayer::OnRender(RenderTarget* rt)
 		{
-			PrepareRender(rt);
+			PrepareToRender(rt);
 			for (const auto& pipeline : pipelines_)
 			{
 				pipeline.second();

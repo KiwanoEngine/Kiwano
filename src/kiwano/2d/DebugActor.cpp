@@ -47,12 +47,13 @@ namespace kiwano
 	}
 
 	DebugActor::DebugActor()
-		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
 		SetName(L"kiwano-debug-actor");
 		SetPosition(Point{ 10, 10 });
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
+
+		background_brush_->SetColor(Color(0.0f, 0.0f, 0.0f, 0.7f));
 
 		debug_text_ = new TextActor;
 		debug_text_->SetPosition(Point{ 10, 10 });
@@ -75,9 +76,7 @@ namespace kiwano
 
 	void DebugActor::OnRender(RenderTarget* rt)
 	{
-		PrepareRender(rt);
-
-		rt->SetDefaultBrushColor(background_color_);
+		rt->SetCurrentBrush(background_brush_);
 		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
 	}
 
@@ -134,6 +133,11 @@ namespace kiwano
 		{
 			SetHeight(20 + debug_text_->GetHeight());
 		}
+	}
+
+	bool DebugActor::CheckVisibilty(RenderTarget* rt) const
+	{
+		return true;
 	}
 
 }

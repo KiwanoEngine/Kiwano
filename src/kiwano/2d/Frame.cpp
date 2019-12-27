@@ -27,21 +27,6 @@ namespace kiwano
 	{
 	}
 
-	Frame::Frame(String const& file_path)
-	{
-		Load(file_path);
-	}
-
-	Frame::Frame(Resource const& res)
-	{
-		Load(res);
-	}
-
-	Frame::Frame(TexturePtr texture)
-	{
-		SetTexture(texture);
-	}
-
 	bool Frame::Load(String const& file_path)
 	{
 		TexturePtr texture = TextureCache::instance().AddOrGetTexture(file_path);

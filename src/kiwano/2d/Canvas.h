@@ -184,9 +184,19 @@ namespace kiwano
 		void SetFillColor(Color const& color);
 
 		/// \~chinese
+		/// @brief ÉèÖÃÌî³ä»­Ë¢
+		/// @param[in] brush Ìî³ä»­Ë¢
+		void SetFillBrush(BrushPtr brush);
+
+		/// \~chinese
 		/// @brief ÉèÖÃÂÖÀªÑÕÉ«
 		/// @param color ÂÖÀªÑÕÉ«
 		void SetStrokeColor(Color const& color);
+
+		/// \~chinese
+		/// @brief ÉèÖÃÂÖÀª»­Ë¢
+		/// @param[in] brush ÂÖÀª»­Ë¢
+		void SetStrokeBrush(BrushPtr brush);
 
 		/// \~chinese
 		/// @brief ÉèÖÃÂÖÀª¿í¶È
@@ -204,17 +214,17 @@ namespace kiwano
 		void SetTextStyle(TextStyle const& text_style);
 
 		/// \~chinese
-		/// @brief ÉèÖÃ»­±ÊÍ¸Ã÷¶È
-		/// @param opacity Í¸Ã÷¶È£¬·¶Î§ [0.0 - 1.0]
-		void SetBrushOpacity(float opacity);
+		/// @brief ÉèÖÃ»­Ë¢
+		/// @param[in] brush »­Ë¢
+		void SetBrush(BrushPtr brush);
 
 		/// \~chinese
-		/// @brief ÉèÖÃ»­±Ê¶þÎ¬±ä»»
+		/// @brief ÉèÖÃ»­Ë¢¶þÎ¬±ä»»
 		/// @param transform ¶þÎ¬±ä»»
 		void SetBrushTransform(Transform const& transform);
 
 		/// \~chinese
-		/// @brief ÉèÖÃ»­±Ê¶þÎ¬±ä»»¾ØÕó
+		/// @brief ÉèÖÃ»­Ë¢¶þÎ¬±ä»»¾ØÕó
 		/// @param transform ¶þÎ¬±ä»»¾ØÕó
 		void SetBrushTransform(Matrix3x2 const& transform);
 
@@ -237,20 +247,16 @@ namespace kiwano
 		void PopClipRect();
 
 		/// \~chinese
-		/// @brief »ñÈ¡Ìî³äÑÕÉ«
-		Color GetFillColor() const;
-
-		/// \~chinese
-		/// @brief »ñÈ¡ÂÖÀªÑÕÉ«
-		Color GetStrokeColor() const;
-
-		/// \~chinese
 		/// @brief »ñÈ¡ÂÖÀª¿í¶È
 		float GetStrokeWidth() const;
 
 		/// \~chinese
-		/// @brief »ñÈ¡»­±ÊÍ¸Ã÷¶È
-		float GetBrushOpacity() const;
+		/// @brief »ñÈ¡Ìî³ä»­Ë¢
+		BrushPtr GetFillBrush() const;
+
+		/// \~chinese
+		/// @brief »ñÈ¡ÂÖÀª»­Ë¢
+		BrushPtr GetStrokeBrush() const;
 
 		/// \~chinese
 		/// @brief µ¼³öÎÆÀí
@@ -259,21 +265,70 @@ namespace kiwano
 		void OnRender(RenderTarget* rt) override;
 
 	private:
+		void InitRenderTargetAndBrushs();
+
 		void UpdateCache() const;
 
 	private:
-		float					stroke_width_;
-		Color					fill_color_;
-		Color					stroke_color_;
-		TextStyle				text_style_;
-		StrokeStyle				stroke_style_;
-		GeometrySink			geo_sink_;
-		TextureRenderTargetPtr	rt_;
+		float			stroke_width_;
+		TextStyle		text_style_;
+		StrokeStyle		stroke_style_;
+		GeometrySink	geo_sink_;
+		BrushPtr		fill_brush_;
+		BrushPtr		stroke_brush_;
 
-		mutable bool			cache_expired_;
-		mutable TexturePtr		texture_cached_;
+		mutable bool					cache_expired_;
+		mutable TexturePtr				texture_cached_;
+		mutable TextureRenderTargetPtr	rt_;
 	};
 
 	/** @} */
+
+	inline void Canvas::SetStrokeWidth(float width)
+	{
+		stroke_width_ = std::max(width, 0.f);
+	}
+
+	inline void Canvas::SetStrokeStyle(StrokeStyle stroke_style)
+	{
+		stroke_style_ = stroke_style;
+	}
+
+	inline void Canvas::SetTextStyle(TextStyle const& text_style)
+	{
+		text_style_ = text_style;
+	}
+
+	inline void Canvas::SetStrokeColor(Color const& color)
+	{
+		InitRenderTargetAndBrushs();
+		stroke_brush_->SetColor(color);
+	}
+
+	inline void Canvas::SetFillColor(Color const& color)
+	{
+		InitRenderTargetAndBrushs();
+		fill_brush_->SetColor(color);
+	}
+
+	inline void Canvas::SetFillBrush(BrushPtr brush)
+	{
+		fill_brush_ = brush;
+	}
+
+	inline void Canvas::SetStrokeBrush(BrushPtr brush)
+	{
+		stroke_brush_ = brush;
+	}
+
+	inline BrushPtr Canvas::GetFillBrush() const
+	{
+		return fill_brush_;
+	}
+
+	inline BrushPtr Canvas::GetStrokeBrush() const
+	{
+		return stroke_brush_;
+	}
 
 }

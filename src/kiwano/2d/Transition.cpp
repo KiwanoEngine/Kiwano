@@ -95,7 +95,7 @@ namespace kiwano
 	{
 		if (out_stage_)
 		{
-			out_stage_->PrepareRender(rt);
+			out_stage_->PrepareToRender(rt);
 			rt->PushClipRect(Rect{ Point{}, window_size_ });
 			rt->PushLayer(out_layer_);
 
@@ -107,7 +107,7 @@ namespace kiwano
 
 		if (in_stage_)
 		{
-			in_stage_->PrepareRender(rt);
+			in_stage_->PrepareToRender(rt);
 			rt->PushClipRect(Rect{ Point{}, window_size_ });
 			rt->PushLayer(in_layer_);
 

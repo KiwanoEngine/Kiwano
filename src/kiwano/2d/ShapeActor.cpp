@@ -25,17 +25,9 @@
 namespace kiwano
 {
 	ShapeActor::ShapeActor()
-		: fill_color_(Color::White)
-		, stroke_color_(Color(Color::Black, 0))
-		, stroke_width_(1.f)
+		: stroke_width_(1.f)
 		, stroke_style_(StrokeStyle::Miter)
 	{
-	}
-
-	ShapeActor::ShapeActor(Geometry const& geometry)
-		: ShapeActor()
-	{
-		SetGeometry(geometry);
 	}
 
 	ShapeActor::~ShapeActor()
@@ -58,16 +50,6 @@ namespace kiwano
 	bool ShapeActor::ContainsPoint(const Point& point) const
 	{
 		return geo_.ContainsPoint(point, GetTransformMatrix());
-	}
-
-	void ShapeActor::SetFillColor(const Color & color)
-	{
-		fill_color_ = color;
-	}
-
-	void ShapeActor::SetStrokeColor(const Color & color)
-	{
-		stroke_color_ = color;
 	}
 
 	void ShapeActor::SetStrokeWidth(float width)
@@ -97,22 +79,29 @@ namespace kiwano
 
 	void ShapeActor::OnRender(RenderTarget* rt)
 	{
-		if (geo_.IsValid() && CheckVisibilty(rt))
+		// Create default brush
+		if (!fill_brush_)
 		{
-			PrepareRender(rt);
-
-			rt->SetDefaultBrushColor(stroke_color_);
-			rt->DrawGeometry(
-				geo_,
-				stroke_width_ * 2,  // twice width for widening
-				stroke_style_
-			);
-
-			rt->SetDefaultBrushColor(fill_color_);
-			rt->FillGeometry(
-				geo_
-			);
+			fill_brush_ = new Brush;
+			fill_brush_->SetColor(Color::White);
 		}
+
+		if (!stroke_brush_)
+		{
+			stroke_brush_ = new Brush;
+			stroke_brush_->SetColor(Color::Transparent);
+		}
+
+		rt->SetCurrentBrush(stroke_brush_);
+		rt->DrawGeometry(geo_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
+
+		rt->SetCurrentBrush(fill_brush_);
+		rt->FillGeometry(geo_);
+	}
+
+	bool ShapeActor::CheckVisibilty(RenderTarget* rt) const
+	{
+		return geo_.IsValid() && Actor::CheckVisibilty(rt);
 	}
 
 	//-------------------------------------------------------
@@ -121,11 +110,6 @@ namespace kiwano
 
 	LineActor::LineActor()
 	{
-	}
-
-	LineActor::LineActor(Point const& begin, Point const& end)
-	{
-		SetLine(begin, end);
 	}
 
 	LineActor::~LineActor()
@@ -151,11 +135,6 @@ namespace kiwano
 	{
 	}
 
-	RectActor::RectActor(Size const& size)
-	{
-		SetRectSize(size);
-	}
-
 	RectActor::~RectActor()
 	{
 	}
@@ -176,11 +155,6 @@ namespace kiwano
 
 	RoundRectActor::RoundRectActor()
 	{
-	}
-
-	RoundRectActor::RoundRectActor(Size const& size, Vec2 const& radius)
-	{
-		SetRoundedRect(size, radius);
 	}
 
 	RoundRectActor::~RoundRectActor()
@@ -217,11 +191,6 @@ namespace kiwano
 	{
 	}
 
-	CircleActor::CircleActor(float radius)
-	{
-		SetRadius(radius);
-	}
-
 	CircleActor::~CircleActor()
 	{
 	}
@@ -242,11 +211,6 @@ namespace kiwano
 
 	EllipseActor::EllipseActor()
 	{
-	}
-
-	EllipseActor::EllipseActor(Vec2 const& radius)
-	{
-		SetRadius(radius);
 	}
 
 	EllipseActor::~EllipseActor()
@@ -271,11 +235,6 @@ namespace kiwano
 	{
 	}
 
-	PolygonActor::PolygonActor(Vector<Point> const& points)
-	{
-		SetVertices(points);
-	}
-
 	PolygonActor::~PolygonActor()
 	{
 	}
@@ -296,23 +255,23 @@ namespace kiwano
 
 
 	//-------------------------------------------------------
-	// PathActor
+	// PathShapeActor
 	//-------------------------------------------------------
 
-	PathActor::PathActor()
+	PathShapeActor::PathShapeActor()
 	{
 	}
 
-	PathActor::~PathActor()
+	PathShapeActor::~PathShapeActor()
 	{
 	}
 
-	void PathActor::BeginPath(Point const& begin_pos)
+	void PathShapeActor::BeginPath(Point const& begin_pos)
 	{
 		sink_.BeginPath(begin_pos);
 	}
 
-	void PathActor::EndPath(bool closed)
+	void PathShapeActor::EndPath(bool closed)
 	{
 		sink_.EndPath(closed);
 		Geometry geo = sink_.GetGeometry();
@@ -323,27 +282,27 @@ namespace kiwano
 		}
 	}
 
-	void PathActor::AddLine(Point const& point)
+	void PathShapeActor::AddLine(Point const& point)
 	{
 		sink_.AddLine(point);
 	}
 
-	void PathActor::AddLines(Vector<Point> const& points)
+	void PathShapeActor::AddLines(Vector<Point> const& points)
 	{
 		sink_.AddLines(points);
 	}
 
-	void PathActor::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+	void PathShapeActor::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 	{
 		sink_.AddBezier(point1, point2, point3);
 	}
 
-	void PathActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+	void PathShapeActor::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 	{
 		sink_.AddArc(point, radius, rotation, clockwise, is_small);
 	}
 
-	void PathActor::ClearPath()
+	void PathShapeActor::ClearPath()
 	{
 		SetGeometry(Geometry());
 	}

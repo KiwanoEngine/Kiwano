@@ -235,9 +235,10 @@ namespace kiwano
 			float dtx = 0;
 			for (int j = 0; j < cols; j++)
 			{
-				FramePtr ptr = new (std::nothrow) Frame(raw->GetTexture());
+				FramePtr ptr = new (std::nothrow) Frame;
 				if (ptr)
 				{
+					ptr->SetTexture(raw->GetTexture());
 					ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
 					frames.push_back(ptr);
 				}

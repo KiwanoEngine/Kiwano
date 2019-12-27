@@ -39,53 +39,28 @@ namespace kiwano
 		Frame();
 
 		/// \~chinese
-		/// @brief 构建图像帧
-		/// @param file_path 图像路径
-		explicit Frame(
-			String const& file_path
-		);
-
-		/// \~chinese
-		/// @brief 构建图像帧
-		/// @param res 图像资源
-		explicit Frame(
-			Resource const& res
-		);
-
-		/// \~chinese
-		/// @brief 构建图像帧
-		/// @param texture 纹理
-		explicit Frame(
-			TexturePtr texture
-		);
-
-		/// \~chinese
 		/// @brief 加载图像
 		/// @param file_path 图像路径
-		bool Load(
-			String const& file_path
-		);
+		bool Load(String const& file_path);
 
 		/// \~chinese
 		/// @brief 加载图像
 		/// @param res 图像资源
-		bool Load(
-			Resource const& res
-		);
+		bool Load(Resource const& res);
 
 		/// \~chinese
 		/// @brief 裁剪图像帧为矩形
 		/// @param crop_rect 裁剪矩形定义
-		void SetCropRect(
-			Rect const& crop_rect
-		);
+		void SetCropRect(Rect const& crop_rect);
 
 		/// \~chinese
 		/// @brief 设置纹理
 		/// @param texture 纹理
-		void SetTexture(
-			TexturePtr texture
-		);
+		void SetTexture(TexturePtr texture);
+
+		/// \~chinese
+		/// @brief 是否有效
+		bool IsValid() const;
 
 		/// \~chinese
 		/// @brief 获取宽度
@@ -116,7 +91,7 @@ namespace kiwano
 		Rect crop_rect_;
 	};
 
-
+	inline bool				Frame::IsValid() const		{ return texture_ && texture_->IsValid(); }
 	inline float			Frame::GetWidth() const		{ return crop_rect_.GetWidth(); }
 	inline float			Frame::GetHeight() const	{ return crop_rect_.GetHeight(); }
 	inline Size				Frame::GetSize() const		{ return crop_rect_.GetSize(); }

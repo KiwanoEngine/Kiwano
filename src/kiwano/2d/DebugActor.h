@@ -22,6 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/TextActor.h>
 #include <kiwano/renderer/Color.h>
+#include <kiwano/renderer/Brush.h>
 
 namespace kiwano
 {
@@ -46,8 +47,11 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
+	protected:
+		bool CheckVisibilty(RenderTarget* rt) const override;
+
 	private:
-		Color			background_color_;
+		BrushPtr		background_brush_;
 		TextActorPtr	debug_text_;
 		Vector<Time>	frame_time_;
 	};

@@ -24,8 +24,15 @@
 
 namespace kiwano
 {
-	SolidColorStyle::SolidColorStyle(Color const& color)
-		: color(color)
+	GradientStop::GradientStop()
+		: offset(0.f)
+		, color()
+	{
+	}
+
+	GradientStop::GradientStop(float offset, Color color)
+		: offset(offset)
+		, color(color)
 	{
 	}
 
@@ -52,39 +59,9 @@ namespace kiwano
 	{
 	}
 
-	Brush::Brush(Color const& color)
-		: Brush()
-	{
-		SetColor(color);
-	}
-
-	Brush::Brush(SolidColorStyle const& style)
-		: Brush()
-	{
-		SetStyle(style);
-	}
-
-	Brush::Brush(LinearGradientStyle const& style)
-		: Brush()
-	{
-		SetStyle(style);
-	}
-
-	Brush::Brush(RadialGradientStyle const& style)
-		: Brush()
-	{
-		SetStyle(style);
-	}
-
 	bool Brush::IsValid() const
 	{
 		return raw_ != nullptr;
-	}
-
-	Brush::Brush(ComPtr<ID2D1Brush> brush)
-		: Brush()
-	{
-		SetBrush(brush);
 	}
 
 	float Brush::GetOpacity() const
@@ -101,17 +78,17 @@ namespace kiwano
 		}
 	}
 
-	void Brush::SetStyle(SolidColorStyle const& style)
+	void Brush::SetColor(Color const& color)
 	{
 		if (type_ == Type::SolidColor && raw_)
 		{
 			auto solid_brush = dynamic_cast<ID2D1SolidColorBrush*>(raw_.get());
 			KGE_ASSERT(solid_brush != nullptr);
-			solid_brush->SetColor(DX::ConvertToColorF(style.color));
+			solid_brush->SetColor(DX::ConvertToColorF(color));
 		}
 		else
 		{
-			Renderer::instance().CreateSolidBrush(*this, style.color);
+			Renderer::instance().CreateSolidBrush(*this, color);
 			type_ = Type::SolidColor;
 		}
 	}
@@ -128,11 +105,10 @@ namespace kiwano
 		type_ = Type::RadialGradient;
 	}
 
-	void Brush::SetBrush(ComPtr<ID2D1Brush> const& brush)
+	void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
 	{
-		type_ = Type::Unknown;
+		type_ = type;
 		raw_ = brush;
-
 		if (raw_)
 		{
 			raw_->SetOpacity(opacity_);

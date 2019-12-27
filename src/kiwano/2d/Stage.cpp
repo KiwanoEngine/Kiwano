@@ -46,4 +46,21 @@ namespace kiwano
 		// KGE_SYS_LOG(L"Stage exited");
 	}
 
+	void Stage::RenderBorder(RenderTarget* rt)
+	{
+		if (!border_fill_brush_)
+		{
+			border_fill_brush_ = new Brush;
+			border_fill_brush_->SetColor(Color(Color::Red, .4f));
+		}
+
+		if (!border_stroke_brush_)
+		{
+			border_stroke_brush_ = new Brush;
+			border_stroke_brush_->SetColor(Color(Color::Red, .8f));
+		}
+
+		Actor::RenderBorder(rt);
+	}
+
 }

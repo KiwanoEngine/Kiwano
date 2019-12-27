@@ -19,75 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/renderer/win32/D2DDeviceResources.h>
 
 namespace kiwano
 {
-	// 渐变转换点
+	class RenderTarget;
+	class Renderer;
+
+	KGE_DECLARE_SMART_PTR(Brush);
+
+	/// \~chinese
+	/// @brief 渐变转换点
 	struct GradientStop
 	{
-		float offset;
-		Color color;
+		float offset;	///< 偏移距离
+		Color color;	///< 渐变点颜色
 
-		GradientStop() : offset(0.f), color() {}
+		GradientStop();
 
-		GradientStop(float offset, Color color) : offset(offset), color(color) {}
+		GradientStop(float offset, Color color);
 	};
 
-
-	// 渐变扩充模式
-	// 该模式用于指定画笔如何绘制正常区域外的部分
-	// Clamp  (夹模式): 重复绘制边界颜色
-	// Wrap   (夹模式): 重复画笔内容
-	// Mirror (镜像模式): 反转画笔内容
+	/// \~chinese
+	/// @brief 渐变扩充模式
+	/// @details 该模式用于指定画笔如何绘制正常区域外的部分
 	enum class GradientExtendMode
 	{
-		Clamp,
-		Wrap,
-		Mirror
+		Clamp,	///< 夹模式，重复绘制边界颜色
+		Wrap,	///< 包裹模式，重复画笔内容
+		Mirror	///< 镜像模式，反转画笔内容
 	};
 
-
-	// 纯色样式
-	struct SolidColorStyle
-	{
-		Color color;
-
-		SolidColorStyle(Color const& color);
-	};
-
-	// 线性渐变样式
+	/// \~chinese
+	/// @brief 线性渐变样式
 	struct LinearGradientStyle
 	{
-		Point begin;
-		Point end;
-		Vector<GradientStop> stops;
-		GradientExtendMode extend_mode;
+		Point begin;					///< 渐变起始点
+		Point end;						///< 渐变终止点
+		Vector<GradientStop> stops;		///< 渐变转换点集合
+		GradientExtendMode extend_mode;	///< 渐变扩充模式
 
-		LinearGradientStyle(
-			Point const& begin,
-			Point const& end,
-			Vector<GradientStop> const& stops,
-			GradientExtendMode extend_mode = GradientExtendMode::Clamp
-		);
+		LinearGradientStyle(Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 	};
 
-	// 径向渐变样式
+	/// \~chinese
+	/// @brief 径向渐变样式
 	struct RadialGradientStyle
 	{
-		Point center;
-		Vec2 offset;
-		Vec2 radius;
-		Vector<GradientStop> stops;
-		GradientExtendMode extend_mode;
+		Point center;					///< 径向渐变圆心
+		Vec2 offset;					///< 径向渐变偏移
+		Vec2 radius;					///< 径向渐变半径
+		Vector<GradientStop> stops;		///< 渐变转换点集合
+		GradientExtendMode extend_mode;	///< 渐变扩充模式
 
-		RadialGradientStyle(
-			Point const& center,
-			Vec2 const& offset,
-			Vec2 const& radius,
-			Vector<GradientStop> const& stops,
-			GradientExtendMode extend_mode = GradientExtendMode::Clamp
-		);
+		RadialGradientStyle(Point const& center, Vec2 const& offset, Vec2 const& radius, Vector<GradientStop> const& stops, GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 	};
 
 	/**
@@ -95,49 +81,59 @@ namespace kiwano
 	* @brief 画刷
 	*/
 	class KGE_API Brush
+		: public ObjectBase
 	{
+		friend class RenderTarget;
+		friend class Renderer;
+
 	public:
+		/// \~chinese
+		/// @brief 构造默认画刷
 		Brush();
 
-		Brush(Color const& color);
-
-		Brush(SolidColorStyle const& style);
-
-		Brush(LinearGradientStyle const& style);
-
-		Brush(RadialGradientStyle const& style);
-
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
+		/// \~chinese
+		/// @brief 设置纯色画刷颜色
 		void SetColor(Color const& color);
 
-		void SetStyle(SolidColorStyle const& style);
-
+		/// \~chinese
+		/// @brief 设置线性渐变样式
 		void SetStyle(LinearGradientStyle const& style);
 
+		/// \~chinese
+		/// @brief 设置径向渐变样式
 		void SetStyle(RadialGradientStyle const& style);
 
+		/// \~chinese
+		/// @brief 获取透明度
 		float GetOpacity() const;
 
+		/// \~chinese
+		/// @brief 设置透明度
 		void SetOpacity(float opacity);
 
 	public:
+		/// \~chinese
+		/// @brief 画刷类型
 		enum class Type
 		{
 			Unknown,
-			SolidColor,			// 纯色填充
-			LinearGradient,		// 线性渐变
-			RadialGradient		// 径向渐变
+			SolidColor,			///< 纯色填充画刷
+			LinearGradient,		///< 线性渐变画刷
+			RadialGradient		///< 径向渐变画刷
 		};
 
-		Type GetType() const { return type_; }
+		/// \~chinese
+		/// @brief 获取画刷类型
+		Type GetType() const;
 
-	public:
-		Brush(ComPtr<ID2D1Brush> brush);
+	private:
+		void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
 
-		void SetBrush(ComPtr<ID2D1Brush> const& brush);
-
-		inline ComPtr<ID2D1Brush> const& GetBrush() const { return raw_; }
+		ComPtr<ID2D1Brush> GetBrush() const;
 
 	private:
 		Type type_;
@@ -145,9 +141,8 @@ namespace kiwano
 		ComPtr<ID2D1Brush> raw_;
 	};
 
-	inline void Brush::SetColor(Color const& color)
-	{
-		SetStyle(SolidColorStyle{ color });
-	}
+	inline Brush::Type			Brush::GetType() const		{ return type_; }
+
+	inline ComPtr<ID2D1Brush>	Brush::GetBrush() const		{ return raw_; }
 
 }

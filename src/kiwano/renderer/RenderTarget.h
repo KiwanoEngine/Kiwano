@@ -111,13 +111,15 @@ namespace kiwano
 		void DrawTexture(
 			Texture const& texture,
 			Rect const& src_rect,
-			Rect const& dest_rect
+			Rect const& dest_rect,
+			float opacity = 1.0f
 		);
 
 		void DrawTexture(
 			Texture const& texture,
 			const Rect* src_rect = nullptr,
-			const Rect* dest_rect = nullptr
+			const Rect* dest_rect = nullptr,
+			float opacity = 1.0f
 		);
 
 		void DrawTextLayout(
@@ -153,22 +155,12 @@ namespace kiwano
 			Color const& clear_color
 		);
 
-		float GetOpacity() const;
-
-		Brush GetCurrentBrush() const;
+		BrushPtr GetCurrentBrush() const;
 
 		Matrix3x2 GetGlobalTransform() const;
 
-		void SetOpacity(
-			float opacity
-		);
-
 		void SetCurrentBrush(
-			Brush const& brush
-		);
-
-		void SetDefaultBrushColor(
-			Color const& color
+			BrushPtr brush
 		);
 
 		void SetTransform(
@@ -230,7 +222,6 @@ namespace kiwano
 		void DiscardDeviceResources();
 
 	private:
-		float							opacity_;
 		bool							antialias_;
 		bool							fast_global_transform_;
 		mutable bool					collecting_status_;
@@ -238,23 +229,28 @@ namespace kiwano
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
-		ComPtr<ID2D1SolidColorBrush>	default_brush_;
-		ComPtr<ID2D1Brush>				current_brush_;
 		ComPtr<ID2DDeviceResources>		device_resources_;
+		BrushPtr						current_brush_;
 		Matrix3x2						global_transform_;
 	};
 
 
-	// 位图渲染目标
+	/// \~chinese
+	/// @brief 纹理渲染目标
+	/// @details 纹理渲染目标将渲染输出到一个纹理对象中
 	class KGE_API TextureRenderTarget
 		: public RenderTarget
 	{
 		friend class Renderer;
 
 	public:
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
-		TexturePtr GetOutput() const;
+		/// \~chinese
+		/// @brief 获取渲染输出
+		bool GetOutput(Texture& texture);
 
 	private:
 		TextureRenderTarget();
@@ -267,9 +263,30 @@ namespace kiwano
 		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
 	};
 
+
+	inline BrushPtr RenderTarget::GetCurrentBrush() const
+	{
+		return current_brush_;
+	}
+
+	inline Matrix3x2 RenderTarget::GetGlobalTransform() const
+	{
+		return global_transform_;
+	}
+
+	inline void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
+	{
+		SetGlobalTransform(&matrix);
+	}
+
+	inline void RenderTarget::SetCurrentBrush(BrushPtr brush)
+	{
+		current_brush_ = brush;
+	}
+
 	inline bool TextureRenderTarget::IsValid() const
 	{
-		return !!bitmap_rt_;
+		return bitmap_rt_ != nullptr;
 	}
 
 	inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderTarget::GetBitmapRenderTarget() const

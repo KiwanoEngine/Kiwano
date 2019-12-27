@@ -33,22 +33,6 @@ namespace kiwano
 	{
 	}
 
-	GifSprite::GifSprite(String const& file_path)
-	{
-		Load(file_path);
-	}
-
-	GifSprite::GifSprite(Resource const& res)
-		: GifSprite()
-	{
-		Load(res);
-	}
-
-	GifSprite::GifSprite(GifImagePtr gif)
-	{
-		Load(gif);
-	}
-
 	bool GifSprite::Load(String const& file_path)
 	{
 		GifImagePtr image = TextureCache::instance().AddOrGetGifImage(file_path);
@@ -91,7 +75,7 @@ namespace kiwano
 	{
 		if (frame_to_render_ && CheckVisibilty(rt))
 		{
-			PrepareRender(rt);
+			PrepareToRender(rt);
 
 			rt->DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
 		}
@@ -197,8 +181,12 @@ namespace kiwano
 
 			frame_rt_->EndDraw();
 
-			frame_to_render_ = frame_rt_->GetOutput();
-			if (frame_to_render_)
+			if (!frame_to_render_)
+			{
+				frame_to_render_ = new Texture;
+			}
+
+			if (frame_rt_->GetOutput(*frame_to_render_))
 			{
 				next_index_ = (++next_index_) % gif_->GetFramesCount();
 			}
@@ -218,9 +206,10 @@ namespace kiwano
 	void GifSprite::SaveComposedFrame()
 	{
 		KGE_ASSERT(frame_rt_);
-		TexturePtr frame_to_be_saved = frame_rt_->GetOutput();
 
-		HRESULT hr = frame_to_be_saved ? S_OK : E_FAIL;
+		TexturePtr frame_to_be_saved = new Texture;
+
+		HRESULT hr = frame_rt_->GetOutput(*frame_to_be_saved) ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
@@ -248,9 +237,9 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			TexturePtr frame_to_copy_to = frame_rt_->GetOutput();
+			TexturePtr frame_to_copy_to = new Texture;
 
-			hr = frame_to_copy_to ? S_OK : E_FAIL;
+			hr = frame_rt_->GetOutput(*frame_to_copy_to) ? S_OK : E_FAIL;
 
 			if (SUCCEEDED(hr))
 			{

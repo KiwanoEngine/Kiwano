@@ -56,21 +56,20 @@ namespace kiwano
 
 	void TextActor::OnRender(RenderTarget* rt)
 	{
-		UpdateLayout();
-
-		if (text_layout_.IsValid() && CheckVisibilty(rt))
-		{
-			PrepareRender(rt);
-			rt->DrawTextLayout(text_layout_);
-		}
+		rt->DrawTextLayout(text_layout_);
 	}
 
-	void TextActor::UpdateLayout()
+	void TextActor::OnUpdate(Duration dt)
 	{
 		if (text_layout_.IsDirty())
 		{
 			text_layout_.Update();
 			SetSize(text_layout_.GetLayoutSize());
 		}
+	}
+
+	bool TextActor::CheckVisibilty(RenderTarget* rt) const
+	{
+		return text_layout_.IsValid() && Actor::CheckVisibilty(rt);
 	}
 }

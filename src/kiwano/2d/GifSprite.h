@@ -52,21 +52,6 @@ namespace kiwano
 		GifSprite();
 
 		/// \~chinese
-		/// @brief 构造GIF精灵
-		/// @param file_path GIF图片路径
-		GifSprite(String const& file_path);
-
-		/// \~chinese
-		/// @brief 构造GIF精灵
-		/// @param res GIF图片资源
-		GifSprite(Resource const& res);
-
-		/// \~chinese
-		/// @brief 构造GIF精灵
-		/// @param gif GIF图片
-		GifSprite(GifImagePtr gif);
-
-		/// \~chinese
 		/// @brief 加载GIF图片
 		/// @param file_path GIF图片路径
 		bool Load(String const& file_path);

@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
+#include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Geometry.h>
 #include <kiwano/renderer/StrokeStyle.h>
 
@@ -32,7 +33,7 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(CircleActor);
 	KGE_DECLARE_SMART_PTR(EllipseActor);
 	KGE_DECLARE_SMART_PTR(PolygonActor);
-	KGE_DECLARE_SMART_PTR(PathActor);
+	KGE_DECLARE_SMART_PTR(PathShapeActor);
 
 	/**
 	* \addtogroup Actors
@@ -41,25 +42,25 @@ namespace kiwano
 
 	/**
 	* \~chinese
-	* @brief 二维图形角色
+	* @brief 二维形状角色
 	*/
 	class KGE_API ShapeActor
 		: public Actor
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造二维形状角色
 		ShapeActor();
-
-		ShapeActor(Geometry const& geometry);
 
 		virtual ~ShapeActor();
 
 		/// \~chinese
-		/// @brief 获取填充颜色
-		Color GetFillColor() const;
+		/// @brief 获取填充画刷
+		BrushPtr GetFillBrush() const;
 
 		/// \~chinese
-		/// @brief 获取线条颜色
-		Color GetStrokeColor() const;
+		/// @brief 获取轮廓画刷
+		BrushPtr GetStrokeBrush() const;
 
 		/// \~chinese
 		/// @brief 获取线条宽度
@@ -87,11 +88,23 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置填充颜色
-		void SetFillColor(const Color& color);
+		/// @param color 填充颜色
+		void SetFillColor(Color const& color);
 
 		/// \~chinese
-		/// @brief 设置线条颜色
-		void SetStrokeColor(const Color& color);
+		/// @brief 设置填充画刷
+		/// @param[in] brush 填充画刷
+		void SetFillBrush(BrushPtr brush);
+
+		/// \~chinese
+		/// @brief 设置轮廓颜色
+		/// @param color 轮廓颜色
+		void SetStrokeColor(Color const& color);
+
+		/// \~chinese
+		/// @brief 设置轮廓画刷
+		/// @param[in] brush 轮廓画刷
+		void SetStrokeBrush(BrushPtr brush);
 
 		/// \~chinese
 		/// @brief 设置线条宽度，默认为 1.0
@@ -107,9 +120,12 @@ namespace kiwano
 
 		void OnRender(RenderTarget* rt) override;
 
+	protected:
+		bool CheckVisibilty(RenderTarget* rt) const override;
+
 	private:
-		Color		fill_color_;
-		Color		stroke_color_;
+		BrushPtr	fill_brush_;
+		BrushPtr	stroke_brush_;
 		float		stroke_width_;
 		StrokeStyle	stroke_style_;
 		Rect		bounds_;
@@ -124,12 +140,6 @@ namespace kiwano
 	{
 	public:
 		LineActor();
-
-		/// \~chinese
-		/// @brief 线段图形角色
-		/// @param begin 线段起点
-		/// @param end 线段终点
-		LineActor(Point const& begin, Point const& end);
 
 		virtual ~LineActor();
 
@@ -171,11 +181,6 @@ namespace kiwano
 	public:
 		RectActor();
 
-		/// \~chinese
-		/// @brief 构造矩形角色
-		/// @param size 矩形大小
-		RectActor(Size const& size);
-
 		virtual ~RectActor();
 
 		/// \~chinese
@@ -200,12 +205,6 @@ namespace kiwano
 	{
 	public:
 		RoundRectActor();
-
-		/// \~chinese
-		/// @brief 构造圆角矩形角色
-		/// @param size 圆角矩形大小
-		/// @param radius 圆角半径
-		RoundRectActor(Size const& size, Vec2 const& radius);
 
 		virtual ~RoundRectActor();
 
@@ -247,11 +246,6 @@ namespace kiwano
 	public:
 		CircleActor();
 
-		/// \~chinese
-		/// @brief 构造圆形角色
-		/// @param radius 圆形半径
-		CircleActor(float radius);
-
 		virtual ~CircleActor();
 
 		/// \~chinese
@@ -275,11 +269,6 @@ namespace kiwano
 	{
 	public:
 		EllipseActor();
-
-		/// \~chinese
-		/// @brief 构造椭圆角色
-		/// @param radius 椭圆半径
-		EllipseActor(Vec2 const& radius);
 
 		virtual ~EllipseActor();
 
@@ -305,11 +294,6 @@ namespace kiwano
 	public:
 		PolygonActor();
 
-		/// \~chinese
-		/// @brief 构造多边形角色
-		/// @param points 多边形端点集合
-		PolygonActor(Vector<Point> const& points);
-
 		virtual ~PolygonActor();
 
 		/// \~chinese
@@ -321,13 +305,13 @@ namespace kiwano
 
 	/// \~chinese
 	/// @brief 路径图形角色
-	class KGE_API PathActor
+	class KGE_API PathShapeActor
 		: public ShapeActor
 	{
 	public:
-		PathActor();
+		PathShapeActor();
 
-		virtual ~PathActor();
+		virtual ~PathShapeActor();
 
 		/// \~chinese
 		/// @brief 开始添加路径
@@ -374,10 +358,29 @@ namespace kiwano
 	};
 
 	/** @} */
-	
 
-	inline Color		ShapeActor::GetFillColor() const				{ return fill_color_; }
-	inline Color		ShapeActor::GetStrokeColor() const				{ return stroke_color_; }
+	inline void ShapeActor::SetStrokeColor(Color const& color)
+	{
+		if (!stroke_brush_)
+		{
+			stroke_brush_ = new Brush;
+		}
+		stroke_brush_->SetColor(color);
+	}
+
+	inline void ShapeActor::SetFillColor(Color const& color)
+	{
+		if (!fill_brush_)
+		{
+			fill_brush_ = new Brush;
+		}
+		fill_brush_->SetColor(color);
+	}
+
+	inline void			ShapeActor::SetFillBrush(BrushPtr brush)		{ fill_brush_ = brush; }
+	inline void			ShapeActor::SetStrokeBrush(BrushPtr brush)		{ stroke_brush_ = brush; }
+	inline BrushPtr		ShapeActor::GetFillBrush() const				{ return fill_brush_; }
+	inline BrushPtr		ShapeActor::GetStrokeBrush() const				{ return stroke_brush_; }
 	inline float		ShapeActor::GetStrokeWidth() const				{ return stroke_width_; }
 	inline StrokeStyle	ShapeActor::SetStrokeStyle() const				{ return stroke_style_; }
 	inline Geometry		ShapeActor::GetGeometry() const					{ return geo_; }

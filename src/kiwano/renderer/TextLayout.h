@@ -93,8 +93,12 @@ namespace kiwano
 		void SetFontWeight(uint32_t weight);
 
 		/// \~chinese
-		/// @brief 设置文字颜色（默认值为 Color::White）
-		void SetColor(Color const& color);
+		/// @brief 设置文字填充画刷
+		void SetFillBrush(BrushPtr brush);
+
+		/// \~chinese
+		/// @brief 设置文字填充颜色（默认值为 Color::White）
+		void SetFillColor(Color const& color);
 
 		/// \~chinese
 		/// @brief 设置文字斜体（默认值为 false）
@@ -113,19 +117,19 @@ namespace kiwano
 		void SetAlignment(TextAlign align);
 
 		/// \~chinese
-		/// @brief 设置是否显示描边
-		void SetOutline(bool enable);
+		/// @brief 设置文字描边画刷
+		void SetOutlineBrush(BrushPtr brush);
 
 		/// \~chinese
-		/// @brief 设置描边颜色
+		/// @brief 设置文字描边颜色
 		void SetOutlineColor(Color const& outline_color);
 
 		/// \~chinese
-		/// @brief 设置描边线宽
+		/// @brief 设置文字描边线宽
 		void SetOutlineWidth(float outline_width);
 
 		/// \~chinese
-		/// @brief 设置描边线相交样式
+		/// @brief 设置文字描边线相交样式
 		void SetOutlineStroke(StrokeStyle outline_stroke);
 
 		/// \~chinese
@@ -197,9 +201,14 @@ namespace kiwano
 		return text_layout_;
 	}
 
-	inline void TextLayout::SetColor(Color const& color)
+	inline void TextLayout::SetFillBrush(BrushPtr brush)
 	{
-		style_.color = color;
+		style_.fill_brush = brush;
+	}
+
+	inline void TextLayout::SetFillColor(Color const& color)
+	{
+		style_.SetFillColor(color);
 	}
 
 	inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
@@ -212,14 +221,14 @@ namespace kiwano
 		text_layout_ = layout;
 	}
 
-	inline void TextLayout::SetOutline(bool enable)
+	inline void TextLayout::SetOutlineBrush(BrushPtr brush)
 	{
-		style_.outline = enable;
+		style_.outline_brush = brush;
 	}
 
 	inline void TextLayout::SetOutlineColor(Color const& outline_color)
 	{
-		style_.outline_color = outline_color;
+		style_.SetOutlineColor(outline_color);
 	}
 
 	inline void TextLayout::SetOutlineWidth(float outline_width)

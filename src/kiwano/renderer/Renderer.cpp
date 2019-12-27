@@ -907,7 +907,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			brush.SetBrush(output);
+			brush.SetBrush(output, Brush::Type::SolidColor);
 		}
 
 		ThrowIfFailed(hr);
@@ -946,7 +946,7 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					brush.SetBrush(output);
+					brush.SetBrush(output, Brush::Type::LinearGradient);
 				}
 			}
 		}
@@ -990,7 +990,7 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					brush.SetBrush(output);
+					brush.SetBrush(output, Brush::Type::RadialGradient);
 				}
 			}
 		}

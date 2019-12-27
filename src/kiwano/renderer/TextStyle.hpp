@@ -20,8 +20,9 @@
 
 #pragma once
 #include <kiwano/renderer/Color.h>
-#include <kiwano/renderer/StrokeStyle.h>
 #include <kiwano/renderer/Font.h>
+#include <kiwano/renderer/Brush.h>
+#include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano
 {
@@ -68,61 +69,80 @@ namespace kiwano
 		float		font_size;			///< 字号
 		uint32_t	font_weight;		///< 粗细值
 		bool		italic;				///< 是否斜体
-		Color		color;				///< 颜色
 		TextAlign	alignment;			///< 对齐方式
 		float		wrap_width;			///< 自动换行宽度
 		float		line_spacing;		///< 行间距
-		bool		outline;			///< 描边
-		Color		outline_color;		///< 描边颜色
+		BrushPtr	fill_brush;			///< 填充画刷
+		BrushPtr	outline_brush;		///< 描边画刷
 		float		outline_width;		///< 描边线宽
 		StrokeStyle	outline_stroke;		///< 描边线相交样式
 
 	public:
 		/**
 		* \~chinese
+		* @brief 构建默认文本样式
+		*/
+		TextStyle();
+
+		/**
+		* \~chinese
 		* @brief 构建文本样式
-		* @param font 字体
 		* @param font_family 字体族
 		* @param font_size 字体大小
 		* @param font_weight 字体粗细
-		* @param italic 斜体
-		* @param color 颜色
-		* @param alignment 对齐方式
-		* @param wrap_width 自动换行宽度
-		* @param line_spacing 行间距
-		* @param outline 描边
-		* @param outline_color 描边颜色
-		* @param outline_width 描边线宽
-		* @param outline_stroke 描边线相交样式
+		* @param color 填充颜色
 		*/
-		TextStyle(
-			FontPtr			font			= nullptr,
-			const String&	font_family		= String(),
-			float			font_size		= 18,
-			uint32_t		font_weight		= FontWeight::Normal,
-			bool			italic			= false,
-			Color			color			= Color::White,
-			TextAlign		alignment		= TextAlign::Left,
-			float			wrap_width		= 0.f,
-			float			line_spacing	= 0.f,
-			bool			outline			= false,
-			Color			outline_color	= Color(Color::Black, 0.5),
-			float			outline_width	= 1.f,
-			StrokeStyle		outline_stroke	= StrokeStyle::Round
-		)
-			: font(nullptr)
-			, font_family(font_family)
-			, font_size(font_size)
-			, font_weight(font_weight)
-			, italic(italic)
-			, color(color)
-			, alignment(alignment)
-			, wrap_width(wrap_width)
-			, line_spacing(line_spacing)
-			, outline(outline)
-			, outline_color(outline_color)
-			, outline_width(outline_width)
-			, outline_stroke(outline_stroke)
-		{}
+		TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal, Color color = Color::White);
+
+		void SetFillColor(Color const& color);
+
+		void SetOutlineColor(Color const& color);
 	};
+
+	inline TextStyle::TextStyle()
+		: font(nullptr)
+		, font_family()
+		, font_size(18)
+		, font_weight(FontWeight::Normal)
+		, italic(false)
+		, alignment(TextAlign::Left)
+		, wrap_width(0)
+		, line_spacing(0)
+		, outline_width(1.0f)
+		, outline_stroke(StrokeStyle::Round)
+	{
+	}
+
+	inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight, Color color)
+		: font(nullptr)
+		, font_family(font_family)
+		, font_size(font_size)
+		, font_weight(font_weight)
+		, italic(false)
+		, alignment(TextAlign::Left)
+		, wrap_width(0)
+		, line_spacing(0)
+		, outline_width(1.0f)
+		, outline_stroke(StrokeStyle::Round)
+	{
+	}
+
+	inline void TextStyle::SetFillColor(Color const& color)
+	{
+		if (!fill_brush)
+		{
+			fill_brush = new Brush;
+		}
+		fill_brush->SetColor(color);
+	}
+
+	inline void TextStyle::SetOutlineColor(Color const& color)
+	{
+		if (!outline_brush)
+		{
+			outline_brush = new Brush;
+		}
+		outline_brush->SetColor(color);
+	}
+
 }

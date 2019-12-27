@@ -28,8 +28,7 @@ namespace kiwano
 	//
 
 	RenderTarget::RenderTarget()
-		: opacity_(1.f)
-		, collecting_status_(false)
+		: collecting_status_(false)
 		, fast_global_transform_(true)
 		, antialias_(true)
 		, text_antialias_(TextAntialiasMode::GrayScale)
@@ -59,20 +58,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			default_brush_.reset();
-			hr = render_target_->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::White),
-				D2D1::BrushProperties(),
-				&default_brush_
-			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
 			SetAntialiasMode(antialias_);
 			SetTextAntialiasMode(text_antialias_);
 
-			current_brush_ = default_brush_;
+			current_brush_.reset();
 		}
 
 		return hr;
@@ -82,7 +71,6 @@ namespace kiwano
 	{
 		text_renderer_.reset();
 		render_target_.reset();
-		default_brush_.reset();
 		current_brush_.reset();
 		device_resources_.reset();
 	}
@@ -128,7 +116,7 @@ namespace kiwano
 		{
 			render_target_->DrawGeometry(
 				geometry.GetGeometry().get(),
-				current_brush_.get(),
+				current_brush_->GetBrush().get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -151,7 +139,7 @@ namespace kiwano
 		{
 			render_target_->FillGeometry(
 				geometry.GetGeometry().get(),
-				current_brush_.get()
+				current_brush_->GetBrush().get()
 			);
 
 			IncreasePrimitivesCount();
@@ -173,7 +161,7 @@ namespace kiwano
 			render_target_->DrawLine(
 				DX::ConvertToPoint2F(point1),
 				DX::ConvertToPoint2F(point2),
-				current_brush_.get(),
+				current_brush_->GetBrush().get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -197,7 +185,7 @@ namespace kiwano
 		{
 			render_target_->DrawRectangle(
 				DX::ConvertToRectF(rect),
-				current_brush_.get(),
+				current_brush_->GetBrush().get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -220,7 +208,7 @@ namespace kiwano
 		{
 			render_target_->FillRectangle(
 				DX::ConvertToRectF(rect),
-				current_brush_.get()
+				current_brush_->GetBrush().get()
 			);
 
 			IncreasePrimitivesCount();
@@ -245,7 +233,7 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				current_brush_.get(),
+				current_brush_->GetBrush().get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -272,7 +260,7 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				current_brush_.get()
+				current_brush_->GetBrush().get()
 			);
 
 			IncreasePrimitivesCount();
@@ -297,7 +285,7 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				current_brush_.get(),
+				current_brush_->GetBrush().get(),
 				stroke_width,
 				GetStrokeStyle(stroke).get()
 			);
@@ -324,7 +312,7 @@ namespace kiwano
 					radius.x,
 					radius.y
 				),
-				current_brush_.get()
+				current_brush_->GetBrush().get()
 			);
 
 			IncreasePrimitivesCount();
@@ -333,12 +321,12 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
+	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect, float opacity)
 	{
-		DrawTexture(texture, &src_rect, &dest_rect);
+		DrawTexture(texture, &src_rect, &dest_rect, opacity);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
+	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect, float opacity)
 	{
 		HRESULT hr = S_OK;
 		if (!render_target_)
@@ -355,7 +343,7 @@ namespace kiwano
 			render_target_->DrawBitmap(
 				texture.GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
-				opacity_,
+				opacity,
 				mode,
 				src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr
 			);
@@ -377,11 +365,9 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			const TextStyle& style = layout.GetStyle();
-			text_renderer_->SetTextStyle(
-				opacity_,
-				DX::ConvertToColorF(style.color),
-				style.outline,
-				DX::ConvertToColorF(style.outline_color),
+			text_renderer_->SetStyle(
+				style.fill_brush ? style.fill_brush->GetBrush().get() : nullptr,
+				style.outline_brush ? style.outline_brush->GetBrush().get() : nullptr,
 				style.outline_width,
 				GetStrokeStyle(style.outline_stroke).get()
 			);
@@ -552,21 +538,6 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	float RenderTarget::GetOpacity() const
-	{
-		return opacity_;
-	}
-
-	Brush RenderTarget::GetCurrentBrush() const
-	{
-		return Brush( current_brush_ );
-	}
-
-	Matrix3x2 RenderTarget::GetGlobalTransform() const
-	{
-		return global_transform_;
-	}
-
 	ComPtr<ID2D1StrokeStyle> RenderTarget::GetStrokeStyle(StrokeStyle style)
 	{
 		switch (style)
@@ -602,11 +573,6 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
-	{
-		SetGlobalTransform(&matrix);
-	}
-
 	void RenderTarget::SetGlobalTransform(const Matrix3x2* matrix)
 	{
 		if (matrix)
@@ -618,37 +584,6 @@ namespace kiwano
 		{
 			fast_global_transform_ = true;
 		}
-	}
-
-	void RenderTarget::SetOpacity(float opacity)
-	{
-		HRESULT hr = S_OK;
-		if (!current_brush_)
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			if (opacity_ != opacity)
-			{
-				opacity_ = opacity;
-				current_brush_->SetOpacity(opacity);
-			}
-		}
-
-		ThrowIfFailed(hr);
-	}
-
-	void RenderTarget::SetCurrentBrush(Brush const& brush)
-	{
-		current_brush_ = brush.GetBrush();
-	}
-
-	void RenderTarget::SetDefaultBrushColor(Color const& color)
-	{
-		KGE_ASSERT(default_brush_);
-		default_brush_->SetColor(DX::ConvertToColorF(color));
 	}
 
 	void RenderTarget::SetAntialiasMode(bool enabled)
@@ -737,27 +672,22 @@ namespace kiwano
 	{
 	}
 
-	TexturePtr TextureRenderTarget::GetOutput() const
+	bool TextureRenderTarget::GetOutput(Texture& texture)
 	{
 		HRESULT hr = E_FAIL;
-		TexturePtr output;
 
 		if (bitmap_rt_)
 		{
-			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt = bitmap_rt_;
 			ComPtr<ID2D1Bitmap> bitmap;
 
-			hr = bitmap_rt->GetBitmap(&bitmap);
+			hr = bitmap_rt_->GetBitmap(&bitmap);
 
 			if (SUCCEEDED(hr))
 			{
-				output = new Texture;
-				output->SetBitmap(bitmap);
+				texture.SetBitmap(bitmap);
 			}
 		}
-
-		ThrowIfFailed(hr);
-		return output;
+		return SUCCEEDED(hr);
 	}
 
 }

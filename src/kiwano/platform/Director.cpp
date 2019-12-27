@@ -167,7 +167,6 @@ namespace kiwano
 
 		if (render_border_enabled_)
 		{
-			rt->SetOpacity(1.f);
 			if (current_stage_)
 			{
 				current_stage_->RenderBorder(rt);
