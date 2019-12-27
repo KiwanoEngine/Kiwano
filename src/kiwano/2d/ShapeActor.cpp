@@ -49,7 +49,7 @@ namespace kiwano
 
 	Rect ShapeActor::GetBoundingBox() const
 	{
-		if (!geo_)
+		if (!geo_.IsValid())
 			return Rect{};
 
 		return geo_.GetBoundingBox(GetTransformMatrix());
@@ -83,7 +83,7 @@ namespace kiwano
 	void ShapeActor::SetGeometry(Geometry const& geometry)
 	{
 		geo_ = geometry;
-		if (geo_)
+		if (geo_.IsValid())
 		{
 			bounds_ = geo_.GetBoundingBox();
 			SetSize(bounds_.GetSize());
@@ -97,7 +97,7 @@ namespace kiwano
 
 	void ShapeActor::OnRender(RenderTarget* rt)
 	{
-		if (geo_ && CheckVisibilty(rt))
+		if (geo_.IsValid() && CheckVisibilty(rt))
 		{
 			PrepareRender(rt);
 
@@ -317,7 +317,7 @@ namespace kiwano
 		sink_.EndPath(closed);
 		Geometry geo = sink_.GetGeometry();
 
-		if (geo)
+		if (geo.IsValid())
 		{
 			SetGeometry(geo);
 		}

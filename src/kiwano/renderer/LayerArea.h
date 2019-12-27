@@ -23,9 +23,13 @@
 
 namespace kiwano
 {
+	class RenderTarget;
+
 	// 图层
 	class KGE_API LayerArea
 	{
+		friend class RenderTarget;
+
 	public:
 		LayerArea();
 
@@ -53,7 +57,7 @@ namespace kiwano
 		// 设置几何蒙层变换
 		inline void SetMaskTransform(Matrix3x2 const& matrix)	{ mask_transform_ = matrix; }
 
-	public:
+	private:
 		inline ComPtr<ID2D1Layer> GetLayer() const				{ return layer_; }
 
 		inline void SetLayer(ComPtr<ID2D1Layer> layer)			{ layer_ = layer; }

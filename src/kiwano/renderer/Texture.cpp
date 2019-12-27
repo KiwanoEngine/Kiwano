@@ -31,24 +31,6 @@ namespace kiwano
 	{
 	}
 
-	Texture::Texture(String const& file_path)
-		: Texture()
-	{
-		Load(file_path);
-	}
-
-	Texture::Texture(Resource const& res)
-		: Texture()
-	{
-		Load(res);
-	}
-
-	Texture::Texture(ComPtr<ID2D1Bitmap> const & bitmap)
-		: Texture()
-	{
-		SetBitmap(bitmap);
-	}
-
 	Texture::~Texture()
 	{
 	}

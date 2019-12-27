@@ -40,12 +40,12 @@ namespace kiwano
 
 	void Canvas::BeginDraw()
 	{
-		rt_.BeginDraw();
+		rt_->BeginDraw();
 	}
 
 	void Canvas::EndDraw()
 	{
-		rt_.EndDraw();
+		rt_->EndDraw();
 		cache_expired_ = true;
 	}
 
@@ -89,7 +89,7 @@ namespace kiwano
 
 	void Canvas::SetBrushOpacity(float opacity)
 	{
-		rt_.SetOpacity(opacity);
+		rt_->SetOpacity(opacity);
 	}
 
 	Color Canvas::GetStrokeColor() const
@@ -109,43 +109,43 @@ namespace kiwano
 
 	float Canvas::GetBrushOpacity() const
 	{
-		return rt_.GetOpacity();
+		return rt_->GetOpacity();
 	}
 
 	void Canvas::SetBrushTransform(Transform const& transform)
 	{
-		rt_.SetTransform(transform.ToMatrix());
+		rt_->SetTransform(transform.ToMatrix());
 	}
 
 	void Canvas::SetBrushTransform(Matrix3x2 const & transform)
 	{
-		rt_.SetTransform(transform);
+		rt_->SetTransform(transform);
 	}
 
 	void Canvas::PushLayerArea(LayerArea& area)
 	{
-		rt_.PushLayer(area);
+		rt_->PushLayer(area);
 	}
 
 	void Canvas::PopLayerArea()
 	{
-		rt_.PopLayer();
+		rt_->PopLayer();
 	}
 
 	void Canvas::PushClipRect(Rect const& clip_rect)
 	{
-		rt_.PushClipRect(clip_rect);
+		rt_->PushClipRect(clip_rect);
 	}
 
 	void Canvas::PopClipRect()
 	{
-		rt_.PopClipRect();
+		rt_->PopClipRect();
 	}
 
 	void Canvas::DrawLine(Point const& begin, Point const& end)
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawLine(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawLine(
 			begin,
 			end,
 			stroke_width_,
@@ -156,8 +156,8 @@ namespace kiwano
 
 	void Canvas::DrawCircle(Point const& center, float radius)
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawEllipse(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawEllipse(
 			center,
 			Vec2(radius, radius),
 			stroke_width_,
@@ -168,8 +168,8 @@ namespace kiwano
 
 	void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawEllipse(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawEllipse(
 			center,
 			radius,
 			stroke_width_,
@@ -180,8 +180,8 @@ namespace kiwano
 
 	void Canvas::DrawRect(Rect const& rect)
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawRectangle(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawRectangle(
 			rect,
 			stroke_width_,
 			stroke_style_
@@ -191,8 +191,8 @@ namespace kiwano
 
 	void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawRoundedRectangle(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawRoundedRectangle(
 			rect,
 			radius,
 			stroke_width_,
@@ -203,8 +203,8 @@ namespace kiwano
 
 	void Canvas::FillCircle(Point const& center, float radius)
 	{
-		rt_.SetDefaultBrushColor(fill_color_);
-		rt_.FillEllipse(
+		rt_->SetDefaultBrushColor(fill_color_);
+		rt_->FillEllipse(
 			center,
 			Vec2(radius, radius)
 		);
@@ -213,8 +213,8 @@ namespace kiwano
 
 	void Canvas::FillEllipse(Point const& center, Vec2 const& radius)
 	{
-		rt_.SetDefaultBrushColor(fill_color_);
-		rt_.FillEllipse(
+		rt_->SetDefaultBrushColor(fill_color_);
+		rt_->FillEllipse(
 			center,
 			radius
 		);
@@ -223,8 +223,8 @@ namespace kiwano
 
 	void Canvas::FillRect(Rect const& rect)
 	{
-		rt_.SetDefaultBrushColor(fill_color_);
-		rt_.FillRectangle(
+		rt_->SetDefaultBrushColor(fill_color_);
+		rt_->FillRectangle(
 			rect
 		);
 		cache_expired_ = true;
@@ -232,8 +232,8 @@ namespace kiwano
 
 	void Canvas::FillRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
-		rt_.SetDefaultBrushColor(fill_color_);
-		rt_.FillRoundedRectangle(
+		rt_->SetDefaultBrushColor(fill_color_);
+		rt_->FillRoundedRectangle(
 			rect,
 			radius
 		);
@@ -244,7 +244,7 @@ namespace kiwano
 	{
 		if (texture)
 		{
-			rt_.DrawTexture(*texture, src_rect, dest_rect);
+			rt_->DrawTexture(*texture, src_rect, dest_rect);
 			cache_expired_ = true;
 		}
 	}
@@ -262,7 +262,7 @@ namespace kiwano
 
 	void Canvas::DrawTextLayout(TextLayout const& layout, Point const& point)
 	{
-		rt_.DrawTextLayout(layout, point);
+		rt_->DrawTextLayout(layout, point);
 	}
 
 	void Canvas::BeginPath(Point const& begin_pos)
@@ -297,8 +297,8 @@ namespace kiwano
 
 	void Canvas::StrokePath()
 	{
-		rt_.SetDefaultBrushColor(stroke_color_);
-		rt_.DrawGeometry(
+		rt_->SetDefaultBrushColor(stroke_color_);
+		rt_->DrawGeometry(
 			geo_sink_.GetGeometry(),
 			stroke_width_,
 			stroke_style_
@@ -308,8 +308,8 @@ namespace kiwano
 
 	void Canvas::FillPath()
 	{
-		rt_.SetDefaultBrushColor(fill_color_);
-		rt_.FillGeometry(
+		rt_->SetDefaultBrushColor(fill_color_);
+		rt_->FillGeometry(
 			geo_sink_.GetGeometry()
 		);
 		cache_expired_ = true;
@@ -317,13 +317,13 @@ namespace kiwano
 
 	void Canvas::Clear()
 	{
-		rt_.Clear();
+		rt_->Clear();
 		cache_expired_ = true;
 	}
 
 	void Canvas::Clear(Color const& clear_color)
 	{
-		rt_.Clear(clear_color);
+		rt_->Clear(clear_color);
 		cache_expired_ = true;
 	}
 
@@ -337,7 +337,7 @@ namespace kiwano
 	{
 		if (cache_expired_)
 		{
-			texture_cached_ = rt_.GetOutput();
+			texture_cached_ = rt_->GetOutput();
 			cache_expired_ = false;
 		}
 	}

@@ -73,7 +73,7 @@ namespace kiwano
 
 			SetSize(Size{ static_cast<float>(gif_->GetWidthInPixels()), static_cast<float>(gif_->GetHeightInPixels()) });
 
-			if (!frame_rt_.IsValid())
+			if (!frame_rt_)
 			{
 				Renderer::instance().CreateTextureRenderTarget(frame_rt_);
 			}
@@ -129,9 +129,10 @@ namespace kiwano
 
 	void GifSprite::ComposeNextFrame()
 	{
-		KGE_ASSERT(gif_ && gif_->IsValid());
+		KGE_ASSERT(frame_rt_);
+		KGE_ASSERT(gif_);
 
-		if (frame_rt_.IsValid())
+		if (frame_rt_->IsValid())
 		{
 			do
 			{
@@ -170,6 +171,7 @@ namespace kiwano
 
 	void GifSprite::OverlayNextFrame()
 	{
+		KGE_ASSERT(frame_rt_);
 		KGE_ASSERT(gif_ && gif_->IsValid());
 
 		frame_ = gif_->GetFrame(next_index_);
@@ -179,9 +181,9 @@ namespace kiwano
 			SaveComposedFrame();
 		}
 
-		if (frame_rt_.IsValid())
+		if (frame_rt_->IsValid())
 		{
-			frame_rt_.BeginDraw();
+			frame_rt_->BeginDraw();
 
 			if (next_index_ == 0)
 			{
@@ -190,12 +192,12 @@ namespace kiwano
 
 			if (frame_.raw)
 			{
-				frame_rt_.DrawTexture(*frame_.raw, nullptr, &frame_.rect);
+				frame_rt_->DrawTexture(*frame_.raw, nullptr, &frame_.rect);
 			}
 
-			frame_rt_.EndDraw();
+			frame_rt_->EndDraw();
 
-			frame_to_render_ = frame_rt_.GetOutput();
+			frame_to_render_ = frame_rt_->GetOutput();
 			if (frame_to_render_)
 			{
 				next_index_ = (++next_index_) % gif_->GetFramesCount();
@@ -215,7 +217,8 @@ namespace kiwano
 
 	void GifSprite::SaveComposedFrame()
 	{
-		TexturePtr frame_to_be_saved = frame_rt_.GetOutput();
+		KGE_ASSERT(frame_rt_);
+		TexturePtr frame_to_be_saved = frame_rt_->GetOutput();
 
 		HRESULT hr = frame_to_be_saved ? S_OK : E_FAIL;
 
@@ -223,17 +226,11 @@ namespace kiwano
 		{
 			if (!saved_frame_)
 			{
-				auto size = frame_to_be_saved->GetSizeInPixels();
-				auto prop = D2D1::BitmapProperties(frame_to_be_saved->GetPixelFormat());
-
-				ComPtr<ID2D1Bitmap> saved_bitmap;
-				hr = frame_rt_.GetRenderTarget()->CreateBitmap(D2D1::SizeU(size.x, size.y), prop, &saved_bitmap);
-
-				if (SUCCEEDED(hr))
-				{
-					saved_frame_->SetBitmap(saved_bitmap);
-				}
+				saved_frame_ = new Texture;
+				frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels(), frame_to_be_saved->GetPixelFormat());
 			}
+
+			hr = saved_frame_ ? S_OK : E_FAIL;
 		}
 
 		if (SUCCEEDED(hr))
@@ -246,11 +243,12 @@ namespace kiwano
 
 	void GifSprite::RestoreSavedFrame()
 	{
+		KGE_ASSERT(frame_rt_);
 		HRESULT hr = saved_frame_ ? S_OK : E_FAIL;
 
 		if (SUCCEEDED(hr))
 		{
-			TexturePtr frame_to_copy_to = frame_rt_.GetOutput();
+			TexturePtr frame_to_copy_to = frame_rt_->GetOutput();
 
 			hr = frame_to_copy_to ? S_OK : E_FAIL;
 
@@ -265,13 +263,14 @@ namespace kiwano
 
 	void GifSprite::ClearCurrentFrameArea()
 	{
-		frame_rt_.BeginDraw();
+		KGE_ASSERT(frame_rt_);
+		frame_rt_->BeginDraw();
 
-		frame_rt_.PushClipRect(frame_.rect);
-		frame_rt_.Clear();
-		frame_rt_.PopClipRect();
+		frame_rt_->PushClipRect(frame_.rect);
+		frame_rt_->Clear();
+		frame_rt_->PopClipRect();
 
-		return frame_rt_.EndDraw();
+		return frame_rt_->EndDraw();
 	}
 
 }

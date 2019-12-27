@@ -397,6 +397,29 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	void RenderTarget::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, D2D1_PIXEL_FORMAT format)
+	{
+		HRESULT hr = S_OK;
+
+		if (!render_target_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			ComPtr<ID2D1Bitmap> saved_bitmap;
+			hr = render_target_->CreateBitmap(D2D1::SizeU(size.x, size.y), D2D1::BitmapProperties(format), &saved_bitmap);
+
+			if (SUCCEEDED(hr))
+			{
+				texture.SetBitmap(saved_bitmap);
+			}
+		}
+
+		ThrowIfFailed(hr);
+	}
+
 	void RenderTarget::CreateLayer(LayerArea& layer)
 	{
 		HRESULT hr = S_OK;
@@ -714,26 +737,22 @@ namespace kiwano
 	{
 	}
 
-	TexturePtr TextureRenderTarget::GetOutput()
+	TexturePtr TextureRenderTarget::GetOutput() const
 	{
 		HRESULT hr = E_FAIL;
 		TexturePtr output;
 
-		if (GetRenderTarget())
+		if (bitmap_rt_)
 		{
-			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
-			hr = GetRenderTarget()->QueryInterface<ID2D1BitmapRenderTarget>(&bitmap_rt);
+			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt = bitmap_rt_;
+			ComPtr<ID2D1Bitmap> bitmap;
+
+			hr = bitmap_rt->GetBitmap(&bitmap);
 
 			if (SUCCEEDED(hr))
 			{
-				ComPtr<ID2D1Bitmap> bitmap;
-				hr = bitmap_rt->GetBitmap(&bitmap);
-
-				if (SUCCEEDED(hr))
-				{
-					output = new Texture;
-					output->SetBitmap(bitmap);
-				}
+				output = new Texture;
+				output->SetBitmap(bitmap);
 			}
 		}
 

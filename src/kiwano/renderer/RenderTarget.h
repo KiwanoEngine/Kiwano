@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/time.h>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Texture.h>
@@ -30,6 +31,11 @@
 
 namespace kiwano
 {
+	class Renderer;
+
+	KGE_DECLARE_SMART_PTR(RenderTarget);
+	KGE_DECLARE_SMART_PTR(TextureRenderTarget);
+
 	// 文字抗锯齿模式
 	enum class TextAntialiasMode
 	{
@@ -42,7 +48,7 @@ namespace kiwano
 
 	// 渲染目标
 	class KGE_API RenderTarget
-		: public Noncopyable
+		: public ObjectBase
 	{
 	public:
 		bool IsValid() const;
@@ -50,10 +56,6 @@ namespace kiwano
 		void BeginDraw();
 
 		void EndDraw();
-
-		void CreateLayer(
-			LayerArea& layer
-		);
 
 		void DrawGeometry(
 			Geometry const& geometry,
@@ -121,6 +123,16 @@ namespace kiwano
 		void DrawTextLayout(
 			TextLayout const& layout,
 			Point const& offset = Point{}
+		);
+
+		void CreateTexture(
+			Texture& texture,
+			math::Vec2T<uint32_t> size,
+			D2D1_PIXEL_FORMAT format
+		);
+
+		void CreateLayer(
+			LayerArea& layer
 		);
 
 		void PushClipRect(
@@ -203,19 +215,17 @@ namespace kiwano
 
 		inline Status const&				GetStatus() const						{ return status_; }
 
+	protected:
 		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const					{ KGE_ASSERT(render_target_); return render_target_; }
 
 		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
 
 		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style);
 
-	public:
+	protected:
 		RenderTarget();
 
-		HRESULT CreateDeviceResources(
-			ComPtr<ID2D1RenderTarget> rt,
-			ComPtr<ID2DDeviceResources> dev_res
-		);
+		HRESULT CreateDeviceResources(ComPtr<ID2D1RenderTarget> rt, ComPtr<ID2DDeviceResources> dev_res);
 
 		void DiscardDeviceResources();
 
@@ -239,9 +249,36 @@ namespace kiwano
 	class KGE_API TextureRenderTarget
 		: public RenderTarget
 	{
+		friend class Renderer;
+
 	public:
+		bool IsValid() const;
+
+		TexturePtr GetOutput() const;
+
+	private:
 		TextureRenderTarget();
 
-		TexturePtr GetOutput();
+		ComPtr<ID2D1BitmapRenderTarget> GetBitmapRenderTarget() const;
+
+		void SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt);
+
+	private:
+		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
 	};
+
+	inline bool TextureRenderTarget::IsValid() const
+	{
+		return !!bitmap_rt_;
+	}
+
+	inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderTarget::GetBitmapRenderTarget() const
+	{
+		return bitmap_rt_;
+	}
+
+	inline void TextureRenderTarget::SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt)
+	{
+		bitmap_rt_ = rt;
+	}
 }

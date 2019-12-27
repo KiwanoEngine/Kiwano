@@ -23,25 +23,19 @@
 
 namespace kiwano
 {
+	class RenderTarget;
+	class Renderer;
 	class GeometrySink;
 
 	// 几何体
 	class KGE_API Geometry
 	{
-	public:
-		// 几何体组合模式
-		enum class CombineMode
-		{
-			Union,		/* 并集 (A + B) */
-			Intersect,	/* 交集 (A + B) */
-			Xor,		/* 对称差集 ((A - B) + (B - A)) */
-			Exclude		/* 差集 (A - B) */
-		};
+		friend class RenderTarget;
+		friend class Renderer;
+		friend class GeometrySink;
 
 	public:
 		Geometry();
-
-		Geometry(ComPtr<ID2D1Geometry> geo);
 
 		bool IsValid() const;
 
@@ -72,6 +66,19 @@ namespace kiwano
 			Vec2& tangent
 		) const;
 
+		// 清除形状
+		void Clear();
+
+	public:
+		// 几何体组合模式
+		enum class CombineMode
+		{
+			Union,		/* 并集 (A + B) */
+			Intersect,	/* 交集 (A + B) */
+			Xor,		/* 对称差集 ((A - B) + (B - A)) */
+			Exclude		/* 差集 (A - B) */
+		};
+
 		// 组合几何体
 		void CombineWith(
 			GeometrySink& sink,
@@ -87,6 +94,7 @@ namespace kiwano
 			Matrix3x2 const& input_matrix = Matrix3x2()
 		) const;
 
+	public:
 		// 创建直线
 		static Geometry CreateLine(
 			Point const& begin,
@@ -116,12 +124,10 @@ namespace kiwano
 			Vec2 const& radius
 		);
 
-	public:
+	private:
 		inline ComPtr<ID2D1Geometry> GetGeometry() const		{ return geo_; }
 
 		inline void SetGeometry(ComPtr<ID2D1Geometry> geometry)	{ geo_ = geometry; }
-
-		inline operator bool() const							{ return IsValid(); }
 
 	private:
 		ComPtr<ID2D1Geometry> geo_;
@@ -132,8 +138,12 @@ namespace kiwano
 	class KGE_API GeometrySink
 		: protected Noncopyable
 	{
+		friend class Geometry;
+		friend class Renderer;
+
 	public:
 		GeometrySink();
+
 		~GeometrySink();
 
 		// 开始添加路径
@@ -187,7 +197,7 @@ namespace kiwano
 		// 关闭流
 		void Close();
 
-	public:
+	private:
 		inline ComPtr<ID2D1PathGeometry> GetPathGeometry() const	{ return path_geo_; }
 
 		inline void SetPathGeometry(ComPtr<ID2D1PathGeometry> path)	{ path_geo_ = path; }

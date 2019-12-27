@@ -141,12 +141,12 @@ namespace kiwano
 			Vec2 const& radius
 		);
 
-		void CreatePathGeometrySink(
+		void CreateGeometrySink(
 			GeometrySink& sink
 		);
 
 		void CreateTextureRenderTarget(
-			TextureRenderTarget& render_target
+			TextureRenderTargetPtr& render_target
 		);
 
 		void CreateSolidBrush(

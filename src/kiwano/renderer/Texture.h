@@ -24,6 +24,10 @@
 
 namespace kiwano
 {
+	class RenderTarget;
+	class TextureRenderTarget;
+	class Renderer;
+
 	// 插值模式
 	// 插值模式指定了位图在缩放和旋转时像素颜色的计算方式
 	// Linear (双线性插值): 对周围四个像素进行两次线性插值计算, 在图像放大时可能会模糊（默认）
@@ -40,20 +44,12 @@ namespace kiwano
 	class KGE_API Texture
 		: public ObjectBase
 	{
+		friend class RenderTarget;
+		friend class TextureRenderTarget;
+		friend class Renderer;
+
 	public:
 		Texture();
-
-		explicit Texture(
-			String const& file_path
-		);
-
-		explicit Texture(
-			Resource const& res
-		);
-
-		explicit Texture(
-			ComPtr<ID2D1Bitmap> const& bitmap
-		);
 
 		virtual ~Texture();
 
@@ -91,6 +87,9 @@ namespace kiwano
 		// 获取像素插值方式
 		InterpolationMode GetBitmapInterpolationMode() const;
 
+		// 获取像素格式
+		D2D1_PIXEL_FORMAT GetPixelFormat() const;
+
 		// 拷贝位图内存
 		void CopyFrom(TexturePtr copy_from);
 
@@ -103,15 +102,12 @@ namespace kiwano
 		// 设置默认的像素插值方式
 		static void SetDefaultInterpolationMode(InterpolationMode mode);
 
-	public:
+	private:
 		// 获取源位图
 		ComPtr<ID2D1Bitmap> GetBitmap() const;
 
 		// 设置源位图
 		void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
-
-		// 获取像素格式
-		D2D1_PIXEL_FORMAT GetPixelFormat() const;
 
 	private:
 		ComPtr<ID2D1Bitmap>	bitmap_;

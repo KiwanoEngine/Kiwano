@@ -835,7 +835,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreatePathGeometrySink(GeometrySink& sink)
+	void Renderer::CreateGeometrySink(GeometrySink& sink)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -857,7 +857,7 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextureRenderTarget(TextureRenderTarget& render_target)
+	void Renderer::CreateTextureRenderTarget(TextureRenderTargetPtr& render_target)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -865,15 +865,27 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<ID2D1BitmapRenderTarget> output;
+		TextureRenderTargetPtr output;
 		if (SUCCEEDED(hr))
 		{
-			hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&output);
+			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
+			hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&bitmap_rt);
+
+			if (SUCCEEDED(hr))
+			{
+				output = new TextureRenderTarget;
+				hr = output->CreateDeviceResources(bitmap_rt, d2d_res_);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				output->SetBitmapRenderTarget(bitmap_rt);
+			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = render_target.CreateDeviceResources(output, d2d_res_);
+			render_target = output;
 		}
 
 		ThrowIfFailed(hr);

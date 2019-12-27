@@ -39,10 +39,6 @@ namespace kiwano
 	public:
 		Font();
 
-		Font(String const& font_file);
-
-		Font(Resource const& font_resource);
-
 		bool Load(String const& font_file);
 
 		bool Load(Resource const& font_resource);

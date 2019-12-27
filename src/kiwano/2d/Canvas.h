@@ -262,16 +262,16 @@ namespace kiwano
 		void UpdateCache() const;
 
 	private:
-		float				stroke_width_;
-		Color				fill_color_;
-		Color				stroke_color_;
-		TextStyle			text_style_;
-		StrokeStyle			stroke_style_;
-		GeometrySink		geo_sink_;
+		float					stroke_width_;
+		Color					fill_color_;
+		Color					stroke_color_;
+		TextStyle				text_style_;
+		StrokeStyle				stroke_style_;
+		GeometrySink			geo_sink_;
+		TextureRenderTargetPtr	rt_;
 
-		mutable bool		cache_expired_;
-		mutable TexturePtr	texture_cached_;
-		mutable TextureRenderTarget	rt_;
+		mutable bool			cache_expired_;
+		mutable TexturePtr		texture_cached_;
 	};
 
 	/** @} */

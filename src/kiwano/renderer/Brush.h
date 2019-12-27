@@ -90,48 +90,32 @@ namespace kiwano
 		);
 	};
 
-	// »­±Ê
+	/**
+	* \~chinese
+	* @brief »­Ë¢
+	*/
 	class KGE_API Brush
 	{
 	public:
 		Brush();
 
-		Brush(
-			Color const& color
-		);
+		Brush(Color const& color);
 
-		Brush(
-			SolidColorStyle const& style
-		);
+		Brush(SolidColorStyle const& style);
 
-		Brush(
-			LinearGradientStyle const& style
-		);
+		Brush(LinearGradientStyle const& style);
 
-		Brush(
-			RadialGradientStyle const& style
-		);
+		Brush(RadialGradientStyle const& style);
 
 		bool IsValid() const;
 
-		inline void SetColor(
-			Color const& color
-		)
-		{
-			SetStyle(SolidColorStyle{ color });
-		}
+		void SetColor(Color const& color);
 
-		void SetStyle(
-			SolidColorStyle const& style
-		);
+		void SetStyle(SolidColorStyle const& style);
 
-		void SetStyle(
-			LinearGradientStyle const& style
-		);
+		void SetStyle(LinearGradientStyle const& style);
 
-		void SetStyle(
-			RadialGradientStyle const& style
-		);
+		void SetStyle(RadialGradientStyle const& style);
 
 		float GetOpacity() const;
 
@@ -149,9 +133,7 @@ namespace kiwano
 		Type GetType() const { return type_; }
 
 	public:
-		Brush(
-			ComPtr<ID2D1Brush> brush
-		);
+		Brush(ComPtr<ID2D1Brush> brush);
 
 		void SetBrush(ComPtr<ID2D1Brush> const& brush);
 
@@ -162,5 +144,10 @@ namespace kiwano
 		float opacity_;
 		ComPtr<ID2D1Brush> raw_;
 	};
+
+	inline void Brush::SetColor(Color const& color)
+	{
+		SetStyle(SolidColorStyle{ color });
+	}
 
 }

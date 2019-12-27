@@ -60,7 +60,7 @@ namespace kiwano
 
 	void ActionWalk::Init(Actor* target)
 	{
-		if (!path_)
+		if (!path_.IsValid())
 		{
 			Done();
 			return;
@@ -121,7 +121,7 @@ namespace kiwano
 
 	void ActionWalk::ClearPath()
 	{
-		path_.SetGeometry(nullptr);
+		path_.Clear();
 	}
 
 }

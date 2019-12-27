@@ -31,17 +31,6 @@ namespace kiwano
 	{
 	}
 
-	GifImage::GifImage(String const& file_path)
-	{
-		Load(file_path);
-	}
-
-	GifImage::GifImage(Resource const& res)
-		: GifImage()
-	{
-		Load(res);
-	}
-
 	bool GifImage::Load(String const& file_path)
 	{
 		Renderer::instance().CreateGifImage(*this, file_path);

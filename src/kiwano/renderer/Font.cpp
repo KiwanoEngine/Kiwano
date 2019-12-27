@@ -27,16 +27,6 @@ namespace kiwano
 	{
 	}
 
-	Font::Font(String const& font_file)
-	{
-		Load(font_file);
-	}
-
-	Font::Font(Resource const& font_resource)
-	{
-		Load(font_resource);
-	}
-
 	bool Font::Load(String const& font_file)
 	{
 		try

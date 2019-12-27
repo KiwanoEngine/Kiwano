@@ -24,18 +24,18 @@
 
 namespace kiwano
 {
+	class Renderer;
+
 	KGE_DECLARE_SMART_PTR(GifImage);
 
 	// GIF Í¼Ïñ
 	class KGE_API GifImage
 		: public ObjectBase
 	{
+		friend class Renderer;
+
 	public:
 		GifImage();
-
-		GifImage(String const& file_path);
-
-		GifImage(Resource const& res);
 
 		bool Load(String const& file_path);
 
@@ -70,11 +70,11 @@ namespace kiwano
 
 		Frame GetFrame(uint32_t index);
 
+	private:
 		ComPtr<IWICBitmapDecoder> GetDecoder() const;
 
 		void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
 
-	private:
 		HRESULT GetGlobalMetadata();
 
 	private:

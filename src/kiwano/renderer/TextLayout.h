@@ -24,10 +24,16 @@
 
 namespace kiwano
 {
+	class RenderTarget;
+	class Renderer;
+
 	/// \~chinese
 	/// @brief 文本布局
 	class KGE_API TextLayout
 	{
+		friend class RenderTarget;
+		friend class Renderer;
+
 	public:
 		/// \~chinese
 		/// @brief 构造空的文本布局
@@ -136,7 +142,7 @@ namespace kiwano
 		/// @param length 长度
 		void SetStrikethrough(bool enable, uint32_t start, uint32_t length);
 
-	public:
+	private:
 		ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
 		void SetTextFormat(ComPtr<IDWriteTextFormat> format);

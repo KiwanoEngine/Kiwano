@@ -33,11 +33,6 @@ namespace kiwano
 	{
 	}
 
-	Geometry::Geometry(ComPtr<ID2D1Geometry> geo)
-		: geo_(geo)
-	{
-	}
-
 	bool Geometry::IsValid() const
 	{
 		return geo_ != nullptr;
@@ -90,6 +85,11 @@ namespace kiwano
 			return SUCCEEDED(hr);
 		}
 		return false;
+	}
+
+	void Geometry::Clear()
+	{
+		geo_.reset();
 	}
 
 	void Geometry::CombineWith(GeometrySink& sink, Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
@@ -277,14 +277,17 @@ namespace kiwano
 		{
 			EndPath();
 		}
-		return Geometry(path_geo_);
+
+		Geometry geo;
+		geo.SetGeometry(path_geo_);
+		return geo;
 	}
 
 	void GeometrySink::Init()
 	{
 		if (!path_geo_)
 		{
-			Renderer::instance().CreatePathGeometrySink(*this);
+			Renderer::instance().CreateGeometrySink(*this);
 		}
 	}
 
