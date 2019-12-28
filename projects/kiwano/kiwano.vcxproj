@@ -75,6 +75,7 @@
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Button.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Menu.h" />

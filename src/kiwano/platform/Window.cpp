@@ -20,6 +20,7 @@
 
 #include <kiwano/platform/Window.h>
 #include <kiwano/core/win32/helper.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX

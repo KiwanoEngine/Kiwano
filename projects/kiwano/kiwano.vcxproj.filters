@@ -267,6 +267,9 @@
     <ClInclude Include="..\..\src\kiwano\renderer\TextStyle.hpp">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\helper.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">

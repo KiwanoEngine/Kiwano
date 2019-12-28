@@ -18,18 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
+#include <stdexcept>
+#include <kiwano/macros.h>
 #include <3rd-party/StackWalker/StackWalker.h>
 
 namespace kiwano
 {
-	// Display stack trace on exception
 	inline void ThrowIfFailed(HRESULT hr)
 	{
 		if (FAILED(hr))
 		{
-			KGE_ERROR(L"Failed with HRESULT of %08X", hr);
-
 			StackWalker{}.ShowCallstack();
 
 			static char buffer[1024 + 1];

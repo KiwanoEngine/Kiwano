@@ -22,6 +22,7 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/modules.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Director.h>
@@ -148,8 +149,6 @@ namespace kiwano
 			comps_.clear();
 		}
 
-		Input::instance().Destroy();
-		Renderer::instance().Destroy();
 		Window::instance().Destroy();
 	}
 
@@ -304,14 +303,12 @@ namespace kiwano
 			{
 				KeyDownEvent evt;
 				evt.code = static_cast<int>(wparam);
-				// evt.count = static_cast<int>(lparam & 0xFF);
 				app->DispatchEvent(evt);
 			}
 			else
 			{
 				KeyUpEvent evt;
 				evt.code = static_cast<int>(wparam);
-				// evt.count = static_cast<int>(lparam & 0xFF);
 				app->DispatchEvent(evt);
 			}
 		}
@@ -321,7 +318,6 @@ namespace kiwano
 		{
 			KeyCharEvent evt;
 			evt.value = static_cast<char>(wparam);
-			// evt.count = static_cast<int>(lparam & 0xFF);
 			app->DispatchEvent(evt);
 		}
 		break;
@@ -383,7 +379,7 @@ namespace kiwano
 		{
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				// KGE_SYS_LOG(L"Window minimized");
+				KGE_SYS_LOG(L"Window minimized");
 			}
 			else
 			{
@@ -425,7 +421,7 @@ namespace kiwano
 
 		case WM_SETTEXT:
 		{
-			// KGE_SYS_LOG(L"Window title changed");
+			KGE_SYS_LOG(L"Window title changed");
 
 			WindowTitleChangedEvent evt;
 			evt.title = reinterpret_cast<const wchar_t*>(lparam);
@@ -435,13 +431,13 @@ namespace kiwano
 
 		case WM_SETICON:
 		{
-			// KGE_SYS_LOG(L"Window icon changed");
+			KGE_SYS_LOG(L"Window icon changed");
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
-			// KGE_SYS_LOG(L"The display resolution has changed");
+			KGE_SYS_LOG(L"The display resolution has changed");
 
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
@@ -455,7 +451,7 @@ namespace kiwano
 
 		case WM_CLOSE:
 		{
-			// KGE_SYS_LOG(L"Window is closing");
+			KGE_SYS_LOG(L"Window is closing");
 
 			if (!app->OnClosing())
 			{

@@ -100,8 +100,6 @@ namespace kiwano
 
 		void UpdateMousePos(float, float);
 
-		void Destroy();
-
 	private:
 		Input();
 

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Renderer.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/platform/FileSystem.h>
@@ -61,20 +62,16 @@ namespace kiwano
 
 		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
 
-		// Direct2D device resources
-		if (SUCCEEDED(hr))
-		{
-			hr = ID2DDeviceResources::Create(&d2d_res_);
-		}
-
 		// Direct3D device resources
 		if (SUCCEEDED(hr))
 		{
-			hr = ID3DDeviceResources::Create(
-				&d3d_res_,
-				d2d_res_.get(),
-				hwnd_
-			);
+			hr = ID3DDeviceResources::Create(&d3d_res_, hwnd_);
+		}
+
+		// Direct2D device resources
+		if (SUCCEEDED(hr))
+		{
+			hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
 		}
 
 		// DrawingStateBlock
@@ -88,7 +85,7 @@ namespace kiwano
 		// Other device resources
 		if (SUCCEEDED(hr))
 		{
-			hr = CreateDeviceResources();
+			hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
 		}
 
 		// FontFileLoader and FontCollectionLoader
@@ -130,7 +127,7 @@ namespace kiwano
 	{
 		KGE_SYS_LOG(L"Destroying device resources");
 
-		RenderTarget::DiscardDeviceResources();
+		DiscardDeviceResources();
 
 		d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
 		res_font_file_loader_.reset();
@@ -145,17 +142,9 @@ namespace kiwano
 
 	void Renderer::BeforeRender()
 	{
-		HRESULT hr = S_OK;
+		KGE_ASSERT(d3d_res_ && IsValid());
 
-		if (!IsValid())
-		{
-			hr = E_UNEXPECTED;
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d3d_res_->ClearRenderTarget(clear_color_);
-		}
+		HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
 
 		if (SUCCEEDED(hr))
 		{
@@ -168,24 +157,12 @@ namespace kiwano
 
 	void Renderer::AfterRender()
 	{
-		HRESULT hr = S_OK;
-		
-		if (!IsValid())
-		{
-			hr = E_UNEXPECTED;
-		}
+		KGE_ASSERT(d3d_res_ && IsValid());
 
-		if (SUCCEEDED(hr))
-		{
-			EndDraw();
+		EndDraw();
+		GetRenderTarget()->RestoreDrawingState(drawing_state_block_.get());
 
-			GetRenderTarget()->RestoreDrawingState(drawing_state_block_.get());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d3d_res_->Present(vsync_);
-		}
+		HRESULT hr = d3d_res_->Present(vsync_);
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
@@ -211,24 +188,20 @@ namespace kiwano
 		}
 	}
 
-	HRESULT Renderer::CreateDeviceResources()
-	{
-		KGE_ASSERT(d2d_res_);
-
-		HRESULT hr = RenderTarget::CreateDeviceResources(
-			d2d_res_->GetDeviceContext(),
-			d2d_res_
-		);
-		return hr;
-	}
-
 	HRESULT Renderer::HandleDeviceLost()
 	{
+		KGE_ASSERT(d3d_res_ && d2d_res_ && render_target_);
+
 		HRESULT hr = d3d_res_->HandleDeviceLost();
 
 		if (SUCCEEDED(hr))
 		{
-			hr = CreateDeviceResources();
+			hr = d2d_res_->HandleDeviceLost(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
 		}
 		return hr;
 	}
@@ -998,6 +971,19 @@ namespace kiwano
 		ThrowIfFailed(hr);
 	}
 
+	void Renderer::SetDpi(float dpi)
+	{
+		KGE_ASSERT(d3d_res_ && d2d_res_);
+
+		HRESULT hr = d3d_res_->SetDpi(dpi);
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->SetDpi(dpi);
+		}
+
+		ThrowIfFailed(hr);
+	}
+
 	void Renderer::SetVSyncEnabled(bool enabled)
 	{
 		vsync_ = enabled;
@@ -1011,10 +997,9 @@ namespace kiwano
 	void Renderer::ResizeTarget(uint32_t width, uint32_t height)
 	{
 		HRESULT hr = S_OK;
+
 		if (!d3d_res_)
-		{
 			hr = E_UNEXPECTED;
-		}
 
 		if (SUCCEEDED(hr))
 		{
@@ -1023,19 +1008,17 @@ namespace kiwano
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->SetLogicalSize(output_size_);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
+		}
+
 		ThrowIfFailed(hr);
-	}
-
-	void Renderer::Destroy()
-	{
-		DiscardDeviceResources();
-
-		d2d_res_.reset();
-		d3d_res_.reset();
-		drawing_state_block_.reset();
-		font_collection_loader_.reset();
-		res_font_file_loader_.reset();
-		res_font_collection_loader_.reset();
 	}
 
 }

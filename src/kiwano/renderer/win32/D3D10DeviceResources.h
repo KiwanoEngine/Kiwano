@@ -21,8 +21,7 @@
 #pragma once
 
 #include <kiwano/macros.h>
-
-#include <kiwano/renderer/win32/D2DDeviceResources.h>
+#include <kiwano/renderer/win32/helper.h>
 #include <kiwano/renderer/win32/D3DDeviceResourcesBase.h>
 #include <d3d10_1.h>
 
@@ -33,20 +32,22 @@ namespace kiwano
 		: public ID3DDeviceResourcesBase
 	{
 	public:
-		static HRESULT Create(ID3D10DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd);
+		static HRESULT Create(ID3D10DeviceResources** device_resources, HWND hwnd);
 
 		inline ID3D10Device*			GetDevice()				{ KGE_ASSERT(device_); return device_.get(); }
 		inline ID3D10RenderTargetView*	GetRenderTargetView()	{ KGE_ASSERT(rt_view_); return rt_view_.get(); }
 		inline ID3D10DepthStencilView*	GetDepthStencilView()	{ KGE_ASSERT(ds_view_); return ds_view_.get(); }
 		inline IDXGIFactory*			GetDXGIFactory()		{ KGE_ASSERT(dxgi_factory_); return dxgi_factory_.get(); }
+		inline IDXGIDevice*				GetDXGIDevice()			{ KGE_ASSERT(dxgi_device_); return dxgi_device_.get(); }
 		inline IDXGISwapChain*			GetDXGISwapChain()		{ KGE_ASSERT(dxgi_swap_chain_); return dxgi_swap_chain_.get(); }
 
 	protected:
 		ComPtr<ID3D10Device>			device_;
 		ComPtr<ID3D10RenderTargetView>	rt_view_;
 		ComPtr<ID3D10DepthStencilView>	ds_view_;
-		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
 		ComPtr<IDXGIFactory>			dxgi_factory_;
+		ComPtr<IDXGIDevice>				dxgi_device_;
+		ComPtr<IDXGISwapChain>			dxgi_swap_chain_;
 	};
 
 }

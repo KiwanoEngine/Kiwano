@@ -171,6 +171,10 @@ namespace kiwano
 			GradientExtendMode extend_mode
 		);
 
+		void SetDpi(
+			float dpi
+		);
+
 	public:
 		void Init(RenderConfig const& config);
 
@@ -183,8 +187,6 @@ namespace kiwano
 		void AfterRender() override;
 
 		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
-
-		void Destroy();
 
 	public:
 		inline HWND						GetTargetWindow() const			{ return hwnd_; }
@@ -201,8 +203,6 @@ namespace kiwano
 		Renderer();
 
 		~Renderer();
-
-		HRESULT CreateDeviceResources();
 
 		HRESULT HandleDeviceLost();
 

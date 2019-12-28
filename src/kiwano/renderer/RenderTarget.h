@@ -50,6 +50,8 @@ namespace kiwano
 	class KGE_API RenderTarget
 		: public ObjectBase
 	{
+		friend class Renderer;
+
 	public:
 		bool IsValid() const;
 
@@ -133,27 +135,17 @@ namespace kiwano
 			D2D1_PIXEL_FORMAT format
 		);
 
-		void CreateLayer(
-			LayerArea& layer
-		);
-
-		void PushClipRect(
-			Rect const& clip_rect
-		);
+		void PushClipRect(Rect const& clip_rect);
 
 		void PopClipRect();
 
-		void PushLayer(
-			LayerArea& layer
-		);
+		void PushLayer(LayerArea& layer);
 
 		void PopLayer();
 
 		void Clear();
 
-		void Clear(
-			Color const& clear_color
-		);
+		void Clear(Color const& clear_color);
 
 		BrushPtr GetCurrentBrush() const;
 
@@ -191,6 +183,10 @@ namespace kiwano
 			Matrix3x2 const& transform
 		);
 
+		void Resize(
+			Size const& size
+		);
+
 	public:
 		struct Status
 		{
@@ -208,30 +204,34 @@ namespace kiwano
 		inline Status const&				GetStatus() const						{ return status_; }
 
 	protected:
+		RenderTarget();
+
 		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const					{ KGE_ASSERT(render_target_); return render_target_; }
 
 		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
 
 		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style);
 
-	protected:
-		RenderTarget();
-
-		HRESULT CreateDeviceResources(ComPtr<ID2D1RenderTarget> rt, ComPtr<ID2DDeviceResources> dev_res);
+	private:
+		HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> rt);
 
 		void DiscardDeviceResources();
 
 	private:
 		bool							antialias_;
 		bool							fast_global_transform_;
-		mutable bool					collecting_status_;
-		mutable Status					status_;
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
-		ComPtr<ID2DDeviceResources>		device_resources_;
+		ComPtr<ID2D1StrokeStyle>		miter_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>		bevel_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>		round_stroke_style_;
 		BrushPtr						current_brush_;
+		Rect							visible_size_;
 		Matrix3x2						global_transform_;
+
+		mutable bool					collecting_status_;
+		mutable Status					status_;
 	};
 
 

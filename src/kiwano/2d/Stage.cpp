@@ -38,12 +38,12 @@ namespace kiwano
 
 	void Stage::OnEnter()
 	{
-		// KGE_SYS_LOG(L"Stage entered");
+		KGE_SYS_LOG(L"Stage entered");
 	}
 
 	void Stage::OnExit()
 	{
-		// KGE_SYS_LOG(L"Stage exited");
+		KGE_SYS_LOG(L"Stage exited");
 	}
 
 	void Stage::RenderBorder(RenderTarget* rt)
