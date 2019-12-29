@@ -107,14 +107,6 @@ namespace kiwano
 		/// @brief 设置径向渐变样式
 		void SetStyle(RadialGradientStyle const& style);
 
-		/// \~chinese
-		/// @brief 获取透明度
-		float GetOpacity() const;
-
-		/// \~chinese
-		/// @brief 设置透明度
-		void SetOpacity(float opacity);
-
 	public:
 		/// \~chinese
 		/// @brief 画刷类型
@@ -131,6 +123,14 @@ namespace kiwano
 		Type GetType() const;
 
 	private:
+		/// \~chinese
+		/// @brief 获取透明度
+		float GetOpacity() const;
+
+		/// \~chinese
+		/// @brief 设置透明度
+		void SetOpacity(float opacity);
+
 		void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
 
 		ComPtr<ID2D1Brush> GetBrush() const;

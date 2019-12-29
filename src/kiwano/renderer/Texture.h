@@ -28,19 +28,23 @@ namespace kiwano
 	class TextureRenderTarget;
 	class Renderer;
 
-	// 插值模式
-	// 插值模式指定了位图在缩放和旋转时像素颜色的计算方式
-	// Linear (双线性插值): 对周围四个像素进行两次线性插值计算, 在图像放大时可能会模糊（默认）
-	// Nearest (最邻近插值): 取最邻近的像素点的颜色值
+	/**
+	* \~chinese
+	* @brief 插值模式
+	* @details 插值模式指定了位图在缩放和旋转时像素颜色的计算方式
+	*/
 	enum class InterpolationMode
 	{
-		Linear,		// 双线性插值
-		Nearest,	// 最邻近插值
+		Linear,		///< 双线性插值，对周围四个像素进行两次线性插值计算, 在图像放大时可能会模糊
+		Nearest,	///< 最邻近插值，取最邻近的像素点的颜色值
 	};
 
 	KGE_DECLARE_SMART_PTR(Texture);
 
-	// 纹理
+	/**
+	* \~chinese
+	* @brief 纹理
+	*/
 	class KGE_API Texture
 		: public ObjectBase
 	{
@@ -53,60 +57,81 @@ namespace kiwano
 
 		virtual ~Texture();
 
-		// 加载本地文件
-		bool Load(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 加载本地文件
+		bool Load(String const& file_path);
 
-		// 加载资源
-		bool Load(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 加载资源
+		bool Load(Resource const& res);
 
-		// 资源是否有效
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
-		// 获取宽度
+		/// \~chinese
+		/// @brief 获取纹理宽度
 		float GetWidth() const;
 
-		// 获取高度
+		/// \~chinese
+		/// @brief 获取纹理高度
 		float GetHeight() const;
 
-		// 获取大小
+		/// \~chinese
+		/// @brief 获取纹理大小
 		Size GetSize() const;
 
-		// 获取像素宽度
+		/// \~chinese
+		/// @brief 获取像素宽度
 		uint32_t GetWidthInPixels() const;
 
-		// 获取像素高度
+		/// \~chinese
+		/// @brief 获取像素高度
 		uint32_t GetHeightInPixels() const;
 
-		// 获取像素大小
+		/// \~chinese
+		/// @brief 获取像素大小
 		math::Vec2T<uint32_t> GetSizeInPixels() const;
 
-		// 获取像素插值方式
+		/// \~chinese
+		/// @brief 获取像素插值方式
 		InterpolationMode GetBitmapInterpolationMode() const;
 
-		// 获取像素格式
+		/// \~chinese
+		/// @brief 获取像素格式
 		D2D1_PIXEL_FORMAT GetPixelFormat() const;
 
-		// 拷贝位图内存
+		/// \~chinese
+		/// @brief 拷贝纹理
+		/// @param copy_from 源纹理
 		void CopyFrom(TexturePtr copy_from);
 
-		// 拷贝位图内存
+		/// \~chinese
+		/// @brief 拷贝纹理
+		/// @param copy_from 源纹理
+		/// @param src_rect 源纹理裁剪矩形
+		/// @param dest_point 拷贝至目标位置
 		void CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point);
 
-		// 设置像素插值方式
+		/// \~chinese
+		/// @brief 设置像素插值方式
 		void SetInterpolationMode(InterpolationMode mode);
 
-		// 设置默认的像素插值方式
+		/// \~chinese
+		/// @brief 设置默认的像素插值方式
 		static void SetDefaultInterpolationMode(InterpolationMode mode);
 
+		/// \~chinese
+		/// @brief 获取默认的像素插值方式
+		static InterpolationMode GetDefaultInterpolationMode();
+
 	private:
-		// 获取源位图
+		/// \~chinese
+		/// @brief 获取源位图
 		ComPtr<ID2D1Bitmap> GetBitmap() const;
 
-		// 设置源位图
+		/// \~chinese
+		/// @brief 设置源位图
 		void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
 	private:

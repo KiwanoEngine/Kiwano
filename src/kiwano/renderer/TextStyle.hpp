@@ -90,30 +90,16 @@ namespace kiwano
 		* @param font_family 字体族
 		* @param font_size 字体大小
 		* @param font_weight 字体粗细
-		* @param color 填充颜色
 		*/
-		TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal, Color color = Color::White);
-
-		void SetFillColor(Color const& color);
-
-		void SetOutlineColor(Color const& color);
+		TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
 	};
 
 	inline TextStyle::TextStyle()
-		: font(nullptr)
-		, font_family()
-		, font_size(18)
-		, font_weight(FontWeight::Normal)
-		, italic(false)
-		, alignment(TextAlign::Left)
-		, wrap_width(0)
-		, line_spacing(0)
-		, outline_width(1.0f)
-		, outline_stroke(StrokeStyle::Round)
+		: TextStyle(String(), 18, FontWeight::Normal)
 	{
 	}
 
-	inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight, Color color)
+	inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight)
 		: font(nullptr)
 		, font_family(font_family)
 		, font_size(font_size)
@@ -125,24 +111,6 @@ namespace kiwano
 		, outline_width(1.0f)
 		, outline_stroke(StrokeStyle::Round)
 	{
-	}
-
-	inline void TextStyle::SetFillColor(Color const& color)
-	{
-		if (!fill_brush)
-		{
-			fill_brush = new Brush;
-		}
-		fill_brush->SetColor(color);
-	}
-
-	inline void TextStyle::SetOutlineColor(Color const& color)
-	{
-		if (!outline_brush)
-		{
-			outline_brush = new Brush;
-		}
-		outline_brush->SetColor(color);
 	}
 
 }

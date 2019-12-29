@@ -53,6 +53,7 @@ namespace kiwano
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
 
+		background_brush_ = new Brush;
 		background_brush_->SetColor(Color(0.0f, 0.0f, 0.0f, 0.7f));
 
 		debug_text_ = new TextActor;
@@ -65,6 +66,7 @@ namespace kiwano
 		style.font_weight = FontWeight::Normal;
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
+		debug_text_->SetFillColor(Color::White);
 
 		AddListener<MouseHoverEvent>([=](Event&) { SetOpacity(0.4f); });
 		AddListener<MouseOutEvent>([=](Event&) { SetOpacity(1.f); });

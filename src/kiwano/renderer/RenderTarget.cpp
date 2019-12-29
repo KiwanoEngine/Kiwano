@@ -31,6 +31,7 @@ namespace kiwano
 	RenderTarget::RenderTarget()
 		: collecting_status_(false)
 		, fast_global_transform_(true)
+		, brush_opacity_(1.0f)
 		, antialias_(true)
 		, text_antialias_(TextAntialiasMode::GrayScale)
 	{
@@ -290,12 +291,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect, float opacity)
+	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
 	{
-		DrawTexture(texture, &src_rect, &dest_rect, opacity);
+		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect, float opacity)
+	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
@@ -308,7 +309,7 @@ namespace kiwano
 			render_target_->DrawBitmap(
 				texture.GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
-				opacity,
+				brush_opacity_,
 				mode,
 				src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr
 			);
@@ -321,23 +322,42 @@ namespace kiwano
 	{
 		KGE_ASSERT(text_renderer_ && "Text renderer has not been initialized!");
 
-		const TextStyle& style = layout.GetStyle();
-		text_renderer_->SetStyle(
-			style.fill_brush ? style.fill_brush->GetBrush().get() : nullptr,
-			style.outline_brush ? style.outline_brush->GetBrush().get() : nullptr,
-			style.outline_width,
-			GetStrokeStyle(style.outline_stroke).get()
-		);
-
-		HRESULT hr = layout.GetTextLayout()->Draw(nullptr, text_renderer_.get(), offset.x, offset.y);
-
-		if (SUCCEEDED(hr))
+		if (layout.IsValid())
 		{
-			IncreasePrimitivesCount();
-		}
-		else
-		{
-			KGE_ERROR(L"Failed to draw text layout with HRESULT of %08X", hr);
+			ComPtr<ID2D1Brush> fill_brush;
+			ComPtr<ID2D1Brush> outline_brush;
+			const TextStyle& style = layout.GetStyle();
+
+			if (style.fill_brush)
+			{
+				fill_brush = style.fill_brush->GetBrush();
+				fill_brush->SetOpacity(brush_opacity_);
+			}
+
+			if (style.outline_brush)
+			{
+				outline_brush = style.outline_brush->GetBrush();
+				outline_brush->SetOpacity(brush_opacity_);
+			}
+
+			HRESULT hr = text_renderer_->DrawTextLayout(
+				layout.GetTextLayout().get(),
+				offset.x,
+				offset.y,
+				fill_brush.get(),
+				outline_brush.get(),
+				style.outline_width,
+				GetStrokeStyle(style.outline_stroke).get()
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				IncreasePrimitivesCount(text_renderer_->GetLastPrimitivesCount());
+			}
+			else
+			{
+				KGE_ERROR(L"Failed to draw text layout with HRESULT of %08X", hr);
+			}
 		}
 	}
 
@@ -525,11 +545,11 @@ namespace kiwano
 		collecting_status_ = collecting;
 	}
 
-	void RenderTarget::IncreasePrimitivesCount() const
+	void RenderTarget::IncreasePrimitivesCount(uint32_t increase) const
 	{
 		if (collecting_status_)
 		{
-			++status_.primitives;
+			status_.primitives += increase;
 		}
 	}
 

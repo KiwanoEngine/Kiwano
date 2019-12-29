@@ -32,11 +32,16 @@ namespace kiwano
 			_In_ ID2D1RenderTarget* pRT
 		);
 
-		STDMETHOD_(void, SetStyle)(
+		STDMETHOD(DrawTextLayout)(
+			_In_ IDWriteTextLayout* pTextLayout,
+			float fOriginX,
+			float fOriginY,
 			_In_opt_ ID2D1Brush* pFillBrush,
 			_In_opt_ ID2D1Brush* pOutlineBrush,
 			float fOutlineWidth,
 			_In_opt_ ID2D1StrokeStyle* pStrokeStyle
 		) PURE;
+
+		STDMETHOD_(uint32_t, GetLastPrimitivesCount)() PURE;
 	};
 }

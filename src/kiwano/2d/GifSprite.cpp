@@ -174,9 +174,9 @@ namespace kiwano
 				loop_count_++;
 			}
 
-			if (frame_.raw)
+			if (frame_.texture)
 			{
-				frame_rt_->DrawTexture(*frame_.raw, nullptr, &frame_.rect);
+				frame_rt_->DrawTexture(*frame_.texture, nullptr, &frame_.rect);
 			}
 
 			frame_rt_->EndDraw();

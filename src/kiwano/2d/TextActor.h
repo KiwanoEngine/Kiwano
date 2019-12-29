@@ -70,6 +70,14 @@ namespace kiwano
 		const TextLayout& GetLayout() const;
 
 		/// \~chinese
+		/// @brief 获取填充画刷
+		BrushPtr GetFillBrush() const;
+
+		/// \~chinese
+		/// @brief 获取描边画刷
+		BrushPtr GetOutlineBrush() const;
+
+		/// \~chinese
 		/// @brief 获取字体
 		FontPtr GetFont() const;
 
@@ -146,8 +154,17 @@ namespace kiwano
 		void SetStrikethrough(bool enable);
 
 		/// \~chinese
+		/// @brief 更新文字布局
+		/// @details 文字布局是懒更新的，手动更新文字布局以更新节点状态
+		void UpdateLayout();
+
+		/// \~chinese
 		/// @brief 设置默认文字样式
 		static void SetDefaultStyle(TextStyle const& style);
+
+		/// \~chinese
+		/// @brief 获取默认文字样式
+		static const TextStyle& GetDefaultStyle();
 
 		void OnRender(RenderTarget* rt) override;
 
@@ -157,6 +174,8 @@ namespace kiwano
 		bool CheckVisibilty(RenderTarget* rt) const override;
 
 	private:
+		bool		show_underline_;
+		bool		show_strikethrough_;
 		TextLayout	text_layout_;
 	};
 
@@ -180,6 +199,16 @@ namespace kiwano
 	inline const TextLayout& TextActor::GetLayout() const
 	{
 		return text_layout_;
+	}
+
+	inline BrushPtr TextActor::GetFillBrush() const
+	{
+		return text_layout_.GetFillBrush();
+	}
+
+	inline BrushPtr TextActor::GetOutlineBrush() const
+	{
+		return text_layout_.GetOutlineBrush();
 	}
 
 	inline void TextActor::SetText(String const& text)
@@ -234,12 +263,12 @@ namespace kiwano
 
 	inline void TextActor::SetUnderline(bool enable)
 	{
-		text_layout_.SetUnderline(enable, 0, text_layout_.GetText().length());
+		show_underline_ = enable;
 	}
 
 	inline void TextActor::SetStrikethrough(bool enable)
 	{
-		text_layout_.SetStrikethrough(enable, 0, text_layout_.GetText().length());
+		show_strikethrough_ = enable;
 	}
 
 	inline void TextActor::SetFillBrush(BrushPtr brush)
@@ -247,19 +276,9 @@ namespace kiwano
 		text_layout_.SetFillBrush(brush);
 	}
 
-	inline void TextActor::SetFillColor(Color const& color)
-	{
-		text_layout_.SetFillColor(color);
-	}
-
 	inline void TextActor::SetOutlineBrush(BrushPtr brush)
 	{
 		text_layout_.SetOutlineBrush(brush);
-	}
-
-	inline void TextActor::SetOutlineColor(Color const& outline_color)
-	{
-		text_layout_.SetOutlineColor(outline_color);
 	}
 
 	inline void TextActor::SetOutlineWidth(float outline_width)

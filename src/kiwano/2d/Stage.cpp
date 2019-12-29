@@ -48,6 +48,8 @@ namespace kiwano
 
 	void Stage::RenderBorder(RenderTarget* rt)
 	{
+		rt->SetBrushOpacity(1.0f);
+
 		if (!border_fill_brush_)
 		{
 			border_fill_brush_ = new Brush;

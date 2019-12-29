@@ -28,7 +28,10 @@ namespace kiwano
 
 	KGE_DECLARE_SMART_PTR(GifImage);
 
-	// GIF 图像
+	/**
+	* \~chinese
+	* @brief GIF图像
+	*/
 	class KGE_API GifImage
 		: public ObjectBase
 	{
@@ -37,37 +40,56 @@ namespace kiwano
 	public:
 		GifImage();
 
+		/// \~chinese
+		/// @brief 加载本地GIF图片
 		bool Load(String const& file_path);
 
+		/// \~chinese
+		/// @brief 加载GIF资源
 		bool Load(Resource const& res);
 
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
+		/// \~chinese
+		/// @brief 获取像素宽度
 		uint32_t GetWidthInPixels() const;
 
+		/// \~chinese
+		/// @brief 获取像素高度
 		uint32_t GetHeightInPixels() const;
 
+		/// \~chinese
+		/// @brief 获取帧数量
 		uint32_t GetFramesCount() const;
 
 	public:
+		/// \~chinese
+		/// @brief GIF帧的处置方式
 		enum class DisposalType
 		{
-			Unknown,
-			None,
-			Background,
-			Previous
+			Unknown,		///< 未知
+			None,			///< 不处理
+			Background,		///< 背景
+			Previous		///< 恢复前一帧
 		};
 
+		/// \~chinese
+		/// @brief GIF帧
 		struct Frame
 		{
-			Duration delay;
-			TexturePtr raw;
-			Rect rect;
-			DisposalType disposal_type;
+			Duration delay;				///< 帧延迟
+			TexturePtr texture;			///< 帧图像
+			Rect rect;					///< 绘制区域
+			DisposalType disposal_type;	///< 处置方式
 
 			Frame();
 		};
 
+		/// \~chinese
+		/// @brief 获取GIF帧
+		/// @param index 帧下标
 		Frame GetFrame(uint32_t index);
 
 	private:

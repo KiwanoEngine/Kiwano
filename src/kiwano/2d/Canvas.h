@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/renderer/RenderTarget.h>
-
+#include <kiwano/renderer/GeometrySink.h>
 
 namespace kiwano
 {
@@ -133,7 +133,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 结束路径
 		/// @param closed 路径是否闭合
-		void EndPath(bool closed = true);
+		void EndPath(bool closed = false);
 
 		/// \~chinese
 		/// @brief 添加一条线段

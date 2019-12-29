@@ -49,7 +49,7 @@ namespace kiwano
 
 	bool ShapeActor::ContainsPoint(const Point& point) const
 	{
-		return geo_.ContainsPoint(point, GetTransformMatrix());
+		return geo_.ContainsPoint(point, &GetTransformMatrix());
 	}
 
 	void ShapeActor::SetStrokeWidth(float width)

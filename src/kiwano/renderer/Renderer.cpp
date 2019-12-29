@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Renderer.h>
+#include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Window.h>
@@ -66,58 +67,56 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			hr = ID3DDeviceResources::Create(&d3d_res_, hwnd_);
-		}
 
-		// Direct2D device resources
-		if (SUCCEEDED(hr))
-		{
-			hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
-		}
+			// Direct2D device resources
+			if (SUCCEEDED(hr))
+			{
+				hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
 
-		// DrawingStateBlock
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(
-				&drawing_state_block_
-			);
-		}
+				// DrawingStateBlock
+				if (SUCCEEDED(hr))
+				{
+					hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(&drawing_state_block_);
+				}
 
-		// Other device resources
-		if (SUCCEEDED(hr))
-		{
-			hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
-		}
+				// Other device resources
+				if (SUCCEEDED(hr))
+				{
+					hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+				}
 
-		// FontFileLoader and FontCollectionLoader
-		if (SUCCEEDED(hr))
-		{
-			hr = IFontCollectionLoader::Create(&font_collection_loader_);
-		}
+				// FontFileLoader and FontCollectionLoader
+				if (SUCCEEDED(hr))
+				{
+					hr = IFontCollectionLoader::Create(&font_collection_loader_);
+				}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
-		}
+				if (SUCCEEDED(hr))
+				{
+					hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+				}
 
-		// ResourceFontFileLoader and ResourceFontCollectionLoader
-		if (SUCCEEDED(hr))
-		{
-			hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-		}
+				// ResourceFontFileLoader and ResourceFontCollectionLoader
+				if (SUCCEEDED(hr))
+				{
+					hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+				}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
-		}
+				if (SUCCEEDED(hr))
+				{
+					hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
+				}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
-		}
+				if (SUCCEEDED(hr))
+				{
+					hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
+				}
 
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+				if (SUCCEEDED(hr))
+				{
+					hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+				}
+			}
 		}
 
 		ThrowIfFailed(hr);
@@ -424,8 +423,8 @@ namespace kiwano
 
 					if (SUCCEEDED(hr))
 					{
-						frame.raw = new Texture;
-						frame.raw->SetBitmap(raw_bitmap);
+						frame.texture = new Texture;
+						frame.texture->SetBitmap(raw_bitmap);
 					}
 				}
 			}
@@ -847,7 +846,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				output = new TextureRenderTarget;
-				hr = output->CreateDeviceResources(bitmap_rt, d2d_res_);
+				hr = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
 			}
 
 			if (SUCCEEDED(hr))

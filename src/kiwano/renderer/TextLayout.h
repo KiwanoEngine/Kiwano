@@ -69,6 +69,14 @@ namespace kiwano
 		Size GetLayoutSize() const;
 
 		/// \~chinese
+		/// @brief 获取填充画刷
+		BrushPtr GetFillBrush() const;
+
+		/// \~chinese
+		/// @brief 获取描边画刷
+		BrushPtr GetOutlineBrush() const;
+
+		/// \~chinese
 		/// @brief 设置文本
 		void SetText(const String& text);
 
@@ -97,10 +105,6 @@ namespace kiwano
 		void SetFillBrush(BrushPtr brush);
 
 		/// \~chinese
-		/// @brief 设置文字填充颜色（默认值为 Color::White）
-		void SetFillColor(Color const& color);
-
-		/// \~chinese
 		/// @brief 设置文字斜体（默认值为 false）
 		void SetItalic(bool italic);
 
@@ -119,10 +123,6 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 设置文字描边画刷
 		void SetOutlineBrush(BrushPtr brush);
-
-		/// \~chinese
-		/// @brief 设置文字描边颜色
-		void SetOutlineColor(Color const& outline_color);
 
 		/// \~chinese
 		/// @brief 设置文字描边线宽
@@ -173,7 +173,7 @@ namespace kiwano
 
 	inline bool TextLayout::IsValid() const
 	{
-		return !!text_layout_;
+		return text_layout_ != nullptr;
 	}
 
 	inline bool TextLayout::IsDirty() const
@@ -201,14 +201,19 @@ namespace kiwano
 		return text_layout_;
 	}
 
+	inline BrushPtr TextLayout::GetFillBrush() const
+	{
+		return style_.fill_brush;
+	}
+
+	inline BrushPtr TextLayout::GetOutlineBrush() const
+	{
+		return style_.outline_brush;
+	}
+
 	inline void TextLayout::SetFillBrush(BrushPtr brush)
 	{
 		style_.fill_brush = brush;
-	}
-
-	inline void TextLayout::SetFillColor(Color const& color)
-	{
-		style_.SetFillColor(color);
 	}
 
 	inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
@@ -224,11 +229,6 @@ namespace kiwano
 	inline void TextLayout::SetOutlineBrush(BrushPtr brush)
 	{
 		style_.outline_brush = brush;
-	}
-
-	inline void TextLayout::SetOutlineColor(Color const& outline_color)
-	{
-		style_.SetOutlineColor(outline_color);
 	}
 
 	inline void TextLayout::SetOutlineWidth(float outline_width)

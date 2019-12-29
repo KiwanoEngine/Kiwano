@@ -129,6 +129,7 @@ namespace kiwano
 	void Actor::PrepareToRender(RenderTarget* rt)
 	{
 		rt->SetTransform(transform_matrix_);
+		rt->SetBrushOpacity(GetDisplayedOpacity());
 	}
 
 	void Actor::RenderBorder(RenderTarget* rt)

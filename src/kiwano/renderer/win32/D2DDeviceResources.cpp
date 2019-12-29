@@ -332,7 +332,7 @@ namespace kiwano
 				device_context_->SetTarget(target_bitmap_.get());
 			}
 		}
-		return E_NOTIMPL;
+		return hr;
 	}
 
 	HRESULT D2DDeviceResources::SetDpi(float dpi)

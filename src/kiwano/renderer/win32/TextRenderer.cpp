@@ -35,7 +35,10 @@ namespace kiwano
 			_In_ ID2D1RenderTarget* pRT
 			);
 
-		STDMETHOD_(void, SetStyle)(
+		STDMETHOD(DrawTextLayout)(
+			_In_ IDWriteTextLayout* pTextLayout,
+			float fOriginX,
+			float fOriginY,
 			_In_opt_ ID2D1Brush* pFillBrush,
 			_In_opt_ ID2D1Brush* pOutlineBrush,
 			float fOutlineWidth,
@@ -93,6 +96,8 @@ namespace kiwano
 			__out float* pixelsPerDip
 			);
 
+		STDMETHOD_(uint32_t, GetLastPrimitivesCount)();
+
 	public:
 		unsigned long STDMETHODCALLTYPE AddRef();
 		unsigned long STDMETHODCALLTYPE Release();
@@ -103,6 +108,7 @@ namespace kiwano
 
 	private:
 		unsigned long				cRefCount_;
+		uint32_t					cPrimitivesCount_;
 		float						fOutlineWidth_;
 		ComPtr<ID2D1Factory>		pFactory_;
 		ComPtr<ID2D1RenderTarget>	pRT_;
@@ -144,6 +150,7 @@ namespace kiwano
 
 	TextRenderer::TextRenderer()
 		: cRefCount_(0)
+		, cPrimitivesCount_(0)
 		, fOutlineWidth_(1)
 	{
 		if (pRT_)
@@ -172,16 +179,27 @@ namespace kiwano
 		return hr;
 	}
 
-	STDMETHODIMP_(void) TextRenderer::SetStyle(
+	STDMETHODIMP TextRenderer::DrawTextLayout(
+		_In_ IDWriteTextLayout* pTextLayout,
+		float fOriginX,
+		float fOriginY,
 		_In_opt_ ID2D1Brush* pFillBrush,
 		_In_opt_ ID2D1Brush* pOutlineBrush,
         float fOutlineWidth,
 		_In_opt_ ID2D1StrokeStyle* pStrokeStyle)
 	{
+		if (!pTextLayout)
+		{
+			return E_INVALIDARG;
+		}
+
+		cPrimitivesCount_ = 0;
 		pFillBrush_ = pFillBrush;
 		pOutlineBrush_ = pOutlineBrush;
 		fOutlineWidth_ = fOutlineWidth;
 		pCurrStrokeStyle_ = pStrokeStyle;
+
+		return pTextLayout->Draw(nullptr, this, fOriginX, fOriginY);
 	}
 
 	STDMETHODIMP TextRenderer::DrawGlyphRun(
@@ -260,6 +278,8 @@ namespace kiwano
 							fOutlineWidth_ * 2,  // twice width for widening
 							pCurrStrokeStyle_.get()
 						);
+
+						++cPrimitivesCount_;
 					}
 				}
 			}
@@ -272,6 +292,8 @@ namespace kiwano
 				glyphRun,
 				pFillBrush_.get()
 			);
+
+			++cPrimitivesCount_;
 		}
 		return hr;
 	}
@@ -325,16 +347,20 @@ namespace kiwano
 				fOutlineWidth_ * 2,
 				pCurrStrokeStyle_.get()
 			);
+
+			++cPrimitivesCount_;
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && pFillBrush_)
 		{
 			pRT_->FillGeometry(
 				pTransformedGeometry.get(),
 				pFillBrush_.get()
 			);
+
+			++cPrimitivesCount_;
 		}
-		return S_OK;
+		return hr;
 	}
 
 	STDMETHODIMP TextRenderer::DrawStrikethrough(
@@ -386,16 +412,20 @@ namespace kiwano
 				fOutlineWidth_ * 2,
 				pCurrStrokeStyle_.get()
 			);
+
+			++cPrimitivesCount_;
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED(hr) && pFillBrush_)
 		{
 			pRT_->FillGeometry(
 				pTransformedGeometry.get(),
 				pFillBrush_.get()
 			);
+
+			++cPrimitivesCount_;
 		}
-		return S_OK;
+		return hr;
 	}
 
 	STDMETHODIMP TextRenderer::DrawInlineObject(
@@ -449,6 +479,11 @@ namespace kiwano
 		*pixelsPerDip = x / 96;
 
 		return S_OK;
+	}
+
+	STDMETHODIMP_(uint32_t) TextRenderer::GetLastPrimitivesCount()
+	{
+		return cPrimitivesCount_;
 	}
 
 	STDMETHODIMP_(unsigned long) TextRenderer::AddRef()

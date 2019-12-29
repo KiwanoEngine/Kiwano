@@ -30,7 +30,10 @@ namespace kiwano
 
 	class Renderer;
 
-	// 字体
+	/**
+	* \~chinese
+	* @brief 字体
+	*/
 	class Font
 		: public ObjectBase
 	{
@@ -39,9 +42,21 @@ namespace kiwano
 	public:
 		Font();
 
+		/// \~chinese
+		/// @brief 加载字体文件
 		bool Load(String const& font_file);
 
+		/// \~chinese
+		/// @brief 加载字体资源
 		bool Load(Resource const& font_resource);
+
+		/// \~chinese
+		/// @brief 加载多个字体文件
+		bool Load(Vector<String> const& font_file);
+
+		/// \~chinese
+		/// @brief 加载多个字体资源
+		bool Load(Vector<Resource> const& font_resource);
 
 	private:
 		ComPtr<IDWriteFontCollection> GetCollection() const;

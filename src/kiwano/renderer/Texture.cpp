@@ -176,6 +176,12 @@ namespace kiwano
 
 	void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
 	{
+		default_interpolation_mode_ = mode;
+	}
+
+	InterpolationMode Texture::GetDefaultInterpolationMode()
+	{
+		return default_interpolation_mode_;
 	}
 
 }

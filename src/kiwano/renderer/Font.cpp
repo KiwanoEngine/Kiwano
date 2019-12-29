@@ -29,9 +29,19 @@ namespace kiwano
 
 	bool Font::Load(String const& font_file)
 	{
+		return Load(Vector<String>{ font_file });
+	}
+
+	bool Font::Load(Resource const& font_resource)
+	{
+		return Load(Vector<Resource>{ font_resource });
+	}
+
+	bool Font::Load(Vector<String> const& font_file)
+	{
 		try
 		{
-			Renderer::instance().CreateFontCollection(*this, { font_file });
+			Renderer::instance().CreateFontCollection(*this, font_file);
 		}
 		catch (std::runtime_error&)
 		{
@@ -40,11 +50,11 @@ namespace kiwano
 		return true;
 	}
 
-	bool Font::Load(Resource const& font_resource)
+	bool Font::Load(Vector<Resource> const& font_resource)
 	{
 		try
 		{
-			Renderer::instance().CreateFontCollection(*this, { font_resource });
+			Renderer::instance().CreateFontCollection(*this, font_resource);
 		}
 		catch (std::runtime_error&)
 		{

@@ -19,15 +19,12 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/renderer/Renderer.h>
 #include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {
-
-	//
-	// Geometry
-	//
 
 	Geometry::Geometry()
 	{
@@ -92,32 +89,6 @@ namespace kiwano
 		geo_.reset();
 	}
 
-	void Geometry::CombineWith(GeometrySink& sink, Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
-	{
-		if (geo_ && input.geo_)
-		{
-			ThrowIfFailed(
-				geo_->CombineWithGeometry(
-					input.geo_.get(),
-					D2D1_COMBINE_MODE(mode),
-					DX::ConvertToMatrix3x2F(input_matrix),
-					sink.GetGeometrySink().get()
-				)
-			);
-		}
-	}
-
-	Geometry Geometry::CombineWith(Geometry input, CombineMode mode, Matrix3x2 const& input_matrix) const
-	{
-		GeometrySink sink;
-		sink.Open();
-
-		CombineWith(sink, input, mode, input_matrix);
-
-		sink.Close();
-		return sink.GetGeometry();
-	}
-
 	float Geometry::ComputeArea() const
 	{
 		if (!geo_)
@@ -129,7 +100,7 @@ namespace kiwano
 		return area;
 	}
 
-	bool Geometry::ContainsPoint(Point const& point, Matrix3x2 const& transform) const
+	bool Geometry::ContainsPoint(Point const& point, const Matrix3x2* transform) const
 	{
 		if (!geo_)
 			return false;
@@ -139,6 +110,7 @@ namespace kiwano
 		geo_->FillContainsPoint(
 			DX::ConvertToPoint2F(point),
 			DX::ConvertToMatrix3x2F(transform),
+			D2D1_DEFAULT_FLATTENING_TOLERANCE,
 			&ret
 		);
 		return !!ret;
@@ -177,138 +149,6 @@ namespace kiwano
 		Geometry output;
 		Renderer::instance().CreateEllipseGeometry(output, center, radius);
 		return output;
-	}
-
-	//
-	// GeometrySink
-	//
-
-	GeometrySink::GeometrySink()
-	{
-	}
-
-	GeometrySink::~GeometrySink()
-	{
-		Close();
-	}
-
-	GeometrySink& GeometrySink::BeginPath(Point const& begin_pos)
-	{
-		if (!sink_)
-		{
-			Open();
-		}
-
-		sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
-		return (*this);
-	}
-
-	GeometrySink& GeometrySink::EndPath(bool closed)
-	{
-		if (sink_)
-		{
-			sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
-			
-			Close();
-		}
-		return (*this);
-	}
-
-	GeometrySink& GeometrySink::AddLine(Point const& point)
-	{
-		if (!sink_) BeginPath();
-
-		sink_->AddLine(DX::ConvertToPoint2F(point));
-		return (*this);
-	}
-
-	GeometrySink& GeometrySink::AddLines(Vector<Point> const& points)
-	{
-		if (!sink_) BeginPath();
-		
-		sink_->AddLines(
-			reinterpret_cast<const D2D_POINT_2F*>(&points[0]),
-			static_cast<uint32_t>(points.size())
-		);
-		return (*this);
-	}
-
-	GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, size_t count)
-	{
-		if (!sink_) BeginPath();
-
-		sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), UINT32(count));
-		return (*this);
-	}
-
-	GeometrySink& GeometrySink::AddBezier(Point const& point1, Point const& point2, Point const& point3)
-	{
-		if (!sink_) BeginPath();
-		
-		sink_->AddBezier(
-			D2D1::BezierSegment(
-				DX::ConvertToPoint2F(point1),
-				DX::ConvertToPoint2F(point2),
-				DX::ConvertToPoint2F(point3)
-			)
-		);
-		return (*this);
-	}
-
-	GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
-	{
-		if (!sink_) BeginPath();
-
-		sink_->AddArc(
-			D2D1::ArcSegment(
-				DX::ConvertToPoint2F(point),
-				DX::ConvertToSizeF(radius),
-				rotation,
-				clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
-				is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE
-			)
-		);
-		return (*this);
-	}
-
-	Geometry GeometrySink::GetGeometry()
-	{
-		if (sink_)
-		{
-			EndPath();
-		}
-
-		Geometry geo;
-		geo.SetGeometry(path_geo_);
-		return geo;
-	}
-
-	void GeometrySink::Init()
-	{
-		if (!path_geo_)
-		{
-			Renderer::instance().CreateGeometrySink(*this);
-		}
-	}
-
-	void GeometrySink::Open()
-	{
-		Init();
-
-		if (!sink_)
-		{
-			ThrowIfFailed(path_geo_->Open(&sink_));
-		}
-	}
-
-	void GeometrySink::Close()
-	{
-		if (sink_)
-		{
-			ThrowIfFailed(sink_->Close());
-
-			sink_ = nullptr;
-		}
 	}
 
 }

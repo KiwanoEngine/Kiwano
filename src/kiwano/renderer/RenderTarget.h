@@ -36,39 +36,54 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(RenderTarget);
 	KGE_DECLARE_SMART_PTR(TextureRenderTarget);
 
-	// 文字抗锯齿模式
+	/// \~chinese
+	/// @brief 文字抗锯齿模式
 	enum class TextAntialiasMode
 	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
+		Default,	///< 系统默认
+		ClearType,	///< ClearType 抗锯齿
+		GrayScale,	///< 灰度抗锯齿
+		None		///< 不启用抗锯齿
 	};
 
 
-	// 渲染目标
+	/// \~chinese
+	/// @brief 渲染目标
+	/// @details 渲染目标将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
 	class KGE_API RenderTarget
 		: public ObjectBase
 	{
 		friend class Renderer;
 
 	public:
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
+		/// \~chinese
+		/// @brief 是否有效
 		void BeginDraw();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void EndDraw();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawGeometry(
 			Geometry const& geometry,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillGeometry(
 			Geometry const& geometry
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawLine(
 			Point const& point1,
 			Point const& point2,
@@ -76,16 +91,22 @@ namespace kiwano
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawRectangle(
 			Rect const& rect,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillRectangle(
 			Rect const& rect
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius,
@@ -93,11 +114,15 @@ namespace kiwano
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawEllipse(
 			Point const& center,
 			Vec2 const& radius,
@@ -105,121 +130,179 @@ namespace kiwano
 			StrokeStyle stroke = StrokeStyle::Miter
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillEllipse(
 			Point const& center,
 			Vec2 const& radius
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTexture(
 			Texture const& texture,
 			Rect const& src_rect,
-			Rect const& dest_rect,
-			float opacity = 1.0f
+			Rect const& dest_rect
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTexture(
 			Texture const& texture,
 			const Rect* src_rect = nullptr,
-			const Rect* dest_rect = nullptr,
-			float opacity = 1.0f
+			const Rect* dest_rect = nullptr
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTextLayout(
 			TextLayout const& layout,
 			Point const& offset = Point{}
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void CreateTexture(
 			Texture& texture,
 			math::Vec2T<uint32_t> size,
 			D2D1_PIXEL_FORMAT format
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void PushClipRect(Rect const& clip_rect);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void PopClipRect();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void PushLayer(LayerArea& layer);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void PopLayer();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void Clear();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void Clear(Color const& clear_color);
 
+		/// \~chinese
+		/// @brief 是否有效
+		float GetBrushOpacity() const;
+
+		/// \~chinese
+		/// @brief 是否有效
 		BrushPtr GetCurrentBrush() const;
 
+		/// \~chinese
+		/// @brief 是否有效
 		Matrix3x2 GetGlobalTransform() const;
 
+		/// \~chinese
+		/// @brief 是否有效
+		void SetBrushOpacity(
+			float opacity
+		);
+
+		/// \~chinese
+		/// @brief 是否有效
 		void SetCurrentBrush(
 			BrushPtr brush
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetTransform(
 			const Matrix3x2& matrix
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetGlobalTransform(
 			const Matrix3x2& matrix
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetGlobalTransform(
 			const Matrix3x2* matrix
 		);
 
-		// 设置抗锯齿模式
+		/// \~chinese
+		/// @brief 设置抗锯齿模式
 		void SetAntialiasMode(
 			bool enabled
 		);
 
-		// 设置文字抗锯齿模式
+		/// \~chinese
+		/// @brief 设置文字抗锯齿模式
 		void SetTextAntialiasMode(
 			TextAntialiasMode mode
 		);
 
-		// 检查边界是否在视区内
+		/// \~chinese
+		/// @brief 检查边界是否在视区内
 		bool CheckVisibility(
 			Rect const& bounds,
 			Matrix3x2 const& transform
 		);
 
-		void Resize(
-			Size const& size
-		);
+		/// \~chinese
+		/// @brief 重设渲染目标大小
+		void Resize(Size const& size);
 
 	public:
+		/// \~chinese
+		/// @brief 渲染目标状态
 		struct Status
 		{
-			int primitives;
-			Time start;
-			Duration duration;
+			uint32_t primitives;	///< 渲染图元数量
+			Time start;				///< 渲染起始时间
+			Duration duration;		///< 渲染时长
 
-			Status() : primitives(0) {}
+			Status();
 		};
 
+		/// \~chinese
+		/// @brief 启用或禁用状态收集功能
 		void SetCollectingStatus(bool collecting);
 
-		void IncreasePrimitivesCount() const;
-
-		inline Status const&				GetStatus() const						{ return status_; }
+		/// \~chinese
+		/// @brief 获取渲染目标状态
+		Status const& GetStatus() const;
 
 	protected:
 		RenderTarget();
 
-		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const					{ KGE_ASSERT(render_target_); return render_target_; }
+		ComPtr<ID2D1RenderTarget> GetRenderTarget() const;
 
-		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
+		ComPtr<ITextRenderer> GetTextRenderer() const;
 
-		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style);
+		ComPtr<ID2D1StrokeStyle> GetStrokeStyle(StrokeStyle style);
 
 	private:
+		/// \~chinese
+		/// @brief 创建设备依赖资源
 		HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> rt);
 
+		/// \~chinese
+		/// @brief 销毁设备依赖资源
 		void DiscardDeviceResources();
+
+		/// \~chinese
+		/// @brief 增加渲染图元数量
+		void IncreasePrimitivesCount(uint32_t increase = 1) const;
 
 	private:
 		bool							antialias_;
 		bool							fast_global_transform_;
+		float							brush_opacity_;
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
@@ -250,6 +333,8 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取渲染输出
+		/// @param[out] texture 纹理输出
+		/// @return 操作是否成功
 		bool GetOutput(Texture& texture);
 
 	private:
@@ -264,6 +349,33 @@ namespace kiwano
 	};
 
 
+	inline RenderTarget::Status::Status()
+		: primitives(0)
+	{
+	}
+
+	inline RenderTarget::Status const& RenderTarget::GetStatus() const
+	{
+		return status_;
+	}
+
+	inline ComPtr<ID2D1RenderTarget> RenderTarget::GetRenderTarget() const
+	{
+		KGE_ASSERT(render_target_);
+		return render_target_;
+	}
+
+	inline ComPtr<ITextRenderer> RenderTarget::GetTextRenderer() const
+	{
+		KGE_ASSERT(text_renderer_);
+		return text_renderer_;
+	}
+
+	inline float RenderTarget::GetBrushOpacity() const
+	{
+		return brush_opacity_;
+	}
+
 	inline BrushPtr RenderTarget::GetCurrentBrush() const
 	{
 		return current_brush_;
@@ -274,6 +386,11 @@ namespace kiwano
 		return global_transform_;
 	}
 
+	inline void RenderTarget::SetBrushOpacity(float opacity)
+	{
+		brush_opacity_ = opacity;
+	}
+
 	inline void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
 	{
 		SetGlobalTransform(&matrix);
@@ -282,6 +399,10 @@ namespace kiwano
 	inline void RenderTarget::SetCurrentBrush(BrushPtr brush)
 	{
 		current_brush_ = brush;
+		if (current_brush_)
+		{
+			current_brush_->SetOpacity(brush_opacity_);
+		}
 	}
 
 	inline bool TextureRenderTarget::IsValid() const

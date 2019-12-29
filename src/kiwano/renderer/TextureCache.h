@@ -24,22 +24,50 @@
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 纹理缓存
+	*/
 	class KGE_API TextureCache
 		: public Singleton<TextureCache>
 	{
 		friend Singleton<TextureCache>;
 
 	public:
+		/// \~chinese
+		/// @brief 添加或获取纹理
 		TexturePtr AddOrGetTexture(String const& file_path);
+
+		/// \~chinese
+		/// @brief 添加或获取纹理
 		TexturePtr AddOrGetTexture(Resource const& res);
+
+		/// \~chinese
+		/// @brief 添加或获取GIF图像
 		GifImagePtr AddOrGetGifImage(String const& file_path);
+
+		/// \~chinese
+		/// @brief 添加或获取GIF图像
 		GifImagePtr AddOrGetGifImage(Resource const& res);
 
+		/// \~chinese
+		/// @brief 移除纹理缓存
 		void RemoveTexture(String const& file_path);
+
+		/// \~chinese
+		/// @brief 移除纹理缓存
 		void RemoveTexture(Resource const& res);
+
+		/// \~chinese
+		/// @brief 移除GIF图像缓存
 		void RemoveGifImage(String const& file_path);
+
+		/// \~chinese
+		/// @brief 移除GIF图像缓存
 		void RemoveGifImage(Resource const& res);
 
+		/// \~chinese
+		/// @brief 清空缓存
 		void Clear();
 
 	private:

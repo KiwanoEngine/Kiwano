@@ -259,19 +259,6 @@ namespace kiwano
 		}
 
 		/// \~chinese
-		/// @brief 构造路径行走动画
-		/// @param duration 持续时长
-		/// @param sink 几何形状生成器
-		/// @param rotating 是否沿路径切线方向旋转
-		/// @param start 路径起点（百分比）
-		/// @param end 路径终点（百分比）
-		static inline TweenHelper
-		Walk(Duration duration, GeometrySink& sink, bool rotating = false, float start = 0.f, float end = 1.f)
-		{
-			return TweenHelper(new kiwano::ActionWalk(duration, sink.GetGeometry(), rotating, start, end));
-		}
-
-		/// \~chinese
 		/// @brief 构建帧动画
 		/// @param duration 动画时长
 		/// @param[in] frame_seq 序列帧

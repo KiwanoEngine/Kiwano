@@ -22,6 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Geometry.h>
+#include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/renderer/StrokeStyle.h>
 
 namespace kiwano

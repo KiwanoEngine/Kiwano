@@ -270,6 +270,9 @@
     <ClInclude Include="..\..\src\kiwano\renderer\win32\helper.h">
       <Filter>renderer\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\GeometrySink.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -451,6 +454,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\GeometrySink.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

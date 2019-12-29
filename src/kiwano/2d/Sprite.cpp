@@ -76,7 +76,7 @@ namespace kiwano
 
 	void Sprite::OnRender(RenderTarget* rt)
 	{
-		rt->DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds(), GetDisplayedOpacity());
+		rt->DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
 	}
 
 	bool Sprite::CheckVisibilty(RenderTarget* rt) const

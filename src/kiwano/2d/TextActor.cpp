@@ -27,11 +27,29 @@ namespace kiwano
 	namespace
 	{
 		TextStyle text_default_style;
+
+		void InitDefaultTextStyle()
+		{
+			static bool inited = false;
+			if (!inited)
+			{
+				inited = true;
+
+				// 默认使用白色画刷填充文字
+				text_default_style.fill_brush = new Brush;
+				text_default_style.fill_brush->SetColor(Color::White);
+			}
+		}
 	}
 
 	void TextActor::SetDefaultStyle(TextStyle const & style)
 	{
 		text_default_style = style;
+	}
+
+	const TextStyle& TextActor::GetDefaultStyle()
+	{
+		return text_default_style;
 	}
 
 	TextActor::TextActor()
@@ -44,8 +62,12 @@ namespace kiwano
 	{
 	}
 
-	TextActor::TextActor(String const& text, const TextStyle & style)
+	TextActor::TextActor(String const& text, const TextStyle& style)
+		: show_underline_(false)
+		, show_strikethrough_(false)
 	{
+		InitDefaultTextStyle();
+
 		SetText(text);
 		SetStyle(style);
 	}
@@ -61,9 +83,21 @@ namespace kiwano
 
 	void TextActor::OnUpdate(Duration dt)
 	{
+		UpdateLayout();
+	}
+
+	void TextActor::UpdateLayout()
+	{
 		if (text_layout_.IsDirty())
 		{
 			text_layout_.Update();
+
+			if (show_underline_)
+				text_layout_.SetUnderline(true, 0, text_layout_.GetText().length());
+
+			if (show_strikethrough_)
+				text_layout_.SetStrikethrough(true, 0, text_layout_.GetText().length());
+
 			SetSize(text_layout_.GetLayoutSize());
 		}
 	}
@@ -71,5 +105,25 @@ namespace kiwano
 	bool TextActor::CheckVisibilty(RenderTarget* rt) const
 	{
 		return text_layout_.IsValid() && Actor::CheckVisibilty(rt);
+	}
+
+	void TextActor::SetFillColor(Color const& color)
+	{
+		if (!text_layout_.GetFillBrush())
+		{
+			BrushPtr brush = new Brush;
+			text_layout_.SetFillBrush(brush);
+		}
+		text_layout_.GetFillBrush()->SetColor(color);
+	}
+
+	void TextActor::SetOutlineColor(Color const& outline_color)
+	{
+		if (!text_layout_.GetOutlineBrush())
+		{
+			BrushPtr brush = new Brush;
+			text_layout_.SetOutlineBrush(brush);
+		}
+		text_layout_.GetOutlineBrush()->SetColor(outline_color);
 	}
 }
