@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/win32/D3D10DeviceResources.h>
-
 #include <kiwano/core/Logger.h>
 
 #pragma comment(lib, "d3d10_1.lib")

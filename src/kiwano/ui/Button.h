@@ -25,66 +25,67 @@ namespace kiwano
 {
 	KGE_DECLARE_SMART_PTR(Button);
 
+	/**
+	* \~chinese
+	* @brief 按钮
+	*/
 	class KGE_API Button
 		: public Sprite
 	{
 	public:
-		using Callback = Function<void()>;
+		/// \~chinese
+		/// @brief 按钮回调函数
+		using Callback = Function<void(Button* /* self */)>;
 
 		Button();
 
-		explicit Button(
-			Callback const& click		/* 按钮点击回调函数 */
-		);
+		/// \~chinese
+		/// @brief 构造按钮
+		/// @param click 按钮点击回调函数
+		explicit Button(Callback const& click);
 
-		Button(
-			Callback const& click,		/* 按钮点击回调函数 */
-			Callback const& pressed,	/* 按钮按下回调函数 */
-			Callback const& mouse_over,	/* 按钮移入回调函数 */
-			Callback const& mouse_out	/* 按钮移出回调函数 */
-		);
+		/// \~chinese
+		/// @brief 获取按钮状态是启用还是禁用
+		/// @param click 按钮点击回调函数
+		/// @param pressed 按钮按下回调函数
+		/// @param mouse_over 按钮移入回调函数
+		/// @param mouse_out 按钮移出回调函数
+		Button(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
 
 		virtual ~Button();
 
-		// 获取按钮状态是启用还是禁用
+		/// \~chinese
+		/// @brief 获取按钮状态是启用还是禁用
 		bool IsEnable() const;
 
-		// 设置按钮启用或禁用
-		void SetEnabled(
-			bool enabled
-		);
+		/// \~chinese
+		/// @brief 设置按钮启用或禁用
+		void SetEnabled(bool enabled);
 
-		// 设置按钮点击后的回调函数
-		void SetClickCallback(
-			const Callback& func
-		);
+		/// \~chinese
+		/// @brief 设置按钮点击后的回调函数
+		void SetClickCallback(const Callback& func);
 
-		// 设置按钮被按下时的回调函数
-		void SetPressedCallback(
-			const Callback& func
-		);
+		/// \~chinese
+		/// @brief 设置按钮被按下时的回调函数
+		void SetPressedCallback(const Callback& func);
 
-		// 设置按钮被抬起时的回调函数
-		void SetReleasedCallback(
-			const Callback& func
-		);
+		/// \~chinese
+		/// @brief 设置按钮被抬起时的回调函数
+		void SetReleasedCallback(const Callback& func);
 
-		// 设置鼠标移入按钮时的回调函数
-		void SetMouseOverCallback(
-			const Callback& func
-		);
+		/// \~chinese
+		/// @brief 设置鼠标移入按钮时的回调函数
+		void SetMouseOverCallback(const Callback& func);
 
-		// 设置鼠标移出按钮时的回调函数
-		void SetMouseOutCallback(
-			const Callback& func
-		);
+		/// \~chinese
+		/// @brief 设置鼠标移出按钮时的回调函数
+		void SetMouseOutCallback(const Callback& func);
 
 	private:
 		enum class Status { Normal, Hover, Pressed };
 
-		void SetStatus(
-			Status status
-		);
+		void SetStatus(Status status);
 
 		void UpdateStatus(Event& evt);
 

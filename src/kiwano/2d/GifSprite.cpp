@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/renderer/Renderer.h>
 
@@ -149,7 +148,7 @@ namespace kiwano
 		}
 
 		default:
-			ThrowIfFailed(E_FAIL);
+			DX::ThrowIfFailed(E_FAIL);
 		}
 	}
 
@@ -227,7 +226,7 @@ namespace kiwano
 			saved_frame_->CopyFrom(frame_to_be_saved);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void GifSprite::RestoreSavedFrame()
@@ -247,7 +246,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void GifSprite::ClearCurrentFrameArea()

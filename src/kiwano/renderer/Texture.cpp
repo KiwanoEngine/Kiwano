@@ -20,7 +20,6 @@
 
 #include <kiwano/renderer/Texture.h>
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {
@@ -119,7 +118,7 @@ namespace kiwano
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 
@@ -137,7 +136,7 @@ namespace kiwano
 					uint32_t(src_rect.GetBottom()))
 			);
 
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 

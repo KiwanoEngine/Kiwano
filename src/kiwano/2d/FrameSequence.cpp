@@ -69,6 +69,11 @@ namespace kiwano
 		return frames_;
 	}
 
+	size_t FrameSequence::GetFramesCount() const
+	{
+		return frames_.size();
+	}
+
 	FrameSequencePtr FrameSequence::Clone() const
 	{
 		auto frame_seq = new (std::nothrow) FrameSequence;

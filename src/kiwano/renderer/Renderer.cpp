@@ -21,7 +21,6 @@
 #include <kiwano/renderer/Renderer.h>
 #include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/platform/FileSystem.h>
 
@@ -119,7 +118,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::DestroyComponent()
@@ -151,7 +150,7 @@ namespace kiwano
 			BeginDraw();
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::AfterRender()
@@ -169,7 +168,7 @@ namespace kiwano
 			hr = HandleDeviceLost();
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
@@ -597,7 +596,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
@@ -632,7 +631,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextFormat(TextLayout& layout)
@@ -664,7 +663,7 @@ namespace kiwano
 			layout.SetTextFormat(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextLayout(TextLayout& layout)
@@ -690,7 +689,7 @@ namespace kiwano
 			layout.SetTextLayout(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
@@ -726,7 +725,7 @@ namespace kiwano
 			geo.SetGeometry(path_geo);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
@@ -748,7 +747,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
@@ -776,7 +775,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
@@ -804,7 +803,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateGeometrySink(GeometrySink& sink)
@@ -826,7 +825,7 @@ namespace kiwano
 			sink.SetPathGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextureRenderTarget(TextureRenderTargetPtr& render_target)
@@ -860,7 +859,7 @@ namespace kiwano
 			render_target = output;
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
@@ -882,7 +881,7 @@ namespace kiwano
 			brush.SetBrush(output, Brush::Type::SolidColor);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
@@ -923,7 +922,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
@@ -967,7 +966,7 @@ namespace kiwano
 			}
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetDpi(float dpi)
@@ -980,7 +979,7 @@ namespace kiwano
 			hr = d2d_res_->SetDpi(dpi);
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetVSyncEnabled(bool enabled)
@@ -1017,7 +1016,7 @@ namespace kiwano
 			Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
 		}
 
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 }

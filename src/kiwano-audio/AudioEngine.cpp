@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/win32/helper.h>
 #include <kiwano-audio/audio-modules.h>
 #include <kiwano-audio/AudioEngine.h>
 
@@ -52,7 +51,7 @@ namespace kiwano
 				hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
 			}
 
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 
 		void AudioEngine::DestroyComponent()

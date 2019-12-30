@@ -66,6 +66,10 @@ namespace kiwano
 		Vector<FramePtr> const& GetFrames() const;
 
 		/// \~chinese
+		/// @brief 获取关键帧数量
+		size_t GetFramesCount() const;
+
+		/// \~chinese
 		/// @brief 获取序列帧的拷贝对象
 		FrameSequencePtr Clone() const;
 

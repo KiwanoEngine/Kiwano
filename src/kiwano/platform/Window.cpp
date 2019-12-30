@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Window.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 
@@ -161,7 +160,7 @@ namespace kiwano
 		if (handle_ == nullptr)
 		{
 			::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
-			ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+			DX::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 		}
 		else
 		{

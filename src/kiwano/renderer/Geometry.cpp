@@ -21,7 +21,6 @@
 #include <kiwano/renderer/Geometry.h>
 #include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {

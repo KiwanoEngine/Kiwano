@@ -271,7 +271,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 启用或禁用状态收集功能
-		void SetCollectingStatus(bool collecting);
+		void SetCollectingStatus(bool enable);
 
 		/// \~chinese
 		/// @brief 获取渲染目标状态

@@ -203,26 +203,55 @@ namespace kiwano
 				}
 			}
 		}
-
-		if (!frames.empty())
-		{
-			FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-			return AddObject(id, fs);
-		}
-		return 0;
+		return AddFrameSequence(id, frames);
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows, float padding_x, float padding_y)
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<Resource> const& resources)
+	{
+		if (resources.empty())
+			return 0;
+
+		Vector<FramePtr> frames;
+		frames.reserve(resources.size());
+
+		for (const auto& res : resources)
+		{
+			FramePtr ptr = new (std::nothrow) Frame;
+			if (ptr)
+			{
+				if (ptr->Load(res))
+				{
+					frames.push_back(ptr);
+				}
+			}
+		}
+		return AddFrameSequence(id, frames);
+	}
+
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const& frames)
+	{
+		if (frames.empty())
+			return 0;
+
+		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
+		if (fs)
+		{
+			fs->AddFrames(frames);
+			AddObject(id, fs);
+			return fs->GetFramesCount();
+		}
+	}
+
+	size_t ResourceCache::AddFrameSequence(String const& id, FramePtr frame, int cols, int rows, float padding_x, float padding_y)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
 
-		FramePtr raw = new (std::nothrow) Frame;
-		if (!raw || !raw->Load(file_path))
-			return false;
+		if (!frame)
+			return 0;
 
-		float raw_width = raw->GetWidth();
-		float raw_height = raw->GetHeight();
+		float raw_width = frame->GetWidth();
+		float raw_height = frame->GetHeight();
 		float width = (raw_width - (cols - 1) * padding_x) / cols;
 		float height = (raw_height - (rows - 1) * padding_y) / rows;
 
@@ -238,7 +267,7 @@ namespace kiwano
 				FramePtr ptr = new (std::nothrow) Frame;
 				if (ptr)
 				{
-					ptr->SetTexture(raw->GetTexture());
+					ptr->SetTexture(frame->GetTexture());
 					ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
 					frames.push_back(ptr);
 				}
@@ -247,8 +276,14 @@ namespace kiwano
 			dty += (height + padding_y);
 		}
 
-		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-		return AddObject(id, fs);
+		FrameSequencePtr fs = new (std::nothrow) FrameSequence;
+		if (fs)
+		{
+			fs->AddFrames(frames);
+			AddObject(id, fs);
+			return fs->GetFramesCount();
+		}
+		return 0;
 	}
 
 	bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)

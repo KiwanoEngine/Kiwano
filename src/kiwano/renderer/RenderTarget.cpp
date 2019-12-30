@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/RenderTarget.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/core/Logger.h>
 
 namespace kiwano
@@ -133,7 +132,7 @@ namespace kiwano
 
 	void RenderTarget::EndDraw()
 	{
-		ThrowIfFailed( render_target_->EndDraw() );
+		DX::ThrowIfFailed( render_target_->EndDraw() );
 
 		if (collecting_status_)
 		{
@@ -378,7 +377,7 @@ namespace kiwano
 		}
 		else
 		{
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 
@@ -411,7 +410,7 @@ namespace kiwano
 			}
 			else
 			{
-				ThrowIfFailed(hr);
+				DX::ThrowIfFailed(hr);
 			}
 		}
 
@@ -540,9 +539,9 @@ namespace kiwano
 		visible_size_ = Rect(Point(), size);
 	}
 
-	void RenderTarget::SetCollectingStatus(bool collecting)
+	void RenderTarget::SetCollectingStatus(bool enable)
 	{
-		collecting_status_ = collecting;
+		collecting_status_ = enable;
 	}
 
 	void RenderTarget::IncreasePrimitivesCount(uint32_t increase) const

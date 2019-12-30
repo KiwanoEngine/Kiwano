@@ -225,9 +225,6 @@
     <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp">
       <Filter>core\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\win32\helper.h">
-      <Filter>core\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
     </ClInclude>

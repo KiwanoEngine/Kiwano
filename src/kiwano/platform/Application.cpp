@@ -23,7 +23,6 @@
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/modules.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Director.h>
 #include <kiwano/renderer/TextureCache.h>
@@ -68,7 +67,7 @@ namespace kiwano
 		, inited_(false)
 		, time_scale_(1.f)
 	{
-		ThrowIfFailed(::CoInitialize(nullptr));
+		DX::ThrowIfFailed(::CoInitialize(nullptr));
 
 		Use(&Renderer::instance());
 		Use(&Input::instance());

@@ -1,6 +1,6 @@
 // dear imgui: Renderer for Kiwano (DirectX11)
 
-#include <kiwano/core/win32/helper.h>
+#include <kiwano/renderer/win32/helper.h>
 #include <kiwano-imgui/imgui_impl_dx11.h>
 
 // DirectX
@@ -259,7 +259,7 @@ static void ImGui_ImplDX11_CreateFontsTexture()
         subResource.pSysMem = pixels;
         subResource.SysMemPitch = desc.Width * 4;
         subResource.SysMemSlicePitch = 0;
-        kiwano::ThrowIfFailed(
+        kiwano::DX::ThrowIfFailed(
             g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture)
         );
 
@@ -272,7 +272,7 @@ static void ImGui_ImplDX11_CreateFontsTexture()
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MipLevels = desc.MipLevels;
             srvDesc.Texture2D.MostDetailedMip = 0;
-            kiwano::ThrowIfFailed(
+            kiwano::DX::ThrowIfFailed(
                 g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &g_pFontTextureView)
             );
 

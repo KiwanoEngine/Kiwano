@@ -15,7 +15,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\core\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />

@@ -20,7 +20,6 @@
 
 #include <kiwano/renderer/TextLayout.h>
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {
@@ -182,7 +181,7 @@ namespace kiwano
 					}
 				}
 			}
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 
@@ -201,7 +200,7 @@ namespace kiwano
 			{
 				hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, line_spacing, line_spacing * 0.8f);
 			}
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 
@@ -212,7 +211,7 @@ namespace kiwano
 		if (text_layout_)
 		{
 			HRESULT hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(align));
-			ThrowIfFailed(hr);
+			DX::ThrowIfFailed(hr);
 		}
 	}
 
@@ -227,7 +226,7 @@ namespace kiwano
 		{
 			hr = text_layout_->SetUnderline(enable, { start, length });
 		}
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 	void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
@@ -241,7 +240,7 @@ namespace kiwano
 		{
 			hr = text_layout_->SetStrikethrough(enable, { start, length });
 		}
-		ThrowIfFailed(hr);
+		DX::ThrowIfFailed(hr);
 	}
 
 }

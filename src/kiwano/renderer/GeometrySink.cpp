@@ -20,7 +20,6 @@
 
 #include <kiwano/renderer/GeometrySink.h>
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/core/win32/helper.h>
 
 namespace kiwano
 {
@@ -41,7 +40,7 @@ namespace kiwano
 			path_geo_.reset();
 			Renderer::instance().CreateGeometrySink(*this);
 
-			ThrowIfFailed(path_geo_->Open(&sink_));
+			DX::ThrowIfFailed(path_geo_->Open(&sink_));
 		}
 	}
 
@@ -49,7 +48,7 @@ namespace kiwano
 	{
 		if (IsOpened())
 		{
-			ThrowIfFailed(sink_->Close());
+			DX::ThrowIfFailed(sink_->Close());
 			sink_.reset();
 		}
 	}
@@ -76,7 +75,7 @@ namespace kiwano
 		}
 
 		ComPtr<ID2D1Geometry> geo = input.geo_;
-		ThrowIfFailed(
+		DX::ThrowIfFailed(
 			geo->Outline(
 				DX::ConvertToMatrix3x2F(input_matrix),
 				D2D1_DEFAULT_FLATTENING_TOLERANCE,
@@ -165,7 +164,7 @@ namespace kiwano
 
 		ComPtr<ID2D1Geometry> geo_a_raw = geo_a.geo_;
 		ComPtr<ID2D1Geometry> geo_b_raw = geo_b.geo_;
-		ThrowIfFailed(
+		DX::ThrowIfFailed(
 			geo_a_raw->CombineWithGeometry(
 				geo_b_raw.get(),
 				D2D1_COMBINE_MODE(mode),

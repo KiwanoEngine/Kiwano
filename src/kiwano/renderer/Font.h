@@ -44,19 +44,19 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 加载字体文件
-		bool Load(String const& font_file);
+		bool Load(String const& file);
 
 		/// \~chinese
 		/// @brief 加载字体资源
-		bool Load(Resource const& font_resource);
+		bool Load(Resource const& resource);
 
 		/// \~chinese
 		/// @brief 加载多个字体文件
-		bool Load(Vector<String> const& font_file);
+		bool Load(Vector<String> const& files);
 
 		/// \~chinese
 		/// @brief 加载多个字体资源
-		bool Load(Vector<Resource> const& font_resource);
+		bool Load(Vector<Resource> const& resources);
 
 	private:
 		ComPtr<IDWriteFontCollection> GetCollection() const;
