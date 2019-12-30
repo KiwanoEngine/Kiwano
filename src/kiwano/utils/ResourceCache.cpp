@@ -240,6 +240,7 @@ namespace kiwano
 			AddObject(id, fs);
 			return fs->GetFramesCount();
 		}
+		return 0;
 	}
 
 	size_t ResourceCache::AddFrameSequence(String const& id, FramePtr frame, int cols, int rows, float padding_x, float padding_y)
@@ -386,7 +387,11 @@ namespace kiwano
 					if (rows || cols)
 					{
 						// Frame slices
-						return !!loader->AddFrameSequence(*id, gdata->path + (*file), std::max(cols, 1), std::max(rows, 1), padding_x, padding_y);
+						FramePtr frame = new (std::nothrow) Frame;
+						if (frame && frame->Load(gdata->path + (*file)))
+						{
+							return !!loader->AddFrameSequence(*id, frame, std::max(cols, 1), std::max(rows, 1), padding_x, padding_y);
+						}
 					}
 					else
 					{

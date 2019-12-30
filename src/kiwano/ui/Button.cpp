@@ -113,7 +113,7 @@ namespace kiwano
 				Window::instance().SetCursor(CursorType::Hand);
 
 				if (mouse_over_callback_)
-					mouse_over_callback_();
+					mouse_over_callback_(this);
 			}
 			else if (evt.IsType<MouseOutEvent>())
 			{
@@ -121,24 +121,24 @@ namespace kiwano
 				Window::instance().SetCursor(CursorType::Arrow);
 
 				if (mouse_out_callback_)
-					mouse_out_callback_();
+					mouse_out_callback_(this);
 			}
 			else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
 			{
 				SetStatus(Status::Pressed);
 
 				if (pressed_callback_)
-					pressed_callback_();
+					pressed_callback_(this);
 			}
 			else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
 			{
 				SetStatus(Status::Hover);
 
 				if (released_callback_)
-					released_callback_();
+					released_callback_(this);
 
 				if (click_callback_)
-					click_callback_();
+					click_callback_(this);
 			}
 		}
 	}
