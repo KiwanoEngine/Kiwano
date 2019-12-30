@@ -19,11 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <stdexcept>
 #include <kiwano/math/math.h>
-#include <kiwano/core/win32/ComPtr.hpp>
+#include <kiwano/platform/win32/ComPtr.hpp>
+#include <kiwano/platform/win32/helper.h>
 #include <kiwano/renderer/Color.h>
-#include <3rd-party/StackWalker/StackWalker.h>
 #include <d2d1.h>
 
 namespace kiwano
@@ -174,18 +173,6 @@ namespace kiwano
 		{
 			static const float dips_per_inch = 96.0f;
 			return math::Floor(dips * dpi / dips_per_inch + 0.5f); // Round to nearest integer.
-		}
-
-		inline void ThrowIfFailed(HRESULT hr)
-		{
-			if (FAILED(hr))
-			{
-				StackWalker().ShowCallstack();
-
-				static char buffer[1024 + 1];
-				sprintf_s(buffer, "Failed with HRESULT of %08X", hr);
-				throw std::runtime_error(buffer);
-			}
 		}
 	}
 }

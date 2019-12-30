@@ -105,7 +105,6 @@
 // platform
 //
 
-#include <kiwano/platform/modules.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Window.h>

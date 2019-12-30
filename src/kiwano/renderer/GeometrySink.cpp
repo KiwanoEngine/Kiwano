@@ -40,7 +40,7 @@ namespace kiwano
 			path_geo_.reset();
 			Renderer::instance().CreateGeometrySink(*this);
 
-			DX::ThrowIfFailed(path_geo_->Open(&sink_));
+			win32::ThrowIfFailed(path_geo_->Open(&sink_));
 		}
 	}
 
@@ -48,7 +48,7 @@ namespace kiwano
 	{
 		if (IsOpened())
 		{
-			DX::ThrowIfFailed(sink_->Close());
+			win32::ThrowIfFailed(sink_->Close());
 			sink_.reset();
 		}
 	}
@@ -75,7 +75,7 @@ namespace kiwano
 		}
 
 		ComPtr<ID2D1Geometry> geo = input.geo_;
-		DX::ThrowIfFailed(
+		win32::ThrowIfFailed(
 			geo->Outline(
 				DX::ConvertToMatrix3x2F(input_matrix),
 				D2D1_DEFAULT_FLATTENING_TOLERANCE,
@@ -164,7 +164,7 @@ namespace kiwano
 
 		ComPtr<ID2D1Geometry> geo_a_raw = geo_a.geo_;
 		ComPtr<ID2D1Geometry> geo_b_raw = geo_b.geo_;
-		DX::ThrowIfFailed(
+		win32::ThrowIfFailed(
 			geo_a_raw->CombineWithGeometry(
 				geo_b_raw.get(),
 				D2D1_COMBINE_MODE(mode),

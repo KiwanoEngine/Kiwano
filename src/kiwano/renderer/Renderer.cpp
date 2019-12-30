@@ -88,37 +88,37 @@ namespace kiwano
 				if (SUCCEEDED(hr))
 				{
 					hr = IFontCollectionLoader::Create(&font_collection_loader_);
-				}
 
-				if (SUCCEEDED(hr))
-				{
-					hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+					if (SUCCEEDED(hr))
+					{
+						hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+					}
 				}
 
 				// ResourceFontFileLoader and ResourceFontCollectionLoader
 				if (SUCCEEDED(hr))
 				{
 					hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-				}
 
-				if (SUCCEEDED(hr))
-				{
-					hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
-				}
+					if (SUCCEEDED(hr))
+					{
+						hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
+					}
 
-				if (SUCCEEDED(hr))
-				{
-					hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
-				}
+					if (SUCCEEDED(hr))
+					{
+						hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
 
-				if (SUCCEEDED(hr))
-				{
-					hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+						if (SUCCEEDED(hr))
+						{
+							hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+						}
+					}
 				}
 			}
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::DestroyComponent()
@@ -150,7 +150,7 @@ namespace kiwano
 			BeginDraw();
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::AfterRender()
@@ -168,7 +168,7 @@ namespace kiwano
 			hr = HandleDeviceLost();
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
@@ -596,7 +596,7 @@ namespace kiwano
 			}
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
@@ -631,7 +631,7 @@ namespace kiwano
 			}
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextFormat(TextLayout& layout)
@@ -663,7 +663,7 @@ namespace kiwano
 			layout.SetTextFormat(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextLayout(TextLayout& layout)
@@ -689,7 +689,7 @@ namespace kiwano
 			layout.SetTextLayout(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
@@ -725,7 +725,7 @@ namespace kiwano
 			geo.SetGeometry(path_geo);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
@@ -747,7 +747,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
@@ -775,7 +775,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
@@ -803,7 +803,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateGeometrySink(GeometrySink& sink)
@@ -825,7 +825,7 @@ namespace kiwano
 			sink.SetPathGeometry(output);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateTextureRenderTarget(TextureRenderTargetPtr& render_target)
@@ -859,7 +859,7 @@ namespace kiwano
 			render_target = output;
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
@@ -881,7 +881,7 @@ namespace kiwano
 			brush.SetBrush(output, Brush::Type::SolidColor);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
@@ -922,7 +922,7 @@ namespace kiwano
 			}
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
@@ -966,7 +966,7 @@ namespace kiwano
 			}
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetDpi(float dpi)
@@ -979,7 +979,7 @@ namespace kiwano
 			hr = d2d_res_->SetDpi(dpi);
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetVSyncEnabled(bool enabled)
@@ -1016,7 +1016,7 @@ namespace kiwano
 			Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
 		}
 
-		DX::ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 }

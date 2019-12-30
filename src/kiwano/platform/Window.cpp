@@ -160,7 +160,7 @@ namespace kiwano
 		if (handle_ == nullptr)
 		{
 			::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
-			DX::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+			win32::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 		}
 		else
 		{

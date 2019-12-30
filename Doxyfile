@@ -45,7 +45,9 @@ FILE_PATTERNS          = *.c \
                          *.h++
 
 RECURSIVE              = YES
-EXCLUDE                = src/3rd-party
+EXCLUDE                = src/3rd-party \
+                         src/kiwano/platform/win32 \
+                         src/kiwano/renderer/win32
 
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor

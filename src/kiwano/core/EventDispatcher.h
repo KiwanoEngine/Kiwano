@@ -30,6 +30,8 @@ namespace kiwano
 	class KGE_API EventDispatcher
 	{
 	public:
+		/// \~chinese
+		/// @brief ¼àÌıÆ÷ÁĞ±í
 		using Listeners = IntrusiveList<EventListenerPtr>;
 
 		/// \~chinese

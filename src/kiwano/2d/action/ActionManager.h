@@ -35,6 +35,8 @@ namespace kiwano
 	class KGE_API ActionManager
 	{
 	public:
+		/// \~chinese
+		/// @brief ¶¯»­ÁÐ±í
 		using Actions = IntrusiveList<ActionPtr>;
 
 		/// \~chinese

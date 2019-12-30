@@ -394,22 +394,40 @@ namespace kiwano
 		static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
 	protected:
+		/// \~chinese
+		/// @brief 更新自身和所有子节点
 		virtual void Update(Duration dt);
 
+		/// \~chinese
+		/// @brief 渲染自身和所有子节点
 		virtual void Render(RenderTarget* rt);
 
-		virtual void PrepareToRender(RenderTarget* rt);
-
+		/// \~chinese
+		/// @brief 绘制自身和所有子节点的边界
 		virtual void RenderBorder(RenderTarget* rt);
 
+		/// \~chinese
+		/// @brief 检查是否在渲染目标的视区内
 		virtual bool CheckVisibilty(RenderTarget* rt) const;
 
+		/// \~chinese
+		/// @brief 渲染前初始化渲染目标状态，仅当 CheckVisibilty 返回真时调用该函数
+		virtual void PrepareToRender(RenderTarget* rt);
+
+		/// \~chinese
+		/// @brief 更新自己的二维变换，并通知所有子节点
 		void UpdateTransform() const;
 
+		/// \~chinese
+		/// @brief 更新自己和所有子节点的透明度
 		void UpdateOpacity();
 
+		/// \~chinese
+		/// @brief 将所有子节点按Z轴顺序排序
 		void Reorder();
 
+		/// \~chinese
+		/// @brief 设置节点所在舞台
 		void SetStage(Stage* stage);
 
 	private:

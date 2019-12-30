@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano/core/time.h>
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Texture.h>
 #include <kiwano/renderer/Geometry.h>

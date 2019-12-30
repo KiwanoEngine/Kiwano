@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano-audio\audio-modules.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\libraries.h" />
     <ClInclude Include="..\..\src\kiwano-audio\AudioEngine.h" />
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-audio\audio-modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\libraries.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\AudioEngine.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />

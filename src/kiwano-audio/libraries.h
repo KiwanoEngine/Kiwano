@@ -29,7 +29,7 @@ namespace kiwano
 {
 	namespace audio
 	{
-		namespace modules
+		namespace dlls
 		{
 			class KGE_API XAudio2
 			{

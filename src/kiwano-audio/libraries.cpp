@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Logger.h>
-#include <kiwano-audio/audio-modules.h>
+#include <kiwano-audio/libraries.h>
 
 namespace kiwano
 {
 	namespace audio
 	{
-		namespace modules
+		namespace dlls
 		{
 			XAudio2::XAudio2()
 				: xaudio2()

@@ -18,8 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/renderer/win32/helper.h>  // DX::ThrowIfFailed
-#include <kiwano-audio/audio-modules.h>
+#include <kiwano/platform/win32/helper.h>  // win32::ThrowIfFailed
+#include <kiwano/core/Logger.h>
+#include <kiwano-audio/libraries.h>
 #include <kiwano-audio/AudioEngine.h>
 
 namespace kiwano
@@ -38,13 +39,13 @@ namespace kiwano
 
 		void AudioEngine::SetupComponent()
 		{
-			// KGE_SYS_LOG(L"Creating audio resources");
+			KGE_SYS_LOG(L"Creating audio resources");
 
-			HRESULT hr = modules::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
+			HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
 			if (SUCCEEDED(hr))
 			{
-				hr = modules::XAudio2::Get().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+				hr = dlls::XAudio2::Get().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 			}
 
 			if (SUCCEEDED(hr))
@@ -52,12 +53,12 @@ namespace kiwano
 				hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
 			}
 
-			DX::ThrowIfFailed(hr);
+			win32::ThrowIfFailed(hr);
 		}
 
 		void AudioEngine::DestroyComponent()
 		{
-			// KGE_SYS_LOG(L"Destroying audio resources");
+			KGE_SYS_LOG(L"Destroying audio resources");
 
 			if (mastering_voice_)
 			{
@@ -71,7 +72,7 @@ namespace kiwano
 				x_audio2_ = nullptr;
 			}
 
-			modules::MediaFoundation::Get().MFShutdown();
+			dlls::MediaFoundation::Get().MFShutdown();
 		}
 
 		HRESULT AudioEngine::CreateVoice(IXAudio2SourceVoice** voice, const Transcoder::Buffer& buffer)

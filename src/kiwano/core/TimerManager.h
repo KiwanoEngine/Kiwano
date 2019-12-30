@@ -30,6 +30,8 @@ namespace kiwano
 	class KGE_API TimerManager
 	{
 	public:
+		/// \~chinese
+		/// @brief 定时器列表
 		using Timers = IntrusiveList<TimerPtr>;
 
 		/// \~chinese

@@ -14,7 +14,6 @@
     <ClInclude Include="..\..\src\kiwano\core\common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
-    <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />
@@ -54,7 +53,9 @@
     <ClInclude Include="..\..\src\kiwano\platform\Director.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
-    <ClInclude Include="..\..\src\kiwano\platform\modules.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Brush.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Color.h" />
@@ -121,7 +122,7 @@
     <ClCompile Include="..\..\src\kiwano\platform\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
-    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Brush.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Color.cpp" />

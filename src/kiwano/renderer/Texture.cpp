@@ -118,7 +118,7 @@ namespace kiwano
 		{
 			HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
-			DX::ThrowIfFailed(hr);
+			win32::ThrowIfFailed(hr);
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace kiwano
 					uint32_t(src_rect.GetBottom()))
 			);
 
-			DX::ThrowIfFailed(hr);
+			win32::ThrowIfFailed(hr);
 		}
 	}
 

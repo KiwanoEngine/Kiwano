@@ -75,6 +75,8 @@ namespace kiwano
 		void SetBorderStrokeBrush(BrushPtr brush);
 
 	protected:
+		/// \~chinese
+		/// @brief 绘制所有子节点的边界
 		void RenderBorder(RenderTarget* rt) override;
 
 	private:

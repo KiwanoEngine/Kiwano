@@ -28,8 +28,8 @@
     <Filter Include="renderer\win32">
       <UniqueIdentifier>{30333461-e9bc-4709-84bd-ce6e0e1a3079}</UniqueIdentifier>
     </Filter>
-    <Filter Include="core\win32">
-      <UniqueIdentifier>{192a47a9-9df6-4f40-a7d3-888eb00c53ac}</UniqueIdentifier>
+    <Filter Include="platform\win32">
+      <UniqueIdentifier>{e84dcf9a-e650-473e-8c9c-193804ab9e76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,9 +76,6 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Application.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\modules.h">
       <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\config.h" />
@@ -222,9 +219,6 @@
     <ClInclude Include="..\..\src\kiwano\math\scalar.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp">
-      <Filter>core\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -270,6 +264,15 @@
     <ClInclude Include="..\..\src\kiwano\renderer\GeometrySink.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\ui\Button.cpp">
@@ -303,9 +306,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp">
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
@@ -454,6 +454,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\renderer\GeometrySink.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
+      <Filter>platform\win32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

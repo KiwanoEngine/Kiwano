@@ -18,47 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/common.h>
-#include <kiwano/core/Component.h>
-#include <kiwano-audio/Transcoder.h>
-#include <xaudio2.h>
+#include <kiwano/platform/win32/libraries.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
-	namespace audio
+	namespace win32
 	{
-		class KGE_API AudioEngine
-			: public Singleton<AudioEngine>
-			, public ComponentBase
+		namespace dlls
 		{
-			friend Singleton<AudioEngine>;
-
-		public:
-			// 开启设备
-			void Open();
-
-			// 关闭设备
-			void Close();
-
-			HRESULT CreateVoice(
-				IXAudio2SourceVoice** voice,
-				const Transcoder::Buffer& buffer
-			);
-
-		public:
-			void SetupComponent() override;
-
-			void DestroyComponent() override;
-
-		private:
-			AudioEngine();
-
-			~AudioEngine();
-
-		private:
-			IXAudio2* x_audio2_;
-			IXAudio2MasteringVoice* mastering_voice_;
-		};
+			Shlwapi::Shlwapi()
+				: shlwapi()
+				, PathFileExistsW(nullptr)
+				, SHCreateMemStream(nullptr)
+			{
+				if (shlwapi.Load(L"shlwapi.dll"))
+				{
+					PathFileExistsW = shlwapi.GetProcess<PFN_PathFileExistsW>(L"PathFileExistsW");
+					SHCreateMemStream = shlwapi.GetProcess<PFN_SHCreateMemStream>(L"SHCreateMemStream");
+				}
+				else
+				{
+					KGE_ERROR(L"Load shlapi.dll failed");
+					throw std::runtime_error("Load shlapi.dll failed");
+				}
+			}
+		}
 	}
 }

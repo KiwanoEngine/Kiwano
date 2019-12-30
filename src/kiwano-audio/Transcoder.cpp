@@ -26,9 +26,9 @@
 #include <kiwano/core/common.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/win32/ComPtr.hpp>
-#include <kiwano/platform/modules.h>
-#include <kiwano-audio/audio-modules.h>
+#include <kiwano/platform/win32/ComPtr.hpp>
+#include <kiwano/platform/win32/libraries.h>
+#include <kiwano-audio/libraries.h>
 #include <kiwano-audio/Transcoder.h>
 
 namespace kiwano
@@ -76,7 +76,7 @@ namespace kiwano
 
 			ComPtr<IMFSourceReader> reader;
 
-			hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromURL(
+			hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(
 				file_path.c_str(),
 				nullptr,
 				&reader
@@ -101,7 +101,7 @@ namespace kiwano
 			Resource::Data data = res.GetData();
 			if (!data) { return E_FAIL; }
 
-			stream = kiwano::modules::Shlwapi::Get().SHCreateMemStream(
+			stream = win32::dlls::Shlwapi::Get().SHCreateMemStream(
 				static_cast<const BYTE*>(data.buffer),
 				static_cast<uint32_t>(data.size)
 			);
@@ -114,12 +114,12 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				hr = modules::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.get(), &byte_stream);
+				hr = dlls::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.get(), &byte_stream);
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				hr = modules::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(
+				hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(
 					byte_stream.get(),
 					nullptr,
 					&reader
@@ -142,7 +142,7 @@ namespace kiwano
 			ComPtr<IMFMediaType> partial_type;
 			ComPtr<IMFMediaType> uncompressed_type;
 
-			hr = modules::MediaFoundation::Get().MFCreateMediaType(&partial_type);
+			hr = dlls::MediaFoundation::Get().MFCreateMediaType(&partial_type);
 
 			if (SUCCEEDED(hr))
 			{
@@ -186,7 +186,7 @@ namespace kiwano
 			if (SUCCEEDED(hr))
 			{
 				uint32_t size = 0;
-				hr = modules::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
+				hr = dlls::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
 					uncompressed_type.get(),
 					&wave_format_,
 					&size,

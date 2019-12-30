@@ -132,7 +132,7 @@ namespace kiwano
 
 	void RenderTarget::EndDraw()
 	{
-		DX::ThrowIfFailed( render_target_->EndDraw() );
+		win32::ThrowIfFailed( render_target_->EndDraw() );
 
 		if (collecting_status_)
 		{
@@ -377,7 +377,7 @@ namespace kiwano
 		}
 		else
 		{
-			DX::ThrowIfFailed(hr);
+			win32::ThrowIfFailed(hr);
 		}
 	}
 
@@ -410,7 +410,7 @@ namespace kiwano
 			}
 			else
 			{
-				DX::ThrowIfFailed(hr);
+				win32::ThrowIfFailed(hr);
 			}
 		}
 

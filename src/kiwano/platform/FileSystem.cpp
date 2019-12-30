@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/FileSystem.h>
-#include <kiwano/platform/modules.h>
 
 namespace kiwano
 {

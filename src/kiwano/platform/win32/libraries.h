@@ -19,29 +19,39 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <type_traits>
-#include <kiwano/core/common.h>
-#include <Unknwnbase.h>
+#include <kiwano/macros.h>
+#include <kiwano/core/Library.h>
 
 namespace kiwano
 {
-	struct ComPtrProxy
+	namespace win32
 	{
-		static inline void add_ref(IUnknown* ptr)
+		namespace dlls
 		{
-			if (ptr) ptr->AddRef();
+			class KGE_API Shlwapi
+			{
+			public:
+				static inline Shlwapi& Get()
+				{
+					static Shlwapi instance;
+					return instance;
+				}
+
+				// Shlwapi functions
+				typedef BOOL(WINAPI* PFN_PathFileExistsW)(LPCWSTR);
+				typedef IStream* (WINAPI* PFN_SHCreateMemStream)(const BYTE*, UINT);
+
+				PFN_PathFileExistsW PathFileExistsW;
+				PFN_SHCreateMemStream SHCreateMemStream;
+
+			private:
+				Shlwapi();
+
+				Shlwapi(const Shlwapi&) = delete;
+				Shlwapi& operator=(const Shlwapi&) = delete;
+
+				Library shlwapi;
+			};
 		}
-
-		static inline void release(IUnknown* ptr)
-		{
-			if (ptr) ptr->Release();
-		}
-	};
-
-	// ComPtr<> is a smart pointer for COM
-	template<
-		typename _Ty,
-		typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-	using ComPtr = IntrusivePtr<_Ty, ComPtrProxy>;
-
+	}
 }

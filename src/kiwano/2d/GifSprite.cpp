@@ -136,19 +136,12 @@ namespace kiwano
 			break;
 
 		case GifImage::DisposalType::Background:
-		{
 			ClearCurrentFrameArea();
 			break;
-		}
 
 		case GifImage::DisposalType::Previous:
-		{
 			RestoreSavedFrame();
 			break;
-		}
-
-		default:
-			DX::ThrowIfFailed(E_FAIL);
 		}
 	}
 
@@ -208,9 +201,7 @@ namespace kiwano
 
 		TexturePtr frame_to_be_saved = new Texture;
 
-		HRESULT hr = frame_rt_->GetOutput(*frame_to_be_saved) ? S_OK : E_FAIL;
-
-		if (SUCCEEDED(hr))
+		if (frame_rt_->GetOutput(*frame_to_be_saved))
 		{
 			if (!saved_frame_)
 			{
@@ -218,35 +209,23 @@ namespace kiwano
 				frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels(), frame_to_be_saved->GetPixelFormat());
 			}
 
-			hr = saved_frame_ ? S_OK : E_FAIL;
-		}
-
-		if (SUCCEEDED(hr))
-		{
 			saved_frame_->CopyFrom(frame_to_be_saved);
 		}
-
-		DX::ThrowIfFailed(hr);
 	}
 
 	void GifSprite::RestoreSavedFrame()
 	{
 		KGE_ASSERT(frame_rt_);
-		HRESULT hr = saved_frame_ ? S_OK : E_FAIL;
 
-		if (SUCCEEDED(hr))
+		if (saved_frame_)
 		{
 			TexturePtr frame_to_copy_to = new Texture;
 
-			hr = frame_rt_->GetOutput(*frame_to_copy_to) ? S_OK : E_FAIL;
-
-			if (SUCCEEDED(hr))
+			if (frame_rt_->GetOutput(*frame_to_copy_to))
 			{
 				frame_to_copy_to->CopyFrom(saved_frame_);
 			}
 		}
-
-		DX::ThrowIfFailed(hr);
 	}
 
 	void GifSprite::ClearCurrentFrameArea()

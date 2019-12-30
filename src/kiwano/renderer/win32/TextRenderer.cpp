@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/win32/ComPtr.hpp>
 #include <kiwano/renderer/win32/TextRenderer.h>
 
 namespace kiwano

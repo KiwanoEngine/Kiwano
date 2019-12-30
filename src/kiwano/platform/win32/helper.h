@@ -18,27 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/modules.h>
-#include <kiwano/core/Logger.h>
+#pragma once
+#include <stdexcept>
+#include <kiwano/macros.h>
+#include <3rd-party/StackWalker/StackWalker.h>
 
 namespace kiwano
 {
-	namespace modules
+	namespace win32
 	{
-		Shlwapi::Shlwapi()
-			: shlwapi()
-			, PathFileExistsW(nullptr)
-			, SHCreateMemStream(nullptr)
+		inline void ThrowIfFailed(HRESULT hr)
 		{
-			if (shlwapi.Load(L"shlwapi.dll"))
+			if (FAILED(hr))
 			{
-				PathFileExistsW = shlwapi.GetProcess<PFN_PathFileExistsW>(L"PathFileExistsW");
-				SHCreateMemStream = shlwapi.GetProcess<PFN_SHCreateMemStream>(L"SHCreateMemStream");
-			}
-			else
-			{
-				KGE_ERROR(L"Load shlapi.dll failed");
-				throw std::runtime_error("Load shlapi.dll failed");
+				StackWalker().ShowCallstack();
+
+				static char buffer[1024 + 1];
+				sprintf_s(buffer, "Failed with HRESULT of %08X", hr);
+				throw std::runtime_error(buffer);
 			}
 		}
 	}
