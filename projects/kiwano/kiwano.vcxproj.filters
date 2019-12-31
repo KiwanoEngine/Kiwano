@@ -31,6 +31,9 @@
     <Filter Include="platform\win32">
       <UniqueIdentifier>{e84dcf9a-e650-473e-8c9c-193804ab9e76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core\event">
+      <UniqueIdentifier>{c629aedd-ffb9-4bc1-82c3-f50e77c82e77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\ui\Button.h">
@@ -228,9 +231,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Library.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Event.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h">
       <Filter>platform</Filter>
     </ClInclude>
@@ -272,6 +272,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h">
       <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\Event.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\EventType.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h">
+      <Filter>core\event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,9 +446,6 @@
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Event.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp">
       <Filter>platform</Filter>
     </ClCompile>
@@ -460,6 +472,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp">
       <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp">
+      <Filter>core\event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

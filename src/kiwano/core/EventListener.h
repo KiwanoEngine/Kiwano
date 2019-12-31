@@ -22,7 +22,10 @@
 #include <kiwano/core/common.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Event.h>
+#include <kiwano/core/event/Event.h>
+#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/core/event/KeyEvent.h>
+#include <kiwano/core/event/WindowEvent.h>
 
 namespace kiwano
 {

@@ -105,7 +105,9 @@ namespace kiwano
 
 	void Button::UpdateStatus(Event& evt)
 	{
-		if (enabled_ && (evt.Cast<MouseEvent>().target == this))
+		KGE_ASSERT(evt.IsType<MouseEvent>());
+
+		if (enabled_ && (evt.SafeCast<MouseEvent>().target == this))
 		{
 			if (evt.IsType<MouseHoverEvent>())
 			{

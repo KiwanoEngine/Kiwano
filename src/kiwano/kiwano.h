@@ -49,7 +49,10 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Event.h>
+#include <kiwano/core/event/Event.h>
+#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/core/event/KeyEvent.h>
+#include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/core/EventListener.h>
 #include <kiwano/core/EventDispatcher.h>
 #include <kiwano/core/Timer.h>

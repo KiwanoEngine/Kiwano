@@ -12,7 +12,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\core\common.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Event.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\EventType.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
@@ -107,9 +111,12 @@
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Component.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Event.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventListener.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />

@@ -22,7 +22,10 @@
 #include <kiwano/core/common.h>
 #include <kiwano/core/time.h>
 #include <kiwano/core/Component.h>
-#include <kiwano/core/Event.h>
+#include <kiwano/core/event/Event.h>
+#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/core/event/KeyEvent.h>
+#include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/renderer/Renderer.h>
 
