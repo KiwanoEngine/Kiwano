@@ -91,6 +91,8 @@ namespace kiwano
 			Joint(World* world, b2JointDef* joint_def);
 			virtual ~Joint();
 
+			/// \~chinese
+			/// @brief 初始化关节
 			void Init(World* world, b2JointDef* joint_def);
 
 			/// \~chinese
@@ -125,10 +127,10 @@ namespace kiwano
 			/// @brief 固定距离关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor_a;			///< 物体A的锚点位置
-				Point anchor_b;			///< 物体B的锚点位置
-				float frequency_hz;		///< 弹簧阻尼器频率
-				float damping_ratio;	///< 阻尼比
+				Point anchor_a;			///< 关节在物体A上的连接点
+				Point anchor_b;			///< 关节在物体B上的连接点
+				float frequency_hz;		///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
+				float damping_ratio;	///< 阻尼率，值越大关节运动阻尼越大
 
 				Param(
 					Body* body_a,
@@ -164,16 +166,25 @@ namespace kiwano
 			/// \~chinese
 			/// @brief 设置关节长度
 			void SetLength(float length);
+
+			/// \~chinese
+			/// @brief 获取关节长度
 			float GetLength() const;
 
 			/// \~chinese
-			/// @brief 设置弹簧阻尼器频率 [赫兹]
+			/// @brief 设置弹簧响应速度 [赫兹]
 			void SetFrequency(float hz);
+
+			/// \~chinese
+			/// @brief 获取弹簧响应速度 [赫兹]
 			float GetFrequency() const;
 
 			/// \~chinese
-			/// @brief 设置阻尼比
+			/// @brief 设置阻尼率
 			void SetDampingRatio(float ratio);
+
+			/// \~chinese
+			/// @brief 获取阻尼率
 			float GetDampingRatio() const;
 
 		private:
@@ -189,9 +200,9 @@ namespace kiwano
 		public:
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor;
-				float max_force;
-				float max_torque;
+				Point anchor;		///< 摩擦作用点
+				float max_force;	///< 最大摩擦力
+				float max_torque;	///< 最大扭力
 
 				Param(
 					Body* body_a,
@@ -222,13 +233,19 @@ namespace kiwano
 			FrictionJoint(World* world, Param const& param);
 
 			/// \~chinese
-			/// @brief 设定最大摩擦力
+			/// @brief 设置最大摩擦力
 			void SetMaxForce(float force);
+
+			/// \~chinese
+			/// @brief 获取最大摩擦力
 			float GetMaxForce() const;
 
 			/// \~chinese
-			/// @brief 设定最大转矩
+			/// @brief 设置最大转矩
 			void SetMaxTorque(float torque);
+
+			/// \~chinese
+			/// @brief 获取最大转矩
 			float GetMaxTorque() const;
 
 		private:
@@ -246,8 +263,8 @@ namespace kiwano
 			/// @brief 齿轮关节参数
 			struct Param : public Joint::ParamBase
 			{
-				JointPtr joint_a;	///< 关节A
-				JointPtr joint_b;	///< 关节B
+				JointPtr joint_a;	///< 关节A（旋转关节/平移关节）
+				JointPtr joint_b;	///< 关节B（旋转关节/平移关节）
 				float ratio;		///< 齿轮传动比
 
 				Param(
@@ -277,6 +294,9 @@ namespace kiwano
 			/// \~chinese
 			/// @brief 设定齿轮传动比
 			void SetRatio(float ratio);
+
+			/// \~chinese
+			/// @brief 获取齿轮传动比
 			float GetRatio() const;
 
 		private:
@@ -327,13 +347,19 @@ namespace kiwano
 			MotorJoint(World* world, Param const& param);
 
 			/// \~chinese
-			/// @brief 设定最大摩擦力
+			/// @brief 设置最大摩擦力
 			void SetMaxForce(float force);
+
+			/// \~chinese
+			/// @brief 获取最大摩擦力
 			float GetMaxForce() const;
 
 			/// \~chinese
-			/// @brief 设定最大转矩
+			/// @brief 设置最大转矩
 			void SetMaxTorque(float torque);
+
+			/// \~chinese
+			/// @brief 获取最大转矩
 			float GetMaxTorque() const;
 
 		private:
@@ -351,12 +377,12 @@ namespace kiwano
 			/// @brief 平移关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor;				///< 锚点位置
-				Vec2 axis;					///< 平移轴向量
-				bool enable_limit;			///< 关节限制开关
-				float lower_translation;	///< 关节下限
-				float upper_translation;	///< 关节上限
-				bool enable_motor;			///< 马达开关
+				Point anchor;				///< 关节位置
+				Vec2 axis;					///< 物体A滑动的方向
+				bool enable_limit;			///< 是否启用限制
+				float lower_translation;	///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
+				float upper_translation;	///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
+				bool enable_motor;			///< 是否启用马达
 				float max_motor_force;		///< 最大马达力 [N]
 				float motor_speed;			///< 马达转速 [degree/s]
 
@@ -418,27 +444,45 @@ namespace kiwano
 			/// \~chinese
 			/// @brief 是否启用关节限制
 			bool IsLimitEnabled() const;
+
+			/// \~chinese
+			/// @brief 设置是否启用关节限制
 			void EnableLimit(bool flag);
 
 			/// \~chinese
-			/// @brief 设置关节限制
+			/// @brief 获取平移最小限制
 			float GetLowerLimit() const;
+
+			/// \~chinese
+			/// @brief 获取平移最大限制
 			float GetUpperLimit() const;
+
+			/// \~chinese
+			/// @brief 设置关节限制
 			void SetLimits(float lower, float upper);
 
 			/// \~chinese
 			/// @brief 是否启用马达
 			bool IsMotorEnabled() const;
+
+			/// \~chinese
+			/// @brief 设置是否启用马达
 			void EnableMotor(bool flag);
 
 			/// \~chinese
 			/// @brief 设置马达转速 [degree/s]
 			void SetMotorSpeed(float speed);
+
+			/// \~chinese
+			/// @brief 获取马达转速 [degree/s]
 			float GetMotorSpeed() const;
 
 			/// \~chinese
-			/// @brief 设定最大马达力 [N]
+			/// @brief 设置最大马达力 [N]
 			void SetMaxMotorForce(float force);
+
+			/// \~chinese
+			/// @brief 获取最大马达力 [N]
 			float GetMaxMotorForce() const;
 
 		private:
@@ -456,11 +500,11 @@ namespace kiwano
 			/// @brief 滑轮关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor_a;			///< 
-				Point anchor_b;			///< 
-				Point ground_anchor_a;	///< 
-				Point ground_anchor_b;	///< 
-				float ratio;			///< 
+				Point anchor_a;			///< 关节在物体A上的作用点
+				Point anchor_b;			///< 关节在物体B上的作用点
+				Point ground_anchor_a;	///< 物体A对应的滑轮的位置
+				Point ground_anchor_b;	///< 物体B对应的滑轮的位置
+				float ratio;			///< 滑轮比，关节传动时，滑轮上升和下降的两头的位移比例
 
 				Param(
 					Body* body_a,
@@ -496,15 +540,32 @@ namespace kiwano
 			PulleyJoint(World* world, b2PulleyJointDef* def);
 			PulleyJoint(World* world, Param const& param);
 
+			/// \~chinese
+			/// @brief 物体A对应的滑轮的位置
 			Point GetGroundAnchorA() const;
+
+			/// \~chinese
+			/// @brief 物体B对应的滑轮的位置
 			Point GetGroundAnchorB() const;
 
+			/// \~chinese
+			/// @brief 获取滑轮传动比
 			float GetRatio() const;
 
+			/// \~chinese
+			/// @brief 获取物体A与滑轮的距离
 			float GetLengthA() const;
+
+			/// \~chinese
+			/// @brief 获取物体B与滑轮的距离
 			float GetLengthB() const;
 
+			/// \~chinese
+			/// @brief 获取物体A与滑轮的当前距离
 			float GetCurrentLengthA() const;
+
+			/// \~chinese
+			/// @brief 获取物体B与滑轮的当前距离
 			float GetCurrentLengthB() const;
 
 		private:
@@ -518,15 +579,17 @@ namespace kiwano
 			: public Joint
 		{
 		public:
+			/// \~chinese
+			/// @brief 旋转关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor;
-				bool enable_limit;
-				float lower_angle;
-				float upper_angle;
-				bool enable_motor;
-				float max_motor_torque;
-				float motor_speed;
+				Point anchor;			///< 关节位置
+				bool enable_limit;		///< 是否启用限制
+				float lower_angle;		///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
+				float upper_angle;		///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
+				bool enable_motor;		///< 是否启用马达
+				float max_motor_torque;	///< 最大马达力 [N]
+				float motor_speed;		///< 马达转速 [degree/s]
 
 				Param(
 					Body* body_a,
@@ -568,28 +631,60 @@ namespace kiwano
 			RevoluteJoint(World* world, b2RevoluteJointDef* def);
 			RevoluteJoint(World* world, Param const& param);
 
+			/// \~chinese
+			/// @brief 获取参考角
 			float GetReferenceAngle() const;
+
+			/// \~chinese
+			/// @brief 获取关节角度
 			float GetJointAngle() const;
+
+			/// \~chinese
+			/// @brief 获取关节速度
 			float GetJointSpeed() const;
 
+			/// \~chinese
+			/// @brief 是否启用关节限制
 			bool IsLimitEnabled() const;
+
+			/// \~chinese
+			/// @brief 设置是否启用关节限制
 			void EnableLimit(bool flag);
 
+			/// \~chinese
+			/// @brief 获取平移最小限制
 			float GetLowerLimit() const;
+
+			/// \~chinese
+			/// @brief 获取平移最大限制
 			float GetUpperLimit() const;
+
+			/// \~chinese
+			/// @brief 设置关节限制
 			void SetLimits(float lower, float upper);
 
+			/// \~chinese
+			/// @brief 是否启用马达
 			bool IsMotorEnabled() const;
+
+			/// \~chinese
+			/// @brief 设置是否启用马达
 			void EnableMotor(bool flag);
 
 			/// \~chinese
 			/// @brief 设置马达转速 [degree/s]
 			void SetMotorSpeed(float speed);
+
+			/// \~chinese
+			/// @brief 获取马达转速 [degree/s]
 			float GetMotorSpeed() const;
 
 			/// \~chinese
-			/// @brief 设定最大马达转矩 [N/m]
+			/// @brief 设置最大马达转矩 [N/m]
 			void SetMaxMotorTorque(float torque);
+
+			/// \~chinese
+			/// @brief 获取最大马达转矩 [N/m]
 			float GetMaxMotorTorque() const;
 
 		private:
@@ -603,11 +698,13 @@ namespace kiwano
 			: public Joint
 		{
 		public:
+			/// \~chinese
+			/// @brief 绳关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point local_anchor_a;
-				Point local_anchor_b;
-				float max_length;
+				Point local_anchor_a;	///< 关节在物体A上的连接点
+				Point local_anchor_b;	///< 关节在物体B上的连接点
+				float max_length;		///< 绳索最大长度
 
 				Param(
 					Body* body_a,
@@ -637,7 +734,12 @@ namespace kiwano
 			RopeJoint(World* world, b2RopeJointDef* def);
 			RopeJoint(World* world, Param const& param);
 
+			/// \~chinese
+			/// @brief 设置关节最大长度
 			void SetMaxLength(float length);
+
+			/// \~chinese
+			/// @brief 获取关节最大长度
 			float GetMaxLength() const;
 
 		private:
@@ -651,11 +753,13 @@ namespace kiwano
 			: public Joint
 		{
 		public:
+			/// \~chinese
+			/// @brief 焊接关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor;
-				float frequency_hz;
-				float damping_ratio;
+				Point anchor;			///< 焊接位置
+				float frequency_hz;		///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
+				float damping_ratio;	///< 阻尼率，值越大关节运动阻尼越大
 
 				Param(
 					Body* body_a,
@@ -686,13 +790,23 @@ namespace kiwano
 			WeldJoint(World* world, Param const& param);
 
 			/// \~chinese
-			/// @brief 设置弹簧阻尼器频率 [赫兹]
+			/// @brief 获取物体B相对于物体A的角度
+			float GetReferenceAngle() const;
+
+			/// \~chinese
+			/// @brief 设置弹簧响应速度 [赫兹]
 			void SetFrequency(float hz);
+
+			/// \~chinese
+			/// @brief 获取弹簧响应速度 [赫兹]
 			float GetFrequency() const;
 
 			/// \~chinese
-			/// @brief 设置阻尼比
+			/// @brief 设置阻尼率
 			void SetDampingRatio(float ratio);
+
+			/// \~chinese
+			/// @brief 获取阻尼率
 			float GetDampingRatio() const;
 
 		private:
@@ -706,15 +820,17 @@ namespace kiwano
 			: public Joint
 		{
 		public:
+			/// \~chinese
+			/// @brief 轮关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point anchor;
-				Vec2 axis;
-				bool enable_motor;
-				float max_motor_torque;
-				float motor_speed;
-				float frequency_hz;
-				float damping_ratio;
+				Point anchor;				///< 轮关节位置
+				Vec2 axis;					///< 物体A滑动方向
+				bool enable_motor;			///< 是否启用马达
+				float max_motor_torque;		///< 最大马达力 [N]
+				float motor_speed;			///< 马达转速 [degree/s]
+				float frequency_hz;			///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
+				float damping_ratio;		///< 弹簧阻尼率，值越大关节运动阻尼越大
 
 				Param(
 					Body* body_a,
@@ -756,28 +872,60 @@ namespace kiwano
 			WheelJoint(World* world, b2WheelJointDef* def);
 			WheelJoint(World* world, Param const& param);
 
+			/// \~chinese
+			/// @brief 获取关节当前的平移距离
 			float GetJointTranslation() const;
+
+			/// \~chinese
+			/// @brief 获取关节当前的线性速度
 			float GetJointLinearSpeed() const;
+
+			/// \~chinese
+			/// @brief 获取关节当前的角度
 			float GetJointAngle() const;
+
+			/// \~chinese
+			/// @brief 获取关节当前的旋转速度
 			float GetJointAngularSpeed() const;
 
+			/// \~chinese
+			/// @brief 是否启用马达
 			bool IsMotorEnabled() const;
+
+			/// \~chinese
+			/// @brief 设置是否启用马达
 			void EnableMotor(bool flag);
 
 			/// \~chinese
 			/// @brief 设置马达转速 [degree/s]
 			void SetMotorSpeed(float speed);
+
+			/// \~chinese
+			/// @brief 获取马达转速 [degree/s]
 			float GetMotorSpeed() const;
 
 			/// \~chinese
-			/// @brief 设定最大马达转矩 [N/m]
+			/// @brief 设置最大马达转矩 [N/m]
 			void SetMaxMotorTorque(float torque);
+
+			/// \~chinese
+			/// @brief 获取最大马达转矩 [N/m]
 			float GetMaxMotorTorque() const;
 
+			/// \~chinese
+			/// @brief 设置弹簧响应速度
 			void SetSpringFrequencyHz(float hz);
+
+			/// \~chinese
+			/// @brief 获取弹簧响应速度
 			float GetSpringFrequencyHz() const;
 
+			/// \~chinese
+			/// @brief 设置弹簧阻尼率
 			void SetSpringDampingRatio(float ratio);
+
+			/// \~chinese
+			/// @brief 获取弹簧阻尼率
 			float GetSpringDampingRatio() const;
 
 		private:
@@ -792,12 +940,14 @@ namespace kiwano
 			: public Joint
 		{
 		public:
+			/// \~chinese
+			/// @brief 鼠标关节参数
 			struct Param : public Joint::ParamBase
 			{
-				Point target;
-				float max_force;
-				float frequency_hz;
-				float damping_ratio;
+				Point target;			///< 关节作用目标位置
+				float max_force;		///< 作用在物体A上的最大力
+				float frequency_hz;		///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
+				float damping_ratio;	///< 阻尼率，值越大关节运动阻尼越大
 
 				Param(
 					Body* body_a,
@@ -826,16 +976,25 @@ namespace kiwano
 			/// \~chinese
 			/// @brief 设定最大摩擦力 [N]
 			void SetMaxForce(float force);
+
+			/// \~chinese
+			/// @brief 获取最大摩擦力 [N]
 			float GetMaxForce() const;
 
 			/// \~chinese
 			/// @brief 设置响应速度 [hz]
 			void SetFrequency(float hz);
+
+			/// \~chinese
+			/// @brief 获取响应速度 [hz]
 			float GetFrequency() const;
 
 			/// \~chinese
-			/// @brief 设置阻尼比
+			/// @brief 设置阻尼率
 			void SetDampingRatio(float ratio);
+
+			/// \~chinese
+			/// @brief 获取阻尼率
 			float GetDampingRatio() const;
 
 		private:
@@ -871,10 +1030,12 @@ namespace kiwano
 		inline void RevoluteJoint::SetMotorSpeed(float speed)		{ KGE_ASSERT(raw_joint_); raw_joint_->SetMotorSpeed(math::Degree2Radian(speed)); }
 		inline float RevoluteJoint::GetMotorSpeed() const			{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetMotorSpeed()); }
 
+		inline float WeldJoint::GetReferenceAngle() const			{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetReferenceAngle()); }
 		inline void WeldJoint::SetFrequency(float hz)				{ KGE_ASSERT(raw_joint_); raw_joint_->SetFrequency(hz); }
 		inline float WeldJoint::GetFrequency() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->GetFrequency(); }
 		inline void WeldJoint::SetDampingRatio(float ratio)			{ KGE_ASSERT(raw_joint_); raw_joint_->SetDampingRatio(ratio); }
 		inline float WeldJoint::GetDampingRatio() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->GetDampingRatio(); }
+
 		inline float WheelJoint::GetJointAngle() const				{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetJointAngle()); }
 		inline float WheelJoint::GetJointAngularSpeed() const		{ KGE_ASSERT(raw_joint_); return math::Radian2Degree(raw_joint_->GetJointAngularSpeed()); }
 		inline bool WheelJoint::IsMotorEnabled() const				{ KGE_ASSERT(raw_joint_); return raw_joint_->IsMotorEnabled(); }

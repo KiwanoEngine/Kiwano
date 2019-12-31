@@ -580,6 +580,7 @@ namespace kiwano
 			raw_joint_ = static_cast<b2WeldJoint*>(GetB2Joint());
 		}
 
+
 		//
 		// WheelJoint
 		//
