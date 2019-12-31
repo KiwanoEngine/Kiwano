@@ -22,6 +22,11 @@
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/// \~chinese
 	/// @brief 线条样式
 	/// @details 线条样式表示渲染目标在绘制线条时，如何处理两条线相交部分
@@ -31,4 +36,6 @@ namespace kiwano
 		Bevel = 1,	///< 斜角样式
 		Round = 2	///< 圆角样式
 	};
+
+	/** @} */
 }

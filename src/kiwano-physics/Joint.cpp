@@ -260,6 +260,7 @@ namespace kiwano
 			def.Initialize(param.body_a->GetB2Body(), param.body_b->GetB2Body());
 			def.maxForce = param.max_force;
 			def.maxTorque = world->Stage2World(param.max_torque);
+			def.correctionFactor = param.correction_factor;
 
 			Init(world, &def);
 			raw_joint_ = static_cast<b2MotorJoint*>(GetB2Joint());

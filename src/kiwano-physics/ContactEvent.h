@@ -38,10 +38,9 @@ namespace kiwano
 		{
 		public:
 			Contact contact;	///< 产生的接触
-			Body* body_a;		///< 产生接触的物体A
-			Body* body_b;		///< 产生接触的物体B
 
 			ContactBeginEvent();
+
 			ContactBeginEvent(Contact const& contact);
 		};
 
@@ -52,10 +51,9 @@ namespace kiwano
 		{
 		public:
 			Contact contact;	///< 产生的接触
-			Body* body_a;		///< 产生接触的物体A
-			Body* body_b;		///< 产生接触的物体B
 
 			ContactEndEvent();
+
 			ContactEndEvent(Contact const& contact);
 		};
 

@@ -28,6 +28,13 @@ namespace kiwano
 	class TextureRenderTarget;
 	class Renderer;
 
+	KGE_DECLARE_SMART_PTR(Texture);
+
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/**
 	* \~chinese
 	* @brief 插值模式
@@ -38,8 +45,6 @@ namespace kiwano
 		Linear,		///< 双线性插值，对周围四个像素进行两次线性插值计算, 在图像放大时可能会模糊
 		Nearest,	///< 最邻近插值，取最邻近的像素点的颜色值
 	};
-
-	KGE_DECLARE_SMART_PTR(Texture);
 
 	/**
 	* \~chinese
@@ -140,4 +145,6 @@ namespace kiwano
 
 		static InterpolationMode default_interpolation_mode_;
 	};
+
+	/** @} */
 }

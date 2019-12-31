@@ -26,7 +26,22 @@ namespace kiwano
 {
 	namespace physics
 	{
-		// 物理世界
+		KGE_DECLARE_SMART_PTR(World);
+
+		/**
+		* \~chinese
+		* \defgroup Physics 物理引擎
+		*/
+
+		/**
+		* \addtogroup Physics
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief 物理世界
+		*/
 		class KGE_API World
 			: public Stage
 		{
@@ -38,54 +53,82 @@ namespace kiwano
 
 			virtual ~World();
 
-			// 获取重力
+			/// \~chinese
+			/// @brief 获取重力 [N]
 			Vec2 GetGravity() const;
 
-			// 设置重力
+			/// \~chinese
+			/// @brief 设置重力 [N]
 			void SetGravity(Vec2 gravity);
 
-			// 获取全局缩放比例
-			inline float	GetGlobalScale() const					{ return global_scale_; }
+			/// \~chinese
+			/// @brief 获取全局缩放比例
+			/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+			float GetGlobalScale() const;
 
-			// 设置全局缩放比例
-			inline void		SetGlobalScale(float scale)				{ global_scale_ = scale; }
+			/// \~chinese
+			/// @brief 设置全局缩放比例
+			/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+			void SetGlobalScale(float scale);
 
-			// 游戏世界单位转换为物理世界单位
-			inline float	World2Stage(float value) const			{ return value * GetGlobalScale(); }
-			inline Point	World2Stage(const b2Vec2& pos) const	{ return Point(World2Stage(pos.x), World2Stage(pos.y)); }
+			/// \~chinese
+			/// @brief 游戏世界单位转换为物理世界单位
+			/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+			float World2Stage(float value) const;
 
-			// 物理世界单位转换为游戏世界单位
-			inline float	Stage2World(float value) const			{ return value / GetGlobalScale(); }
-			inline b2Vec2	Stage2World(const Point& pos) const		{ return b2Vec2(Stage2World(pos.x), Stage2World(pos.y)); }
+			/// \~chinese
+			/// @brief 游戏世界单位转换为物理世界单位
+			/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+			Vec2 World2Stage(const b2Vec2& pos) const;
 
-			// 设置速度迭代次数, 默认为 6
-			inline void SetVelocityIterations(int vel_iter)			{ vel_iter_ = vel_iter; }
+			/// \~chinese
+			/// @brief 物理世界单位转换为游戏世界单位
+			/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+			float Stage2World(float value) const;
 
-			// 设置位置迭代次数, 默认为 2
-			inline void SetPositionIterations(int pos_iter)			{ pos_iter_ = pos_iter; }
+			/// \~chinese
+			/// @brief 物理世界单位转换为游戏世界单位
+			/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+			b2Vec2 Stage2World(const Vec2& pos) const;
+
+			/// \~chinese
+			/// @brief 设置速度迭代次数, 默认为 6
+			void SetVelocityIterations(int vel_iter);
+
+			/// \~chinese
+			/// @brief 设置位置迭代次数, 默认为 2
+			void SetPositionIterations(int pos_iter);
 
 			b2World* GetB2World();
+
 			const b2World* GetB2World() const;
 
 		private:
-			// 移除物体
+			/// \~chinese
+			/// @brief 移除物体
 			void RemoveBody(Body* body);
 
-			// 移除所有物体
+			/// \~chinese
+			/// @brief 移除所有物体
 			void RemoveAllBodies();
 
-			// 添加关节
+			/// \~chinese
+			/// @brief 添加关节
 			void AddJoint(Joint* joint);
 
-			// 移除关节
+			/// \~chinese
+			/// @brief 移除关节
 			void RemoveJoint(Joint* joint);
 
-			// 移除所有关节
+			/// \~chinese
+			/// @brief 移除所有关节
 			void RemoveAllJoints();
 
-			// 关节被移除
+			/// \~chinese
+			/// @brief 关节被移除
 			void JointRemoved(b2Joint* joint);
 
+		protected:
 			void Update(Duration dt) override;
 
 		private:
@@ -106,6 +149,47 @@ namespace kiwano
 			Vector<Joint*> joints_;
 		};
 
-		KGE_DECLARE_SMART_PTR(World);
+
+		/** @} */
+
+		inline float World::GetGlobalScale() const
+		{
+			return global_scale_;
+		}
+
+		inline void World::SetGlobalScale(float scale)
+		{
+			global_scale_ = scale;
+		}
+
+		inline float World::World2Stage(float value) const
+		{
+			return value * GetGlobalScale();
+		}
+
+		inline Vec2 World::World2Stage(const b2Vec2& pos) const
+		{
+			return Point(World2Stage(pos.x), World2Stage(pos.y));
+		}
+
+		inline float World::Stage2World(float value) const
+		{
+			return value / GetGlobalScale();
+		}
+
+		inline b2Vec2 World::Stage2World(const Vec2& pos) const
+		{
+			return b2Vec2(Stage2World(pos.x), Stage2World(pos.y));
+		}
+
+		inline void World::SetVelocityIterations(int vel_iter)
+		{
+			vel_iter_ = vel_iter;
+		}
+
+		inline void World::SetPositionIterations(int pos_iter)
+		{
+			pos_iter_ = pos_iter;
+		}
 	}
 }

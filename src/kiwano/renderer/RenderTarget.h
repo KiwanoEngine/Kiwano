@@ -35,6 +35,11 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(RenderTarget);
 	KGE_DECLARE_SMART_PTR(TextureRenderTarget);
 
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/// \~chinese
 	/// @brief ÎÄ×Ö¿¹¾â³ÝÄ£Ê½
 	enum class TextAntialiasMode
@@ -346,6 +351,8 @@ namespace kiwano
 	private:
 		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
 	};
+
+	/** @} */
 
 
 	inline RenderTarget::Status::Status()

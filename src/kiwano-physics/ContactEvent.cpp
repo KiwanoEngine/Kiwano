@@ -26,8 +26,6 @@ namespace kiwano
 	{
 		ContactBeginEvent::ContactBeginEvent()
 			: Event(KGE_EVENT(ContactBeginEvent))
-			, body_a(nullptr)
-			, body_b(nullptr)
 		{
 		}
 
@@ -35,14 +33,10 @@ namespace kiwano
 			: ContactBeginEvent()
 		{
 			this->contact = contact;
-			body_a = this->contact.GetFixtureA().GetBody();
-			body_b = this->contact.GetFixtureB().GetBody();
 		}
 
 		ContactEndEvent::ContactEndEvent()
 			: Event(KGE_EVENT(ContactEndEvent))
-			, body_a(nullptr)
-			, body_b(nullptr)
 		{
 		}
 
@@ -50,8 +44,6 @@ namespace kiwano
 			: ContactEndEvent()
 		{
 			this->contact = contact;
-			body_a = this->contact.GetFixtureA().GetBody();
-			body_b = this->contact.GetFixtureB().GetBody();
 		}
 
 }

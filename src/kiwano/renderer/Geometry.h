@@ -28,6 +28,11 @@ namespace kiwano
 	class GeometrySink;
 
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief ¼¸ºÎÐÎ×´
 	*/
@@ -116,6 +121,8 @@ namespace kiwano
 	private:
 		ComPtr<ID2D1Geometry> geo_;
 	};
+
+	/** @} */
 
 	inline ComPtr<ID2D1Geometry> Geometry::GetGeometry() const					{ return geo_; }
 

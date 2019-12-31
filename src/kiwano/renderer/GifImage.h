@@ -29,6 +29,11 @@ namespace kiwano
 	KGE_DECLARE_SMART_PTR(GifImage);
 
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief GIFÍ¼Ïñ
 	*/
@@ -106,6 +111,8 @@ namespace kiwano
 
 		ComPtr<IWICBitmapDecoder> decoder_;
 	};
+
+	/** @} */
 
 	inline GifImage::Frame::Frame()
 		: disposal_type(DisposalType::Unknown)

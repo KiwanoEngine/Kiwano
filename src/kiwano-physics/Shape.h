@@ -26,25 +26,35 @@ namespace kiwano
 	namespace physics
 	{
 		class World;
+		class Fixture;
 
-		// 形状基类
+		/**
+		* \addtogroup Physics
+		* @{
+		*/
+
+		/// \~chinese
+		/// @brief 形状基类
 		class KGE_API Shape
 		{
+			friend class Fixture;
+
 		public:
 			Shape();
 			Shape(b2Shape* shape);
 
-			b2Shape* GetB2Shape();
-			const b2Shape* GetB2Shape() const;
+			b2Shape* GetB2Shape() const;
 			void SetB2Shape(b2Shape* shape);
 
+		private:
 			virtual void FitWorld(World* world) {}
 
 		private:
 			b2Shape* shape_;
 		};
 
-		// 圆形形状
+		/// \~chinese
+		/// @brief 圆形形状
 		class KGE_API CircleShape
 			: public Shape
 		{
@@ -55,6 +65,7 @@ namespace kiwano
 
 			void Set(float radius, Point const& offset = Point());
 
+		private:
 			void FitWorld(World* world) override;
 
 		private:
@@ -63,7 +74,8 @@ namespace kiwano
 			b2CircleShape circle_;
 		};
 
-		// 盒子形状
+		/// \~chinese
+		/// @brief 盒子形状
 		class KGE_API BoxShape
 			: public Shape
 		{
@@ -74,6 +86,7 @@ namespace kiwano
 
 			void Set(Vec2 const& size, Point const& offset = Point(), float rotation = 0.f);
 
+		private:
 			void FitWorld(World* world) override;
 
 		private:
@@ -83,7 +96,8 @@ namespace kiwano
 			b2PolygonShape polygon_;
 		};
 
-		// 多边形形状
+		/// \~chinese
+		/// @brief 多边形形状
 		class KGE_API PolygonShape
 			: public Shape
 		{
@@ -94,6 +108,7 @@ namespace kiwano
 
 			void Set(Vector<Point> const& vertexs);
 
+		private:
 			void FitWorld(World* world) override;
 
 		private:
@@ -101,7 +116,8 @@ namespace kiwano
 			b2PolygonShape polygon_;
 		};
 
-		// 线段形状, 用于表示一条边
+		/// \~chinese
+		/// @brief 线段形状, 用于表示一条边
 		class KGE_API EdgeShape
 			: public Shape
 		{
@@ -112,6 +128,7 @@ namespace kiwano
 
 			void Set(Point const& p1, Point const& p2);
 
+		private:
 			void FitWorld(World* world) override;
 
 		private:
@@ -119,7 +136,8 @@ namespace kiwano
 			b2EdgeShape edge_;
 		};
 
-		// 链式形状
+		/// \~chinese
+		/// @brief 链式形状
 		class KGE_API ChainShape
 			: public Shape
 		{
@@ -130,6 +148,7 @@ namespace kiwano
 
 			void Set(Vector<Point> const& vertexs, bool loop = false);
 
+		private:
 			void FitWorld(World* world) override;
 
 		private:
@@ -137,5 +156,7 @@ namespace kiwano
 			Vector<Point> vertexs_;
 			b2ChainShape chain_;
 		};
+
+		/** @} */
 	}
 }

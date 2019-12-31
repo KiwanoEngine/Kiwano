@@ -31,6 +31,11 @@ namespace kiwano
 	class Renderer;
 
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief ×ÖÌå
 	*/
@@ -66,6 +71,8 @@ namespace kiwano
 	private:
 		ComPtr<IDWriteFontCollection> collection_;
 	};
+
+	/** @} */
 
 	inline ComPtr<IDWriteFontCollection> Font::GetCollection() const
 	{

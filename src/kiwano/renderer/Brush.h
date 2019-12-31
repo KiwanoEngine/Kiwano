@@ -29,6 +29,11 @@ namespace kiwano
 
 	KGE_DECLARE_SMART_PTR(Brush);
 
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/// \~chinese
 	/// @brief ½¥±ä×ª»»µã
 	struct GradientStop
@@ -140,6 +145,8 @@ namespace kiwano
 		float opacity_;
 		ComPtr<ID2D1Brush> raw_;
 	};
+
+	/** @} */
 
 	inline Brush::Type			Brush::GetType() const		{ return type_; }
 

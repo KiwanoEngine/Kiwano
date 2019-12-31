@@ -27,6 +27,11 @@ namespace kiwano
 	class RenderTarget;
 	class Renderer;
 
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/// \~chinese
 	/// @brief 文本布局
 	class KGE_API TextLayout
@@ -170,6 +175,8 @@ namespace kiwano
 		String text_;
 		TextStyle style_;
 	};
+
+	/** @} */
 
 	inline bool TextLayout::IsValid() const
 	{

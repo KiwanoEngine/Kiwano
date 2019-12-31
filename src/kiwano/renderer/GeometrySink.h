@@ -26,6 +26,11 @@ namespace kiwano
 	class RenderTarget;
 	class Renderer;
 
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/// \~chinese
 	/// @brief 几何形状组合方式
 	enum class CombineMode
@@ -142,6 +147,8 @@ namespace kiwano
 		ComPtr<ID2D1PathGeometry> path_geo_;
 		ComPtr<ID2D1GeometrySink> sink_;
 	};
+
+	/** @} */
 	
 	inline ComPtr<ID2D1PathGeometry> GeometrySink::GetPathGeometry() const		{ return path_geo_; }
 

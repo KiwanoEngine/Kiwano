@@ -35,12 +35,7 @@ namespace kiwano
 		{
 		}
 
-		b2Shape* Shape::GetB2Shape()
-		{
-			return shape_;
-		}
-
-		const b2Shape* Shape::GetB2Shape() const
+		b2Shape* Shape::GetB2Shape() const
 		{
 			return shape_;
 		}

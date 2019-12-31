@@ -82,14 +82,14 @@ namespace kiwano
 	};
 
 	/// \~chinese
-	/// @brief 事件特性：判断是否是事件类型
+	/// @brief 事件特性：判断指定类型是否是事件
 	template <typename _Ty>
 	struct IsEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value>
 	{
 	};
 
 	/// \~chinese
-	/// @brief 事件特性：判断是否是事件类型
+	/// @brief 事件特性：判断一个事件能否安全转换到另一事件类型
 	template <typename _Ty, typename = typename std::enable_if<IsEvent<_Ty>::value, int>::type>
 	struct IsEventType
 	{

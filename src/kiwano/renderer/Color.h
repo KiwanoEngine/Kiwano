@@ -24,6 +24,11 @@
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
 	/*
 	* \~chinese
 	* @brief 颜色
@@ -127,6 +132,8 @@ namespace kiwano
 		float b;  ///< 蓝色值
 		float a;  ///< Alpha值
 	};
+
+	/** @} */
 
 	inline bool Color::operator== (const Color& rhs) const
 	{

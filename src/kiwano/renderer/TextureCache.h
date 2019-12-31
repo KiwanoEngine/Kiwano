@@ -25,6 +25,11 @@
 namespace kiwano
 {
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief Œ∆¿Ìª∫¥Ê
 	*/
@@ -82,4 +87,6 @@ namespace kiwano
 		using GifImageMap = UnorderedMap<size_t, GifImagePtr>;
 		GifImageMap gif_texture_cache_;
 	};
+
+	/** @} */
 }

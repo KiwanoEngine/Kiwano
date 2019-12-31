@@ -26,6 +26,11 @@ namespace kiwano
 	class RenderTarget;
 
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief Õº≤„«¯”Ú
 	*/
@@ -84,6 +89,8 @@ namespace kiwano
 		Matrix3x2 mask_transform_;
 		ComPtr<ID2D1Layer> layer_;
 	};
+
+	/** @} */
 
 	inline bool					LayerArea::IsValid() const								{ return layer_ != nullptr; }
 

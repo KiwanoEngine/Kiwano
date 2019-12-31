@@ -27,6 +27,11 @@
 namespace kiwano
 {
 	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
 	* \~chinese
 	* @brief 文本对齐方式
 	*/
@@ -93,6 +98,8 @@ namespace kiwano
 		*/
 		TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
 	};
+
+	/** @} */
 
 	inline TextStyle::TextStyle()
 		: TextStyle(String(), 18, FontWeight::Normal)

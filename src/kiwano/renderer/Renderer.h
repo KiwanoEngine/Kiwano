@@ -43,6 +43,16 @@ namespace kiwano
 
 	/**
 	* \~chinese
+	* \defgroup Render ‰÷»æ“˝«Ê
+	*/
+
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
+	* \~chinese
 	* @brief ‰÷»æ…Ë÷√
 	*/
 	struct RenderConfig
@@ -314,6 +324,8 @@ namespace kiwano
 		ComPtr<IResourceFontFileLoader>			res_font_file_loader_;
 		ComPtr<IResourceFontCollectionLoader>	res_font_collection_loader_;
 	};
+
+	/** @} */
 
 	inline HWND					Renderer::GetTargetWindow() const	{ return hwnd_; }
 

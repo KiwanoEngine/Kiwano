@@ -58,28 +58,16 @@ namespace kiwano
 			}
 		}
 
-		Body* Fixture::GetBody()
+		Body* Fixture::GetBody() const
 		{
 			KGE_ASSERT(fixture_);
 			return static_cast<Body*>(fixture_->GetBody()->GetUserData());
-		}
-
-		const Body* Fixture::GetBody() const
-		{
-			KGE_ASSERT(fixture_);
-			return static_cast<const Body*>(fixture_->GetBody()->GetUserData());
 		}
 
 		Shape Fixture::GetShape() const
 		{
 			KGE_ASSERT(fixture_);
 			return Shape(fixture_->GetShape());
-		}
-
-		Fixture Fixture::GetNext() const
-		{
-			KGE_ASSERT(fixture_);
-			return Fixture(fixture_->GetNext());
 		}
 
 		void Fixture::GetMassData(float* mass, Point* center, float* inertia) const
