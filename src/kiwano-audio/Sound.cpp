@@ -35,18 +35,6 @@ namespace kiwano
 		{
 		}
 
-		Sound::Sound(String const& file_path)
-			: Sound()
-		{
-			Load(file_path);
-		}
-
-		Sound::Sound(Resource const& res)
-			: Sound()
-		{
-			Load(res);
-		}
-
 		Sound::~Sound()
 		{
 			Close();
@@ -68,19 +56,15 @@ namespace kiwano
 			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			HRESULT hr = transcoder_.LoadMediaFile(full_path);
-
 			if (FAILED(hr))
 			{
 				KGE_ERROR(L"Load media file failed with HRESULT of %08X", hr);
 				return false;
 			}
 
-			hr = AudioEngine::instance().CreateVoice(&voice_, transcoder_.GetBuffer());
-			if (FAILED(hr))
+			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
-
-				KGE_ERROR(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
 
@@ -96,24 +80,25 @@ namespace kiwano
 			}
 
 			HRESULT hr = transcoder_.LoadMediaResource(res);
-
 			if (FAILED(hr))
 			{
 				KGE_ERROR(L"Load media resource failed with HRESULT of %08X", hr);
 				return false;
 			}
 
-			hr = AudioEngine::instance().CreateVoice(&voice_, transcoder_.GetBuffer());
-			if (FAILED(hr))
+			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
-
-				KGE_ERROR(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
 
 			opened_ = true;
 			return true;
+		}
+
+		bool Sound::IsValid() const
+		{
+			return voice_ != nullptr;
 		}
 
 		void Sound::Play(int loop_count)

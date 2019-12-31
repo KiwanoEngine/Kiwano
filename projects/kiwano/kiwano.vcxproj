@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Brush.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Color.cpp" />
@@ -158,9 +159,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd-party\StackWalker\libStackWalker.vcxproj">
-      <Project>{3a3948dc-9865-46b3-b7b9-7e5572704ed2}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\3rd-party\tinyxml2\libtinyxml2.vcxproj">
       <Project>{ab47e875-85e5-4105-a71e-88930eaab910}</Project>
     </ProjectReference>
@@ -179,7 +177,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>

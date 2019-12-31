@@ -2,6 +2,8 @@
 
 #pragma once
 
+#ifndef KGE_DOXYGEN_DO_NOT_INCLUDE
+
 #if !defined(KGE_USE_DIRECTX10)
 
 #include <kiwano-imgui/imgui_impl_dx11.h>
@@ -25,5 +27,7 @@ inline void     ImGui_Impl_RenderDrawData(ImDrawData* draw_data)	{ ImGui_ImplDX1
 
 inline void     ImGui_Impl_InvalidateDeviceObjects()				{ ImGui_ImplDX10_InvalidateDeviceObjects(); }
 inline bool     ImGui_Impl_CreateDeviceObjects()					{ return ImGui_ImplDX10_CreateDeviceObjects(); }
+
+#endif
 
 #endif

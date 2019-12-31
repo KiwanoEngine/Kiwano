@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Resource.h>
+#include <kiwano/platform/win32/ComPtr.hpp>
 #include <kiwano-audio/Transcoder.h>
 #include <xaudio2.h>
 
@@ -28,68 +29,100 @@ namespace kiwano
 {
 	namespace audio
 	{
+		class AudioEngine;
+
 		KGE_DECLARE_SMART_PTR(Sound);
 
+		/**
+		* \addtogroup Audio
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief 音频
+		*/
 		class KGE_API Sound
 			: public ObjectBase
 		{
+			friend class AudioEngine;
+
 		public:
 			Sound();
 
-			Sound(
-				String const& file_path	/* 本地音频文件 */
-			);
-
-			Sound(
-				Resource const& res		/* 音乐资源 */
-			);
-
 			virtual ~Sound();
 
-			// 打开本地音频文件
-			bool Load(
-				String const& file_path
-			);
+			/// \~chinese
+			/// @brief 打开本地音频文件
+			/// @param res 本地音频文件路径
+			bool Load(String const& file_path);
 
-			// 打开音乐资源
-			bool Load(
-				Resource const& res		/* 音乐资源 */
-			);
+			/// \~chinese
+			/// @brief 打开音频资源
+			/// @param res 音频资源
+			bool Load(Resource const& res);
 
-			// 播放
-			void Play(
-				int loop_count = 0		/* 播放循环次数 (-1 为循环播放) */
-			);
+			/// \~chinese
+			/// @brief 是否有效
+			bool IsValid() const;
 
-			// 暂停
+			/// \~chinese
+			/// @brief 播放
+			/// @param loop_count 播放循环次数，设置 -1 为循环播放
+			void Play(int loop_count = 0);
+
+			/// \~chinese
+			/// @brief 暂停
 			void Pause();
 
-			// 继续
+			/// \~chinese
+			/// @brief 继续
 			void Resume();
 
-			// 停止
+			/// \~chinese
+			/// @brief 停止
 			void Stop();
 
-			// 关闭并回收资源
+			/// \~chinese
+			/// @brief 关闭并销毁资源
 			void Close();
 
-			// 是否正在播放
+			/// \~chinese
+			/// @brief 是否正在播放
 			bool IsPlaying() const;
 
-			// 获取音量
+			/// \~chinese
+			/// @brief 获取音量
 			float GetVolume() const;
 
-			// 设置音量
-			void SetVolume(
-				float volume	/* 1 为原始音量, 大于 1 为放大音量, 0 为最小音量 */
-			);
+			/// \~chinese
+			/// @brief 设置音量
+			/// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
+			void SetVolume(float volume);
 
 		private:
-			bool		opened_;
-			bool		playing_;
-			Transcoder	transcoder_;
+			IXAudio2SourceVoice* GetXAudio2Voice() const;
 
+			void SetXAudio2Voice(IXAudio2SourceVoice* voice);
+
+		private:
+			bool					opened_;
+			bool					playing_;
+			Transcoder				transcoder_;
 			IXAudio2SourceVoice*	voice_;
 		};
+
+		/** @} */
+
+
+		inline IXAudio2SourceVoice* Sound::GetXAudio2Voice() const
+		{
+			return voice_;
+		}
+
+		inline void Sound::SetXAudio2Voice(IXAudio2SourceVoice* voice)
+		{
+			voice_ = voice;
+		}
 	}
 }

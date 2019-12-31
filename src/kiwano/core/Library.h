@@ -48,6 +48,11 @@ namespace kiwano
 		bool Load(String const& lib);
 
 		/// \~chinese
+		/// @brief 加载DLL
+		/// @param lib DLL文件路径
+		bool Load(ByteString const& lib);
+
+		/// \~chinese
 		/// @brief 是否有效
 		bool IsValid() const;
 
@@ -58,13 +63,13 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 检索指定的DLL中的输出库函数地址
 		/// @param proc_name 函数名
-		FARPROC GetProcess(String const& proc_name);
+		FARPROC GetProcess(ByteString const& proc_name);
 
 		/// \~chinese
 		/// @brief 检索指定的DLL中的输出库函数地址
 		/// @param proc_name 函数名
 		template <typename _Proc>
-		inline _Proc GetProcess(String const& proc_name)
+		inline _Proc GetProcess(ByteString const& proc_name)
 		{
 			return reinterpret_cast<_Proc>(GetProcess(proc_name));
 		}

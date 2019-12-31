@@ -3,6 +3,8 @@
 #pragma once
 #include <3rd-party/imgui/imgui.h>
 
+#ifndef KGE_DOXYGEN_DO_NOT_INCLUDE
+
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -14,3 +16,5 @@ IMGUI_IMPL_API void     ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data);
 // Use if you want to reset your rendering device without losing ImGui state.
 IMGUI_IMPL_API void     ImGui_ImplDX11_InvalidateDeviceObjects();
 IMGUI_IMPL_API bool     ImGui_ImplDX11_CreateDeviceObjects();
+
+#endif

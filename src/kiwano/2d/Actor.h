@@ -38,7 +38,7 @@ namespace kiwano
 
 	/**
 	* \~chinese
-	* \defgroup Actors 角色
+	* \defgroup Actors 基础角色
 	*/
 
 	/**
@@ -63,8 +63,13 @@ namespace kiwano
 		friend IntrusiveList<ActorPtr>;
 
 	public:
-		using Children			= IntrusiveList<ActorPtr>;
-		using UpdateCallback	= Function<void(Duration)>;
+		/// \~chinese
+		/// @brief 子成员列表
+		using Children = IntrusiveList<ActorPtr>;
+
+		/// \~chinese
+		/// @brief 角色更新回调函数
+		using UpdateCallback = Function<void(Duration)>;
 
 		Actor();
 
@@ -395,15 +400,15 @@ namespace kiwano
 
 	protected:
 		/// \~chinese
-		/// @brief 更新自身和所有子节点
+		/// @brief 更新自身和所有子角色
 		virtual void Update(Duration dt);
 
 		/// \~chinese
-		/// @brief 渲染自身和所有子节点
+		/// @brief 渲染自身和所有子角色
 		virtual void Render(RenderTarget* rt);
 
 		/// \~chinese
-		/// @brief 绘制自身和所有子节点的边界
+		/// @brief 绘制自身和所有子角色的边界
 		virtual void RenderBorder(RenderTarget* rt);
 
 		/// \~chinese
@@ -415,15 +420,15 @@ namespace kiwano
 		virtual void PrepareToRender(RenderTarget* rt);
 
 		/// \~chinese
-		/// @brief 更新自己的二维变换，并通知所有子节点
+		/// @brief 更新自己的二维变换，并通知所有子角色
 		void UpdateTransform() const;
 
 		/// \~chinese
-		/// @brief 更新自己和所有子节点的透明度
+		/// @brief 更新自己和所有子角色的透明度
 		void UpdateOpacity();
 
 		/// \~chinese
-		/// @brief 将所有子节点按Z轴顺序排序
+		/// @brief 将所有子角色按Z轴顺序排序
 		void Reorder();
 
 		/// \~chinese

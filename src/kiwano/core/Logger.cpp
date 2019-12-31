@@ -201,32 +201,29 @@ namespace kiwano
 
 	void Logger::Prepare(Level level, StringStream& sstream)
 	{
-		String prompt;
+		String prefix;
 
 		switch (level)
 		{
 		case Level::Info:
-			prompt = L"[INFO] ";
+			prefix = L"[INFO] ";
 			break;
 		case Level::System:
-			prompt = L"[SYSTEM] ";
+			prefix = L"[SYSTEM] ";
 			break;
 		case Level::Warning:
-			prompt = L"[WARNING] ";
+			prefix = L"[WARN] ";
 			break;
 		case Level::Error:
-			prompt = L"[ERROR] ";
+			prefix = L"[ERROR] ";
 			break;
 		}
-
-		// Prefix
-		sstream << L"[KIWANO] " << prompt;
 
 		// Timestamp
 		time_t unix = std::time(nullptr);
 		std::tm tmbuf;
 		localtime_s(&tmbuf, &unix);
-		sstream << std::put_time(&tmbuf, L"%H:%M:%S ");
+		sstream << prefix << std::put_time(&tmbuf, L"%H:%M:%S ");
 	}
 
 	void Logger::Output(Level level, StringStream& sstream)

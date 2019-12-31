@@ -75,36 +75,51 @@ namespace kiwano
 			dlls::MediaFoundation::Get().MFShutdown();
 		}
 
-		HRESULT AudioEngine::CreateVoice(IXAudio2SourceVoice** voice, const Transcoder::Buffer& buffer)
+		bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
 		{
 			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
-			if (voice == nullptr)
+			HRESULT hr = S_OK;
+
+			if (buffer.format == nullptr)
+				hr = E_INVALIDARG;
+
+			if (SUCCEEDED(hr))
 			{
-				return E_INVALIDARG;
+				IXAudio2SourceVoice* voice = nullptr;
+				hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
+
+				if (SUCCEEDED(hr))
+				{
+					IXAudio2SourceVoice* old = sound.GetXAudio2Voice();
+					if (old)
+					{
+						old->DestroyVoice();
+						old = nullptr;
+					}
+
+					sound.SetXAudio2Voice(voice);
+				}
 			}
 
-			if (*voice)
-			{
-				(*voice)->DestroyVoice();
-				(*voice) = nullptr;
-			}
-
-			return x_audio2_->CreateSourceVoice(voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
+			win32::WarnIfFailed(hr);
+			return SUCCEEDED(hr);
 		}
 
 		void AudioEngine::Open()
 		{
 			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
-			x_audio2_->StartEngine();
+			if (x_audio2_)
+				x_audio2_->StartEngine();
 		}
 
 		void AudioEngine::Close()
 		{
 			KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
 
-			x_audio2_->StopEngine();
+			if (x_audio2_)
+				x_audio2_->StopEngine();
 		}
 	}
 }

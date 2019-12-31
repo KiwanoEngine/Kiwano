@@ -38,6 +38,10 @@ namespace kiwano
 	using String = oc::wstring;
 
 	/// \~chinese
+	/// @brief Õ­×Ö·û´®ÈÝÆ÷
+	using ByteString = oc::string;
+
+	/// \~chinese
 	/// @brief ×Ö·û´®Á÷
 	using StringStream = std::wstringstream;
 
@@ -148,5 +152,15 @@ namespace kiwano
 	inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret(_Ty::* func)(_Args...) const)
 	{
 		return oc::closure(ptr, func);
+	}
+
+	inline ByteString WideToMultiByte(const String& str)
+	{
+		return oc::wide_to_string(str);
+	}
+
+	inline String MultiByteToWide(const ByteString& str)
+	{
+		return oc::string_to_wide(str);
 	}
 }

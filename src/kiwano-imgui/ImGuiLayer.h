@@ -27,8 +27,14 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
+		/// \~chinese
+		/// @brief ImGui管道
 		using ImGuiPipeline = Function<void()>;
 
+		/**
+		* \~chinese
+		* @brief ImGui图层
+		*/
 		class ImGuiLayer
 			: public Layer
 		{
@@ -37,18 +43,20 @@ namespace kiwano
 
 			virtual ~ImGuiLayer();
 
-			// 添加 ImGui 元素
-			void AddItem(
-				ImGuiPipeline const& item,
-				String const& name
-			);
+			/// \~chinese
+			/// @brief 添加 ImGui 元素
+			/// @param item 管道
+			/// @param name 元素名称
+			void AddItem(ImGuiPipeline const& item, String const& name);
 
-			// 移除 ImGui 元素
-			void RemoveItem(
-				String const& name
-			);
+			/// \~chinese
+			/// @brief 移除 ImGui 元素
+			/// @param name 元素名称
+			void RemoveItem(String const& name);
 
 			// 移除所有元素
+			/// \~chinese
+			/// @brief 移除所有元素
 			void RemoveAllItems();
 
 		public:

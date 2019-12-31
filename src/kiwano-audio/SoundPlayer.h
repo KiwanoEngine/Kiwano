@@ -28,69 +28,84 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(SoundPlayer);
 
-		// 音乐播放器
+		/**
+		* \addtogroup Audio
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief 音频播放器
+		*/
 		class KGE_API SoundPlayer
-			: protected ObjectBase
+			: public ObjectBase
 		{
 		public:
 			SoundPlayer();
 
 			~SoundPlayer();
 
-			// 加载本地音频文件, 返回该资源的标识符
-			size_t Load(
-				String const& file_path
-			);
+			/// \~chinese
+			/// @brief 加载本地音频文件
+			/// @param file_path 本地音频文件路径
+			/// @return 音频标识符
+			size_t Load(String const& file_path);
 
-			// 加载音乐资源, 返回该资源的标识符
-			size_t Load(
-				Resource const& res			/* 音乐资源 */
-			);
+			/// \~chinese
+			/// @brief 加载音频资源
+			/// @param res 音频资源
+			/// @return 音频标识符
+			size_t Load(Resource const& res);
 
-			// 播放音乐
-			void Play(
-				size_t id,				/* 标识符 */
-				int loop_count = 0			/* 播放循环次数 (-1 为循环播放) */
-			);
+			/// \~chinese
+			/// @brief 播放音频
+			/// @param id 音频标识符
+			/// @param loop_count 播放循环次数，设置 -1 为循环播放
+			void Play(size_t id, int loop_count = 0);
 
-			// 暂停音乐
-			void Pause(
-				size_t id				/* 标识符 */
-			);
+			/// \~chinese
+			/// @brief 暂停音频
+			/// @param id 音频标识符
+			void Pause(size_t id);
 
-			// 继续播放音乐
-			void Resume(
-				size_t id				/* 标识符 */
-			);
+			/// \~chinese
+			/// @brief 继续播放音频
+			/// @param id 音频标识符
+			void Resume(size_t id);
 
-			// 停止音乐
-			void Stop(
-				size_t id				/* 标识符 */
-			);
+			/// \~chinese
+			/// @brief 停止音频
+			/// @param id 音频标识符
+			void Stop(size_t id);
 
-			// 获取音乐播放状态
-			bool IsPlaying(
-				size_t id				/* 标识符 */
-			);
+			/// \~chinese
+			/// @brief 获取音频播放状态
+			/// @param id 音频标识符
+			bool IsPlaying(size_t id);
 
-			// 获取音量
+			/// \~chinese
+			/// @brief 获取音量
 			float GetVolume() const;
 
-			// 设置音量
-			void SetVolume(
-				float volume				/* 1.0 为原始音量 */
-			);
+			/// \~chinese
+			/// @brief 设置音量
+			/// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
+			void SetVolume(float volume);
 
-			// 暂停所有音乐
+			/// \~chinese
+			/// @brief 暂停所有音频
 			void PauseAll();
 
-			// 继续播放所有音乐
+			/// \~chinese
+			/// @brief 继续播放所有音频
 			void ResumeAll();
 
-			// 停止所有音乐
+			/// \~chinese
+			/// @brief 停止所有音频
 			void StopAll();
 
-			// 清除缓存
+			/// \~chinese
+			/// @brief 清除缓存
 			void ClearCache();
 
 		private:
@@ -99,5 +114,7 @@ namespace kiwano
 			using SoundMap = Map<size_t, SoundPtr>;
 			SoundMap sound_cache_;
 		};
+
+		/** @} */
 	}
 }

@@ -458,5 +458,8 @@
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

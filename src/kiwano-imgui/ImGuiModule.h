@@ -26,6 +26,10 @@ namespace kiwano
 {
 	namespace imgui
 	{
+		/**
+		* \~chinese
+		* @brief ImGuiÄ£¿é
+		*/
 		class ImGuiModule
 			: public Singleton<ImGuiModule>
 			, public RenderComponent
@@ -34,13 +38,6 @@ namespace kiwano
 		{
 			friend Singleton<ImGuiModule>;
 
-		private:
-			void Init(HWND hwnd);
-
-			void NewFrame();
-
-			void Render();
-
 		public:
 			ImGuiModule();
 
@@ -48,13 +45,20 @@ namespace kiwano
 
 			void DestroyComponent() override;
 
-			void OnUpdate(Duration dt) override;
-
 			void BeforeRender() override;
 
 			void AfterRender() override;
 
 			void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+
+			void OnUpdate(Duration dt) override;
+
+		private:
+			void Init(HWND hwnd);
+
+			void NewFrame();
+
+			void Render();
 
 			void UpdateMousePos();
 

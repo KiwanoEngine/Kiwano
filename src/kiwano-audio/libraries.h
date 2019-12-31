@@ -25,6 +25,8 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 
+#ifndef KGE_DOXYGEN_DO_NOT_INCLUDE
+
 namespace kiwano
 {
 	namespace audio
@@ -93,3 +95,5 @@ namespace kiwano
 		}
 	}
 }
+
+#endif

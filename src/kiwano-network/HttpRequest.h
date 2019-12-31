@@ -31,46 +31,88 @@ namespace kiwano
 
 		KGE_DECLARE_SMART_PTR(HttpRequest);
 
+		/**
+		* \addtogroup Network
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief HTTP请求
+		*/
 		class KGE_API HttpRequest
 			: public ObjectBase
 		{
 		public:
-			using ResponseCallback = Function<void(HttpRequest*, HttpResponse*)>;
+			/// \~chinese
+			/// @brief 响应回调函数
+			using ResponseCallback = Function<void(HttpRequest* /* request */, HttpResponse* /* response */)>;
 
+			/// \~chinese
+			/// @brief 请求类型
 			enum class Type
 			{
-				Unknown,
-				Get,
-				Post,
-				Put,
-				Delete
+				Unknown,	///< 未知
+				Get,		///< HTTP GET请求
+				Post,		///< HTTP POST请求
+				Put,		///< HTTP PUT请求
+				Delete		///< HTTP DELETE请求
 			};
 
 			HttpRequest();
 
 			HttpRequest(Type type);
 
-			// 请求地址
+			/// \~chinese
+			/// @brief 设置请求地址
 			void SetUrl(String const& url);
+
+			/// \~chinese
+			/// @brief 设置请求类型
+			void SetType(Type type);
+
+			/// \~chinese
+			/// @brief 设置请求携带的数据
+			void SetData(String const& data);
+
+			/// \~chinese
+			/// @brief 设置请求携带的JSON数据
+			void SetJsonData(Json const& json);
+
+			/// \~chinese
+			/// @brief 设置HTTP头
+			void SetHeaders(Map<String, String> const& headers);
+
+			/// \~chinese
+			/// @brief 设置HTTP头
+			void SetHeader(String const& field, String const& content);
+
+			/// \~chinese
+			/// @brief 设置响应回调函数
+			void SetResponseCallback(ResponseCallback const& callback);
+
+			/// \~chinese
+			/// @brief 获取请求地址
 			String const& GetUrl() const;
 
-			// 请求类型
-			void SetType(Type type);
+			/// \~chinese
+			/// @brief 获取请求类型
 			Type GetType() const;
 
-			// 请求数据
-			void SetData(String const& data);
-			void SetJsonData(Json const& json);
+			/// \~chinese
+			/// @brief 获取请求数据
 			String const& GetData() const;
 
-			// 请求头
-			void SetHeaders(Map<String, String> const& headers);
-			void SetHeader(String const& field, String const& content);
+			/// \~chinese
+			/// @brief 获取HTTP头
 			Map<String, String>& GetHeaders();
+
+			/// \~chinese
+			/// @brief 获取HTTP头
 			String const& GetHeader(String const& header) const;
 
-			// 响应回调
-			void SetResponseCallback(ResponseCallback const& callback);
+			/// \~chinese
+			/// @brief 获取响应回调函数
 			ResponseCallback const& GetResponseCallback() const;
 
 		private:
@@ -80,6 +122,8 @@ namespace kiwano
 			Map<String, String> headers_;
 			ResponseCallback response_cb_;
 		};
+
+		/** @} */
 
 		inline HttpRequest::HttpRequest()														: type_(Type::Unknown) {}
 

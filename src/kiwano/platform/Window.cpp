@@ -128,13 +128,7 @@ namespace kiwano
 			uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
 			uint32_t win_width, win_height;
-			AdjustWindow(
-				width,
-				height,
-				GetWindowStyle(),
-				&win_width,
-				&win_height
-			);
+			AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
 
 			left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
 			top = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;

@@ -33,9 +33,9 @@ namespace kiwano
 			{
 				const auto xaudio2_dll_names =
 				{
-					L"xaudio2_9.dll",	// for Windows 10
-					L"xaudio2_8.dll",	// for Windows 8
-					L"xaudio2_7.dll"	// for DirectX SDK
+					"xaudio2_9.dll",	// for Windows 10
+					"xaudio2_8.dll",	// for Windows 8
+					"xaudio2_7.dll"	// for DirectX SDK
 				};
 
 				for (const auto& name : xaudio2_dll_names)
@@ -48,7 +48,7 @@ namespace kiwano
 
 				if (xaudio2.IsValid())
 				{
-					XAudio2Create = xaudio2.GetProcess<PFN_XAudio2Create>(L"XAudio2Create");
+					XAudio2Create = xaudio2.GetProcess<PFN_XAudio2Create>("XAudio2Create");
 				}
 				else
 				{
@@ -68,28 +68,28 @@ namespace kiwano
 				, MFCreateSourceReaderFromByteStream(nullptr)
 				, MFCreateMFByteStreamOnStream(nullptr)
 			{
-				if (mfplat.Load(L"Mfplat.dll"))
+				if (mfplat.Load("Mfplat.dll"))
 				{
-					MFStartup = mfplat.GetProcess<PFN_MFStartup>(L"MFStartup");
-					MFShutdown = mfplat.GetProcess<PFN_MFShutdown>(L"MFShutdown");
-					MFCreateMediaType = mfplat.GetProcess<PFN_MFCreateMediaType>(L"MFCreateMediaType");
-					MFCreateWaveFormatExFromMFMediaType = mfplat.GetProcess<PFN_MFCreateWaveFormatExFromMFMediaType>(L"MFCreateWaveFormatExFromMFMediaType");
-					MFCreateMFByteStreamOnStream = mfplat.GetProcess<PFN_MFCreateMFByteStreamOnStream>(L"MFCreateMFByteStreamOnStream");
+					MFStartup = mfplat.GetProcess<PFN_MFStartup>("MFStartup");
+					MFShutdown = mfplat.GetProcess<PFN_MFShutdown>("MFShutdown");
+					MFCreateMediaType = mfplat.GetProcess<PFN_MFCreateMediaType>("MFCreateMediaType");
+					MFCreateWaveFormatExFromMFMediaType = mfplat.GetProcess<PFN_MFCreateWaveFormatExFromMFMediaType>("MFCreateWaveFormatExFromMFMediaType");
+					MFCreateMFByteStreamOnStream = mfplat.GetProcess<PFN_MFCreateMFByteStreamOnStream>("MFCreateMFByteStreamOnStream");
 				}
 				else
 				{
-					KGE_SYS_LOG(L"Load Mfplat.dll failed");
+					KGE_ERROR(L"Load Mfplat.dll failed");
 					throw std::runtime_error("Load Mfplat.dll failed");
 				}
 
-				if (mfreadwrite.Load(L"Mfreadwrite.dll"))
+				if (mfreadwrite.Load("Mfreadwrite.dll"))
 				{
-					MFCreateSourceReaderFromURL = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromURL>(L"MFCreateSourceReaderFromURL");
-					MFCreateSourceReaderFromByteStream = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromByteStream>(L"MFCreateSourceReaderFromByteStream");
+					MFCreateSourceReaderFromURL = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromURL>("MFCreateSourceReaderFromURL");
+					MFCreateSourceReaderFromByteStream = mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromByteStream>("MFCreateSourceReaderFromByteStream");
 				}
 				else
 				{
-					KGE_SYS_LOG(L"Load Mfreadwrite.dll failed");
+					KGE_ERROR(L"Load Mfreadwrite.dll failed");
 					throw std::runtime_error("Load Mfreadwrite.dll failed");
 				}
 			}

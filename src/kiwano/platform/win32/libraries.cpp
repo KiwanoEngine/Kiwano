@@ -32,10 +32,10 @@ namespace kiwano
 				, PathFileExistsW(nullptr)
 				, SHCreateMemStream(nullptr)
 			{
-				if (shlwapi.Load(L"shlwapi.dll"))
+				if (shlwapi.Load("shlwapi.dll"))
 				{
-					PathFileExistsW = shlwapi.GetProcess<PFN_PathFileExistsW>(L"PathFileExistsW");
-					SHCreateMemStream = shlwapi.GetProcess<PFN_SHCreateMemStream>(L"SHCreateMemStream");
+					PathFileExistsW = shlwapi.GetProcess<PFN_PathFileExistsW>("PathFileExistsW");
+					SHCreateMemStream = shlwapi.GetProcess<PFN_SHCreateMemStream>("SHCreateMemStream");
 				}
 				else
 				{

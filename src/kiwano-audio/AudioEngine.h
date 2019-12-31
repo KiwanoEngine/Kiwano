@@ -22,12 +22,27 @@
 #include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
 #include <kiwano-audio/Transcoder.h>
+#include <kiwano-audio/Sound.h>
 #include <xaudio2.h>
 
 namespace kiwano
 {
 	namespace audio
 	{
+		/**
+		* \~chinese
+		* \defgroup Audio 音频引擎
+		*/
+
+		/**
+		* \addtogroup Audio
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief 音频引擎
+		*/
 		class KGE_API AudioEngine
 			: public Singleton<AudioEngine>
 			, public ComponentBase
@@ -35,16 +50,17 @@ namespace kiwano
 			friend Singleton<AudioEngine>;
 
 		public:
-			// 开启设备
+			/// \~chinese
+			/// @brief 开启音频设备
 			void Open();
 
-			// 关闭设备
+			/// \~chinese
+			/// @brief 关闭音频设备
 			void Close();
 
-			HRESULT CreateVoice(
-				IXAudio2SourceVoice** voice,
-				const Transcoder::Buffer& buffer
-			);
+			/// \~chinese
+			/// @brief 从解码器数据缓冲中创建音频对象
+			bool CreateSound(Sound& sound, const Transcoder::Buffer& buffer);
 
 		public:
 			void SetupComponent() override;
@@ -60,5 +76,7 @@ namespace kiwano
 			IXAudio2* x_audio2_;
 			IXAudio2MasteringVoice* mastering_voice_;
 		};
+
+		/** @} */
 	}
 }

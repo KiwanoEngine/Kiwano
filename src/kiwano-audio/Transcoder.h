@@ -28,41 +28,64 @@ namespace kiwano
 {
 	namespace audio
 	{
+		class Sound;
 
+		/**
+		* \addtogroup Audio
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief 音频解码器
+		*/
 		class KGE_API Transcoder
 		{
+			friend class Sound;
+
 		public:
+			/**
+			* \~chinese
+			* @brief 音频数据缓冲
+			*/
 			struct Buffer
 			{
-				BYTE* data;
-				uint32_t size;
-				const WAVEFORMATEX* format;
+				BYTE* data;					///< 音频数据
+				uint32_t size;				///< 音频数据大小
+				const WAVEFORMATEX* format;	///< 音频数据格式
 			};
 
 			Transcoder();
 
 			~Transcoder();
 
+			/// \~chinese
+			/// @brief 获取数据缓冲
 			Buffer GetBuffer() const;
 
+			/// \~chinese
+			/// @brief 清空数据缓冲
 			void ClearBuffer();
 
-			HRESULT LoadMediaFile(
-				String const& file_path
-			);
+		private:
+			/// \~chinese
+			/// @brief 解码本地音频文件
+			HRESULT LoadMediaFile(String const& file_path);
 
-			HRESULT LoadMediaResource(
-				Resource const& res
-			);
+			/// \~chinese
+			/// @brief 解码音频资源
+			HRESULT LoadMediaResource(Resource const& res);
 
-			HRESULT ReadSource(
-				IMFSourceReader* reader
-			);
+			/// \~chinese
+			/// @brief 读取音频源数据
+			HRESULT ReadSource(IMFSourceReader* reader);
 
 		private:
 			BYTE* wave_data_;
 			uint32_t wave_size_;
 			WAVEFORMATEX* wave_format_;
 		};
+
+		/** @} */
 	}
 }

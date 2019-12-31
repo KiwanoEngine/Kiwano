@@ -45,6 +45,12 @@ namespace kiwano
 		return IsValid();
 	}
 
+	bool Library::Load(ByteString const& lib)
+	{
+		instance_ = ::LoadLibraryA(lib.c_str());
+		return IsValid();
+	}
+
 	bool Library::IsValid() const
 	{
 		return instance_ != nullptr;
@@ -59,10 +65,13 @@ namespace kiwano
 		}
 	}
 
-	FARPROC Library::GetProcess(String const& proc_name)
+	FARPROC Library::GetProcess(ByteString const& proc_name)
 	{
 		KGE_ASSERT(instance_ != nullptr);
-		return GetProcAddress(instance_, oc::wide_to_string(proc_name).c_str());
+
+		if (!IsValid())
+			return nullptr;
+		return GetProcAddress(instance_, proc_name.c_str());
 	}
 
 }

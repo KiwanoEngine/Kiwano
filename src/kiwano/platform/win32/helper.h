@@ -21,22 +21,37 @@
 #pragma once
 #include <stdexcept>
 #include <kiwano/macros.h>
-#include <3rd-party/StackWalker/StackWalker.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
 	namespace win32
 	{
+		void PrintCallStack();
+
+		void PrintCallStackOnContext(PCONTEXT pContext);
+
 		inline void ThrowIfFailed(HRESULT hr)
 		{
 			if (FAILED(hr))
 			{
-				StackWalker().ShowCallstack();
+				PrintCallStack();
 
-				static char buffer[1024 + 1];
+				static char buffer[32];
 				sprintf_s(buffer, "Failed with HRESULT of %08X", hr);
 				throw std::runtime_error(buffer);
 			}
 		}
+
+		inline void WarnIfFailed(HRESULT hr)
+		{
+			if (FAILED(hr))
+			{
+				PrintCallStack();
+
+				KGE_WARN(L"Failed with HRESULT of %08X", hr);
+			}
+		}
+
 	}
 }

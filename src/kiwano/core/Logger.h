@@ -79,18 +79,6 @@ namespace kiwano
 		using ConsoleColor = Function<OutputStream& (OutputStream&)>;
 
 		/// \~chinese
-		/// @brief 显示或关闭控制台
-		void ShowConsole(bool show);
-
-		/// \~chinese
-		/// @brief 启用日志
-		void Enable();
-
-		/// \~chinese
-		/// @brief 禁用日志
-		void Disable();
-
-		/// \~chinese
 		/// @brief 打印日志
 		/// @param level 日志级别
 		/// @param format 格式字符串
@@ -109,6 +97,19 @@ namespace kiwano
 		/// @param args 参数
 		template <typename ..._Args>
 		void Println(Level level, _Args&& ... args);
+
+		/// \~chinese
+		/// @brief 显示或关闭控制台
+		/// @note 此操作会重置输出流
+		void ShowConsole(bool show);
+
+		/// \~chinese
+		/// @brief 启用日志
+		void Enable();
+
+		/// \~chinese
+		/// @brief 禁用日志
+		void Disable();
 
 		/// \~chinese
 		/// @brief 获取输出流

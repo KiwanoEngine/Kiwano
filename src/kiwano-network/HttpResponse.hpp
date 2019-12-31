@@ -27,33 +27,63 @@ namespace kiwano
 	{
 		KGE_DECLARE_SMART_PTR(HttpResponse);
 
+		/**
+		* \addtogroup Network
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief HTTP响应
+		*/
 		class KGE_API HttpResponse
 			: public ObjectBase
 		{
 		public:
 			HttpResponse(HttpRequestPtr request);
 
-			// 获取请求
+			/// \~chinese
+			/// @brief 获取对应的HTTP请求
 			HttpRequestPtr GetRequest() const;
 
-			// 响应状态
+			/// \~chinese
+			/// @brief 获取响应状态
 			bool IsSucceed() const;
+
+			/// \~chinese
+			/// @brief 获取HTTP状态码
+			long GetResponseCode() const;
+
+			/// \~chinese
+			/// @brief 获取响应头
+			String GetHeader() const;
+
+			/// \~chinese
+			/// @brief 获取响应数据
+			String const& GetData() const;
+
+			/// \~chinese
+			/// @brief 获取错误信息
+			String const& GetError() const;
+
+			/// \~chinese
+			/// @brief 设置响应状态
 			void SetSucceed(bool succeed);
 
-			// 响应状态码
-			long GetResponseCode() const;
+			/// \~chinese
+			/// @brief 设置HTTP状态码
 			void SetResponseCode(long response_code);
 
-			// 响应头
-			String GetHeader() const;
+			/// \~chinese
+			/// @brief 设置响应头
 			void SetHeader(String const& response_header);
 
-			// 响应数据
-			String const& GetData() const;
+			/// \~chinese
+			/// @brief 设置响应数据
 			void SetData(String const& response_data);
 
-			// 错误信息
-			String const& GetError() const;
+			/// \~chinese
+			/// @brief 设置错误信息
 			void SetError(String const& error_buffer);
 
 		private:
@@ -65,6 +95,8 @@ namespace kiwano
 			String response_data_;
 			String error_buffer_;
 		};
+
+		/** @} */
 
 		inline HttpResponse::HttpResponse(HttpRequestPtr request)						: request_(request), succeed_(false), response_code_(0) {}
 
