@@ -56,7 +56,7 @@ EXCLUDE                = src/3rd-party \
 ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = YES
 PREDEFINED             = KGE_API= \
-                         KGE_DISABLE_DOXYGEN= 
+                         KGE_DOXYGEN_DO_NOT_INCLUDE= 
 
 # The INCLUDE_PATH tag can be used to specify one or more directories that
 # contain include files that are not input files but should be processed by the
