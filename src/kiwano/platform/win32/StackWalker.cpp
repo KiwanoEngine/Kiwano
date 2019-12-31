@@ -21,7 +21,11 @@
 #include <kiwano/macros.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/Library.h>
+
+#pragma warning (push)
+#pragma warning (disable: 4091)
 #include <dbghelp.h>
+#pragma warning (pop)
 
 namespace kiwano
 {
