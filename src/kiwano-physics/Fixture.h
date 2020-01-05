@@ -126,20 +126,111 @@ namespace kiwano
 		class FixtureList
 			: public List<Fixture>
 		{
+			template <typename _Ty>
+			class IteratorImpl
+				: public std::iterator<std::forward_iterator_tag, _Ty>
+			{
+				using herit = std::iterator<std::forward_iterator_tag, _Ty>;
+
+			public:
+				IteratorImpl(const _Ty& elem)
+					: elem_(elem)
+				{
+				}
+
+				inline typename herit::reference operator*() const
+				{
+					return const_cast<typename herit::reference>(elem_);
+				}
+
+				inline typename herit::pointer operator->() const
+				{
+					return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+				}
+
+				inline IteratorImpl& operator++()
+				{
+					elem_ = elem_.GetB2Contact()->GetNext();
+					return *this;
+				}
+
+				inline IteratorImpl operator++(int)
+				{
+					IteratorImpl old = *this;
+					operator++();
+					return old;
+				}
+
+				inline bool operator== (const IteratorImpl& rhs) const
+				{
+					return elem_.GetB2Contact() == rhs.elem_.GetB2Contact();
+				}
+
+				inline bool operator!= (const IteratorImpl& rhs) const
+				{
+					return !operator==(rhs);
+				}
+
+			private:
+				_Ty elem_;
+			};
+
 		public:
-			FixtureList()
+			using value_type		= Fixture;
+			using iterator			= IteratorImpl<value_type>;
+			using const_iterator	= IteratorImpl<const value_type>;
+
+			inline FixtureList()
 			{
 			}
 
-			FixtureList(const Fixture& first)
+			inline FixtureList(const value_type& first)
+				: first_(first)
 			{
-				Fixture current = first;
-				while (current.GetB2Fixture())
-				{
-					push_back(current);
-					current = current.GetB2Fixture()->GetNext();
-				}
 			}
+
+			inline const value_type& front() const
+			{
+				return first_;
+			}
+
+			inline value_type& front()
+			{
+				return first_;
+			}
+
+			inline iterator begin()
+			{
+				return iterator(first_);
+			}
+
+			inline const_iterator begin() const
+			{
+				return cbegin();
+			}
+
+			inline const_iterator cbegin() const
+			{
+				return const_iterator(first_);
+			}
+
+			inline iterator end()
+			{
+				return iterator(nullptr);
+			}
+
+			inline const_iterator end() const
+			{
+				return cend();
+			}
+
+			inline const_iterator cend() const
+			{
+				return const_iterator(nullptr);
+			}
+
+		private:
+			value_type first_;
 		};
 
 		/** @} */

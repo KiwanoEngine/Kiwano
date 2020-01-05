@@ -146,42 +146,223 @@ namespace kiwano
 		class ContactList
 			: public List<Contact>
 		{
-		public:
-			ContactList()
+			template <typename _Ty>
+			class IteratorImpl
+				: public std::iterator<std::forward_iterator_tag, _Ty>
 			{
-			}
+				using herit = std::iterator<std::forward_iterator_tag, _Ty>;
 
-			ContactList(const Contact& first)
-			{
-				Contact current = first;
-				while (current.GetB2Contact())
+			public:
+				IteratorImpl(const _Ty& elem)
+					: elem_(elem)
 				{
-					push_back(current);
-					current = current.GetB2Contact()->GetNext();
 				}
-			}
-		};
 
+				inline typename herit::reference operator*() const
+				{
+					return const_cast<typename herit::reference>(elem_);
+				}
+
+				inline typename herit::pointer operator->() const
+				{
+					return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+				}
+
+				inline IteratorImpl& operator++()
+				{
+					elem_ = elem_.GetB2Contact()->GetNext();
+					return *this;
+				}
+
+				inline IteratorImpl operator++(int)
+				{
+					IteratorImpl old = *this;
+					operator++();
+					return old;
+				}
+
+				inline bool operator== (const IteratorImpl& rhs) const
+				{
+					return elem_.GetB2Contact() == rhs.elem_.GetB2Contact();
+				}
+
+				inline bool operator!= (const IteratorImpl& rhs) const
+				{
+					return !operator==(rhs);
+				}
+
+			private:
+				_Ty elem_;
+			};
+
+		public:
+			using value_type		= Contact;
+			using iterator			= IteratorImpl<value_type>;
+			using const_iterator	= IteratorImpl<const value_type>;
+
+			inline ContactList()
+			{
+			}
+
+			inline ContactList(const value_type& first)
+				: first_(first)
+			{
+			}
+
+			inline const value_type& front() const
+			{
+				return first_;
+			}
+
+			inline value_type& front()
+			{
+				return first_;
+			}
+
+			inline iterator begin()
+			{
+				return iterator(first_);
+			}
+
+			inline const_iterator begin() const
+			{
+				return cbegin();
+			}
+
+			inline const_iterator cbegin() const
+			{
+				return const_iterator(first_);
+			}
+
+			inline iterator end()
+			{
+				return iterator(nullptr);
+			}
+
+			inline const_iterator end() const
+			{
+				return cend();
+			}
+
+			inline const_iterator cend() const
+			{
+				return const_iterator(nullptr);
+			}
+
+		private:
+			value_type first_;
+		};
 
 		/// \~chinese
 		/// @brief 物理接触边列表
 		class ContactEdgeList
-			: public List<ContactEdge>
 		{
+			template <typename _Ty>
+			class IteratorImpl
+				: public std::iterator<std::forward_iterator_tag, _Ty>
+			{
+				using herit = std::iterator<std::forward_iterator_tag, _Ty>;
+
+			public:
+
+				inline IteratorImpl(const _Ty& elem)
+					: elem_(elem)
+				{
+				}
+
+				inline typename herit::reference operator*() const
+				{
+					return const_cast<typename herit::reference>(elem_);
+				}
+
+				inline typename herit::pointer operator->() const
+				{
+					return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+				}
+
+				inline IteratorImpl& operator++()
+				{
+					elem_ = elem_.GetB2ContactEdge()->next;
+					return *this;
+				}
+
+				inline IteratorImpl operator++(int)
+				{
+					IteratorImpl old = *this;
+					operator++();
+					return old;
+				}
+
+				inline bool operator== (const IteratorImpl& rhs) const
+				{
+					return elem_.GetB2ContactEdge() == rhs.elem_.GetB2ContactEdge();
+				}
+
+				inline bool operator!= (const IteratorImpl& rhs) const
+				{
+					return !operator==(rhs);
+				}
+
+			private:
+				_Ty elem_;
+			};
+
 		public:
-			ContactEdgeList()
+			using value_type		= ContactEdge;
+			using iterator			= IteratorImpl<value_type>;
+			using const_iterator	= IteratorImpl<const value_type>;
+
+			inline ContactEdgeList()
 			{
 			}
 
-			ContactEdgeList(const ContactEdge& first)
+			inline ContactEdgeList(const value_type& first)
+				: first_(first)
 			{
-				ContactEdge current = first;
-				while (current.GetB2ContactEdge())
-				{
-					push_back(current);
-					current = current.GetB2ContactEdge()->next;
-				}
 			}
+
+			inline const value_type& front() const
+			{
+				return first_;
+			}
+
+			inline value_type& front()
+			{
+				return first_;
+			}
+
+			inline iterator begin()
+			{
+				return iterator(first_);
+			}
+
+			inline const_iterator begin() const
+			{
+				return cbegin();
+			}
+
+			inline const_iterator cbegin() const
+			{
+				return const_iterator(first_);
+			}
+
+			inline iterator end()
+			{
+				return iterator(nullptr);
+			}
+
+			inline const_iterator end() const
+			{
+				return cend();
+			}
+
+			inline const_iterator cend() const
+			{
+				return const_iterator(nullptr);
+			}
+
+		private:
+			value_type first_;
 		};
 
 		/** @} */

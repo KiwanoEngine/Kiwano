@@ -225,6 +225,11 @@ namespace kiwano
 			world_.SetGravity(b2Vec2(gravity.x, gravity.y));
 		}
 
+		ContactList World::GetContactList()
+		{
+			return ContactList(Contact(world_.GetContactList()));
+		}
+
 		void World::Update(Duration dt)
 		{
 			world_.Step(dt.Seconds(), vel_iter_, pos_iter_);

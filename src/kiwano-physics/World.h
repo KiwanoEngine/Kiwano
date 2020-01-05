@@ -62,6 +62,10 @@ namespace kiwano
 			void SetGravity(Vec2 gravity);
 
 			/// \~chinese
+			/// @brief 获取物理接触列表
+			ContactList GetContactList();
+
+			/// \~chinese
 			/// @brief 获取全局缩放比例
 			/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
 			float GetGlobalScale() const;
