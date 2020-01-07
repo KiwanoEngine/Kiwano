@@ -44,7 +44,7 @@ public:
 	inline vector&		operator=(vector&& src) noexcept					{ swap(src); return *this; }
 	inline vector&		operator=(initializer_list list)					{ if (list.size()) { assign(list.begin(), list.end()); } else clear(); return (*this); }
 
-	inline vector&		assign(size_type count, const _Ty& val)				{ if (count > 0) { resize(count); manager::copy(begin(), count, val); } else clear(); return (*this); }
+	inline vector&		assign(size_type count, const _Ty& val)				{ if (count > 0) { resize(count); manager::fill_n(begin(), count, val); } else clear(); return (*this); }
 	inline vector&		assign(const vector& src)							{ return operator=(src); }
 	inline vector&		assign(initializer_list list)						{ return operator=(list); }
 

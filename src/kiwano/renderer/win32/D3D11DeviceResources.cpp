@@ -21,7 +21,10 @@
 #include <kiwano/renderer/win32/D3D11DeviceResources.h>
 #include <kiwano/core/Logger.h>
 
+#pragma warning (push)
+#pragma warning (disable: 4800)
 #include <versionhelpers.h>  // IsWindows10OrGreater
+#pragma warning (pop)
 
 #pragma comment(lib, "d3d11.lib")
 
