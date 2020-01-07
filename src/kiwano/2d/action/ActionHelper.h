@@ -27,64 +27,93 @@
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 动画辅助类
 	struct ActionHelper
 	{
-		// 设置循环次数
+		using DoneCallback = Action::DoneCallback;
+
+		/// \~chinese
+		/// @brief 设置循环次数
 		inline ActionHelper& SetLoops(int loops)							{ core->SetLoops(loops); return (*this); }
 
-		// 设置动作延迟
+		/// \~chinese
+		/// @brief 设置动画延迟
 		inline ActionHelper& SetDelay(Duration delay)						{ core->SetDelay(delay); return (*this); }
 
-		// 设置动作结束回调函数
-		inline ActionHelper& SetDoneCallback(ActionCallback const& cb)		{ core->SetDoneCallback(cb); return (*this); }
+		/// \~chinese
+		/// @brief 设置动画结束回调函数
+		inline ActionHelper& SetDoneCallback(DoneCallback const& cb)		{ core->SetDoneCallback(cb); return (*this); }
 
-		// 设置动作循环结束时的回调函数
-		inline ActionHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ core->SetLoopDoneCallback(cb); return (*this); }
+		/// \~chinese
+		/// @brief 设置动画循环结束时的回调函数
+		inline ActionHelper& SetLoopDoneCallback(DoneCallback const& cb)	{ core->SetLoopDoneCallback(cb); return (*this); }
 
-		// 动作结束时移除目标角色
+		/// \~chinese
+		/// @brief 动画结束时移除目标角色
 		inline ActionHelper& RemoveTargetWhenDone()							{ core->RemoveTargetWhenDone(); return (*this); }
 
-		// 设置名称
+		/// \~chinese
+		/// @brief 设置名称
 		inline ActionHelper& SetName(String const& name)					{ core->SetName(name); return (*this); }
 
-		// 获取指针
+		/// \~chinese
+		/// @brief 获取指针
 		inline ActionPtr Get() const										{ return core; }
 
 		inline ActionHelper(ActionPtr core)									: core(core) {}
 
 		inline operator ActionPtr() const									{ return core; }
 
-	protected:
+	private:
 		ActionPtr core;
 	};
 
+	/// \~chinese
+	/// @brief 补间动画辅助类
 	struct TweenHelper
 	{
-		// 设置动画持续时长
+		using DoneCallback = Action::DoneCallback;
+
+		/// \~chinese
+		/// @brief 设置动画持续时长
 		inline TweenHelper& SetDuration(Duration dur)						{ core->SetDuration(dur); return (*this); }
 
-		// 设置循环次数
-		inline TweenHelper& SetLoops(int loops)							{ core->SetLoops(loops); return (*this); }
+		/// \~chinese
+		/// @brief 设置循环次数
+		inline TweenHelper& SetLoops(int loops)								{ core->SetLoops(loops); return (*this); }
 
-		// 设置缓动函数
+		/// \~chinese
+		/// @brief 设置缓动函数
 		inline TweenHelper& SetEaseFunc(EaseFunc ease)						{ core->SetEaseFunc(ease); return (*this); }
 
-		// 设置动作延迟
+		/// \~chinese
+		/// @brief 设置动画延迟
 		inline TweenHelper& SetDelay(Duration delay)						{ core->SetDelay(delay); return (*this); }
 
-		// 设置动作结束回调函数
-		inline TweenHelper& SetDoneCallback(ActionCallback const& cb)		{ core->SetDoneCallback(cb); return (*this); }
+		/// \~chinese
+		/// @brief 设置动画结束回调函数
+		inline TweenHelper& SetDoneCallback(DoneCallback const& cb)			{ core->SetDoneCallback(cb); return (*this); }
 
-		// 设置动作循环结束时的回调函数
-		inline TweenHelper& SetLoopDoneCallback(ActionCallback const& cb)	{ core->SetLoopDoneCallback(cb); return (*this); }
+		/// \~chinese
+		/// @brief 设置动画循环结束时的回调函数
+		inline TweenHelper& SetLoopDoneCallback(DoneCallback const& cb)		{ core->SetLoopDoneCallback(cb); return (*this); }
 
-		// 动作结束时移除目标角色
+		/// \~chinese
+		/// @brief 动画结束时移除目标角色
 		inline TweenHelper& RemoveTargetWhenDone()							{ core->RemoveTargetWhenDone(); return (*this); }
 
-		// 设置名称
+		/// \~chinese
+		/// @brief 设置名称
 		inline TweenHelper& SetName(String const& name)						{ core->SetName(name); return (*this); }
 
-		// 获取指针
+		/// \~chinese
+		/// @brief 获取指针
 		inline ActionTweenPtr Get() const									{ return core; }
 		
 		inline TweenHelper(ActionTweenPtr core)								: core(core) {}
@@ -93,188 +122,190 @@ namespace kiwano
 
 		inline operator ActionTweenPtr() const								{ return core; }
 
-	protected:
+	private:
 		ActionTweenPtr core;
 	};
 
-	// Tween actions helper
+	/// \~chinese
+	/// @brief 动画构造器
 	struct Tween
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造相对位移动画
+		/// @param duration 动画时长
+		/// @param vector 移动向量
 		static inline TweenHelper
 		MoveBy(Duration dur, Point const& vector)
 		{
 			return TweenHelper(new kiwano::ActionMoveBy(dur, vector));
 		}
 
+		/// \~chinese
+		/// @brief 构造位移动画
+		/// @param duration 动画时长
+		/// @param pos 目的坐标
 		static inline TweenHelper
 		MoveTo(Duration dur, Point const& pos)
 		{
 			return TweenHelper(new kiwano::ActionMoveTo(dur, pos));
 		}
 
+		/// \~chinese
+		/// @brief 构造相对跳跃动画
+		/// @param duration 动画时长
+		/// @param vec 跳跃位移向量
+		/// @param height 跳跃高度
+		/// @param jumps 跳跃次数
 		static inline TweenHelper
-		JumpBy(
-			Duration dur,
-			Point const& pos,	/* 目的坐标 */
-			float height,		/* 跳跃高度 */
-			int jumps = 1)	/* 跳跃次数 */
+		JumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1)
 		{
-			return TweenHelper(new kiwano::ActionJumpBy(dur, pos, height, jumps));
+			return TweenHelper(new kiwano::ActionJumpBy(duration, vec, height, jumps));
 		}
 
+		/// \~chinese
+		/// @brief 构造跳跃动画
+		/// @param duration 动画时长
+		/// @param pos 目的坐标
+		/// @param height 跳跃高度
+		/// @param jumps 跳跃次数
 		static inline TweenHelper
-		JumpTo(
-			Duration dur,
-			Point const& pos,	/* 目的坐标 */
-			float height,		/* 跳跃高度 */
-			int jumps = 1)	/* 跳跃次数 */
+		JumpTo(Duration duration, Point const& pos, float height, int jumps = 1)
 		{
-			return TweenHelper(new kiwano::ActionJumpTo(dur, pos, height, jumps));
+			return TweenHelper(new kiwano::ActionJumpTo(duration, pos, height, jumps));
 		}
 
-		static inline TweenHelper
-		ScaleBy(Duration dur, float scale)
-		{
-			return TweenHelper(new kiwano::ActionScaleBy(dur, scale));
-		}
-
+		/// \~chinese
+		/// @brief 构造相对缩放动画
+		/// @param duration 动画时长
+		/// @param scale_x 横向缩放相对变化值
+		/// @param scale_y 纵向缩放相对变化值
 		static inline TweenHelper
 		ScaleBy(Duration dur, float scale_x, float scale_y)
 		{
 			return TweenHelper(new kiwano::ActionScaleBy(dur, scale_x, scale_y));
 		}
 
-		static inline TweenHelper
-		ScaleTo(Duration dur, float scale)
-		{
-			return TweenHelper(new kiwano::ActionScaleTo(dur, scale));
-		}
-
+		/// \~chinese
+		/// @brief 构造缩放动画
+		/// @param duration 动画时长
+		/// @param scale_x 横向缩放目标值
+		/// @param scale_y 纵向缩放目标值
 		static inline TweenHelper
 		ScaleTo(Duration dur, float scale_x, float scale_y)
 		{
 			return TweenHelper(new kiwano::ActionScaleTo(dur, scale_x, scale_y));
 		}
 
+		/// \~chinese
+		/// @brief 构造透明度渐变动画
+		/// @param duration 动画时长
+		/// @param opacity 目标透明度
 		static inline TweenHelper
 		FadeTo(Duration dur, float opacity)
 		{
 			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
 		}
 
+		/// \~chinese
+		/// @brief 构造淡入动画
+		/// @param duration 动画时长
 		static inline TweenHelper
 		FadeIn(Duration dur)
 		{
 			return TweenHelper(new kiwano::ActionFadeIn(dur));
 		}
 
+		/// \~chinese
+		/// @brief 构造淡出动画
+		/// @param duration 动画时长
 		static inline TweenHelper
 		FadeOut(Duration dur)
 		{
 			return TweenHelper(new kiwano::ActionFadeOut(dur));
 		}
 
+		/// \~chinese
+		/// @brief 构造相对旋转动画
+		/// @param duration 动画时长
+		/// @param rotation 角度相对变化值
 		static inline TweenHelper
 		RotateBy(Duration dur, float rotation)
 		{
 			return TweenHelper(new kiwano::ActionRotateBy(dur, rotation));
 		}
 
+		/// \~chinese
+		/// @brief 构造旋转动画
+		/// @param duration 动画时长
+		/// @param rotation 目标角度
 		static inline TweenHelper
 		RotateTo(Duration dur, float rotation)
 		{
 			return TweenHelper(new kiwano::ActionRotateTo(dur, rotation));
 		}
 
+		/// \~chinese
+		/// @brief 构造路径行走动画
+		/// @param duration 持续时长
+		/// @param path 路径几何形状
+		/// @param rotating 是否沿路径切线方向旋转
+		/// @param start 路径起点（百分比）
+		/// @param end 路径终点（百分比）
 		static inline TweenHelper
-		Walk(
-			Duration duration,		/* 持续时长 */
-			Geometry const& geo,	/* 路线 */
-			bool rotating = false,	/* 沿路线切线方向旋转 */
-			float start = 0.f,		/* 起点 */
-			float end = 1.f,		/* 终点 */
-			EaseFunc func = nullptr	/* 速度变化 */
-		)
+		Walk(Duration duration, Geometry const& path, bool rotating = false, float start = 0.f, float end = 1.f)
 		{
-			return TweenHelper(new kiwano::ActionWalk(duration, geo, rotating, start, end, func));
+			return TweenHelper(new kiwano::ActionWalk(duration, path, rotating, start, end));
 		}
 
-		static inline TweenHelper
-		Walk(
-			Duration duration,			/* 持续时长 */
-			GeometrySink& sink,			/* 路线生成器 */
-			bool rotating = false,		/* 沿路线切线方向旋转 */
-			float start = 0.f,			/* 起点 */
-			float end = 1.f,			/* 终点 */
-			EaseFunc func = nullptr		/* 速度变化 */
-		)
-		{
-			return TweenHelper(new kiwano::ActionWalk(duration, sink.GetGeometry(), rotating, start, end, func));
-		}
-
+		/// \~chinese
+		/// @brief 构建帧动画
+		/// @param duration 动画时长
+		/// @param[in] frame_seq 序列帧
 		static inline TweenHelper
 		Animation(Duration dur, FrameSequencePtr frames)
 		{
 			return TweenHelper(new kiwano::Animation(dur, frames));
 		}
 
+		/// \~chinese
+		/// @brief 构造自定义动画
+		/// @param duration 动画时长
+		/// @param tween_func 动画回调函数
 		static inline TweenHelper
 		Custom(Duration dur, ActionCustom::TweenFunc tween_func)
 		{
 			return TweenHelper(new kiwano::ActionCustom(dur, tween_func));
 		}
 
+		/// \~chinese
+		/// @brief 构建延时动画
+		/// @param delay 延时时长
 		static inline ActionHelper
 		Delay(Duration delay)
 		{
 			return ActionHelper(new kiwano::ActionDelay(delay));
 		}
 
+		/// \~chinese
+		/// @brief 动画组合
+		/// @param actions 动画集合
+		/// @param sequence 动画按顺序依次执行或同时执行
 		static inline ActionHelper
 		Group(Vector<ActionPtr> const& actions, bool sequence = true)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, sequence));
 		}
 
+		/// \~chinese
+		/// @brief 同步动画组合
+		/// @param actions 动画集合
 		static inline ActionHelper
 		Multiple(Vector<ActionPtr> const& actions)
 		{
 			return ActionHelper(new kiwano::ActionGroup(actions, false));
 		}
-
-#pragma warning(push)
-#pragma warning(disable : 4996)
-
-		KGE_DEPRECATED("Tween::OpacityBy has been removed, use Tween::FadeTo instead")
-		static inline TweenHelper
-		OpacityBy(float opacity)
-		{
-			KGE_ASSERT("Tween::OpacityBy has been removed, use Tween::FadeTo instead");
-			return TweenHelper(nullptr);
-		}
-
-		KGE_DEPRECATED("Tween::OpacityTo is deprecated, use Tween::FadeTo instead")
-		static inline TweenHelper
-		OpacityTo(Duration dur, float opacity)
-		{
-			return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
-		}
-
-		KGE_DEPRECATED("Tween::Sequence is deprecated, use Tween::Group instead")
-		static inline ActionHelper
-		Sequence(Vector<ActionPtr> const& actions)
-		{
-			return ActionHelper(new kiwano::ActionGroup(actions, true));
-		}
-
-		KGE_DEPRECATED("Tween::Spawn is deprecated, use Tween::Multiple instead")
-		static inline ActionHelper
-		Spawn(Vector<ActionPtr> const& actions)
-		{
-			return ActionHelper(new kiwano::ActionGroup(actions, false));
-		}
-
-#pragma warning(pop)
 	};
+
+	/** @} */
 }

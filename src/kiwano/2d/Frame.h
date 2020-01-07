@@ -24,63 +24,78 @@
 
 namespace kiwano
 {
-	// 帧图像
+	KGE_DECLARE_SMART_PTR(Frame);
+
+	/**
+	* \~chinese
+	* @brief 图像帧
+	*/
 	class KGE_API Frame
 		: public ObjectBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 构建空图像帧
 		Frame();
 
-		explicit Frame(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 加载图像
+		/// @param file_path 图像路径
+		bool Load(String const& file_path);
 
-		explicit Frame(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 加载图像
+		/// @param res 图像资源
+		bool Load(Resource const& res);
 
-		explicit Frame(
-			Texture const& texture
-		);
+		/// \~chinese
+		/// @brief 裁剪图像帧为矩形
+		/// @param crop_rect 裁剪矩形定义
+		void SetCropRect(Rect const& crop_rect);
 
-		bool Load(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 设置纹理
+		/// @param texture 纹理
+		void SetTexture(TexturePtr texture);
 
-		bool Load(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 是否有效
+		bool IsValid() const;
 
-		// 裁剪矩形
-		void SetCropRect(
-			Rect const& crop_rect	/* 裁剪矩形 */
-		);
+		/// \~chinese
+		/// @brief 获取宽度
+		float GetWidth() const;
 
-		// 设置纹理
-		void SetTexture(
-			Texture const& texture
-		);
+		/// \~chinese
+		/// @brief 获取高度
+		float GetHeight() const;
 
-		// 获取宽度
-		float					GetWidth() const		{ return crop_rect_.GetWidth(); }
+		/// \~chinese
+		/// @brief 获取大小
+		Size GetSize() const;
 
-		// 获取高度
-		float					GetHeight() const		{ return crop_rect_.GetHeight(); }
+		/// \~chinese
+		/// @brief 获取裁剪位置
+		Point GetCropPoint() const;
 
-		// 获取大小
-		Size					GetSize() const			{ return crop_rect_.GetSize(); }
+		/// \~chinese
+		/// @brief 获取裁剪矩形
+		Rect const& GetCropRect() const;
 
-		// 获取裁剪位置
-		Point					GetCropPoint() const	{ return crop_rect_.GetLeftTop(); }
+		/// \~chinese
+		/// @brief 获取纹理
+		TexturePtr GetTexture() const;
 
-		// 获取裁剪矩形
-		inline Rect const&		GetCropRect() const		{ return crop_rect_; }
-
-		// 获取纹理
-		inline Texture const&	GetTexture() const		{ return texture_; }
-
-	protected:
-		Texture texture_;
+	private:
+		TexturePtr texture_;
 		Rect crop_rect_;
 	};
+
+	inline bool				Frame::IsValid() const		{ return texture_ && texture_->IsValid(); }
+	inline float			Frame::GetWidth() const		{ return crop_rect_.GetWidth(); }
+	inline float			Frame::GetHeight() const	{ return crop_rect_.GetHeight(); }
+	inline Size				Frame::GetSize() const		{ return crop_rect_.GetSize(); }
+	inline Point			Frame::GetCropPoint() const { return crop_rect_.GetLeftTop(); }
+	inline Rect const&		Frame::GetCropRect() const	{ return crop_rect_; }
+	inline TexturePtr		Frame::GetTexture() const	{ return texture_; }
 }

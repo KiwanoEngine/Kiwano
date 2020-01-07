@@ -24,62 +24,60 @@
 
 namespace kiwano
 {
-	// 精灵
+	KGE_DECLARE_SMART_PTR(Sprite);
+
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 精灵
+	*/
 	class KGE_API Sprite
 		: public Actor
 	{
 	public:
 		Sprite();
 
-		explicit Sprite(
-			String const& file_path
-		);
-
-		Sprite(
-			String const& file_path,
-			Rect const& crop_rect	/* 裁剪矩形 */
-		);
-
-		explicit Sprite(
-			Resource const& res
-		);
-
-		Sprite(
-			Resource const& res,
-			Rect const& crop_rect	/* 裁剪矩形 */
-		);
-
-		explicit Sprite(
-			FramePtr frame
-		);
-
 		virtual ~Sprite();
 
-		// 加载图像
-		bool Load(
-			String const& file_path
-		);
+		/// \~chinese
+		/// @brief 加载本地图片
+		/// @param file_path 本地图片路径
+		bool Load(String const& file_path);
 
-		// 加载图像资源
-		bool Load(
-			Resource const& res
-		);
+		/// \~chinese
+		/// @brief 加载图像资源
+		/// @param res 图片资源
+		bool Load(Resource const& res);
 
-		// 裁剪矩形
-		void SetCropRect(
-			const Rect& crop_rect
-		);
+		/// \~chinese
+		/// @brief 使用矩形区域裁剪精灵
+		/// @param crop_rect 裁剪矩形
+		void SetCropRect(const Rect& crop_rect);
 
-		// 获取帧图像
-		inline FramePtr GetFrame() const { return frame_; }
+		/// \~chinese
+		/// @brief 获取帧图像
+		FramePtr GetFrame() const;
 
-		// 设置帧图像
+		/// \~chinese
+		/// @brief 设置图像帧
+		/// @param[in] frame 图像帧
 		void SetFrame(FramePtr frame);
 
-		// 渲染精灵
 		void OnRender(RenderTarget* rt) override;
 
 	protected:
+		bool CheckVisibilty(RenderTarget* rt) const override;
+
+	private:
 		FramePtr frame_;
 	};
+
+	/** @} */
+
+	inline FramePtr Sprite::GetFrame() const { return frame_; }
+
 }

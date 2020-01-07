@@ -20,11 +20,22 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/..\renderer\LayerArea.h>
-#include <kiwano/2d/..\renderer\RenderTarget.h>
+#include <kiwano/renderer/LayerArea.h>
+#include <kiwano/renderer/RenderTarget.h>
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(Layer);
+
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 图层
+	*/
 	class KGE_API Layer
 		: public Actor
 	{
@@ -33,49 +44,64 @@ namespace kiwano
 
 		virtual ~Layer();
 
-		// 重载下列函数以获取图层事件
-		virtual void OnMouseButtonDown(MouseButton::Value btn, Point const& p) {}
-		virtual void OnMouseButtonUp(MouseButton::Value btn, Point const& p) {}
-		virtual void OnMouseMoved(Point const& p) {}
-		virtual void OnMouseWheel(float wheel) {}
-		virtual void OnKeyDown(int key) {}
-		virtual void OnKeyUp(int key) {}
-		virtual void OnChar(char c) {}
+		/// \~chinese
+		/// @brief 是否开启消息吞没
+		bool IsSwallowEventsEnabled() const;
 
-		// 是否开启消息吞没
-		inline bool IsSwallowEventsEnabled() const	{ return swallow_; }
+		/// \~chinese
+		/// @brief 设置消息吞没功能
+		/// @param enabled 是否启用
+		void SetSwallowEvents(bool enabled);
 
-		// 吞没消息
-		inline void SetSwallowEvents(bool enabled)	{ swallow_ = enabled; }
-
-		// 设置裁剪区域
+		/// \~chinese
+		/// @brief 设置裁剪区域
+		/// @param clip_rect 裁剪矩形
 		void SetClipRect(Rect const& clip_rect);
 
-		// 设置图层透明度
+		/// \~chinese
+		/// @brief 设置图层透明度
+		/// @param opacity 透明度
 		void SetOpacity(float opacity) override;
 
-		// 设置几何蒙层
+		/// \~chinese
+		/// @brief 设置几何蒙层
+		/// @param mask 蒙层的几何形状
 		void SetMaskGeometry(Geometry const& mask);
 
-		// 设置几何蒙层的二维变换
+		/// \~chinese
+		/// @brief 设置几何蒙层的二维变换
+		/// @param transform 应用于蒙层的二维变换
 		void SetMaskTransform(Matrix3x2 const& transform);
 
-		// 设置图层区域
-		inline void SetArea(LayerArea const& area)	{ area_ = area; }
+		/// \~chinese
+		/// @brief 设置图层区域
+		/// @param area 图层区域属性
+		void SetArea(LayerArea const& area);
 
-		// 获取图层区域
-		inline LayerArea const& GetArea() const		{ return area_; }
+		/// \~chinese
+		/// @brief 获取图层区域
+		LayerArea const& GetArea() const;
 
-	public:
 		void Dispatch(Event& evt) override;
 
 	protected:
 		void Render(RenderTarget* rt) override;
 
-		void HandleMessages(Event& evt);
+		bool CheckVisibilty(RenderTarget* rt) const override;
 
-	protected:
+	private:
 		bool		swallow_;
 		LayerArea	area_;
 	};
+
+	/** @} */
+
+	inline bool				Layer::IsSwallowEventsEnabled() const	{ return swallow_; }
+
+	inline void				Layer::SetSwallowEvents(bool enabled)	{ swallow_ = enabled; }
+
+	inline void				Layer::SetArea(LayerArea const& area)	{ area_ = area; }
+
+	inline LayerArea const&	Layer::GetArea() const					{ return area_; }
+
 }

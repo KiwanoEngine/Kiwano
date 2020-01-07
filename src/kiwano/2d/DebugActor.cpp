@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/2d/Text.h>
 #include <kiwano/renderer/Renderer.h>
+#include <kiwano/core/Logger.h>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")
@@ -31,7 +31,7 @@ namespace kiwano
 	{
 		class comma_numpunct : public std::numpunct<wchar_t>
 		{
-		protected:
+		private:
 			virtual wchar_t do_thousands_sep() const override
 			{
 				return L',';
@@ -42,32 +42,34 @@ namespace kiwano
 				return "\03";
 			}
 		};
+
+		std::locale comma_locale(std::locale(), new comma_numpunct);
 	}
 
 	DebugActor::DebugActor()
-		: background_color_(0.0f, 0.0f, 0.0f, 0.7f)
 	{
 		SetName(L"kiwano-debug-actor");
 		SetPosition(Point{ 10, 10 });
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
 
-		debug_text_ = new Text;
+		background_brush_ = new Brush;
+		background_brush_->SetColor(Color(0.0f, 0.0f, 0.0f, 0.7f));
+
+		debug_text_ = new TextActor;
 		debug_text_->SetPosition(Point{ 10, 10 });
 		this->AddChild(debug_text_);
 
-		Font font;
-		font.family = L"Arial";
-		font.size = 16.f;
-		font.weight = FontWeight::Normal;
-		debug_text_->SetFont(font);
-
 		TextStyle style;
+		style.font_family = L"Arial";
+		style.font_size = 16.f;
+		style.font_weight = FontWeight::Normal;
 		style.line_spacing = 20.f;
 		debug_text_->SetStyle(style);
+		debug_text_->SetFillColor(Color::White);
 
-		AddListener(event::MouseHover, [=](Event&) { SetOpacity(0.4f); });
-		AddListener(event::MouseOut, [=](Event&) { SetOpacity(1.f); });
+		AddListener<MouseHoverEvent>([=](Event&) { SetOpacity(0.4f); });
+		AddListener<MouseOutEvent>([=](Event&) { SetOpacity(1.f); });
 	}
 
 	DebugActor::~DebugActor()
@@ -76,9 +78,7 @@ namespace kiwano
 
 	void DebugActor::OnRender(RenderTarget* rt)
 	{
-		PrepareRender(rt);
-
-		rt->SetDefaultBrushColor(background_color_);
+		rt->SetCurrentBrush(background_brush_);
 		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
 	}
 
@@ -94,24 +94,21 @@ namespace kiwano
 
 		StringStream ss;
 
-		{
-			// For formatting integers with commas
-			static std::locale comma_locale(std::locale(), new comma_numpunct);
-			(void)ss.imbue(comma_locale);
-		}
+		// For formatting integers with commas
+		(void)ss.imbue(comma_locale);
 
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
 #if defined(KGE_DEBUG)
 		if (ObjectBase::IsTracingLeaks())
 		{
-			ss << "Objects: " << ObjectBase::__GetTracingObjects().size() << std::endl;
+			ss << "Objects: " << ObjectBase::GetTracingObjects().size() << std::endl;
 		}
 #endif
 
-		ss << "Render: " << Renderer::GetInstance()->GetStatus().duration.Milliseconds() << "ms" << std::endl;
+		ss << "Render: " << Renderer::instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
 
-		ss << "Primitives / sec: " << std::fixed << Renderer::GetInstance()->GetStatus().primitives * frame_time_.size() << std::endl;
+		ss << "Primitives / sec: " << std::fixed << Renderer::instance().GetStatus().primitives * frame_time_.size() << std::endl;
 
 		ss << "Memory: ";
 		{
@@ -138,6 +135,11 @@ namespace kiwano
 		{
 			SetHeight(20 + debug_text_->GetHeight());
 		}
+	}
+
+	bool DebugActor::CheckVisibilty(RenderTarget* rt) const
+	{
+		return true;
 	}
 
 }

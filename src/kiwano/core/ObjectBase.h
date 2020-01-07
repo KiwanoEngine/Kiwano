@@ -20,51 +20,82 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
-#include <kiwano/core/RefCounter.hpp>
+#include <kiwano/core/common.h>
+#include <kiwano/core/RefCounter.h>
 #include <kiwano/core/SmartPtr.hpp>
 
 namespace kiwano
 {
 	KGE_DECLARE_SMART_PTR(ObjectBase);
 
+	/**
+	* \~chinese
+	* @brief 基础对象
+	*/
 	class KGE_API ObjectBase
 		: public virtual RefCounter
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造基础对象
 		ObjectBase();
 
 		virtual ~ObjectBase();
 
-		const Any&		GetUserData() const;
+		/// \~chinese
+		/// @brief 设置对象名
+		void SetName(String const& name);
 
-		void			SetUserData(Any const& data);
+		/// \~chinese
+		/// @brief 获取对象名
+		String GetName() const;
 
-		void			SetName(String const& name);
+		/// \~chinese
+		/// @brief 判断对象的名称是否相同
+		/// @param name 需要判断的名称
+		bool IsName(String const& name) const;
 
-		String			DumpObject();
+		/// \~chinese
+		/// @brief 获取用户数据
+		const Any& GetUserData() const;
 
-		inline String	GetName() const						{ if (name_) return *name_; return String(); }
+		/// \~chinese
+		/// @brief 设置用户数据
+		void SetUserData(Any const& data);
 
-		inline bool		IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+		/// \~chinese
+		/// @brief 获取对象ID
+		uint32_t GetObjectID() const;
 
-		inline uint32_t	GetObjectID() const					{ return id_; }
+		/// \~chinese
+		/// @brief 序列化对象
+		String DumpObject();
 
 	public:
+		/// \~chinese
+		/// @brief 是否启用了内存泄漏追踪
 		static bool IsTracingLeaks();
 
+		/// \~chinese
+		/// @brief 开始追踪内存泄漏
 		static void StartTracingLeaks();
 
+		/// \~chinese
+		/// @brief 停止追踪内存泄漏
 		static void StopTracingLeaks();
 
+		/// \~chinese
+		/// @brief 打印所有追踪中的对象信息
 		static void DumpTracingObjects();
 
-	public:
-		static Vector<ObjectBase*>& __GetTracingObjects();
+		/// \~chinese
+		/// @brief 获取所有追踪中的对象
+		static Vector<ObjectBase*>& GetTracingObjects();
 
-		static void __AddObjectToTracingList(ObjectBase*);
+	private:
+		static void AddObjectToTracingList(ObjectBase*);
 
-		static void __RemoveObjectFromTracingList(ObjectBase*);
+		static void RemoveObjectFromTracingList(ObjectBase*);
 
 	private:
 		bool	tracing_leak_;
@@ -72,6 +103,11 @@ namespace kiwano
 		String*	name_;
 
 		const uint32_t id_;
-		static uint32_t last_object_id;
 	};
+
+	inline String	ObjectBase::GetName() const						{ if (name_) return *name_; return String(); }
+
+	inline bool		ObjectBase::IsName(String const& name) const	{ return name_ ? (*name_ == name) : name.empty(); }
+
+	inline uint32_t	ObjectBase::GetObjectID() const					{ return id_; }
 }

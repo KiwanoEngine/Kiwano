@@ -37,12 +37,12 @@ namespace kiwano
 		data_.insert(std::make_pair(key, data));
 	}
 
-	void UserData::Set(Pair<String, Any> const& pair)
+	void UserData::Set(DataPair const& pair)
 	{
 		data_.insert(pair);
 	}
 
-	void UserData::Set(std::initializer_list<Pair<String, Any>> const& list)
+	void UserData::Set(std::initializer_list<DataPair> const& list)
 	{
 		for (const auto& pair : list)
 		{
@@ -60,7 +60,7 @@ namespace kiwano
 		return data_.count(key) != 0;
 	}
 
-	const UnorderedMap<String, Any>& UserData::GetData() const
+	const UserData::DataMap& UserData::GetDataMap() const
 	{
 		return data_;
 	}

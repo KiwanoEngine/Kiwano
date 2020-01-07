@@ -28,18 +28,4 @@ namespace kiwano
 	{
 	}
 
-	bool LayerArea::IsValid() const
-	{
-		return layer_ != nullptr;
-	}
-
-	Size LayerArea::GetSize() const
-	{
-		if (layer_)
-		{
-			return reinterpret_cast<Size const&>(layer_->GetSize());
-		}
-		return Size();
-	}
-
 }

@@ -31,20 +31,9 @@ namespace kiwano
 	{
 	}
 
-	GifImage::GifImage(String const& file_path)
-	{
-		Load(file_path);
-	}
-
-	GifImage::GifImage(Resource const& res)
-		: GifImage()
-	{
-		Load(res);
-	}
-
 	bool GifImage::Load(String const& file_path)
 	{
-		Renderer::GetInstance()->CreateGifImage(*this, file_path);
+		Renderer::instance().CreateGifImage(*this, file_path);
 
 		if (IsValid())
 		{
@@ -60,7 +49,7 @@ namespace kiwano
 
 	bool GifImage::Load(Resource const& res)
 	{
-		Renderer::GetInstance()->CreateGifImage(*this, res);
+		Renderer::instance().CreateGifImage(*this, res);
 
 		if (IsValid())
 		{
@@ -77,6 +66,13 @@ namespace kiwano
 	bool GifImage::IsValid() const
 	{
 		return decoder_ != nullptr;
+	}
+
+	GifImage::Frame GifImage::GetFrame(uint32_t index)
+	{
+		Frame frame;
+		Renderer::instance().CreateGifImageFrame(frame, *this, index);
+		return frame;
 	}
 
 	HRESULT GifImage::GetGlobalMetadata()

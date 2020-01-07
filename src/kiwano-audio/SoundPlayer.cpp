@@ -118,7 +118,7 @@ namespace kiwano
 		void SoundPlayer::SetVolume(float volume)
 		{
 			volume_ = std::min(std::max(volume, -224.f), 224.f);
-			for (const auto& pair : sound_cache_)
+			for (auto& pair : sound_cache_)
 			{
 				pair.second->SetVolume(volume_);
 			}
@@ -126,7 +126,7 @@ namespace kiwano
 
 		void SoundPlayer::PauseAll()
 		{
-			for (const auto& pair : sound_cache_)
+			for (auto& pair : sound_cache_)
 			{
 				pair.second->Pause();
 			}
@@ -134,7 +134,7 @@ namespace kiwano
 
 		void SoundPlayer::ResumeAll()
 		{
-			for (const auto& pair : sound_cache_)
+			for (auto& pair : sound_cache_)
 			{
 				pair.second->Resume();
 			}
@@ -142,7 +142,7 @@ namespace kiwano
 
 		void SoundPlayer::StopAll()
 		{
-			for (const auto& pair : sound_cache_)
+			for (auto& pair : sound_cache_)
 			{
 				pair.second->Stop();
 			}

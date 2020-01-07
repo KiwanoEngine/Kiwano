@@ -20,9 +20,8 @@
 
 #include <mutex>
 
+#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
-#include <kiwano/platform/modules.h>
-#include <kiwano/core/win32/helper.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Director.h>
 #include <kiwano/renderer/TextureCache.h>
@@ -67,11 +66,11 @@ namespace kiwano
 		, inited_(false)
 		, time_scale_(1.f)
 	{
-		ThrowIfFailed(::CoInitialize(nullptr));
+		::CoInitialize(nullptr);
 
-		Use(Renderer::GetInstance());
-		Use(Input::GetInstance());
-		Use(Director::GetInstance());
+		Use(&Renderer::instance());
+		Use(&Input::instance());
+		Use(&Director::instance());
 	}
 
 	Application::~Application()
@@ -83,8 +82,8 @@ namespace kiwano
 
 	void Application::Init(const Config& config)
 	{
-		Window::GetInstance()->Init(config.window, Application::WndProc);
-		Renderer::GetInstance()->Init(config.render);
+		Window::instance().Init(config.window, Application::WndProc);
+		Renderer::instance().Init(config.render);
 
 		// Setup all components
 		for (auto c : comps_)
@@ -94,14 +93,14 @@ namespace kiwano
 
 		if (config.debug)
 		{
-			Director::GetInstance()->ShowDebugInfo(true);
-			Renderer::GetInstance()->SetCollectingStatus(true);
+			Director::instance().ShowDebugInfo(true);
+			Renderer::instance().SetCollectingStatus(true);
 		}
 
 		// Everything is ready
 		OnReady();
 
-		HWND hwnd = Window::GetInstance()->GetHandle();
+		HWND hwnd = Window::instance().GetHandle();
 
 		// disable imm
 		::ImmAssociateContext(hwnd, nullptr);
@@ -118,10 +117,10 @@ namespace kiwano
 
 		end_ = false;
 
-		Window::GetInstance()->Prepare();
+		Window::instance().Prepare();
 		while (!end_)
 		{
-			Window::GetInstance()->PollEvents();
+			Window::instance().PollEvents();
 		}
 	}
 
@@ -133,9 +132,9 @@ namespace kiwano
 	void Application::Destroy()
 	{
 		// Clear all resources
-		Director::GetInstance()->ClearStages();
-		ResourceCache::GetInstance()->Clear();
-		TextureCache::GetInstance()->Clear();
+		Director::instance().ClearStages();
+		ResourceCache::instance().Clear();
+		TextureCache::instance().Clear();
 
 		if (inited_)
 		{
@@ -148,16 +147,7 @@ namespace kiwano
 			comps_.clear();
 		}
 
-		// Destroy all instances
-		Director::DestroyInstance();
-		ResourceCache::DestroyInstance();
-		TextureCache::DestroyInstance();
-		Input::DestroyInstance();
-		Renderer::DestroyInstance();
-		Window::DestroyInstance();
-
-		// DO NOT destroy Logger instance manually
-		// Logger::DestroyInstance();
+		Window::instance().Destroy();
 	}
 
 	void Application::Use(ComponentBase* component)
@@ -248,7 +238,7 @@ namespace kiwano
 		}
 
 		// Rendering
-		Renderer* renderer = Renderer::GetInstance();
+		Renderer* renderer = &Renderer::instance();
 		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);
@@ -269,10 +259,10 @@ namespace kiwano
 		}
 	}
 
-	void Application::PreformInMainThread(Function<void()> Function)
+	void Application::PreformInMainThread(Function<void()> func)
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
-		functions_to_perform_.push(Function);
+		functions_to_perform_.push(func);
 	}
 
 	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
@@ -311,14 +301,12 @@ namespace kiwano
 			{
 				KeyDownEvent evt;
 				evt.code = static_cast<int>(wparam);
-				// evt.count = static_cast<int>(lparam & 0xFF);
 				app->DispatchEvent(evt);
 			}
 			else
 			{
 				KeyUpEvent evt;
 				evt.code = static_cast<int>(wparam);
-				// evt.count = static_cast<int>(lparam & 0xFF);
 				app->DispatchEvent(evt);
 			}
 		}
@@ -328,7 +316,6 @@ namespace kiwano
 		{
 			KeyCharEvent evt;
 			evt.value = static_cast<char>(wparam);
-			// evt.count = static_cast<int>(lparam & 0xFF);
 			app->DispatchEvent(evt);
 		}
 		break;
@@ -390,13 +377,13 @@ namespace kiwano
 		{
 			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
 			{
-				// KGE_LOG(L"Window minimized");
+				KGE_SYS_LOG(L"Window minimized");
 			}
 			else
 			{
-				// KGE_LOG(L"Window resized");
+				// KGE_SYS_LOG(L"Window resized");
 
-				Window::GetInstance()->UpdateWindowRect();
+				Window::instance().UpdateWindowRect();
 
 				WindowResizedEvent evt;
 				evt.width = LOWORD(lparam);
@@ -422,7 +409,7 @@ namespace kiwano
 		{
 			bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-			Window::GetInstance()->SetActive(active);
+			Window::instance().SetActive(active);
 
 			WindowFocusChangedEvent evt;
 			evt.focus = active;
@@ -432,7 +419,7 @@ namespace kiwano
 
 		case WM_SETTEXT:
 		{
-			// KGE_LOG(L"Window title changed");
+			KGE_SYS_LOG(L"Window title changed");
 
 			WindowTitleChangedEvent evt;
 			evt.title = reinterpret_cast<const wchar_t*>(lparam);
@@ -442,13 +429,13 @@ namespace kiwano
 
 		case WM_SETICON:
 		{
-			// KGE_LOG(L"Window icon changed");
+			KGE_SYS_LOG(L"Window icon changed");
 		}
 		break;
 
 		case WM_DISPLAYCHANGE:
 		{
-			// KGE_LOG(L"The display resolution has changed");
+			KGE_SYS_LOG(L"The display resolution has changed");
 
 			::InvalidateRect(hwnd, nullptr, FALSE);
 		}
@@ -456,13 +443,13 @@ namespace kiwano
 
 		case WM_SETCURSOR:
 		{
-			Window::GetInstance()->UpdateCursor();
+			Window::instance().UpdateCursor();
 		}
 		break;
 
 		case WM_CLOSE:
 		{
-			// KGE_LOG(L"Window is closing");
+			KGE_SYS_LOG(L"Window is closing");
 
 			if (!app->OnClosing())
 			{
@@ -475,7 +462,7 @@ namespace kiwano
 
 		case WM_DESTROY:
 		{
-			KGE_LOG(L"Window was destroyed");
+			KGE_SYS_LOG(L"Window was destroyed");
 
 			app->Quit();
 			app->OnDestroy();

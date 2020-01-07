@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/common/common.h>
-#include <kiwano/common/singleton.hpp>
+#include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
 #include <mutex>
 #include <condition_variable>
@@ -29,25 +28,55 @@ namespace kiwano
 {
 	namespace network
 	{
+		/**
+		* \~chinese
+		* \defgroup Network 网络通信
+		*/
+
+		/**
+		* \addtogroup Network
+		* @{
+		*/
+
+		/**
+		* \~chinese
+		* @brief HTTP客户端
+		*/
 		class KGE_API HttpClient
 			: public Singleton<HttpClient>
 			, public ComponentBase
 		{
-			KGE_DECLARE_SINGLETON(HttpClient);
+			friend Singleton<HttpClient>;
 
 		public:
+			/// \~chinese
+			/// @brief 发送HTTP请求
+			/// @param[in] request HTTP请求
+			/// @details 发送请求后，无论结束或失败都将调用请求的响应回调函数
 			void Send(HttpRequestPtr request);
 
+			/// \~chinese
+			/// @brief 设置连接超时时长
 			void SetTimeoutForConnect(Duration timeout);
 
+			/// \~chinese
+			/// @brief 获取连接超时时长
 			Duration GetTimeoutForConnect() const;
 
+			/// \~chinese
+			/// @brief 设置读取超时时长
 			void SetTimeoutForRead(Duration timeout);
 
+			/// \~chinese
+			/// @brief 获取读取超时时长
 			Duration GetTimeoutForRead() const;
 
+			/// \~chinese
+			/// @brief 设置SSL证书地址
 			void SetSSLVerification(String const& root_certificate_path);
 
+			/// \~chinese
+			/// @brief 获取SSL证书地址
 			String const& GetSSLVerification() const;
 
 		public:
@@ -60,10 +89,7 @@ namespace kiwano
 
 			void NetworkThread();
 
-			void Perform(
-				HttpRequestPtr request,
-				HttpResponsePtr response
-			);
+			void Perform(HttpRequestPtr request, HttpResponsePtr response);
 
 			void DispatchResponseCallback();
 
@@ -81,6 +107,8 @@ namespace kiwano
 
 			std::condition_variable_any sleep_condition_;
 		};
+
+		/** @} */
 
 
 		inline void HttpClient::SetTimeoutForConnect(Duration timeout)

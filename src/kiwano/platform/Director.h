@@ -19,48 +19,84 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
 #include <kiwano/core/Component.h>
+#include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Stage.h>
+#include <kiwano/2d/Transition.h>
 
 namespace kiwano
 {
-	// 导演
+	/**
+	* \~chinese
+	* @brief 导演
+	* @details 导演完成舞台的渲染、更新、事件分发以及控制舞台间跳转
+	* @see kiwano::Stage
+	*/
 	class KGE_API Director
 		: public Singleton<Director>
 		, public UpdateComponent
 		, public RenderComponent
 		, public EventComponent
 	{
-		KGE_DECLARE_SINGLETON(Director);
+		friend Singleton<Director>;
 
 	public:
-		// 切换舞台
+		/**
+		* \~chinese
+		* @brief 切换舞台
+		* @param[in] stage 舞台
+		* @param[in] transition 过渡动画
+		*/
 		void EnterStage(
-			StagePtr stage,						/* 舞台 */
-			TransitionPtr transition = nullptr	/* 过渡动画 */
+			StagePtr stage,
+			TransitionPtr transition = nullptr
 		);
 
-		// 舞台压栈
+		/**
+		* \~chinese
+		* @brief 切换舞台，并将当前舞台储存到栈中
+		* @param[in] stage 舞台
+		* @param[in] transition 过渡动画
+		*/
 		void PushStage(
-			StagePtr stage,						/* 舞台 */
-			TransitionPtr transition = nullptr	/* 过渡动画 */
+			StagePtr stage,
+			TransitionPtr transition = nullptr
 		);
 
-		// 舞台出栈
+		/**
+		* \~chinese
+		* @brief 退出当前舞台，并切换到上一个舞台
+		* @param[in] transition 过渡动画
+		*/
 		void PopStage(
-			TransitionPtr transition = nullptr	/* 过渡动画 */
+			TransitionPtr transition = nullptr
 		);
 
-		// 获取当前舞台
+		/**
+		* \~chinese
+		* @brief 获取当前舞台
+		* @return 返回当前舞台的指针
+		*/
 		StagePtr GetCurrentStage();
 
-		// 启用或禁用角色边界渲染功能
+		/**
+		* \~chinese
+		* @brief 启用或禁用角色边界渲染功能
+		* @param enabled 是否启用
+		*/
 		void SetRenderBorderEnabled(bool enabled);
 
-		// 显示调试信息
+		/**
+		* \~chinese
+		* @brief 显示或隐藏调试信息
+		* @param show 是否显示
+		*/
 		void ShowDebugInfo(bool show = true);
 
-		// 清空舞台
+		/**
+		* \~chinese
+		* @brief 退出当前舞台并清空舞台栈
+		*/
 		void ClearStages();
 
 	public:
@@ -74,12 +110,12 @@ namespace kiwano
 
 		void HandleEvent(Event& evt) override;
 
-	protected:
+	private:
 		Director();
 
 		virtual ~Director();
 
-	protected:
+	private:
 		bool			render_border_enabled_;
 		Stack<StagePtr>	stages_;
 		StagePtr		current_stage_;

@@ -23,46 +23,94 @@
 
 namespace kiwano
 {
-	// 图层
+	class RenderTarget;
+
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 图层区域
+	*/
 	class KGE_API LayerArea
 	{
+		friend class RenderTarget;
+
 	public:
 		LayerArea();
 
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
-		Size GetSize() const;
+		/// \~chinese
+		/// @brief 获取图层区域
+		Rect const& GetAreaRect() const;
 
-		inline Rect const& GetAreaRect() const					{ return area_; }
+		/// \~chinese
+		/// @brief 获取图层透明度
+		float GetOpacity() const;
 
-		inline float GetOpacity() const							{ return opacity_; }
+		/// \~chinese
+		/// @brief 获取几何蒙层
+		Geometry const& GetMaskGeometry() const;
 
-		inline Geometry const& GetMaskGeometry() const			{ return mask_; }
+		/// \~chinese
+		/// @brief 获取几何蒙层变换
+		Matrix3x2 const& GetMaskTransform() const;
 
-		inline Matrix3x2 const& GetMaskTransform() const		{ return mask_transform_; }
+		/// \~chinese
+		/// @brief 设置图层区域
+		void SetAreaRect(Rect const& area);
 
-		// 设置图层区域
-		inline void SetAreaRect(Rect const& area)				{ area_ = area; }
+		/// \~chinese
+		/// @brief 设置图层透明度
+		void SetOpacity(float opacity);
 
-		// 设置图层透明度
-		inline void SetOpacity(float opacity)					{ opacity_ = opacity; }
+		/// \~chinese
+		/// @brief 设置几何蒙层
+		void SetMaskGeometry(Geometry const& mask);
 
-		// 设置几何蒙层
-		inline void SetMaskGeometry(Geometry const& mask)		{ mask_ = mask; }
+		/// \~chinese
+		/// @brief 设置几何蒙层变换
+		void SetMaskTransform(Matrix3x2 const& matrix);
 
-		// 设置几何蒙层变换
-		inline void SetMaskTransform(Matrix3x2 const& matrix)	{ mask_transform_ = matrix; }
+	private:
+		ComPtr<ID2D1Layer> GetLayer() const;
 
-	public:
-		inline ComPtr<ID2D1Layer> GetLayer() const				{ return layer_; }
+		void SetLayer(ComPtr<ID2D1Layer> layer);
 
-		inline void SetLayer(ComPtr<ID2D1Layer> layer)			{ layer_ = layer; }
-
-	protected:
+	private:
 		Rect area_;
 		float opacity_;
 		Geometry mask_;
 		Matrix3x2 mask_transform_;
 		ComPtr<ID2D1Layer> layer_;
 	};
+
+	/** @} */
+
+	inline bool					LayerArea::IsValid() const								{ return layer_ != nullptr; }
+
+	inline Rect const&			LayerArea::GetAreaRect() const							{ return area_; }
+
+	inline float				LayerArea::GetOpacity() const							{ return opacity_; }
+
+	inline Geometry const&		LayerArea::GetMaskGeometry() const						{ return mask_; }
+
+	inline Matrix3x2 const&		LayerArea::GetMaskTransform() const						{ return mask_transform_; }
+
+	inline void					LayerArea::SetAreaRect(Rect const& area)				{ area_ = area; }
+
+	inline void					LayerArea::SetOpacity(float opacity)					{ opacity_ = opacity; }
+
+	inline void					LayerArea::SetMaskGeometry(Geometry const& mask)		{ mask_ = mask; }
+
+	inline void					LayerArea::SetMaskTransform(Matrix3x2 const& matrix)	{ mask_transform_ = matrix; }
+
+	inline ComPtr<ID2D1Layer>	LayerArea::GetLayer() const								{ return layer_; }
+
+	inline void					LayerArea::SetLayer(ComPtr<ID2D1Layer> layer)			{ layer_ = layer; }
 }

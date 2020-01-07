@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	template <typename _Ty, typename _PathTy, typename _CacheTy>
-	_Ty CreateOrGetCache(_CacheTy& cache, _PathTy const& path, size_t hash)
+	SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, _PathTy const& path, size_t hash)
 	{
 		auto iter = cache.find(hash);
 		if (iter != cache.end())
@@ -33,8 +33,8 @@ namespace kiwano
 			return iter->second;
 		}
 
-		_Ty texture;
-		if (texture.Load(path))
+		SmartPtr<_Ty> texture = new _Ty;
+		if (texture->Load(path))
 		{
 			cache.insert(std::make_pair(hash, texture));
 		}
@@ -59,22 +59,22 @@ namespace kiwano
 	{
 	}
 
-	Texture TextureCache::AddOrGetTexture(String const& file_path)
+	TexturePtr TextureCache::AddOrGetTexture(String const& file_path)
 	{
 		return CreateOrGetCache<Texture>(texture_cache_, file_path, file_path.hash());
 	}
 
-	Texture TextureCache::AddOrGetTexture(Resource const& res)
+	TexturePtr TextureCache::AddOrGetTexture(Resource const& res)
 	{
 		return CreateOrGetCache<Texture>(texture_cache_, res, res.GetId());
 	}
 
-	GifImage TextureCache::AddOrGetGifImage(String const& file_path)
+	GifImagePtr TextureCache::AddOrGetGifImage(String const& file_path)
 	{
 		return CreateOrGetCache<GifImage>(gif_texture_cache_, file_path, file_path.hash());
 	}
 
-	GifImage TextureCache::AddOrGetGifImage(Resource const& res)
+	GifImagePtr TextureCache::AddOrGetGifImage(Resource const& res)
 	{
 		return CreateOrGetCache<GifImage>(gif_texture_cache_, res, res.GetId());
 	}

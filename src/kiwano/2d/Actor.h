@@ -19,7 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/core/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/math/math.h>
 #include <kiwano/2d/Transform.h>
 #include <kiwano/2d/action/ActionManager.h>
 #include <kiwano/core/TimerManager.h>
@@ -27,10 +30,27 @@
 
 namespace kiwano
 {
+	class Stage;
 	class Director;
 	class RenderTarget;
 
-	// 角色
+	KGE_DECLARE_SMART_PTR(Actor);
+
+	/**
+	* \~chinese
+	* \defgroup Actors 基础角色
+	*/
+
+	/**
+	* \addtogroup Actors
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 角色
+	* @details 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、定时器、事件监听等功能的载体
+	*/
 	class KGE_API Actor
 		: public ObjectBase
 		, public TimerManager
@@ -43,353 +63,376 @@ namespace kiwano
 		friend IntrusiveList<ActorPtr>;
 
 	public:
-		using Children			= IntrusiveList<ActorPtr>;
-		using UpdateCallback	= Function<void(Duration)>;
+		/// \~chinese
+		/// @brief 子成员列表
+		using Children = IntrusiveList<ActorPtr>;
+
+		/// \~chinese
+		/// @brief 角色更新回调函数
+		using UpdateCallback = Function<void(Duration)>;
 
 		Actor();
 
-		// 更新角色
+		/// \~chinese
+		/// @brief 更新角色
+		/// @details 每帧画面刷新前调用该函数，重载该函数以实现角色的更新处理
+		/// @param dt 距上一次更新的时间间隔
 		virtual void OnUpdate(Duration dt);
 
-		// 渲染角色
+		/// \~chinese
+		/// @brief 渲染角色
+		/// @details 每帧画面刷新时调用该函数，默认不进行渲染，重载该函数以实现具体渲染过程
+		/// @param rt 渲染目标
 		virtual void OnRender(RenderTarget* rt);
 
-		// 获取显示状态
+		/// \~chinese
+		/// @brief 获取显示状态
 		bool IsVisible() const;
 
-		// 获取响应状态
+		/// \~chinese
+		/// @brief 获取响应状态
 		bool IsResponsible() const;
 
-		// 是否启用级联透明度
+		/// \~chinese
+		/// @brief 是否启用级联透明度
 		bool IsCascadeOpacityEnabled() const;
 
-		// 获取名称的 Hash 值
+		/// \~chinese
+		/// @brief 获取名称的 Hash 值
 		size_t GetHashName() const;
 
-		// 获取 Z 轴顺序
+		/// \~chinese
+		/// @brief 获取 Z 轴顺序
 		int GetZOrder() const;
 
-		// 获取坐标
+		/// \~chinese
+		/// @brief 获取坐标
 		Point const& GetPosition() const;
 
-		// 获取 x 坐标
+		/// \~chinese
+		/// @brief 获取 x 坐标
 		float GetPositionX() const;
 
-		// 获取 y 坐标
+		/// \~chinese
+		/// @brief 获取 y 坐标
 		float GetPositionY() const;
 
-		// 获取缩放比例
+		/// \~chinese
+		/// @brief 获取缩放比例
 		Point const& GetScale() const;
 
-		// 获取横向缩放比例
+		/// \~chinese
+		/// @brief 获取横向缩放比例
 		float GetScaleX() const;
 
-		// 获取纵向缩放比例
+		/// \~chinese
+		/// @brief 获取纵向缩放比例
 		float GetScaleY() const;
 
-		// 获取错切角度
+		/// \~chinese
+		/// @brief 获取错切角度
 		Point const& GetSkew() const;
 
-		// 获取横向错切角度
+		/// \~chinese
+		/// @brief 获取横向错切角度
 		float GetSkewX() const;
 
-		// 获取纵向错切角度
+		/// \~chinese
+		/// @brief 获取纵向错切角度
 		float GetSkewY() const;
 
-		// 获取旋转角度
+		/// \~chinese
+		/// @brief 获取旋转角度
 		float GetRotation() const;
 
-		// 获取宽度
+		/// \~chinese
+		/// @brief 获取宽度
 		float GetWidth() const;
 
-		// 获取高度
+		/// \~chinese
+		/// @brief 获取高度
 		float GetHeight() const;
 
-		// 获取大小
+		/// \~chinese
+		/// @brief 获取大小
 		Size const& GetSize() const;
 
-		// 获取缩放后的宽度
+		/// \~chinese
+		/// @brief 获取缩放后的宽度
 		float GetScaledWidth() const;
 
-		// 获取缩放后的高度
+		/// \~chinese
+		/// @brief 获取缩放后的高度
 		float GetScaledHeight() const;
 
-		// 获取缩放后的大小
+		/// \~chinese
+		/// @brief 获取缩放后的大小
 		Size GetScaledSize() const;
 
-		// 获取锚点
+		/// \~chinese
+		/// @brief 获取锚点
 		Point const& GetAnchor() const;
 
-		// 获取 x 方向锚点
+		/// \~chinese
+		/// @brief 获取 x 方向锚点
 		float GetAnchorX() const;
 
-		// 获取 y 方向锚点
+		/// \~chinese
+		/// @brief 获取 y 方向锚点
 		float GetAnchorY() const;
 
-		// 获取透明度
+		/// \~chinese
+		/// @brief 获取透明度
 		float GetOpacity() const;
 
-		// 获取显示透明度
+		/// \~chinese
+		/// @brief 获取显示透明度
 		float GetDisplayedOpacity() const;
 
-		// 获取变换
+		/// \~chinese
+		/// @brief 获取变换
 		Transform GetTransform() const;
 
-		// 获取父角色
+		/// \~chinese
+		/// @brief 获取父角色
 		Actor* GetParent() const;
 
-		// 获取所在舞台
+		/// \~chinese
+		/// @brief 获取所在舞台
 		Stage* GetStage() const;
 
-		// 获取边框
+		/// \~chinese
+		/// @brief 获取边框
 		virtual Rect GetBounds() const;
 
-		// 获取外切包围盒
+		/// \~chinese
+		/// @brief 获取外切包围盒
 		virtual Rect GetBoundingBox() const;
 
-		// 获取二维变换矩阵
+		/// \~chinese
+		/// @brief 获取二维变换矩阵
 		Matrix3x2 const& GetTransformMatrix()  const;
 
-		// 获取二维变换的逆矩阵
+		/// \~chinese
+		/// @brief 获取二维变换的逆矩阵
 		Matrix3x2 const& GetTransformInverseMatrix()  const;
 
-		// 设置是否显示
-		void SetVisible(
-			bool val
-		);
+		/// \~chinese
+		/// @brief 设置角色是否可见
+		void SetVisible(bool val);
 
-		// 设置名称
-		void SetName(
-			String const& name
-		);
+		/// \~chinese
+		/// @brief 设置名称
+		void SetName(String const& name);
 
-		// 设置坐标
-		virtual void SetPosition(
-			Point const& point
-		);
+		/// \~chinese
+		/// @brief 设置坐标
+		virtual void SetPosition(Point const& point);
 
-		// 设置坐标
-		void SetPosition(
-			float x,
-			float y
-		);
+		/// \~chinese
+		/// @brief 设置坐标
+		void SetPosition(float x, float y);
 
-		// 设置横坐标
-		void SetPositionX(
-			float x
-		);
+		/// \~chinese
+		/// @brief 设置横坐标
+		void SetPositionX(float x);
 
-		// 设置纵坐标
-		void SetPositionY(
-			float y
-		);
+		/// \~chinese
+		/// @brief 设置纵坐标
+		void SetPositionY(float y);
 
-		// 移动坐标
-		void Move(
-			Vec2 const& v
-		);
+		/// \~chinese
+		/// @brief 移动坐标
+		void Move(Vec2 const& v);
 
-		// 移动坐标
-		void Move(
-			float vx,
-			float vy
-		);
+		/// \~chinese
+		/// @brief 移动坐标
+		void Move(float vx, float vy);
 
-		// 设置缩放比例
-		// 默认为 (1.0, 1.0)
-		virtual void SetScale(
-			Vec2 const& scale
-		);
+		/// \~chinese
+		/// @brief 设置缩放比例，默认为 (1.0, 1.0)
+		virtual void SetScale(Vec2 const& scale);
 
-		// 设置缩放比例
-		// 默认为 (1.0, 1.0)
-		void SetScale(
-			float scalex,
-			float scaley
-		);
+		/// \~chinese
+		/// @brief 设置缩放比例，默认为 (1.0, 1.0)
+		void SetScale(float scalex, float scaley);
 
-		// 设置错切角度
-		// 默认为 (0, 0)
-		virtual void SetSkew(
-			Vec2 const& skew
-		);
+		/// \~chinese
+		/// @brief 设置错切角度，默认为 (0, 0)
+		virtual void SetSkew(Vec2 const& skew);
 
-		// 设置错切角度
-		// 默认为 (0, 0)
-		void SetSkew(
-			float skewx,
-			float skewy
-		);
+		/// \~chinese
+		/// @brief 设置错切角度，默认为 (0, 0)
+		void SetSkew(float skewx, float skewy);
 
-		// 设置旋转角度
-		// 默认为 0
-		virtual void SetRotation(
-			float rotation
-		);
+		/// \~chinese
+		/// @brief 设置旋转角度，默认为 0
+		virtual void SetRotation(float rotation);
 
-		// 设置锚点位置
-		// 默认为 (0, 0), 范围 [0, 1]
-		virtual void SetAnchor(
-			Vec2 const& anchor
-		);
+		/// \~chinese
+		/// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
+		virtual void SetAnchor(Vec2 const& anchor);
 
-		// 设置锚点位置
-		// 默认为 (0, 0), 范围 [0, 1]
-		void SetAnchor(
-			float anchorx,
-			float anchory
-		);
+		/// \~chinese
+		/// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
+		void SetAnchor(float anchorx, float anchory);
 
-		// 修改宽度
-		virtual void SetWidth(
-			float width
-		);
+		/// \~chinese
+		/// @brief 修改宽度
+		virtual void SetWidth(float width);
 
-		// 修改高度
-		virtual void SetHeight(
-			float height
-		);
+		/// \~chinese
+		/// @brief 修改高度
+		virtual void SetHeight(float height);
 
-		// 修改大小
-		virtual void SetSize(
-			Size const& size
-		);
+		/// \~chinese
+		/// @brief 修改大小
+		virtual void SetSize(Size const& size);
 
-		// 修改大小
-		void SetSize(
-			float width,
-			float height
-		);
+		/// \~chinese
+		/// @brief 修改大小
+		void SetSize(float width, float height);
 
-		// 设置透明度
-		// 默认为 1.0, 范围 [0, 1]
-		virtual void SetOpacity(
-			float opacity
-		);
+		/// \~chinese
+		/// @brief 设置透明度，默认为 1.0, 范围 [0, 1]
+		virtual void SetOpacity(float opacity);
 
-		// 启用或禁用级联透明度
-		void SetCascadeOpacityEnabled(
-			bool enabled
-		);
+		/// \~chinese
+		/// @brief 启用或禁用级联透明度
+		void SetCascadeOpacityEnabled(bool enabled);
 
-		// 设置二维仿射变换
-		void SetTransform(
-			Transform const& transform
-		);
+		/// \~chinese
+		/// @brief 设置二维仿射变换
+		void SetTransform(Transform const& transform);
 
-		// 设置 Z 轴顺序
-		// 默认为 0
-		void SetZOrder(
-			int zorder
-		);
+		/// \~chinese
+		/// @brief 设置 Z 轴顺序，默认为 0
+		void SetZOrder(int zorder);
 
-		// 是否可响应 (鼠标 Hover | Out | Click 消息)
-		// 默认为 false
-		void SetResponsible(
-			bool enable
-		);
+		/// \~chinese
+		/// @brief 设置角色是否可响应，默认为 false
+		/// @details 可响应的角色会收到鼠标的 Hover | Out | Click 消息
+		void SetResponsible(bool enable);
 
-		// 添加子角色
-		void AddChild(
-			ActorPtr child,
-			int zorder = 0
-		);
+		/// \~chinese
+		/// @brief 添加子角色
+		void AddChild(ActorPtr child, int zorder = 0);
 
-		// 添加子角色
-		void AddChild(
-			Actor* child,
-			int zorder = 0
-		);
+		/// \~chinese
+		/// @brief 添加子角色
+		void AddChild(Actor* child, int zorder = 0);
 
-		// 添加多个子角色
-		void AddChildren(
-			Vector<ActorPtr> const& children
-		);
+		/// \~chinese
+		/// @brief 添加多个子角色
+		void AddChildren(Vector<ActorPtr> const& children);
 
-		// 获取名称相同的子角色
-		Actor* GetChild(
-			String const& name
-		) const;
+		/// \~chinese
+		/// @brief 获取名称相同的子角色
+		Actor* GetChild(String const& name) const;
 
-		// 获取所有名称相同的子角色
-		Vector<ActorPtr> GetChildren(
-			String const& name
-		) const;
+		/// \~chinese
+		/// @brief 获取所有名称相同的子角色
+		Vector<ActorPtr> GetChildren(String const& name) const;
 
-		// 获取全部子角色
+		/// \~chinese
+		/// @brief 获取全部子角色
 		Children& GetAllChildren();
 
-		// 获取全部子角色
+		/// \~chinese
+		/// @brief 获取全部子角色
 		Children const& GetAllChildren() const;
 
-		// 移除子角色
-		void RemoveChild(
-			ActorPtr child
-		);
+		/// \~chinese
+		/// @brief 移除子角色
+		void RemoveChild(ActorPtr child);
 
-		// 移除子角色
-		void RemoveChild(
-			Actor* child
-		);
+		/// \~chinese
+		/// @brief 移除子角色
+		void RemoveChild(Actor* child);
 
-		// 移除所有名称相同的子角色
-		void RemoveChildren(
-			String const& child_name
-		);
+		/// \~chinese
+		/// @brief 移除所有名称相同的子角色
+		void RemoveChildren(String const& child_name);
 
-		// 移除所有角色
+		/// \~chinese
+		/// @brief 移除所有角色
 		void RemoveAllChildren();
 
-		// 从父角色移除
+		/// \~chinese
+		/// @brief 从父角色移除
 		void RemoveFromParent();
 
-		// 判断点是否在角色内
+		/// \~chinese
+		/// @brief 判断点是否在角色内
 		virtual bool ContainsPoint(const Point& point) const;
 
-		// 暂停角色更新
+		/// \~chinese
+		/// @brief 暂停角色更新
 		void PauseUpdating();
 
-		// 继续角色更新
+		/// \~chinese
+		/// @brief 继续角色更新
 		void ResumeUpdating();
 
-		// 角色更新是否暂停
+		/// \~chinese
+		/// @brief 角色更新是否暂停
 		bool IsUpdatePausing() const;
 
-		// 设置更新时的回调函数
+		/// \~chinese
+		/// @brief 设置更新时的回调函数
 		void SetCallbackOnUpdate(UpdateCallback const& cb);
 
-		// 获取更新时的回调函数
+		/// \~chinese
+		/// @brief 获取更新时的回调函数
 		UpdateCallback GetCallbackOnUpdate() const;
 
-		// 渲染角色边界
+		/// \~chinese
+		/// @brief 渲染角色边界
 		void ShowBorder(bool show);
 
-		// 事件分发
+		/// \~chinese
+		/// @brief 分发事件
 		void Dispatch(Event& evt) override;
 
-		// 设置默认锚点
-		static void SetDefaultAnchor(
-			float anchor_x,
-			float anchor_y
-		);
+		/// \~chinese
+		/// @brief 设置默认锚点
+		static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
 	protected:
+		/// \~chinese
+		/// @brief 更新自身和所有子角色
 		virtual void Update(Duration dt);
 
+		/// \~chinese
+		/// @brief 渲染自身和所有子角色
 		virtual void Render(RenderTarget* rt);
 
-		virtual void PrepareRender(RenderTarget* rt);
-
+		/// \~chinese
+		/// @brief 绘制自身和所有子角色的边界
 		virtual void RenderBorder(RenderTarget* rt);
 
+		/// \~chinese
+		/// @brief 检查是否在渲染目标的视区内
 		virtual bool CheckVisibilty(RenderTarget* rt) const;
 
+		/// \~chinese
+		/// @brief 渲染前初始化渲染目标状态，仅当 CheckVisibilty 返回真时调用该函数
+		virtual void PrepareToRender(RenderTarget* rt);
+
+		/// \~chinese
+		/// @brief 更新自己的二维变换，并通知所有子角色
 		void UpdateTransform() const;
 
+		/// \~chinese
+		/// @brief 更新自己和所有子角色的透明度
 		void UpdateOpacity();
 
+		/// \~chinese
+		/// @brief 将所有子角色按Z轴顺序排序
 		void Reorder();
 
+		/// \~chinese
+		/// @brief 设置节点所在舞台
 		void SetStage(Stage* stage);
 
 	private:
@@ -420,6 +463,9 @@ namespace kiwano
 		mutable Matrix3x2	transform_matrix_;
 		mutable Matrix3x2	transform_matrix_inverse_;
 	};
+
+	/** @} */
+
 
 	inline void Actor::OnUpdate(Duration dt)
 	{

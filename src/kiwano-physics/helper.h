@@ -28,7 +28,7 @@ namespace kiwano
 {
 	namespace physics
 	{
-		inline b2Vec2	Stage2World(const Point& pos)	{ return b2Vec2(pos.x, pos.y); }
-		inline Point	World2Stage(const b2Vec2& pos)	{ return Point(pos.x, pos.y); }
+		inline b2Vec2	Stage2World(const Vec2& pos)	{ return b2Vec2(pos.x, pos.y); }
+		inline Vec2		World2Stage(const b2Vec2& pos)	{ return Vec2(pos.x, pos.y); }
 	}
 }

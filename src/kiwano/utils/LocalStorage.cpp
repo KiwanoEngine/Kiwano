@@ -28,16 +28,6 @@ namespace kiwano
 		SetFieldName(field);
 	}
 
-	void LocalStorage::SetFilePath(String const & file_path)
-	{
-		file_path_ = file_path;
-	}
-
-	void LocalStorage::SetFieldName(String const & field_name)
-	{
-		field_name_ = field_name;
-	}
-
 	bool LocalStorage::Exists(String const& key) const
 	{
 		wchar_t temp[256] = { 0 };

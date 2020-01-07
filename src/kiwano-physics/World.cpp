@@ -27,7 +27,7 @@ namespace kiwano
 	{
 		namespace
 		{
-			const float DefaultGlobalScale = 100.f;		// 100 pixels per meters
+			const float default_global_scale = 100.f;		// 100 pixels per meters
 		}
 
 		class World::DestructionListener : public b2DestructionListener
@@ -85,7 +85,7 @@ namespace kiwano
 			: world_(b2Vec2(0, 10.0f))
 			, vel_iter_(6)
 			, pos_iter_(2)
-			, global_scale_(DefaultGlobalScale)
+			, global_scale_(default_global_scale)
 			, destruction_listener_(nullptr)
 			, contact_listener_(nullptr)
 			, removing_joint_(false)
@@ -225,36 +225,25 @@ namespace kiwano
 			world_.SetGravity(b2Vec2(gravity.x, gravity.y));
 		}
 
+		ContactList World::GetContactList()
+		{
+			return ContactList(Contact(world_.GetContactList()));
+		}
+
 		void World::Update(Duration dt)
 		{
-			{
-				b2Body* b2body = world_.GetBodyList();
-				while (b2body)
-				{
-					Body* body = static_cast<Body*>(b2body->GetUserData());
-					if (body && body->GetType() != Body::Type::Static)
-					{
-						body->UpdateFromActor();
-					}
-
-					b2body = b2body->GetNext();
-				}
-			}
-
 			world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
 
+			b2Body* b2body = world_.GetBodyList();
+			while (b2body)
 			{
-				b2Body* b2body = world_.GetBodyList();
-				while (b2body)
+				Body* body = static_cast<Body*>(b2body->GetUserData());
+				if (body && body->GetType() != Body::Type::Static)
 				{
-					Body* body = static_cast<Body*>(b2body->GetUserData());
-					if (body && body->GetType() != Body::Type::Static)
-					{
-						body->UpdateActor();
-					}
-
-					b2body = b2body->GetNext();
+					body->UpdateActor();
 				}
+
+				b2body = b2body->GetNext();
 			}
 
 			Stage::Update(dt);

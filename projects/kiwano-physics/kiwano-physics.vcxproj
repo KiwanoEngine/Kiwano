@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-physics\Body.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Contact.h" />
+    <ClInclude Include="..\..\src\kiwano-physics\ContactEdge.h" />
     <ClInclude Include="..\..\src\kiwano-physics\ContactEvent.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Fixture.h" />
     <ClInclude Include="..\..\src\kiwano-physics\helper.h" />
@@ -24,6 +25,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-physics\Body.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Contact.cpp" />
+    <ClCompile Include="..\..\src\kiwano-physics\ContactEdge.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\ContactEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Fixture.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Joint.cpp" />
@@ -44,7 +46,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>

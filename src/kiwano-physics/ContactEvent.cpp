@@ -22,19 +22,10 @@
 
 namespace kiwano
 {
-	namespace event
-	{
-		EventType event::ContactBegin	= EventType(L"ContactBegin");
-		EventType event::ContactEnd		= EventType(L"ContactEnd");
-	}
-
 	namespace physics
 	{
-
 		ContactBeginEvent::ContactBeginEvent()
-			: Event(event::ContactBegin)
-			, body_a(nullptr)
-			, body_b(nullptr)
+			: Event(KGE_EVENT(ContactBeginEvent))
 		{
 		}
 
@@ -42,14 +33,10 @@ namespace kiwano
 			: ContactBeginEvent()
 		{
 			this->contact = contact;
-			body_a = this->contact.GetFixtureA().GetBody();
-			body_b = this->contact.GetFixtureB().GetBody();
 		}
 
 		ContactEndEvent::ContactEndEvent()
-			: Event(event::ContactEnd)
-			, body_a(nullptr)
-			, body_b(nullptr)
+			: Event(KGE_EVENT(ContactEndEvent))
 		{
 		}
 
@@ -57,8 +44,6 @@ namespace kiwano
 			: ContactEndEvent()
 		{
 			this->contact = contact;
-			body_a = this->contact.GetFixtureA().GetBody();
-			body_b = this->contact.GetFixtureB().GetBody();
 		}
 
 }

@@ -3,16 +3,16 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
     <ClInclude Include="..\..\src\kiwano-audio\AudioEngine.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\audio-modules.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
     <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\libraries.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-audio\AudioEngine.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\audio-modules.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\Transcoder.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\libraries.cpp" />
   </ItemGroup>
 </Project>

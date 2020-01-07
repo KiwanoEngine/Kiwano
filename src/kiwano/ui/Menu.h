@@ -23,39 +23,40 @@
 
 namespace kiwano
 {
-	// 菜单
+	KGE_DECLARE_SMART_PTR(Menu);
+
+	/**
+	* \~chinese
+	* @brief 菜单，用于管理多个按钮
+	*/
 	class KGE_API Menu
 		: public Actor
 	{
 	public:
 		Menu();
 
-		explicit Menu(
-			Vector<ButtonPtr> const& buttons	/* 按钮数组 */
-		);
-
-		// 获取菜单是否禁用
+		/// \~chinese
+		/// @brief 获取菜单是否禁用
 		bool IsEnable() const;
 
-		// 获取菜单中的按钮数量
+		/// \~chinese
+		/// @brief 获取菜单中的按钮数量
 		size_t GetButtonCount() const;
 
-		// 设置菜单启用或禁用
-		void SetEnabled(
-			bool enabled
-		);
+		/// \~chinese
+		/// @brief 设置菜单启用或禁用
+		void SetEnabled(bool enabled);
 
-		// 添加按钮
-		void AddButton(
-			ButtonPtr button
-		);
+		/// \~chinese
+		/// @brief 添加按钮
+		void AddButton(ButtonPtr button);
 
-		// 移除按钮
-		bool RemoveButton(
-			ButtonPtr button
-		);
+		/// \~chinese
+		/// @brief 移除按钮
+		bool RemoveButton(ButtonPtr button);
 
-		// 获取所有按钮
+		/// \~chinese
+		/// @brief 获取所有按钮
 		Vector<ButtonPtr> const& GetAllButtons() const;
 
 	private:

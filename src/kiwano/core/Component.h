@@ -27,11 +27,19 @@ namespace kiwano
 	class RenderTarget;
 	class Event;
 
-	// 基础组件
+	/**
+	* \~chinese
+	* @brief 基础功能组件
+	*/
 	class KGE_API ComponentBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 启动组件
 		virtual void SetupComponent() = 0;
+
+		/// \~chinese
+		/// @brief 销毁组件
 		virtual void DestroyComponent() = 0;
 
 		bool Check(const int flag);
@@ -44,15 +52,25 @@ namespace kiwano
 	};
 
 
-	// 渲染支持组件
+	/**
+	* \~chinese
+	* @brief 渲染支持组件
+	*/
 	class KGE_API RenderComponent
 		: public virtual ComponentBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 渲染前
 		virtual void BeforeRender() {}
 
-		virtual void OnRender(RenderTarget*) {}
+		/// \~chinese
+		/// @brief 渲染时
+		/// @param rt 渲染目标
+		virtual void OnRender(RenderTarget* rt) {}
 
+		/// \~chinese
+		/// @brief 渲染后
 		virtual void AfterRender() {}
 
 	public:
@@ -62,15 +80,25 @@ namespace kiwano
 	};
 
 
-	// 更新支持组件
+	/**
+	* \~chinese
+	* @brief 更新支持组件
+	*/
 	class KGE_API UpdateComponent
 		: public virtual ComponentBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 更新前
 		virtual void BeforeUpdate() {}
 
-		virtual void OnUpdate(Duration) {}
+		/// \~chinese
+		/// @brief 更新时
+		/// @param dt 间隔时间
+		virtual void OnUpdate(Duration dt) {}
 
+		/// \~chinese
+		/// @brief 更新后
 		virtual void AfterUpdate() {}
 
 	public:
@@ -80,13 +108,21 @@ namespace kiwano
 	};
 
 
-	// 事件支持组件
+	/**
+	* \~chinese
+	* @brief 事件支持组件
+	*/
 	class KGE_API EventComponent
 		: public virtual ComponentBase
 	{
 	public:
-		virtual void HandleEvent(Event&) {}
+		/// \~chinese
+		/// @brief 事件处理
+		/// @param evt 事件
+		virtual void HandleEvent(Event& evt) {}
 
+		/// \~chinese
+		/// @brief 处理 Windows 消息
 		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
 
 	public:

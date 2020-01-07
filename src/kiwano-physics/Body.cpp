@@ -104,8 +104,7 @@ namespace kiwano
 		{
 			if (fixture.GetB2Fixture())
 			{
-				b2Fixture* ptr = const_cast<b2Fixture*>(fixture.GetB2Fixture());
-				body_->DestroyFixture(ptr);
+				body_->DestroyFixture(fixture.GetB2Fixture());
 			}
 		}
 
@@ -254,7 +253,7 @@ namespace kiwano
 
 		void Body::Destroy()
 		{
-			if (world_)
+			if (world_ && body_)
 			{
 				world_->RemoveBody(this);
 			}

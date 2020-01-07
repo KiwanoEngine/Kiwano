@@ -93,7 +93,11 @@ namespace kiwano
 
 		if (children_.empty())
 		{
-			OnRender(rt);
+			if (CheckVisibilty(rt))
+			{
+				PrepareToRender(rt);
+				OnRender(rt);
+			}
 		}
 		else
 		{
@@ -108,7 +112,11 @@ namespace kiwano
 				child = child->next_item().get();
 			}
 
-			OnRender(rt);
+			if (CheckVisibilty(rt))
+			{
+				PrepareToRender(rt);
+				OnRender(rt);
+			}
 
 			while (child)
 			{
@@ -118,10 +126,10 @@ namespace kiwano
 		}
 	}
 
-	void Actor::PrepareRender(RenderTarget* rt)
+	void Actor::PrepareToRender(RenderTarget* rt)
 	{
 		rt->SetTransform(transform_matrix_);
-		rt->SetOpacity(displayed_opacity_);
+		rt->SetBrushOpacity(GetDisplayedOpacity());
 	}
 
 	void Actor::RenderBorder(RenderTarget* rt)
@@ -132,10 +140,10 @@ namespace kiwano
 
 			rt->SetTransform(transform_matrix_);
 
-			rt->SetDefaultBrushColor(Color(Color::Red, .4f));
+			rt->SetCurrentBrush(GetStage()->GetBorderFillBrush());
 			rt->FillRectangle(bounds);
 
-			rt->SetDefaultBrushColor(Color(Color::Red, .8f));
+			rt->SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
 			rt->DrawRectangle(bounds, 2.f);
 		}
 
@@ -150,7 +158,15 @@ namespace kiwano
 		if (dirty_visibility_)
 		{
 			dirty_visibility_ = false;
-			visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+
+			if (size_.IsOrigin())
+			{
+				visible_in_rt_ = false;
+			}
+			else
+			{
+				visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+			}
 		}
 		return visible_in_rt_;
 	}
@@ -169,21 +185,21 @@ namespace kiwano
 
 		if (responsible_)
 		{
-			if (evt.type == event::MouseMove)
+			if (evt.IsType<MouseMoveEvent>())
 			{
-				auto mouse_evt = evt.SafeCast<MouseMoveEvent>();
-				if (!mouse_evt->target && ContainsPoint(mouse_evt->pos))
+				auto& mouse_evt = evt.SafeCast<MouseMoveEvent>();
+				if (!mouse_evt.target && ContainsPoint(mouse_evt.pos))
 				{
-					mouse_evt->target = this;
+					mouse_evt.target = this;
 
 					if (!hover_)
 					{
 						hover_ = true;
 
 						MouseHoverEvent hover;
-						hover.pos = mouse_evt->pos;
-						hover.left_btn_down = mouse_evt->left_btn_down;
-						hover.right_btn_down = mouse_evt->right_btn_down;
+						hover.pos = mouse_evt.pos;
+						hover.left_btn_down = mouse_evt.left_btn_down;
+						hover.right_btn_down = mouse_evt.right_btn_down;
 						hover.target = this;
 						EventDispatcher::Dispatch(hover);
 					}
@@ -194,33 +210,33 @@ namespace kiwano
 					pressed_ = false;
 
 					MouseOutEvent out;
-					out.pos = mouse_evt->pos;
-					out.left_btn_down = mouse_evt->left_btn_down;
-					out.right_btn_down = mouse_evt->right_btn_down;
+					out.pos = mouse_evt.pos;
+					out.left_btn_down = mouse_evt.left_btn_down;
+					out.right_btn_down = mouse_evt.right_btn_down;
 					out.target = this;
 					EventDispatcher::Dispatch(out);
 				}
 			}
 
-			if (evt.type == event::MouseDown && hover_)
+			if (evt.IsType<MouseDownEvent>() && hover_)
 			{
 				pressed_ = true;
-				evt.SafeCast<MouseDownEvent>()->target = this;
+				evt.SafeCast<MouseDownEvent>().target = this;
 			}
 
-			if (evt.type == event::MouseUp && pressed_)
+			if (evt.IsType<MouseUpEvent>() && pressed_)
 			{
 				pressed_ = false;
 
 				auto mouse_up_evt = evt.SafeCast<MouseUpEvent>();
-				mouse_up_evt->target = this;
+				mouse_up_evt.target = this;
 
 				MouseClickEvent click;
-				click.pos = mouse_up_evt->pos;
-				click.left_btn_down = mouse_up_evt->left_btn_down;
-				click.right_btn_down = mouse_up_evt->right_btn_down;
+				click.pos = mouse_up_evt.pos;
+				click.left_btn_down = mouse_up_evt.left_btn_down;
+				click.right_btn_down = mouse_up_evt.right_btn_down;
 				click.target = this;
-				click.button = mouse_up_evt->button;
+				click.button = mouse_up_evt.button;
 				EventDispatcher::Dispatch(click);
 			}
 		}
@@ -272,7 +288,7 @@ namespace kiwano
 		}
 
 		// update children's transform
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 			child->dirty_transform_ = true;
 	}
 
@@ -481,7 +497,7 @@ namespace kiwano
 			{
 				if (parent == child)
 				{
-					KGE_ERROR_LOG(L"A actor cannot be its own parent");
+					KGE_ERROR(L"A actor cannot be its own parent");
 					return;
 				}
 			}
@@ -527,11 +543,11 @@ namespace kiwano
 		Vector<ActorPtr> children;
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
-				children.push_back(child);
+				children.push_back(const_cast<Actor*>(child));
 			}
 		}
 		return children;
@@ -541,11 +557,11 @@ namespace kiwano
 	{
 		size_t hash_code = std::hash<String>{}(name);
 
-		for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+		for (auto child = children_.first_item().get(); child; child = child->next_item().get())
 		{
 			if (child->hash_name_ == hash_code && child->IsName(name))
 			{
-				return child;
+				return const_cast<Actor*>(child);
 			}
 		}
 		return nullptr;

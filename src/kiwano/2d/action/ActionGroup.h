@@ -23,7 +23,15 @@
 
 namespace kiwano
 {
-	// 动作组
+	KGE_DECLARE_SMART_PTR(ActionGroup);
+
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 动画组合
 	class KGE_API ActionGroup
 		: public Action
 	{
@@ -32,78 +40,49 @@ namespace kiwano
 
 		ActionGroup();
 
-		explicit ActionGroup(
-			Vector<ActionPtr> const& actions,
-			bool sequence = true				// 按顺序执行或同时执行
-		);
+		/// \~chinese
+		/// @brief 动画组合
+		/// @param actions 动画集合
+		/// @param sequence 动画按顺序依次执行或同时执行
+		explicit ActionGroup(Vector<ActionPtr> const& actions, bool sequence = true);
 
 		virtual ~ActionGroup();
 
-		// 添加动作
-		void Add(
-			ActionPtr action
-		);
+		/// \~chinese
+		/// @brief 添加动画
+		/// @param action 动画
+		void Add(ActionPtr action);
 
-		// 添加多个动作
-		void Add(
-			Vector<ActionPtr> const& actions
-		);
+		/// \~chinese
+		/// @brief 添加多个动画
+		/// @param actions 动画集合
+		void Add(Vector<ActionPtr> const& actions);
 
-		// 获取所有动作
-		inline ActionList const& GetActions() { return actions_; }
+		/// \~chinese
+		/// @brief 获取所有动画
+		ActionList const& GetActions() const;
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		// 初始化动作
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		// 更新动作
-		void Update(ActorPtr target, Duration dt) override;
+		void Update(Actor* target, Duration dt) override;
 
-	protected:
+	private:
 		bool		sequence_;
 		ActionPtr	current_;
 		ActionList	actions_;
 	};
 
+	/** @} */
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
-
-	// 顺序动作
-	class KGE_API ActionSequence
-		: public ActionGroup
-	{
-	public:
-		KGE_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead")
-		inline ActionSequence() : ActionGroup() {}
-
-		KGE_DEPRECATED("ActionSequence is deprecated, use ActionGroup instead")
-		inline explicit ActionSequence(Vector<ActionPtr> const& actions) : ActionGroup(actions, true) {}
-
-		virtual ~ActionSequence() {}
-	};
-
-
-	// 同步动作
-	class KGE_API ActionSpawn
-		: public ActionGroup
-	{
-	public:
-		KGE_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead")
-		inline ActionSpawn() : ActionGroup() { sequence_ = false; }
-
-		KGE_DEPRECATED("ActionSpawn is deprecated, use ActionGroup instead")
-		inline explicit ActionSpawn(Vector<ActionPtr> const& actions) : ActionGroup(actions, false) {}
-
-		virtual ~ActionSpawn() {}
-	};
-
-#pragma warning(pop)
+	inline ActionGroup::ActionList const& ActionGroup::GetActions() const { return actions_; }
 
 }

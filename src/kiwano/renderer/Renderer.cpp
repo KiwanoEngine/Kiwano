@@ -19,7 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/Renderer.h>
-#include <kiwano/core/win32/helper.h>
+#include <kiwano/renderer/GeometrySink.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/platform/FileSystem.h>
 
@@ -50,10 +51,10 @@ namespace kiwano
 
 	void Renderer::SetupComponent()
 	{
-		KGE_LOG(L"Creating device resources");
+		KGE_SYS_LOG(L"Creating device resources");
 
-		hwnd_ = Window::GetInstance()->GetHandle();
-		output_size_ = Window::GetInstance()->GetSize();
+		hwnd_ = Window::instance().GetHandle();
+		output_size_ = Window::instance().GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -61,76 +62,70 @@ namespace kiwano
 
 		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
 
-		// Direct2D device resources
-		if (SUCCEEDED(hr))
-		{
-			hr = ID2DDeviceResources::Create(&d2d_res_);
-		}
-
 		// Direct3D device resources
 		if (SUCCEEDED(hr))
 		{
-			hr = ID3DDeviceResources::Create(
-				&d3d_res_,
-				d2d_res_.get(),
-				hwnd_
-			);
+			hr = ID3DDeviceResources::Create(&d3d_res_, hwnd_);
+
+			// Direct2D device resources
+			if (SUCCEEDED(hr))
+			{
+				hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+
+				// DrawingStateBlock
+				if (SUCCEEDED(hr))
+				{
+					hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(&drawing_state_block_);
+				}
+
+				// Other device resources
+				if (SUCCEEDED(hr))
+				{
+					hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+				}
+
+				// FontFileLoader and FontCollectionLoader
+				if (SUCCEEDED(hr))
+				{
+					hr = IFontCollectionLoader::Create(&font_collection_loader_);
+
+					if (SUCCEEDED(hr))
+					{
+						hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+					}
+				}
+
+				// ResourceFontFileLoader and ResourceFontCollectionLoader
+				if (SUCCEEDED(hr))
+				{
+					hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+
+					if (SUCCEEDED(hr))
+					{
+						hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
+					}
+
+					if (SUCCEEDED(hr))
+					{
+						hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
+
+						if (SUCCEEDED(hr))
+						{
+							hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
+						}
+					}
+				}
+			}
 		}
 
-		// DrawingStateBlock
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(
-				&drawing_state_block_
-			);
-		}
-
-		// Other device resources
-		if (SUCCEEDED(hr))
-		{
-			hr = CreateDeviceResources();
-		}
-
-		// FontFileLoader and FontCollectionLoader
-		if (SUCCEEDED(hr))
-		{
-			hr = IFontCollectionLoader::Create(&font_collection_loader_);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
-		}
-
-		// ResourceFontFileLoader and ResourceFontCollectionLoader
-		if (SUCCEEDED(hr))
-		{
-			hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.get());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.get());
-		}
-
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::DestroyComponent()
 	{
-		KGE_LOG(L"Destroying device resources");
+		KGE_SYS_LOG(L"Destroying device resources");
 
-		RenderTarget::DiscardDeviceResources();
+		DiscardDeviceResources();
 
 		d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
 		res_font_file_loader_.reset();
@@ -145,47 +140,27 @@ namespace kiwano
 
 	void Renderer::BeforeRender()
 	{
-		HRESULT hr = S_OK;
+		KGE_ASSERT(d3d_res_ && IsValid());
 
-		if (!IsValid())
-		{
-			hr = E_UNEXPECTED;
-		}
+		HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
 
 		if (SUCCEEDED(hr))
 		{
-			hr = d3d_res_->ClearRenderTarget(clear_color_);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			render_target_->SaveDrawingState(drawing_state_block_.get());
+			GetRenderTarget()->SaveDrawingState(drawing_state_block_.get());
 			BeginDraw();
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::AfterRender()
 	{
-		HRESULT hr = S_OK;
-		
-		if (!IsValid())
-		{
-			hr = E_UNEXPECTED;
-		}
+		KGE_ASSERT(d3d_res_ && IsValid());
 
-		if (SUCCEEDED(hr))
-		{
-			EndDraw();
+		EndDraw();
+		GetRenderTarget()->RestoreDrawingState(drawing_state_block_.get());
 
-			render_target_->RestoreDrawingState(drawing_state_block_.get());
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			hr = d3d_res_->Present(vsync_);
-		}
+		HRESULT hr = d3d_res_->Present(vsync_);
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
@@ -193,7 +168,7 @@ namespace kiwano
 			hr = HandleDeviceLost();
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
@@ -211,30 +186,20 @@ namespace kiwano
 		}
 	}
 
-	HRESULT Renderer::CreateDeviceResources()
-	{
-		KGE_ASSERT(d2d_res_);
-
-		HRESULT hr = RenderTarget::CreateDeviceResources(
-			d2d_res_->GetDeviceContext(),
-			d2d_res_
-		);
-
-		if (SUCCEEDED(hr))
-		{
-			SetAntialiasMode(antialias_);
-			SetTextAntialiasMode(text_antialias_);
-		}
-		return hr;
-	}
-
 	HRESULT Renderer::HandleDeviceLost()
 	{
+		KGE_ASSERT(d3d_res_ && d2d_res_ && render_target_);
+
 		HRESULT hr = d3d_res_->HandleDeviceLost();
 
 		if (SUCCEEDED(hr))
 		{
-			hr = CreateDeviceResources();
+			hr = d2d_res_->HandleDeviceLost(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
 		}
 		return hr;
 	}
@@ -247,15 +212,15 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"Texture file '%s' not found!", file_path.c_str());
+			KGE_WARN(L"Texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -298,7 +263,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -353,7 +318,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -365,15 +330,15 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"Gif texture file '%s' not found!", file_path.c_str());
+			KGE_WARN(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -386,7 +351,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -411,7 +376,7 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF texture failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
 		}
 	}
 
@@ -457,7 +422,8 @@ namespace kiwano
 
 					if (SUCCEEDED(hr))
 					{
-						frame.raw.SetBitmap(raw_bitmap);
+						frame.texture = new Texture;
+						frame.texture->SetBitmap(raw_bitmap);
 					}
 				}
 			}
@@ -578,11 +544,11 @@ namespace kiwano
 
 		if (FAILED(hr))
 		{
-			KGE_WARNING_LOG(L"Load GIF frame failed with HRESULT of %08X!", hr);
+			KGE_WARN(L"Load GIF frame failed with HRESULT of %08X!", hr);
 		}
 	}
 
-	void Renderer::CreateFontCollection(FontCollection& collection, Vector<String> const& file_paths)
+	void Renderer::CreateFontCollection(Font& font, Vector<String> const& file_paths)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -596,13 +562,13 @@ namespace kiwano
 		{
 			for (auto& file_path : full_paths)
 			{
-				if (!FileSystem::GetInstance()->IsFileExists(file_path))
+				if (!FileSystem::instance().IsFileExists(file_path))
 				{
-					KGE_WARNING_LOG(L"Font file '%s' not found!", file_path.c_str());
+					KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
 					hr = E_FAIL;
 				}
 
-				file_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+				file_path = FileSystem::instance().GetFullPathForFile(file_path);
 			}
 		}
 
@@ -625,18 +591,15 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					collection.SetFontCollection(font_collection);
+					font.SetCollection(font_collection);
 				}
 			}
 		}
 
-		if (FAILED(hr))
-		{
-			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
-		}
+		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateFontCollection(FontCollection& collection, Vector<Resource> const& res_arr)
+	void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -663,18 +626,15 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					collection.SetFontCollection(font_collection);
+					font.SetCollection(font_collection);
 				}
 			}
 		}
 
-		if (FAILED(hr))
-		{
-			KGE_WARNING_LOG(L"Load font failed with HRESULT of %08X!", hr);
-		}
+		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextFormat(TextFormat& format, Font const& font)
+	void Renderer::CreateTextFormat(TextLayout& layout)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -685,18 +645,28 @@ namespace kiwano
 		ComPtr<IDWriteTextFormat> output;
 		if (SUCCEEDED(hr))
 		{
-			hr = d2d_res_->CreateTextFormat(output, font);
+			const TextStyle& style = layout.GetStyle();
+
+			hr = d2d_res_->CreateTextFormat(
+				output,
+				style.font_family,
+				style.font ? style.font->GetCollection() : nullptr,
+				DWRITE_FONT_WEIGHT(style.font_weight),
+				style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH_NORMAL,
+				style.font_size
+			);
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			format.SetTextFormat(output);
+			layout.SetTextFormat(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextLayout(TextLayout& layout, String const& text, TextFormat const& format)
+	void Renderer::CreateTextLayout(TextLayout& layout)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -709,8 +679,8 @@ namespace kiwano
 		{
 			hr = d2d_res_->CreateTextLayout(
 				output,
-				text,
-				format.GetTextFormat()
+				layout.GetText(),
+				layout.GetTextFormat()
 			);
 		}
 
@@ -719,7 +689,7 @@ namespace kiwano
 			layout.SetTextLayout(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
@@ -755,7 +725,7 @@ namespace kiwano
 			geo.SetGeometry(path_geo);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
@@ -777,7 +747,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
@@ -805,7 +775,7 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
@@ -833,10 +803,10 @@ namespace kiwano
 			geo.SetGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreatePathGeometrySink(GeometrySink& sink)
+	void Renderer::CreateGeometrySink(GeometrySink& sink)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -855,10 +825,10 @@ namespace kiwano
 			sink.SetPathGeometry(output);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextureRenderTarget(TextureRenderTarget& render_target)
+	void Renderer::CreateTextureRenderTarget(TextureRenderTargetPtr& render_target)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -866,18 +836,30 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<ID2D1BitmapRenderTarget> output;
+		TextureRenderTargetPtr output;
 		if (SUCCEEDED(hr))
 		{
-			hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&output);
+			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
+			hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&bitmap_rt);
+
+			if (SUCCEEDED(hr))
+			{
+				output = new TextureRenderTarget;
+				hr = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				output->SetBitmapRenderTarget(bitmap_rt);
+			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			hr = render_target.CreateDeviceResources(output, d2d_res_);
+			render_target = output;
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
@@ -896,10 +878,10 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			brush.SetBrush(output);
+			brush.SetBrush(output, Brush::Type::SolidColor);
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
@@ -935,12 +917,12 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					brush.SetBrush(output);
+					brush.SetBrush(output, Brush::Type::LinearGradient);
 				}
 			}
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
@@ -979,12 +961,25 @@ namespace kiwano
 
 				if (SUCCEEDED(hr))
 				{
-					brush.SetBrush(output);
+					brush.SetBrush(output, Brush::Type::RadialGradient);
 				}
 			}
 		}
 
-		ThrowIfFailed(hr);
+		win32::ThrowIfFailed(hr);
+	}
+
+	void Renderer::SetDpi(float dpi)
+	{
+		KGE_ASSERT(d3d_res_ && d2d_res_);
+
+		HRESULT hr = d3d_res_->SetDpi(dpi);
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->SetDpi(dpi);
+		}
+
+		win32::ThrowIfFailed(hr);
 	}
 
 	void Renderer::SetVSyncEnabled(bool enabled)
@@ -1000,10 +995,9 @@ namespace kiwano
 	void Renderer::ResizeTarget(uint32_t width, uint32_t height)
 	{
 		HRESULT hr = S_OK;
+
 		if (!d3d_res_)
-		{
 			hr = E_UNEXPECTED;
-		}
 
 		if (SUCCEEDED(hr))
 		{
@@ -1012,7 +1006,17 @@ namespace kiwano
 			hr = d3d_res_->SetLogicalSize(output_size_);
 		}
 
-		ThrowIfFailed(hr);
+		if (SUCCEEDED(hr))
+		{
+			hr = d2d_res_->SetLogicalSize(output_size_);
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
+		}
+
+		win32::ThrowIfFailed(hr);
 	}
 
 }

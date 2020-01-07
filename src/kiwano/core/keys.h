@@ -23,103 +23,105 @@
 
 namespace kiwano
 {
-	// 鼠标按键
+	/// \~chinese
+	/// @brief 鼠标按键
 	struct MouseButton
 	{
 		typedef int Value;
 
 		enum : Value
 		{
-			Left	= VK_LBUTTON,	// 鼠标左键
-			Right	= VK_RBUTTON,	// 鼠标右键
-			Middle	= VK_MBUTTON	// 鼠标中键
+			Left	= VK_LBUTTON,	///< 鼠标左键
+			Right	= VK_RBUTTON,	///< 鼠标右键
+			Middle	= VK_MBUTTON	///< 鼠标中键
 		};
 	};
 
 
-	// 按键键值
+	/// \~chinese
+	/// @brief 按键键值
 	struct KeyCode
 	{
 		typedef int Value;
 
 		enum : Value
 		{
-			Unknown = 0,
-			Up		= VK_UP,
-			Left	= VK_LEFT,
-			Right	= VK_RIGHT,
-			Down	= VK_DOWN,
-			Enter	= VK_RETURN,
-			Space	= VK_SPACE,
-			Esc		= VK_ESCAPE,
-			Ctrl	= VK_CONTROL,
-			Shift	= VK_SHIFT,
-			Alt		= VK_MENU,
-			Tab		= VK_TAB,
-			Delete	= VK_DELETE,
-			Back	= VK_BACK,
+			Unknown = 0,			///< 未知
+			Up		= VK_UP,		///< 上键
+			Left	= VK_LEFT,		///< 左键
+			Right	= VK_RIGHT,		///< 右键
+			Down	= VK_DOWN,		///< 下键
+			Enter	= VK_RETURN,	///< 回车键
+			Space	= VK_SPACE,		///< 空格键
+			Esc		= VK_ESCAPE,	///< 退出键
+			Ctrl	= VK_CONTROL,	///< CTRL键
+			Shift	= VK_SHIFT,		///< SHIFT键
+			Alt		= VK_MENU,		///< ALT键
+			Tab		= VK_TAB,		///< TAB键
+			Delete	= VK_DELETE,	///< 删除键
+			Back	= VK_BACK,		///< 退格键
 
-			A = 0x41,
-			B,
-			C,
-			D,
-			E,
-			F,
-			G,
-			H,
-			I,
-			J,
-			K,
-			L,
-			M,
-			N,
-			O,
-			P,
-			Q,
-			R,
-			S,
-			T,
-			U,
-			V,
-			W,
-			X,
-			Y,
-			Z,
+			A = 0x41,				///< A键
+			B,						///< B键
+			C,						///< C键
+			D,						///< D键
+			E,						///< E键
+			F,						///< F键
+			G,						///< G键
+			H,						///< H键
+			I,						///< I键
+			J,						///< J键
+			K,						///< K键
+			L,						///< L键
+			M,						///< M键
+			N,						///< N键
+			O,						///< O键
+			P,						///< P键
+			Q,						///< Q键
+			R,						///< R键
+			S,						///< S键
+			T,						///< T键
+			U,						///< U键
+			V,						///< V键
+			W,						///< W键
+			X,						///< X键
+			Y,						///< Y键
+			Z,						///< Z键
 
-			Num0 = 0x30,
-			Num1,
-			Num2,
-			Num3,
-			Num4,
-			Num5,
-			Num6,
-			Num7,
-			Num8,
-			Num9,
+			Num0 = 0x30,			///< 数字0键
+			Num1,					///< 数字1键
+			Num2,					///< 数字2键
+			Num3,					///< 数字3键
+			Num4,					///< 数字4键
+			Num5,					///< 数字5键
+			Num6,					///< 数字6键
+			Num7,					///< 数字7键
+			Num8,					///< 数字8键
+			Num9,					///< 数字9键
 
-			Numpad0 = VK_NUMPAD0,
-			Numpad1,
-			Numpad2,
-			Numpad3,
-			Numpad4,
-			Numpad5,
-			Numpad6,
-			Numpad7,
-			Numpad8,
-			Numpad9,
+			Numpad0 = VK_NUMPAD0,	///< 数字小键盘0键
+			Numpad1,				///< 数字小键盘1键
+			Numpad2,				///< 数字小键盘2键
+			Numpad3,				///< 数字小键盘3键
+			Numpad4,				///< 数字小键盘4键
+			Numpad5,				///< 数字小键盘5键
+			Numpad6,				///< 数字小键盘6键
+			Numpad7,				///< 数字小键盘7键
+			Numpad8,				///< 数字小键盘8键
+			Numpad9,				///< 数字小键盘9键
 
-			F1 = VK_F1,
-			F2,
-			F3,
-			F4,
-			F5,
-			F6,
-			F7,
-			F8,
-			F9,
-			F10,
-			F11,
-			F12,
+			F1 = VK_F1,				///< F1键
+			F2,						///< F2键
+			F3,						///< F3键
+			F4,						///< F4键
+			F5,						///< F5键
+			F6,						///< F6键
+			F7,						///< F7键
+			F8,						///< F8键
+			F9,						///< F9键
+			F10,					///< F10键
+			F11,					///< F11键
+			F12,					///< F12键
 		};
 	};
 }

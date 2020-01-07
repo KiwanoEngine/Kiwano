@@ -19,9 +19,12 @@
 // THE SOFTWARE.
 
 #include <kiwano/renderer/win32/D3D11DeviceResources.h>
-
 #include <kiwano/core/Logger.h>
+
+#pragma warning (push)
+#pragma warning (disable: 4800)
 #include <versionhelpers.h>  // IsWindows10OrGreater
+#pragma warning (pop)
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -95,7 +98,6 @@ namespace kiwano
 		unsigned long ref_count_;
 
 		D3D_FEATURE_LEVEL d3d_feature_level_;
-		ComPtr<ID2DDeviceResources> d2d_res_;
 	};
 
 
@@ -112,11 +114,11 @@ namespace kiwano
 		DiscardResources();
 	}
 
-	HRESULT ID3D11DeviceResources::Create(ID3D11DeviceResources** device_resources, ID2DDeviceResources* d2d_device_res, HWND hwnd)
+	HRESULT ID3D11DeviceResources::Create(ID3D11DeviceResources** device_resources, HWND hwnd)
 	{
 		HRESULT hr = E_FAIL;
 
-		if (device_resources && d2d_device_res)
+		if (device_resources)
 		{
 			D3D11DeviceResources* res = new (std::nothrow) D3D11DeviceResources;
 			if (res)
@@ -125,7 +127,6 @@ namespace kiwano
 				::GetClientRect(hwnd, &rc);
 
 				res->hwnd_ = hwnd;
-				res->d2d_res_ = d2d_device_res;
 				res->logical_size_.x = float(rc.right - rc.left);
 				res->logical_size_.y = float(rc.bottom - rc.top);
 
@@ -176,11 +177,11 @@ namespace kiwano
 
 	void D3D11DeviceResources::DiscardResources()
 	{
-		d2d_res_.reset();
 		device_.reset();
 		device_context_.reset();
 		rt_view_.reset();
 		ds_view_.reset();
+		dxgi_device_.reset();
 		dxgi_swap_chain_.reset();
 		dxgi_factory_.reset();
 
@@ -253,40 +254,29 @@ namespace kiwano
 			device_ = device;
 			device_context_ = context;
 
-			ComPtr<IDXGIAdapter> dxgi_adapter;
-			ComPtr<IDXGIDevice> dxgi_device;
-			ComPtr<IDXGIFactory> dxgi_factory;
-			ComPtr<ID2D1Device> d2d_device;
-
 			if (SUCCEEDED(hr))
 			{
+				ComPtr<IDXGIDevice> dxgi_device;
 				hr = device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
-			}
 
-			if (SUCCEEDED(hr))
-			{
-				hr = dxgi_device->GetAdapter(&dxgi_adapter);
-			}
+				if (SUCCEEDED(hr))
+				{
+					dxgi_device_ = dxgi_device;
 
-			if (SUCCEEDED(hr))
-			{
-				hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
-			}
+					ComPtr<IDXGIAdapter> dxgi_adapter;
+					hr = dxgi_device_->GetAdapter(&dxgi_adapter);
 
-			if (SUCCEEDED(hr))
-			{
-				dxgi_factory_ = dxgi_factory;
-			}
+					if (SUCCEEDED(hr))
+					{
+						ComPtr<IDXGIFactory> dxgi_factory;
+						hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
 
-			// Create the Direct2D device object and a corresponding context.
-			if (SUCCEEDED(hr))
-			{
-				hr = d2d_res_->GetFactory()->CreateDevice(dxgi_device.get(), &d2d_device);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = d2d_res_->SetD2DDevice(d2d_device);
+						if (SUCCEEDED(hr))
+						{
+							dxgi_factory_ = dxgi_factory;
+						}
+					}
+				}
 			}
 		}
 
@@ -328,33 +318,12 @@ namespace kiwano
 				swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 			}
 
-			ComPtr<IDXGIDevice> dxgi_device;
-			if (SUCCEEDED(hr))
-			{
-				hr = device_->QueryInterface(&dxgi_device);
-			}
-
-			ComPtr<IDXGIAdapter> dxgi_adapter;
-			if (SUCCEEDED(hr))
-			{
-				hr = dxgi_device->GetAdapter(&dxgi_adapter);
-			}
-
-			ComPtr<IDXGIFactory> dxgi_factory;
-			if (SUCCEEDED(hr))
-			{
-				hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				hr = dxgi_factory->CreateSwapChain(
-					device_.get(),
-					&swap_chain_desc,
-					&dxgi_swap_chain_);
-			}
+			hr = dxgi_factory_->CreateSwapChain(
+				device_.get(),
+				&swap_chain_desc,
+				&dxgi_swap_chain_
+			);
 		}
-
 		return hr;
 	}
 
@@ -368,7 +337,6 @@ namespace kiwano
 		// Clear the previous window size specific context.
 		ID3D11RenderTargetView* null_views[] = { nullptr };
 		device_context_->OMSetRenderTargets(ARRAYSIZE(null_views), null_views, nullptr);
-		d2d_res_->SetTargetBitmap(nullptr);
 		rt_view_ = nullptr;
 		ds_view_ = nullptr;
 		device_context_->Flush();
@@ -444,32 +412,6 @@ namespace kiwano
 			device_context_->RSSetViewports(1, &screen_viewport);
 		}
 
-		// Create a Direct2D target bitmap associated with the
-		// swap chain back buffer and set it as the current target.
-		if (SUCCEEDED(hr))
-		{
-			ComPtr<IDXGISurface> dxgi_back_buffer;
-			hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
-
-			ComPtr<ID2D1Bitmap1> target;
-			if (SUCCEEDED(hr))
-			{
-				hr = d2d_res_->GetDeviceContext()->CreateBitmapFromDxgiSurface(
-					dxgi_back_buffer.get(),
-					D2D1::BitmapProperties1(
-						D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-						D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
-						dpi_,
-						dpi_),
-					&target);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				d2d_res_->SetTargetBitmap(target);
-			}
-		}
-
 		return hr;
 	}
 
@@ -508,8 +450,6 @@ namespace kiwano
 
 			logical_size_.x = float(rc.right - rc.left);
 			logical_size_.y = float(rc.bottom - rc.top);
-
-			d2d_res_->GetDeviceContext()->SetDpi(dpi_, dpi_);
 
 			return CreateWindowSizeDependentResources();
 		}

@@ -19,90 +19,116 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <ctime>
 #include <iomanip>
 #include <sstream>
-
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
-#ifndef KGE_LOG
+#ifndef KGE_SYS_LOG
 #	ifdef KGE_DEBUG
-#		define KGE_LOG(FORMAT, ...)		::kiwano::Logger::GetInstance()->Messagef((FORMAT ## "\n"), __VA_ARGS__)
+#		define KGE_SYS_LOG(FORMAT, ...)	::kiwano::Logger::instance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
 #	else
-#		define KGE_LOG __noop
+#		define KGE_SYS_LOG __noop
 #	endif
 #endif
 
-#ifndef KGE_WARNING_LOG
-#	define KGE_WARNING_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Warningf((FORMAT ## "\n"), __VA_ARGS__)
+#ifndef KGE_WARN
+#	define KGE_WARN(FORMAT, ...)		::kiwano::Logger::instance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
 #endif
 
-#ifndef KGE_ERROR_LOG
-#	define KGE_ERROR_LOG(FORMAT, ...)	::kiwano::Logger::GetInstance()->Errorf((FORMAT ## "\n"), __VA_ARGS__)
+#ifndef KGE_ERROR
+#	define KGE_ERROR(FORMAT, ...)		::kiwano::Logger::instance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
 #endif
 
-#ifndef KGE_PRINT
-#	define KGE_PRINT(...)				::kiwano::Logger::GetInstance()->Println(__VA_ARGS__)
+#ifndef KGE_LOG
+#	define KGE_LOG(...)					::kiwano::Logger::instance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
 #endif
 
-#ifndef KGE_PRINTF
-#	define KGE_PRINTF(FORMAT, ...)		::kiwano::Logger::GetInstance()->Printf((FORMAT), __VA_ARGS__)
+#ifndef KGE_LOGF
+#	define KGE_LOGF(FORMAT, ...)		::kiwano::Logger::instance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
 #endif
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 日志
+	*/
 	class KGE_API Logger
 		: public Singleton<Logger>
 	{
-		KGE_DECLARE_SINGLETON(Logger);
+		friend Singleton<Logger>;
 
 	public:
-		// 显示或关闭控制台
+		/// \~chinese
+		/// @brief 日志级别
+		enum class Level
+		{
+			Info,		///< 信息
+			System,		///< 系统
+			Warning,	///< 警告
+			Error		///< 错误
+		};
+
+		/// \~chinese
+		/// @brief 输出流
+		using OutputStream = std::wostream;
+
+		/// \~chinese
+		/// @brief 控制台颜色
+		using ConsoleColor = Function<OutputStream& (OutputStream&)>;
+
+		/// \~chinese
+		/// @brief 打印日志
+		/// @param level 日志级别
+		/// @param format 格式字符串
+		void Printf(Level level, const wchar_t* format, ...);
+
+		/// \~chinese
+		/// @brief 打印日志
+		/// @param level 日志级别
+		/// @param args 参数
+		template <typename ..._Args>
+		void Print(Level level, _Args&& ... args);
+
+		/// \~chinese
+		/// @brief 打印一行日志
+		/// @param level 日志级别
+		/// @param args 参数
+		template <typename ..._Args>
+		void Println(Level level, _Args&& ... args);
+
+		/// \~chinese
+		/// @brief 显示或关闭控制台
+		/// @note 此操作会重置输出流
 		void ShowConsole(bool show);
 
-		// 启用 Logger
+		/// \~chinese
+		/// @brief 启用日志
 		void Enable();
 
-		// 禁用 Logger
+		/// \~chinese
+		/// @brief 禁用日志
 		void Disable();
 
-		void Printf(const wchar_t* format, ...);
+		/// \~chinese
+		/// @brief 获取输出流
+		std::wostream& GetOutputStream();
 
-		void Messagef(const wchar_t * format, ...);
+		/// \~chinese
+		/// @brief 获取错误流
+		std::wostream& GetErrorStream();
 
-		void Warningf(const wchar_t* format, ...);
-
-		void Errorf(const wchar_t* format, ...);
-
-		template <typename ..._Args>
-		void Print(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Println(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Message(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Messageln(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Warning(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Warningln(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Error(_Args&& ... args);
-
-		template <typename ..._Args>
-		void Errorln(_Args&& ... args);
-
+		/// \~chinese
+		/// @brief 重定向输出流
 		std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
 
+		/// \~chinese
+		/// @brief 重定向错误流
 		std::wstreambuf* RedirectErrorStreamBuffer(std::wstreambuf* buf);
 
+		/// \~chinese
+		/// @brief 重置输出流
 		void ResetOutputStream();
 
 	private:
@@ -110,74 +136,22 @@ namespace kiwano
 
 		~Logger();
 
-		//
-		// output functions
-		//
-		void Outputf(std::wostream& os, std::wostream&(*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const;
+		void Prepare(Level level, StringStream& sstream);
 
-		template <typename ..._Args>
-		void OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
+		void Output(Level level, StringStream& sstream);
 
-		template <typename ..._Args>
-		void Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const;
-
-		static std::wostream& OutPrefix(std::wostream& out);
-
-		//
-		// make string
-		//
-		std::wstring MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const;
-
-		template <typename ..._Args>
-		std::wstring MakeOutputString(const wchar_t* prompt, _Args&& ... args) const;
-
-		//
-		// reset functions
-		//
 		void ResetConsoleColor() const;
 
-		static std::wostream& DefaultOutputColor(std::wostream& out);
+		OutputStream& DefaultOutputColor(OutputStream& out);
 
 	private:
 		bool enabled_;
 		WORD default_stdout_color_;
 		WORD default_stderr_color_;
 
-		std::wostream output_stream_;
-		std::wostream error_stream_;
+		OutputStream output_stream_;
+		OutputStream error_stream_;
 	};
-
-
-	//
-	// details of Logger
-	//
-
-	namespace __console_colors
-	{
-#define DECLARE_COLOR(COLOR)\
-		extern std::wostream&(stdout_##COLOR)(std::wostream&);\
-		extern std::wostream&(stderr_##COLOR)(std::wostream&);
-
-#define DECLARE_BG_COLOR(COLOR)\
-		extern std::wostream&(stdout_##COLOR##_bg)(std::wostream&);\
-		extern std::wostream&(stderr_##COLOR##_bg)(std::wostream&);
-
-		DECLARE_COLOR(red);
-		DECLARE_COLOR(green);
-		DECLARE_COLOR(yellow);
-		DECLARE_COLOR(blue);
-		DECLARE_COLOR(white);
-		DECLARE_COLOR(reset);
-
-		DECLARE_BG_COLOR(red);
-		DECLARE_BG_COLOR(green);
-		DECLARE_BG_COLOR(yellow);
-		DECLARE_BG_COLOR(blue);
-		DECLARE_BG_COLOR(white);
-
-#undef DECLARE_COLOR
-#undef DECLARE_BG_COLOR
-	}
 
 
 	inline void Logger::Enable()
@@ -191,97 +165,35 @@ namespace kiwano
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Print(_Args&& ... args)
+	void Logger::Print(Level level, _Args&& ... args)
 	{
-		Output(output_stream_, Logger::DefaultOutputColor, nullptr, std::forward<_Args>(args)...);
+		if (!enabled_)
+			return;
+
+		StringStream sstream;
+		Prepare(level, sstream);
+
+		// Format message
+		(void)std::initializer_list<int>{((sstream << ' ' << args), 0)...};
+
+		Output(level, sstream);
 	}
 
 	template <typename ..._Args>
-	inline void Logger::Println(_Args&& ... args)
+	void Logger::Println(Level level, _Args&& ... args)
 	{
-		OutputLine(output_stream_, Logger::DefaultOutputColor, nullptr, std::forward<_Args>(args)...);
-	}
+		if (!enabled_)
+			return;
 
-	template <typename ..._Args>
-	inline void Logger::Message(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		Output(output_stream_, stdout_blue, nullptr, std::forward<_Args>(args)...);
-	}
+		StringStream sstream;
+		Prepare(level, sstream);
 
-	template <typename ..._Args>
-	inline void Logger::Messageln(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		OutputLine(output_stream_, stdout_blue, nullptr, std::forward<_Args>(args)...);
-	}
+		// Format message
+		(void)std::initializer_list<int>{((sstream << ' ' << args), 0)...};
 
-	template <typename ..._Args>
-	inline void Logger::Warning(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		Output(output_stream_, stdout_yellow_bg, L"Warning:", std::forward<_Args>(args)...);
-	}
+		sstream << L"\r\n";
 
-	template <typename ..._Args>
-	inline void Logger::Warningln(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		OutputLine(output_stream_, stdout_yellow_bg, L"Warning:", std::forward<_Args>(args)...);
-	}
-
-	template <typename ..._Args>
-	inline void Logger::Error(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		Output(error_stream_, stderr_red_bg, L"Error:", std::forward<_Args>(args)...);
-	}
-
-	template <typename ..._Args>
-	inline void Logger::Errorln(_Args&& ... args)
-	{
-		using namespace __console_colors;
-		OutputLine(error_stream_, stderr_red_bg, L"Error:", std::forward<_Args>(args)...);
-	}
-
-	template <typename ..._Args>
-	void Logger::OutputLine(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
-	{
-		if (enabled_)
-		{
-			Output(os, color, prompt, std::forward<_Args>(args)...);
-
-			os << std::endl;
-			::OutputDebugStringW(L"\r\n");
-		}
-	}
-
-	template <typename ..._Args>
-	void Logger::Output(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, _Args&& ... args) const
-	{
-		if (enabled_)
-		{
-			std::wstring output = MakeOutputString(prompt, std::forward<_Args>(args)...);
-
-			os << color << output << std::flush;
-			::OutputDebugStringW(output.c_str());
-
-			ResetConsoleColor();
-		}
-	}
-
-	template <typename ..._Args>
-	std::wstring Logger::MakeOutputString(const wchar_t* prompt, _Args&& ... args) const
-	{
-		StringStream ss;
-		ss << Logger::OutPrefix;
-
-		if (prompt)
-			ss << prompt;
-
-		(void)std::initializer_list<int>{((ss << ' ' << args), 0)...};
-
-		return ss.str();
+		Output(level, sstream);
 	}
 
 	inline void Logger::ResetConsoleColor() const
@@ -290,9 +202,19 @@ namespace kiwano
 		::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
 	}
 
-	inline std::wostream& Logger::DefaultOutputColor(std::wostream& out)
+	inline Logger::OutputStream& Logger::DefaultOutputColor(OutputStream& out)
 	{
-		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), Logger::GetInstance()->default_stdout_color_);
+		::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
 		return out;
+	}
+
+	inline std::wostream& Logger::GetOutputStream()
+	{
+		return output_stream_;
+	}
+
+	inline std::wostream& Logger::GetErrorStream()
+	{
+		return error_stream_;
 	}
 }

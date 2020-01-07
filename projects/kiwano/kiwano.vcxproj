@@ -11,24 +11,16 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Event.h" />
+    <ClInclude Include="..\..\src\kiwano\core\common.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\EventType.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
-    <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\core\win32\helper.h" />
-    <ClInclude Include="..\..\src\kiwano\common\any.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\basic_json.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\function.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\common.h" />
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_list.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_ptr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\noncopyable.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\singleton.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\string.hpp" />
-    <ClInclude Include="..\..\src\kiwano\common\vector.hpp" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\include-forwards.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h" />
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h" />
@@ -37,8 +29,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Text.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp" />
+    <ClInclude Include="..\..\src\kiwano\2d\TextActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Transform.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h" />
     <ClInclude Include="..\..\src\kiwano\core\AsyncTask.h" />
@@ -48,7 +39,7 @@
     <ClInclude Include="..\..\src\kiwano\core\keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Logger.h" />
     <ClInclude Include="..\..\src\kiwano\core\ObjectBase.h" />
-    <ClInclude Include="..\..\src\kiwano\core\RefCounter.hpp" />
+    <ClInclude Include="..\..\src\kiwano\core\RefCounter.h" />
     <ClInclude Include="..\..\src\kiwano\core\Resource.h" />
     <ClInclude Include="..\..\src\kiwano\core\SmartPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
@@ -66,15 +57,18 @@
     <ClInclude Include="..\..\src\kiwano\platform\Director.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
-    <ClInclude Include="..\..\src\kiwano\platform\modules.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Brush.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Color.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Font.h" />
-    <ClInclude Include="..\..\src\kiwano\renderer\FontCollection.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Geometry.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\GeometrySink.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\GifImage.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\StrokeStyle.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\TextStyle.hpp" />
     <ClInclude Include="..\..\src\kiwano\renderer\Texture.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\TextureCache.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\LayerArea.h" />
@@ -86,6 +80,7 @@
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D11DeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\FontCollectionLoader.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Button.h" />
     <ClInclude Include="..\..\src\kiwano\ui\Menu.h" />
@@ -111,17 +106,21 @@
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Text.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Component.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Event.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventListener.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp" />
@@ -130,13 +129,14 @@
     <ClCompile Include="..\..\src\kiwano\platform\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
-    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp" />
+    <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Brush.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Color.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Font.cpp" />
-    <ClCompile Include="..\..\src\kiwano\renderer\FontCollection.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Geometry.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\GeometrySink.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\GifImage.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\TextureCache.cpp" />
@@ -166,9 +166,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd-party\StackWalker\libStackWalker.vcxproj">
-      <Project>{3a3948dc-9865-46b3-b7b9-7e5572704ed2}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\3rd-party\tinyxml2\libtinyxml2.vcxproj">
       <Project>{ab47e875-85e5-4105-a71e-88930eaab910}</Project>
     </ProjectReference>
@@ -187,7 +184,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>

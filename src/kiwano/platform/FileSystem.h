@@ -23,41 +23,87 @@
 
 namespace kiwano
 {
-    // 文件
+	/**
+	* \~chinese
+	* @brief 文件系统，为其他模块提供文件搜索规则等
+	*/
 	class KGE_API FileSystem
 		: public Singleton<FileSystem>
 	{
-		KGE_DECLARE_SINGLETON(FileSystem);
+		friend Singleton<FileSystem>;
 
 	public:
-		// 添加文件搜索路径
+		/**
+		* \~chinese
+		* @brief 添加文件搜索路径
+		* @param path 文件搜索路径
+		*/
 		void AddSearchPath(String const& path);
 
-		// 设置文件搜索路径
+		/**
+		* \~chinese
+		* @brief 设置文件搜索路径
+		* @param paths 搜索路径数组
+		*/
 		void SetSearchPaths(Vector<String> const& paths);
 
-		// 获取文件的完整路径
+		/**
+		* \~chinese
+		* @brief 在搜索列表中查找文件并获取完整路径
+		* @param file 文件路径
+		* @return 完整的文件路径
+		*/
 		String GetFullPathForFile(String const& file) const;
 
-		// 添加文件路径查找字典规则
+		/**
+		* \~chinese
+		* @brief 添加文件路径查找字典规则
+		* @param key 文件关键词
+		* @param file_path 文件路径
+		*/
 		void AddFileLookupRule(String const& key, String const& file_path);
 
-		// 设置文件路径查找字典
+		/**
+		* \~chinese
+		* @brief 设置文件路径查找字典
+		* @param dict 文件路径查找字典
+		*/
 		void SetFileLookupDictionary(UnorderedMap<String, String> const& dict);
 
-		// 文件是否存在
+		/**
+		* \~chinese
+		* @brief 文件是否存在
+		* @param file_path 文件路径
+		* @return 若文件存在，返回 true
+		*/
 		bool IsFileExists(String const& file_path) const;
 
-		// 判断路径是否是绝对路径
+		/**
+		* \~chinese
+		* @brief 判断路径是否是绝对路径
+		* @param path 文件路径
+		* @return 若是绝对路径，返回 true
+		*/
 		bool IsAbsolutePath(String const& path) const;
 
-		// 删除文件
+		/**
+		* \~chinese
+		* @brief 删除文件
+		* @param file_path 文件路径
+		* @return 删除是否成功
+		*/
 		bool RemoveFile(String const& file_path) const;
 
-		// 释放二进制资源到临时文件目录
+		/**
+		* \~chinese
+		* @brief 释放二进制资源到临时文件目录
+		* @param res 资源
+		* @param dest_file_name 目标文件名
+		* @return 操作是否成功
+		*/
 		bool ExtractResourceToFile(
-			Resource const& res,			/* 资源 */
-			String const& dest_file_name	/* 目标文件名 */
+			Resource const& res,
+			String const& dest_file_name
 		) const;
 
 	private:

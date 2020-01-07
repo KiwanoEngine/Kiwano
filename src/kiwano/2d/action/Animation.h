@@ -20,44 +20,59 @@
 
 #pragma once
 #include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/FrameSequence.h>
 
 namespace kiwano
 {
-	// 帧动画
+	KGE_DECLARE_SMART_PTR(Animation);
+
+	/**
+	* \addtogroup Actions
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 帧动画
 	class KGE_API Animation
 		: public ActionTween
 	{
 	public:
 		Animation();
 
-		Animation(
-			Duration duration,			/* 动画时长 */
-			FrameSequencePtr frame_seq,	/* 序列帧 */
-			EaseFunc func = nullptr		/* 速度变化 */
-		);
+		/// \~chinese
+		/// @brief 构建帧动画
+		/// @param duration 动画时长
+		/// @param[in] frame_seq 序列帧
+		/// @param func 动画速度缓动函数
+		Animation(Duration duration, FrameSequencePtr frame_seq, EaseFunc func = nullptr);
 
 		virtual ~Animation();
 
-		// 获取动画
+		/// \~chinese
+		/// @brief 获取序列帧
 		FrameSequencePtr GetFrameSequence() const;
 
-		// 设置动画
-		void SetFrameSequence(
-			FrameSequencePtr frames
-		);
+		/// \~chinese
+		/// @brief 设置序列帧
+		/// @param[in] frame_seq 序列帧
+		void SetFrameSequence(FrameSequencePtr frame_seq);
 
-		// 获取该动作的拷贝对象
+		/// \~chinese
+		/// @brief 获取该动画的拷贝对象
 		ActionPtr Clone() const override;
 
-		// 获取该动作的倒转
+		/// \~chinese
+		/// @brief 获取该动画的倒转
 		ActionPtr Reverse() const override;
 
 	protected:
-		void Init(ActorPtr target) override;
+		void Init(Actor* target) override;
 
-		void UpdateTween(ActorPtr target, float percent) override;
+		void UpdateTween(Actor* target, float percent) override;
 
-	protected:
+	private:
 		FrameSequencePtr frame_seq_;
 	};
+
+	/** @} */
 }

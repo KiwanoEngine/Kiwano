@@ -19,27 +19,24 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/common.h>
 #include <kiwano/core/Component.h>
-#include <kiwano/common/singleton.hpp>
 
 namespace kiwano
 {
 	namespace imgui
 	{
+		/**
+		* \~chinese
+		* @brief ImGuiÄ£¿é
+		*/
 		class ImGuiModule
 			: public Singleton<ImGuiModule>
 			, public RenderComponent
 			, public UpdateComponent
 			, public EventComponent
 		{
-			KGE_DECLARE_SINGLETON(ImGuiModule);
-
-		private:
-			void Init(HWND hwnd);
-
-			void NewFrame();
-
-			void Render();
+			friend Singleton<ImGuiModule>;
 
 		public:
 			ImGuiModule();
@@ -48,13 +45,20 @@ namespace kiwano
 
 			void DestroyComponent() override;
 
-			void OnUpdate(Duration dt) override;
-
 			void BeforeRender() override;
 
 			void AfterRender() override;
 
 			void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+
+			void OnUpdate(Duration dt) override;
+
+		private:
+			void Init(HWND hwnd);
+
+			void NewFrame();
+
+			void Render();
 
 			void UpdateMousePos();
 

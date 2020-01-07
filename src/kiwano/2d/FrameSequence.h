@@ -19,46 +19,65 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/include-forwards.h>
+#include <kiwano/core/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/2d/Frame.h>
 
 namespace kiwano
 {
-	// 序列帧
+	KGE_DECLARE_SMART_PTR(FrameSequence);
+
+	/**
+	* \~chinese
+	* @brief 序列帧
+	*/
 	class KGE_API FrameSequence
 		: public ObjectBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 构建空序列帧
 		FrameSequence();
 
-		explicit FrameSequence(
-			Vector<FramePtr> const& frames	/* 帧序列 */
-		);
+		/// \~chinese
+		/// @brief 构建序列帧
+		/// @param frames 图像帧集合
+		explicit FrameSequence(Vector<FramePtr> const& frames);
 
 		virtual ~FrameSequence();
 
-		// 添加关键帧
-		void AddFrame(
-			FramePtr frame
-		);
+		/// \~chinese
+		/// @brief 添加关键帧
+		/// @param frame 图像帧
+		void AddFrame(FramePtr frame);
 
-		// 添加多个关键帧
-		void AddFrames(
-			Vector<FramePtr> const& frames
-		);
+		/// \~chinese
+		/// @brief 添加多个关键帧
+		/// @param frames 图像帧集合
+		void AddFrames(Vector<FramePtr> const& frames);
 
-		// 获取关键帧
+		/// \~chinese
+		/// @brief 获取关键帧
+		/// @param index 图像帧下标
 		FramePtr GetFrame(size_t index) const;
 
-		// 获取关键帧
+		/// \~chinese
+		/// @brief 获取所有关键帧
 		Vector<FramePtr> const& GetFrames() const;
 
-		// 获取帧动画的拷贝对象
+		/// \~chinese
+		/// @brief 获取关键帧数量
+		size_t GetFramesCount() const;
+
+		/// \~chinese
+		/// @brief 获取序列帧的拷贝对象
 		FrameSequencePtr Clone() const;
 
-		// 获取帧动画的倒转
+		/// \~chinese
+		/// @brief 获取序列帧的倒转
 		FrameSequencePtr Reverse() const;
 
-	protected:
+	private:
 		Vector<FramePtr>	frames_;
 	};
 }

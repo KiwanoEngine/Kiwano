@@ -40,7 +40,7 @@ namespace kiwano
 
 	ActionPtr ActionWalk::Clone() const
 	{
-		ActionWalkPtr clone = new ActionWalk(dur_, rotating_, start_, end_, ease_func_);
+		ActionWalkPtr clone = new ActionWalk(GetDuration(), rotating_, start_, end_, GetEaseFunc());
 		if (clone)
 		{
 			clone->SetPath(path_);
@@ -50,7 +50,7 @@ namespace kiwano
 
 	ActionPtr ActionWalk::Reverse() const
 	{
-		ActionWalkPtr reverse = new ActionWalk(dur_, rotating_, end_, start_, ease_func_);
+		ActionWalkPtr reverse = new ActionWalk(GetDuration(), rotating_, end_, start_, GetEaseFunc());
 		if (reverse)
 		{
 			reverse->SetPath(path_);
@@ -58,9 +58,9 @@ namespace kiwano
 		return reverse;
 	}
 
-	void ActionWalk::Init(ActorPtr target)
+	void ActionWalk::Init(Actor* target)
 	{
-		if (!path_)
+		if (!path_.IsValid())
 		{
 			Done();
 			return;
@@ -70,7 +70,7 @@ namespace kiwano
 		length_ = path_.GetLength();
 	}
 
-	void ActionWalk::UpdateTween(ActorPtr target, float percent)
+	void ActionWalk::UpdateTween(Actor* target, float percent)
 	{
 		float distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 
@@ -121,7 +121,7 @@ namespace kiwano
 
 	void ActionWalk::ClearPath()
 	{
-		path_.SetGeometry(nullptr);
+		path_.Clear();
 	}
 
 }

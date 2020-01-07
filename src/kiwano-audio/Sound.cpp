@@ -35,18 +35,6 @@ namespace kiwano
 		{
 		}
 
-		Sound::Sound(String const& file_path)
-			: Sound()
-		{
-			Load(file_path);
-		}
-
-		Sound::Sound(Resource const& res)
-			: Sound()
-		{
-			Load(res);
-		}
-
 		Sound::~Sound()
 		{
 			Close();
@@ -54,9 +42,9 @@ namespace kiwano
 
 		bool Sound::Load(String const& file_path)
 		{
-			if (!FileSystem::GetInstance()->IsFileExists(file_path))
+			if (!FileSystem::instance().IsFileExists(file_path))
 			{
-				KGE_WARNING_LOG(L"Media file '%s' not found", file_path.c_str());
+				KGE_WARN(L"Media file '%s' not found", file_path.c_str());
 				return false;
 			}
 
@@ -65,22 +53,18 @@ namespace kiwano
 				Close();
 			}
 
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 
 			HRESULT hr = transcoder_.LoadMediaFile(full_path);
-
 			if (FAILED(hr))
 			{
-				KGE_ERROR_LOG(L"Load media file failed with HRESULT of %08X", hr);
+				KGE_ERROR(L"Load media file failed with HRESULT of %08X", hr);
 				return false;
 			}
 
-			hr = AudioEngine::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer());
-			if (FAILED(hr))
+			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
-
-				KGE_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
 
@@ -96,19 +80,15 @@ namespace kiwano
 			}
 
 			HRESULT hr = transcoder_.LoadMediaResource(res);
-
 			if (FAILED(hr))
 			{
-				KGE_ERROR_LOG(L"Load media resource failed with HRESULT of %08X", hr);
+				KGE_ERROR(L"Load media resource failed with HRESULT of %08X", hr);
 				return false;
 			}
 
-			hr = AudioEngine::GetInstance()->CreateVoice(&voice_, transcoder_.GetBuffer());
-			if (FAILED(hr))
+			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
-
-				KGE_ERROR_LOG(L"Create source voice failed with HRESULT of %08X", hr);
 				return false;
 			}
 
@@ -116,11 +96,16 @@ namespace kiwano
 			return true;
 		}
 
+		bool Sound::IsValid() const
+		{
+			return voice_ != nullptr;
+		}
+
 		void Sound::Play(int loop_count)
 		{
 			if (!opened_)
 			{
-				KGE_ERROR_LOG(L"Sound must be opened first!");
+				KGE_ERROR(L"Sound must be opened first!");
 				return;
 			}
 
@@ -151,7 +136,7 @@ namespace kiwano
 
 			if (FAILED(hr))
 			{
-				KGE_ERROR_LOG(L"Submitting source buffer failed with HRESULT of %08X", hr);
+				KGE_ERROR(L"Submitting source buffer failed with HRESULT of %08X", hr);
 			}
 
 			playing_ = SUCCEEDED(hr);

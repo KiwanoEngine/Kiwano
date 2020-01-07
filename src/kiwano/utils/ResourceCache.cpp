@@ -19,15 +19,9 @@
 // THE SOFTWARE.
 
 #include <fstream>
-
 #include <kiwano/utils/ResourceCache.h>
-#include <kiwano/platform/FileSystem.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/2d/Frame.h>
-#include <kiwano/2d/FrameSequence.h>
-#include <kiwano/renderer/GifImage.h>
-#include <kiwano/renderer/FontCollection.h>
-
+#include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
 {
@@ -61,9 +55,9 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromJsonFile(String const& file_path)
 	{
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: File not found.");
 			return false;
 		}
 
@@ -73,19 +67,19 @@ namespace kiwano
 
 		try
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 			ifs.open(full_path.c_str());
 			ifs >> json_data;
 			ifs.close();
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
-		catch (common::json_exception& e)
+		catch (oc::json_exception& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return LoadFromJson(json_data);
@@ -113,7 +107,7 @@ namespace kiwano
 		}
 		catch (std::exception& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return false;
@@ -121,9 +115,9 @@ namespace kiwano
 
 	bool ResourceCache::LoadFromXmlFile(String const& file_path)
 	{
-		if (!FileSystem::GetInstance()->IsFileExists(file_path))
+		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: File not found.");
 			return false;
 		}
 
@@ -133,7 +127,7 @@ namespace kiwano
 
 		try
 		{
-			String full_path = FileSystem::GetInstance()->GetFullPathForFile(file_path);
+			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
 			ifs.open(full_path.c_str());
 
 			StringStream ss;
@@ -141,14 +135,14 @@ namespace kiwano
 
 			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
 			{
-				KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
+				KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
 					tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID()), doc.ErrorStr());
 				return false;
 			}
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARNING_LOG(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", string_to_wide(e.what()).c_str());
+			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 
@@ -183,32 +177,9 @@ namespace kiwano
 			}
 			catch (std::exception& e)
 			{
-				KGE_WARNING_LOG(L"ResourceCache::LoadFromXml failed: %s", string_to_wide(e.what()).c_str());
+				KGE_WARN(L"ResourceCache::LoadFromXml failed: %s", oc::string_to_wide(e.what()).c_str());
 				return false;
 			}
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddFrame(String const& id, String const& file_path)
-	{
-		FramePtr ptr = new (std::nothrow) Frame;
-		if (ptr)
-		{
-			if (ptr->Load(file_path))
-			{
-				return AddFrame(id, ptr);
-			}
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddFrame(String const & id, FramePtr frame)
-	{
-		if (frame)
-		{
-			object_cache_.insert(std::make_pair(id, frame));
-			return true;
 		}
 		return false;
 	}
@@ -232,26 +203,56 @@ namespace kiwano
 				}
 			}
 		}
+		return AddFrameSequence(id, frames);
+	}
 
-		if (!frames.empty())
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<Resource> const& resources)
+	{
+		if (resources.empty())
+			return 0;
+
+		Vector<FramePtr> frames;
+		frames.reserve(resources.size());
+
+		for (const auto& res : resources)
 		{
-			FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-			return AddFrameSequence(id, fs);
+			FramePtr ptr = new (std::nothrow) Frame;
+			if (ptr)
+			{
+				if (ptr->Load(res))
+				{
+					frames.push_back(ptr);
+				}
+			}
+		}
+		return AddFrameSequence(id, frames);
+	}
+
+	size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const& frames)
+	{
+		if (frames.empty())
+			return 0;
+
+		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
+		if (fs)
+		{
+			fs->AddFrames(frames);
+			AddObject(id, fs);
+			return fs->GetFramesCount();
 		}
 		return 0;
 	}
 
-	size_t ResourceCache::AddFrameSequence(String const & id, String const& file_path, int cols, int rows, float padding_x, float padding_y)
+	size_t ResourceCache::AddFrameSequence(String const& id, FramePtr frame, int cols, int rows, float padding_x, float padding_y)
 	{
 		if (cols <= 0 || rows <= 0)
 			return 0;
 
-		FramePtr raw = new (std::nothrow) Frame;
-		if (!raw || !raw->Load(file_path))
-			return false;
+		if (!frame)
+			return 0;
 
-		float raw_width = raw->GetWidth();
-		float raw_height = raw->GetHeight();
+		float raw_width = frame->GetWidth();
+		float raw_height = frame->GetHeight();
 		float width = (raw_width - (cols - 1) * padding_x) / cols;
 		float height = (raw_height - (rows - 1) * padding_y) / rows;
 
@@ -264,9 +265,10 @@ namespace kiwano
 			float dtx = 0;
 			for (int j = 0; j < cols; j++)
 			{
-				FramePtr ptr = new (std::nothrow) Frame(raw->GetTexture());
+				FramePtr ptr = new (std::nothrow) Frame;
 				if (ptr)
 				{
+					ptr->SetTexture(frame->GetTexture());
 					ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
 					frames.push_back(ptr);
 				}
@@ -275,21 +277,17 @@ namespace kiwano
 			dty += (height + padding_y);
 		}
 
-		FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
-		return AddFrameSequence(id, fs);
-	}
-
-	size_t ResourceCache::AddFrameSequence(String const & id, FrameSequencePtr frames)
-	{
-		if (frames)
+		FrameSequencePtr fs = new (std::nothrow) FrameSequence;
+		if (fs)
 		{
-			object_cache_.insert(std::make_pair(id, frames));
-			return frames->GetFrames().size();
+			fs->AddFrames(frames);
+			AddObject(id, fs);
+			return fs->GetFramesCount();
 		}
 		return 0;
 	}
 
-	bool ResourceCache::AddObjectBase(String const& id, ObjectBasePtr obj)
+	bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)
 	{
 		if (obj)
 		{
@@ -297,62 +295,6 @@ namespace kiwano
 			return true;
 		}
 		return false;
-	}
-
-	bool ResourceCache::AddGifImage(String const& id, GifImage const& gif)
-	{
-		if (gif.IsValid())
-		{
-			gif_cache_.insert(std::make_pair(id, gif));
-			return true;
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddGifImage(String const& id, String const& file_path)
-	{
-		GifImage gif;
-		if (gif.Load(file_path))
-		{
-			return AddGifImage(id, gif);
-		}
-		return false;
-	}
-
-	bool ResourceCache::AddFontCollection(String const& id, FontCollection const& collection)
-	{
-		if (collection.IsValid())
-		{
-			font_collection_cache_.insert(std::make_pair(id, collection));
-			return true;
-		}
-		return false;
-	}
-
-	FramePtr ResourceCache::GetFrame(String const & id) const
-	{
-		return Get<Frame>(id);
-	}
-
-	FrameSequencePtr ResourceCache::GetFrameSequence(String const & id) const
-	{
-		return Get<FrameSequence>(id);
-	}
-
-	GifImage ResourceCache::GetGifImage(String const& id) const
-	{
-		auto iter = gif_cache_.find(id);
-		if (iter != gif_cache_.end())
-			return iter->second;
-		return GifImage();
-	}
-
-	FontCollection ResourceCache::GetFontCollection(String const& id) const
-	{
-		auto iter = font_collection_cache_.find(id);
-		if (iter != font_collection_cache_.end())
-			return iter->second;
-		return FontCollection();
 	}
 
 	void ResourceCache::Remove(String const & id)
@@ -363,6 +305,14 @@ namespace kiwano
 	void ResourceCache::Clear()
 	{
 		object_cache_.clear();
+	}
+
+	ObjectBasePtr ResourceCache::Get(String const& id) const
+	{
+		auto iter = object_cache_.find(id);
+		if (iter == object_cache_.end())
+			return nullptr;
+		return (*iter).second;
 	}
 
 }
@@ -383,13 +333,21 @@ namespace kiwano
 			if (type && (*type) == L"gif")
 			{
 				// GIF image
-				return loader->AddGifImage(*id, gdata->path + (*file));
+				GifImagePtr gif = new (std::nothrow) GifImage;
+				if (gif && gif->Load(gdata->path + (*file)))
+				{
+					return loader->AddObject(*id, gif);
+				}
 			}
 
 			if (file && !(*file).empty())
 			{
 				// Simple image
-				return loader->AddFrame(*id, gdata->path + (*file));
+				FramePtr frame = new (std::nothrow) Frame;
+				if (frame && frame->Load(gdata->path + (*file)))
+				{
+					return loader->AddObject(*id, frame);
+				}
 			}
 			return false;
 		}
@@ -412,7 +370,7 @@ namespace kiwano
 					}
 				}
 				FrameSequencePtr frame_seq = new FrameSequence(frames);
-				return !!loader->AddFrameSequence(*id, frame_seq);
+				return !!loader->AddObject(*id, frame_seq);
 			}
 			return false;
 		}
@@ -429,35 +387,36 @@ namespace kiwano
 					if (rows || cols)
 					{
 						// Frame slices
-						return !!loader->AddFrameSequence(*id, gdata->path + (*file), std::max(cols, 1), std::max(rows, 1), padding_x, padding_y);
+						FramePtr frame = new (std::nothrow) Frame;
+						if (frame && frame->Load(gdata->path + (*file)))
+						{
+							return !!loader->AddFrameSequence(*id, frame, std::max(cols, 1), std::max(rows, 1), padding_x, padding_y);
+						}
 					}
 					else
 					{
 						// Simple image
-						return loader->AddFrame(*id, gdata->path + (*file));
+						FramePtr frame = new (std::nothrow) Frame;
+						if (frame && frame->Load(gdata->path + (*file)))
+						{
+							return loader->AddObject(*id, frame);
+						}
 					}
 				}
 			}
 			return false;
 		}
 
-		bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const Vector<String>* files)
+		bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file)
 		{
 			if (!gdata || !id) return false;
 
-			// Font Collection
-			if (files)
+			if (file)
 			{
-				Vector<String> files_copy(*files);
-				for (auto& file : files_copy)
+				FontPtr font = new (std::nothrow) Font;
+				if (font && font->Load(gdata->path + (*file)))
 				{
-					file = gdata->path + file;
-				}
-
-				FontCollection collection;
-				if (collection.Load(files_copy))
-				{
-					return loader->AddFontCollection(*id, collection);
+					return loader->AddObject(*id, font);
 				}
 			}
 			return false;
@@ -517,20 +476,13 @@ namespace kiwano
 			{
 				for (const auto& font : json_data[L"fonts"])
 				{
-					String id;
+					const String *id = nullptr, *file = nullptr;
 
-					if (font.count(L"id")) id = font[L"id"].as_string();
-					if (font.count(L"files"))
-					{
-						Vector<String> files;
-						files.reserve(font[L"files"].size());
-						for (const auto& file : font[L"files"])
-						{
-							files.push_back(file.as_string());
-						}
-						if (!LoadFontsFromData(loader, &global_data, &id, &files))
-							return false;
-					}
+					if (font.count(L"id")) id = &font[L"id"].as_string();
+					if (font.count(L"file")) file = &font[L"file"].as_string();
+
+					if (!LoadFontsFromData(loader, &global_data, id, file))
+						return false;
 				}
 			}
 			return true;
@@ -592,18 +544,11 @@ namespace kiwano
 			{
 				for (auto font = fonts->FirstChildElement(); font; font = font->NextSiblingElement())
 				{
-					String id;
+					String id, file;
 					if (auto attr = font->Attribute(L"id")) id.assign(attr);
+					if (auto attr = font->Attribute(L"file")) file.assign(attr);
 
-					Vector<String> files_arr;
-					for (auto file = font->FirstChildElement(); file; file = file->NextSiblingElement())
-					{
-						if (auto path = file->Attribute(L"path"))
-						{
-							files_arr.push_back(path);
-						}
-					}
-					if (!LoadFontsFromData(loader, &global_data, &id, &files_arr))
+					if (!LoadFontsFromData(loader, &global_data, &id, &file))
 						return false;
 				}
 			}

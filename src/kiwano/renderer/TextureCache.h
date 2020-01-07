@@ -24,34 +24,69 @@
 
 namespace kiwano
 {
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief 纹理缓存
+	*/
 	class KGE_API TextureCache
 		: public Singleton<TextureCache>
 	{
-		KGE_DECLARE_SINGLETON(TextureCache);
+		friend Singleton<TextureCache>;
 
 	public:
-		Texture AddOrGetTexture(String const& file_path);
-		Texture AddOrGetTexture(Resource const& res);
-		GifImage AddOrGetGifImage(String const& file_path);
-		GifImage AddOrGetGifImage(Resource const& res);
+		/// \~chinese
+		/// @brief 添加或获取纹理
+		TexturePtr AddOrGetTexture(String const& file_path);
 
+		/// \~chinese
+		/// @brief 添加或获取纹理
+		TexturePtr AddOrGetTexture(Resource const& res);
+
+		/// \~chinese
+		/// @brief 添加或获取GIF图像
+		GifImagePtr AddOrGetGifImage(String const& file_path);
+
+		/// \~chinese
+		/// @brief 添加或获取GIF图像
+		GifImagePtr AddOrGetGifImage(Resource const& res);
+
+		/// \~chinese
+		/// @brief 移除纹理缓存
 		void RemoveTexture(String const& file_path);
+
+		/// \~chinese
+		/// @brief 移除纹理缓存
 		void RemoveTexture(Resource const& res);
+
+		/// \~chinese
+		/// @brief 移除GIF图像缓存
 		void RemoveGifImage(String const& file_path);
+
+		/// \~chinese
+		/// @brief 移除GIF图像缓存
 		void RemoveGifImage(Resource const& res);
 
+		/// \~chinese
+		/// @brief 清空缓存
 		void Clear();
 
-	protected:
+	private:
 		TextureCache();
 
 		virtual ~TextureCache();
 
-	protected:
-		using TextureMap = UnorderedMap<size_t, Texture>;
+	private:
+		using TextureMap = UnorderedMap<size_t, TexturePtr>;
 		TextureMap texture_cache_;
 
-		using GifImageMap = UnorderedMap<size_t, GifImage>;
+		using GifImageMap = UnorderedMap<size_t, GifImagePtr>;
 		GifImageMap gif_texture_cache_;
 	};
+
+	/** @} */
 }

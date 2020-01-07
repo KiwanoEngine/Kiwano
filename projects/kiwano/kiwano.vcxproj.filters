@@ -25,14 +25,14 @@
     <Filter Include="2d\action">
       <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{86e2d0f2-a9d0-4456-b6a5-d480228bbf82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="renderer\win32">
       <UniqueIdentifier>{30333461-e9bc-4709-84bd-ce6e0e1a3079}</UniqueIdentifier>
     </Filter>
-    <Filter Include="core\win32">
-      <UniqueIdentifier>{192a47a9-9df6-4f40-a7d3-888eb00c53ac}</UniqueIdentifier>
+    <Filter Include="platform\win32">
+      <UniqueIdentifier>{e84dcf9a-e650-473e-8c9c-193804ab9e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\event">
+      <UniqueIdentifier>{c629aedd-ffb9-4bc1-82c3-f50e77c82e77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,19 +45,10 @@
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\include-forwards.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Layer.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Text.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\TextStyle.hpp">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h">
@@ -70,9 +61,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\EventListener.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\RefCounter.hpp">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Resource.h">
@@ -91,9 +79,6 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Application.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\modules.h">
       <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\config.h" />
@@ -149,33 +134,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\basic_json.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\function.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_list.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\intrusive_ptr.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\noncopyable.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\singleton.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\string.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\vector.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\common.h">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h">
       <Filter>2d</Filter>
@@ -240,9 +198,6 @@
     <ClInclude Include="..\..\src\kiwano\renderer\RenderTarget.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\renderer\FontCollection.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Transform.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -267,25 +222,13 @@
     <ClInclude Include="..\..\src\kiwano\math\scalar.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\win32\ComPtr.hpp">
-      <Filter>core\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\win32\helper.h">
-      <Filter>core\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\common\any.hpp">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Library.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Event.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h">
@@ -302,6 +245,48 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Director.h">
       <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\common.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RefCounter.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\TextStyle.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\win32\helper.h">
+      <Filter>renderer\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\renderer\GeometrySink.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\Event.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\EventType.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h">
+      <Filter>core\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h">
+      <Filter>core\event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,9 +305,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Text.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp">
       <Filter>2d</Filter>
     </ClCompile>
@@ -339,9 +321,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\modules.cpp">
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
@@ -443,9 +422,6 @@
     <ClCompile Include="..\..\src\kiwano\renderer\RenderTarget.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\renderer\FontCollection.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp">
       <Filter>2d</Filter>
     </ClCompile>
@@ -470,9 +446,6 @@
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Event.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp">
       <Filter>platform</Filter>
     </ClCompile>
@@ -484,6 +457,33 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Director.cpp">
       <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\renderer\GeometrySink.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp">
+      <Filter>core\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp">
+      <Filter>core\event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

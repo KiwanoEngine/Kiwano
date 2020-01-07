@@ -27,16 +27,6 @@ namespace kiwano
 	Layer::Layer()
 		: swallow_(false)
 	{
-		auto handler = Closure(this, &Layer::HandleMessages);
-
-		AddListener(event::MouseDown, handler);
-		AddListener(event::MouseUp, handler);
-		AddListener(event::MouseMove, handler);
-		AddListener(event::MouseWheel, handler);
-
-		AddListener(event::KeyDown, handler);
-		AddListener(event::KeyUp, handler);
-		AddListener(event::KeyChar, handler);
 	}
 
 	Layer::~Layer()
@@ -84,50 +74,17 @@ namespace kiwano
 
 	void Layer::Render(RenderTarget* rt)
 	{
-		PrepareRender(rt);
-
 		rt->PushLayer(area_);
+
 		Actor::Render(rt);
+
 		rt->PopLayer();
 	}
 
-	void Layer::HandleMessages(Event& evt)
+	bool Layer::CheckVisibilty(RenderTarget* rt) const
 	{
-		if (evt.type == event::MouseDown)
-		{
-			auto real_evt = evt.SafeCast<MouseDownEvent>();
-			OnMouseButtonDown(real_evt->button, real_evt->pos);
-		}
-		else if (evt.type == event::MouseUp)
-		{
-			auto real_evt = evt.SafeCast<MouseUpEvent>();
-			OnMouseButtonUp(real_evt->button, real_evt->pos);
-		}
-		else if (evt.type == event::MouseMove)
-		{
-			auto real_evt = evt.SafeCast<MouseMoveEvent>();
-			OnMouseMoved(real_evt->pos);
-		}
-		else if (evt.type == event::MouseWheel)
-		{
-			auto real_evt = evt.SafeCast<MouseWheelEvent>();
-			OnMouseWheel(real_evt->wheel);
-		}
-		else if (evt.type == event::KeyDown)
-		{
-			auto real_evt = evt.SafeCast<KeyDownEvent>();
-			OnKeyDown(real_evt->code);
-		}
-		else if (evt.type == event::KeyUp)
-		{
-			auto real_evt = evt.SafeCast<KeyUpEvent>();
-			OnKeyUp(real_evt->code);
-		}
-		else if (evt.type == event::KeyChar)
-		{
-			auto real_evt = evt.SafeCast<KeyCharEvent>();
-			OnChar(real_evt->value);
-		}
+		// Do not need to render Layer
+		return false;
 	}
 
 }

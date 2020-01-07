@@ -31,34 +31,54 @@ namespace kiwano
 	typedef Function<void()> AsyncTaskFunc;
 	typedef Function<void()> AsyncTaskCallback;
 
+	/// \~chinese
+	/// @brief 异步任务
+	/// @details 在多线程下执行任务并返回
+	///   @code
+	///     AsyncTaskPtr task = new AsyncTask;
+	///     task->Then(DoSomething);
+	///     task->Start();
+	///   @endcode
 	class AsyncTask
 		: public ObjectBase
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造异步任务
 		AsyncTask();
 
+		/// \~chinese
+		/// @brief 构造异步任务
+		/// @param func 异步回调函数
 		AsyncTask(
 			AsyncTaskFunc func
 		);
 
 		virtual ~AsyncTask();
 
+		/// \~chinese
+		/// @brief 添加异步任务链
 		AsyncTask& Then(
 			AsyncTaskFunc func
 		);
 
+		/// \~chinese
+		/// @brief 设置任务执行完成后的回调函数
+		/// @note 该函数在 Kiwano 主线程中执行
 		AsyncTask& SetCallback(
 			AsyncTaskCallback callback
 		);
 
+		/// \~chinese
+		/// @brief 启动异步任务
 		void Start();
 
-	protected:
+	private:
 		void TaskThread();
 
 		void Complete();
 
-	protected:
+	private:
 		std::thread thread_;
 		std::mutex func_mutex_;
 		Queue<AsyncTaskFunc> thread_func_queue_;

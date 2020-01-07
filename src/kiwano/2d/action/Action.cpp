@@ -36,17 +36,19 @@ namespace kiwano
 	{
 	}
 
-	void Action::Init(ActorPtr target)
+	void Action::Init(Actor* target)
 	{
 	}
 
-	void Action::Update(ActorPtr target, Duration dt)
+	void Action::Update(Actor* target, Duration dt)
 	{
 		Complete(target);
 	}
 
-	void Action::UpdateStep(ActorPtr target, Duration dt)
+	void Action::UpdateStep(Actor* target, Duration dt)
 	{
+		KGE_ASSERT(target != nullptr && "Action target should NOT be nullptr!");
+
 		elapsed_ += dt;
 
 		if (status_ == Status::NotStarted)
@@ -72,7 +74,7 @@ namespace kiwano
 		if (status_ == Status::Done)
 		{
 			if (cb_done_)
-				cb_done_();
+				cb_done_(target);
 
 			if (detach_target_)
 				target->RemoveFromParent();
@@ -81,10 +83,10 @@ namespace kiwano
 		}
 	}
 
-	void Action::Complete(ActorPtr target)
+	void Action::Complete(Actor* target)
 	{
 		if (cb_loop_done_)
-			cb_loop_done_();
+			cb_loop_done_(target);
 
 		if (loops_ >= 0
 			&& loops_done_ >= loops_)
@@ -99,7 +101,7 @@ namespace kiwano
 		++loops_done_;
 	}
 
-	void Action::Restart(ActorPtr target)
+	void Action::Restart(Actor* target)
 	{
 		status_ = Status::NotStarted;
 		elapsed_ = 0;

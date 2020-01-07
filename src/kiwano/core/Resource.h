@@ -20,45 +20,58 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
-	// 资源
-	// 
-	// 资源是保存在 exe 中的二进制数据
-	// 例如, 一份音频资源的类型为 L"WAVE", 名称标识符为 IDR_WAVE_1,
-	// 那么可以这样指定该资源: Resource(IDR_WAVE_1, L"WAVE");
-	// 
-	// 了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
-	//
+	/**
+	* \~chinese
+	* @brief 资源
+	* @details
+	*   资源是保存在 exe 中的二进制数据，
+	*   例如，一份音频资源的类型为 L"WAVE"，名称标识符为 IDR_WAVE_1，那么可以这样指定该资源: 
+	*   @code
+	*     Resource(IDR_WAVE_1, L"WAVE");
+	*   @endcode
+	*   了解资源的更多信息: https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+	*/
 	class KGE_API Resource
 	{
 	public:
-		// 二进制数据
+		/// \~chinese
+		/// @brief 资源的二进制数据
 		struct Data
 		{
-			void* buffer;
-			uint32_t size;
+			void* buffer;	///< 资源数据
+			uint32_t size;	///< 资源数据大小
 
-			inline Data() : buffer(nullptr), size(0) {}
+			Data();
 
-			inline operator bool() const { return buffer && size; }
+			operator bool() const;
 		};
 
+		/// \~chinese
+		/// @brief 构造资源
 		Resource();
 
-		Resource(
-			uint32_t id,		/* 资源 ID */
-			const wchar_t* type	/* 资源类型 */
-		);
+		/// \~chinese
+		/// @brief 构造资源
+		/// @param id 资源 ID
+		/// @param type 资源类型
+		Resource(uint32_t id, const wchar_t* type);
 
-		// 获取二进制数据
-		Resource::Data			GetData() const;
+		/// \~chinese
+		/// @brief 获取资源的二进制数据
+		/// @return 资源数据
+		Resource::Data GetData() const;
 
-		inline uint32_t			GetId() const	{ return id_; }
+		/// \~chinese
+		/// @brief 获取资源 ID
+		uint32_t GetId() const;
 
-		inline const wchar_t*	GetType() const	{ return type_; }
+		/// \~chinese
+		/// @brief 获取资源类型
+		const wchar_t* GetType() const;
 
 	private:
 		uint32_t		id_;
@@ -66,4 +79,25 @@ namespace kiwano
 
 		mutable Resource::Data	data_;
 	};
+
+	inline Resource::Data::Data()
+		: buffer(nullptr)
+		, size(0)
+	{
+	}
+
+	inline Resource::Data::operator bool() const
+	{
+		return buffer != nullptr && size;
+	}
+
+	inline uint32_t Resource::GetId() const
+	{
+		return id_;
+	}
+
+	inline const wchar_t* Resource::GetType() const
+	{
+		return type_;
+	}
 }

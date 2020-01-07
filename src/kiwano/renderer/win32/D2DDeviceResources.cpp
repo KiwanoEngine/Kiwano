@@ -36,7 +36,13 @@ namespace kiwano
 
 		HRESULT CreateDeviceIndependentResources();
 
-	public:
+		HRESULT CreateDeviceResources(
+			_In_ ComPtr<IDXGIDevice> dxgi_device,
+			_In_ ComPtr<IDXGISwapChain> dxgi_swap_chain
+		);
+
+		HRESULT CreateWindowSizeDependentResources();
+
 		HRESULT CreateBitmapConverter(
 			_Out_ ComPtr<IWICFormatConverter>& converter,
 			_In_opt_ ComPtr<IWICBitmapSource> source,
@@ -65,21 +71,31 @@ namespace kiwano
 
 		HRESULT CreateTextFormat(
 			_Out_ ComPtr<IDWriteTextFormat>& text_format,
-			_In_ Font const& font
-		) const override;
+			String const& family,
+			_In_ ComPtr<IDWriteFontCollection> collection,
+			DWRITE_FONT_WEIGHT weight,
+			DWRITE_FONT_STYLE style,
+			DWRITE_FONT_STRETCH stretch,
+			FLOAT font_size
+		) override;
 
 		HRESULT CreateTextLayout(
 			_Out_ ComPtr<IDWriteTextLayout>& text_layout,
-			_In_ String const& text,
-			_In_ ComPtr<IDWriteTextFormat> const& text_format
-		) const override;
-
-		HRESULT SetD2DDevice(
-			_In_ ComPtr<ID2D1Device> const& device
+			String const& text,
+			_In_ ComPtr<IDWriteTextFormat> text_format
 		) override;
 
-		void SetTargetBitmap(
-			_In_ ComPtr<ID2D1Bitmap1> const& target
+		HRESULT SetDpi(
+			float dpi
+		) override;
+
+		HRESULT SetLogicalSize(
+			Size logical_size
+		) override;
+
+		HRESULT HandleDeviceLost(
+			_In_ ComPtr<IDXGIDevice> dxgi_device,
+			_In_ ComPtr<IDXGISwapChain> dxgi_swap_chain
 		) override;
 
 		void DiscardResources() override;
@@ -94,13 +110,18 @@ namespace kiwano
 			void** ppvObject
 		);
 
-	protected:
+	private:
 		unsigned long ref_count_;
 		float dpi_;
+
+		ComPtr<IDXGISwapChain> dxgi_swap_chain_;
 	};
 
 
-	HRESULT ID2DDeviceResources::Create(ID2DDeviceResources** device_resources)
+	HRESULT ID2DDeviceResources::Create(
+		_Out_ ID2DDeviceResources** device_resources,
+		_In_ ComPtr<IDXGIDevice> dxgi_device,
+		_In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
 	{
 		HRESULT hr = E_FAIL;
 		if (device_resources)
@@ -109,17 +130,22 @@ namespace kiwano
 			if (res)
 			{
 				hr = res->CreateDeviceIndependentResources();
+
+				if (SUCCEEDED(hr))
+				{
+					hr = res->CreateDeviceResources(dxgi_device, dxgi_swap_chain);
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = res->CreateWindowSizeDependentResources();
+				}
 			}
 
 			if (SUCCEEDED(hr))
 			{
-				res->AddRef();
-
-				if (*device_resources)
-				{
-					(*device_resources)->Release();
-				}
-				(*device_resources) = res;
+				DX::SafeRelease(*device_resources);
+				(*device_resources) = DX::SafeAcquire(res);
 			}
 			else
 			{
@@ -189,10 +215,6 @@ namespace kiwano
 
 		imaging_factory_.reset();
 		dwrite_factory_.reset();
-
-		miter_stroke_style_.reset();
-		bevel_stroke_style_.reset();
-		round_stroke_style_.reset();
 	}
 
 	HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
@@ -219,7 +241,10 @@ namespace kiwano
 		if (SUCCEEDED(hr))
 		{
 			factory_ = factory;
+		}
 
+		if (SUCCEEDED(hr))
+		{
 			hr = CoCreateInstance(
 				CLSID_WICImagingFactory,
 				nullptr,
@@ -227,101 +252,114 @@ namespace kiwano
 				__uuidof(IWICImagingFactory),
 				reinterpret_cast<void**>(&imaging_factory)
 			);
+
+			if (SUCCEEDED(hr))
+			{
+				imaging_factory_ = imaging_factory;
+			}
 		}
 
 		if (SUCCEEDED(hr))
 		{
-			imaging_factory_ = imaging_factory;
-
 			hr = DWriteCreateFactory(
 				DWRITE_FACTORY_TYPE_SHARED,
 				__uuidof(IDWriteFactory),
 				reinterpret_cast<IUnknown**>(&dwrite_factory)
 			);
-		}
-
-		if (SUCCEEDED(hr))
-		{
-			dwrite_factory_ = dwrite_factory;
-
-			ComPtr<ID2D1StrokeStyle> miter_stroke_style;
-			ComPtr<ID2D1StrokeStyle> bevel_stroke_style;
-			ComPtr<ID2D1StrokeStyle> round_stroke_style;
-
-			D2D1_STROKE_STYLE_PROPERTIES stroke_style = D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_LINE_JOIN_MITER,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f
-			);
-
-			hr = factory_->CreateStrokeStyle(
-				stroke_style,
-				nullptr,
-				0,
-				&miter_stroke_style
-			);
 
 			if (SUCCEEDED(hr))
 			{
-				stroke_style.lineJoin = D2D1_LINE_JOIN_BEVEL;
-				hr = factory_->CreateStrokeStyle(
-					stroke_style,
-					nullptr,
-					0,
-					&bevel_stroke_style
-				);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				stroke_style.lineJoin = D2D1_LINE_JOIN_ROUND;
-				hr = factory_->CreateStrokeStyle(
-					stroke_style,
-					nullptr,
-					0,
-					&round_stroke_style
-				);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				miter_stroke_style_ = miter_stroke_style;
-				bevel_stroke_style_ = bevel_stroke_style;
-				round_stroke_style_ = round_stroke_style;
+				dwrite_factory_ = dwrite_factory;
 			}
 		}
-
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::SetD2DDevice(_In_ ComPtr<ID2D1Device> const& device)
+	HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
 	{
-		ComPtr<ID2D1DeviceContext> device_ctx;
+		if (!factory_)
+			return E_UNEXPECTED;
 
-		HRESULT hr = device->CreateDeviceContext(
-			D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-			&device_ctx
-		);
+		// Create the Direct2D device object and a corresponding context.
+		ComPtr<ID2D1Device> device;
+		HRESULT hr = factory_->CreateDevice(dxgi_device.get(), &device);
 
 		if (SUCCEEDED(hr))
 		{
-			device_ = device;
-			device_context_ = device_ctx;
-			device_context_->SetDpi(dpi_, dpi_);
-		}
+			ComPtr<ID2D1DeviceContext> device_ctx;
 
+			hr = device->CreateDeviceContext(
+				D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
+				&device_ctx
+			);
+
+			if (SUCCEEDED(hr))
+			{
+				device_ = device;
+				device_context_ = device_ctx;
+				device_context_->SetDpi(dpi_, dpi_);
+				dxgi_swap_chain_ = dxgi_swap_chain;
+			}
+		}
 		return hr;
 	}
 
-	void D2DDeviceResources::SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> const& target)
+	HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
 	{
-		target_bitmap_ = target;
-		if (device_context_)
-			device_context_->SetTarget(target_bitmap_.get());
+		if (!dxgi_swap_chain_ || !device_context_)
+			return E_UNEXPECTED;
+
+		// Create a Direct2D target bitmap associated with the
+		// swap chain back buffer and set it as the current target.
+		ComPtr<IDXGISurface> dxgi_back_buffer;
+		HRESULT hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
+
+		if (SUCCEEDED(hr))
+		{
+			ComPtr<ID2D1Bitmap1> target;
+			hr = device_context_->CreateBitmapFromDxgiSurface(
+				dxgi_back_buffer.get(),
+				D2D1::BitmapProperties1(
+					D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+					D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+					dpi_,
+					dpi_),
+				&target);
+
+			if (SUCCEEDED(hr))
+			{
+				target_bitmap_ = target;
+				device_context_->SetTarget(target_bitmap_.get());
+			}
+		}
+		return hr;
+	}
+
+	HRESULT D2DDeviceResources::SetDpi(float dpi)
+	{
+		if (!device_context_)
+			return E_UNEXPECTED;
+
+		device_context_->SetDpi(dpi, dpi);
+		return CreateWindowSizeDependentResources();
+	}
+
+	HRESULT D2DDeviceResources::SetLogicalSize(Size)
+	{
+		return CreateWindowSizeDependentResources();
+	}
+
+	HRESULT D2DDeviceResources::HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
+	{
+		dxgi_swap_chain_ = nullptr;
+
+		HRESULT hr = CreateDeviceResources(dxgi_device, dxgi_swap_chain);
+
+		if (SUCCEEDED(hr))
+		{
+			hr = CreateWindowSizeDependentResources();
+		}
+		return hr;
 	}
 
 	HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter, _In_opt_ ComPtr<IWICBitmapSource> source,
@@ -435,19 +473,20 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ Font const & font) const
+	HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, String const& family, _In_ ComPtr<IDWriteFontCollection> collection,
+		DWRITE_FONT_WEIGHT weight, DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size)
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;
 
 		ComPtr<IDWriteTextFormat> output;
 		HRESULT hr = dwrite_factory_->CreateTextFormat(
-			font.family.c_str(),
-			font.collection.GetFontCollection().get(),
-			DWRITE_FONT_WEIGHT(font.weight),
-			font.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			font.size,
+			family.c_str(),
+			collection.get(),
+			weight,
+			style,
+			stretch,
+			font_size,
 			L"",
 			&output
 		);
@@ -459,8 +498,8 @@ namespace kiwano
 		return hr;
 	}
 
-	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ String const& text,
-		_In_ ComPtr<IDWriteTextFormat> const& text_format) const
+	HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, String const& text,
+		_In_ ComPtr<IDWriteTextFormat> text_format)
 	{
 		if (!dwrite_factory_)
 			return E_UNEXPECTED;

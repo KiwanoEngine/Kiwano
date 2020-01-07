@@ -20,71 +20,58 @@
 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include <kiwano/core/Logger.h>
 
 namespace
 {
-	std::streambuf* cin_buffer, * cout_buffer, * cerr_buffer;
-	std::fstream console_input, console_output, console_error;
+	std::streambuf* cout_buffer, * cerr_buffer;
+	std::fstream console_output, console_error;
 
-	std::wstreambuf* wcin_buffer, * wcout_buffer, * wcerr_buffer;
-	std::wfstream wconsole_input, wconsole_output, wconsole_error;
+	std::wstreambuf* wcout_buffer, * wcerr_buffer;
+	std::wfstream wconsole_output, wconsole_error;
 
 	void RedirectStdIO()
 	{
-		cin_buffer = std::cin.rdbuf();
 		cout_buffer = std::cout.rdbuf();
 		cerr_buffer = std::cerr.rdbuf();
-		wcin_buffer = std::wcin.rdbuf();
 		wcout_buffer = std::wcout.rdbuf();
 		wcerr_buffer = std::wcerr.rdbuf();
 
-		console_input.open("CONIN$", std::ios::in);
 		console_output.open("CONOUT$", std::ios::out);
 		console_error.open("CONOUT$", std::ios::out);
-		wconsole_input.open("CONIN$", std::ios::in);
 		wconsole_output.open("CONOUT$", std::ios::out);
 		wconsole_error.open("CONOUT$", std::ios::out);
 
 		FILE* dummy;
 		freopen_s(&dummy, "CONOUT$", "w+t", stdout);
-		freopen_s(&dummy, "CONIN$", "r+t", stdin);
 		freopen_s(&dummy, "CONOUT$", "w+t", stderr);
 		(void)dummy;
 
-		std::cin.rdbuf(console_input.rdbuf());
 		std::cout.rdbuf(console_output.rdbuf());
 		std::cerr.rdbuf(console_error.rdbuf());
-		std::wcin.rdbuf(wconsole_input.rdbuf());
 		std::wcout.rdbuf(wconsole_output.rdbuf());
 		std::wcerr.rdbuf(wconsole_error.rdbuf());
 	}
 
 	void ResetStdIO()
 	{
-		console_input.close();
 		console_output.close();
 		console_error.close();
-		wconsole_input.close();
 		wconsole_output.close();
 		wconsole_error.close();
 
-		std::cin.rdbuf(cin_buffer);
 		std::cout.rdbuf(cout_buffer);
 		std::cerr.rdbuf(cerr_buffer);
-		std::wcin.rdbuf(wcin_buffer);
 		std::wcout.rdbuf(wcout_buffer);
 		std::wcerr.rdbuf(wcerr_buffer);
 
 		fclose(stdout);
-		fclose(stdin);
 		fclose(stderr);
 
-		cin_buffer = nullptr;
 		cout_buffer = nullptr;
 		cerr_buffer = nullptr;
-		wcin_buffer = nullptr;
 		wcout_buffer = nullptr;
 		wcerr_buffer = nullptr;
 	}
@@ -123,25 +110,29 @@ namespace
 
 namespace kiwano
 {
-	namespace __console_colors
+	namespace console_colors
 	{
-		const WORD _blue = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-		const WORD _green = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-		const WORD _red = FOREGROUND_RED | FOREGROUND_INTENSITY;
-		const WORD _yellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-		const WORD _white = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD blue			= FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+		const WORD green		= FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+		const WORD red			= FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD yellow		= FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+		const WORD white		= FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 
-		const WORD _blue_bg = _white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
-		const WORD _green_bg = _white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
-		const WORD _red_bg = _white | BACKGROUND_RED | BACKGROUND_INTENSITY;
-		const WORD _yellow_bg = BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
-		const WORD _white_bg = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD blue_bg		= white | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+		const WORD green_bg		= white | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+		const WORD red_bg		= white | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD yellow_bg	= BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+		const WORD white_bg		= BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 
-		const WORD _reset = _white;
+		const WORD reset		= white;
+	}
 
 #define DECLARE_HANDLE_COLOR(NAME, HANDLE_NAME, COLOR)\
 	inline std::wostream& (NAME)(std::wostream& _out)\
-		{ ::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), _##COLOR); return _out; }
+	{\
+		::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), console_colors::##COLOR);\
+		return _out;\
+	}
 
 #define DECLARE_COLOR(COLOR) \
 	DECLARE_HANDLE_COLOR(stdout_##COLOR, STD_OUTPUT_HANDLE, COLOR)\
@@ -151,6 +142,8 @@ namespace kiwano
 	DECLARE_HANDLE_COLOR(stdout_##COLOR##_bg, STD_OUTPUT_HANDLE, COLOR##_bg)\
 	DECLARE_HANDLE_COLOR(stderr_##COLOR##_bg, STD_ERROR_HANDLE, COLOR##_bg)
 
+	namespace console_colors
+	{
 		DECLARE_COLOR(red);
 		DECLARE_COLOR(green);
 		DECLARE_COLOR(yellow);
@@ -163,9 +156,6 @@ namespace kiwano
 		DECLARE_BG_COLOR(yellow);
 		DECLARE_BG_COLOR(blue);
 		DECLARE_BG_COLOR(white);
-
-#undef DECLARE_COLOR
-#undef DECLARE_BG_COLOR
 	}
 
 	Logger::Logger()
@@ -181,6 +171,95 @@ namespace kiwano
 	Logger::~Logger()
 	{
 		FreeAllocatedConsole();
+	}
+
+	void Logger::Printf(Level level, const wchar_t* format, ...)
+	{
+		if (!enabled_)
+			return;
+
+		StringStream sstream;
+		Prepare(level, sstream);
+
+		// Format message
+		if (format)
+		{
+			va_list args = nullptr;
+			va_start(args, format);
+
+			static wchar_t temp_buffer[1024 * 3 + 1];
+			const auto len = ::_vscwprintf(format, args) + 1;
+			::_vsnwprintf_s(temp_buffer, len, len, format, args);
+
+			sstream << ' ' << temp_buffer << L"\r\n";
+
+			va_end(args);
+		}
+
+		Output(level, sstream);
+	}
+
+	void Logger::Prepare(Level level, StringStream& sstream)
+	{
+		String prefix;
+
+		switch (level)
+		{
+		case Level::Info:
+			prefix = L"[INFO] ";
+			break;
+		case Level::System:
+			prefix = L"[SYSTEM] ";
+			break;
+		case Level::Warning:
+			prefix = L"[WARN] ";
+			break;
+		case Level::Error:
+			prefix = L"[ERROR] ";
+			break;
+		}
+
+		// Timestamp
+		time_t unix = std::time(nullptr);
+		std::tm tmbuf;
+		localtime_s(&tmbuf, &unix);
+		sstream << prefix << std::put_time(&tmbuf, L"%H:%M:%S ");
+	}
+
+	void Logger::Output(Level level, StringStream& sstream)
+	{
+		OutputStream* ostream = nullptr;
+		ConsoleColor color = nullptr;
+
+		switch (level)
+		{
+		case Level::Info:
+			ostream = &output_stream_;
+			color = Closure(this, &Logger::DefaultOutputColor);
+			break;
+		case Level::System:
+			ostream = &output_stream_;
+			color = console_colors::stdout_blue;
+			break;
+		case Level::Warning:
+			ostream = &output_stream_;
+			color = console_colors::stdout_yellow_bg;
+			break;
+		case Level::Error:
+			ostream = &error_stream_;
+			color = console_colors::stderr_red_bg;
+			break;
+		}
+
+		// Printing
+		if (ostream)
+		{
+			auto output = sstream.str();
+			color(*ostream) << output << std::flush;
+			::OutputDebugStringW(output.c_str());
+
+			ResetConsoleColor();
+		}
 	}
 
 	void Logger::ResetOutputStream()
@@ -202,6 +281,11 @@ namespace kiwano
 				default_stderr_color_ = stderr_info.wAttributes;
 			}
 
+			// replace the C++ global locale with the user-preferred locale
+			(void)std::locale::global(std::locale(""));
+			(void)std::wcout.imbue(std::locale());
+			(void)std::wcerr.imbue(std::locale());
+
 			RedirectOutputStreamBuffer(std::wcout.rdbuf());
 			RedirectErrorStreamBuffer(std::wcerr.rdbuf());
 		}
@@ -215,94 +299,6 @@ namespace kiwano
 	std::wstreambuf* Logger::RedirectErrorStreamBuffer(std::wstreambuf* buf)
 	{
 		return error_stream_.rdbuf(buf);
-	}
-
-	void Logger::Printf(const wchar_t* format, ...)
-	{
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, Logger::DefaultOutputColor, nullptr, format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Messagef(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, stdout_blue, nullptr, format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Warningf(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(output_stream_, stdout_yellow_bg, L" Warning:", format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Errorf(const wchar_t* format, ...)
-	{
-		using namespace __console_colors;
-
-		va_list args = nullptr;
-		va_start(args, format);
-
-		Outputf(error_stream_, stderr_red_bg, L" Error:", format, args);
-
-		va_end(args);
-	}
-
-	void Logger::Outputf(std::wostream& os, std::wostream& (*color)(std::wostream&), const wchar_t* prompt, const wchar_t* format, va_list args) const
-	{
-		if (enabled_)
-		{
-			std::wstring output = MakeOutputStringf(prompt, format, args);
-
-			os << color << output << std::flush;
-			::OutputDebugStringW(output.c_str());
-
-			ResetConsoleColor();
-		}
-	}
-
-	std::wstring Logger::MakeOutputStringf(const wchar_t* prompt, const wchar_t* format, va_list args) const
-	{
-		static wchar_t temp_buffer[1024 * 3 + 1];
-
-		StringStream ss;
-		ss << Logger::OutPrefix;
-
-		if (prompt)
-			ss << prompt;
-
-		if (format)
-		{
-			const auto len = ::_vscwprintf(format, args) + 1;
-			::_vsnwprintf_s(temp_buffer, len, len, format, args);
-
-			ss << ' ' << temp_buffer;
-		}
-		return ss.str();
-	}
-
-	std::wostream& Logger::OutPrefix(std::wostream& out)
-	{
-		time_t unix = std::time(nullptr);
-		std::tm tmbuf;
-		localtime_s(&tmbuf, &unix);
-		out << std::put_time(&tmbuf, L"[kiwano] %H:%M:%S");
-		return out;
 	}
 
 	void Logger::ShowConsole(bool show)
@@ -319,7 +315,7 @@ namespace kiwano
 				HWND console = ::AllocateConsole();
 				if (!console)
 				{
-					KGE_WARNING_LOG(L"AllocConsole failed");
+					KGE_WARN(L"AllocConsole failed");
 				}
 				else
 				{

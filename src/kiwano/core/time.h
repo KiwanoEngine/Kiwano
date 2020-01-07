@@ -20,54 +20,101 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
-	// 时间段
-	//
-	// 时间段表示法:
-	//     5 秒: time::Second * 5
-	//     1.5 小时: time::Hour * 1.5
-	//     3 小时 45 分 15 秒: time::Hour * 3 + time::Minute * 45 + time::Second * 15
-	// 在 VS2015 及更高版本可以使用 time literals:
-	//     5 秒: 5_s
-	//     1.5 小时: 1.5_h
-	//     3 小时 45 分 15 秒: 3_h + 45_m + 15_s
-	//
+	/**
+	* \~chinese
+	* @brief 时间段
+	* @par
+	*   时间段表示法:
+	*   @code
+	*     time::Second * 5  // 5 秒
+	*     time::Hour * 1.5  // 1.5 小时
+	*     time::Hour * 3 + time::Minute * 45 + time::Second * 15  // 3 小时 45 分 15 秒
+	*   @endcode
+	*   在 VS2015 及更高版本可以使用 time literals:
+	*   @code
+	*     using namespace kiwano;
+	*     5_sec                     // 5 秒
+	*     1.5_hour                  // 1.5 小时
+	*     3_hour + 45_min + 15_sec  // 3 小时 45 分 15 秒
+	*   @endcode
+	*/
 	struct KGE_API Duration
 	{
+		/// \~chinese
+		/// @brief 构造时间段
 		Duration();
 
+		/// \~chinese
+		/// @brief 构造时间段
+		/// @param milliseconds 毫秒数
 		Duration(
 			long milliseconds
 		);
 
-		// 转化为毫秒
+		/// \~chinese
+		/// @brief 获取毫秒数
 		long Milliseconds() const;
 
-		// 转化为秒
+		/// \~chinese
+		/// @brief 获取秒数
 		float Seconds() const;
 
-		// 转化为分钟
+		/// \~chinese
+		/// @brief 获取分钟数
 		float Minutes() const;
 
-		// 转化为小时
+		/// \~chinese
+		/// @brief 获取小时数
 		float Hours() const;
 
-		// 时长是否是零
+		/// \~chinese
+		/// @brief 时长是否是零
+		/// @return 若时长是零，返回true
 		bool IsZero() const;
 
+		/// \~chinese
+		/// @brief 设置毫秒数
+		/// @param ms 毫秒数
 		void SetMilliseconds(long ms);
 
+		/// \~chinese
+		/// @brief 设置秒数
+		/// @param seconds 秒数
 		void SetSeconds(float seconds);
 
+		/// \~chinese
+		/// @brief 设置分钟数
+		/// @param minutes 分钟数
 		void SetMinutes(float minutes);
 
+		/// \~chinese
+		/// @brief 设置小时数
+		/// @param hours 小时数
 		void SetHours(float hours);
 
-		// 转为字符串
+		/// \~chinese
+		/// @brief 转为字符串
 		String ToString() const;
+
+		/// \~chinese
+		/// @brief 解析时间段字符串
+		/// @param str 时间段字符串
+		/// @details
+		///   时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
+		///   例如: "300ms", "-1.5h", "2h45m"
+		///   允许的时间单位有 "ms", "s", "m", "h"
+		/// @return 解析出的时间段
+		/// @throw std::runtime_error 传入了一个不合法的格式
+		static Duration Parse(const String& str);
+
+		static const Duration Ms;		///< 毫秒
+		static const Duration Second;	///< 秒
+		static const Duration Minute;	///< 分钟
+		static const Duration Hour;		///< 小时
 
 		bool operator== (const Duration &) const;
 		bool operator!= (const Duration &) const;
@@ -107,36 +154,36 @@ namespace kiwano
 		friend const Duration operator/ (float, const Duration &);
 		friend const Duration operator/ (double, const Duration &);
 
-		// 时间段格式化
-		//
-		// 时间段字符串允许是有符号的浮点数, 并且带有时间单位后缀
-		// 例如: "300ms", "-1.5h", "2h45m"
-		// 允许的时间单位有 "ms", "s", "m", "h"
-		static Duration Parse(const String& parse_str);
-
-		static const Duration Ms;		// 毫秒
-		static const Duration Second;		// 秒
-		static const Duration Minute;		// 分钟
-		static const Duration Hour;		// 小时
-
 	private:
 		long milliseconds_;
 	};
 
 
-	// 时间
-	//
-	// 获取当前时间: Time now = Time::Now();
-	// 两时间相减, 得到一个 Duration 对象, 例如:
-	//     Time t1, t2;
-	//     int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
-	// 
+	/**
+	* \~chinese
+	* @brief 时间
+	* @par 示例：
+	* @code
+	*   // 两时间相减, 可得到一个 Duration 对象
+	*   Time t1 = Time::Now();
+	*   // 等待一段时间后
+	*   Time t2 = Time::Now();
+	*   int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
+	* @endcode
+	* @note 时间点与系统时钟无关，因此不能将时间点转化为时分秒
+	*/
 	struct KGE_API Time
 	{
 		Time();
 
-		// 是否是零时
+		/// \~chinese
+		/// @brief 是否是零时
+		/// @return 若是零时，返回true
 		bool IsZero() const;
+
+		/// \~chinese
+		/// @brief 获取当前时间
+		static Time Now() noexcept;
 
 		const Duration operator -(const Time&) const;
 
@@ -145,11 +192,6 @@ namespace kiwano
 
 		Time& operator +=(const Duration &);
 		Time& operator -=(const Duration &);
-
-		// 获取当前时间
-		// 由于该时间点基于系统启动时间开始计算, 所以无法格式化该时间, 
-		// 也无法获得该时间的 Unix 时间戳
-		static Time Now() noexcept;
 
 	private:
 		Time(long ms);
@@ -174,48 +216,48 @@ namespace kiwano
 	inline bool Time::IsZero() const				{ return dur_ == 0; }
 }
 
-#if KGE_VS_VER > KGE_VS_2013
+#if defined(KGE_VS_VER) && KGE_VS_VER > KGE_VS_2013
 
 namespace kiwano
 {
 	inline namespace literals
 	{
-		inline const kiwano::Duration operator "" _ms(long double val)
+		inline const kiwano::Duration operator "" _msec(long double val)
 		{
 			return kiwano::Duration::Ms * val;
 		}
 
-		inline const kiwano::Duration operator "" _s(long double val)
+		inline const kiwano::Duration operator "" _msec(unsigned long long val)
+		{
+			return kiwano::Duration::Ms * val;
+		}
+
+		inline const kiwano::Duration operator "" _sec(long double val)
 		{
 			return kiwano::Duration::Second * val;
 		}
 
-		inline const kiwano::Duration operator "" _m(long double val)
+		inline const kiwano::Duration operator "" _sec(unsigned long long val)
+		{
+			return kiwano::Duration::Second * val;
+		}
+
+		inline const kiwano::Duration operator "" _min(long double val)
 		{
 			return kiwano::Duration::Minute * val;
 		}
 
-		inline const kiwano::Duration operator "" _h(long double val)
+		inline const kiwano::Duration operator "" _min(unsigned long long val)
+		{
+			return kiwano::Duration::Minute * val;
+		}
+
+		inline const kiwano::Duration operator "" _hour(long double val)
 		{
 			return kiwano::Duration::Hour * val;
 		}
 
-		inline const kiwano::Duration operator "" _ms(unsigned long long val)
-		{
-			return kiwano::Duration::Ms * val;
-		}
-
-		inline const kiwano::Duration operator "" _s(unsigned long long val)
-		{
-			return kiwano::Duration::Second * val;
-		}
-
-		inline const kiwano::Duration operator "" _m(unsigned long long val)
-		{
-			return kiwano::Duration::Minute * val;
-		}
-
-		inline const kiwano::Duration operator "" _h(unsigned long long val)
+		inline const kiwano::Duration operator "" _hour(unsigned long long val)
 		{
 			return kiwano::Duration::Hour * val;
 		}

@@ -27,15 +27,6 @@ namespace kiwano
 	{
 	}
 
-	Menu::Menu(Vector<ButtonPtr> const& buttons)
-		: enabled_(true)
-	{
-		for (const auto& button : buttons)
-		{
-			this->AddButton(button);
-		}
-	}
-
 	bool Menu::IsEnable() const
 	{
 		return enabled_;
@@ -52,7 +43,7 @@ namespace kiwano
 		{
 			enabled_ = enabled;
 
-			for (const auto& button : buttons_)
+			for (auto& button : buttons_)
 			{
 				button->SetEnabled(enabled);
 			}

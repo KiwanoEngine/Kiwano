@@ -43,7 +43,7 @@ namespace kiwano
 	{
 	}
 
-	void ActionGroup::Init(ActorPtr target)
+	void ActionGroup::Init(Actor* target)
 	{
 		if (actions_.empty())
 		{
@@ -64,7 +64,7 @@ namespace kiwano
 		}
 	}
 
-	void ActionGroup::Update(ActorPtr target, Duration dt)
+	void ActionGroup::Update(Actor* target, Duration dt)
 	{
 		if (sequence_)
 		{

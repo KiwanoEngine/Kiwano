@@ -29,7 +29,7 @@ namespace kiwano
 		SetStage(this);
 
 		SetAnchor(Vec2{ 0, 0 });
-		SetSize(Renderer::GetInstance()->GetOutputSize());
+		SetSize(Renderer::instance().GetOutputSize());
 	}
 
 	Stage::~Stage()
@@ -38,12 +38,31 @@ namespace kiwano
 
 	void Stage::OnEnter()
 	{
-		// KGE_LOG(L"Stage entered");
+		KGE_SYS_LOG(L"Stage entered");
 	}
 
 	void Stage::OnExit()
 	{
-		// KGE_LOG(L"Stage exited");
+		KGE_SYS_LOG(L"Stage exited");
+	}
+
+	void Stage::RenderBorder(RenderTarget* rt)
+	{
+		rt->SetBrushOpacity(1.0f);
+
+		if (!border_fill_brush_)
+		{
+			border_fill_brush_ = new Brush;
+			border_fill_brush_->SetColor(Color(Color::Red, .4f));
+		}
+
+		if (!border_stroke_brush_)
+		{
+			border_stroke_brush_ = new Brush;
+			border_stroke_brush_->SetColor(Color(Color::Red, .8f));
+		}
+
+		Actor::RenderBorder(rt);
 	}
 
 }

@@ -32,10 +32,10 @@ namespace kiwano
 	{
 		SetResponsible(true);
 
-		AddListener(event::MouseHover, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseOut, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseDown, Closure(this, &Button::UpdateStatus));
-		AddListener(event::MouseUp, Closure(this, &Button::UpdateStatus));
+		AddListener<MouseHoverEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseOutEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseDownEvent>(Closure(this, &Button::UpdateStatus));
+		AddListener<MouseUpEvent>(Closure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)
@@ -105,43 +105,42 @@ namespace kiwano
 
 	void Button::UpdateStatus(Event& evt)
 	{
-		auto mouse_evt = evt.SafeCast<MouseEvent>();
-		KGE_ASSERT(mouse_evt);
+		KGE_ASSERT(evt.IsType<MouseEvent>());
 
-		if (enabled_ && (mouse_evt->target == this))
+		if (enabled_ && (evt.SafeCast<MouseEvent>().target == this))
 		{
-			if (evt.type == event::MouseHover)
+			if (evt.IsType<MouseHoverEvent>())
 			{
 				SetStatus(Status::Hover);
-				Window::GetInstance()->SetCursor(CursorType::Hand);
+				Window::instance().SetCursor(CursorType::Hand);
 
 				if (mouse_over_callback_)
-					mouse_over_callback_();
+					mouse_over_callback_(this);
 			}
-			else if (evt.type == event::MouseOut)
+			else if (evt.IsType<MouseOutEvent>())
 			{
 				SetStatus(Status::Normal);
-				Window::GetInstance()->SetCursor(CursorType::Arrow);
+				Window::instance().SetCursor(CursorType::Arrow);
 
 				if (mouse_out_callback_)
-					mouse_out_callback_();
+					mouse_out_callback_(this);
 			}
-			else if (evt.type == event::MouseDown && status_ == Status::Hover)
+			else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
 			{
 				SetStatus(Status::Pressed);
 
 				if (pressed_callback_)
-					pressed_callback_();
+					pressed_callback_(this);
 			}
-			else if (evt.type == event::MouseUp && status_ == Status::Pressed)
+			else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
 			{
 				SetStatus(Status::Hover);
 
 				if (released_callback_)
-					released_callback_();
+					released_callback_(this);
 
 				if (click_callback_)
-					click_callback_();
+					click_callback_(this);
 			}
 		}
 	}

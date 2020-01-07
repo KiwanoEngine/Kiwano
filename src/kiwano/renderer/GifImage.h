@@ -24,59 +24,123 @@
 
 namespace kiwano
 {
-	// GIF 图像
+	class Renderer;
+
+	KGE_DECLARE_SMART_PTR(GifImage);
+
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/**
+	* \~chinese
+	* @brief GIF图像
+	*/
 	class KGE_API GifImage
+		: public ObjectBase
 	{
+		friend class Renderer;
+
 	public:
 		GifImage();
 
-		GifImage(String const& file_path);
-
-		GifImage(Resource const& res);
-
+		/// \~chinese
+		/// @brief 加载本地GIF图片
 		bool Load(String const& file_path);
 
+		/// \~chinese
+		/// @brief 加载GIF资源
 		bool Load(Resource const& res);
 
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
-		inline uint32_t GetWidthInPixels() const	{ return width_in_pixels_; }
+		/// \~chinese
+		/// @brief 获取像素宽度
+		uint32_t GetWidthInPixels() const;
 
-		inline uint32_t GetHeightInPixels() const	{ return height_in_pixels_; }
+		/// \~chinese
+		/// @brief 获取像素高度
+		uint32_t GetHeightInPixels() const;
 
-		inline uint32_t GetFramesCount() const		{ return frames_count_; }
+		/// \~chinese
+		/// @brief 获取帧数量
+		uint32_t GetFramesCount() const;
 
 	public:
+		/// \~chinese
+		/// @brief GIF帧的处置方式
 		enum class DisposalType
 		{
-			Unknown,
-			None,
-			Background,
-			Previous
+			Unknown,		///< 未知
+			None,			///< 不处理
+			Background,		///< 背景
+			Previous		///< 恢复前一帧
 		};
 
+		/// \~chinese
+		/// @brief GIF帧
 		struct Frame
 		{
-			Duration delay;
-			Texture raw;
-			Rect rect;
-			DisposalType disposal_type;
+			Duration delay;				///< 帧延迟
+			TexturePtr texture;			///< 帧图像
+			Rect rect;					///< 绘制区域
+			DisposalType disposal_type;	///< 处置方式
 
-			Frame() : disposal_type(DisposalType::Unknown) {}
+			Frame();
 		};
 
-		inline ComPtr<IWICBitmapDecoder> GetDecoder() const			{ return decoder_; }
+		/// \~chinese
+		/// @brief 获取GIF帧
+		/// @param index 帧下标
+		Frame GetFrame(uint32_t index);
 
-		inline void SetDecoder(ComPtr<IWICBitmapDecoder> decoder)	{ decoder_ = decoder; }
+	private:
+		ComPtr<IWICBitmapDecoder> GetDecoder() const;
 
-	protected:
+		void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
+
 		HRESULT GetGlobalMetadata();
 
-	protected:
+	private:
 		uint32_t	frames_count_;
 		uint32_t	width_in_pixels_;
 		uint32_t	height_in_pixels_;
 
 		ComPtr<IWICBitmapDecoder> decoder_;
 	};
+
+	/** @} */
+
+	inline GifImage::Frame::Frame()
+		: disposal_type(DisposalType::Unknown)
+	{
+	}
+
+	inline uint32_t GifImage::GetWidthInPixels() const
+	{
+		return width_in_pixels_;
+	}
+
+	inline uint32_t GifImage::GetHeightInPixels() const
+	{
+		return height_in_pixels_;
+	}
+
+	inline uint32_t GifImage::GetFramesCount() const
+	{
+		return frames_count_;
+	}
+
+	inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
+	{
+		return decoder_;
+	}
+
+	inline void GifImage::SetDecoder(ComPtr<IWICBitmapDecoder> decoder)
+	{
+		decoder_ = decoder;
+	}
 }

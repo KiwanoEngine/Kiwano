@@ -354,25 +354,24 @@ namespace kiwano
 		return dur * val;
 	}
 
-	Duration Duration::Parse(const String& str)
+	Duration Duration::Parse(const String& format)
 	{
-		bool		negative	= false;
-		size_t	len			= str.length();
-		size_t	pos			= 0;
-		Duration	ret;
+		bool negative = false;
+		size_t len = format.length();
+		size_t pos = 0;
+		Duration ret;
 
-		if (!std::regex_match(str.c_str(), duration_regex))
+		if (!std::regex_match(format.c_str(), duration_regex))
 		{
-			KGE_ERROR_LOG(L"Duration::Parse failed, invalid duration");
-			return ret;
+			throw std::runtime_error("Duration::Parse failed, invalid duration");
 		}
 
-		if (str.empty() || str == L"0") { return ret; }
+		if (format.empty() || format == L"0") { return ret; }
 
 		// ·ûºÅÎ»
-		if (str[0] == L'-' || str[0] == L'+')
+		if (format[0] == L'-' || format[0] == L'+')
 		{
-			negative = (str[0] == L'-');
+			negative = (format[0] == L'-');
 			pos++;
 		}
 
@@ -382,32 +381,34 @@ namespace kiwano
 			size_t i = pos;
 			for (; i < len; ++i)
 			{
-				wchar_t ch = str[i];
+				wchar_t ch = format[i];
 				if (!(ch == L'.' || L'0' <= ch && ch <= L'9'))
 				{
 					break;
 				}
 			}
 
-			String num_str = str.substr(pos, i - pos);
+			String num_str = format.substr(pos, i - pos);
 			pos = i;
 
-			KGE_ASSERT(!(num_str.empty() || num_str == L".") && "Duration::Parse failed, invalid duration");
+			if (num_str.empty() || num_str == L".")
+				throw std::runtime_error("Duration::Parse failed, invalid duration");
 
 			// µ¥Î»
 			for (; i < len; ++i)
 			{
-				wchar_t ch = str[i];
+				wchar_t ch = format[i];
 				if (ch == L'.' || L'0' <= ch && ch <= L'9')
 				{
 					break;
 				}
 			}
 
-			String unit_str = str.substr(pos, i - pos);
+			String unit_str = format.substr(pos, i - pos);
 			pos = i;
 
-			KGE_ASSERT(unit_map.find(unit_str) != unit_map.end() && "Duration::Parse failed, invalid duration");
+			if (unit_map.find(unit_str) == unit_map.end())
+				throw std::runtime_error("Duration::Parse failed, invalid duration");
 
 			double num = std::wcstod(num_str.c_str(), nullptr);
 			Duration unit = unit_map.at(unit_str);

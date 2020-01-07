@@ -23,55 +23,72 @@
 
 namespace kiwano
 {
+	/**
+	* \~chinese
+	* @brief 定时器管理器
+	*/
 	class KGE_API TimerManager
 	{
+	public:
+		/// \~chinese
+		/// @brief 定时器列表
 		using Timers = IntrusiveList<TimerPtr>;
 
-	public:
-		// 添加定时器
-		Timer* AddTimer(
-			Timer::Callback const& func,	/* 执行函数 */
-			Duration delay,					/* 时间间隔（秒） */
-			int times = -1,				/* 执行次数（设 -1 为永久执行） */
-			String const& name = L""		/* 任务名称 */
-		);
+		/// \~chinese
+		/// @brief 添加定时器
+		/// @param cb 回调函数
+		/// @param interval 时间间隔
+		/// @param times 执行次数（设 -1 为永久执行）
+		Timer* AddTimer(Timer::Callback const& cb, Duration interval, int times = -1);
 
-		// 添加定时器
-		Timer* AddTimer(
-			TimerPtr timer
-		);
+		/// \~chinese
+		/// @brief 添加定时器
+		/// @param name 定时器名称
+		/// @param cb 回调函数
+		/// @param interval 时间间隔
+		/// @param times 执行次数（设 -1 为永久执行）
+		Timer* AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times = -1);
 
-		// 启动任务
-		void StartTimers(
-			String const& timer_name
-		);
+		/// \~chinese
+		/// @brief 添加定时器
+		Timer* AddTimer(TimerPtr timer);
 
-		// 停止任务
-		void StopTimers(
-			String const& timer_name
-		);
+		/// \~chinese
+		/// @brief 启动定时器
+		void StartTimers(String const& timer_name);
 
-		// 移除任务
+		/// \~chinese
+		/// @brief 停止定时器
+		void StopTimers(String const& timer_name);
+
+		/// \~chinese
+		/// @brief 移除定时器
 		void RemoveTimers(
 			String const& timer_name
 		);
 
-		// 启动所有任务
+		/// \~chinese
+		/// @brief 启动所有定时器
 		void StartAllTimers();
 
-		// 停止所有任务
+		/// \~chinese
+		/// @brief 停止所有定时器
 		void StopAllTimers();
 
-		// 移除所有任务
+		/// \~chinese
+		/// @brief 移除所有定时器
 		void RemoveAllTimers();
 
-		// 获取所有任务
+		/// \~chinese
+		/// @brief 获取所有定时器
 		const Timers& GetAllTimers() const;
 
 	protected:
+		/// \~chinese
+		/// @brief 更新定时器
 		void UpdateTimers(Duration dt);
 
-	protected:
+	private:
 		Timers timers_;
 	};
 }

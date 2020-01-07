@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/FrameSequence.h>
-#include <kiwano/2d/Frame.h>
 #include <kiwano/core/Logger.h>
 
 namespace kiwano
@@ -68,6 +67,11 @@ namespace kiwano
 	Vector<FramePtr> const& FrameSequence::GetFrames() const
 	{
 		return frames_;
+	}
+
+	size_t FrameSequence::GetFramesCount() const
+	{
+		return frames_.size();
 	}
 
 	FrameSequencePtr FrameSequence::Clone() const

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Window.h>
-#include <kiwano/core/win32/helper.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
@@ -63,20 +63,6 @@ namespace kiwano
 
 	Window::~Window()
 	{
-		if (is_fullscreen_)
-			RestoreResolution(device_name_);
-
-		if (device_name_)
-		{
-			delete[] device_name_;
-			device_name_ = nullptr;
-		}
-
-		if (handle_)
-		{
-			::DestroyWindow(handle_);
-			handle_ = nullptr;
-		}
 	}
 
 	void Window::Init(WindowConfig const& config, WNDPROC proc)
@@ -142,13 +128,7 @@ namespace kiwano
 			uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
 			uint32_t win_width, win_height;
-			AdjustWindow(
-				width,
-				height,
-				GetWindowStyle(),
-				&win_width,
-				&win_height
-			);
+			AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
 
 			left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
 			top = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
@@ -174,7 +154,7 @@ namespace kiwano
 		if (handle_ == nullptr)
 		{
 			::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
-			ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+			win32::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 		}
 		else
 		{
@@ -388,6 +368,24 @@ namespace kiwano
 		}
 	}
 
+	void Window::Destroy()
+	{
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
+
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
+	}
+
 	namespace
 	{
 		MONITORINFOEX GetMoniterInfoEx(HWND hwnd)
@@ -434,7 +432,7 @@ namespace kiwano
 			mode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 			if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-				KGE_ERROR_LOG(L"ChangeDisplaySettings failed");
+				KGE_ERROR(L"ChangeDisplaySettings failed");
 		}
 
 		void RestoreResolution(WCHAR* device_name)

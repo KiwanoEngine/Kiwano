@@ -20,34 +20,50 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
 
 namespace kiwano
 {
-	// 鼠标指针类型
+	/**
+	* \~chinese
+	* @brief 鼠标指针类型
+	*/
 	enum class CursorType
 	{
-		Arrow,		/* 指针 */
-		TextInput,	/* 文本 */
-		Hand,		/* 手指 */
-		SizeAll,
-		SizeNESW,
-		SizeNS,
-		SizeNWSE,
-		SizeWE,
+		Arrow,		///< 指针
+		TextInput,	///< 文本
+		Hand,		///< 手
+		SizeAll,	///< 指向四个方向的箭头
+		SizeWE,		///< 指向左右方向的箭头
+		SizeNS,		///< 指向上下方向的箭头
+		SizeNESW,	///< 指向左下到右上方向的箭头
+		SizeNWSE,	///< 指向左上到右下方向的箭头
 	};
 
-	// 窗口设置
+	/**
+	* \~chinese
+	* @brief 窗口设置
+	*/
 	struct WindowConfig
 	{
-		String		title;				// 标题
-		uint32_t	width;				// 宽度
-		uint32_t	height;				// 高度
-		uint32_t	icon;				// 图标资源 ID
-		bool		resizable;			// 窗口大小可拉伸
-		bool		fullscreen;			// 全屏模式
+		String		title;			///< 标题
+		uint32_t	width;			///< 宽度
+		uint32_t	height;			///< 高度
+		uint32_t	icon;			///< 图标资源 ID
+		bool		resizable;		///< 窗口大小可拉伸
+		bool		fullscreen;		///< 全屏模式
 
+		/**
+		* \~chinese
+		* @brief 构建窗口设置
+		* @param title 标题
+		* @param width 宽度
+		* @param height 高度
+		* @param icon 图标资源ID
+		* @param resizable 窗口大小可拉伸
+		* @param fullscreen 全屏模式
+		*/
 		WindowConfig(
 			String const&	title = L"Kiwano Game",
 			uint32_t		width = 640,
@@ -59,38 +75,80 @@ namespace kiwano
 	};
 
 
-	// 窗口
+	/**
+	* \~chinese
+	* @brief 窗口实例，控制窗口标题、大小、图标等
+	*/
 	class KGE_API Window
 		: public Singleton<Window>
 	{
-		KGE_DECLARE_SINGLETON(Window);
+		friend Singleton<Window>;
 
 	public:
-		// 获取标题
+		/**
+		* \~chinese
+		* @brief 获取窗口标题
+		* @return 窗口标题
+		*/
 		String GetTitle() const;
 
-		// 获取窗口大小
+		/**
+		* \~chinese
+		* @brief 获取窗口大小
+		* @return 窗口大小
+		*/
 		Size GetSize() const;
 
-		// 获取窗口宽度
+		/**
+		* \~chinese
+		* @brief 获取窗口宽度
+		* @return 窗口宽度
+		*/
 		float GetWidth() const;
 
-		// 获取窗口高度
+		/**
+		* \~chinese
+		* @brief 获取窗口高度
+		* @return 窗口高度
+		*/
 		float GetHeight() const;
 
-		// 设置标题
+		/**
+		* \~chinese
+		* @brief 设置标题
+		* @param title 标题
+		*/
 		void SetTitle(String const& title);
 
-		// 设置窗口图标
+		/**
+		* \~chinese
+		* @brief 设置窗口图标
+		* @param icon_resource 图标资源ID
+		*/
 		void SetIcon(uint32_t icon_resource);
 
-		// 重设窗口大小
+		/**
+		* \~chinese
+		* @brief 重设窗口大小
+		* @param width 窗口宽度
+		* @param height 窗口高度
+		*/
 		void Resize(int width, int height);
 
-		// 设置全屏模式
+		/**
+		* \~chinese
+		* @brief 设置全屏模式
+		* @param fullscreen 是否全屏
+		* @param width 窗口宽度
+		* @param height 窗口高度
+		*/
 		void SetFullscreen(bool fullscreen, int width, int height);
 
-		// 设置鼠标指针类型
+		/**
+		* \~chinese
+		* @brief 设置鼠标指针类型
+		* @param cursor 鼠标指针类型
+		*/
 		void SetCursor(CursorType cursor);
 
 	public:
@@ -110,7 +168,9 @@ namespace kiwano
 		
 		void SetActive(bool actived);
 
-	protected:
+		void Destroy();
+
+	private:
 		Window();
 
 		~Window();

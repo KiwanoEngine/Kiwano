@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/time.h>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/renderer/Brush.h>
 #include <kiwano/renderer/Texture.h>
 #include <kiwano/renderer/Geometry.h>
@@ -29,218 +30,399 @@
 
 namespace kiwano
 {
-	// 文字抗锯齿模式
+	class Renderer;
+
+	KGE_DECLARE_SMART_PTR(RenderTarget);
+	KGE_DECLARE_SMART_PTR(TextureRenderTarget);
+
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/// \~chinese
+	/// @brief 文字抗锯齿模式
 	enum class TextAntialiasMode
 	{
-		Default,	// 系统默认
-		ClearType,	// ClearType 抗锯齿
-		GrayScale,	// 灰度抗锯齿
-		None		// 不启用抗锯齿
+		Default,	///< 系统默认
+		ClearType,	///< ClearType 抗锯齿
+		GrayScale,	///< 灰度抗锯齿
+		None		///< 不启用抗锯齿
 	};
 
 
-	// 渲染目标
+	/// \~chinese
+	/// @brief 渲染目标
+	/// @details 渲染目标将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
 	class KGE_API RenderTarget
-		: public common::noncopyable
+		: public ObjectBase
 	{
+		friend class Renderer;
+
 	public:
+		/// \~chinese
+		/// @brief 是否有效
 		bool IsValid() const;
 
+		/// \~chinese
+		/// @brief 是否有效
 		void BeginDraw();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void EndDraw();
 
-		void CreateLayer(
-			LayerArea& layer
-		) const;
-
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawGeometry(
 			Geometry const& geometry,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillGeometry(
 			Geometry const& geometry
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawLine(
 			Point const& point1,
 			Point const& point2,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawRectangle(
 			Rect const& rect,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillRectangle(
 			Rect const& rect
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillRoundedRectangle(
 			Rect const& rect,
 			Vec2 const& radius
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawEllipse(
 			Point const& center,
 			Vec2 const& radius,
 			float stroke_width,
 			StrokeStyle stroke = StrokeStyle::Miter
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void FillEllipse(
 			Point const& center,
 			Vec2 const& radius
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTexture(
 			Texture const& texture,
 			Rect const& src_rect,
 			Rect const& dest_rect
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTexture(
 			Texture const& texture,
 			const Rect* src_rect = nullptr,
 			const Rect* dest_rect = nullptr
-		) const;
+		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void DrawTextLayout(
 			TextLayout const& layout,
 			Point const& offset = Point{}
-		) const;
-
-		void PushClipRect(
-			Rect const& clip_rect
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
+		void CreateTexture(
+			Texture& texture,
+			math::Vec2T<uint32_t> size,
+			D2D1_PIXEL_FORMAT format
+		);
+
+		/// \~chinese
+		/// @brief 是否有效
+		void PushClipRect(Rect const& clip_rect);
+
+		/// \~chinese
+		/// @brief 是否有效
 		void PopClipRect();
 
-		void PushLayer(
-			LayerArea& layer
-		);
+		/// \~chinese
+		/// @brief 是否有效
+		void PushLayer(LayerArea& layer);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void PopLayer();
 
+		/// \~chinese
+		/// @brief 是否有效
 		void Clear();
 
-		void Clear(
-			Color const& clear_color
-		);
+		/// \~chinese
+		/// @brief 是否有效
+		void Clear(Color const& clear_color);
 
-		float GetOpacity() const;
+		/// \~chinese
+		/// @brief 是否有效
+		float GetBrushOpacity() const;
 
-		Brush GetCurrentBrush() const;
+		/// \~chinese
+		/// @brief 是否有效
+		BrushPtr GetCurrentBrush() const;
 
+		/// \~chinese
+		/// @brief 是否有效
 		Matrix3x2 GetGlobalTransform() const;
 
-		void SetOpacity(
+		/// \~chinese
+		/// @brief 是否有效
+		void SetBrushOpacity(
 			float opacity
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetCurrentBrush(
-			Brush const& brush
+			BrushPtr brush
 		);
 
-		void SetDefaultBrushColor(
-			Color const& color
-		);
-
+		/// \~chinese
+		/// @brief 是否有效
 		void SetTransform(
 			const Matrix3x2& matrix
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetGlobalTransform(
 			const Matrix3x2& matrix
 		);
 
+		/// \~chinese
+		/// @brief 是否有效
 		void SetGlobalTransform(
 			const Matrix3x2* matrix
 		);
 
-		// 设置抗锯齿模式
+		/// \~chinese
+		/// @brief 设置抗锯齿模式
 		void SetAntialiasMode(
 			bool enabled
 		);
 
-		// 设置文字抗锯齿模式
+		/// \~chinese
+		/// @brief 设置文字抗锯齿模式
 		void SetTextAntialiasMode(
 			TextAntialiasMode mode
 		);
 
-		// 检查边界是否在视区内
+		/// \~chinese
+		/// @brief 检查边界是否在视区内
 		bool CheckVisibility(
 			Rect const& bounds,
 			Matrix3x2 const& transform
 		);
 
+		/// \~chinese
+		/// @brief 重设渲染目标大小
+		void Resize(Size const& size);
+
 	public:
+		/// \~chinese
+		/// @brief 渲染目标状态
 		struct Status
 		{
-			int primitives;
-			Time start;
-			Duration duration;
+			uint32_t primitives;	///< 渲染图元数量
+			Time start;				///< 渲染起始时间
+			Duration duration;		///< 渲染时长
 
-			Status() : primitives(0) {}
+			Status();
 		};
 
-		void SetCollectingStatus(bool collecting);
+		/// \~chinese
+		/// @brief 启用或禁用状态收集功能
+		void SetCollectingStatus(bool enable);
 
-		void IncreasePrimitivesCount() const;
-
-		inline Status const&				GetStatus() const						{ return status_; }
-
-		inline ComPtr<ID2D1RenderTarget>	GetRenderTarget() const					{ KGE_ASSERT(render_target_); return render_target_; }
-
-		inline ComPtr<ITextRenderer>		GetTextRenderer() const					{ KGE_ASSERT(text_renderer_); return text_renderer_; }
-
-		ComPtr<ID2D1StrokeStyle>			GetStrokeStyle(StrokeStyle style) const;
-
-	public:
-		RenderTarget();
-
-		HRESULT CreateDeviceResources(
-			ComPtr<ID2D1RenderTarget> rt,
-			ComPtr<ID2DDeviceResources> dev_res
-		);
-
-		void DiscardDeviceResources();
+		/// \~chinese
+		/// @brief 获取渲染目标状态
+		Status const& GetStatus() const;
 
 	protected:
-		float							opacity_;
+		RenderTarget();
+
+		ComPtr<ID2D1RenderTarget> GetRenderTarget() const;
+
+		ComPtr<ITextRenderer> GetTextRenderer() const;
+
+		ComPtr<ID2D1StrokeStyle> GetStrokeStyle(StrokeStyle style);
+
+	private:
+		/// \~chinese
+		/// @brief 创建设备依赖资源
+		HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> rt);
+
+		/// \~chinese
+		/// @brief 销毁设备依赖资源
+		void DiscardDeviceResources();
+
+		/// \~chinese
+		/// @brief 增加渲染图元数量
+		void IncreasePrimitivesCount(uint32_t increase = 1) const;
+
+	private:
 		bool							antialias_;
 		bool							fast_global_transform_;
-		mutable bool					collecting_status_;
-		mutable Status					status_;
+		float							brush_opacity_;
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
-		ComPtr<ID2D1SolidColorBrush>	default_brush_;
-		ComPtr<ID2D1Brush>				current_brush_;
-		ComPtr<ID2DDeviceResources>		device_resources_;
+		ComPtr<ID2D1StrokeStyle>		miter_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>		bevel_stroke_style_;
+		ComPtr<ID2D1StrokeStyle>		round_stroke_style_;
+		BrushPtr						current_brush_;
+		Rect							visible_size_;
 		Matrix3x2						global_transform_;
+
+		mutable bool					collecting_status_;
+		mutable Status					status_;
 	};
 
 
-	// 位图渲染目标
+	/// \~chinese
+	/// @brief 纹理渲染目标
+	/// @details 纹理渲染目标将渲染输出到一个纹理对象中
 	class KGE_API TextureRenderTarget
 		: public RenderTarget
 	{
+		friend class Renderer;
+
 	public:
+		/// \~chinese
+		/// @brief 是否有效
+		bool IsValid() const;
+
+		/// \~chinese
+		/// @brief 获取渲染输出
+		/// @param[out] texture 纹理输出
+		/// @return 操作是否成功
+		bool GetOutput(Texture& texture);
+
+	private:
 		TextureRenderTarget();
 
-		Texture GetOutput() const;
+		ComPtr<ID2D1BitmapRenderTarget> GetBitmapRenderTarget() const;
+
+		void SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt);
+
+	private:
+		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
 	};
+
+	/** @} */
+
+
+	inline RenderTarget::Status::Status()
+		: primitives(0)
+	{
+	}
+
+	inline RenderTarget::Status const& RenderTarget::GetStatus() const
+	{
+		return status_;
+	}
+
+	inline ComPtr<ID2D1RenderTarget> RenderTarget::GetRenderTarget() const
+	{
+		KGE_ASSERT(render_target_);
+		return render_target_;
+	}
+
+	inline ComPtr<ITextRenderer> RenderTarget::GetTextRenderer() const
+	{
+		KGE_ASSERT(text_renderer_);
+		return text_renderer_;
+	}
+
+	inline float RenderTarget::GetBrushOpacity() const
+	{
+		return brush_opacity_;
+	}
+
+	inline BrushPtr RenderTarget::GetCurrentBrush() const
+	{
+		return current_brush_;
+	}
+
+	inline Matrix3x2 RenderTarget::GetGlobalTransform() const
+	{
+		return global_transform_;
+	}
+
+	inline void RenderTarget::SetBrushOpacity(float opacity)
+	{
+		brush_opacity_ = opacity;
+	}
+
+	inline void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
+	{
+		SetGlobalTransform(&matrix);
+	}
+
+	inline void RenderTarget::SetCurrentBrush(BrushPtr brush)
+	{
+		current_brush_ = brush;
+		if (current_brush_)
+		{
+			current_brush_->SetOpacity(brush_opacity_);
+		}
+	}
+
+	inline bool TextureRenderTarget::IsValid() const
+	{
+		return bitmap_rt_ != nullptr;
+	}
+
+	inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderTarget::GetBitmapRenderTarget() const
+	{
+		return bitmap_rt_;
+	}
+
+	inline void TextureRenderTarget::SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt)
+	{
+		bitmap_rt_ = rt;
+	}
 }

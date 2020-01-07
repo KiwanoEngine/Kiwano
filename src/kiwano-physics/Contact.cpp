@@ -38,40 +38,26 @@ namespace kiwano
 			SetB2Contact(contact);
 		}
 
-		Contact Contact::GetNext()
-		{
-			KGE_ASSERT(contact_);
-			return Contact(contact_->GetNext());
-		}
-
-		const Contact Contact::GetNext() const
-		{
-			KGE_ASSERT(contact_);
-			return Contact(contact_->GetNext());
-		}
-
-		Fixture Contact::GetFixtureA()
+		Fixture Contact::GetFixtureA() const
 		{
 			KGE_ASSERT(contact_);
 			return Fixture(contact_->GetFixtureA());
 		}
 
-		const Fixture Contact::GetFixtureA() const
-		{
-			KGE_ASSERT(contact_);
-			return Fixture(contact_->GetFixtureA());
-		}
-
-		Fixture Contact::GetFixtureB()
+		Fixture Contact::GetFixtureB() const
 		{
 			KGE_ASSERT(contact_);
 			return Fixture(contact_->GetFixtureB());
 		}
 
-		const Fixture Contact::GetFixtureB() const
+		Body* Contact::GetBodyA() const
 		{
-			KGE_ASSERT(contact_);
-			return Fixture(contact_->GetFixtureB());
+			return GetFixtureA().GetBody();
+		}
+
+		Body* Contact::GetBodyB() const
+		{
+			return GetFixtureB().GetBody();
 		}
 
 		void Contact::SetTangentSpeed(float speed)
@@ -98,18 +84,6 @@ namespace kiwano
 			KGE_ASSERT(world);
 
 			return world->World2Stage(contact_->GetTangentSpeed());
-		}
-
-
-		ContactEdge::ContactEdge()
-			: edge_(nullptr)
-		{
-		}
-
-		ContactEdge::ContactEdge(b2ContactEdge* edge)
-			: ContactEdge()
-		{
-			SetB2ContactEdge(edge);
 		}
 
 	}

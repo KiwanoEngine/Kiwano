@@ -29,22 +29,6 @@
 
 
 //
-// common
-//
-
-#include <kiwano/common/vector.hpp>
-#include <kiwano/common/string.hpp>
-#include <kiwano/common/any.hpp>
-#include <kiwano/common/function.hpp>
-#include <kiwano/common/intrusive_list.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
-#include <kiwano/common/noncopyable.hpp>
-#include <kiwano/common/singleton.hpp>
-#include <kiwano/common/basic_json.hpp>
-#include <kiwano/common/common.h>
-
-
-//
 // math
 //
 
@@ -54,6 +38,27 @@
 #include <kiwano/math/Vec2.hpp>
 #include <kiwano/math/rand.h>
 #include <kiwano/math/Matrix.hpp>
+
+
+//
+// core
+//
+
+#include <kiwano/core/common.h>
+#include <kiwano/core/time.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/event/Event.h>
+#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/core/event/KeyEvent.h>
+#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/core/EventListener.h>
+#include <kiwano/core/EventDispatcher.h>
+#include <kiwano/core/Timer.h>
+#include <kiwano/core/TimerManager.h>
+#include <kiwano/core/AsyncTask.h>
+#include <kiwano/core/Resource.h>
 
 
 //
@@ -72,33 +77,13 @@
 
 
 //
-// core
-//
-
-#include <kiwano/core/time.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/SmartPtr.hpp>
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Event.h>
-#include <kiwano/core/EventListener.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/Timer.h>
-#include <kiwano/core/TimerManager.h>
-#include <kiwano/core/AsyncTask.h>
-#include <kiwano/core/Resource.h>
-
-
-//
 // 2d
 //
 
 
 #include <kiwano/2d/Transform.h>
-#include <kiwano/2d/TextStyle.hpp>
-
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
-
 #include <kiwano/2d/action/Action.h>
 #include <kiwano/2d/action/ActionGroup.h>
 #include <kiwano/2d/action/ActionTween.h>
@@ -107,15 +92,13 @@
 #include <kiwano/2d/action/Animation.h>
 #include <kiwano/2d/action/ActionHelper.h>
 #include <kiwano/2d/action/ActionManager.h>
-
 #include <kiwano/2d/Transition.h>
-
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Layer.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/2d/Text.h>
+#include <kiwano/2d/TextActor.h>
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/2d/ShapeActor.h>
 #include <kiwano/2d/DebugActor.h>
@@ -125,7 +108,6 @@
 // platform
 //
 
-#include <kiwano/platform/modules.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Window.h>

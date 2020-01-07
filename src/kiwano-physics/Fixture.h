@@ -28,16 +28,24 @@ namespace kiwano
 	{
 		class Body;
 
-		// 夹具
+		/**
+		* \addtogroup Physics
+		* @{
+		*/
+
+		/// \~chinese
+		/// @brief 物理夹具
 		class Fixture
 		{
 		public:
+			/// \~chinese
+			/// @brief 夹具参数
 			struct Param
 			{
-				float density = 0.f;
-				float friction = 0.2f;
-				float restitution = 0.f;
-				bool is_sensor = false;
+				float density = 0.f;		///< 密度
+				float friction = 0.2f;		///< 摩擦力
+				float restitution = 0.f;	///< 弹性恢复
+				bool is_sensor = false;		///< 是否是接触传感器
 
 				Param() {}
 
@@ -53,46 +61,195 @@ namespace kiwano
 			Fixture(b2Fixture* fixture);
 			Fixture(Body* body, Shape* shape, const Param& param);
 
-			// 物体
-			Body* GetBody();
-			const Body* GetBody() const;
+			/// \~chinese
+			/// @brief 是否有效
+			bool IsValid() const;
 
-			// 形状
+			/// \~chinese
+			/// @brief 获取夹具所在的物体
+			Body* GetBody() const;
+
+			/// \~chinese
+			/// @brief 形状
 			Shape GetShape() const;
 
-			// 下一夹具 (同一物体上)
-			Fixture GetNext() const;
+			/// \~chinese
+			/// @brief 是否是接触传感器
+			bool IsSensor() const;
 
-			// 接触传感器
-			bool IsSensor() const					{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }
-			void SetSensor(bool sensor)				{ KGE_ASSERT(fixture_); fixture_->SetSensor(sensor); }
+			/// \~chinese
+			/// @brief 设置夹具是否是接触传感器
+			/// @details 接触传感器只会产生物理接触，而不会影响物体运动
+			void SetSensor(bool sensor);
 
-			// 质量数据
+			/// \~chinese
+			/// @brief 获取夹具的质量数据
 			void GetMassData(float* mass, Point* center, float* inertia) const;
 
-			// 密度
-			float GetDensity() const				{ KGE_ASSERT(fixture_); return fixture_->GetDensity(); }
-			void SetDensity(float density)			{ KGE_ASSERT(fixture_); fixture_->SetDensity(density); }
+			/// \~chinese
+			/// @brief 获取密度
+			float GetDensity() const;
 
-			// 摩擦力
-			float GetFriction() const				{ KGE_ASSERT(fixture_); return fixture_->GetFriction(); }
-			void SetFriction(float friction)		{ KGE_ASSERT(fixture_); fixture_->SetFriction(friction); }
+			/// \~chinese
+			/// @brief 设置密度
+			void SetDensity(float density);
 
-			// 弹性恢复
-			float GetRestitution() const			{ KGE_ASSERT(fixture_); return fixture_->GetRestitution(); }
-			void SetRestitution(float restitution)	{ KGE_ASSERT(fixture_); fixture_->SetRestitution(restitution); }
+			/// \~chinese
+			/// @brief 获取摩擦力 [N]
+			float GetFriction() const;
 
-			// 点测试
+			/// \~chinese
+			/// @brief 设置摩擦力 [N]
+			void SetFriction(float friction);
+
+			/// \~chinese
+			/// @brief 获取弹性恢复
+			float GetRestitution() const;
+
+			/// \~chinese
+			/// @brief 设置弹性恢复
+			void SetRestitution(float restitution);
+
+			/// \~chinese
+			/// @brief 点测试
 			bool TestPoint(const Point& p) const;
 
-			bool IsValid() const					{ return !!fixture_; }
+			b2Fixture* GetB2Fixture() const;
+			void SetB2Fixture(b2Fixture* fixture);
 
-			b2Fixture* GetB2Fixture()				{ return fixture_; }
-			const b2Fixture* GetB2Fixture() const	{ return fixture_; }
-			void SetB2Fixture(b2Fixture* fixture)	{ fixture_ = fixture; }
+			bool operator== (const Fixture& rhs) const;
+			bool operator!= (const Fixture& rhs) const;
 
-		protected:
+		private:
 			b2Fixture* fixture_;
 		};
+
+		/// \~chinese
+		/// @brief 物理夹具列表
+		class FixtureList
+			: public List<Fixture>
+		{
+			template <typename _Ty>
+			class IteratorImpl
+				: public std::iterator<std::forward_iterator_tag, _Ty>
+			{
+				using herit = std::iterator<std::forward_iterator_tag, _Ty>;
+
+			public:
+				IteratorImpl(const _Ty& elem)
+					: elem_(elem)
+				{
+				}
+
+				inline typename herit::reference operator*() const
+				{
+					return const_cast<typename herit::reference>(elem_);
+				}
+
+				inline typename herit::pointer operator->() const
+				{
+					return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+				}
+
+				inline IteratorImpl& operator++()
+				{
+					elem_ = elem_.GetB2Fixture()->GetNext();
+					return *this;
+				}
+
+				inline IteratorImpl operator++(int)
+				{
+					IteratorImpl old = *this;
+					operator++();
+					return old;
+				}
+
+				inline bool operator== (const IteratorImpl& rhs) const
+				{
+					return elem_ == rhs.elem_;
+				}
+
+				inline bool operator!= (const IteratorImpl& rhs) const
+				{
+					return !operator==(rhs);
+				}
+
+			private:
+				_Ty elem_;
+			};
+
+		public:
+			using value_type		= Fixture;
+			using iterator			= IteratorImpl<value_type>;
+			using const_iterator	= IteratorImpl<const value_type>;
+
+			inline FixtureList()
+			{
+			}
+
+			inline FixtureList(const value_type& first)
+				: first_(first)
+			{
+			}
+
+			inline const value_type& front() const
+			{
+				return first_;
+			}
+
+			inline value_type& front()
+			{
+				return first_;
+			}
+
+			inline iterator begin()
+			{
+				return iterator(first_);
+			}
+
+			inline const_iterator begin() const
+			{
+				return cbegin();
+			}
+
+			inline const_iterator cbegin() const
+			{
+				return const_iterator(first_);
+			}
+
+			inline iterator end()
+			{
+				return iterator(nullptr);
+			}
+
+			inline const_iterator end() const
+			{
+				return cend();
+			}
+
+			inline const_iterator cend() const
+			{
+				return const_iterator(nullptr);
+			}
+
+		private:
+			value_type first_;
+		};
+
+		/** @} */
+
+		inline bool Fixture::IsSensor() const						{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }
+		inline void Fixture::SetSensor(bool sensor)					{ KGE_ASSERT(fixture_); fixture_->SetSensor(sensor); }
+		inline float Fixture::GetDensity() const					{ KGE_ASSERT(fixture_); return fixture_->GetDensity(); }
+		inline void Fixture::SetDensity(float density)				{ KGE_ASSERT(fixture_); fixture_->SetDensity(density); }
+		inline float Fixture::GetFriction() const					{ KGE_ASSERT(fixture_); return fixture_->GetFriction(); }
+		inline void Fixture::SetFriction(float friction)			{ KGE_ASSERT(fixture_); fixture_->SetFriction(friction); }
+		inline float Fixture::GetRestitution() const				{ KGE_ASSERT(fixture_); return fixture_->GetRestitution(); }
+		inline void Fixture::SetRestitution(float restitution)		{ KGE_ASSERT(fixture_); fixture_->SetRestitution(restitution); }
+		inline bool Fixture::IsValid() const						{ return fixture_ != nullptr; }
+		inline b2Fixture* Fixture::GetB2Fixture() const				{ return fixture_; }
+		inline void Fixture::SetB2Fixture(b2Fixture* fixture)		{ fixture_ = fixture; }
+		inline bool Fixture::operator==(const Fixture& rhs) const	{ return fixture_ == rhs.fixture_; }
+		inline bool Fixture::operator!=(const Fixture& rhs) const	{ return fixture_ != rhs.fixture_; }
 	}
 }

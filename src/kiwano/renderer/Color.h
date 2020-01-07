@@ -20,55 +20,65 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/common/common.h>
+#include <kiwano/core/common.h>
 
 namespace kiwano
 {
-	// 颜色
-	//
-	// 使用枚举表示颜色: Color blue = Color::Blue;
-	// 使用 RGB 表示一个颜色: Color red(1.0f, 0.0f, 0.0f);
-	// 使用 RGBA 表示一个带透明度的颜色: Color not_black(1.0f, 1.0f, 1.0f, 0.5f);
-	// 使用一个 uint32_t 类型的值表示 RGB: Color black(0x000000);
-	//
+	/**
+	* \addtogroup Render
+	* @{
+	*/
+
+	/*
+	* \~chinese
+	* @brief 颜色
+	* @details
+	* 使用枚举表示颜色: @code Color blue = Color::Blue; @endcode
+	* 使用 RGB 表示一个颜色: @code Color red = Color(1.0f, 0.0f, 0.0f); @endcode
+	* 使用 RGBA 表示一个带透明度的颜色: @code Color not_white = Color(1.0f, 1.0f, 1.0f, 0.5f); @endcode
+	* 使用一个16进制整型值表示 RGB 颜色: @code Color black(0x000000); @endcode
+	*/
 	class KGE_API Color
 	{
 	public:
+		/// \~chinese
+		/// @brief 构造颜色
+		/// @details 默认颜色为 R: 0.0, G: 0.0, B: 0.0, A: 1.0
 		Color();
 
-		Color(
-			float r,
-			float g,
-			float b
-		);
+		/// \~chinese
+		/// @brief 构造 RGB 颜色
+		/// @param r 红色值，范围 0.0 - 1.0
+		/// @param g 绿色值，范围 0.0 - 1.0
+		/// @param b 蓝色值，范围 0.0 - 1.0
+		Color(float r, float g, float b);
 
-		Color(
-			float r,
-			float g,
-			float b,
-			float alpha
-		);
+		/// \~chinese
+		/// @brief 构造 RGBA 颜色
+		/// @param r 红色值，范围 0.0 - 1.0
+		/// @param g 绿色值，范围 0.0 - 1.0
+		/// @param b 蓝色值，范围 0.0 - 1.0
+		/// @param a Alpha值，范围 0.0 - 1.0
+		Color(float r, float g, float b, float alpha);
 
-		Color(
-			uint32_t rgb
-		);
+		/// \~chinese
+		/// @brief 构造 RGB 颜色
+		/// @param rgb 使用16进制整形值表示 RGB颜色
+		Color(uint32_t rgb);
 
-		Color(
-			uint32_t rgb,
-			float alpha
-		);
+		/// \~chinese
+		/// @brief 构造 RGBA 颜色
+		/// @param rgb 使用16进制整形值表示 RGB 颜色
+		/// @param a Alpha值，范围 0.0 - 1.0
+		Color(uint32_t rgb, float alpha);
 
-		inline bool operator== (const Color& rhs) const
-		{
-			return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a;
-		}
+		bool operator== (const Color& rhs) const;
 
-		inline bool operator!= (const Color& rhs) const
-		{
-			return !((*this) == rhs);
-		}
+		bool operator!= (const Color& rhs) const;
 
 	public:
+		/// \~chinese
+		/// @brief 常见颜色枚举
 		enum Value : uint32_t
 		{
 			Black			= 0x000000,
@@ -112,12 +122,26 @@ namespace kiwano
 			YellowGreen		= 0x9ACD32
 		};
 
+		/// \~chinese
+		/// @brief 透明色
 		static const Color Transparent;
 
 	public:
-		float r;
-		float g;
-		float b;
-		float a;
+		float r;  ///< 红色值
+		float g;  ///< 绿色值
+		float b;  ///< 蓝色值
+		float a;  ///< Alpha值
 	};
+
+	/** @} */
+
+	inline bool Color::operator== (const Color& rhs) const
+	{
+		return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a;
+	}
+
+	inline bool Color::operator!= (const Color& rhs) const
+	{
+		return !((*this) == rhs);
+	}
 }

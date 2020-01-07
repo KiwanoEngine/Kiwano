@@ -32,13 +32,16 @@ namespace kiwano
 			_In_ ID2D1RenderTarget* pRT
 		);
 
-		STDMETHOD_(void, SetTextStyle)(
-			_In_ float opacity,
-			_In_ CONST D2D1_COLOR_F &fillColor,
-			_In_ BOOL outline,
-			_In_ CONST D2D1_COLOR_F &outlineColor,
-			_In_ float outlineWidth,
-			_In_ ID2D1StrokeStyle* outlineJoin
+		STDMETHOD(DrawTextLayout)(
+			_In_ IDWriteTextLayout* pTextLayout,
+			float fOriginX,
+			float fOriginY,
+			_In_opt_ ID2D1Brush* pFillBrush,
+			_In_opt_ ID2D1Brush* pOutlineBrush,
+			float fOutlineWidth,
+			_In_opt_ ID2D1StrokeStyle* pStrokeStyle
 		) PURE;
+
+		STDMETHOD_(uint32_t, GetLastPrimitivesCount)() PURE;
 	};
 }

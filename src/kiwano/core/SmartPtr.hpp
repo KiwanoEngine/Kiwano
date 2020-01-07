@@ -19,31 +19,39 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/RefCounter.hpp>
-#include <kiwano/common/intrusive_ptr.hpp>
+#include <kiwano/core/common.h>
+#include <kiwano/core/RefCounter.h>
 
 namespace kiwano
 {
-	struct DefaultIntrusivePtrManager
+	/**
+	* \~chinese
+	* @brief 默认的智能指针代理
+	*/
+	struct DefaultSmartPtrRefProxy
 	{
-		static inline void AddRef(RefCounter* ptr)
+		static inline void add_ref(RefCounter* ptr)
 		{
 			if (ptr) ptr->Retain();
 		}
 
-		static inline void Release(RefCounter* ptr)
+		static inline void release(RefCounter* ptr)
 		{
 			if (ptr) ptr->Release();
 		}
 	};
 
+	/**
+	* \~chinese
+	* @brief 智能指针
+	*/
 	template <typename _Ty>
-	using SmartPtr = common::intrusive_ptr<_Ty, DefaultIntrusivePtrManager>;
+	using SmartPtr = IntrusivePtr<_Ty, DefaultSmartPtrRefProxy>;
 
 }
 
 #ifndef KGE_DECLARE_SMART_PTR
 #define KGE_DECLARE_SMART_PTR(CLASS)\
 	class CLASS;\
-	using CLASS##Ptr = ::kiwano::SmartPtr< CLASS >
+	typedef ::kiwano::SmartPtr< CLASS > CLASS##Ptr;
 #endif

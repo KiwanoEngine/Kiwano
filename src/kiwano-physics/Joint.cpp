@@ -126,14 +126,14 @@ namespace kiwano
 
 		void DistanceJoint::SetLength(float length)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetLength(world_->Stage2World(length));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetLength(GetWorld()->Stage2World(length));
 		}
 
 		float DistanceJoint::GetLength() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetLength());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetLength());
 		}
 
 		//
@@ -181,14 +181,14 @@ namespace kiwano
 
 		void FrictionJoint::SetMaxTorque(float length)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetMaxTorque(world_->Stage2World(length));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetMaxTorque(GetWorld()->Stage2World(length));
 		}
 
 		float FrictionJoint::GetMaxTorque() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetMaxTorque());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetMaxTorque());
 		}
 
 		//
@@ -207,7 +207,7 @@ namespace kiwano
 		{
 		}
 
-		GearJoint::GearJoint(World* world, GearJoint::Param const& param)
+		GearJoint::GearJoint(World* world, GearJoint::Param param)
 			: Joint()
 			, raw_joint_(nullptr)
 		{
@@ -260,6 +260,7 @@ namespace kiwano
 			def.Initialize(param.body_a->GetB2Body(), param.body_b->GetB2Body());
 			def.maxForce = param.max_force;
 			def.maxTorque = world->Stage2World(param.max_torque);
+			def.correctionFactor = param.correction_factor;
 
 			Init(world, &def);
 			raw_joint_ = static_cast<b2MotorJoint*>(GetB2Joint());
@@ -279,14 +280,14 @@ namespace kiwano
 
 		void MotorJoint::SetMaxTorque(float length)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetMaxTorque(world_->Stage2World(length));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetMaxTorque(GetWorld()->Stage2World(length));
 		}
 
 		float MotorJoint::GetMaxTorque() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetMaxTorque());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetMaxTorque());
 		}
 
 		//
@@ -326,32 +327,32 @@ namespace kiwano
 
 		float PrismaticJoint::GetJointTranslation() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetJointTranslation());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetJointTranslation());
 		}
 
 		float PrismaticJoint::GetJointSpeed() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetJointSpeed());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetJointSpeed());
 		}
 
 		float PrismaticJoint::GetLowerLimit() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetLowerLimit());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetLowerLimit());
 		}
 
 		float PrismaticJoint::GetUpperLimit() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetUpperLimit());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetUpperLimit());
 		}
 
 		void PrismaticJoint::SetLimits(float lower, float upper)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetLimits(world_->Stage2World(lower), world_->Stage2World(upper));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetLimits(GetWorld()->Stage2World(lower), GetWorld()->Stage2World(upper));
 		}
 		
 		//
@@ -386,14 +387,14 @@ namespace kiwano
 
 		Point PulleyJoint::GetGroundAnchorA() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetGroundAnchorA());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetGroundAnchorA());
 		}
 
 		Point PulleyJoint::GetGroundAnchorB() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetGroundAnchorB());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetGroundAnchorB());
 		}
 
 		float PulleyJoint::GetRatio() const
@@ -404,26 +405,26 @@ namespace kiwano
 
 		float PulleyJoint::GetLengthA() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetLengthA());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetLengthA());
 		}
 
 		float PulleyJoint::GetLengthB() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetLengthB());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetLengthB());
 		}
 
 		float PulleyJoint::GetCurrentLengthA() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetCurrentLengthA());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetCurrentLengthA());
 		}
 
 		float PulleyJoint::GetCurrentLengthB() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetCurrentLengthB());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetCurrentLengthB());
 		}
 
 		//
@@ -463,44 +464,44 @@ namespace kiwano
 
 		float RevoluteJoint::GetJointAngle() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
+			KGE_ASSERT(raw_joint_ && GetWorld());
 			return math::Radian2Degree(raw_joint_->GetJointAngle());
 		}
 
 		float RevoluteJoint::GetJointSpeed() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
+			KGE_ASSERT(raw_joint_ && GetWorld());
 			return math::Radian2Degree(raw_joint_->GetJointSpeed());
 		}
 
 		float RevoluteJoint::GetLowerLimit() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
+			KGE_ASSERT(raw_joint_ && GetWorld());
 			return math::Radian2Degree(raw_joint_->GetLowerLimit());
 		}
 
 		float RevoluteJoint::GetUpperLimit() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
+			KGE_ASSERT(raw_joint_ && GetWorld());
 			return math::Radian2Degree(raw_joint_->GetUpperLimit());
 		}
 
 		void RevoluteJoint::SetLimits(float lower, float upper)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
+			KGE_ASSERT(raw_joint_ && GetWorld());
 			raw_joint_->SetLimits(math::Degree2Radian(lower), math::Degree2Radian(upper));
 		}
 
 		void RevoluteJoint::SetMaxMotorTorque(float torque)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetMaxMotorTorque(world_->Stage2World(torque));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetMaxMotorTorque(GetWorld()->Stage2World(torque));
 		}
 
 		float RevoluteJoint::GetMaxMotorTorque() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetMaxMotorTorque());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetMaxMotorTorque());
 		}
 
 		//
@@ -538,14 +539,14 @@ namespace kiwano
 
 		void RopeJoint::SetMaxLength(float length)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetMaxLength(world_->Stage2World(length));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetMaxLength(GetWorld()->Stage2World(length));
 		}
 
 		float RopeJoint::GetMaxLength() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetMaxLength());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetMaxLength());
 		}
 
 		//
@@ -578,6 +579,7 @@ namespace kiwano
 			Init(world, &def);
 			raw_joint_ = static_cast<b2WeldJoint*>(GetB2Joint());
 		}
+
 
 		//
 		// WheelJoint
@@ -615,26 +617,26 @@ namespace kiwano
 
 		float WheelJoint::GetJointTranslation() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetJointTranslation());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetJointTranslation());
 		}
 
 		float WheelJoint::GetJointLinearSpeed() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetJointLinearSpeed());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetJointLinearSpeed());
 		}
 
 		void WheelJoint::SetMaxMotorTorque(float torque)
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			raw_joint_->SetMaxMotorTorque(world_->Stage2World(torque));
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			raw_joint_->SetMaxMotorTorque(GetWorld()->Stage2World(torque));
 		}
 
 		float WheelJoint::GetMaxMotorTorque() const
 		{
-			KGE_ASSERT(raw_joint_ && world_);
-			return world_->World2Stage(raw_joint_->GetMaxMotorTorque());
+			KGE_ASSERT(raw_joint_ && GetWorld());
+			return GetWorld()->World2Stage(raw_joint_->GetMaxMotorTorque());
 		}
 
 		//

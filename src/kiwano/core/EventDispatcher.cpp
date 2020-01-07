@@ -33,9 +33,14 @@ namespace kiwano
 		{
 			next = listener->next_item();
 
-			if (listener->IsRunning() && listener->type_ == evt.type)
+			if (listener->IsRunning())
 			{
-				listener->callback_(evt);
+				listener->Receive(evt);
+			}
+
+			if (listener->IsRemoveable())
+			{
+				listeners_.remove(listener);
 			}
 		}
 	}
@@ -70,7 +75,7 @@ namespace kiwano
 
 	void EventDispatcher::StartListeners(String const & listener_name)
 	{
-		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+		for (auto& listener : listeners_)
 		{
 			if (listener->IsName(listener_name))
 			{
@@ -81,7 +86,7 @@ namespace kiwano
 
 	void EventDispatcher::StopListeners(String const & listener_name)
 	{
-		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+		for (auto& listener : listeners_)
 		{
 			if (listener->IsName(listener_name))
 			{
@@ -92,21 +97,18 @@ namespace kiwano
 
 	void EventDispatcher::RemoveListeners(String const & listener_name)
 	{
-		EventListenerPtr next;
-		for (auto listener = listeners_.first_item(); listener; listener = next)
+		for (auto& listener : listeners_)
 		{
-			next = listener->next_item();
-
 			if (listener->IsName(listener_name))
 			{
-				listeners_.remove(listener);
+				listener->Remove();
 			}
 		}
 	}
 
 	void EventDispatcher::StartListeners(const EventType& type)
 	{
-		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+		for (auto& listener : listeners_)
 		{
 			if (listener->type_ == type)
 			{
@@ -117,7 +119,7 @@ namespace kiwano
 
 	void EventDispatcher::StopListeners(const EventType& type)
 	{
-		for (auto listener = listeners_.first_item(); listener; listener = listener->next_item())
+		for (auto& listener : listeners_)
 		{
 			if (listener->type_ == type)
 			{
@@ -128,16 +130,42 @@ namespace kiwano
 
 	void EventDispatcher::RemoveListeners(const EventType& type)
 	{
-		EventListenerPtr next;
-		for (auto listener = listeners_.first_item(); listener; listener = next)
+		for (auto& listener : listeners_)
 		{
-			next = listener->next_item();
-
 			if (listener->type_ == type)
 			{
-				listeners_.remove(listener);
+				listener->Remove();
 			}
 		}
+	}
+
+	void EventDispatcher::StartAllListeners()
+	{
+		for (auto& listener : listeners_)
+		{
+			listener->Start();
+		}
+	}
+
+	void EventDispatcher::StopAllListeners()
+	{
+		for (auto& listener : listeners_)
+		{
+			listener->Stop();
+		}
+	}
+
+	void EventDispatcher::RemoveAllListeners()
+	{
+		for (auto& listener : listeners_)
+		{
+			listener->Remove();
+		}
+	}
+
+	const EventDispatcher::Listeners& EventDispatcher::GetAllListeners() const
+	{
+		return listeners_;
 	}
 
 }

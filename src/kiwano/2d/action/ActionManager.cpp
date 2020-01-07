@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-	void ActionManager::UpdateActions(ActorPtr target, Duration dt)
+	void ActionManager::UpdateActions(Actor* target, Duration dt)
 	{
 		if (actions_.empty() || !target)
 			return;
@@ -58,14 +58,15 @@ namespace kiwano
 		return action;
 	}
 
-	Action* ActionManager::GetAction(String const & name)
+	ActionPtr ActionManager::GetAction(String const & name)
 	{
 		if (actions_.empty())
 			return nullptr;
 
-		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
+		for (auto& action : actions_)
 			if (action->IsName(name))
 				return action;
+
 		return nullptr;
 	}
 
@@ -74,7 +75,7 @@ namespace kiwano
 		if (actions_.empty())
 			return;
 
-		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
+		for (auto& action : actions_)
 		{
 			action->Resume();
 		}
@@ -85,7 +86,7 @@ namespace kiwano
 		if (actions_.empty())
 			return;
 
-		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
+		for (auto& action : actions_)
 		{
 			action->Pause();
 		}
@@ -96,7 +97,7 @@ namespace kiwano
 		if (actions_.empty())
 			return;
 
-		for (auto action = actions_.first_item().get(); action; action = action->next_item().get())
+		for (auto& action : actions_)
 		{
 			action->Stop();
 		}
