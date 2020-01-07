@@ -18,72 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-physics/Contact.h>
-#include <kiwano-physics/Body.h>
-#include <kiwano-physics/World.h>
+#include <kiwano-physics/ContactEdge.h>
 
 namespace kiwano
 {
 	namespace physics
 	{
 
-		Contact::Contact()
-			: contact_(nullptr)
+		ContactEdge::ContactEdge()
+			: edge_(nullptr)
 		{
 		}
 
-		Contact::Contact(b2Contact* contact)
-			: Contact()
+		ContactEdge::ContactEdge(b2ContactEdge* edge)
+			: ContactEdge()
 		{
-			SetB2Contact(contact);
-		}
-
-		Fixture Contact::GetFixtureA() const
-		{
-			KGE_ASSERT(contact_);
-			return Fixture(contact_->GetFixtureA());
-		}
-
-		Fixture Contact::GetFixtureB() const
-		{
-			KGE_ASSERT(contact_);
-			return Fixture(contact_->GetFixtureB());
-		}
-
-		Body* Contact::GetBodyA() const
-		{
-			return GetFixtureA().GetBody();
-		}
-
-		Body* Contact::GetBodyB() const
-		{
-			return GetFixtureB().GetBody();
-		}
-
-		void Contact::SetTangentSpeed(float speed)
-		{
-			KGE_ASSERT(contact_);
-
-			Body* body = GetFixtureA().GetBody();
-			KGE_ASSERT(body);
-
-			World* world = body->GetWorld();
-			KGE_ASSERT(world);
-
-			contact_->SetTangentSpeed(world->Stage2World(speed));
-		}
-
-		float Contact::GetTangentSpeed() const
-		{
-			KGE_ASSERT(contact_);
-
-			const Body* body = GetFixtureA().GetBody();
-			KGE_ASSERT(body);
-
-			const World* world = body->GetWorld();
-			KGE_ASSERT(world);
-
-			return world->World2Stage(contact_->GetTangentSpeed());
+			SetB2ContactEdge(edge);
 		}
 
 	}

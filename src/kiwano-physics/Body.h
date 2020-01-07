@@ -22,7 +22,7 @@
 #include <kiwano-physics/helper.h>
 #include <kiwano-physics/Shape.h>
 #include <kiwano-physics/Fixture.h>
-#include <kiwano-physics/Contact.h>
+#include <kiwano-physics/ContactEdge.h>
 
 namespace kiwano
 {

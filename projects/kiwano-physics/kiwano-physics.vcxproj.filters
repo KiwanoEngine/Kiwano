@@ -10,6 +10,7 @@
     <ClInclude Include="..\..\src\kiwano-physics\Fixture.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Contact.h" />
     <ClInclude Include="..\..\src\kiwano-physics\ContactEvent.h" />
+    <ClInclude Include="..\..\src\kiwano-physics\ContactEdge.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-physics\Body.cpp" />
@@ -19,5 +20,6 @@
     <ClCompile Include="..\..\src\kiwano-physics\Fixture.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Contact.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\ContactEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano-physics\ContactEdge.cpp" />
   </ItemGroup>
 </Project>

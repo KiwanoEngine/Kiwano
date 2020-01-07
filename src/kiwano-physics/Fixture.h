@@ -117,6 +117,9 @@ namespace kiwano
 			b2Fixture* GetB2Fixture() const;
 			void SetB2Fixture(b2Fixture* fixture);
 
+			bool operator== (const Fixture& rhs) const;
+			bool operator!= (const Fixture& rhs) const;
+
 		private:
 			b2Fixture* fixture_;
 		};
@@ -150,7 +153,7 @@ namespace kiwano
 
 				inline IteratorImpl& operator++()
 				{
-					elem_ = elem_.GetB2Contact()->GetNext();
+					elem_ = elem_.GetB2Fixture()->GetNext();
 					return *this;
 				}
 
@@ -163,7 +166,7 @@ namespace kiwano
 
 				inline bool operator== (const IteratorImpl& rhs) const
 				{
-					return elem_.GetB2Contact() == rhs.elem_.GetB2Contact();
+					return elem_ == rhs.elem_;
 				}
 
 				inline bool operator!= (const IteratorImpl& rhs) const
@@ -235,16 +238,18 @@ namespace kiwano
 
 		/** @} */
 
-		inline bool Fixture::IsSensor() const					{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }
-		inline void Fixture::SetSensor(bool sensor)				{ KGE_ASSERT(fixture_); fixture_->SetSensor(sensor); }
-		inline float Fixture::GetDensity() const				{ KGE_ASSERT(fixture_); return fixture_->GetDensity(); }
-		inline void Fixture::SetDensity(float density)			{ KGE_ASSERT(fixture_); fixture_->SetDensity(density); }
-		inline float Fixture::GetFriction() const				{ KGE_ASSERT(fixture_); return fixture_->GetFriction(); }
-		inline void Fixture::SetFriction(float friction)		{ KGE_ASSERT(fixture_); fixture_->SetFriction(friction); }
-		inline float Fixture::GetRestitution() const			{ KGE_ASSERT(fixture_); return fixture_->GetRestitution(); }
-		inline void Fixture::SetRestitution(float restitution)	{ KGE_ASSERT(fixture_); fixture_->SetRestitution(restitution); }
-		inline bool Fixture::IsValid() const					{ return fixture_ != nullptr; }
-		inline b2Fixture* Fixture::GetB2Fixture() const			{ return fixture_; }
-		inline void Fixture::SetB2Fixture(b2Fixture* fixture)	{ fixture_ = fixture; }
+		inline bool Fixture::IsSensor() const						{ KGE_ASSERT(fixture_); return fixture_->IsSensor(); }
+		inline void Fixture::SetSensor(bool sensor)					{ KGE_ASSERT(fixture_); fixture_->SetSensor(sensor); }
+		inline float Fixture::GetDensity() const					{ KGE_ASSERT(fixture_); return fixture_->GetDensity(); }
+		inline void Fixture::SetDensity(float density)				{ KGE_ASSERT(fixture_); fixture_->SetDensity(density); }
+		inline float Fixture::GetFriction() const					{ KGE_ASSERT(fixture_); return fixture_->GetFriction(); }
+		inline void Fixture::SetFriction(float friction)			{ KGE_ASSERT(fixture_); fixture_->SetFriction(friction); }
+		inline float Fixture::GetRestitution() const				{ KGE_ASSERT(fixture_); return fixture_->GetRestitution(); }
+		inline void Fixture::SetRestitution(float restitution)		{ KGE_ASSERT(fixture_); fixture_->SetRestitution(restitution); }
+		inline bool Fixture::IsValid() const						{ return fixture_ != nullptr; }
+		inline b2Fixture* Fixture::GetB2Fixture() const				{ return fixture_; }
+		inline void Fixture::SetB2Fixture(b2Fixture* fixture)		{ fixture_ = fixture; }
+		inline bool Fixture::operator==(const Fixture& rhs) const	{ return fixture_ == rhs.fixture_; }
+		inline bool Fixture::operator!=(const Fixture& rhs) const	{ return fixture_ != rhs.fixture_; }
 	}
 }

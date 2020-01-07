@@ -108,36 +108,11 @@ namespace kiwano
 			b2Contact* GetB2Contact() const;
 			void SetB2Contact(b2Contact* contact);
 
+			bool operator== (const Contact& rhs) const;
+			bool operator!= (const Contact& rhs) const;
+
 		private:
 			b2Contact* contact_;
-		};
-
-
-		/// \~chinese
-		/// @brief 接触边
-		class KGE_API ContactEdge
-		{
-		public:
-			ContactEdge();
-			ContactEdge(b2ContactEdge* edge);
-
-			/// \~chinese
-			/// @brief 是否有效
-			bool IsValid() const;
-
-			/// \~chinese
-			/// @brief 获取接触物体
-			Body* GetOtherBody() const;
-
-			/// \~chinese
-			/// @brief 获取接触
-			Contact GetContact() const;
-
-			b2ContactEdge* GetB2ContactEdge() const;
-			void SetB2ContactEdge(b2ContactEdge* edge);
-
-		private:
-			b2ContactEdge* edge_;
 		};
 
 
@@ -183,7 +158,7 @@ namespace kiwano
 
 				inline bool operator== (const IteratorImpl& rhs) const
 				{
-					return elem_.GetB2Contact() == rhs.elem_.GetB2Contact();
+					return elem_ == rhs.elem_;
 				}
 
 				inline bool operator!= (const IteratorImpl& rhs) const
@@ -253,118 +228,6 @@ namespace kiwano
 			value_type first_;
 		};
 
-		/// \~chinese
-		/// @brief 物理接触边列表
-		class ContactEdgeList
-		{
-			template <typename _Ty>
-			class IteratorImpl
-				: public std::iterator<std::forward_iterator_tag, _Ty>
-			{
-				using herit = std::iterator<std::forward_iterator_tag, _Ty>;
-
-			public:
-
-				inline IteratorImpl(const _Ty& elem)
-					: elem_(elem)
-				{
-				}
-
-				inline typename herit::reference operator*() const
-				{
-					return const_cast<typename herit::reference>(elem_);
-				}
-
-				inline typename herit::pointer operator->() const
-				{
-					return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
-				}
-
-				inline IteratorImpl& operator++()
-				{
-					elem_ = elem_.GetB2ContactEdge()->next;
-					return *this;
-				}
-
-				inline IteratorImpl operator++(int)
-				{
-					IteratorImpl old = *this;
-					operator++();
-					return old;
-				}
-
-				inline bool operator== (const IteratorImpl& rhs) const
-				{
-					return elem_.GetB2ContactEdge() == rhs.elem_.GetB2ContactEdge();
-				}
-
-				inline bool operator!= (const IteratorImpl& rhs) const
-				{
-					return !operator==(rhs);
-				}
-
-			private:
-				_Ty elem_;
-			};
-
-		public:
-			using value_type		= ContactEdge;
-			using iterator			= IteratorImpl<value_type>;
-			using const_iterator	= IteratorImpl<const value_type>;
-
-			inline ContactEdgeList()
-			{
-			}
-
-			inline ContactEdgeList(const value_type& first)
-				: first_(first)
-			{
-			}
-
-			inline const value_type& front() const
-			{
-				return first_;
-			}
-
-			inline value_type& front()
-			{
-				return first_;
-			}
-
-			inline iterator begin()
-			{
-				return iterator(first_);
-			}
-
-			inline const_iterator begin() const
-			{
-				return cbegin();
-			}
-
-			inline const_iterator cbegin() const
-			{
-				return const_iterator(first_);
-			}
-
-			inline iterator end()
-			{
-				return iterator(nullptr);
-			}
-
-			inline const_iterator end() const
-			{
-				return cend();
-			}
-
-			inline const_iterator cend() const
-			{
-				return const_iterator(nullptr);
-			}
-
-		private:
-			value_type first_;
-		};
-
 		/** @} */
 
 
@@ -380,12 +243,8 @@ namespace kiwano
 		inline void Contact::ResetRestitution()						{ KGE_ASSERT(contact_); contact_->ResetRestitution(); }
 		inline b2Contact* Contact::GetB2Contact() const				{ return contact_; }
 		inline void Contact::SetB2Contact(b2Contact* contact)		{ contact_ = contact; }
-
-		inline bool ContactEdge::IsValid() const							{ return edge_ != nullptr; }
-		inline Body* ContactEdge::GetOtherBody() const						{ KGE_ASSERT(edge_); return static_cast<Body*>(edge_->other->GetUserData()); }
-		inline Contact ContactEdge::GetContact() const						{ KGE_ASSERT(edge_); return Contact(edge_->contact); }
-		inline b2ContactEdge* ContactEdge::GetB2ContactEdge() const			{ return edge_; }
-		inline void ContactEdge::SetB2ContactEdge(b2ContactEdge* edge)		{ edge_ = edge; }
+		inline bool Contact::operator==(const Contact& rhs) const	{ return contact_ == rhs.contact_; }
+		inline bool Contact::operator!=(const Contact& rhs) const	{ return contact_ != rhs.contact_; }
 
 	}
 }
