@@ -40,7 +40,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 物体
 		class KGE_API Body
-			: public virtual RefCounter
+			: public virtual ObjectBase
 		{
 		public:
 			/// \~chinese
@@ -53,16 +53,20 @@ namespace kiwano
 			};
 
 			Body();
-			Body(b2Body* body, Actor* actor);
-			Body(World* world, Actor* actor);
-			Body(World* world, ActorPtr actor);
+
 			virtual ~Body();
 
 			/// \~chinese
 			/// @brief 初始化
 			/// @param[in] world 物理世界
 			/// @param[in] actor 绑定的角色
-			void Init(World* world, Actor* actor);
+			bool InitBody(World* world, ActorPtr actor);
+
+			/// \~chinese
+			/// @brief 初始化
+			/// @param[in] world 物理世界
+			/// @param[in] actor 绑定的角色
+			bool InitBody(World* world, Actor* actor);
 
 			/// \~chinese
 			/// @brief 添加夹具
@@ -319,62 +323,62 @@ namespace kiwano
 
 		/** @} */
 
-		inline Body::Body(World* world, ActorPtr actor)			: Body(world, actor.get()) {}
+		inline bool Body::InitBody(World* world, ActorPtr actor)	{ return InitBody(world, actor.get()); }
 
-		inline FixtureList Body::GetFixtureList() const			{ KGE_ASSERT(body_); return FixtureList(Fixture(body_->GetFixtureList())); }
+		inline FixtureList Body::GetFixtureList() const				{ KGE_ASSERT(body_); return FixtureList(Fixture(body_->GetFixtureList())); }
 
-		inline ContactEdgeList Body::GetContactList() const		{ KGE_ASSERT(body_); return ContactEdgeList(ContactEdge(body_->GetContactList())); }
+		inline ContactEdgeList Body::GetContactList() const			{ KGE_ASSERT(body_); return ContactEdgeList(ContactEdge(body_->GetContactList())); }
 
-		inline uint16_t Body::GetCategoryBits() const			{ return category_bits_; }
+		inline uint16_t Body::GetCategoryBits() const				{ return category_bits_; }
 
-		inline uint16_t Body::GetMaskBits() const				{ return mask_bits_; }
+		inline uint16_t Body::GetMaskBits() const					{ return mask_bits_; }
 
-		inline int16_t Body::GetGroupIndex() const				{ return group_index_; }
+		inline int16_t Body::GetGroupIndex() const					{ return group_index_; }
 
-		inline float Body::GetBodyRotation() const				{ KGE_ASSERT(body_); return math::Radian2Degree(body_->GetAngle()); }
+		inline float Body::GetBodyRotation() const					{ KGE_ASSERT(body_); return math::Radian2Degree(body_->GetAngle()); }
 
-		inline void Body::SetBodyRotation(float angle)			{ SetBodyTransform(GetBodyPosition(), angle); }
+		inline void Body::SetBodyRotation(float angle)				{ SetBodyTransform(GetBodyPosition(), angle); }
 
-		inline void Body::SetBodyPosition(Point const& pos)		{ SetBodyTransform(pos, GetBodyRotation()); }
+		inline void Body::SetBodyPosition(Point const& pos)			{ SetBodyTransform(pos, GetBodyRotation()); }
 
-		inline float Body::GetMass() const						{ KGE_ASSERT(body_); return body_->GetMass(); }
+		inline float Body::GetMass() const							{ KGE_ASSERT(body_); return body_->GetMass(); }
 
-		inline float Body::GetInertia() const					{ KGE_ASSERT(body_); return body_->GetInertia(); }
+		inline float Body::GetInertia() const						{ KGE_ASSERT(body_); return body_->GetInertia(); }
 
-		inline Body::Type Body::GetType() const					{ KGE_ASSERT(body_); return Type(body_->GetType()); }
+		inline Body::Type Body::GetType() const						{ KGE_ASSERT(body_); return Type(body_->GetType()); }
 
-		inline void Body::SetType(Type type)					{ KGE_ASSERT(body_); body_->SetType(static_cast<b2BodyType>(type)); }
+		inline void Body::SetType(Type type)						{ KGE_ASSERT(body_); body_->SetType(static_cast<b2BodyType>(type)); }
 
-		inline float Body::GetGravityScale() const				{ KGE_ASSERT(body_); return body_->GetGravityScale(); }
+		inline float Body::GetGravityScale() const					{ KGE_ASSERT(body_); return body_->GetGravityScale(); }
 
-		inline void Body::SetGravityScale(float scale)			{ KGE_ASSERT(body_); body_->SetGravityScale(scale); }
+		inline void Body::SetGravityScale(float scale)				{ KGE_ASSERT(body_); body_->SetGravityScale(scale); }
 
-		inline bool Body::IsIgnoreRotation() const				{ KGE_ASSERT(body_); return body_->IsFixedRotation(); }
+		inline bool Body::IsIgnoreRotation() const					{ KGE_ASSERT(body_); return body_->IsFixedRotation(); }
 
-		inline void Body::SetIgnoreRotation(bool flag)			{ KGE_ASSERT(body_); body_->SetFixedRotation(flag); }
+		inline void Body::SetIgnoreRotation(bool flag)				{ KGE_ASSERT(body_); body_->SetFixedRotation(flag); }
 
-		inline bool Body::IsBullet() const						{ KGE_ASSERT(body_); return body_->IsBullet(); }
+		inline bool Body::IsBullet() const							{ KGE_ASSERT(body_); return body_->IsBullet(); }
 
-		inline void Body::SetBullet(bool flag)					{ KGE_ASSERT(body_); body_->SetBullet(flag); }
+		inline void Body::SetBullet(bool flag)						{ KGE_ASSERT(body_); body_->SetBullet(flag); }
 
-		inline bool Body::IsAwake() const						{ KGE_ASSERT(body_); return body_->IsAwake(); }
+		inline bool Body::IsAwake() const							{ KGE_ASSERT(body_); return body_->IsAwake(); }
 
-		inline void Body::SetAwake(bool flag)					{ KGE_ASSERT(body_); body_->SetAwake(flag); }
+		inline void Body::SetAwake(bool flag)						{ KGE_ASSERT(body_); body_->SetAwake(flag); }
 
-		inline bool Body::IsSleepingAllowed() const				{ KGE_ASSERT(body_); return body_->IsSleepingAllowed(); }
+		inline bool Body::IsSleepingAllowed() const					{ KGE_ASSERT(body_); return body_->IsSleepingAllowed(); }
 
-		inline void Body::SetSleepingAllowed(bool flag)			{ KGE_ASSERT(body_); body_->SetSleepingAllowed(flag); }
+		inline void Body::SetSleepingAllowed(bool flag)				{ KGE_ASSERT(body_); body_->SetSleepingAllowed(flag); }
 
-		inline bool Body::IsActive() const						{ KGE_ASSERT(body_); return body_->IsActive(); }
+		inline bool Body::IsActive() const							{ KGE_ASSERT(body_); return body_->IsActive(); }
 
-		inline void Body::SetActive(bool flag)					{ KGE_ASSERT(body_); body_->SetActive(flag); }
+		inline void Body::SetActive(bool flag)						{ KGE_ASSERT(body_); body_->SetActive(flag); }
 
-		inline Actor* Body::GetActor() const					{ return actor_; }
+		inline Actor* Body::GetActor() const						{ return actor_; }
 
-		inline void Body::SetActor(Actor* actor)				{ actor_ = actor; }
+		inline void Body::SetActor(Actor* actor)					{ actor_ = actor; }
 
-		inline b2Body* Body::GetB2Body() const					{ return body_; }
+		inline b2Body* Body::GetB2Body() const						{ return body_; }
 
-		inline World* Body::GetWorld() const					{ return world_; }
+		inline World* Body::GetWorld() const						{ return world_; }
 	}
 }

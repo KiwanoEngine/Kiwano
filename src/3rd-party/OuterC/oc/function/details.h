@@ -115,23 +115,23 @@ public:
 
 	virtual _Ret invoke(_Args... args) const override
 	{
-		return (static_cast<_Ty*>(ptr_)->*func_)(::std::forward<_Args>(args)...);
+		return (ptr_->*func_)(::std::forward<_Args>(args)...);
 	}
 
-	static inline callable<_Ret, _Args...>* make(void* ptr, _FuncType func)
+	static inline callable<_Ret, _Args...>* make(_Ty* ptr, _FuncType func)
 	{
 		return new (::std::nothrow) proxy_mem_callable<_Ty, _Ret, _Args...>(ptr, func);
 	}
 
 protected:
-	proxy_mem_callable(void* ptr, _FuncType func)
+	proxy_mem_callable(_Ty* ptr, _FuncType func)
 		: ptr_(ptr)
 		, func_(func)
 	{
 	}
 
 protected:
-	void* ptr_;
+	_Ty* ptr_;
 	_FuncType func_;
 };
 
@@ -144,23 +144,23 @@ public:
 
 	virtual _Ret invoke(_Args... args) const override
 	{
-		return (static_cast<_Ty*>(ptr_)->*func_)(::std::forward<_Args>(args)...);
+		return (ptr_->*func_)(::std::forward<_Args>(args)...);
 	}
 
-	static inline callable<_Ret, _Args...>* make(void* ptr, _FuncType func)
+	static inline callable<_Ret, _Args...>* make(_Ty* ptr, _FuncType func)
 	{
 		return new (::std::nothrow) proxy_const_mem_callable<_Ty, _Ret, _Args...>(ptr, func);
 	}
 
 protected:
-	proxy_const_mem_callable(void* ptr, _FuncType func)
+	proxy_const_mem_callable(_Ty* ptr, _FuncType func)
 		: ptr_(ptr)
 		, func_(func)
 	{
 	}
 
 protected:
-	void* ptr_;
+	_Ty* ptr_;
 	_FuncType func_;
 };
 

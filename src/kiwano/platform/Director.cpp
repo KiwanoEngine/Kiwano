@@ -181,11 +181,14 @@ namespace kiwano
 
 	void Director::HandleEvent(Event& evt)
 	{
-		if (debug_actor_)
-			debug_actor_->Dispatch(evt);
-
 		if (current_stage_)
 			current_stage_->Dispatch(evt);
+
+		if (next_stage_)
+			next_stage_->Dispatch(evt);
+
+		if (debug_actor_)
+			debug_actor_->Dispatch(evt);
 	}
 
 }

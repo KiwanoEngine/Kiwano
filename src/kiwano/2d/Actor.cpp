@@ -60,6 +60,10 @@ namespace kiwano
 	{
 	}
 
+	Actor::~Actor()
+	{
+	}
+
 	void Actor::Update(Duration dt)
 	{
 		UpdateActions(this, dt);
@@ -176,35 +180,47 @@ namespace kiwano
 		if (!visible_)
 			return;
 
-		ActorPtr prev;
-		for (auto child = children_.last_item(); child; child = prev)
+		// Dispatch to children those are greater than 0 in Z-Order
+		Actor* child = children_.last_item().get();
+		while (child)
 		{
-			prev = child->prev_item();
+			if (child->GetZOrder() < 0)
+				break;
+
 			child->Dispatch(evt);
+			child = child->prev_item().get();
 		}
+
+		HandleEvent(evt);
+
+		while (child)
+		{
+			child->Dispatch(evt);
+			child = child->prev_item().get();
+		}
+	}
+
+	void Actor::HandleEvent(Event& evt)
+	{
+		EventDispatcher::Dispatch(evt);
 
 		if (responsible_)
 		{
 			if (evt.IsType<MouseMoveEvent>())
 			{
 				auto& mouse_evt = evt.SafeCast<MouseMoveEvent>();
-				if (!mouse_evt.target && ContainsPoint(mouse_evt.pos))
+				bool contains = ContainsPoint(mouse_evt.pos);
+				if (!hover_ && contains)
 				{
-					mouse_evt.target = this;
+					hover_ = true;
 
-					if (!hover_)
-					{
-						hover_ = true;
-
-						MouseHoverEvent hover;
-						hover.pos = mouse_evt.pos;
-						hover.left_btn_down = mouse_evt.left_btn_down;
-						hover.right_btn_down = mouse_evt.right_btn_down;
-						hover.target = this;
-						EventDispatcher::Dispatch(hover);
-					}
+					MouseHoverEvent hover;
+					hover.pos = mouse_evt.pos;
+					hover.left_btn_down = mouse_evt.left_btn_down;
+					hover.right_btn_down = mouse_evt.right_btn_down;
+					EventDispatcher::Dispatch(hover);
 				}
-				else if (hover_)
+				else if (hover_ && !contains)
 				{
 					hover_ = false;
 					pressed_ = false;
@@ -213,7 +229,6 @@ namespace kiwano
 					out.pos = mouse_evt.pos;
 					out.left_btn_down = mouse_evt.left_btn_down;
 					out.right_btn_down = mouse_evt.right_btn_down;
-					out.target = this;
 					EventDispatcher::Dispatch(out);
 				}
 			}
@@ -221,27 +236,22 @@ namespace kiwano
 			if (evt.IsType<MouseDownEvent>() && hover_)
 			{
 				pressed_ = true;
-				evt.SafeCast<MouseDownEvent>().target = this;
 			}
 
 			if (evt.IsType<MouseUpEvent>() && pressed_)
 			{
 				pressed_ = false;
 
-				auto mouse_up_evt = evt.SafeCast<MouseUpEvent>();
-				mouse_up_evt.target = this;
+				auto& mouse_up_evt = evt.SafeCast<MouseUpEvent>();
 
 				MouseClickEvent click;
 				click.pos = mouse_up_evt.pos;
 				click.left_btn_down = mouse_up_evt.left_btn_down;
 				click.right_btn_down = mouse_up_evt.right_btn_down;
-				click.target = this;
 				click.button = mouse_up_evt.button;
 				EventDispatcher::Dispatch(click);
 			}
 		}
-
-		EventDispatcher::Dispatch(evt);
 	}
 
 	Matrix3x2 const & Actor::GetTransformMatrix()  const

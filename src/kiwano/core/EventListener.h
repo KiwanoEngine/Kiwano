@@ -38,7 +38,7 @@ namespace kiwano
 	* @brief ÊÂ¼ş¼àÌıÆ÷
 	*/
 	class KGE_API EventListener
-		: public ObjectBase
+		: public virtual ObjectBase
 		, protected IntrusiveListItem<EventListenerPtr>
 	{
 		friend class EventDispatcher;

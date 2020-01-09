@@ -31,7 +31,7 @@ namespace kiwano
 	* @brief Í¼ÏñÖ¡
 	*/
 	class KGE_API Frame
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 	public:
 		/// \~chinese

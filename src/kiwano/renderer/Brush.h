@@ -86,7 +86,7 @@ namespace kiwano
 	* @brief »­Ë¢
 	*/
 	class KGE_API Brush
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class RenderTarget;
 		friend class Renderer;

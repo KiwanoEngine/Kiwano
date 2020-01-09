@@ -42,8 +42,6 @@ namespace kiwano
 				return "\03";
 			}
 		};
-
-		std::locale comma_locale(std::locale(), new comma_numpunct);
 	}
 
 	DebugActor::DebugActor()
@@ -53,20 +51,21 @@ namespace kiwano
 		SetResponsible(true);
 		SetCascadeOpacityEnabled(true);
 
+		comma_locale_ = std::locale(std::locale(), new comma_numpunct);
+
 		background_brush_ = new Brush;
 		background_brush_->SetColor(Color(0.0f, 0.0f, 0.0f, 0.7f));
 
-		debug_text_ = new TextActor;
-		debug_text_->SetPosition(Point{ 10, 10 });
-		this->AddChild(debug_text_);
+		BrushPtr fill_brush = new Brush;
+		fill_brush->SetColor(Color::White);
 
 		TextStyle style;
 		style.font_family = L"Arial";
 		style.font_size = 16.f;
 		style.font_weight = FontWeight::Normal;
 		style.line_spacing = 20.f;
-		debug_text_->SetStyle(style);
-		debug_text_->SetFillColor(Color::White);
+		style.fill_brush = fill_brush;
+		debug_text_.SetStyle(style);
 
 		AddListener<MouseHoverEvent>([=](Event&) { SetOpacity(0.4f); });
 		AddListener<MouseOutEvent>([=](Event&) { SetOpacity(1.f); });
@@ -80,6 +79,8 @@ namespace kiwano
 	{
 		rt->SetCurrentBrush(background_brush_);
 		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
+
+		rt->DrawTextLayout(debug_text_, Point(10, 10));
 	}
 
 	void DebugActor::OnUpdate(Duration dt)
@@ -95,7 +96,7 @@ namespace kiwano
 		StringStream ss;
 
 		// For formatting integers with commas
-		(void)ss.imbue(comma_locale);
+		(void)ss.imbue(comma_locale_);
 
 		ss << "Fps: " << frame_time_.size() << std::endl;
 
@@ -124,16 +125,18 @@ namespace kiwano
 			ss << pmc.PrivateUsage / 1024 << "Kb";
 		}
 
-		debug_text_->SetText(ss.str());
+		debug_text_.SetText(ss.str());
+		debug_text_.Update();
 
-		if (debug_text_->GetWidth() > GetWidth() - 20)
+		Size layout_size = debug_text_.GetLayoutSize();
+		if (layout_size.x > GetWidth() - 20)
 		{
-			SetWidth(20 + debug_text_->GetWidth());
+			SetWidth(20 + layout_size.x);
 		}
 
-		if (debug_text_->GetHeight() > GetHeight() - 20)
+		if (layout_size.y > GetHeight() - 20)
 		{
-			SetHeight(20 + debug_text_->GetHeight());
+			SetHeight(20 + layout_size.y);
 		}
 	}
 

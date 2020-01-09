@@ -38,7 +38,7 @@ namespace kiwano
 	* @brief GIFÍ¼Ïñ
 	*/
 	class KGE_API GifImage
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class Renderer;
 

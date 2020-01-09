@@ -51,7 +51,7 @@ namespace kiwano
 	* @brief Œ∆¿Ì
 	*/
 	class KGE_API Texture
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class RenderTarget;
 		friend class TextureRenderTarget;

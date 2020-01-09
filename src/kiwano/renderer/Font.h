@@ -40,7 +40,7 @@ namespace kiwano
 	* @brief ×ÖÌå
 	*/
 	class Font
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class Renderer;
 

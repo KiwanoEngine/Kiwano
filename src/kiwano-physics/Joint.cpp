@@ -36,28 +36,17 @@ namespace kiwano
 		{
 		}
 
-		Joint::Joint(b2Joint* joint)
-			: Joint()
-		{
-			SetB2Joint(joint);
-		}
-
-		Joint::Joint(World* world, b2JointDef* joint_def)
-			: Joint()
-		{
-			Init(world, joint_def);
-		}
-
 		Joint::~Joint()
 		{
-			if (world_)
-			{
-				world_->RemoveJoint(this);
-			}
+			Destroy();
 		}
 
-		void Joint::Init(World* world, b2JointDef* joint_def)
+		bool Joint::InitJoint(World* world, b2JointDef* joint_def)
 		{
+			KGE_ASSERT(world);
+
+			Destroy();
+
 			world_ = world;
 			if (world_)
 			{
@@ -65,7 +54,10 @@ namespace kiwano
 
 				b2Joint* joint = world_->GetB2World()->CreateJoint(joint_def);
 				SetB2Joint(joint);
+
+				return joint != nullptr;
 			}
+			return false;
 		}
 
 		BodyPtr Joint::GetBodyA() const
@@ -93,6 +85,14 @@ namespace kiwano
 			}
 		}
 
+		void Joint::Destroy()
+		{
+			if (world_)
+			{
+				world_->RemoveJoint(this);
+			}
+		}
+
 		//
 		// DistanceJoint
 		//
@@ -103,15 +103,7 @@ namespace kiwano
 		{
 		}
 
-		DistanceJoint::DistanceJoint(World* world, b2DistanceJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		DistanceJoint::DistanceJoint(World* world, DistanceJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool DistanceJoint::InitJoint(World* world, DistanceJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -120,8 +112,9 @@ namespace kiwano
 			def.frequencyHz = param.frequency_hz;
 			def.dampingRatio = param.damping_ratio;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2DistanceJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void DistanceJoint::SetLength(float length)
@@ -146,15 +139,7 @@ namespace kiwano
 		{
 		}
 
-		FrictionJoint::FrictionJoint(World* world, b2FrictionJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		FrictionJoint::FrictionJoint(World* world, FrictionJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool FrictionJoint::InitJoint(World* world, FrictionJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -163,8 +148,9 @@ namespace kiwano
 			def.maxForce = param.max_force;
 			def.maxTorque = world->Stage2World(param.max_torque);
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2FrictionJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void FrictionJoint::SetMaxForce(float length)
@@ -201,15 +187,7 @@ namespace kiwano
 		{
 		}
 
-		GearJoint::GearJoint(World* world, b2GearJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		GearJoint::GearJoint(World* world, GearJoint::Param param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool GearJoint::InitJoint(World* world, GearJoint::Param const& param)
 		{
 			KGE_ASSERT(param.joint_a && param.joint_b);
 
@@ -218,8 +196,9 @@ namespace kiwano
 			def.joint2 = param.joint_b->GetB2Joint();
 			def.ratio = param.ratio;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2GearJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void GearJoint::SetRatio(float ratio)
@@ -244,15 +223,7 @@ namespace kiwano
 		{
 		}
 
-		MotorJoint::MotorJoint(World* world, b2MotorJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		MotorJoint::MotorJoint(World* world, MotorJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool MotorJoint::InitJoint(World* world, MotorJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -262,8 +233,9 @@ namespace kiwano
 			def.maxTorque = world->Stage2World(param.max_torque);
 			def.correctionFactor = param.correction_factor;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2MotorJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void MotorJoint::SetMaxForce(float length)
@@ -300,15 +272,7 @@ namespace kiwano
 		{
 		}
 
-		PrismaticJoint::PrismaticJoint(World* world, b2PrismaticJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		PrismaticJoint::PrismaticJoint(World* world, PrismaticJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool PrismaticJoint::InitJoint(World* world, PrismaticJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -321,8 +285,9 @@ namespace kiwano
 			def.maxMotorForce = param.max_motor_force;
 			def.motorSpeed = world->Stage2World(param.motor_speed);
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2PrismaticJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		float PrismaticJoint::GetJointTranslation() const
@@ -365,15 +330,7 @@ namespace kiwano
 		{
 		}
 
-		PulleyJoint::PulleyJoint(World* world, b2PulleyJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		PulleyJoint::PulleyJoint(World* world, PulleyJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool PulleyJoint::InitJoint(World* world, PulleyJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -381,8 +338,9 @@ namespace kiwano
 			def.Initialize(param.body_a->GetB2Body(), param.body_b->GetB2Body(), world->Stage2World(param.ground_anchor_a), world->Stage2World(param.ground_anchor_b),
 				world->Stage2World(param.anchor_a), world->Stage2World(param.anchor_b), param.ratio);
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2PulleyJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		Point PulleyJoint::GetGroundAnchorA() const
@@ -437,15 +395,7 @@ namespace kiwano
 		{
 		}
 
-		RevoluteJoint::RevoluteJoint(World* world, b2RevoluteJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		RevoluteJoint::RevoluteJoint(World* world, RevoluteJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool RevoluteJoint::InitJoint(World* world, RevoluteJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -458,8 +408,9 @@ namespace kiwano
 			def.maxMotorTorque = world->Stage2World(param.max_motor_torque);
 			def.motorSpeed = math::Degree2Radian(param.motor_speed);
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2RevoluteJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		float RevoluteJoint::GetJointAngle() const
@@ -514,15 +465,7 @@ namespace kiwano
 		{
 		}
 
-		RopeJoint::RopeJoint(World* world, b2RopeJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		RopeJoint::RopeJoint(World* world, RopeJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool RopeJoint::InitJoint(World* world, RopeJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -533,8 +476,9 @@ namespace kiwano
 			def.localAnchorB = world->Stage2World(param.local_anchor_b);
 			def.maxLength = world->Stage2World(param.max_length);
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2RopeJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void RopeJoint::SetMaxLength(float length)
@@ -559,15 +503,7 @@ namespace kiwano
 		{
 		}
 
-		WeldJoint::WeldJoint(World* world, b2WeldJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		WeldJoint::WeldJoint(World* world, WeldJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool WeldJoint::InitJoint(World* world, WeldJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -576,8 +512,9 @@ namespace kiwano
 			def.frequencyHz = param.frequency_hz;
 			def.dampingRatio = param.damping_ratio;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2WeldJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 
@@ -591,15 +528,7 @@ namespace kiwano
 		{
 		}
 
-		WheelJoint::WheelJoint(World* world, b2WheelJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		WheelJoint::WheelJoint(World* world, WheelJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool WheelJoint::InitJoint(World* world, WheelJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -611,8 +540,9 @@ namespace kiwano
 			def.frequencyHz = param.frequency_hz;
 			def.dampingRatio = param.damping_ratio;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2WheelJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		float WheelJoint::GetJointTranslation() const
@@ -649,15 +579,7 @@ namespace kiwano
 		{
 		}
 
-		MouseJoint::MouseJoint(World* world, b2MouseJointDef* def)
-			: Joint(world, def)
-			, raw_joint_(nullptr)
-		{
-		}
-
-		MouseJoint::MouseJoint(World* world, MouseJoint::Param const& param)
-			: Joint()
-			, raw_joint_(nullptr)
+		bool MouseJoint::InitJoint(World* world, MouseJoint::Param const& param)
 		{
 			KGE_ASSERT(param.body_a && param.body_b);
 
@@ -669,8 +591,9 @@ namespace kiwano
 			def.frequencyHz = param.frequency_hz;
 			def.dampingRatio = param.damping_ratio;
 
-			Init(world, &def);
+			Joint::InitJoint(world, &def);
 			raw_joint_ = static_cast<b2MouseJoint*>(GetB2Joint());
+			return raw_joint_ != nullptr;
 		}
 
 		void MouseJoint::SetMaxForce(float length)

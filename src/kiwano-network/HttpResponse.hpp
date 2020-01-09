@@ -37,7 +37,7 @@ namespace kiwano
 		* @brief HTTPœÏ”¶
 		*/
 		class KGE_API HttpResponse
-			: public ObjectBase
+			: public virtual ObjectBase
 		{
 		public:
 			HttpResponse(HttpRequestPtr request);

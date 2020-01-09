@@ -20,17 +20,20 @@
 
 #pragma once
 #include <kiwano/2d/Sprite.h>
+#include <kiwano/2d/TextActor.h>
 
 namespace kiwano
 {
 	KGE_DECLARE_SMART_PTR(Button);
+	KGE_DECLARE_SMART_PTR(SpriteButton);
+	KGE_DECLARE_SMART_PTR(TextButton);
 
 	/**
 	* \~chinese
 	* @brief 按钮
 	*/
 	class KGE_API Button
-		: public Sprite
+		: public virtual ObjectBase
 	{
 	public:
 		/// \~chinese
@@ -45,7 +48,7 @@ namespace kiwano
 		explicit Button(Callback const& click);
 
 		/// \~chinese
-		/// @brief 获取按钮状态是启用还是禁用
+		/// @brief 构造按钮
 		/// @param click 按钮点击回调函数
 		/// @param pressed 按钮按下回调函数
 		/// @param mouse_over 按钮移入回调函数
@@ -82,21 +85,83 @@ namespace kiwano
 		/// @brief 设置鼠标移出按钮时的回调函数
 		void SetMouseOutCallback(const Callback& func);
 
-	private:
-		enum class Status { Normal, Hover, Pressed };
+		/// \~chinese
+		/// @brief 按钮状态
+		enum class Status
+		{
+			Normal,		///< 普通
+			Hover,		///< 鼠标在按钮内
+			Pressed		///< 被按下
+		};
 
+		/// \~chinese
+		/// @brief 设置按钮状态
 		void SetStatus(Status status);
 
+		/// \~chinese
+		/// @brief 获取按钮状态
+		Status GetStatus() const;
+
+	protected:
+		/// \~chinese
+		/// @brief 更新按钮状态
 		void UpdateStatus(Event& evt);
 
 	private:
 		bool		enabled_;
-		bool		is_selected_;
 		Status		status_;
 		Callback	click_callback_;
 		Callback	pressed_callback_;
 		Callback	released_callback_;
 		Callback	mouse_over_callback_;
 		Callback	mouse_out_callback_;
+	};
+
+
+	/// \~chinese
+	/// @brief 精灵按钮
+	class SpriteButton
+		: public Sprite
+		, public Button
+	{
+	public:
+		SpriteButton();
+
+		/// \~chinese
+		/// @brief 构造精灵按钮
+		/// @param click 按钮点击回调函数
+		explicit SpriteButton(Callback const& click);
+
+		/// \~chinese
+		/// @brief 构造精灵按钮
+		/// @param click 按钮点击回调函数
+		/// @param pressed 按钮按下回调函数
+		/// @param mouse_over 按钮移入回调函数
+		/// @param mouse_out 按钮移出回调函数
+		SpriteButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
+	};
+
+
+	/// \~chinese
+	/// @brief 文字按钮
+	class TextButton
+		: public TextActor
+		, public Button
+	{
+	public:
+		TextButton();
+
+		/// \~chinese
+		/// @brief 构造文字按钮
+		/// @param click 按钮点击回调函数
+		explicit TextButton(Callback const& click);
+
+		/// \~chinese
+		/// @brief 构造文字按钮
+		/// @param click 按钮点击回调函数
+		/// @param pressed 按钮按下回调函数
+		/// @param mouse_over 按钮移入回调函数
+		/// @param mouse_out 按钮移出回调函数
+		TextButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
 	};
 }

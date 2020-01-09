@@ -19,14 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/common.h>
+#include <kiwano/math/math.h>
 #include <kiwano/core/time.h>
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/math/math.h>
-#include <kiwano/2d/Transform.h>
-#include <kiwano/2d/action/ActionManager.h>
 #include <kiwano/core/TimerManager.h>
 #include <kiwano/core/EventDispatcher.h>
+#include <kiwano/2d/Transform.h>
+#include <kiwano/2d/action/ActionManager.h>
 
 namespace kiwano
 {
@@ -52,11 +51,11 @@ namespace kiwano
 	* @details 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、定时器、事件监听等功能的载体
 	*/
 	class KGE_API Actor
-		: public ObjectBase
+		: public virtual ObjectBase
 		, public TimerManager
 		, public ActionManager
 		, public EventDispatcher
-		, public IntrusiveListItem<ActorPtr>
+		, protected IntrusiveListItem<ActorPtr>
 	{
 		friend class Director;
 		friend class Transition;
@@ -72,6 +71,8 @@ namespace kiwano
 		using UpdateCallback = Function<void(Duration)>;
 
 		Actor();
+
+		virtual ~Actor();
 
 		/// \~chinese
 		/// @brief 更新角色
@@ -118,34 +119,6 @@ namespace kiwano
 		float GetPositionY() const;
 
 		/// \~chinese
-		/// @brief 获取缩放比例
-		Point const& GetScale() const;
-
-		/// \~chinese
-		/// @brief 获取横向缩放比例
-		float GetScaleX() const;
-
-		/// \~chinese
-		/// @brief 获取纵向缩放比例
-		float GetScaleY() const;
-
-		/// \~chinese
-		/// @brief 获取错切角度
-		Point const& GetSkew() const;
-
-		/// \~chinese
-		/// @brief 获取横向错切角度
-		float GetSkewX() const;
-
-		/// \~chinese
-		/// @brief 获取纵向错切角度
-		float GetSkewY() const;
-
-		/// \~chinese
-		/// @brief 获取旋转角度
-		float GetRotation() const;
-
-		/// \~chinese
 		/// @brief 获取宽度
 		float GetWidth() const;
 
@@ -188,6 +161,34 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 获取显示透明度
 		float GetDisplayedOpacity() const;
+
+		/// \~chinese
+		/// @brief 获取旋转角度
+		float GetRotation() const;
+
+		/// \~chinese
+		/// @brief 获取缩放比例
+		Point const& GetScale() const;
+
+		/// \~chinese
+		/// @brief 获取横向缩放比例
+		float GetScaleX() const;
+
+		/// \~chinese
+		/// @brief 获取纵向缩放比例
+		float GetScaleY() const;
+
+		/// \~chinese
+		/// @brief 获取错切角度
+		Point const& GetSkew() const;
+
+		/// \~chinese
+		/// @brief 获取横向错切角度
+		float GetSkewX() const;
+
+		/// \~chinese
+		/// @brief 获取纵向错切角度
+		float GetSkewY() const;
 
 		/// \~chinese
 		/// @brief 获取变换
@@ -363,10 +364,6 @@ namespace kiwano
 		void RemoveFromParent();
 
 		/// \~chinese
-		/// @brief 判断点是否在角色内
-		virtual bool ContainsPoint(const Point& point) const;
-
-		/// \~chinese
 		/// @brief 暂停角色更新
 		void PauseUpdating();
 
@@ -385,6 +382,10 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 获取更新时的回调函数
 		UpdateCallback GetCallbackOnUpdate() const;
+
+		/// \~chinese
+		/// @brief 判断点是否在角色内
+		virtual bool ContainsPoint(const Point& point) const;
 
 		/// \~chinese
 		/// @brief 渲染角色边界
@@ -434,6 +435,10 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 设置节点所在舞台
 		void SetStage(Stage* stage);
+
+		/// \~chinese
+		/// @brief 处理事件
+		void HandleEvent(Event& evt);
 
 	private:
 		bool			visible_;

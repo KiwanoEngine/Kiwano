@@ -33,7 +33,7 @@ namespace kiwano
 	* @brief »ù´¡¶ÔÏó
 	*/
 	class KGE_API ObjectBase
-		: public virtual RefCounter
+		: public RefCounter
 	{
 	public:
 		/// \~chinese

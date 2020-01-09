@@ -40,7 +40,7 @@ namespace kiwano
 	///     task->Start();
 	///   @endcode
 	class AsyncTask
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 	public:
 		/// \~chinese

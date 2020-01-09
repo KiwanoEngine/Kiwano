@@ -7,7 +7,6 @@ namespace kiwano
 		, pos()
 		, left_btn_down(false)
 		, right_btn_down(false)
-		, target(nullptr)
 	{
 	}
 

@@ -20,9 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/TextActor.h>
-#include <kiwano/renderer/Color.h>
-#include <kiwano/renderer/Brush.h>
+#include <kiwano/renderer/TextLayout.h>
 
 namespace kiwano
 {
@@ -51,8 +49,9 @@ namespace kiwano
 		bool CheckVisibilty(RenderTarget* rt) const override;
 
 	private:
+		std::locale		comma_locale_;
 		BrushPtr		background_brush_;
-		TextActorPtr	debug_text_;
+		TextLayout		debug_text_;
 		Vector<Time>	frame_time_;
 	};
 

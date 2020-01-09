@@ -45,7 +45,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief ¶¯»­
 	class KGE_API Action
-		: public ObjectBase
+		: public virtual ObjectBase
 		, protected IntrusiveListItem<ActionPtr>
 	{
 		friend class ActionManager;

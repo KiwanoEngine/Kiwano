@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/ui/Button.h>
+#include <kiwano/2d/Button.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/platform/Window.h>
 
@@ -26,16 +26,8 @@ namespace kiwano
 {
 	Button::Button()
 		: enabled_(true)
-		, is_selected_(false)
-		, click_callback_(nullptr)
 		, status_(Status::Normal)
 	{
-		SetResponsible(true);
-
-		AddListener<MouseHoverEvent>(Closure(this, &Button::UpdateStatus));
-		AddListener<MouseOutEvent>(Closure(this, &Button::UpdateStatus));
-		AddListener<MouseDownEvent>(Closure(this, &Button::UpdateStatus));
-		AddListener<MouseUpEvent>(Closure(this, &Button::UpdateStatus));
 	}
 
 	Button::Button(const Callback& click)
@@ -99,50 +91,119 @@ namespace kiwano
 	{
 		if (status_ != status)
 		{
-			status_ = status;
-		}
-	}
+			Status old_status = status_;
 
-	void Button::UpdateStatus(Event& evt)
-	{
-		KGE_ASSERT(evt.IsType<MouseEvent>());
-
-		if (enabled_ && (evt.SafeCast<MouseEvent>().target == this))
-		{
-			if (evt.IsType<MouseHoverEvent>())
+			if (status == Status::Normal)
 			{
-				SetStatus(Status::Hover);
-				Window::instance().SetCursor(CursorType::Hand);
-
-				if (mouse_over_callback_)
-					mouse_over_callback_(this);
-			}
-			else if (evt.IsType<MouseOutEvent>())
-			{
-				SetStatus(Status::Normal);
 				Window::instance().SetCursor(CursorType::Arrow);
 
 				if (mouse_out_callback_)
 					mouse_out_callback_(this);
 			}
-			else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
+			else if (status == Status::Hover)
 			{
-				SetStatus(Status::Pressed);
+				Window::instance().SetCursor(CursorType::Hand);
 
+				if (old_status == Status::Pressed)
+				{
+					if (released_callback_)
+						released_callback_(this);
+				}
+				else
+				{
+					if (mouse_over_callback_)
+						mouse_over_callback_(this);
+				}
+			}
+			else if (status == Status::Pressed)
+			{
 				if (pressed_callback_)
 					pressed_callback_(this);
 			}
-			else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
-			{
-				SetStatus(Status::Hover);
 
-				if (released_callback_)
-					released_callback_(this);
-
-				if (click_callback_)
-					click_callback_(this);
-			}
+			status_ = status;
 		}
+	}
+
+	Button::Status Button::GetStatus() const
+	{
+		return status_;
+	}
+
+	void Button::UpdateStatus(Event& evt)
+	{
+		if (!enabled_)
+			return;
+
+		if (evt.IsType<MouseHoverEvent>())
+		{
+			SetStatus(Status::Hover);
+		}
+		else if (evt.IsType<MouseOutEvent>())
+		{
+			SetStatus(Status::Normal);
+		}
+		else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
+		{
+			SetStatus(Status::Pressed);
+		}
+		else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
+		{
+			SetStatus(Status::Hover);
+		}
+		else if (evt.IsType<MouseClickEvent>())
+		{
+			if (click_callback_)
+				click_callback_(this);
+		}
+	}
+
+
+	SpriteButton::SpriteButton()
+		: SpriteButton(nullptr, nullptr, nullptr, nullptr)
+	{
+	}
+
+	SpriteButton::SpriteButton(Callback const& click)
+		: SpriteButton(click, nullptr, nullptr, nullptr)
+	{
+	}
+
+	SpriteButton::SpriteButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out)
+		: Button(click, pressed, mouse_over, mouse_out)
+	{
+		SetResponsible(true);
+
+		EventListener::Callback handler = Closure(this, &SpriteButton::UpdateStatus);
+		AddListener<MouseHoverEvent>(handler);
+		AddListener<MouseOutEvent>(handler);
+		AddListener<MouseDownEvent>(handler);
+		AddListener<MouseUpEvent>(handler);
+		AddListener<MouseClickEvent>(handler);
+	}
+
+
+	TextButton::TextButton()
+		: TextButton(nullptr, nullptr, nullptr, nullptr)
+	{
+	}
+
+	TextButton::TextButton(Callback const& click)
+		: TextButton(click, nullptr, nullptr, nullptr)
+	{
+	}
+
+	TextButton::TextButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out)
+		: Button(click, pressed, mouse_over, mouse_out)
+	{
+		SetResponsible(true);
+
+		EventListener::Callback handler = Closure(this, &TextButton::UpdateStatus);
+		AddListener<MouseHoverEvent>(handler);
+		AddListener<MouseOutEvent>(handler);
+		AddListener<MouseDownEvent>(handler);
+		AddListener<MouseUpEvent>(handler);
+		AddListener<MouseClickEvent>(handler);
 	}
 
 }

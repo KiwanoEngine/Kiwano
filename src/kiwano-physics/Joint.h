@@ -47,7 +47,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 关节
 		class KGE_API Joint
-			: public virtual RefCounter
+			: public virtual ObjectBase
 		{
 		public:
 			/// \~chinese
@@ -87,13 +87,12 @@ namespace kiwano
 			};
 
 			Joint();
-			Joint(b2Joint* joint);
-			Joint(World* world, b2JointDef* joint_def);
+
 			virtual ~Joint();
 
 			/// \~chinese
 			/// @brief 初始化关节
-			void Init(World* world, b2JointDef* joint_def);
+			bool InitJoint(World* world, b2JointDef* joint_def);
 
 			/// \~chinese
 			/// @brief 获取关节连接的物体A
@@ -106,6 +105,10 @@ namespace kiwano
 			/// \~chinese
 			/// @brief 获取物理世界
 			World* GetWorld() const;
+
+			/// \~chinese
+			/// @brief 销毁关节
+			void Destroy();
 
 			b2Joint* GetB2Joint() const;
 			void SetB2Joint(b2Joint* joint);
@@ -160,8 +163,10 @@ namespace kiwano
 			};
 
 			DistanceJoint();
-			DistanceJoint(World* world, b2DistanceJointDef* def);
-			DistanceJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设置关节长度
@@ -229,8 +234,10 @@ namespace kiwano
 			};
 
 			FrictionJoint();
-			FrictionJoint(World* world, b2FrictionJointDef* def);
-			FrictionJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设置最大摩擦力
@@ -263,8 +270,8 @@ namespace kiwano
 			/// @brief 齿轮关节参数
 			struct Param : public Joint::ParamBase
 			{
-				JointPtr joint_a;	///< 关节A（旋转关节/平移关节）
-				JointPtr joint_b;	///< 关节B（旋转关节/平移关节）
+				Joint* joint_a;		///< 关节A（旋转关节/平移关节）
+				Joint* joint_b;		///< 关节B（旋转关节/平移关节）
 				float ratio;		///< 齿轮传动比
 
 				Param(
@@ -288,8 +295,10 @@ namespace kiwano
 			};
 
 			GearJoint();
-			GearJoint(World* world, b2GearJointDef* def);
-			GearJoint(World* world, Param param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设定齿轮传动比
@@ -343,8 +352,10 @@ namespace kiwano
 			};
 
 			MotorJoint();
-			MotorJoint(World* world, b2MotorJointDef* def);
-			MotorJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设置最大摩擦力
@@ -426,8 +437,10 @@ namespace kiwano
 			};
 
 			PrismaticJoint();
-			PrismaticJoint(World* world, b2PrismaticJointDef* def);
-			PrismaticJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 获取参考角
@@ -537,8 +550,10 @@ namespace kiwano
 			};
 
 			PulleyJoint();
-			PulleyJoint(World* world, b2PulleyJointDef* def);
-			PulleyJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 物体A对应的滑轮的位置
@@ -628,8 +643,10 @@ namespace kiwano
 			};
 
 			RevoluteJoint();
-			RevoluteJoint(World* world, b2RevoluteJointDef* def);
-			RevoluteJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 获取参考角
@@ -731,8 +748,10 @@ namespace kiwano
 			};
 
 			RopeJoint();
-			RopeJoint(World* world, b2RopeJointDef* def);
-			RopeJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设置关节最大长度
@@ -786,8 +805,10 @@ namespace kiwano
 			};
 
 			WeldJoint();
-			WeldJoint(World* world, b2WeldJointDef* def);
-			WeldJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 获取物体B相对于物体A的角度
@@ -869,8 +890,10 @@ namespace kiwano
 			};
 
 			WheelJoint();
-			WheelJoint(World* world, b2WheelJointDef* def);
-			WheelJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 获取关节当前的平移距离
@@ -970,8 +993,10 @@ namespace kiwano
 			};
 
 			MouseJoint();
-			MouseJoint(World* world, b2MouseJointDef* def);
-			MouseJoint(World* world, Param const& param);
+
+			/// \~chinese
+			/// @brief 初始化关节
+			bool InitJoint(World* world, Param const& param);
 
 			/// \~chinese
 			/// @brief 设定最大摩擦力 [N]

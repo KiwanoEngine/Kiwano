@@ -36,25 +36,12 @@ namespace kiwano
 		{
 		}
 
-		Body::Body(b2Body* body, Actor* actor)
-			: Body()
-		{
-			SetB2Body(body);
-			SetActor(actor);
-		}
-
-		Body::Body(World* world, Actor* actor)
-			: Body()
-		{
-			Init(world, actor);
-		}
-
 		Body::~Body()
 		{
 			Destroy();
 		}
 
-		void Body::Init(World* world, Actor* actor)
+		bool Body::InitBody(World* world, Actor* actor)
 		{
 			KGE_ASSERT(world);
 
@@ -64,9 +51,14 @@ namespace kiwano
 			b2BodyDef def;
 			b2Body* b2body = world->GetB2World()->CreateBody(&def);
 
-			SetB2Body(b2body);
-			SetActor(actor);
-			UpdateFromActor();
+			if (b2body)
+			{
+				SetB2Body(b2body);
+				SetActor(actor);
+				UpdateFromActor();
+				return true;
+			}
+			return false;
 		}
 
 		Fixture Body::AddFixture(Shape* shape, const Fixture::Param& param)
@@ -253,7 +245,7 @@ namespace kiwano
 
 		void Body::Destroy()
 		{
-			if (world_ && body_)
+			if (world_)
 			{
 				world_->RemoveBody(this);
 			}

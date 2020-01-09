@@ -41,7 +41,7 @@ namespace kiwano
 		* @brief HTTP«Î«Û
 		*/
 		class KGE_API HttpRequest
-			: public ObjectBase
+			: public virtual ObjectBase
 		{
 		public:
 			/// \~chinese

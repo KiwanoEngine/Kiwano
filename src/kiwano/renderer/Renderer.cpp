@@ -870,15 +870,15 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		ComPtr<ID2D1SolidColorBrush> output;
 		if (SUCCEEDED(hr))
 		{
+			ComPtr<ID2D1SolidColorBrush> output;
 			hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &output);
-		}
 
-		if (SUCCEEDED(hr))
-		{
-			brush.SetBrush(output, Brush::Type::SolidColor);
+			if (SUCCEEDED(hr))
+			{
+				brush.SetBrush(output, Brush::Type::SolidColor);
+			}
 		}
 
 		win32::ThrowIfFailed(hr);
@@ -894,7 +894,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			ID2D1GradientStopCollection* collection = nullptr;
+			ComPtr<ID2D1GradientStopCollection> collection;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
 				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
 				UINT32(stops.size()),
@@ -911,7 +911,7 @@ namespace kiwano
 						DX::ConvertToPoint2F(begin),
 						DX::ConvertToPoint2F(end)
 					),
-					collection,
+					collection.get(),
 					&output
 				);
 
@@ -936,7 +936,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			ID2D1GradientStopCollection* collection = nullptr;
+			ComPtr<ID2D1GradientStopCollection> collection;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
 				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
 				UINT32(stops.size()),
@@ -955,7 +955,7 @@ namespace kiwano
 						radius.x,
 						radius.y
 					),
-					collection,
+					collection.get(),
 					&output
 				);
 

@@ -70,6 +70,10 @@ namespace kiwano
 		const TextLayout& GetLayout() const;
 
 		/// \~chinese
+		/// @brief 获取文本布局大小
+		Size GetLayoutSize() const;
+
+		/// \~chinese
 		/// @brief 获取填充画刷
 		BrushPtr GetFillBrush() const;
 
@@ -199,6 +203,11 @@ namespace kiwano
 	inline const TextLayout& TextActor::GetLayout() const
 	{
 		return text_layout_;
+	}
+
+	inline Size TextActor::GetLayoutSize() const
+	{
+		return text_layout_.GetLayoutSize();
 	}
 
 	inline BrushPtr TextActor::GetFillBrush() const

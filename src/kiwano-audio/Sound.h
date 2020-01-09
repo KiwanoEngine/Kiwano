@@ -43,7 +43,7 @@ namespace kiwano
 		* @brief “Ù∆µ
 		*/
 		class KGE_API Sound
-			: public ObjectBase
+			: public virtual ObjectBase
 		{
 			friend class AudioEngine;
 

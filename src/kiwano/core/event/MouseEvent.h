@@ -25,8 +25,6 @@
 
 namespace kiwano
 {
-	class Actor;
-
 	/**
 	* \addtogroup Events
 	* @{
@@ -41,7 +39,6 @@ namespace kiwano
 		Point pos;				///< 鼠标位置
 		bool left_btn_down;		///< 鼠标左键是否按下
 		bool right_btn_down;	///< 鼠标右键是否按下
-		Actor* target;			///< 目标
 
 		MouseEvent(EventType const& type);
 	};

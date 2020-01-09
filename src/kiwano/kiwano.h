@@ -100,6 +100,7 @@
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/TextActor.h>
 #include <kiwano/2d/Canvas.h>
+#include <kiwano/2d/Button.h>
 #include <kiwano/2d/ShapeActor.h>
 #include <kiwano/2d/DebugActor.h>
 
@@ -122,11 +123,3 @@
 #include <kiwano/utils/UserData.h>
 #include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
-
-
-//
-// ui
-//
-
-#include <kiwano/ui/Button.h>
-#include <kiwano/ui/Menu.h>

@@ -38,7 +38,7 @@ namespace kiwano
 		* @brief ÒôÆµ²¥·ÅÆ÷
 		*/
 		class KGE_API SoundPlayer
-			: public ObjectBase
+			: public virtual ObjectBase
 		{
 		public:
 			SoundPlayer();

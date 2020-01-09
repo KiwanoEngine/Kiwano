@@ -39,7 +39,7 @@ namespace kiwano
 	* @brief ÎèÌ¨¹ý¶É¶¯»­
 	*/
 	class KGE_API Transition
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class Director;
 

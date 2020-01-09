@@ -55,7 +55,7 @@ namespace kiwano
 	/// @brief 渲染目标
 	/// @details 渲染目标将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
 	class KGE_API RenderTarget
-		: public ObjectBase
+		: public virtual ObjectBase
 	{
 		friend class Renderer;
 
