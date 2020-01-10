@@ -28,21 +28,21 @@ namespace kiwano
 		, callback_()
 		, running_(true)
 		, removeable_(false)
+		, swallow_(false)
 	{
 	}
 
 	EventListener::EventListener(EventType type, Callback const& callback)
-		: type_(type)
-		, callback_(callback)
-		, running_(true)
-		, removeable_(false)
+		: EventListener(String(), type, callback)
 	{
 	}
 
 	EventListener::EventListener(String const& name, EventType type, Callback const& callback)
-		: EventListener(type, callback)
+		: EventListener()
 	{
 		SetName(name);
+		SetEventType(type);
+		SetCallback(callback);
 	}
 
 	EventListener::~EventListener()

@@ -23,10 +23,10 @@
 
 namespace kiwano
 {
-	void EventDispatcher::Dispatch(Event& evt)
+	bool EventDispatcher::DispatchEvent(Event& evt)
 	{
 		if (listeners_.empty())
-			return;
+			return true;
 
 		EventListenerPtr next;
 		for (auto listener = listeners_.first_item(); listener; listener = next)
@@ -34,15 +34,15 @@ namespace kiwano
 			next = listener->next_item();
 
 			if (listener->IsRunning())
-			{
 				listener->Receive(evt);
-			}
 
 			if (listener->IsRemoveable())
-			{
 				listeners_.remove(listener);
-			}
+
+			if (listener->IsSwallowEnabled())
+				return false;
 		}
+		return true;
 	}
 
 	EventListener* EventDispatcher::AddListener(EventListenerPtr listener)

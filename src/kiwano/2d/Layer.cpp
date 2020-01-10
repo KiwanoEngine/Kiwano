@@ -54,20 +54,16 @@ namespace kiwano
 		area_.SetMaskTransform(transform);
 	}
 
-	void Layer::Dispatch(Event& evt)
+	bool Layer::DispatchEvent(Event& evt)
 	{
 		if (!IsVisible())
-			return;
+			return true;
 
-		if (!swallow_)
+		if (swallow_)
 		{
-			for (auto child = GetAllChildren().rbegin(); child != GetAllChildren().rend(); ++child)
-			{
-				child->Dispatch(evt);
-			}
+			return EventDispatcher::DispatchEvent(evt);
 		}
-
-		EventDispatcher::Dispatch(evt);
+		return Actor::DispatchEvent(evt);
 	}
 
 	void Layer::Render(RenderContext& ctx)

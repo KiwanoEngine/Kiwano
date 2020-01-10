@@ -116,6 +116,15 @@ namespace kiwano
 		bool IsRemoveable() const;
 
 		/// \~chinese
+		/// @brief 是否开启消息吞没
+		bool IsSwallowEnabled() const;
+
+		/// \~chinese
+		/// @brief 设置消息吞没功能
+		/// @param enabled 是否启用
+		void SetSwallowEnabled(bool enabled);
+
+		/// \~chinese
 		/// @brief 获取回调函数
 		const Callback& GetCallback() const;
 
@@ -150,6 +159,7 @@ namespace kiwano
 	private:
 		bool		running_;
 		bool		removeable_;
+		bool		swallow_;
 		EventType	type_;
 		Callback	callback_;
 	};
@@ -178,6 +188,16 @@ namespace kiwano
 	inline bool EventListener::IsRemoveable() const
 	{
 		return removeable_;
+	}
+
+	inline bool EventListener::IsSwallowEnabled() const
+	{
+		return swallow_;
+	}
+
+	inline void EventListener::SetSwallowEnabled(bool enabled)
+	{
+		swallow_ = enabled;
 	}
 
 	inline const EventListener::Callback& EventListener::GetCallback() const

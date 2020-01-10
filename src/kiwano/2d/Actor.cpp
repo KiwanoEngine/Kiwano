@@ -175,10 +175,10 @@ namespace kiwano
 		return visible_in_rt_;
 	}
 
-	void Actor::Dispatch(Event& evt)
+	bool Actor::DispatchEvent(Event& evt)
 	{
 		if (!visible_)
-			return;
+			return true;
 
 		// Dispatch to children those are greater than 0 in Z-Order
 		Actor* child = children_.last_item().get();
@@ -187,23 +187,29 @@ namespace kiwano
 			if (child->GetZOrder() < 0)
 				break;
 
-			child->Dispatch(evt);
+			if (!child->DispatchEvent(evt))
+				return false;
+
 			child = child->prev_item().get();
 		}
+
+		if (!EventDispatcher::DispatchEvent(evt))
+			return false;
 
 		HandleEvent(evt);
 
 		while (child)
 		{
-			child->Dispatch(evt);
+			if (!child->DispatchEvent(evt))
+				return false;
+
 			child = child->prev_item().get();
 		}
+		return true;
 	}
 
 	void Actor::HandleEvent(Event& evt)
 	{
-		EventDispatcher::Dispatch(evt);
-
 		if (responsible_)
 		{
 			if (evt.IsType<MouseMoveEvent>())
@@ -218,7 +224,7 @@ namespace kiwano
 					hover.pos = mouse_evt.pos;
 					hover.left_btn_down = mouse_evt.left_btn_down;
 					hover.right_btn_down = mouse_evt.right_btn_down;
-					EventDispatcher::Dispatch(hover);
+					EventDispatcher::DispatchEvent(hover);
 				}
 				else if (hover_ && !contains)
 				{
@@ -229,7 +235,7 @@ namespace kiwano
 					out.pos = mouse_evt.pos;
 					out.left_btn_down = mouse_evt.left_btn_down;
 					out.right_btn_down = mouse_evt.right_btn_down;
-					EventDispatcher::Dispatch(out);
+					EventDispatcher::DispatchEvent(out);
 				}
 			}
 
@@ -249,7 +255,7 @@ namespace kiwano
 				click.left_btn_down = mouse_up_evt.left_btn_down;
 				click.right_btn_down = mouse_up_evt.right_btn_down;
 				click.button = mouse_up_evt.button;
-				EventDispatcher::Dispatch(click);
+				EventDispatcher::DispatchEvent(click);
 			}
 		}
 	}

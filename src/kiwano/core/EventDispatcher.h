@@ -131,7 +131,8 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 分发事件
 		/// @param evt 事件
-		virtual void Dispatch(Event& evt);
+		/// @return 是否继续分发该事件
+		bool DispatchEvent(Event& evt);
 
 	private:
 		Listeners listeners_;

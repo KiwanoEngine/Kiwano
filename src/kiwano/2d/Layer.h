@@ -82,7 +82,7 @@ namespace kiwano
 		/// @brief »ñÈ¡Í¼²ãÇøÓò
 		LayerArea const& GetArea() const;
 
-		void Dispatch(Event& evt) override;
+		bool DispatchEvent(Event& evt) override;
 
 	protected:
 		void Render(RenderContext& ctx) override;

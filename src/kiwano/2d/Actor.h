@@ -393,7 +393,9 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 分发事件
-		void Dispatch(Event& evt) override;
+		/// @param evt 事件
+		/// @return 是否继续分发该事件
+		virtual bool DispatchEvent(Event& evt);
 
 		/// \~chinese
 		/// @brief 设置默认锚点
