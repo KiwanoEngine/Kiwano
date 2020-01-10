@@ -82,25 +82,25 @@ namespace kiwano
 	{
 		if (type_ == Type::SolidColor && raw_)
 		{
-			auto solid_brush = dynamic_cast<ID2D1SolidColorBrush*>(raw_.get());
-			KGE_ASSERT(solid_brush != nullptr);
+			ComPtr<ID2D1SolidColorBrush> solid_brush;
 
-			solid_brush->SetColor(DX::ConvertToColorF(color));
+			if (SUCCEEDED(raw_->QueryInterface(&solid_brush)))
+			{
+				solid_brush->SetColor(DX::ConvertToColorF(color));
+				return;
+			}
 		}
-		else
-		{
-			Renderer::instance().CreateSolidBrush(*this, color);
-		}
+		Renderer::instance().CreateSolidBrush(*this, color);
 	}
 
 	void Brush::SetStyle(LinearGradientStyle const& style)
 	{
-		Renderer::instance().CreateLinearGradientBrush(*this, style.begin, style.end, style.stops, style.extend_mode);
+		Renderer::instance().CreateLinearGradientBrush(*this, style);
 	}
 
 	void Brush::SetStyle(RadialGradientStyle const& style)
 	{
-		Renderer::instance().CreateRadialGradientBrush(*this, style.center, style.offset, style.radius, style.stops, style.extend_mode);
+		Renderer::instance().CreateRadialGradientBrush(*this, style);
 	}
 
 	void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)

@@ -57,7 +57,7 @@ namespace kiwano
 			}
 		}
 
-		dirty_flag_ = DirtyFlag::Clean;
+		dirty_flag_ = DirtyFlag::Updated;
 	}
 
 	void TextLayout::SetText(const String& text)

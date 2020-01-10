@@ -151,6 +151,20 @@ namespace kiwano
 		/// @param length 长度
 		void SetStrikethrough(bool enable, uint32_t start, uint32_t length);
 
+		/// \~chinese
+		/// @brief 脏数据标志
+		enum DirtyFlag : uint8_t
+		{
+			Clean = 0,				///< 干净数据
+			DirtyFormat = 1,		///< 文字格式待更新
+			DirtyLayout = 1 << 1,	///< 文字布局待更新
+			Updated = 1 << 2,		///< 数据已更新
+		};
+
+		uint8_t GetDirtyFlag() const;
+
+		void SetDirtyFlag(uint8_t flag);
+
 	private:
 		ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
@@ -161,12 +175,6 @@ namespace kiwano
 		void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
 
 	private:
-		enum DirtyFlag : uint8_t
-		{
-			Clean = 0,
-			DirtyFormat = 1,
-			DirtyLayout = 1 << 1,
-		};
 		uint8_t dirty_flag_;
 
 		ComPtr<IDWriteTextFormat> text_format_;
@@ -196,6 +204,16 @@ namespace kiwano
 	inline const TextStyle& TextLayout::GetStyle() const
 	{
 		return style_;
+	}
+
+	inline uint8_t TextLayout::GetDirtyFlag() const
+	{
+		return dirty_flag_;
+	}
+
+	inline void TextLayout::SetDirtyFlag(uint8_t flag)
+	{
+		dirty_flag_ = flag;
 	}
 
 	inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const

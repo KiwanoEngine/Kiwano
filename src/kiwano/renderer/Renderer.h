@@ -243,33 +243,19 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 创建线性渐变画刷
 		/// @param[out] brush 画刷
-		/// @param[in] begin 渐变起始点
-		/// @param[in] end 渐变终止点
-		/// @param[in] stops 渐变转换点集合
-		/// @param[in] extend_mode 渐变扩充模式
+		/// @param[in] style 线性渐变样式
 		void CreateLinearGradientBrush(
 			Brush& brush,
-			Point const& begin,
-			Point const& end,
-			Vector<GradientStop> const& stops,
-			GradientExtendMode extend_mode
+			LinearGradientStyle const& style
 		);
 
 		/// \~chinese
 		/// @brief 创建径向渐变画刷
 		/// @param[out] brush 画刷
-		/// @param[in] center 径向渐变圆心
-		/// @param[in] offset 径向渐变偏移
-		/// @param[in] radius 径向渐变半径
-		/// @param[in] stops 渐变转换点集合
-		/// @param[in] extend_mode 渐变扩充模式
+		/// @param[in] style 径向渐变样式
 		void CreateRadialGradientBrush(
 			Brush& brush,
-			Point const& center,
-			Vec2 const& offset,
-			Vec2 const& radius,
-			Vector<GradientStop> const& stops,
-			GradientExtendMode extend_mode
+			RadialGradientStyle const& style
 		);
 
 	public:

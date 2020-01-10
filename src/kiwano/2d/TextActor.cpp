@@ -49,6 +49,7 @@ namespace kiwano
 
 	const TextStyle& TextActor::GetDefaultStyle()
 	{
+		InitDefaultTextStyle();
 		return text_default_style;
 	}
 
@@ -58,7 +59,7 @@ namespace kiwano
 	}
 
 	TextActor::TextActor(String const& text)
-		: TextActor(text, text_default_style)
+		: TextActor(text, GetDefaultStyle())
 	{
 	}
 
@@ -66,8 +67,6 @@ namespace kiwano
 		: show_underline_(false)
 		, show_strikethrough_(false)
 	{
-		InitDefaultTextStyle();
-
 		SetText(text);
 		SetStyle(style);
 	}
@@ -91,7 +90,10 @@ namespace kiwano
 		if (text_layout_.IsDirty())
 		{
 			text_layout_.Update();
+		}
 
+		if (text_layout_.GetDirtyFlag() & TextLayout::DirtyFlag::Updated)
+		{
 			if (show_underline_)
 				text_layout_.SetUnderline(true, 0, text_layout_.GetText().length());
 
@@ -109,7 +111,7 @@ namespace kiwano
 
 	void TextActor::SetFillColor(Color const& color)
 	{
-		if (!text_layout_.GetFillBrush())
+		if (!text_layout_.GetFillBrush() || text_layout_.GetFillBrush() == GetDefaultStyle().fill_brush)
 		{
 			BrushPtr brush = new Brush;
 			text_layout_.SetFillBrush(brush);
@@ -119,11 +121,12 @@ namespace kiwano
 
 	void TextActor::SetOutlineColor(Color const& outline_color)
 	{
-		if (!text_layout_.GetOutlineBrush())
+		if (!text_layout_.GetOutlineBrush() || text_layout_.GetOutlineBrush() == GetDefaultStyle().outline_brush)
 		{
 			BrushPtr brush = new Brush;
 			text_layout_.SetOutlineBrush(brush);
 		}
 		text_layout_.GetOutlineBrush()->SetColor(outline_color);
 	}
+
 }

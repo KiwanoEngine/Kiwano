@@ -884,7 +884,7 @@ namespace kiwano
 		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateLinearGradientBrush(Brush& brush, Point const& begin, Point const& end, Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	void Renderer::CreateLinearGradientBrush(Brush& brush, LinearGradientStyle const& style)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -896,10 +896,10 @@ namespace kiwano
 		{
 			ComPtr<ID2D1GradientStopCollection> collection;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
-				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
-				UINT32(stops.size()),
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]),
+				UINT32(style.stops.size()),
 				D2D1_GAMMA_2_2,
-				D2D1_EXTEND_MODE(extend_mode),
+				D2D1_EXTEND_MODE(style.extend_mode),
 				&collection
 			);
 
@@ -908,8 +908,8 @@ namespace kiwano
 				ComPtr<ID2D1LinearGradientBrush> output;
 				hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
 					D2D1::LinearGradientBrushProperties(
-						DX::ConvertToPoint2F(begin),
-						DX::ConvertToPoint2F(end)
+						DX::ConvertToPoint2F(style.begin),
+						DX::ConvertToPoint2F(style.end)
 					),
 					collection.get(),
 					&output
@@ -925,8 +925,7 @@ namespace kiwano
 		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateRadialGradientBrush(Brush& brush, Point const& center, Vec2 const& offset, Vec2 const& radius,
-		Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+	void Renderer::CreateRadialGradientBrush(Brush& brush, RadialGradientStyle const& style)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -938,10 +937,10 @@ namespace kiwano
 		{
 			ComPtr<ID2D1GradientStopCollection> collection;
 			hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
-				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&stops[0]),
-				UINT32(stops.size()),
+				reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]),
+				UINT32(style.stops.size()),
 				D2D1_GAMMA_2_2,
-				D2D1_EXTEND_MODE(extend_mode),
+				D2D1_EXTEND_MODE(style.extend_mode),
 				&collection
 			);
 
@@ -950,10 +949,10 @@ namespace kiwano
 				ComPtr<ID2D1RadialGradientBrush> output;
 				hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
 					D2D1::RadialGradientBrushProperties(
-						DX::ConvertToPoint2F(center),
-						DX::ConvertToPoint2F(offset),
-						radius.x,
-						radius.y
+						DX::ConvertToPoint2F(style.center),
+						DX::ConvertToPoint2F(style.offset),
+						style.radius.x,
+						style.radius.y
 					),
 					collection.get(),
 					&output
