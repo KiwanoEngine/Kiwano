@@ -69,7 +69,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 获取线条样式
-		StrokeStyle SetStrokeStyle() const;
+		const StrokeStyle& GetStrokeStyle() const;
 
 		/// \~chinese
 		/// @brief 获取形状
@@ -113,7 +113,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置线条样式
-		void SetStrokeStyle(StrokeStyle stroke_style);
+		void SetStrokeStyle(const StrokeStyle& stroke_style);
 
 		/// \~chinese
 		/// @brief 设置几何形状
@@ -378,25 +378,25 @@ namespace kiwano
 		fill_brush_->SetColor(color);
 	}
 
-	inline void			ShapeActor::SetFillBrush(BrushPtr brush)		{ fill_brush_ = brush; }
-	inline void			ShapeActor::SetStrokeBrush(BrushPtr brush)		{ stroke_brush_ = brush; }
-	inline BrushPtr		ShapeActor::GetFillBrush() const				{ return fill_brush_; }
-	inline BrushPtr		ShapeActor::GetStrokeBrush() const				{ return stroke_brush_; }
-	inline float		ShapeActor::GetStrokeWidth() const				{ return stroke_width_; }
-	inline StrokeStyle	ShapeActor::SetStrokeStyle() const				{ return stroke_style_; }
-	inline Geometry		ShapeActor::GetGeometry() const					{ return geo_; }
+	inline void					ShapeActor::SetFillBrush(BrushPtr brush)		{ fill_brush_ = brush; }
+	inline void					ShapeActor::SetStrokeBrush(BrushPtr brush)		{ stroke_brush_ = brush; }
+	inline BrushPtr				ShapeActor::GetFillBrush() const				{ return fill_brush_; }
+	inline BrushPtr				ShapeActor::GetStrokeBrush() const				{ return stroke_brush_; }
+	inline float				ShapeActor::GetStrokeWidth() const				{ return stroke_width_; }
+	inline const StrokeStyle&	ShapeActor::GetStrokeStyle() const				{ return stroke_style_; }
+	inline Geometry				ShapeActor::GetGeometry() const					{ return geo_; }
 
-	inline Point const& LineActor::GetBeginPoint() const				{ return begin_; }
-	inline Point const& LineActor::GetEndPoint() const					{ return end_; }
-	inline void			LineActor::SetBeginPoint(Point const& begin)	{ SetLine(begin, end_); }
-	inline void			LineActor::SetEndPoint(Point const& end)		{ SetLine(begin_, end); }
+	inline Point const&			LineActor::GetBeginPoint() const				{ return begin_; }
+	inline Point const&			LineActor::GetEndPoint() const					{ return end_; }
+	inline void					LineActor::SetBeginPoint(Point const& begin)	{ SetLine(begin, end_); }
+	inline void					LineActor::SetEndPoint(Point const& end)		{ SetLine(begin_, end); }
 
-	inline Size const&	RectActor::GetRectSize() const					{ return rect_size_; }
+	inline Size const&			RectActor::GetRectSize() const					{ return rect_size_; }
 
-	inline Vec2			RoundRectActor::GetRadius() const				{ return radius_; }
-	inline Size			RoundRectActor::GetRectSize() const				{ return GetSize(); }
+	inline Vec2					RoundRectActor::GetRadius() const				{ return radius_; }
+	inline Size					RoundRectActor::GetRectSize() const				{ return GetSize(); }
 
-	inline float		CircleActor::GetRadius() const					{ return radius_; }
+	inline float				CircleActor::GetRadius() const					{ return radius_; }
 
 	inline Vec2			EllipseActor::GetRadius() const					{ return radius_; }
 }

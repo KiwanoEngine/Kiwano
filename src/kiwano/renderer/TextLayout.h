@@ -135,7 +135,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 设置文字描边线相交样式
-		void SetOutlineStroke(StrokeStyle outline_stroke);
+		void SetOutlineStroke(const StrokeStyle& outline_stroke);
 
 		/// \~chinese
 		/// @brief 设置下划线
@@ -261,7 +261,7 @@ namespace kiwano
 		style_.outline_width = outline_width;
 	}
 
-	inline void TextLayout::SetOutlineStroke(StrokeStyle outline_stroke)
+	inline void TextLayout::SetOutlineStroke(const StrokeStyle& outline_stroke)
 	{
 		style_.outline_stroke = outline_stroke;
 	}

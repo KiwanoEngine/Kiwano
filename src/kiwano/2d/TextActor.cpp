@@ -94,6 +94,8 @@ namespace kiwano
 
 		if (text_layout_.GetDirtyFlag() & TextLayout::DirtyFlag::Updated)
 		{
+			text_layout_.SetDirtyFlag(TextLayout::DirtyFlag::Clean);
+
 			if (show_underline_)
 				text_layout_.SetUnderline(true, 0, text_layout_.GetText().length());
 

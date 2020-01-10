@@ -968,6 +968,38 @@ namespace kiwano
 		win32::ThrowIfFailed(hr);
 	}
 
+	void Renderer::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size, float dash_offset)
+	{
+		HRESULT hr = S_OK;
+		if (!d2d_res_)
+		{
+			hr = E_UNEXPECTED;
+		}
+
+		if (SUCCEEDED(hr))
+		{
+			D2D1_STROKE_STYLE_PROPERTIES style = D2D1::StrokeStyleProperties(
+				D2D1_CAP_STYLE(cap),
+				D2D1_CAP_STYLE(cap),
+				D2D1_CAP_STYLE(cap),
+				D2D1_LINE_JOIN(line_join),
+				10.0f,
+				D2D1_DASH_STYLE_CUSTOM,
+				dash_offset
+			);
+
+			ComPtr<ID2D1StrokeStyle> output;
+			hr = d2d_res_->GetFactory()->CreateStrokeStyle(style, dash_array, dash_size, &output);
+
+			if (SUCCEEDED(hr))
+			{
+				stroke_style.SetStrokeStyle(output);
+			}
+		}
+
+		win32::ThrowIfFailed(hr);
+	}
+
 	void Renderer::SetDpi(float dpi)
 	{
 		KGE_ASSERT(d3d_res_ && d2d_res_);

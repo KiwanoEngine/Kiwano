@@ -26,7 +26,7 @@ namespace kiwano
 {
 	ShapeActor::ShapeActor()
 		: stroke_width_(1.f)
-		, stroke_style_(StrokeStyle::Miter)
+		, stroke_style_()
 	{
 	}
 
@@ -57,7 +57,7 @@ namespace kiwano
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	void ShapeActor::SetStrokeStyle(StrokeStyle stroke_style)
+	void ShapeActor::SetStrokeStyle(const StrokeStyle& stroke_style)
 	{
 		stroke_style_ = stroke_style;
 	}

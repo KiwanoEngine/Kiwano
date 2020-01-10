@@ -59,53 +59,11 @@ namespace kiwano
 			Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
 		}
 
-		if (SUCCEEDED(hr))
-		{
-			ComPtr<ID2D1StrokeStyle> miter_stroke_style;
-			ComPtr<ID2D1StrokeStyle> bevel_stroke_style;
-			ComPtr<ID2D1StrokeStyle> round_stroke_style;
-
-			D2D1_STROKE_STYLE_PROPERTIES stroke_style = D2D1::StrokeStyleProperties(
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_CAP_STYLE_FLAT,
-				D2D1_LINE_JOIN_MITER,
-				2.0f,
-				D2D1_DASH_STYLE_SOLID,
-				0.0f
-			);
-
-			hr = factory->CreateStrokeStyle(stroke_style, nullptr, 0, &miter_stroke_style);
-
-			if (SUCCEEDED(hr))
-			{
-				stroke_style.lineJoin = D2D1_LINE_JOIN_BEVEL;
-				hr = factory->CreateStrokeStyle(stroke_style, nullptr, 0, &bevel_stroke_style);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				stroke_style.lineJoin = D2D1_LINE_JOIN_ROUND;
-				hr = factory->CreateStrokeStyle(stroke_style, nullptr, 0, &round_stroke_style);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				miter_stroke_style_ = miter_stroke_style;
-				bevel_stroke_style_ = bevel_stroke_style;
-				round_stroke_style_ = round_stroke_style;
-			}
-		}
-
 		return hr;
 	}
 
 	void RenderTarget::DiscardDeviceResources()
 	{
-		miter_stroke_style_.reset();
-		bevel_stroke_style_.reset();
-		round_stroke_style_.reset();
-
 		text_renderer_.reset();
 		render_target_.reset();
 		current_brush_.reset();
@@ -140,7 +98,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, StrokeStyle stroke)
+	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, const StrokeStyle& stroke)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -151,7 +109,7 @@ namespace kiwano
 				geometry.GetGeometry().get(),
 				current_brush_->GetBrush().get(),
 				stroke_width,
-				GetStrokeStyle(stroke).get()
+				stroke.GetStrokeStyle().get()
 			);
 
 			IncreasePrimitivesCount();
@@ -174,7 +132,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStyle stroke)
+	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, const StrokeStyle& stroke)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -184,13 +142,13 @@ namespace kiwano
 			DX::ConvertToPoint2F(point2),
 			current_brush_->GetBrush().get(),
 			stroke_width,
-			GetStrokeStyle(stroke).get()
+			stroke.GetStrokeStyle().get()
 		);
 
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, StrokeStyle stroke)
+	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, const StrokeStyle& stroke)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -199,7 +157,7 @@ namespace kiwano
 			DX::ConvertToRectF(rect),
 			current_brush_->GetBrush().get(),
 			stroke_width,
-			GetStrokeStyle(stroke).get()
+			stroke.GetStrokeStyle().get()
 		);
 
 		IncreasePrimitivesCount();
@@ -218,7 +176,7 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, StrokeStyle stroke)
+	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -231,7 +189,7 @@ namespace kiwano
 			),
 			current_brush_->GetBrush().get(),
 			stroke_width,
-			GetStrokeStyle(stroke).get()
+			stroke.GetStrokeStyle().get()
 		);
 
 		IncreasePrimitivesCount();
@@ -254,7 +212,7 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStyle stroke)
+	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -267,7 +225,7 @@ namespace kiwano
 			),
 			current_brush_->GetBrush().get(),
 			stroke_width,
-			GetStrokeStyle(stroke).get()
+			stroke.GetStrokeStyle().get()
 		);
 
 		IncreasePrimitivesCount();
@@ -346,7 +304,7 @@ namespace kiwano
 				fill_brush.get(),
 				outline_brush.get(),
 				style.outline_width,
-				GetStrokeStyle(style.outline_stroke).get()
+				style.outline_stroke.GetStrokeStyle().get()
 			);
 
 			if (SUCCEEDED(hr))
@@ -447,17 +405,6 @@ namespace kiwano
 	{
 		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 		render_target_->Clear(DX::ConvertToColorF(clear_color));
-	}
-
-	ComPtr<ID2D1StrokeStyle> RenderTarget::GetStrokeStyle(StrokeStyle style)
-	{
-		switch (style)
-		{
-		case StrokeStyle::Miter: return miter_stroke_style_;
-		case StrokeStyle::Bevel: return bevel_stroke_style_;
-		case StrokeStyle::Round: return round_stroke_style_;
-		}
-		return nullptr;
 	}
 
 	void RenderTarget::SetTransform(const Matrix3x2& matrix)

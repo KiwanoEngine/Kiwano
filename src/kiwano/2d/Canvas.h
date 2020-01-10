@@ -206,7 +206,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 设置轮廓样式
 		/// @param stroke_style 轮廓样式
-		void SetStrokeStyle(StrokeStyle stroke_style);
+		void SetStrokeStyle(const StrokeStyle& stroke_style);
 
 		/// \~chinese
 		/// @brief 设置文字画刷样式
@@ -289,7 +289,7 @@ namespace kiwano
 		stroke_width_ = std::max(width, 0.f);
 	}
 
-	inline void Canvas::SetStrokeStyle(StrokeStyle stroke_style)
+	inline void Canvas::SetStrokeStyle(const StrokeStyle& stroke_style)
 	{
 		stroke_style_ = stroke_style;
 	}

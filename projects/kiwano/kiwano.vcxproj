@@ -138,6 +138,7 @@
     <ClCompile Include="..\..\src\kiwano\renderer\Geometry.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\GeometrySink.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\GifImage.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\StrokeStyle.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\TextureCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\LayerArea.cpp" />

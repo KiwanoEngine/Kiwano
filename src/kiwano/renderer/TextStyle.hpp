@@ -80,7 +80,7 @@ namespace kiwano
 		BrushPtr	fill_brush;			///< Ìî³ä»­Ë¢
 		BrushPtr	outline_brush;		///< Ãè±ß»­Ë¢
 		float		outline_width;		///< Ãè±ßÏß¿í
-		StrokeStyle	outline_stroke;		///< Ãè±ßÏßÏà½»ÑùÊ½
+		StrokeStyle	outline_stroke;		///< Ãè±ßÏßÑùÊ½
 
 	public:
 		/**
@@ -116,7 +116,7 @@ namespace kiwano
 		, wrap_width(0)
 		, line_spacing(0)
 		, outline_width(1.0f)
-		, outline_stroke(StrokeStyle::Round)
+		, outline_stroke()
 	{
 	}
 

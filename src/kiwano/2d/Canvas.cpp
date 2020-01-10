@@ -27,7 +27,7 @@ namespace kiwano
 	Canvas::Canvas()
 		: cache_expired_(false)
 		, stroke_width_(1.0f)
-		, stroke_style_(StrokeStyle::Miter)
+		, stroke_style_()
 	{
 	}
 

@@ -258,6 +258,23 @@ namespace kiwano
 			RadialGradientStyle const& style
 		);
 
+		/// \~chinese
+		/// @brief 创建线条样式
+		/// @param[out] stroke_style 线条样式
+		/// @param[in] cap 线段端点样式
+		/// @param[in] line_join 线段相交样式
+		/// @param[in] dash_array 虚线长度与间隙数组
+		/// @param[in] dash_size 虚线数组大小
+		/// @param[in] dash_offset 虚线偏移量
+		void CreateStrokeStyle(
+			StrokeStyle& stroke_style,
+			CapStyle cap,
+			LineJoinStyle line_join,
+			const float* dash_array,
+			size_t dash_size,
+			float dash_offset
+		);
+
 	public:
 		/// \~chinese
 		/// @brief 获取目标窗口

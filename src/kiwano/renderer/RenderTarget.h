@@ -77,7 +77,7 @@ namespace kiwano
 		void DrawGeometry(
 			Geometry const& geometry,
 			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+			const StrokeStyle& stroke = StrokeStyle()
 		);
 
 		/// \~chinese
@@ -92,7 +92,7 @@ namespace kiwano
 			Point const& point1,
 			Point const& point2,
 			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+			const StrokeStyle& stroke = StrokeStyle()
 		);
 
 		/// \~chinese
@@ -100,7 +100,7 @@ namespace kiwano
 		void DrawRectangle(
 			Rect const& rect,
 			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+			const StrokeStyle& stroke = StrokeStyle()
 		);
 
 		/// \~chinese
@@ -115,7 +115,7 @@ namespace kiwano
 			Rect const& rect,
 			Vec2 const& radius,
 			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+			const StrokeStyle& stroke = StrokeStyle()
 		);
 
 		/// \~chinese
@@ -131,7 +131,7 @@ namespace kiwano
 			Point const& center,
 			Vec2 const& radius,
 			float stroke_width,
-			StrokeStyle stroke = StrokeStyle::Miter
+			const StrokeStyle& stroke = StrokeStyle()
 		);
 
 		/// \~chinese
@@ -288,8 +288,6 @@ namespace kiwano
 
 		ComPtr<ITextRenderer> GetTextRenderer() const;
 
-		ComPtr<ID2D1StrokeStyle> GetStrokeStyle(StrokeStyle style);
-
 	private:
 		/// \~chinese
 		/// @brief 创建设备依赖资源
@@ -310,9 +308,6 @@ namespace kiwano
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
 		ComPtr<ID2D1RenderTarget>		render_target_;
-		ComPtr<ID2D1StrokeStyle>		miter_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>		bevel_stroke_style_;
-		ComPtr<ID2D1StrokeStyle>		round_stroke_style_;
 		BrushPtr						current_brush_;
 		Rect							visible_size_;
 		Matrix3x2						global_transform_;
