@@ -91,30 +91,30 @@ namespace kiwano
 		}
 	}
 
-	void Transition::Render(RenderTarget* rt)
+	void Transition::Render(RenderContext& ctx)
 	{
 		if (out_stage_)
 		{
-			out_stage_->PrepareToRender(rt);
-			rt->PushClipRect(Rect{ Point{}, window_size_ });
-			rt->PushLayer(out_layer_);
+			out_stage_->PrepareToRender(ctx);
+			ctx.PushClipRect(Rect{ Point{}, window_size_ });
+			ctx.PushLayer(out_layer_);
 
-			out_stage_->Render(rt);
+			out_stage_->Render(ctx);
 
-			rt->PopLayer();
-			rt->PopClipRect();
+			ctx.PopLayer();
+			ctx.PopClipRect();
 		}
 
 		if (in_stage_)
 		{
-			in_stage_->PrepareToRender(rt);
-			rt->PushClipRect(Rect{ Point{}, window_size_ });
-			rt->PushLayer(in_layer_);
+			in_stage_->PrepareToRender(ctx);
+			ctx.PushClipRect(Rect{ Point{}, window_size_ });
+			ctx.PushLayer(in_layer_);
 
-			in_stage_->Render(rt);
+			in_stage_->Render(ctx);
 
-			rt->PopLayer();
-			rt->PopClipRect();
+			ctx.PopLayer();
+			ctx.PopClipRect();
 		}
 	}
 

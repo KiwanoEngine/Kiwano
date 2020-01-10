@@ -77,9 +77,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->IsName(listener_name))
+			if (listener.IsName(listener_name))
 			{
-				listener->Start();
+				listener.Start();
 			}
 		}
 	}
@@ -88,9 +88,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->IsName(listener_name))
+			if (listener.IsName(listener_name))
 			{
-				listener->Stop();
+				listener.Stop();
 			}
 		}
 	}
@@ -99,9 +99,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->IsName(listener_name))
+			if (listener.IsName(listener_name))
 			{
-				listener->Remove();
+				listener.Remove();
 			}
 		}
 	}
@@ -110,9 +110,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->type_ == type)
+			if (listener.GetEventType() == type)
 			{
-				listener->Start();
+				listener.Start();
 			}
 		}
 	}
@@ -121,9 +121,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->type_ == type)
+			if (listener.GetEventType() == type)
 			{
-				listener->Stop();
+				listener.Stop();
 			}
 		}
 	}
@@ -132,9 +132,9 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			if (listener->type_ == type)
+			if (listener.GetEventType() == type)
 			{
-				listener->Remove();
+				listener.Remove();
 			}
 		}
 	}
@@ -143,7 +143,7 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			listener->Start();
+			listener.Start();
 		}
 	}
 
@@ -151,7 +151,7 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			listener->Stop();
+			listener.Stop();
 		}
 	}
 
@@ -159,7 +159,7 @@ namespace kiwano
 	{
 		for (auto& listener : listeners_)
 		{
-			listener->Remove();
+			listener.Remove();
 		}
 	}
 

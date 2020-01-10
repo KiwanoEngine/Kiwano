@@ -75,12 +75,11 @@ namespace kiwano
 	{
 	}
 
-	void DebugActor::OnRender(RenderTarget* rt)
+	void DebugActor::OnRender(RenderContext& ctx)
 	{
-		rt->SetCurrentBrush(background_brush_);
-		rt->FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
-
-		rt->DrawTextLayout(debug_text_, Point(10, 10));
+		ctx.SetCurrentBrush(background_brush_);
+		ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
+		ctx.DrawTextLayout(debug_text_, Point(10, 10));
 	}
 
 	void DebugActor::OnUpdate(Duration dt)
@@ -140,7 +139,7 @@ namespace kiwano
 		}
 	}
 
-	bool DebugActor::CheckVisibilty(RenderTarget* rt) const
+	bool DebugActor::CheckVisibilty(RenderContext& ctx) const
 	{
 		return true;
 	}

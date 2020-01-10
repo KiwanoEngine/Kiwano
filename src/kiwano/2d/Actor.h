@@ -31,7 +31,7 @@ namespace kiwano
 {
 	class Stage;
 	class Director;
-	class RenderTarget;
+	class RenderContext;
 
 	KGE_DECLARE_SMART_PTR(Actor);
 
@@ -83,8 +83,8 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 渲染角色
 		/// @details 每帧画面刷新时调用该函数，默认不进行渲染，重载该函数以实现具体渲染过程
-		/// @param rt 渲染目标
-		virtual void OnRender(RenderTarget* rt);
+		/// @param ctx 渲染上下文
+		virtual void OnRender(RenderContext& ctx);
 
 		/// \~chinese
 		/// @brief 获取显示状态
@@ -406,19 +406,19 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 渲染自身和所有子角色
-		virtual void Render(RenderTarget* rt);
+		virtual void Render(RenderContext& ctx);
 
 		/// \~chinese
 		/// @brief 绘制自身和所有子角色的边界
-		virtual void RenderBorder(RenderTarget* rt);
+		virtual void RenderBorder(RenderContext& ctx);
 
 		/// \~chinese
-		/// @brief 检查是否在渲染目标的视区内
-		virtual bool CheckVisibilty(RenderTarget* rt) const;
+		/// @brief 检查是否在渲染上下文的视区内
+		virtual bool CheckVisibilty(RenderContext& ctx) const;
 
 		/// \~chinese
-		/// @brief 渲染前初始化渲染目标状态，仅当 CheckVisibilty 返回真时调用该函数
-		virtual void PrepareToRender(RenderTarget* rt);
+		/// @brief 渲染前初始化渲染上下文状态，仅当 CheckVisibilty 返回真时调用该函数
+		virtual void PrepareToRender(RenderContext& ctx);
 
 		/// \~chinese
 		/// @brief 更新自己的二维变换，并通知所有子角色
@@ -477,9 +477,9 @@ namespace kiwano
 		KGE_NOT_USED(dt);
 	}
 
-	inline void Actor::OnRender(RenderTarget* rt)
+	inline void Actor::OnRender(RenderContext& ctx)
 	{
-		KGE_NOT_USED(rt);
+		KGE_NOT_USED(ctx);
 	}
 
 	inline bool Actor::IsVisible() const

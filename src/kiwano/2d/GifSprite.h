@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 #include <kiwano/renderer/GifImage.h>
 
 namespace kiwano
@@ -98,7 +98,7 @@ namespace kiwano
 		/// @brief ªÒ»° GIF Õº∆¨
 		GifImagePtr GetGifImage() const;
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 	private:
 		void Update(Duration dt) override;
@@ -147,7 +147,7 @@ namespace kiwano
 		GifImage::Frame			frame_;
 		TexturePtr				saved_frame_;
 		TexturePtr				frame_to_render_;
-		TextureRenderTargetPtr	frame_rt_;
+		TextureRenderContextPtr	frame_rt_;
 	};
 
 	/** @} */

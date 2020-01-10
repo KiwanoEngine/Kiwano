@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 #include <kiwano/renderer/GeometrySink.h>
 
 namespace kiwano
@@ -262,7 +262,7 @@ namespace kiwano
 		/// @brief µ¼³öÎÆÀí
 		TexturePtr ExportToTexture() const;
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 	private:
 		void InitRenderTargetAndBrushs();
@@ -279,7 +279,7 @@ namespace kiwano
 
 		mutable bool					cache_expired_;
 		mutable TexturePtr				texture_cached_;
-		mutable TextureRenderTargetPtr	rt_;
+		mutable TextureRenderContextPtr	ctx_;
 	};
 
 	/** @} */

@@ -46,9 +46,9 @@ namespace kiwano
 		KGE_SYS_LOG(L"Stage exited");
 	}
 
-	void Stage::RenderBorder(RenderTarget* rt)
+	void Stage::RenderBorder(RenderContext& ctx)
 	{
-		rt->SetBrushOpacity(1.0f);
+		ctx.SetBrushOpacity(1.0f);
 
 		if (!border_fill_brush_)
 		{
@@ -62,7 +62,7 @@ namespace kiwano
 			border_stroke_brush_->SetColor(Color(Color::Red, .8f));
 		}
 
-		Actor::RenderBorder(rt);
+		Actor::RenderBorder(ctx);
 	}
 
 }

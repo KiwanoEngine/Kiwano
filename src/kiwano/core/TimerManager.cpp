@@ -71,9 +71,9 @@ namespace kiwano
 
 		for (auto& timer : timers_)
 		{
-			if (timer->IsName(name))
+			if (timer.IsName(name))
 			{
-				timer->Stop();
+				timer.Stop();
 			}
 		}
 	}
@@ -85,9 +85,9 @@ namespace kiwano
 		
 		for (auto& timer : timers_)
 		{
-			if (timer->IsName(name))
+			if (timer.IsName(name))
 			{
-				timer->Start();
+				timer.Start();
 			}
 		}
 	}
@@ -99,9 +99,9 @@ namespace kiwano
 
 		for (auto& timer : timers_)
 		{
-			if (timer->IsName(name))
+			if (timer.IsName(name))
 			{
-				timer->Remove();
+				timer.Remove();
 			}
 		}
 	}
@@ -113,7 +113,7 @@ namespace kiwano
 
 		for (auto& timer : timers_)
 		{
-			timer->Stop();
+			timer.Stop();
 		}
 	}
 
@@ -124,7 +124,7 @@ namespace kiwano
 
 		for (auto& timer : timers_)
 		{
-			timer->Start();
+			timer.Start();
 		}
 	}
 

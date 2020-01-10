@@ -24,8 +24,8 @@
 
 namespace kiwano
 {
-	class RenderTarget;
-	class TextureRenderTarget;
+	class RenderContext;
+	class TextureRenderContext;
 	class Renderer;
 
 	KGE_DECLARE_SMART_PTR(Texture);
@@ -53,8 +53,8 @@ namespace kiwano
 	class KGE_API Texture
 		: public virtual ObjectBase
 	{
-		friend class RenderTarget;
-		friend class TextureRenderTarget;
+		friend class RenderContext;
+		friend class TextureRenderContext;
 		friend class Renderer;
 
 	public:

@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 
 	/**
 	* \addtogroup Render
@@ -36,7 +36,7 @@ namespace kiwano
 	*/
 	class KGE_API LayerArea
 	{
-		friend class RenderTarget;
+		friend class RenderContext;
 
 	public:
 		LayerArea();

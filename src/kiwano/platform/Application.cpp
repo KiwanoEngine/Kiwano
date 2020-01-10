@@ -238,7 +238,7 @@ namespace kiwano
 		}
 
 		// Rendering
-		Renderer* renderer = &Renderer::instance();
+		Renderer& renderer = Renderer::instance();
 		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);

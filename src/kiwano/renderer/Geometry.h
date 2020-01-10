@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Renderer;
 	class GeometrySink;
 
@@ -38,7 +38,7 @@ namespace kiwano
 	*/
 	class KGE_API Geometry
 	{
-		friend class RenderTarget;
+		friend class RenderContext;
 		friend class Renderer;
 		friend class GeometrySink;
 

@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Renderer;
 
 	/**
@@ -36,7 +36,7 @@ namespace kiwano
 	/// @brief 文本布局
 	class KGE_API TextLayout
 	{
-		friend class RenderTarget;
+		friend class RenderContext;
 		friend class Renderer;
 
 	public:

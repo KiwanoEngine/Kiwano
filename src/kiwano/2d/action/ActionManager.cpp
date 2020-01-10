@@ -58,18 +58,6 @@ namespace kiwano
 		return action;
 	}
 
-	ActionPtr ActionManager::GetAction(String const & name)
-	{
-		if (actions_.empty())
-			return nullptr;
-
-		for (auto& action : actions_)
-			if (action->IsName(name))
-				return action;
-
-		return nullptr;
-	}
-
 	void ActionManager::ResumeAllActions()
 	{
 		if (actions_.empty())
@@ -77,7 +65,7 @@ namespace kiwano
 
 		for (auto& action : actions_)
 		{
-			action->Resume();
+			action.Resume();
 		}
 	}
 
@@ -88,7 +76,7 @@ namespace kiwano
 
 		for (auto& action : actions_)
 		{
-			action->Pause();
+			action.Pause();
 		}
 	}
 
@@ -99,8 +87,20 @@ namespace kiwano
 
 		for (auto& action : actions_)
 		{
-			action->Stop();
+			action.Stop();
 		}
+	}
+
+	ActionPtr ActionManager::GetAction(String const& name)
+	{
+		if (actions_.empty())
+			return nullptr;
+
+		for (auto& action : actions_)
+			if (action.IsName(name))
+				return &action;
+
+		return nullptr;
 	}
 
 	const ActionManager::Actions& ActionManager::GetAllActions() const

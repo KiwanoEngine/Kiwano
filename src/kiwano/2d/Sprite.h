@@ -67,10 +67,10 @@ namespace kiwano
 		/// @param[in] frame Í¼ÏñÖ¡
 		void SetFrame(FramePtr frame);
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 	protected:
-		bool CheckVisibilty(RenderTarget* rt) const override;
+		bool CheckVisibilty(RenderContext& ctx) const override;
 
 	private:
 		FramePtr frame_;

@@ -77,7 +77,7 @@ namespace kiwano
 		}
 	}
 
-	void ShapeActor::OnRender(RenderTarget* rt)
+	void ShapeActor::OnRender(RenderContext& ctx)
 	{
 		// Create default brush
 		if (!fill_brush_)
@@ -92,16 +92,16 @@ namespace kiwano
 			stroke_brush_->SetColor(Color::Transparent);
 		}
 
-		rt->SetCurrentBrush(stroke_brush_);
-		rt->DrawGeometry(geo_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
+		ctx.SetCurrentBrush(stroke_brush_);
+		ctx.DrawGeometry(geo_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
 
-		rt->SetCurrentBrush(fill_brush_);
-		rt->FillGeometry(geo_);
+		ctx.SetCurrentBrush(fill_brush_);
+		ctx.FillGeometry(geo_);
 	}
 
-	bool ShapeActor::CheckVisibilty(RenderTarget* rt) const
+	bool ShapeActor::CheckVisibilty(RenderContext& ctx) const
 	{
-		return geo_.IsValid() && Actor::CheckVisibilty(rt);
+		return geo_.IsValid() && Actor::CheckVisibilty(ctx);
 	}
 
 	//-------------------------------------------------------

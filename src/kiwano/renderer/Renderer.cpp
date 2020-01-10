@@ -188,7 +188,7 @@ namespace kiwano
 
 	HRESULT Renderer::HandleDeviceLost()
 	{
-		KGE_ASSERT(d3d_res_ && d2d_res_ && render_target_);
+		KGE_ASSERT(d3d_res_ && d2d_res_ && render_ctx_);
 
 		HRESULT hr = d3d_res_->HandleDeviceLost();
 
@@ -828,7 +828,7 @@ namespace kiwano
 		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::CreateTextureRenderTarget(TextureRenderTargetPtr& render_target)
+	void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context)
 	{
 		HRESULT hr = S_OK;
 		if (!d2d_res_)
@@ -836,7 +836,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		TextureRenderTargetPtr output;
+		TextureRenderContextPtr output;
 		if (SUCCEEDED(hr))
 		{
 			ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
@@ -844,7 +844,7 @@ namespace kiwano
 
 			if (SUCCEEDED(hr))
 			{
-				output = new TextureRenderTarget;
+				output = new TextureRenderContext;
 				hr = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
 			}
 
@@ -856,7 +856,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			render_target = output;
+			render_context = output;
 		}
 
 		win32::ThrowIfFailed(hr);

@@ -41,12 +41,12 @@ namespace kiwano
 
 		virtual ~DebugActor();
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 		void OnUpdate(Duration dt) override;
 
 	protected:
-		bool CheckVisibilty(RenderTarget* rt) const override;
+		bool CheckVisibilty(RenderContext& ctx) const override;
 
 	private:
 		std::locale		comma_locale_;

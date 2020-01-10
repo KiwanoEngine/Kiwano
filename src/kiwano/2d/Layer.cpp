@@ -61,10 +61,8 @@ namespace kiwano
 
 		if (!swallow_)
 		{
-			ActorPtr prev;
-			for (auto child = GetAllChildren().last_item(); child; child = prev)
+			for (auto child = GetAllChildren().rbegin(); child != GetAllChildren().rend(); ++child)
 			{
-				prev = child->prev_item();
 				child->Dispatch(evt);
 			}
 		}
@@ -72,16 +70,16 @@ namespace kiwano
 		EventDispatcher::Dispatch(evt);
 	}
 
-	void Layer::Render(RenderTarget* rt)
+	void Layer::Render(RenderContext& ctx)
 	{
-		rt->PushLayer(area_);
+		ctx.PushLayer(area_);
 
-		Actor::Render(rt);
+		Actor::Render(ctx);
 
-		rt->PopLayer();
+		ctx.PopLayer();
 	}
 
-	bool Layer::CheckVisibilty(RenderTarget* rt) const
+	bool Layer::CheckVisibilty(RenderContext& ctx) const
 	{
 		// Do not need to render Layer
 		return false;

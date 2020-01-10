@@ -38,33 +38,33 @@ namespace kiwano
 	void Canvas::BeginDraw()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->BeginDraw();
+		ctx_->BeginDraw();
 	}
 
 	void Canvas::EndDraw()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->EndDraw();
+		ctx_->EndDraw();
 		cache_expired_ = true;
 	}
 
-	void Canvas::OnRender(RenderTarget* rt)
+	void Canvas::OnRender(RenderContext& ctx)
 	{
 		UpdateCache();
 		
 		if (texture_cached_ && texture_cached_->IsValid())
 		{
-			PrepareToRender(rt);
+			PrepareToRender(ctx);
 
 			Rect bitmap_rect(0.f, 0.f, texture_cached_->GetWidth(), texture_cached_->GetHeight());
-			rt->DrawTexture(*texture_cached_, bitmap_rect, bitmap_rect);
+			ctx.DrawTexture(*texture_cached_, bitmap_rect, bitmap_rect);
 		}
 	}
 
 	void Canvas::SetBrush(BrushPtr brush)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(brush);
+		ctx_->SetCurrentBrush(brush);
 	}
 
 	float Canvas::GetStrokeWidth() const
@@ -75,44 +75,44 @@ namespace kiwano
 	void Canvas::SetBrushTransform(Transform const& transform)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetTransform(transform.ToMatrix());
+		ctx_->SetTransform(transform.ToMatrix());
 	}
 
 	void Canvas::SetBrushTransform(Matrix3x2 const & transform)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetTransform(transform);
+		ctx_->SetTransform(transform);
 	}
 
 	void Canvas::PushLayerArea(LayerArea& area)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->PushLayer(area);
+		ctx_->PushLayer(area);
 	}
 
 	void Canvas::PopLayerArea()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->PopLayer();
+		ctx_->PopLayer();
 	}
 
 	void Canvas::PushClipRect(Rect const& clip_rect)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->PushClipRect(clip_rect);
+		ctx_->PushClipRect(clip_rect);
 	}
 
 	void Canvas::PopClipRect()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->PopClipRect();
+		ctx_->PopClipRect();
 	}
 
 	void Canvas::DrawLine(Point const& begin, Point const& end)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawLine(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawLine(
 			begin,
 			end,
 			stroke_width_,
@@ -124,8 +124,8 @@ namespace kiwano
 	void Canvas::DrawCircle(Point const& center, float radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawEllipse(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawEllipse(
 			center,
 			Vec2(radius, radius),
 			stroke_width_,
@@ -137,8 +137,8 @@ namespace kiwano
 	void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawEllipse(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawEllipse(
 			center,
 			radius,
 			stroke_width_,
@@ -150,8 +150,8 @@ namespace kiwano
 	void Canvas::DrawRect(Rect const& rect)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawRectangle(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawRectangle(
 			rect,
 			stroke_width_,
 			stroke_style_
@@ -162,8 +162,8 @@ namespace kiwano
 	void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawRoundedRectangle(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawRoundedRectangle(
 			rect,
 			radius,
 			stroke_width_,
@@ -175,8 +175,8 @@ namespace kiwano
 	void Canvas::FillCircle(Point const& center, float radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(fill_brush_);
-		rt_->FillEllipse(
+		ctx_->SetCurrentBrush(fill_brush_);
+		ctx_->FillEllipse(
 			center,
 			Vec2(radius, radius)
 		);
@@ -186,8 +186,8 @@ namespace kiwano
 	void Canvas::FillEllipse(Point const& center, Vec2 const& radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(fill_brush_);
-		rt_->FillEllipse(
+		ctx_->SetCurrentBrush(fill_brush_);
+		ctx_->FillEllipse(
 			center,
 			radius
 		);
@@ -197,8 +197,8 @@ namespace kiwano
 	void Canvas::FillRect(Rect const& rect)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(fill_brush_);
-		rt_->FillRectangle(
+		ctx_->SetCurrentBrush(fill_brush_);
+		ctx_->FillRectangle(
 			rect
 		);
 		cache_expired_ = true;
@@ -207,8 +207,8 @@ namespace kiwano
 	void Canvas::FillRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(fill_brush_);
-		rt_->FillRoundedRectangle(
+		ctx_->SetCurrentBrush(fill_brush_);
+		ctx_->FillRoundedRectangle(
 			rect,
 			radius
 		);
@@ -220,7 +220,7 @@ namespace kiwano
 		if (texture)
 		{
 			InitRenderTargetAndBrushs();
-			rt_->DrawTexture(*texture, src_rect, dest_rect);
+			ctx_->DrawTexture(*texture, src_rect, dest_rect);
 			cache_expired_ = true;
 		}
 	}
@@ -239,7 +239,7 @@ namespace kiwano
 	void Canvas::DrawTextLayout(TextLayout const& layout, Point const& point)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->DrawTextLayout(layout, point);
+		ctx_->DrawTextLayout(layout, point);
 	}
 
 	void Canvas::BeginPath(Point const& begin_pos)
@@ -275,8 +275,8 @@ namespace kiwano
 	void Canvas::StrokePath()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(stroke_brush_);
-		rt_->DrawGeometry(
+		ctx_->SetCurrentBrush(stroke_brush_);
+		ctx_->DrawGeometry(
 			geo_sink_.GetGeometry(),
 			stroke_width_,
 			stroke_style_
@@ -287,8 +287,8 @@ namespace kiwano
 	void Canvas::FillPath()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->SetCurrentBrush(fill_brush_);
-		rt_->FillGeometry(
+		ctx_->SetCurrentBrush(fill_brush_);
+		ctx_->FillGeometry(
 			geo_sink_.GetGeometry()
 		);
 		cache_expired_ = true;
@@ -297,14 +297,14 @@ namespace kiwano
 	void Canvas::Clear()
 	{
 		InitRenderTargetAndBrushs();
-		rt_->Clear();
+		ctx_->Clear();
 		cache_expired_ = true;
 	}
 
 	void Canvas::Clear(Color const& clear_color)
 	{
 		InitRenderTargetAndBrushs();
-		rt_->Clear(clear_color);
+		ctx_->Clear(clear_color);
 		cache_expired_ = true;
 	}
 
@@ -316,9 +316,9 @@ namespace kiwano
 
 	void Canvas::InitRenderTargetAndBrushs()
 	{
-		if (!rt_)
+		if (!ctx_)
 		{
-			Renderer::instance().CreateTextureRenderTarget(rt_);
+			Renderer::instance().CreateTextureRenderTarget(ctx_);
 		}
 
 		if (!stroke_brush_)
@@ -336,14 +336,14 @@ namespace kiwano
 
 	void Canvas::UpdateCache() const
 	{
-		if (cache_expired_ && rt_)
+		if (cache_expired_ && ctx_)
 		{
 			if (!texture_cached_)
 			{
 				texture_cached_ = new Texture;
 			}
 
-			if (rt_->GetOutput(*texture_cached_))
+			if (ctx_->GetOutput(*texture_cached_))
 			{
 				cache_expired_ = false;
 			}

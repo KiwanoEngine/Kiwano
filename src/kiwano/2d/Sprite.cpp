@@ -74,13 +74,13 @@ namespace kiwano
 		}
 	}
 
-	void Sprite::OnRender(RenderTarget* rt)
+	void Sprite::OnRender(RenderContext& ctx)
 	{
-		rt->DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
+		ctx.DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
 	}
 
-	bool Sprite::CheckVisibilty(RenderTarget* rt) const
+	bool Sprite::CheckVisibilty(RenderContext& ctx) const
 	{
-		return frame_ && frame_->IsValid() && Actor::CheckVisibilty(rt);
+		return frame_ && frame_->IsValid() && Actor::CheckVisibilty(ctx);
 	}
 }

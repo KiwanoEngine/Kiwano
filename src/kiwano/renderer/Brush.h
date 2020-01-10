@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Renderer;
 
 	KGE_DECLARE_SMART_PTR(Brush);
@@ -88,7 +88,7 @@ namespace kiwano
 	class KGE_API Brush
 		: public virtual ObjectBase
 	{
-		friend class RenderTarget;
+		friend class RenderContext;
 		friend class Renderer;
 
 	public:

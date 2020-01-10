@@ -106,7 +106,7 @@ namespace kiwano
 
 		void OnUpdate(Duration dt) override;
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 		void HandleEvent(Event& evt) override;
 

@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 #include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
 	//
-	// RenderTarget
+	// RenderContext
 	//
 
-	RenderTarget::RenderTarget()
+	RenderContext::RenderContext()
 		: collecting_status_(false)
 		, fast_global_transform_(true)
 		, brush_opacity_(1.0f)
@@ -37,18 +37,18 @@ namespace kiwano
 		status_.primitives = 0;
 	}
 
-	HRESULT RenderTarget::CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> rt)
+	HRESULT RenderContext::CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> ctx)
 	{
-		if (!factory || !rt)
+		if (!factory || !ctx)
 			return E_INVALIDARG;
 
-		render_target_ = rt;
+		render_ctx_ = ctx;
 		text_renderer_.reset();
 		current_brush_.reset();
 
 		HRESULT hr = ITextRenderer::Create(
 			&text_renderer_,
-			render_target_.get()
+			render_ctx_.get()
 		);
 
 		if (SUCCEEDED(hr))
@@ -62,19 +62,19 @@ namespace kiwano
 		return hr;
 	}
 
-	void RenderTarget::DiscardDeviceResources()
+	void RenderContext::DiscardDeviceResources()
 	{
 		text_renderer_.reset();
-		render_target_.reset();
+		render_ctx_.reset();
 		current_brush_.reset();
 	}
 
-	bool RenderTarget::IsValid() const
+	bool RenderContext::IsValid() const
 	{
-		return render_target_ != nullptr;
+		return render_ctx_ != nullptr;
 	}
 
-	void RenderTarget::BeginDraw()
+	void RenderContext::BeginDraw()
 	{
 		if (collecting_status_)
 		{
@@ -82,15 +82,15 @@ namespace kiwano
 			status_.primitives = 0;
 		}
 
-		if (render_target_)
+		if (render_ctx_)
 		{
-			render_target_->BeginDraw();
+			render_ctx_->BeginDraw();
 		}
 	}
 
-	void RenderTarget::EndDraw()
+	void RenderContext::EndDraw()
 	{
-		win32::ThrowIfFailed( render_target_->EndDraw() );
+		win32::ThrowIfFailed( render_ctx_->EndDraw() );
 
 		if (collecting_status_)
 		{
@@ -98,14 +98,14 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawGeometry(Geometry const& geometry, float stroke_width, const StrokeStyle& stroke)
+	void RenderContext::DrawGeometry(Geometry const& geometry, float stroke_width, const StrokeStyle& stroke)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
 		if (geometry.IsValid())
 		{
-			render_target_->DrawGeometry(
+			render_ctx_->DrawGeometry(
 				geometry.GetGeometry().get(),
 				current_brush_->GetBrush().get(),
 				stroke_width,
@@ -116,14 +116,14 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::FillGeometry(Geometry const& geometry)
+	void RenderContext::FillGeometry(Geometry const& geometry)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
 		if (geometry.IsValid())
 		{
-			render_target_->FillGeometry(
+			render_ctx_->FillGeometry(
 				geometry.GetGeometry().get(),
 				current_brush_->GetBrush().get()
 			);
@@ -132,12 +132,12 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawLine(Point const& point1, Point const& point2, float stroke_width, const StrokeStyle& stroke)
+	void RenderContext::DrawLine(Point const& point1, Point const& point2, float stroke_width, const StrokeStyle& stroke)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->DrawLine(
+		render_ctx_->DrawLine(
 			DX::ConvertToPoint2F(point1),
 			DX::ConvertToPoint2F(point2),
 			current_brush_->GetBrush().get(),
@@ -148,12 +148,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawRectangle(Rect const& rect, float stroke_width, const StrokeStyle& stroke)
+	void RenderContext::DrawRectangle(Rect const& rect, float stroke_width, const StrokeStyle& stroke)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->DrawRectangle(
+		render_ctx_->DrawRectangle(
 			DX::ConvertToRectF(rect),
 			current_brush_->GetBrush().get(),
 			stroke_width,
@@ -163,12 +163,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::FillRectangle(Rect const& rect)
+	void RenderContext::FillRectangle(Rect const& rect)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->FillRectangle(
+		render_ctx_->FillRectangle(
 			DX::ConvertToRectF(rect),
 			current_brush_->GetBrush().get()
 		);
@@ -176,12 +176,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
+	void RenderContext::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->DrawRoundedRectangle(
+		render_ctx_->DrawRoundedRectangle(
 			D2D1::RoundedRect(
 				DX::ConvertToRectF(rect),
 				radius.x,
@@ -195,12 +195,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
+	void RenderContext::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->FillRoundedRectangle(
+		render_ctx_->FillRoundedRectangle(
 			D2D1::RoundedRect(
 				DX::ConvertToRectF(rect),
 				radius.x,
@@ -212,12 +212,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
+	void RenderContext::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, const StrokeStyle& stroke)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->DrawEllipse(
+		render_ctx_->DrawEllipse(
 			D2D1::Ellipse(
 				DX::ConvertToPoint2F(center),
 				radius.x,
@@ -231,12 +231,12 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::FillEllipse(Point const& center, Vec2 const& radius)
+	void RenderContext::FillEllipse(Point const& center, Vec2 const& radius)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-		render_target_->FillEllipse(
+		render_ctx_->FillEllipse(
 			D2D1::Ellipse(
 				DX::ConvertToPoint2F(center),
 				radius.x,
@@ -248,14 +248,14 @@ namespace kiwano
 		IncreasePrimitivesCount();
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
+	void RenderContext::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
 	{
 		DrawTexture(texture, &src_rect, &dest_rect);
 	}
 
-	void RenderTarget::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
+	void RenderContext::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
 		if (texture.IsValid())
 		{
@@ -263,7 +263,7 @@ namespace kiwano
 				? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
 				: D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
-			render_target_->DrawBitmap(
+			render_ctx_->DrawBitmap(
 				texture.GetBitmap().get(),
 				dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
 				brush_opacity_,
@@ -275,7 +275,7 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::DrawTextLayout(TextLayout const& layout, Point const& offset)
+	void RenderContext::DrawTextLayout(TextLayout const& layout, Point const& offset)
 	{
 		KGE_ASSERT(text_renderer_ && "Text renderer has not been initialized!");
 
@@ -318,12 +318,12 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, D2D1_PIXEL_FORMAT format)
+	void RenderContext::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, D2D1_PIXEL_FORMAT format)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
 		ComPtr<ID2D1Bitmap> saved_bitmap;
-		HRESULT hr = render_target_->CreateBitmap(
+		HRESULT hr = render_ctx_->CreateBitmap(
 			D2D1::SizeU(size.x, size.y),
 			D2D1::BitmapProperties(format),
 			&saved_bitmap
@@ -339,28 +339,28 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::PushClipRect(Rect const& clip_rect)
+	void RenderContext::PushClipRect(Rect const& clip_rect)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-		render_target_->PushAxisAlignedClip(
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+		render_ctx_->PushAxisAlignedClip(
 			DX::ConvertToRectF(clip_rect),
 			antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED
 		);
 	}
 
-	void RenderTarget::PopClipRect()
+	void RenderContext::PopClipRect()
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-		render_target_->PopAxisAlignedClip();
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+		render_ctx_->PopAxisAlignedClip();
 	}
 
-	void RenderTarget::PushLayer(LayerArea& layer)
+	void RenderContext::PushLayer(LayerArea& layer)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 		if (!layer.IsValid())
 		{
 			ComPtr<ID2D1Layer> output;
-			HRESULT hr = render_target_->CreateLayer(&output);
+			HRESULT hr = render_ctx_->CreateLayer(&output);
 
 			if (SUCCEEDED(hr))
 			{
@@ -374,7 +374,7 @@ namespace kiwano
 
 		if (layer.IsValid())
 		{
-			render_target_->PushLayer(
+			render_ctx_->PushLayer(
 				D2D1::LayerParameters(
 					DX::ConvertToRectF(layer.GetAreaRect()),
 					layer.GetMaskGeometry().GetGeometry().get(),
@@ -389,40 +389,40 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::PopLayer()
+	void RenderContext::PopLayer()
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-		render_target_->PopLayer();
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+		render_ctx_->PopLayer();
 	}
 
-	void RenderTarget::Clear()
+	void RenderContext::Clear()
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-		render_target_->Clear();
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+		render_ctx_->Clear();
 	}
 
-	void RenderTarget::Clear(Color const& clear_color)
+	void RenderContext::Clear(Color const& clear_color)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-		render_target_->Clear(DX::ConvertToColorF(clear_color));
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+		render_ctx_->Clear(DX::ConvertToColorF(clear_color));
 	}
 
-	void RenderTarget::SetTransform(const Matrix3x2& matrix)
+	void RenderContext::SetTransform(const Matrix3x2& matrix)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
 		if (fast_global_transform_)
 		{
-			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
+			render_ctx_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
 		}
 		else
 		{
 			Matrix3x2 result = matrix * global_transform_;
-			render_target_->SetTransform(DX::ConvertToMatrix3x2F(&result));
+			render_ctx_->SetTransform(DX::ConvertToMatrix3x2F(&result));
 		}
 	}
 
-	void RenderTarget::SetGlobalTransform(const Matrix3x2* matrix)
+	void RenderContext::SetGlobalTransform(const Matrix3x2* matrix)
 	{
 		if (matrix)
 		{
@@ -435,17 +435,17 @@ namespace kiwano
 		}
 	}
 
-	void RenderTarget::SetAntialiasMode(bool enabled)
+	void RenderContext::SetAntialiasMode(bool enabled)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
-		render_target_->SetAntialiasMode(enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED);
+		render_ctx_->SetAntialiasMode(enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED);
 		antialias_ = enabled;
 	}
 
-	void RenderTarget::SetTextAntialiasMode(TextAntialiasMode mode)
+	void RenderContext::SetTextAntialiasMode(TextAntialiasMode mode)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
 		D2D1_TEXT_ANTIALIAS_MODE antialias_mode = D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
 		switch (mode)
@@ -467,12 +467,12 @@ namespace kiwano
 		}
 
 		text_antialias_ = mode;
-		render_target_->SetTextAntialiasMode(antialias_mode);
+		render_ctx_->SetTextAntialiasMode(antialias_mode);
 	}
 
-	bool RenderTarget::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
+	bool RenderContext::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
 	{
-		KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+		KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
 		if (fast_global_transform_)
 		{
@@ -481,17 +481,17 @@ namespace kiwano
 		return visible_size_.Intersects(Matrix3x2(transform * global_transform_).Transform(bounds));
 	}
 
-	void RenderTarget::Resize(Size const& size)
+	void RenderContext::Resize(Size const& size)
 	{
 		visible_size_ = Rect(Point(), size);
 	}
 
-	void RenderTarget::SetCollectingStatus(bool enable)
+	void RenderContext::SetCollectingStatus(bool enable)
 	{
 		collecting_status_ = enable;
 	}
 
-	void RenderTarget::IncreasePrimitivesCount(uint32_t increase) const
+	void RenderContext::IncreasePrimitivesCount(uint32_t increase) const
 	{
 		if (collecting_status_)
 		{
@@ -501,14 +501,14 @@ namespace kiwano
 
 
 	//
-	// TextureRenderTarget
+	// TextureRenderContext
 	//
 
-	TextureRenderTarget::TextureRenderTarget()
+	TextureRenderContext::TextureRenderContext()
 	{
 	}
 
-	bool TextureRenderTarget::GetOutput(Texture& texture)
+	bool TextureRenderContext::GetOutput(Texture& texture)
 	{
 		HRESULT hr = E_FAIL;
 

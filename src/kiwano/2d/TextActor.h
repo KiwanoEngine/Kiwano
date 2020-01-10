@@ -170,12 +170,12 @@ namespace kiwano
 		/// @brief 获取默认文字样式
 		static const TextStyle& GetDefaultStyle();
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 		void OnUpdate(Duration dt) override;
 
 	protected:
-		bool CheckVisibilty(RenderTarget* rt) const override;
+		bool CheckVisibilty(RenderContext& ctx) const override;
 
 	private:
 		bool		show_underline_;

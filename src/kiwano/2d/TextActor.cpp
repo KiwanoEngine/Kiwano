@@ -75,9 +75,9 @@ namespace kiwano
 	{
 	}
 
-	void TextActor::OnRender(RenderTarget* rt)
+	void TextActor::OnRender(RenderContext& ctx)
 	{
-		rt->DrawTextLayout(text_layout_);
+		ctx.DrawTextLayout(text_layout_);
 	}
 
 	void TextActor::OnUpdate(Duration dt)
@@ -106,9 +106,9 @@ namespace kiwano
 		}
 	}
 
-	bool TextActor::CheckVisibilty(RenderTarget* rt) const
+	bool TextActor::CheckVisibilty(RenderContext& ctx) const
 	{
-		return text_layout_.IsValid() && Actor::CheckVisibilty(rt);
+		return text_layout_.IsValid() && Actor::CheckVisibilty(ctx);
 	}
 
 	void TextActor::SetFillColor(Color const& color)

@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Component.h>
 #include <kiwano/renderer/win32/FontCollectionLoader.h>
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/Font.h>
 #include <kiwano/renderer/TextStyle.hpp>
@@ -75,7 +75,7 @@ namespace kiwano
 		: public Singleton<Renderer>
 		, public RenderComponent
 		, public EventComponent
-		, public RenderTarget
+		, public RenderContext
 	{
 		friend Singleton<Renderer>;
 
@@ -225,10 +225,10 @@ namespace kiwano
 		);
 
 		/// \~chinese
-		/// @brief 创建纹理渲染目标
-		/// @param[out] render_target 渲染目标
+		/// @brief 创建纹理渲染上下文
+		/// @param[out] render_context 渲染上下文
 		void CreateTextureRenderTarget(
-			TextureRenderTargetPtr& render_target
+			TextureRenderContextPtr& render_context
 		);
 
 		/// \~chinese

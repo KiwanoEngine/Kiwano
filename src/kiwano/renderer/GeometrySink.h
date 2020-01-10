@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Renderer;
 
 	/**

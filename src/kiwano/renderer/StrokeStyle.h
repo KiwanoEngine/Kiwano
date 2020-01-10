@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Renderer;
 
 	/**
@@ -68,7 +68,7 @@ namespace kiwano
 	/// @brief 线条样式
 	class StrokeStyle
 	{
-		friend class RenderTarget;
+		friend class RenderContext;
 		friend class Renderer;
 
 	public:

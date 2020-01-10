@@ -48,11 +48,6 @@ namespace kiwano
 		Action* AddAction(Action* action);
 
 		/// \~chinese
-		/// @brief 获取指定名称的动画
-		/// @param name 动画名称
-		ActionPtr GetAction(String const& name);
-
-		/// \~chinese
 		/// @brief 继续所有暂停动画
 		void ResumeAllActions();
 
@@ -63,6 +58,11 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 停止所有动画
 		void StopAllActions();
+
+		/// \~chinese
+		/// @brief 获取指定名称的动画
+		/// @param name 动画名称
+		ActionPtr GetAction(String const& name);
 
 		/// \~chinese
 		/// @brief 获取所有动画

@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/renderer/LayerArea.h>
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 
 namespace kiwano
 {
@@ -85,9 +85,9 @@ namespace kiwano
 		void Dispatch(Event& evt) override;
 
 	protected:
-		void Render(RenderTarget* rt) override;
+		void Render(RenderContext& ctx) override;
 
-		bool CheckVisibilty(RenderTarget* rt) const override;
+		bool CheckVisibilty(RenderContext& ctx) const override;
 
 	private:
 		bool		swallow_;

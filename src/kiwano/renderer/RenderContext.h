@@ -32,8 +32,8 @@ namespace kiwano
 {
 	class Renderer;
 
-	KGE_DECLARE_SMART_PTR(RenderTarget);
-	KGE_DECLARE_SMART_PTR(TextureRenderTarget);
+	KGE_DECLARE_SMART_PTR(RenderContext);
+	KGE_DECLARE_SMART_PTR(TextureRenderContext);
 
 	/**
 	* \addtogroup Render
@@ -52,9 +52,9 @@ namespace kiwano
 
 
 	/// \~chinese
-	/// @brief 渲染目标
-	/// @details 渲染目标将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
-	class KGE_API RenderTarget
+	/// @brief 渲染上下文
+	/// @details 渲染上下文将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
+	class KGE_API RenderContext
 		: public virtual ObjectBase
 	{
 		friend class Renderer;
@@ -258,12 +258,12 @@ namespace kiwano
 		);
 
 		/// \~chinese
-		/// @brief 重设渲染目标大小
+		/// @brief 重设渲染上下文大小
 		void Resize(Size const& size);
 
 	public:
 		/// \~chinese
-		/// @brief 渲染目标状态
+		/// @brief 渲染上下文状态
 		struct Status
 		{
 			uint32_t primitives;	///< 渲染图元数量
@@ -278,11 +278,11 @@ namespace kiwano
 		void SetCollectingStatus(bool enable);
 
 		/// \~chinese
-		/// @brief 获取渲染目标状态
+		/// @brief 获取渲染上下文状态
 		Status const& GetStatus() const;
 
 	protected:
-		RenderTarget();
+		RenderContext();
 
 		ComPtr<ID2D1RenderTarget> GetRenderTarget() const;
 
@@ -291,7 +291,7 @@ namespace kiwano
 	private:
 		/// \~chinese
 		/// @brief 创建设备依赖资源
-		HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> rt);
+		HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> ctx);
 
 		/// \~chinese
 		/// @brief 销毁设备依赖资源
@@ -307,7 +307,7 @@ namespace kiwano
 		float							brush_opacity_;
 		TextAntialiasMode				text_antialias_;
 		ComPtr<ITextRenderer>			text_renderer_;
-		ComPtr<ID2D1RenderTarget>		render_target_;
+		ComPtr<ID2D1RenderTarget>		render_ctx_;
 		BrushPtr						current_brush_;
 		Rect							visible_size_;
 		Matrix3x2						global_transform_;
@@ -318,10 +318,10 @@ namespace kiwano
 
 
 	/// \~chinese
-	/// @brief 纹理渲染目标
-	/// @details 纹理渲染目标将渲染输出到一个纹理对象中
-	class KGE_API TextureRenderTarget
-		: public RenderTarget
+	/// @brief 纹理渲染上下文
+	/// @details 纹理渲染上下文将渲染输出到一个纹理对象中
+	class KGE_API TextureRenderContext
+		: public RenderContext
 	{
 		friend class Renderer;
 
@@ -337,11 +337,11 @@ namespace kiwano
 		bool GetOutput(Texture& texture);
 
 	private:
-		TextureRenderTarget();
+		TextureRenderContext();
 
 		ComPtr<ID2D1BitmapRenderTarget> GetBitmapRenderTarget() const;
 
-		void SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt);
+		void SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> ctx);
 
 	private:
 		ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
@@ -350,54 +350,54 @@ namespace kiwano
 	/** @} */
 
 
-	inline RenderTarget::Status::Status()
+	inline RenderContext::Status::Status()
 		: primitives(0)
 	{
 	}
 
-	inline RenderTarget::Status const& RenderTarget::GetStatus() const
+	inline RenderContext::Status const& RenderContext::GetStatus() const
 	{
 		return status_;
 	}
 
-	inline ComPtr<ID2D1RenderTarget> RenderTarget::GetRenderTarget() const
+	inline ComPtr<ID2D1RenderTarget> RenderContext::GetRenderTarget() const
 	{
-		KGE_ASSERT(render_target_);
-		return render_target_;
+		KGE_ASSERT(render_ctx_);
+		return render_ctx_;
 	}
 
-	inline ComPtr<ITextRenderer> RenderTarget::GetTextRenderer() const
+	inline ComPtr<ITextRenderer> RenderContext::GetTextRenderer() const
 	{
 		KGE_ASSERT(text_renderer_);
 		return text_renderer_;
 	}
 
-	inline float RenderTarget::GetBrushOpacity() const
+	inline float RenderContext::GetBrushOpacity() const
 	{
 		return brush_opacity_;
 	}
 
-	inline BrushPtr RenderTarget::GetCurrentBrush() const
+	inline BrushPtr RenderContext::GetCurrentBrush() const
 	{
 		return current_brush_;
 	}
 
-	inline Matrix3x2 RenderTarget::GetGlobalTransform() const
+	inline Matrix3x2 RenderContext::GetGlobalTransform() const
 	{
 		return global_transform_;
 	}
 
-	inline void RenderTarget::SetBrushOpacity(float opacity)
+	inline void RenderContext::SetBrushOpacity(float opacity)
 	{
 		brush_opacity_ = opacity;
 	}
 
-	inline void RenderTarget::SetGlobalTransform(const Matrix3x2& matrix)
+	inline void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
 	{
 		SetGlobalTransform(&matrix);
 	}
 
-	inline void RenderTarget::SetCurrentBrush(BrushPtr brush)
+	inline void RenderContext::SetCurrentBrush(BrushPtr brush)
 	{
 		current_brush_ = brush;
 		if (current_brush_)
@@ -406,18 +406,18 @@ namespace kiwano
 		}
 	}
 
-	inline bool TextureRenderTarget::IsValid() const
+	inline bool TextureRenderContext::IsValid() const
 	{
 		return bitmap_rt_ != nullptr;
 	}
 
-	inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderTarget::GetBitmapRenderTarget() const
+	inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderContext::GetBitmapRenderTarget() const
 	{
 		return bitmap_rt_;
 	}
 
-	inline void TextureRenderTarget::SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> rt)
+	inline void TextureRenderContext::SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> ctx)
 	{
-		bitmap_rt_ = rt;
+		bitmap_rt_ = ctx;
 	}
 }

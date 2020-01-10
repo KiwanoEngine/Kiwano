@@ -23,7 +23,7 @@
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/renderer/RenderTarget.h>
+#include <kiwano/renderer/RenderContext.h>
 
 namespace kiwano
 {
@@ -154,28 +154,28 @@ namespace kiwano
 			debug_actor_->Update(dt);
 	}
 
-	void Director::OnRender(RenderTarget* rt)
+	void Director::OnRender(RenderContext& ctx)
 	{
 		if (transition_)
 		{
-			transition_->Render(rt);
+			transition_->Render(ctx);
 		}
 		else if (current_stage_)
 		{
-			current_stage_->Render(rt);
+			current_stage_->Render(ctx);
 		}
 
 		if (render_border_enabled_)
 		{
 			if (current_stage_)
 			{
-				current_stage_->RenderBorder(rt);
+				current_stage_->RenderBorder(ctx);
 			}
 		}
 
 		if (debug_actor_)
 		{
-			debug_actor_->Render(rt);
+			debug_actor_->Render(ctx);
 		}
 	}
 

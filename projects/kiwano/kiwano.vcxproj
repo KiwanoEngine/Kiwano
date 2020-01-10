@@ -74,7 +74,7 @@
     <ClInclude Include="..\..\src\kiwano\renderer\TextureCache.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\LayerArea.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\Renderer.h" />
-    <ClInclude Include="..\..\src\kiwano\renderer\RenderTarget.h" />
+    <ClInclude Include="..\..\src\kiwano\renderer\RenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\TextLayout.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.h" />
@@ -143,7 +143,7 @@
     <ClCompile Include="..\..\src\kiwano\renderer\TextureCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\LayerArea.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\Renderer.cpp" />
-    <ClCompile Include="..\..\src\kiwano\renderer\RenderTarget.cpp" />
+    <ClCompile Include="..\..\src\kiwano\renderer\RenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\win32\D2DDeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\renderer\win32\D3D10DeviceResources.cpp" />

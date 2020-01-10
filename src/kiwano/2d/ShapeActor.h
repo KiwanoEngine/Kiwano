@@ -119,10 +119,10 @@ namespace kiwano
 		/// @brief 设置几何形状
 		void SetGeometry(Geometry const& geometry);
 
-		void OnRender(RenderTarget* rt) override;
+		void OnRender(RenderContext& ctx) override;
 
 	protected:
-		bool CheckVisibilty(RenderTarget* rt) const override;
+		bool CheckVisibilty(RenderContext& ctx) const override;
 
 	private:
 		BrushPtr	fill_brush_;

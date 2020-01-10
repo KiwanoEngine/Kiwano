@@ -25,7 +25,7 @@
 namespace kiwano
 {
 	class Director;
-	class RenderTarget;
+	class RenderContext;
 
 	KGE_DECLARE_SMART_PTR(Transition);
 	KGE_DECLARE_SMART_PTR(FadeTransition);
@@ -83,9 +83,9 @@ namespace kiwano
 		/**
 		* \~chinese
 		* @brief 渲染过度动画
-		* @param[in] rt 渲染目标
+		* @param[in] ctx 渲染上下文
 		*/
-		virtual void Render(RenderTarget* rt);
+		virtual void Render(RenderContext& ctx);
 
 		/**
 		* \~chinese

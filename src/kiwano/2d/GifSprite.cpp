@@ -70,13 +70,13 @@ namespace kiwano
 		return false;
 	}
 
-	void GifSprite::OnRender(RenderTarget* rt)
+	void GifSprite::OnRender(RenderContext& ctx)
 	{
-		if (frame_to_render_ && CheckVisibilty(rt))
+		if (frame_to_render_ && CheckVisibilty(ctx))
 		{
-			PrepareToRender(rt);
+			PrepareToRender(ctx);
 
-			rt->DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
+			ctx.DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
 		}
 	}
 

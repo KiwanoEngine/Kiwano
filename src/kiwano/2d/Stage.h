@@ -77,7 +77,7 @@ namespace kiwano
 	protected:
 		/// \~chinese
 		/// @brief 绘制所有子角色的边界
-		void RenderBorder(RenderTarget* rt) override;
+		void RenderBorder(RenderContext& ctx) override;
 
 	private:
 		BrushPtr border_fill_brush_;

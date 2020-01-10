@@ -88,7 +88,7 @@ namespace kiwano
 		}
 	}
 
-	void Actor::Render(RenderTarget* rt)
+	void Actor::Render(RenderContext& ctx)
 	{
 		if (!visible_)
 			return;
@@ -97,10 +97,10 @@ namespace kiwano
 
 		if (children_.empty())
 		{
-			if (CheckVisibilty(rt))
+			if (CheckVisibilty(ctx))
 			{
-				PrepareToRender(rt);
-				OnRender(rt);
+				PrepareToRender(ctx);
+				OnRender(ctx);
 			}
 		}
 		else
@@ -112,52 +112,52 @@ namespace kiwano
 				if (child->GetZOrder() >= 0)
 					break;
 
-				child->Render(rt);
+				child->Render(ctx);
 				child = child->next_item().get();
 			}
 
-			if (CheckVisibilty(rt))
+			if (CheckVisibilty(ctx))
 			{
-				PrepareToRender(rt);
-				OnRender(rt);
+				PrepareToRender(ctx);
+				OnRender(ctx);
 			}
 
 			while (child)
 			{
-				child->Render(rt);
+				child->Render(ctx);
 				child = child->next_item().get();
 			}
 		}
 	}
 
-	void Actor::PrepareToRender(RenderTarget* rt)
+	void Actor::PrepareToRender(RenderContext& ctx)
 	{
-		rt->SetTransform(transform_matrix_);
-		rt->SetBrushOpacity(GetDisplayedOpacity());
+		ctx.SetTransform(transform_matrix_);
+		ctx.SetBrushOpacity(GetDisplayedOpacity());
 	}
 
-	void Actor::RenderBorder(RenderTarget* rt)
+	void Actor::RenderBorder(RenderContext& ctx)
 	{
 		if (show_border_ && !size_.IsOrigin())
 		{
 			Rect bounds = GetBounds();
 
-			rt->SetTransform(transform_matrix_);
+			ctx.SetTransform(transform_matrix_);
 
-			rt->SetCurrentBrush(GetStage()->GetBorderFillBrush());
-			rt->FillRectangle(bounds);
+			ctx.SetCurrentBrush(GetStage()->GetBorderFillBrush());
+			ctx.FillRectangle(bounds);
 
-			rt->SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
-			rt->DrawRectangle(bounds, 2.f);
+			ctx.SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
+			ctx.DrawRectangle(bounds, 2.f);
 		}
 
 		for (auto child = children_.first_item(); child; child = child->next_item())
 		{
-			child->RenderBorder(rt);
+			child->RenderBorder(ctx);
 		}
 	}
 
-	bool Actor::CheckVisibilty(RenderTarget* rt) const
+	bool Actor::CheckVisibilty(RenderContext& ctx) const
 	{
 		if (dirty_visibility_)
 		{
@@ -169,7 +169,7 @@ namespace kiwano
 			}
 			else
 			{
-				visible_in_rt_ = rt->CheckVisibility(GetBounds(), GetTransformMatrix());
+				visible_in_rt_ = ctx.CheckVisibility(GetBounds(), GetTransformMatrix());
 			}
 		}
 		return visible_in_rt_;

@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-	class RenderTarget;
+	class RenderContext;
 	class Event;
 
 	/**
@@ -66,8 +66,8 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 渲染时
-		/// @param rt 渲染目标
-		virtual void OnRender(RenderTarget* rt) {}
+		/// @param ctx 渲染上下文
+		virtual void OnRender(RenderContext& ctx) {}
 
 		/// \~chinese
 		/// @brief 渲染后
