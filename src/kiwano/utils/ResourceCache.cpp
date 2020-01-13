@@ -121,8 +121,10 @@ namespace kiwano
 			return false;
 		}
 
+		String full_path = FileSystem::instance().GetFullPathForFile(file_path);
+
 		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load_file(file_path.c_str(), pugi::parse_default, pugi::encoding_auto);
+		pugi::xml_parse_result result = doc.load_file(full_path.c_str(), pugi::parse_default, pugi::encoding_auto);
 
 		if (result)
 		{
@@ -130,44 +132,36 @@ namespace kiwano
 		}
 		else
 		{
-			KGE_ERROR(L"XML [%s] parsed with errors: %s", file_path.c_str(), result.description());
+			KGE_ERROR(L"XML [%s] parsed with errors: %s", full_path.c_str(), result.description());
 			return false;
 		}
 	}
 
-	bool ResourceCache::LoadFromXml(const ResourceCache::XmlDocument& doc)
+	bool ResourceCache::LoadFromXml(const pugi::xml_document& doc)
 	{
-		if (doc)
+		if (pugi::xml_node root = doc.child(L"resources"))
 		{
-			try
-			{
-				if (pugi::xml_node root = doc.child(L"resources"))
-				{
-					String version;
-					if (auto version_node = root.child(L"version"))
-						version = version_node.value();
+			String version;
+			if (auto version_node = root.child(L"version"))
+				version = version_node.child_value();
 
-					auto load = load_xml_funcs.find(version);
-					if (load != load_xml_funcs.end())
-					{
-						return load->second(this, root);
-					}
-					else if (version.empty())
-					{
-						return load_xml_funcs[L"latest"](this, root);
-					}
-					else
-					{
-						throw std::runtime_error("unknown JSON data version");
-					}
-				}
-			}
-			catch (std::exception& e)
+			auto load = load_xml_funcs.find(version);
+			if (load != load_xml_funcs.end())
 			{
-				KGE_WARN(L"ResourceCache::LoadFromXml failed: %s", oc::string_to_wide(e.what()).c_str());
+				return load->second(this, root);
+			}
+			else if (version.empty())
+			{
+				return load_xml_funcs[L"latest"](this, root);
+			}
+			else
+			{
+				KGE_ERROR(L"Unknown  version");
 				return false;
 			}
 		}
+
+		KGE_ERROR(L"Unknown  version");
 		return false;
 	}
 
@@ -480,7 +474,7 @@ namespace kiwano
 			GlobalData global_data;
 			if (auto path = elem.child(L"path"))
 			{
-				global_data.path = path.value();
+				global_data.path = path.child_value();
 			}
 
 			if (auto images = elem.child(L"images"))
@@ -490,7 +484,7 @@ namespace kiwano
 					String id, type, file;
 					int rows = 0, cols = 0;
 
-					if (auto attr = image.attribute(L"id"))		id = attr.value();
+					if (auto attr = image.attribute(L"id"))		id.assign(attr.value());
 					if (auto attr = image.attribute(L"type"))	type = attr.value();
 					if (auto attr = image.attribute(L"file"))	file = attr.value();
 					if (auto attr = image.attribute(L"rows"))	rows = attr.as_int(0);
@@ -511,9 +505,9 @@ namespace kiwano
 						Vector<const wchar_t*> files_arr;
 						for (auto file : image.children())
 						{
-							if (auto path = file.attribute(L"path").value())
+							if (auto path = file.attribute(L"path"))
 							{
-								files_arr.push_back(path);
+								files_arr.push_back(path.value());
 							}
 						}
 						if (!LoadTexturesFromData(loader, &global_data, &id, &files_arr))
@@ -532,8 +526,8 @@ namespace kiwano
 				for (auto font : fonts.children())
 				{
 					String id, file;
-					if (auto attr = font.attribute(L"id")) id.assign(attr.value());
-					if (auto attr = font.attribute(L"file")) file.assign(attr.value());
+					if (auto attr = font.attribute(L"id"))		id.assign(attr.value());
+					if (auto attr = font.attribute(L"file"))	file = attr.value();
 
 					if (!LoadFontsFromData(loader, &global_data, &id, &file))
 						return false;

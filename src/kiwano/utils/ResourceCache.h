@@ -24,8 +24,6 @@
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/Font.h>
-
-#define PUGIXML_WCHAR_MODE
 #include <3rd-party/pugixml/pugixml.hpp>
 
 namespace kiwano
@@ -39,8 +37,6 @@ namespace kiwano
 		friend Singleton<ResourceCache>;
 
 	public:
-		using XmlDocument = pugi::xml_document;
-
 		/// \~chinese
 		/// @brief 从 JSON 文件加载资源信息
 		/// @param file_path JSON文件路径
@@ -59,7 +55,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 从 XML 文档对象加载资源信息
 		/// @param doc XML文档对象
-		bool LoadFromXml(XmlDocument const& doc);
+		bool LoadFromXml(pugi::xml_document const& doc);
 
 		/// \~chinese
 		/// @brief 获取资源

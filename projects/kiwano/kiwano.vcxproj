@@ -164,11 +164,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\3rd-party\pugixml\libpugixml.vcxproj">
-      <Project>{ab47e875-85e5-4105-a71e-88930eaab910}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
     <RootNamespace>kiwano</RootNamespace>

@@ -33,7 +33,6 @@
     <ClInclude Include="..\..\..\src\3rd-party\curl\typecheck-gcc.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\3rd-party\curl\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\src\3rd-party\curl\libs\libcurl.lib">
