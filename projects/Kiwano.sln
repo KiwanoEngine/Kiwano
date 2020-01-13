@@ -14,7 +14,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kiwano-physics", "kiwano-ph
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd-party", "3rd-party", "{2D8919F2-8922-4B3F-8F68-D4127C6BCBB7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtinyxml2", "3rd-party\tinyxml2\libtinyxml2.vcxproj", "{AB47E875-85E5-4105-A71E-88930EAAB910}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml", "3rd-party\pugixml\libpugixml.vcxproj", "{AB47E875-85E5-4105-A71E-88930EAAB910}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libimgui", "3rd-party\imgui\libimgui.vcxproj", "{7FA1E56D-62AC-47D1-97D1-40B302724198}"
 EndProject

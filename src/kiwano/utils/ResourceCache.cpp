@@ -28,7 +28,7 @@ namespace kiwano
 	namespace __resource_cache_01
 	{
 		bool LoadJsonData(ResourceCache* loader, Json const& json_data);
-		bool LoadXmlData(ResourceCache* loader, const tinyxml2::XMLElement* elem);
+		bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem);
 	}
 
 	namespace
@@ -38,7 +38,7 @@ namespace kiwano
 			{ L"0.1", __resource_cache_01::LoadJsonData },
 		};
 
-		Map<String, Function<bool(ResourceCache*, const tinyxml2::XMLElement*)>> load_xml_funcs = {
+		Map<String, Function<bool(ResourceCache*, const pugi::xml_node&)>> load_xml_funcs = {
 			{ L"latest", __resource_cache_01::LoadXmlData },
 			{ L"0.1", __resource_cache_01::LoadXmlData },
 		};
@@ -57,7 +57,7 @@ namespace kiwano
 	{
 		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+			KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: File not found.");
 			return false;
 		}
 
@@ -74,12 +74,12 @@ namespace kiwano
 		}
 		catch (std::wifstream::failure& e)
 		{
-			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
+			KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		catch (oc::json_exception& e)
 		{
-			KGE_WARN(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", oc::string_to_wide(e.what()).c_str());
+			KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return LoadFromJson(json_data);
@@ -107,7 +107,7 @@ namespace kiwano
 		}
 		catch (std::exception& e)
 		{
-			KGE_WARN(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", oc::string_to_wide(e.what()).c_str());
+			KGE_ERROR(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)", oc::string_to_wide(e.what()).c_str());
 			return false;
 		}
 		return false;
@@ -117,48 +117,35 @@ namespace kiwano
 	{
 		if (!FileSystem::instance().IsFileExists(file_path))
 		{
-			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+			KGE_ERROR(L"ResourceCache::LoadFromXmlFile failed: File not found.");
 			return false;
 		}
 
-		tinyxml2::XMLDocument doc;
-		std::wifstream ifs;
-		ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(file_path.c_str(), pugi::parse_default, pugi::encoding_auto);
 
-		try
+		if (result)
 		{
-			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
-			ifs.open(full_path.c_str());
-
-			StringStream ss;
-			ss << ifs.rdbuf();
-
-			if (tinyxml2::XML_SUCCESS != doc.Parse(ss.str().c_str()))
-			{
-				KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: %s (%s)",
-					tinyxml2::XMLDocument::ErrorIDToName(doc.ErrorID()), doc.ErrorStr());
-				return false;
-			}
+			return LoadFromXml(doc);
 		}
-		catch (std::wifstream::failure& e)
+		else
 		{
-			KGE_WARN(L"ResourceCache::LoadFromXmlFile failed: Cannot open file. (%s)", oc::string_to_wide(e.what()).c_str());
+			KGE_ERROR(L"XML [%s] parsed with errors: %s", file_path.c_str(), result.description());
 			return false;
 		}
-
-		return LoadFromXml(&doc);
 	}
 
-	bool ResourceCache::LoadFromXml(const tinyxml2::XMLDocument* doc)
+	bool ResourceCache::LoadFromXml(const ResourceCache::XmlDocument& doc)
 	{
 		if (doc)
 		{
 			try
 			{
-				if (auto root = doc->FirstChildElement(L"resources"))
+				if (pugi::xml_node root = doc.child(L"resources"))
 				{
 					String version;
-					if (auto ver = root->FirstChildElement(L"version")) version = ver->GetText();
+					if (auto version_node = root.child(L"version"))
+						version = version_node.value();
 
 					auto load = load_xml_funcs.find(version);
 					if (load != load_xml_funcs.end())
@@ -488,43 +475,43 @@ namespace kiwano
 			return true;
 		}
 
-		bool LoadXmlData(ResourceCache* loader, const tinyxml2::XMLElement* elem)
+		bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
 		{
 			GlobalData global_data;
-			if (auto path = elem->FirstChildElement(L"path"))
+			if (auto path = elem.child(L"path"))
 			{
-				global_data.path = path->GetText();
+				global_data.path = path.value();
 			}
 
-			if (auto images = elem->FirstChildElement(L"images"))
+			if (auto images = elem.child(L"images"))
 			{
-				for (auto image = images->FirstChildElement(); image; image = image->NextSiblingElement())
+				for (auto image : images.children())
 				{
 					String id, type, file;
 					int rows = 0, cols = 0;
 
-					if (auto attr = image->Attribute(L"id"))      id.assign(attr); // assign() copies attr content
-					if (auto attr = image->Attribute(L"type"))    type = attr;     // operator=() just holds attr pointer
-					if (auto attr = image->Attribute(L"file"))    file = attr;
-					if (auto attr = image->IntAttribute(L"rows")) rows = attr;
-					if (auto attr = image->IntAttribute(L"cols")) cols = attr;
+					if (auto attr = image.attribute(L"id"))		id = attr.value();
+					if (auto attr = image.attribute(L"type"))	type = attr.value();
+					if (auto attr = image.attribute(L"file"))	file = attr.value();
+					if (auto attr = image.attribute(L"rows"))	rows = attr.as_int(0);
+					if (auto attr = image.attribute(L"cols"))	cols = attr.as_int(0);
 
 					if (rows || cols)
 					{
 						float padding_x = 0, padding_y = 0;
-						if (auto attr = image->FloatAttribute(L"padding-x")) padding_x = attr;
-						if (auto attr = image->FloatAttribute(L"padding-y")) padding_y = attr;
+						if (auto attr = image.attribute(L"padding-x")) padding_x = attr.as_float(0.0f);
+						if (auto attr = image.attribute(L"padding-y")) padding_y = attr.as_float(0.0f);
 
 						if (!LoadTexturesFromData(loader, &global_data, &id, &file, rows, cols, padding_x, padding_y))
 							return false;
 					}
 
-					if (file.empty() && !image->NoChildren())
+					if (file.empty() && !image.empty())
 					{
 						Vector<const wchar_t*> files_arr;
-						for (auto file = image->FirstChildElement(); file; file = file->NextSiblingElement())
+						for (auto file : image.children())
 						{
-							if (auto path = file->Attribute(L"path"))
+							if (auto path = file.attribute(L"path").value())
 							{
 								files_arr.push_back(path);
 							}
@@ -540,13 +527,13 @@ namespace kiwano
 				}
 			}
 
-			if (auto fonts = elem->FirstChildElement(L"fonts"))
+			if (auto fonts = elem.child(L"fonts"))
 			{
-				for (auto font = fonts->FirstChildElement(); font; font = font->NextSiblingElement())
+				for (auto font : fonts.children())
 				{
 					String id, file;
-					if (auto attr = font->Attribute(L"id")) id.assign(attr);
-					if (auto attr = font->Attribute(L"file")) file.assign(attr);
+					if (auto attr = font.attribute(L"id")) id.assign(attr.value());
+					if (auto attr = font.attribute(L"file")) file.assign(attr.value());
 
 					if (!LoadFontsFromData(loader, &global_data, &id, &file))
 						return false;
