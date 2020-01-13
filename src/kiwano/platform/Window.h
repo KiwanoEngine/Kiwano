@@ -77,7 +77,7 @@ namespace kiwano
 
 	/**
 	* \~chinese
-	* @brief 窗口实例，控制窗口标题、大小、图标等
+	* @brief 窗口类，控制窗口标题、大小、图标等
 	*/
 	class KGE_API Window
 		: public Singleton<Window>
@@ -151,6 +151,7 @@ namespace kiwano
 		*/
 		void SetCursor(CursorType cursor);
 
+#ifdef KGE_WIN32
 	public:
 		void Init(WindowConfig const& config, WNDPROC proc);
 
@@ -169,6 +170,7 @@ namespace kiwano
 		void SetActive(bool actived);
 
 		void Destroy();
+#endif
 
 	private:
 		Window();
