@@ -19,18 +19,12 @@
 // THE SOFTWARE.
 
 #include <mutex>
-
-#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/platform/Director.h>
+#include <kiwano/core/Director.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/renderer/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
-
-#include <windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
-#include <imm.h>  // ImmAssociateContext
-
-#pragma comment(lib, "imm32.lib")
 
 namespace kiwano
 {
@@ -62,12 +56,8 @@ namespace kiwano
 namespace kiwano
 {
 	Application::Application()
-		: end_(true)
-		, inited_(false)
-		, time_scale_(1.f)
+		: time_scale_(1.f)
 	{
-		::CoInitialize(nullptr);
-
 		Use(&Renderer::instance());
 		Use(&Input::instance());
 		Use(&Director::instance());
@@ -76,13 +66,11 @@ namespace kiwano
 	Application::~Application()
 	{
 		Destroy();
-
-		::CoUninitialize();
 	}
 
-	void Application::Init(const Config& config)
+	void Application::Run(const Config& config)
 	{
-		Window::instance().Init(config.window, Application::WndProc);
+		Window::instance().Init(config.window);
 		Renderer::instance().Init(config.render);
 
 		// Setup all components
@@ -100,33 +88,24 @@ namespace kiwano
 		// Everything is ready
 		OnReady();
 
-		HWND hwnd = Window::instance().GetHandle();
+		last_update_time_ = Time::Now();
 
-		// disable imm
-		::ImmAssociateContext(hwnd, nullptr);
-
-		// use Application instance in message loop
-		::SetWindowLongPtr(hwnd, GWLP_USERDATA, LONG_PTR(this));
-
-		inited_ = true;
-	}
-
-	void Application::Run()
-	{
-		KGE_ASSERT(inited_ && "Calling Application::Run before Application::Init");
-
-		end_ = false;
-
-		Window::instance().Prepare();
-		while (!end_)
+		Window& window = Window::instance();
+		while (!window.ShouldClose())
 		{
-			Window::instance().PollEvents();
+			while (EventPtr evt = window.PollEvent())
+			{
+				DispatchEvent(evt.get());
+			}
+
+			Update();
+			Render();
 		}
 	}
 
 	void Application::Quit()
 	{
-		end_ = true;
+		Window::instance().Destroy();
 	}
 
 	void Application::Destroy()
@@ -136,18 +115,11 @@ namespace kiwano
 		ResourceCache::instance().Clear();
 		TextureCache::instance().Clear();
 
-		if (inited_)
+		for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
 		{
-			inited_ = false;
-
-			for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
-			{
-				(*iter)->DestroyComponent();
-			}
-			comps_.clear();
+			(*iter)->DestroyComponent();
 		}
-
-		Window::instance().Destroy();
+		comps_.clear();
 	}
 
 	void Application::Use(ComponentBase* component)
@@ -210,11 +182,10 @@ namespace kiwano
 
 		// Updating
 		{
-			static auto last = Time::Now();
+			const Time now = Time::Now();
+			const Duration dt = (now - last_update_time_) * time_scale_;
 
-			const auto now = Time::Now();
-			const auto dt = (now - last) * time_scale_;
-			last = now;
+			last_update_time_ = now;
 
 			for (auto c : update_comps_)
 			{
@@ -251,7 +222,7 @@ namespace kiwano
 		}
 	}
 
-	void Application::DispatchEvent(Event& evt)
+	void Application::DispatchEvent(Event* evt)
 	{
 		for (auto c : event_comps_)
 		{
@@ -263,216 +234,5 @@ namespace kiwano
 	{
 		std::lock_guard<std::mutex> lock(perform_mutex_);
 		functions_to_perform_.push(func);
-	}
-
-	LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
-	{
-		Application* app = reinterpret_cast<Application*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
-		if (app == nullptr)
-		{
-			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
-		}
-
-		// Handle Message
-		for (auto c : app->event_comps_)
-		{
-			c->HandleMessage(hwnd, msg, wparam, lparam);
-		}
-
-		switch (msg)
-		{
-		case WM_PAINT:
-		{
-			app->Update();
-			app->Render();
-
-			::InvalidateRect(hwnd, NULL, FALSE);
-			return 0;
-		}
-		break;
-
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSKEYUP:
-		{
-			bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
-			if (down)
-			{
-				KeyDownEvent evt;
-				evt.code = static_cast<int>(wparam);
-				app->DispatchEvent(evt);
-			}
-			else
-			{
-				KeyUpEvent evt;
-				evt.code = static_cast<int>(wparam);
-				app->DispatchEvent(evt);
-			}
-		}
-		break;
-
-		case WM_CHAR:
-		{
-			KeyCharEvent evt;
-			evt.value = static_cast<char>(wparam);
-			app->DispatchEvent(evt);
-		}
-		break;
-
-		case WM_LBUTTONUP:
-		case WM_LBUTTONDOWN:
-		//case WM_LBUTTONDBLCLK:
-		case WM_MBUTTONUP:
-		case WM_MBUTTONDOWN:
-		//case WM_MBUTTONDBLCLK:
-		case WM_RBUTTONUP:
-		case WM_RBUTTONDOWN:
-		//case WM_RBUTTONDBLCLK:
-		case WM_MOUSEMOVE:
-		case WM_MOUSEWHEEL:
-		{
-			auto UpdateMouseData = [&](MouseEvent& evt)
-			{
-				evt.pos = Point(static_cast<float>(GET_X_LPARAM(lparam)), static_cast<float>(GET_Y_LPARAM(lparam)));
-				evt.left_btn_down = !!(wparam & MK_LBUTTON);
-				evt.left_btn_down = !!(wparam & MK_RBUTTON);
-			};
-
-			if (msg == WM_MOUSEMOVE)
-			{
-				MouseMoveEvent evt;
-				UpdateMouseData(evt);
-				app->DispatchEvent(evt);
-			}
-			else if	(msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
-			{
-				MouseDownEvent evt;
-				UpdateMouseData(evt);
-				if		(msg == WM_LBUTTONDOWN)	{ evt.button = MouseButton::Left; }
-				else if	(msg == WM_RBUTTONDOWN)	{ evt.button = MouseButton::Right; }
-				else if	(msg == WM_MBUTTONDOWN)	{ evt.button = MouseButton::Middle; }
-				app->DispatchEvent(evt);
-			}
-			else if (msg == WM_LBUTTONUP || msg == WM_RBUTTONUP || msg == WM_MBUTTONUP)
-			{
-				MouseUpEvent evt;
-				UpdateMouseData(evt);
-				if		(msg == WM_LBUTTONUP)	{ evt.button = MouseButton::Left; }
-				else if	(msg == WM_RBUTTONUP)	{ evt.button = MouseButton::Right; }
-				else if	(msg == WM_MBUTTONUP)	{ evt.button = MouseButton::Middle; }
-				app->DispatchEvent(evt);
-			}
-			else if	(msg == WM_MOUSEWHEEL)
-			{
-				MouseWheelEvent evt;
-				UpdateMouseData(evt);
-				evt.wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
-				app->DispatchEvent(evt);
-			}
-		}
-		break;
-
-		case WM_SIZE:
-		{
-			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
-			{
-				KGE_SYS_LOG(L"Window minimized");
-			}
-			else
-			{
-				// KGE_SYS_LOG(L"Window resized");
-
-				Window::instance().UpdateWindowRect();
-
-				WindowResizedEvent evt;
-				evt.width = LOWORD(lparam);
-				evt.height = HIWORD(lparam);
-				app->DispatchEvent(evt);
-			}
-		}
-		break;
-
-		case WM_MOVE:
-		{
-			int x = (int)(short)LOWORD(lparam);
-			int y = (int)(short)HIWORD(lparam);
-
-			WindowMovedEvent evt;
-			evt.x = x;
-			evt.y = y;
-			app->DispatchEvent(evt);
-		}
-		break;
-
-		case WM_ACTIVATE:
-		{
-			bool active = (LOWORD(wparam) != WA_INACTIVE);
-
-			Window::instance().SetActive(active);
-
-			WindowFocusChangedEvent evt;
-			evt.focus = active;
-			app->DispatchEvent(evt);
-		}
-		break;
-
-		case WM_SETTEXT:
-		{
-			KGE_SYS_LOG(L"Window title changed");
-
-			WindowTitleChangedEvent evt;
-			evt.title = reinterpret_cast<const wchar_t*>(lparam);
-			app->DispatchEvent(evt);
-		}
-		break;
-
-		case WM_SETICON:
-		{
-			KGE_SYS_LOG(L"Window icon changed");
-		}
-		break;
-
-		case WM_DISPLAYCHANGE:
-		{
-			KGE_SYS_LOG(L"The display resolution has changed");
-
-			::InvalidateRect(hwnd, nullptr, FALSE);
-		}
-		break;
-
-		case WM_SETCURSOR:
-		{
-			Window::instance().UpdateCursor();
-		}
-		break;
-
-		case WM_CLOSE:
-		{
-			KGE_SYS_LOG(L"Window is closing");
-
-			if (!app->OnClosing())
-			{
-				WindowClosedEvent evt;
-				app->DispatchEvent(evt);
-				return 0;
-			}
-		}
-		break;
-
-		case WM_DESTROY:
-		{
-			KGE_SYS_LOG(L"Window was destroyed");
-
-			app->Quit();
-			app->OnDestroy();
-
-			::PostQuitMessage(0);
-			return 0;
-		}
-		break;
-		}
-
-		return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 	}
 }

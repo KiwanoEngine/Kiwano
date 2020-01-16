@@ -108,7 +108,7 @@ namespace kiwano
 
 		void OnRender(RenderContext& ctx) override;
 
-		void HandleEvent(Event& evt) override;
+		void HandleEvent(Event* evt) override;
 
 	private:
 		Director();

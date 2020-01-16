@@ -70,7 +70,7 @@ namespace kiwano
 		void OnRender(RenderContext& ctx) override;
 
 	protected:
-		bool CheckVisibilty(RenderContext& ctx) const override;
+		bool CheckVisibility(RenderContext& ctx) const override;
 
 	private:
 		FramePtr frame_;

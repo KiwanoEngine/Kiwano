@@ -67,14 +67,14 @@ namespace kiwano
 
 			void BeginContact(b2Contact* contact) override
 			{
-				ContactBeginEvent evt(contact);
-				world_->DispatchEvent(evt);
+				ContactBeginEventPtr evt = new ContactBeginEvent(contact);
+				world_->DispatchEvent(evt.get());
 			}
 
 			void EndContact(b2Contact* contact) override
 			{
-				ContactEndEvent evt(contact);
-				world_->DispatchEvent(evt);
+				ContactEndEventPtr evt = new ContactEndEvent(contact);
+				world_->DispatchEvent(evt.get());
 			}
 
 			void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override		{ KGE_NOT_USED(contact); KGE_NOT_USED(oldManifold); }

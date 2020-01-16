@@ -105,7 +105,7 @@ namespace kiwano
 	protected:
 		/// \~chinese
 		/// @brief ¸üÐÂ°´Å¥×´Ì¬
-		void UpdateStatus(Event& evt);
+		void UpdateStatus(Event* evt);
 
 	private:
 		bool		enabled_;

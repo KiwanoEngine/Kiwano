@@ -13,6 +13,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\core\common.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Director.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\EventType.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
@@ -55,7 +56,6 @@
     <ClInclude Include="..\..\src\kiwano\math\scalar.h" />
     <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\Application.h" />
-    <ClInclude Include="..\..\src\kiwano\platform\Director.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
@@ -111,6 +111,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Component.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventListener.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp" />
@@ -126,7 +127,6 @@
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\time.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />
-    <ClCompile Include="..\..\src\kiwano\platform\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp" />

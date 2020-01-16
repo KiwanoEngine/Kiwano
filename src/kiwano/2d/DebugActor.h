@@ -46,7 +46,7 @@ namespace kiwano
 		void OnUpdate(Duration dt) override;
 
 	protected:
-		bool CheckVisibilty(RenderContext& ctx) const override;
+		bool CheckVisibility(RenderContext& ctx) const override;
 
 	private:
 		std::locale		comma_locale_;

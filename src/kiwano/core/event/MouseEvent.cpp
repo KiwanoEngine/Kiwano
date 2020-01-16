@@ -5,8 +5,6 @@ namespace kiwano
 	MouseEvent::MouseEvent(EventType const& type)
 		: Event(type)
 		, pos()
-		, left_btn_down(false)
-		, right_btn_down(false)
 	{
 	}
 

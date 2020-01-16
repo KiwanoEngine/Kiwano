@@ -19,8 +19,14 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Window.h>
-#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
+#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/core/event/KeyEvent.h>
+#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/core/Logger.h>
+
+#include <imm.h>  // ImmAssociateContext
+#pragma comment(lib, "imm32.lib")
 
 #define WINDOW_FIXED_STYLE		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE	WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
@@ -65,19 +71,19 @@ namespace kiwano
 	{
 	}
 
-	void Window::Init(WindowConfig const& config, WNDPROC proc)
+	void Window::Init(WindowConfig const& config)
 	{
 		HINSTANCE hinst		= GetModuleHandleW(nullptr);
 		WNDCLASSEX wcex		= { 0 };
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.lpszClassName	= KGE_WND_CLASS_NAME;
 		wcex.style			= CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
-		wcex.lpfnWndProc	= proc;
+		wcex.lpfnWndProc	= Window::WndProc;
 		wcex.hIcon			= nullptr;
 		wcex.cbClsExtra		= 0;
 		wcex.cbWndExtra		= sizeof(LONG_PTR);
 		wcex.hInstance		= hinst;
-		wcex.hbrBackground	= nullptr;
+		wcex.hbrBackground	= (HBRUSH)(::GetStockObject(BLACK_BRUSH));
 		wcex.lpszMenuName	= nullptr;
 		wcex.hCursor		= ::LoadCursorW(hinst, IDC_ARROW);
 
@@ -155,18 +161,18 @@ namespace kiwano
 		{
 			::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
 			win32::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+			return;
 		}
-		else
-		{
-			RECT rc;
-			GetClientRect(handle_, &rc);
-			width_ = rc.right - rc.left;
-			height_ = rc.bottom - rc.top;
-		}
-	}
 
-	void Window::Prepare()
-	{
+		width_ = width;
+		height_ = height;
+
+		// disable imm
+		::ImmAssociateContext(handle_, nullptr);
+
+		// use Application instance in message loop
+		::SetWindowLongPtr(handle_, GWLP_USERDATA, LONG_PTR(this));
+
 		::ShowWindow(handle_, SW_SHOWNORMAL);
 		::UpdateWindow(handle_);
 
@@ -176,15 +182,22 @@ namespace kiwano
 		}
 	}
 
-	void Window::PollEvents()
+	EventPtr Window::PollEvent()
 	{
-		static MSG msg = {};
-
-		if (::GetMessageW(&msg, nullptr, 0, 0))
+		MSG msg;
+		while (::PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			::TranslateMessage(&msg);
 			::DispatchMessageW(&msg);
 		}
+
+		EventPtr evt;
+		if (!event_queue_.empty())
+		{
+			evt = event_queue_.front();
+			event_queue_.pop();
+		}
+		return evt;
 	}
 
 	String Window::GetTitle() const
@@ -293,7 +306,12 @@ namespace kiwano
 				::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
 				::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, win_width, win_height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
 				
-				UpdateWindowRect();
+				// Update window rect
+				RECT rc;
+				::GetClientRect(handle_, &rc);
+
+				width_ = static_cast<uint32_t>(rc.right - rc.left);
+				height_ = static_cast<uint32_t>(rc.bottom - rc.top);
 			}
 			
 			::ShowWindow(handle_, SW_SHOWNORMAL);
@@ -305,26 +323,44 @@ namespace kiwano
 		mouse_cursor_ = cursor;
 	}
 
-	HWND Window::GetHandle() const
+	WindowHandle Window::GetHandle() const
 	{
 		return handle_;
 	}
 
+	bool Window::ShouldClose()
+	{
+		return handle_ == nullptr;
+	}
+
+	void Window::PushEvent(EventPtr evt)
+	{
+		event_queue_.push(evt);
+	}
+
+	void Window::Destroy()
+	{
+		if (is_fullscreen_)
+			RestoreResolution(device_name_);
+
+		if (device_name_)
+		{
+			delete[] device_name_;
+			device_name_ = nullptr;
+		}
+
+		if (handle_)
+		{
+			::DestroyWindow(handle_);
+			handle_ = nullptr;
+		}
+	}
+
+#if defined(KGE_WIN32)
+
 	DWORD Window::GetWindowStyle() const
 	{
 		return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
-	}
-
-	void Window::UpdateWindowRect()
-	{
-		if (!handle_)
-			return;
-
-		RECT rc;
-		::GetClientRect(handle_, &rc);
-
-		width_ = rc.right - rc.left;
-		height_ = rc.bottom - rc.top;
 	}
 
 	void Window::UpdateCursor()
@@ -368,22 +404,185 @@ namespace kiwano
 		}
 	}
 
-	void Window::Destroy()
+	LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (is_fullscreen_)
-			RestoreResolution(device_name_);
-
-		if (device_name_)
+		Window* window = reinterpret_cast<Window*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
+		if (window == nullptr)
 		{
-			delete[] device_name_;
-			device_name_ = nullptr;
+			return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 		}
 
-		if (handle_)
+		switch (msg)
 		{
-			::DestroyWindow(handle_);
-			handle_ = nullptr;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+		{
+			KeyDownEventPtr evt = new KeyDownEvent;
+			evt->code = static_cast<int>(wparam);
+			window->PushEvent(evt);
 		}
+		break;
+
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+		{
+			KeyUpEventPtr evt = new KeyUpEvent;
+			evt->code = static_cast<int>(wparam);
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_CHAR:
+		{
+			KeyCharEventPtr evt = new KeyCharEvent;
+			evt->value = static_cast<char>(wparam);
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK:
+		case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
+		{
+			MouseDownEventPtr evt = new MouseDownEvent;
+			evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+
+			if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONDBLCLK) { evt->button = MouseButton::Left; }
+			else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONDBLCLK) { evt->button = MouseButton::Right; }
+			else if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONDBLCLK) { evt->button = MouseButton::Middle; }
+
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		{
+			MouseUpEventPtr evt = new MouseUpEvent;
+			evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+
+			if		(msg == WM_LBUTTONUP)	{ evt->button = MouseButton::Left; }
+			else if (msg == WM_RBUTTONUP)	{ evt->button = MouseButton::Right; }
+			else if (msg == WM_MBUTTONUP)	{ evt->button = MouseButton::Middle; }
+
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_MOUSEMOVE:
+		{
+			MouseMoveEventPtr evt = new MouseMoveEvent;
+			evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_MOUSEWHEEL:
+		{
+			MouseWheelEventPtr evt = new MouseWheelEvent;
+			evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+			evt->wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_SIZE:
+		{
+			if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
+			{
+				KGE_SYS_LOG(L"Window minimized");
+			}
+			else
+			{
+				// KGE_SYS_LOG(L"Window resized");
+
+				window->width_ = ((uint32_t)(short)LOWORD(lparam));
+				window->height_ = ((uint32_t)(short)HIWORD(lparam));
+
+				WindowResizedEventPtr evt = new WindowResizedEvent;
+				evt->width = window->width_;
+				evt->height = window->height_;
+				window->PushEvent(evt);
+			}
+		}
+		break;
+
+		case WM_MOVE:
+		{
+			int x = ((int)(short)LOWORD(lparam));
+			int y = ((int)(short)HIWORD(lparam));
+
+			WindowMovedEventPtr evt = new WindowMovedEvent;
+			evt->x = x;
+			evt->y = y;
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_ACTIVATE:
+		{
+			bool active = (LOWORD(wparam) != WA_INACTIVE);
+
+			window->SetActive(active);
+
+			WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
+			evt->focus = active;
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_SETTEXT:
+		{
+			KGE_SYS_LOG(L"Window title changed");
+
+			WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
+			evt->title.assign(reinterpret_cast<const wchar_t*>(lparam));
+			window->PushEvent(evt);
+		}
+		break;
+
+		case WM_SETICON:
+		{
+			KGE_SYS_LOG(L"Window icon changed");
+		}
+		break;
+
+		case WM_DISPLAYCHANGE:
+		{
+			KGE_SYS_LOG(L"The display resolution has changed");
+
+			::InvalidateRect(hwnd, nullptr, FALSE);
+		}
+		break;
+
+		case WM_SETCURSOR:
+		{
+			window->UpdateCursor();
+		}
+		break;
+
+		case WM_CLOSE:
+		{
+			KGE_SYS_LOG(L"Window is closing");
+
+			WindowClosedEventPtr evt = new WindowClosedEvent;
+			window->PushEvent(evt);
+			window->Destroy();
+		}
+		break;
+
+		case WM_DESTROY:
+		{
+			KGE_SYS_LOG(L"Window was destroyed");
+
+			::PostQuitMessage(0);
+			return 0;
+		}
+		break;
+		}
+
+		return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 	}
 
 	namespace
@@ -440,5 +639,7 @@ namespace kiwano
 			::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 		}
 	}
+
+#endif
 
 }

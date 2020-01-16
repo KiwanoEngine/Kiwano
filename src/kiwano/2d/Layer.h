@@ -82,12 +82,12 @@ namespace kiwano
 		/// @brief ªÒ»°Õº≤„«¯”Ú
 		LayerArea const& GetArea() const;
 
-		bool DispatchEvent(Event& evt) override;
+		bool DispatchEvent(Event* evt) override;
 
 	protected:
 		void Render(RenderContext& ctx) override;
 
-		bool CheckVisibilty(RenderContext& ctx) const override;
+		bool CheckVisibility(RenderContext& ctx) const override;
 
 	private:
 		bool		swallow_;

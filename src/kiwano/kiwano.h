@@ -59,6 +59,7 @@
 #include <kiwano/core/TimerManager.h>
 #include <kiwano/core/AsyncTask.h>
 #include <kiwano/core/Resource.h>
+#include <kiwano/core/Director.h>
 
 
 //
@@ -112,7 +113,6 @@
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Window.h>
-#include <kiwano/platform/Director.h>
 #include <kiwano/platform/Application.h>
 
 

@@ -23,6 +23,13 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(WindowEvent);
+	KGE_DECLARE_SMART_PTR(WindowMovedEvent);
+	KGE_DECLARE_SMART_PTR(WindowResizedEvent);
+	KGE_DECLARE_SMART_PTR(WindowFocusChangedEvent);
+	KGE_DECLARE_SMART_PTR(WindowTitleChangedEvent);
+	KGE_DECLARE_SMART_PTR(WindowClosedEvent);
+
 	/**
 	* \addtogroup Events
 	* @{
@@ -33,12 +40,14 @@ namespace kiwano
 	class KGE_API WindowEvent
 		: public Event
 	{
+	public:
+		WindowEvent(const EventType& type);
 	};
 
 	/// \~chinese
 	/// @brief 窗口移动事件
 	class KGE_API WindowMovedEvent
-		: public Event
+		: public WindowEvent
 	{
 	public:
 		int x;			///< 窗口左上角 x 坐标
@@ -50,11 +59,11 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 窗口大小变化事件
 	class KGE_API WindowResizedEvent
-		: public Event
+		: public WindowEvent
 	{
 	public:
-		int width;		///< 窗口宽度
-		int height;		///< 窗口高度
+		uint32_t width;		///< 窗口宽度
+		uint32_t height;	///< 窗口高度
 
 		WindowResizedEvent();
 	};
@@ -62,7 +71,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 窗口焦点变化事件
 	class KGE_API WindowFocusChangedEvent
-		: public Event
+		: public WindowEvent
 	{
 	public:
 		bool focus;		///< 是否获取到焦点
@@ -73,7 +82,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 窗口标题更改事件
 	class KGE_API WindowTitleChangedEvent
-		: public Event
+		: public WindowEvent
 	{
 	public:
 		String title;	///< 标题
@@ -84,7 +93,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 窗口关闭事件
 	class KGE_API WindowClosedEvent
-		: public Event
+		: public WindowEvent
 	{
 	public:
 		WindowClosedEvent();
@@ -95,13 +104,13 @@ namespace kiwano
 	template <>
 	struct IsEventType<WindowEvent>
 	{
-		inline bool operator()(const Event& evt) const
+		inline bool operator()(const Event* evt) const
 		{
-			return evt.GetType() == KGE_EVENT(WindowMovedEvent)
-				|| evt.GetType() == KGE_EVENT(WindowResizedEvent)
-				|| evt.GetType() == KGE_EVENT(WindowFocusChangedEvent)
-				|| evt.GetType() == KGE_EVENT(WindowTitleChangedEvent)
-				|| evt.GetType() == KGE_EVENT(WindowClosedEvent);
+			return evt->GetType() == KGE_EVENT(WindowMovedEvent)
+				|| evt->GetType() == KGE_EVENT(WindowResizedEvent)
+				|| evt->GetType() == KGE_EVENT(WindowFocusChangedEvent)
+				|| evt->GetType() == KGE_EVENT(WindowTitleChangedEvent)
+				|| evt->GetType() == KGE_EVENT(WindowClosedEvent);
 		}
 	};
 

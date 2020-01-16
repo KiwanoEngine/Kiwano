@@ -25,6 +25,7 @@
 #include <kiwano/renderer/GifImage.h>
 #include <kiwano/renderer/Font.h>
 #include <kiwano/renderer/TextStyle.hpp>
+#include <kiwano/platform/Window.h>
 
 #if defined(KGE_USE_DIRECTX10)
 #	include "win32/D3D10DeviceResources.h"
@@ -278,7 +279,7 @@ namespace kiwano
 	public:
 		/// \~chinese
 		/// @brief 获取目标窗口
-		HWND GetTargetWindow() const;
+		WindowHandle GetTargetWindow() const;
 
 		/// \~chinese
 		/// @brief 获取渲染输出大小
@@ -303,7 +304,7 @@ namespace kiwano
 
 		void AfterRender() override;
 
-		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+		void HandleEvent(Event* evt) override;
 
 	private:
 		Renderer();
@@ -315,10 +316,10 @@ namespace kiwano
 		void ResizeTarget(uint32_t width, uint32_t height);
 
 	private:
-		bool	vsync_;
-		HWND	hwnd_;
-		Color	clear_color_;
-		Size	output_size_;
+		bool			vsync_;
+		WindowHandle	target_window_;
+		Color			clear_color_;
+		Size			output_size_;
 
 		ComPtr<ID2DDeviceResources>				d2d_res_;
 		ComPtr<ID3DDeviceResources>				d3d_res_;
@@ -330,7 +331,7 @@ namespace kiwano
 
 	/** @} */
 
-	inline HWND					Renderer::GetTargetWindow() const	{ return hwnd_; }
+	inline WindowHandle			Renderer::GetTargetWindow() const	{ return target_window_; }
 
 	inline Size const&			Renderer::GetOutputSize() const		{ return output_size_; }
 

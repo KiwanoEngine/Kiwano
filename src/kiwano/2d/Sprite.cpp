@@ -79,8 +79,8 @@ namespace kiwano
 		ctx.DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
 	}
 
-	bool Sprite::CheckVisibilty(RenderContext& ctx) const
+	bool Sprite::CheckVisibility(RenderContext& ctx) const
 	{
-		return frame_ && frame_->IsValid() && Actor::CheckVisibilty(ctx);
+		return frame_ && frame_->IsValid() && Actor::CheckVisibility(ctx);
 	}
 }

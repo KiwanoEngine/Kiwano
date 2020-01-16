@@ -24,6 +24,11 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(KeyEvent);
+	KGE_DECLARE_SMART_PTR(KeyDownEvent);
+	KGE_DECLARE_SMART_PTR(KeyUpEvent);
+	KGE_DECLARE_SMART_PTR(KeyCharEvent);
+
 	/**
 	* \addtogroup Events
 	* @{
@@ -34,12 +39,14 @@ namespace kiwano
 	class KGE_API KeyEvent
 		: public Event
 	{
+	public:
+		KeyEvent(const EventType& type);
 	};
 
 	/// \~chinese
 	/// @brief 键盘按下事件
 	class KGE_API KeyDownEvent
-		: public Event
+		: public KeyEvent
 	{
 	public:
 		KeyCode::Value code;	///< 键值
@@ -50,7 +57,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 键盘抬起事件
 	class KGE_API KeyUpEvent
-		: public Event
+		: public KeyEvent
 	{
 	public:
 		KeyCode::Value code;	///< 键值
@@ -61,7 +68,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 键盘字符事件
 	class KGE_API KeyCharEvent
-		: public Event
+		: public KeyEvent
 	{
 	public:
 		char value;		///< 字符
@@ -74,11 +81,11 @@ namespace kiwano
 	template <>
 	struct IsEventType<KeyEvent>
 	{
-		inline bool operator()(const Event& evt) const
+		inline bool operator()(const Event* evt) const
 		{
-			return evt.GetType() == KGE_EVENT(KeyDownEvent)
-				|| evt.GetType() == KGE_EVENT(KeyUpEvent)
-				|| evt.GetType() == KGE_EVENT(KeyCharEvent);
+			return evt->GetType() == KGE_EVENT(KeyDownEvent)
+				|| evt->GetType() == KGE_EVENT(KeyUpEvent)
+				|| evt->GetType() == KGE_EVENT(KeyCharEvent);
 		}
 	};
 

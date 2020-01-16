@@ -395,7 +395,7 @@ namespace kiwano
 		/// @brief 分发事件
 		/// @param evt 事件
 		/// @return 是否继续分发该事件
-		virtual bool DispatchEvent(Event& evt);
+		virtual bool DispatchEvent(Event* evt);
 
 		/// \~chinese
 		/// @brief 设置默认锚点
@@ -416,10 +416,10 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 检查是否在渲染上下文的视区内
-		virtual bool CheckVisibilty(RenderContext& ctx) const;
+		virtual bool CheckVisibility(RenderContext& ctx) const;
 
 		/// \~chinese
-		/// @brief 渲染前初始化渲染上下文状态，仅当 CheckVisibilty 返回真时调用该函数
+		/// @brief 渲染前初始化渲染上下文状态，仅当 CheckVisibility 返回真时调用该函数
 		virtual void PrepareToRender(RenderContext& ctx);
 
 		/// \~chinese
@@ -440,7 +440,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 处理事件
-		void HandleEvent(Event& evt);
+		void HandleEvent(Event* evt);
 
 	private:
 		bool			visible_;

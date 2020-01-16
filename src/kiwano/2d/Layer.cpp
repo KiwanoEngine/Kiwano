@@ -54,7 +54,7 @@ namespace kiwano
 		area_.SetMaskTransform(transform);
 	}
 
-	bool Layer::DispatchEvent(Event& evt)
+	bool Layer::DispatchEvent(Event* evt)
 	{
 		if (!IsVisible())
 			return true;
@@ -75,7 +75,7 @@ namespace kiwano
 		ctx.PopLayer();
 	}
 
-	bool Layer::CheckVisibilty(RenderContext& ctx) const
+	bool Layer::CheckVisibility(RenderContext& ctx) const
 	{
 		// Do not need to render Layer
 		return false;

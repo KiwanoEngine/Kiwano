@@ -2,20 +2,26 @@
 
 namespace kiwano
 {
+
+	KeyEvent::KeyEvent(const EventType& type)
+		: Event(type)
+	{
+	}
+
 	KeyDownEvent::KeyDownEvent()
-		: Event(KGE_EVENT(KeyDownEvent))
+		: KeyEvent(KGE_EVENT(KeyDownEvent))
 		, code(0)
 	{
 	}
 
 	KeyUpEvent::KeyUpEvent()
-		: Event(KGE_EVENT(KeyUpEvent))
+		: KeyEvent(KGE_EVENT(KeyUpEvent))
 		, code(0)
 	{
 	}
 
 	KeyCharEvent::KeyCharEvent()
-		: Event(KGE_EVENT(KeyCharEvent))
+		: KeyEvent(KGE_EVENT(KeyCharEvent))
 		, value()
 	{
 	}

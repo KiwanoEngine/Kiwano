@@ -45,9 +45,9 @@ namespace kiwano
 
 			/// \~chinese
 			/// @brief 添加 ImGui 元素
-			/// @param item 管道
 			/// @param name 元素名称
-			void AddItem(ImGuiPipeline const& item, String const& name);
+			/// @param item 管道
+			void AddItem(String const& name, ImGuiPipeline const& item);
 
 			/// \~chinese
 			/// @brief 移除 ImGui 元素
@@ -61,6 +61,8 @@ namespace kiwano
 
 		public:
 			void OnRender(RenderContext& ctx) override;
+
+			bool CheckVisibility(RenderContext& ctx) const override;
 
 		private:
 			Map<String, ImGuiPipeline> pipelines_;

@@ -20,8 +20,9 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
+#include <kiwano/core/common.h>
+#include <kiwano/core/event/Event.h>
 
 namespace kiwano
 {
@@ -74,6 +75,10 @@ namespace kiwano
 		);
 	};
 
+#if defined(KGE_WIN32)
+	typedef HWND WindowHandle;
+#endif
+
 
 	/**
 	* \~chinese
@@ -85,6 +90,13 @@ namespace kiwano
 		friend Singleton<Window>;
 
 	public:
+		/**
+		* \~chinese
+		* @brief 初始化窗口
+		* @param config 窗口设置
+		*/
+		void Init(WindowConfig const& config);
+
 		/**
 		* \~chinese
 		* @brief 获取窗口标题
@@ -151,39 +163,56 @@ namespace kiwano
 		*/
 		void SetCursor(CursorType cursor);
 
-#ifdef KGE_WIN32
-	public:
-		void Init(WindowConfig const& config, WNDPROC proc);
+		/**
+		* \~chinese
+		* @brief 轮询窗口事件
+		* @return 返回事件队列中的第一个事件并将其从队列中移除，若事件队列为空则返回空指针
+		*/
+		EventPtr PollEvent();
 
-		void Prepare();
+		/**
+		* \~chinese
+		* @brief 获取窗口句柄
+		*/
+		WindowHandle GetHandle() const;
 
-		void PollEvents();
+		/**
+		* \~chinese
+		* @brief 是否需要关闭
+		*/
+		bool ShouldClose();
 
-		HWND GetHandle() const;
-
-		DWORD GetWindowStyle() const;
-
-		void UpdateWindowRect();
-
-		void UpdateCursor();
-		
-		void SetActive(bool actived);
-
+		/**
+		* \~chinese
+		* @brief 销毁窗口
+		*/
 		void Destroy();
-#endif
 
 	private:
 		Window();
 
 		~Window();
 
+		void PushEvent(EventPtr evt);
+
+#if defined(KGE_WIN32)
+		DWORD GetWindowStyle() const;
+
+		void UpdateCursor();
+
+		void SetActive(bool actived);
+
+		static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
+#endif
+
 	private:
-		bool		resizable_;
-		bool		is_fullscreen_;
-		HWND		handle_;
-		int			width_;
-		int			height_;
-		wchar_t*	device_name_;
-		CursorType	mouse_cursor_;
+		bool					resizable_;
+		bool					is_fullscreen_;
+		WindowHandle			handle_;
+		uint32_t				width_;
+		uint32_t				height_;
+		wchar_t*				device_name_;
+		CursorType				mouse_cursor_;
+		std::queue<EventPtr>	event_queue_;
 	};
 }

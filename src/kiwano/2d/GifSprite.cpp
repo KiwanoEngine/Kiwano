@@ -72,7 +72,7 @@ namespace kiwano
 
 	void GifSprite::OnRender(RenderContext& ctx)
 	{
-		if (frame_to_render_ && CheckVisibilty(ctx))
+		if (frame_to_render_ && CheckVisibility(ctx))
 		{
 			PrepareToRender(ctx);
 

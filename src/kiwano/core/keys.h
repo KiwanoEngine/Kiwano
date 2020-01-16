@@ -60,6 +60,7 @@ namespace kiwano
 			Tab		= VK_TAB,		///< TAB¼ü
 			Delete	= VK_DELETE,	///< É¾³ý¼ü
 			Back	= VK_BACK,		///< ÍË¸ñ¼ü
+			Super	= VK_LWIN,		///< Cmd/Super/Windows¼ü
 
 			A = 0x41,				///< A¼ü
 			B,						///< B¼ü

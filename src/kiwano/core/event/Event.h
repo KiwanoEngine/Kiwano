@@ -19,12 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/event/EventType.h>
 #include <kiwano/math/math.h>
+#include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/keys.h>
+#include <kiwano/core/event/EventType.h>
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(Event);
+
 	/**
 	* \~chinese
 	* \defgroup Events 事件
@@ -38,6 +41,7 @@ namespace kiwano
 	/// \~chinese
 	/// @brief 事件
 	class KGE_API Event
+		: public RefCounter
 	{
 	public:
 		/// \~chinese
@@ -66,7 +70,7 @@ namespace kiwano
 			typename _Ty,
 			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
 		>
-		const _Ty& SafeCast() const;
+		const _Ty* SafeCast() const;
 
 		/// \~chinese
 		/// @brief 安全转换为其他类型事件
@@ -75,7 +79,7 @@ namespace kiwano
 			typename _Ty,
 			typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type
 		>
-		_Ty& SafeCast();
+		_Ty* SafeCast();
 
 	private:
 		const EventType type_;
@@ -93,9 +97,9 @@ namespace kiwano
 	template <typename _Ty, typename = typename std::enable_if<IsEvent<_Ty>::value, int>::type>
 	struct IsEventType
 	{
-		inline bool operator()(const Event& evt) const
+		inline bool operator()(const Event* evt) const
 		{
-			return evt.GetType() == KGE_EVENT(_Ty);
+			return evt->GetType() == KGE_EVENT(_Ty);
 		}
 	};
 
@@ -109,21 +113,21 @@ namespace kiwano
 	template <typename _Ty, typename>
 	inline bool Event::IsType() const
 	{
-		return kiwano::IsEventType<_Ty>()(*this);
+		return kiwano::IsEventType<_Ty>()(this);
 	}
 
 	template <typename _Ty, typename>
-	inline const _Ty& Event::SafeCast() const
+	inline const _Ty* Event::SafeCast() const
+	{
+		return const_cast<Event*>(this)->SafeCast<_Ty>();
+	}
+
+	template <typename _Ty, typename>
+	inline _Ty* Event::SafeCast()
 	{
 		if (!IsType<_Ty>())
 			throw std::bad_cast();
-		return dynamic_cast<const _Ty&>(*this);
-	}
-
-	template <typename _Ty, typename>
-	inline _Ty& Event::SafeCast()
-	{
-		return const_cast<_Ty&>(const_cast<const Event*>(this)->SafeCast<_Ty>());
+		return dynamic_cast<_Ty*>(this);
 	}
 
 }

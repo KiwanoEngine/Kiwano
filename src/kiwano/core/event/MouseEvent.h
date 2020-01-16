@@ -25,6 +25,15 @@
 
 namespace kiwano
 {
+	KGE_DECLARE_SMART_PTR(MouseEvent);
+	KGE_DECLARE_SMART_PTR(MouseMoveEvent);
+	KGE_DECLARE_SMART_PTR(MouseDownEvent);
+	KGE_DECLARE_SMART_PTR(MouseUpEvent);
+	KGE_DECLARE_SMART_PTR(MouseClickEvent);
+	KGE_DECLARE_SMART_PTR(MouseHoverEvent);
+	KGE_DECLARE_SMART_PTR(MouseOutEvent);
+	KGE_DECLARE_SMART_PTR(MouseWheelEvent);
+
 	/**
 	* \addtogroup Events
 	* @{
@@ -37,8 +46,6 @@ namespace kiwano
 	{
 	public:
 		Point pos;				///< 鼠标位置
-		bool left_btn_down;		///< 鼠标左键是否按下
-		bool right_btn_down;	///< 鼠标右键是否按下
 
 		MouseEvent(EventType const& type);
 	};
@@ -119,15 +126,15 @@ namespace kiwano
 	template <>
 	struct IsEventType<MouseEvent>
 	{
-		inline bool operator()(const Event& evt) const
+		inline bool operator()(const Event* evt) const
 		{
-			return evt.GetType() == KGE_EVENT(MouseMoveEvent)
-				|| evt.GetType() == KGE_EVENT(MouseDownEvent)
-				|| evt.GetType() == KGE_EVENT(MouseUpEvent)
-				|| evt.GetType() == KGE_EVENT(MouseClickEvent)
-				|| evt.GetType() == KGE_EVENT(MouseHoverEvent)
-				|| evt.GetType() == KGE_EVENT(MouseOutEvent)
-				|| evt.GetType() == KGE_EVENT(MouseWheelEvent);
+			return evt->GetType() == KGE_EVENT(MouseMoveEvent)
+				|| evt->GetType() == KGE_EVENT(MouseDownEvent)
+				|| evt->GetType() == KGE_EVENT(MouseUpEvent)
+				|| evt->GetType() == KGE_EVENT(MouseClickEvent)
+				|| evt->GetType() == KGE_EVENT(MouseHoverEvent)
+				|| evt->GetType() == KGE_EVENT(MouseOutEvent)
+				|| evt->GetType() == KGE_EVENT(MouseWheelEvent);
 		}
 	};
 

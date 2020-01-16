@@ -231,9 +231,6 @@
     <ClInclude Include="..\..\src\kiwano\platform\Window.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\Director.h">
-      <Filter>platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -281,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\renderer\RenderContext.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Director.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -440,9 +440,6 @@
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\Director.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
@@ -478,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\renderer\RenderContext.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Director.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -67,8 +67,8 @@ namespace kiwano
 		style.fill_brush = fill_brush;
 		debug_text_.SetStyle(style);
 
-		AddListener<MouseHoverEvent>([=](Event&) { SetOpacity(0.4f); });
-		AddListener<MouseOutEvent>([=](Event&) { SetOpacity(1.f); });
+		AddListener<MouseHoverEvent>([=](Event*) { SetOpacity(0.4f); });
+		AddListener<MouseOutEvent>([=](Event*) { SetOpacity(1.f); });
 	}
 
 	DebugActor::~DebugActor()
@@ -139,7 +139,7 @@ namespace kiwano
 		}
 	}
 
-	bool DebugActor::CheckVisibilty(RenderContext& ctx) const
+	bool DebugActor::CheckVisibility(RenderContext& ctx) const
 	{
 		return true;
 	}

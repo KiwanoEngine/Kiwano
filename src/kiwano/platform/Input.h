@@ -20,9 +20,9 @@
 
 #pragma once
 #include <kiwano/macros.h>
-#include <kiwano/core/common.h>
 #include <kiwano/math/math.h>
-#include <kiwano/core/keys.h>
+#include <kiwano/core/common.h>
+#include <kiwano/core/event/Event.h>
 #include <kiwano/core/Component.h>
 
 namespace kiwano
@@ -46,7 +46,7 @@ namespace kiwano
 		* @return 是否正被按下
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool IsDown(int key_or_btn);
+		bool IsDown(int key_or_btn) const;
 
 		/**
 		* \~chinese
@@ -55,7 +55,7 @@ namespace kiwano
 		* @return 是否刚被点击
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool WasPressed(int key_or_btn);
+		bool WasPressed(int key_or_btn) const;
 
 		/**
 		* \~chinese
@@ -64,28 +64,28 @@ namespace kiwano
 		* @return 是否刚抬起
 		* @see kiwano::KeyCode kiwano::MouseButton
 		*/
-		bool WasReleased(int key_or_btn);
+		bool WasReleased(int key_or_btn) const;
 
 		/**
 		* \~chinese
 		* @brief 获得鼠标 x 坐标
 		* @return 鼠标 x 坐标
 		*/
-		float GetMouseX();
+		float GetMouseX() const;
 
 		/**
 		* \~chinese
 		* @brief 获得鼠标 y 坐标
 		* @return 鼠标 y 坐标
 		*/
-		float GetMouseY();
+		float GetMouseY() const;
 
 		/**
 		* \~chinese
 		* @brief 获得鼠标坐标
 		* @return 鼠标坐标
 		*/
-		Point GetMousePos();
+		Point GetMousePos() const;
 
 	public:
 		void SetupComponent() override {}
@@ -94,25 +94,24 @@ namespace kiwano
 
 		void AfterUpdate() override;
 
-		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
-
-		void UpdateKey(int, bool);
-
-		void UpdateMousePos(float, float);
+		void HandleEvent(Event* evt) override;
 
 	private:
 		Input();
 
 		~Input();
 
+		void UpdateKey(int, bool);
+
+		void UpdateMousePos(const Point& pos);
+
 	private:
 		static const int KEY_NUM = 256;
 
 		bool want_update_;
-		bool keys_[KEY_NUM];
-		bool keys_pressed_[KEY_NUM];
-		bool keys_released_[KEY_NUM];
-		float mouse_pos_x_;
-		float mouse_pos_y_;
+		Point mouse_pos_;
+		std::array<bool, KEY_NUM> keys_;
+		std::array<bool, KEY_NUM> keys_pressed_;
+		std::array<bool, KEY_NUM> keys_released_;
 	};
 }

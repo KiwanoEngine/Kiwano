@@ -99,9 +99,9 @@ namespace kiwano
 		ctx.FillGeometry(geo_);
 	}
 
-	bool ShapeActor::CheckVisibilty(RenderContext& ctx) const
+	bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 	{
-		return geo_.IsValid() && Actor::CheckVisibilty(ctx);
+		return geo_.IsValid() && Actor::CheckVisibility(ctx);
 	}
 
 	//-------------------------------------------------------

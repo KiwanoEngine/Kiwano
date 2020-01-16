@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-	bool EventDispatcher::DispatchEvent(Event& evt)
+	bool EventDispatcher::DispatchEvent(Event* evt)
 	{
 		if (listeners_.empty())
 			return true;

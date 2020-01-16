@@ -82,27 +82,10 @@ namespace kiwano
 
 		/**
 		* \~chinese
-		* @brief 初始化应用程序
-		* @details 初始化所有功能组件后执行 OnReady 函数
-		* @param config 初始化配置
-		* @attention 应在使用其他功能前执行初始化，否则可能引发异常
-		*/
-		void Init(Config const& config = Config());
-
-		/**
-		* \~chinese
 		* @brief 初始化完成处理
 		* @details 重载该函数以在应用程序初始化完成后自动执行
 		*/
 		virtual void OnReady() {}
-
-		/**
-		* \~chinese
-		* @brief 窗口关闭处理
-		* @details 重载该函数以处理用户关闭应用程序窗口时的行为
-		* @return 返回 true 则正常关闭窗口，否则阻止窗口关闭
-		*/
-		virtual bool OnClosing() { return true; }
 
 		/**
 		* \~chinese
@@ -114,9 +97,11 @@ namespace kiwano
 		/**
 		* \~chinese
 		* @brief 启动应用程序
+		* @details 初始化所有功能组件后执行 OnReady 函数
+		* @param config 初始化配置
 		* @note 该函数是阻塞的，应用程序结束时函数返回
 		*/
-		void Run();
+		void Run(Config const& config = Config());
 
 		/**
 		* \~chinese
@@ -152,7 +137,7 @@ namespace kiwano
 		* @details 将事件分发给所有事件功能组件
 		* @param evt 事件
 		*/
-		void DispatchEvent(Event& evt);
+		void DispatchEvent(Event* evt);
 
 		/**
 		* \~chinese
@@ -167,13 +152,9 @@ namespace kiwano
 
 		void Update();
 
-		static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
-
 	private:
-		bool	end_;
-		bool	inited_;
-		float	time_scale_;
-
+		float						time_scale_;
+		Time						last_update_time_;
 		Vector<ComponentBase*>		comps_;
 		Vector<RenderComponent*>	render_comps_;
 		Vector<UpdateComponent*>	update_comps_;

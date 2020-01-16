@@ -119,11 +119,7 @@ namespace kiwano
 		/// \~chinese
 		/// @brief 事件处理
 		/// @param evt 事件
-		virtual void HandleEvent(Event& evt) {}
-
-		/// \~chinese
-		/// @brief 处理 Windows 消息
-		virtual void HandleMessage(HWND, UINT32, WPARAM, LPARAM) {}
+		virtual void HandleEvent(Event* evt) {}
 
 	public:
 		static const int flag;

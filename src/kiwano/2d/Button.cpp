@@ -130,28 +130,28 @@ namespace kiwano
 		return status_;
 	}
 
-	void Button::UpdateStatus(Event& evt)
+	void Button::UpdateStatus(Event* evt)
 	{
 		if (!enabled_)
 			return;
 
-		if (evt.IsType<MouseHoverEvent>())
+		if (evt->IsType<MouseHoverEvent>())
 		{
 			SetStatus(Status::Hover);
 		}
-		else if (evt.IsType<MouseOutEvent>())
+		else if (evt->IsType<MouseOutEvent>())
 		{
 			SetStatus(Status::Normal);
 		}
-		else if (evt.IsType<MouseDownEvent>() && status_ == Status::Hover)
+		else if (evt->IsType<MouseDownEvent>() && status_ == Status::Hover)
 		{
 			SetStatus(Status::Pressed);
 		}
-		else if (evt.IsType<MouseUpEvent>() && status_ == Status::Pressed)
+		else if (evt->IsType<MouseUpEvent>() && status_ == Status::Pressed)
 		{
 			SetStatus(Status::Hover);
 		}
-		else if (evt.IsType<MouseClickEvent>())
+		else if (evt->IsType<MouseClickEvent>())
 		{
 			if (click_callback_)
 				click_callback_(this);

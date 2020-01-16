@@ -49,13 +49,11 @@ namespace kiwano
 
 			void AfterRender() override;
 
-			void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+			void HandleEvent(Event* evt) override;
 
 			void OnUpdate(Duration dt) override;
 
 		private:
-			void Init(HWND hwnd);
-
 			void NewFrame();
 
 			void Render();
@@ -64,12 +62,8 @@ namespace kiwano
 
 			void UpdateMouseCursor();
 
-			void UpdateGamepads();
-
 		private:
-			bool has_gamepad_;
-			bool want_update_has_gamepad_;
-			HWND target_window_;
+			WindowHandle target_window_;
 		};
 	}
 }

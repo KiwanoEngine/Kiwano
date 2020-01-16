@@ -26,6 +26,9 @@ namespace kiwano
 {
 	namespace physics
 	{
+		KGE_DECLARE_SMART_PTR(ContactBeginEvent);
+		KGE_DECLARE_SMART_PTR(ContactEndEvent);
+
 		/**
 		* \addtogroup Events
 		* @{

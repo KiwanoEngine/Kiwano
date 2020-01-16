@@ -47,7 +47,7 @@ namespace kiwano
 	public:
 		/// \~chinese
 		/// @brief 监听器回调函数
-		using Callback = Function<void(Event&)>;
+		using Callback = Function<void(Event*)>;
 
 		/// \~chinese
 		/// @brief 构造空监听器
@@ -154,7 +154,7 @@ namespace kiwano
 
 		/// \~chinese
 		/// @brief 接收消息
-		void Receive(Event& evt);
+		void Receive(Event* evt);
 
 	private:
 		bool		running_;
@@ -220,9 +220,11 @@ namespace kiwano
 		type_ = type;
 	}
 
-	inline void EventListener::Receive(Event& evt)
+	inline void EventListener::Receive(Event* evt)
 	{
-		if (type_ == evt.GetType() && callback_)
+		KGE_ASSERT(evt != nullptr);
+
+		if (type_ == evt->GetType() && callback_)
 		{
 			callback_(evt);
 		}

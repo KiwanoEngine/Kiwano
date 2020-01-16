@@ -20,8 +20,8 @@
 
 #include <kiwano/renderer/Renderer.h>
 #include <kiwano/renderer/GeometrySink.h>
+#include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/platform/Window.h>
 #include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
@@ -33,7 +33,7 @@ namespace kiwano
 	}
 
 	Renderer::Renderer()
-		: hwnd_(nullptr)
+		: target_window_(nullptr)
 		, vsync_(true)
 		, clear_color_(Color::Black)
 	{
@@ -53,19 +53,21 @@ namespace kiwano
 	{
 		KGE_SYS_LOG(L"Creating device resources");
 
-		hwnd_ = Window::instance().GetHandle();
+		win32::ThrowIfFailed(::CoInitialize(nullptr));
+
+		target_window_ = Window::instance().GetHandle();
 		output_size_ = Window::instance().GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
 		drawing_state_block_ = nullptr;
 
-		HRESULT hr = hwnd_ ? S_OK : E_FAIL;
+		HRESULT hr = target_window_ ? S_OK : E_FAIL;
 
 		// Direct3D device resources
 		if (SUCCEEDED(hr))
 		{
-			hr = ID3DDeviceResources::Create(&d3d_res_, hwnd_);
+			hr = ID3DDeviceResources::Create(&d3d_res_, target_window_);
 
 			// Direct2D device resources
 			if (SUCCEEDED(hr))
@@ -136,6 +138,8 @@ namespace kiwano
 		drawing_state_block_.reset();
 		d2d_res_.reset();
 		d3d_res_.reset();
+
+		::CoUninitialize();
 	}
 
 	void Renderer::BeforeRender()
@@ -171,18 +175,12 @@ namespace kiwano
 		win32::ThrowIfFailed(hr);
 	}
 
-	void Renderer::HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
+	void Renderer::HandleEvent(Event* evt)
 	{
-		switch (msg)
+		if (evt->IsType<WindowResizedEvent>())
 		{
-		case WM_SIZE:
-		{
-			uint32_t width = LOWORD(lparam);
-			uint32_t height = HIWORD(lparam);
-
-			ResizeTarget(width, height);
-			break;
-		}
+			auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
+			ResizeTarget(window_evt->width, window_evt->height);
 		}
 	}
 

@@ -106,9 +106,9 @@ namespace kiwano
 		}
 	}
 
-	bool TextActor::CheckVisibilty(RenderContext& ctx) const
+	bool TextActor::CheckVisibility(RenderContext& ctx) const
 	{
-		return text_layout_.IsValid() && Actor::CheckVisibilty(ctx);
+		return text_layout_.IsValid() && Actor::CheckVisibility(ctx);
 	}
 
 	void TextActor::SetFillColor(Color const& color)

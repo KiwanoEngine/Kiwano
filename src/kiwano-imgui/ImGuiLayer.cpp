@@ -35,14 +35,18 @@ namespace kiwano
 
 		void ImGuiLayer::OnRender(RenderContext& ctx)
 		{
-			PrepareToRender(ctx);
 			for (const auto& pipeline : pipelines_)
 			{
 				pipeline.second();
 			}
 		}
 
-		void ImGuiLayer::AddItem(ImGuiPipeline const& item, String const& name)
+		bool ImGuiLayer::CheckVisibility(RenderContext& ctx) const
+		{
+			return true;
+		}
+
+		void ImGuiLayer::AddItem(String const& name, ImGuiPipeline const& item)
 		{
 			pipelines_.insert(std::make_pair(name, item));
 		}
