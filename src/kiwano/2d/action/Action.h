@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/common.h>
-#include <kiwano/core/time.h>
+#include <kiwano/core/Common.h>
+#include <kiwano/core/Time.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/math/math.h>

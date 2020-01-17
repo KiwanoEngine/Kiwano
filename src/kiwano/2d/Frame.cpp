@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Frame.h>
-#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/render/TextureCache.h>
 
 namespace kiwano
 {

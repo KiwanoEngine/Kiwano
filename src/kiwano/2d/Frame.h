@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/renderer/Texture.h>
+#include <kiwano/render/Texture.h>
 
 namespace kiwano
 {

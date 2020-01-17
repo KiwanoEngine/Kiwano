@@ -23,7 +23,7 @@
 #endif
 
 #include <kiwano/macros.h>
-#include <kiwano/core/common.h>
+#include <kiwano/core/Common.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/win32/ComPtr.hpp>

@@ -22,8 +22,8 @@
 #include <kiwano/core/Resource.h>
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
-#include <kiwano/renderer/GifImage.h>
-#include <kiwano/renderer/Font.h>
+#include <kiwano/render/GifImage.h>
+#include <kiwano/render/Font.h>
 #include <3rd-party/pugixml/pugixml.hpp>
 
 namespace kiwano

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Sprite.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {

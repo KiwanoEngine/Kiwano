@@ -21,8 +21,8 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/renderer/RenderContext.h>
-#include <kiwano/renderer/GifImage.h>
+#include <kiwano/render/RenderContext.h>
+#include <kiwano/render/GifImage.h>
 
 namespace kiwano
 {

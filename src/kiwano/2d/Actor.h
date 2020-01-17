@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/math/math.h>
-#include <kiwano/core/time.h>
+#include <kiwano/core/Time.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/TimerManager.h>
 #include <kiwano/core/EventDispatcher.h>

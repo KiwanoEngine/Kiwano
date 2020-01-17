@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/renderer/TextLayout.h>
+#include <kiwano/render/TextLayout.h>
 
 namespace kiwano
 {

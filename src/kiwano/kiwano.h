@@ -44,8 +44,8 @@
 // core
 //
 
-#include <kiwano/core/common.h>
-#include <kiwano/core/time.h>
+#include <kiwano/core/Common.h>
+#include <kiwano/core/Time.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/ObjectBase.h>
@@ -66,15 +66,15 @@
 // renderer
 //
 
-#include <kiwano/renderer/Color.h>
-#include <kiwano/renderer/Font.h>
-#include <kiwano/renderer/Texture.h>
-#include <kiwano/renderer/GifImage.h>
-#include <kiwano/renderer/TextLayout.h>
-#include <kiwano/renderer/Geometry.h>
-#include <kiwano/renderer/LayerArea.h>
-#include <kiwano/renderer/TextureCache.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Color.h>
+#include <kiwano/render/Font.h>
+#include <kiwano/render/Texture.h>
+#include <kiwano/render/GifImage.h>
+#include <kiwano/render/TextLayout.h>
+#include <kiwano/render/Geometry.h>
+#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/Renderer.h>
 
 
 //

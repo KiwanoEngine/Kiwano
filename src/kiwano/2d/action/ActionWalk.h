@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/2d/action/ActionTween.h>
-#include <kiwano/renderer/Geometry.h>
-#include <kiwano/renderer/GeometrySink.h>
+#include <kiwano/render/Geometry.h>
+#include <kiwano/render/GeometrySink.h>
 
 namespace kiwano
 {

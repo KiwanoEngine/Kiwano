@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/renderer/LayerArea.h>
-#include <kiwano/renderer/RenderContext.h>
+#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {

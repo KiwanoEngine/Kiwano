@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/renderer/Brush.h>
+#include <kiwano/render/Brush.h>
 
 namespace kiwano
 {

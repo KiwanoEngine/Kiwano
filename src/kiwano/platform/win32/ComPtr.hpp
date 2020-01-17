@@ -20,7 +20,7 @@
 
 #pragma once
 #include <type_traits>
-#include <kiwano/core/common.h>
+#include <kiwano/core/Common.h>
 #include <Unknwnbase.h>
 
 namespace kiwano

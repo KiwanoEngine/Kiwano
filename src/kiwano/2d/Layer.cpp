@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Layer.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {

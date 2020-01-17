@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/Stage.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {

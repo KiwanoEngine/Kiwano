@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/renderer/TextureCache.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {

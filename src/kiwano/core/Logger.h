@@ -22,7 +22,7 @@
 #include <iomanip>
 #include <sstream>
 #include <kiwano/macros.h>
-#include <kiwano/core/common.h>
+#include <kiwano/core/Common.h>
 
 #ifndef KGE_SYS_LOG
 #	ifdef KGE_DEBUG

@@ -21,7 +21,7 @@
 #pragma once
 #include <typeinfo>
 #include <typeindex>
-#include <kiwano/core/common.h>
+#include <kiwano/core/Common.h>
 
 namespace kiwano
 {

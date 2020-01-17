@@ -23,7 +23,7 @@
 #include <kiwano/platform/Input.h>
 #include <kiwano/core/Director.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/renderer/TextureCache.h>
+#include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
 
 namespace kiwano
