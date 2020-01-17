@@ -37,22 +37,22 @@ namespace kiwano
 			io.ImeWindowHandle = target_window_;
 
 			// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array that we will update during the application lifetime.
-			io.KeyMap[ImGuiKey_Tab] = KeyCode::Tab;
-			io.KeyMap[ImGuiKey_LeftArrow] = KeyCode::Left;
-			io.KeyMap[ImGuiKey_RightArrow] = KeyCode::Right;
-			io.KeyMap[ImGuiKey_UpArrow] = KeyCode::Up;
-			io.KeyMap[ImGuiKey_DownArrow] = KeyCode::Down;
-			io.KeyMap[ImGuiKey_Delete] = KeyCode::Delete;
-			io.KeyMap[ImGuiKey_Backspace] = KeyCode::Back;
-			io.KeyMap[ImGuiKey_Space] = KeyCode::Space;
-			io.KeyMap[ImGuiKey_Enter] = KeyCode::Enter;
-			io.KeyMap[ImGuiKey_Escape] = KeyCode::Esc;
-			io.KeyMap[ImGuiKey_A] = KeyCode::A;
-			io.KeyMap[ImGuiKey_C] = KeyCode::C;
-			io.KeyMap[ImGuiKey_V] = KeyCode::V;
-			io.KeyMap[ImGuiKey_X] = KeyCode::X;
-			io.KeyMap[ImGuiKey_Y] = KeyCode::Y;
-			io.KeyMap[ImGuiKey_Z] = KeyCode::Z;
+			io.KeyMap[ImGuiKey_Tab] = (int)KeyCode::Tab;
+			io.KeyMap[ImGuiKey_LeftArrow] = (int)KeyCode::Left;
+			io.KeyMap[ImGuiKey_RightArrow] = (int)KeyCode::Right;
+			io.KeyMap[ImGuiKey_UpArrow] = (int)KeyCode::Up;
+			io.KeyMap[ImGuiKey_DownArrow] = (int)KeyCode::Down;
+			io.KeyMap[ImGuiKey_Delete] = (int)KeyCode::Delete;
+			io.KeyMap[ImGuiKey_Backspace] = (int)KeyCode::Back;
+			io.KeyMap[ImGuiKey_Space] = (int)KeyCode::Space;
+			io.KeyMap[ImGuiKey_Enter] = (int)KeyCode::Enter;
+			io.KeyMap[ImGuiKey_Escape] = (int)KeyCode::Esc;
+			io.KeyMap[ImGuiKey_A] = (int)KeyCode::A;
+			io.KeyMap[ImGuiKey_C] = (int)KeyCode::C;
+			io.KeyMap[ImGuiKey_V] = (int)KeyCode::V;
+			io.KeyMap[ImGuiKey_X] = (int)KeyCode::X;
+			io.KeyMap[ImGuiKey_Y] = (int)KeyCode::Y;
+			io.KeyMap[ImGuiKey_Z] = (int)KeyCode::Z;
 
 			ImGui_Impl_Init(Renderer::Instance());
 		}
@@ -104,7 +104,7 @@ namespace kiwano
 			{
 				if (evt->IsType<MouseDownEvent>())
 				{
-					int button = dynamic_cast<MouseDownEvent*>(evt)->button;
+					MouseButton button = dynamic_cast<MouseDownEvent*>(evt)->button;
 					int index = 0;
 					if		(button == MouseButton::Left) index = 0;
 					else if (button == MouseButton::Right) index = 1;
@@ -113,7 +113,7 @@ namespace kiwano
 				}
 				else if (evt->IsType<MouseUpEvent>())
 				{
-					int button = dynamic_cast<MouseUpEvent*>(evt)->button;
+					MouseButton button = dynamic_cast<MouseUpEvent*>(evt)->button;
 					int index = 0;
 					if		(button == MouseButton::Left) index = 0;
 					else if (button == MouseButton::Right) index = 1;
@@ -130,13 +130,13 @@ namespace kiwano
 			{
 				if (evt->IsType<KeyDownEvent>())
 				{
-					int key = dynamic_cast<KeyDownEvent*>(evt)->code;
-					io.KeysDown[key] = true;
+					KeyCode key = dynamic_cast<KeyDownEvent*>(evt)->code;
+					io.KeysDown[(int)key] = true;
 				}
 				else if (evt->IsType<KeyUpEvent>())
 				{
-					int key = dynamic_cast<KeyUpEvent*>(evt)->code;
-					io.KeysDown[key] = false;
+					KeyCode key = dynamic_cast<KeyUpEvent*>(evt)->code;
+					io.KeysDown[(int)key] = false;
 				}
 				else if (evt->IsType<KeyCharEvent>())
 				{

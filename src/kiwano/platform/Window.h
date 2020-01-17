@@ -181,9 +181,9 @@ namespace kiwano
 
 		/**
 		* \~chinese
-		* @brief 是否需要关闭
+		* @brief 窗口是否需要关闭
 		*/
-		virtual bool ShouldClose() = 0;
+		bool ShouldClose();
 
 		/**
 		* \~chinese

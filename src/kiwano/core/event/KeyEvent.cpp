@@ -10,13 +10,13 @@ namespace kiwano
 
 	KeyDownEvent::KeyDownEvent()
 		: KeyEvent(KGE_EVENT(KeyDownEvent))
-		, code(0)
+		, code()
 	{
 	}
 
 	KeyUpEvent::KeyUpEvent()
 		: KeyEvent(KGE_EVENT(KeyUpEvent))
-		, code(0)
+		, code()
 	{
 	}
 

@@ -89,11 +89,6 @@ namespace kiwano
 
 	void Window::Destroy()
 	{
-		while (!event_queue_.empty())
-		{
-			event_queue_.pop();
-		}
-
 		should_close_ = true;
 	}
 

@@ -49,7 +49,7 @@ namespace kiwano
 		: public KeyEvent
 	{
 	public:
-		KeyCode::Value code;	///< 键值
+		KeyCode code;	///< 键值
 
 		KeyDownEvent();
 	};
@@ -60,7 +60,7 @@ namespace kiwano
 		: public KeyEvent
 	{
 	public:
-		KeyCode::Value code;	///< 键值
+		KeyCode code;	///< 键值
 
 		KeyUpEvent();
 	};

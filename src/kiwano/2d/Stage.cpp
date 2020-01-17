@@ -48,7 +48,7 @@ namespace kiwano
 
 	void Stage::RenderBorder(RenderContext& ctx)
 	{
-		ctx.SetBrushOpacity(1.0f);
+		ctx.SetBrushOpacity(GetDisplayedOpacity());
 
 		if (!border_fill_brush_)
 		{

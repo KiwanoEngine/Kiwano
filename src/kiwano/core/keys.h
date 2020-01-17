@@ -25,104 +25,98 @@ namespace kiwano
 {
 	/// \~chinese
 	/// @brief Êó±ê°´¼ü
-	struct MouseButton
+	enum class MouseButton
 	{
-		typedef int Value;
+		Left,		///< Êó±ê×ó¼ü
+		Right,		///< Êó±êÓÒ¼ü
+		Middle,		///< Êó±êÖÐ¼ü
 
-		enum : Value
-		{
-			Left	= VK_LBUTTON,	///< Êó±ê×ó¼ü
-			Right	= VK_RBUTTON,	///< Êó±êÓÒ¼ü
-			Middle	= VK_MBUTTON	///< Êó±êÖÐ¼ü
-		};
+		Last
 	};
 
 
 	/// \~chinese
 	/// @brief °´¼ü¼üÖµ
-	struct KeyCode
+	enum class KeyCode
 	{
-		typedef int Value;
+		Unknown,	///< Î´Öª
+		Up,			///< ÉÏ¼ü
+		Left,		///< ×ó¼ü
+		Right,		///< ÓÒ¼ü
+		Down,		///< ÏÂ¼ü
+		Enter,		///< »Ø³µ¼ü
+		Space,		///< ¿Õ¸ñ¼ü
+		Esc,		///< ÍË³ö¼ü
+		Ctrl,		///< CTRL¼ü
+		Shift,		///< SHIFT¼ü
+		Alt,		///< ALT¼ü
+		Tab,		///< TAB¼ü
+		Delete,		///< É¾³ý¼ü
+		Back,		///< ÍË¸ñ¼ü
+		Super,		///< Cmd|Super|Windows¼ü
 
-		enum : Value
-		{
-			Unknown = 0,			///< Î´Öª
-			Up		= VK_UP,		///< ÉÏ¼ü
-			Left	= VK_LEFT,		///< ×ó¼ü
-			Right	= VK_RIGHT,		///< ÓÒ¼ü
-			Down	= VK_DOWN,		///< ÏÂ¼ü
-			Enter	= VK_RETURN,	///< »Ø³µ¼ü
-			Space	= VK_SPACE,		///< ¿Õ¸ñ¼ü
-			Esc		= VK_ESCAPE,	///< ÍË³ö¼ü
-			Ctrl	= VK_CONTROL,	///< CTRL¼ü
-			Shift	= VK_SHIFT,		///< SHIFT¼ü
-			Alt		= VK_MENU,		///< ALT¼ü
-			Tab		= VK_TAB,		///< TAB¼ü
-			Delete	= VK_DELETE,	///< É¾³ý¼ü
-			Back	= VK_BACK,		///< ÍË¸ñ¼ü
-			Super	= VK_LWIN,		///< Cmd/Super/Windows¼ü
+		A,			///< A¼ü
+		B,			///< B¼ü
+		C,			///< C¼ü
+		D,			///< D¼ü
+		E,			///< E¼ü
+		F,			///< F¼ü
+		G,			///< G¼ü
+		H,			///< H¼ü
+		I,			///< I¼ü
+		J,			///< J¼ü
+		K,			///< K¼ü
+		L,			///< L¼ü
+		M,			///< M¼ü
+		N,			///< N¼ü
+		O,			///< O¼ü
+		P,			///< P¼ü
+		Q,			///< Q¼ü
+		R,			///< R¼ü
+		S,			///< S¼ü
+		T,			///< T¼ü
+		U,			///< U¼ü
+		V,			///< V¼ü
+		W,			///< W¼ü
+		X,			///< X¼ü
+		Y,			///< Y¼ü
+		Z,			///< Z¼ü
 
-			A = 0x41,				///< A¼ü
-			B,						///< B¼ü
-			C,						///< C¼ü
-			D,						///< D¼ü
-			E,						///< E¼ü
-			F,						///< F¼ü
-			G,						///< G¼ü
-			H,						///< H¼ü
-			I,						///< I¼ü
-			J,						///< J¼ü
-			K,						///< K¼ü
-			L,						///< L¼ü
-			M,						///< M¼ü
-			N,						///< N¼ü
-			O,						///< O¼ü
-			P,						///< P¼ü
-			Q,						///< Q¼ü
-			R,						///< R¼ü
-			S,						///< S¼ü
-			T,						///< T¼ü
-			U,						///< U¼ü
-			V,						///< V¼ü
-			W,						///< W¼ü
-			X,						///< X¼ü
-			Y,						///< Y¼ü
-			Z,						///< Z¼ü
+		Num0,		///< Êý×Ö0¼ü
+		Num1,		///< Êý×Ö1¼ü
+		Num2,		///< Êý×Ö2¼ü
+		Num3,		///< Êý×Ö3¼ü
+		Num4,		///< Êý×Ö4¼ü
+		Num5,		///< Êý×Ö5¼ü
+		Num6,		///< Êý×Ö6¼ü
+		Num7,		///< Êý×Ö7¼ü
+		Num8,		///< Êý×Ö8¼ü
+		Num9,		///< Êý×Ö9¼ü
 
-			Num0 = 0x30,			///< Êý×Ö0¼ü
-			Num1,					///< Êý×Ö1¼ü
-			Num2,					///< Êý×Ö2¼ü
-			Num3,					///< Êý×Ö3¼ü
-			Num4,					///< Êý×Ö4¼ü
-			Num5,					///< Êý×Ö5¼ü
-			Num6,					///< Êý×Ö6¼ü
-			Num7,					///< Êý×Ö7¼ü
-			Num8,					///< Êý×Ö8¼ü
-			Num9,					///< Êý×Ö9¼ü
+		Numpad0,	///< Êý×ÖÐ¡¼üÅÌ0¼ü
+		Numpad1,	///< Êý×ÖÐ¡¼üÅÌ1¼ü
+		Numpad2,	///< Êý×ÖÐ¡¼üÅÌ2¼ü
+		Numpad3,	///< Êý×ÖÐ¡¼üÅÌ3¼ü
+		Numpad4,	///< Êý×ÖÐ¡¼üÅÌ4¼ü
+		Numpad5,	///< Êý×ÖÐ¡¼üÅÌ5¼ü
+		Numpad6,	///< Êý×ÖÐ¡¼üÅÌ6¼ü
+		Numpad7,	///< Êý×ÖÐ¡¼üÅÌ7¼ü
+		Numpad8,	///< Êý×ÖÐ¡¼üÅÌ8¼ü
+		Numpad9,	///< Êý×ÖÐ¡¼üÅÌ9¼ü
 
-			Numpad0 = VK_NUMPAD0,	///< Êý×ÖÐ¡¼üÅÌ0¼ü
-			Numpad1,				///< Êý×ÖÐ¡¼üÅÌ1¼ü
-			Numpad2,				///< Êý×ÖÐ¡¼üÅÌ2¼ü
-			Numpad3,				///< Êý×ÖÐ¡¼üÅÌ3¼ü
-			Numpad4,				///< Êý×ÖÐ¡¼üÅÌ4¼ü
-			Numpad5,				///< Êý×ÖÐ¡¼üÅÌ5¼ü
-			Numpad6,				///< Êý×ÖÐ¡¼üÅÌ6¼ü
-			Numpad7,				///< Êý×ÖÐ¡¼üÅÌ7¼ü
-			Numpad8,				///< Êý×ÖÐ¡¼üÅÌ8¼ü
-			Numpad9,				///< Êý×ÖÐ¡¼üÅÌ9¼ü
+		F1,			///< F1¼ü
+		F2,			///< F2¼ü
+		F3,			///< F3¼ü
+		F4,			///< F4¼ü
+		F5,			///< F5¼ü
+		F6,			///< F6¼ü
+		F7,			///< F7¼ü
+		F8,			///< F8¼ü
+		F9,			///< F9¼ü
+		F10,		///< F10¼ü
+		F11,		///< F11¼ü
+		F12,		///< F12¼ü
 
-			F1 = VK_F1,				///< F1¼ü
-			F2,						///< F2¼ü
-			F3,						///< F3¼ü
-			F4,						///< F4¼ü
-			F5,						///< F5¼ü
-			F6,						///< F6¼ü
-			F7,						///< F7¼ü
-			F8,						///< F8¼ü
-			F9,						///< F9¼ü
-			F10,					///< F10¼ü
-			F11,					///< F11¼ü
-			F12,					///< F12¼ü
-		};
+		Last
 	};
 }

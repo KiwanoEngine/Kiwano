@@ -65,7 +65,7 @@ namespace kiwano
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;	///< 鼠标键值
+		MouseButton button;	///< 鼠标键值
 
 		MouseDownEvent();
 	};
@@ -76,7 +76,7 @@ namespace kiwano
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;	///< 鼠标键值
+		MouseButton button;	///< 鼠标键值
 
 		MouseUpEvent();
 	};
@@ -87,7 +87,7 @@ namespace kiwano
 		: public MouseEvent
 	{
 	public:
-		MouseButton::Value button;	///< 鼠标键值
+		MouseButton button;	///< 鼠标键值
 
 		MouseClickEvent();
 	};

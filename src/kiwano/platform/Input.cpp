@@ -26,10 +26,10 @@
 namespace kiwano
 {
 	Input::Input()
-		: want_update_(false)
+		: want_update_keys_(false)
+		, want_update_buttons_(false)
+		, buttons_{}
 		, keys_{}
-		, keys_pressed_{}
-		, keys_released_{}
 	{
 	}
 
@@ -39,37 +39,59 @@ namespace kiwano
 
 	void Input::AfterUpdate()
 	{
-		if (want_update_)
+		if (want_update_keys_)
 		{
-			want_update_ = false;
+			want_update_keys_ = false;
+			::memcpy(keys_[Prev].data(), keys_[Current].data(), KEY_NUM * sizeof(bool));
+		}
 
-			keys_pressed_.fill(false);
-			keys_released_.fill(false);
+		if (want_update_buttons_)
+		{
+			want_update_buttons_ = false;
+			buttons_[Prev] = buttons_[Current];
 		}
 	}
 
-	bool Input::IsDown(int key_or_btn) const
+	bool Input::IsDown(KeyCode key) const
 	{
-		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
-			return keys_[key_or_btn];
-		return false;
+		if (key == KeyCode::Unknown || key == KeyCode::Last)
+			return false;
+		return keys_[Current][size_t(key)];
 	}
 
-	bool Input::WasPressed(int key_or_btn) const
+	bool Input::WasPressed(KeyCode key) const
 	{
-		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
-			return keys_pressed_[key_or_btn];
-		return false;
+		if (key == KeyCode::Unknown || key == KeyCode::Last)
+			return false;
+		return keys_[Current][size_t(key)] && !keys_[Prev][size_t(key)];
 	}
 
-	bool Input::WasReleased(int key_or_btn) const
+	bool Input::WasReleased(KeyCode key) const
 	{
-		KGE_ASSERT(key_or_btn >= 0 && key_or_btn < KEY_NUM);
-		if (key_or_btn >= 0 && key_or_btn < KEY_NUM)
-			return keys_released_[key_or_btn];
-		return false;
+		if (key == KeyCode::Unknown || key == KeyCode::Last)
+			return false;
+		return !keys_[Current][size_t(key)] && keys_[Prev][size_t(key)];
+	}
+
+	bool Input::IsDown(MouseButton btn) const
+	{
+		if (btn == MouseButton::Last)
+			return false;
+		return buttons_[Current][size_t(btn)];
+	}
+
+	bool Input::WasPressed(MouseButton btn) const
+	{
+		if (btn == MouseButton::Last)
+			return false;
+		return buttons_[Current][size_t(btn)] && !buttons_[Prev][size_t(btn)];
+	}
+
+	bool Input::WasReleased(MouseButton btn) const
+	{
+		if (btn == MouseButton::Last)
+			return false;
+		return !buttons_[Current][size_t(btn)] && buttons_[Prev][size_t(btn)];
 	}
 
 	float Input::GetMouseX() const
@@ -87,16 +109,22 @@ namespace kiwano
 		return mouse_pos_;
 	}
 
-	void Input::UpdateKey(int key, bool down)
+	void Input::UpdateKey(KeyCode key, bool down)
 	{
-		if (down && !keys_[key])
-			keys_pressed_[key] = true;
-		if (!down && keys_[key])
-			keys_released_[key] = true;
+		if (key == KeyCode::Unknown || key == KeyCode::Last)
+			return;
 
-		keys_[key] = down;
+		keys_[Current][size_t(key)] = down;
+		want_update_keys_ = true;
+	}
 
-		want_update_ = true;
+	void Input::UpdateButton(MouseButton btn, bool down)
+	{
+		if (btn == MouseButton::Last)
+			return;
+
+		buttons_[Current][size_t(btn)] = down;
+		want_update_buttons_ = true;
 	}
 
 	void Input::UpdateMousePos(const Point& pos)
@@ -114,11 +142,11 @@ namespace kiwano
 			}
 			else if (evt->IsType<MouseDownEvent>())
 			{
-				UpdateKey(dynamic_cast<MouseDownEvent*>(evt)->button, true);
+				UpdateButton(dynamic_cast<MouseDownEvent*>(evt)->button, true);
 			}
 			else if (evt->IsType<MouseUpEvent>())
 			{
-				UpdateKey(dynamic_cast<MouseUpEvent*>(evt)->button, false);
+				UpdateButton(dynamic_cast<MouseUpEvent*>(evt)->button, false);
 			}
 		}
 		else if (evt->IsType<KeyEvent>())

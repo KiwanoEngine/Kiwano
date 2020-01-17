@@ -117,8 +117,8 @@ namespace kiwano
 
 		current_stage_.reset();
 		next_stage_.reset();
-		debug_actor_.reset();
 		transition_.reset();
+		debug_actor_.reset();
 	}
 
 	void Director::OnUpdate(Duration dt)
@@ -163,11 +163,8 @@ namespace kiwano
 		else if (current_stage_)
 		{
 			current_stage_->Render(ctx);
-		}
 
-		if (render_border_enabled_)
-		{
-			if (current_stage_)
+			if (render_border_enabled_)
 			{
 				current_stage_->RenderBorder(ctx);
 			}

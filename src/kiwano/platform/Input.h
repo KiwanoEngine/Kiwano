@@ -41,30 +41,44 @@ namespace kiwano
 	public:
 		/**
 		* \~chinese
-		* @brief 检测键盘或鼠标按键是否正被按下
-		* @param key_or_btn 键值
-		* @return 是否正被按下
-		* @see kiwano::KeyCode kiwano::MouseButton
+		* @brief 检测键盘按键是否正被按下
+		* @param key 键值
 		*/
-		bool IsDown(int key_or_btn) const;
+		bool IsDown(KeyCode key) const;
 
 		/**
 		* \~chinese
-		* @brief 检测键盘或鼠标按键是否刚被点击
-		* @param key_or_btn 键值
-		* @return 是否刚被点击
-		* @see kiwano::KeyCode kiwano::MouseButton
+		* @brief 检测键盘按键是否刚被点击
+		* @param key 键值
 		*/
-		bool WasPressed(int key_or_btn) const;
+		bool WasPressed(KeyCode key) const;
 
 		/**
 		* \~chinese
-		* @brief 检测键盘或鼠标按键是否刚抬起
-		* @param key_or_btn 键值
-		* @return 是否刚抬起
-		* @see kiwano::KeyCode kiwano::MouseButton
+		* @brief 检测键盘按键是否刚抬起
+		* @param key 键值
 		*/
-		bool WasReleased(int key_or_btn) const;
+		bool WasReleased(KeyCode key) const;
+		/**
+		* \~chinese
+		* @brief 检测鼠标按键是否正被按下
+		* @param btn 鼠标键值
+		*/
+		bool IsDown(MouseButton btn) const;
+
+		/**
+		* \~chinese
+		* @brief 检测鼠标按键是否刚被点击
+		* @param btn 鼠标键值
+		*/
+		bool WasPressed(MouseButton btn) const;
+
+		/**
+		* \~chinese
+		* @brief 检测鼠标按键是否刚抬起
+		* @param btn 鼠标键值
+		*/
+		bool WasReleased(MouseButton btn) const;
 
 		/**
 		* \~chinese
@@ -101,17 +115,27 @@ namespace kiwano
 
 		~Input();
 
-		void UpdateKey(int, bool);
+		void UpdateKey(KeyCode key, bool down);
+
+		void UpdateButton(MouseButton btn, bool down);
 
 		void UpdateMousePos(const Point& pos);
 
 	private:
-		static const int KEY_NUM = 256;
+		static const int KEY_NUM = int(KeyCode::Last);
+		static const int BUTTON_NUM = int(MouseButton::Last);
 
-		bool want_update_;
+		bool want_update_keys_;
+		bool want_update_buttons_;
 		Point mouse_pos_;
-		std::array<bool, KEY_NUM> keys_;
-		std::array<bool, KEY_NUM> keys_pressed_;
-		std::array<bool, KEY_NUM> keys_released_;
+
+		enum KeyIndex : size_t
+		{
+			Current = 0,
+			Prev
+		};
+
+		std::array<bool, BUTTON_NUM> buttons_[2];
+		std::array<bool, KEY_NUM> keys_[2];
 	};
 }

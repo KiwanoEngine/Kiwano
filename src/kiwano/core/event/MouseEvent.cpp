@@ -15,19 +15,19 @@ namespace kiwano
 
 	MouseDownEvent::MouseDownEvent()
 		: MouseEvent(KGE_EVENT(MouseDownEvent))
-		, button(0)
+		, button()
 	{
 	}
 
 	MouseUpEvent::MouseUpEvent()
 		: MouseEvent(KGE_EVENT(MouseUpEvent))
-		, button(0)
+		, button()
 	{
 	}
 
 	MouseClickEvent::MouseClickEvent()
 		: MouseEvent(KGE_EVENT(MouseClickEvent))
-		, button(0)
+		, button()
 	{
 	}
 

@@ -28,6 +28,7 @@
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/core/Logger.h>
 
+#include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>  // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
 
@@ -117,14 +118,12 @@ namespace kiwano
 
 			void SetCursor(CursorType cursor) override;
 
-			bool ShouldClose() override;
-
 			void Destroy() override;
 
 		private:
 			void PumpEvents() override;
 
-			DWORD GetWindowStyle() const;
+			DWORD GetStyle() const;
 
 			void UpdateCursor();
 
@@ -138,6 +137,8 @@ namespace kiwano
 			wchar_t*		device_name_;
 			WindowHandle	handle_;
 			CursorType		mouse_cursor_;
+
+			std::array<KeyCode, 256> key_map_;
 		};
 
 		WindowImpl::WindowImpl()
@@ -146,7 +147,48 @@ namespace kiwano
 			, is_fullscreen_(false)
 			, resizable_(false)
 			, mouse_cursor_(CursorType::Arrow)
+			, key_map_{}
 		{
+			// Keys
+			key_map_[VK_UP] = KeyCode::Up;
+			key_map_[VK_LEFT] = KeyCode::Left;
+			key_map_[VK_RIGHT] = KeyCode::Right;
+			key_map_[VK_DOWN] = KeyCode::Down;
+			key_map_[VK_RETURN] = KeyCode::Enter;
+			key_map_[VK_SPACE] = KeyCode::Space;
+			key_map_[VK_ESCAPE] = KeyCode::Esc;
+			key_map_[VK_CONTROL] = KeyCode::Ctrl;
+			key_map_[VK_SHIFT] = KeyCode::Shift;
+			key_map_[VK_MENU] = KeyCode::Alt;
+			key_map_[VK_TAB] = KeyCode::Tab;
+			key_map_[VK_DELETE] = KeyCode::Delete;
+			key_map_[VK_BACK] = KeyCode::Back;
+
+			// VK_L* and VK_R*
+			key_map_[VK_LCONTROL] = KeyCode::Ctrl;
+			key_map_[VK_RCONTROL] = KeyCode::Ctrl;
+			key_map_[VK_LSHIFT] = KeyCode::Shift;
+			key_map_[VK_RSHIFT] = KeyCode::Shift;
+			key_map_[VK_LMENU] = KeyCode::Alt;
+			key_map_[VK_RMENU] = KeyCode::Alt;
+			key_map_[VK_LWIN] = KeyCode::Super;
+			key_map_[VK_RWIN] = KeyCode::Super;
+
+			// A - Z
+			for (size_t i = 0, size = ('Z' - 'A'); i <= size; ++i)
+				key_map_['A' + i] = KeyCode(size_t(KeyCode::A) + i);
+
+			// Num 0 - 9
+			for (size_t i = 0; i < 9; ++i)
+				key_map_['0' + i] = KeyCode(size_t(KeyCode::Num0) + i);
+
+			// Numpad 0 - 9
+			for (size_t i = 0; i < 9; ++i)
+				key_map_[VK_NUMPAD0 + i] = KeyCode(size_t(KeyCode::Numpad0) + i);
+
+			// F1 - F12
+			for (size_t i = 0; i < 12; ++i)
+				key_map_[VK_F1 + i] = KeyCode(size_t(KeyCode::F1) + i);
 		}
 
 		WindowImpl::~WindowImpl()
@@ -216,7 +258,7 @@ namespace kiwano
 				uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
 				uint32_t win_width, win_height;
-				AdjustWindow(width, height, GetWindowStyle(), &win_width, &win_height);
+				AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
 
 				left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
 				top = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
@@ -228,7 +270,7 @@ namespace kiwano
 				is_fullscreen_ ? WS_EX_TOPMOST : 0,
 				KGE_WND_CLASS_NAME,
 				config.title.c_str(),
-				GetWindowStyle(),
+				GetStyle(),
 				left,
 				top,
 				width,
@@ -309,7 +351,7 @@ namespace kiwano
 			if (handle_ && !is_fullscreen_)
 			{
 				RECT rc = { 0, 0, LONG(width), LONG(height) };
-				::AdjustWindowRect(&rc, GetWindowStyle(), false);
+				::AdjustWindowRect(&rc, GetStyle(), false);
 
 				width = rc.right - rc.left;
 				height = rc.bottom - rc.top;
@@ -335,7 +377,7 @@ namespace kiwano
 
 					MONITORINFOEX info = GetMoniterInfoEx(handle_);
 
-					::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
+					::SetWindowLongPtr(handle_, GWL_STYLE, GetStyle());
 					::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height, SWP_NOACTIVATE);
 				}
 				else
@@ -350,7 +392,7 @@ namespace kiwano
 					int left = screenw > width ? ((screenw - width) / 2) : 0;
 					int top = screenh > height ? ((screenh - height) / 2) : 0;
 
-					::SetWindowLongPtr(handle_, GWL_STYLE, GetWindowStyle());
+					::SetWindowLongPtr(handle_, GWL_STYLE, GetStyle());
 					::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
 				}
 
@@ -361,11 +403,6 @@ namespace kiwano
 		void WindowImpl::SetCursor(CursorType cursor)
 		{
 			mouse_cursor_ = cursor;
-		}
-
-		bool WindowImpl::ShouldClose()
-		{
-			return handle_ == nullptr;
 		}
 
 		void WindowImpl::Destroy()
@@ -388,7 +425,7 @@ namespace kiwano
 			Window::Destroy();
 		}
 
-		DWORD WindowImpl::GetWindowStyle() const
+		DWORD WindowImpl::GetStyle() const
 		{
 			return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
 		}
@@ -447,25 +484,33 @@ namespace kiwano
 			case WM_KEYDOWN:
 			case WM_SYSKEYDOWN:
 			{
-				KeyDownEventPtr evt = new KeyDownEvent;
-				evt->code = static_cast<int>(wparam);
-				window->PushEvent(evt);
+				KeyCode key = window->key_map_[size_t(wparam)];
+				if (key != KeyCode::Unknown)
+				{
+					KeyDownEventPtr evt = new KeyDownEvent;
+					evt->code = key;
+					window->PushEvent(evt);
+				}
 			}
 			break;
 
 			case WM_KEYUP:
 			case WM_SYSKEYUP:
 			{
-				KeyUpEventPtr evt = new KeyUpEvent;
-				evt->code = static_cast<int>(wparam);
-				window->PushEvent(evt);
+				KeyCode key = window->key_map_[size_t(wparam)];
+				if (key != KeyCode::Unknown)
+				{
+					KeyUpEventPtr evt = new KeyUpEvent;
+					evt->code = key;
+					window->PushEvent(evt);
+				}
 			}
 			break;
 
 			case WM_CHAR:
 			{
 				KeyCharEventPtr evt = new KeyCharEvent;
-				evt->value = static_cast<char>(wparam);
+				evt->value = char(wparam);
 				window->PushEvent(evt);
 			}
 			break;
@@ -475,7 +520,7 @@ namespace kiwano
 			case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
 			{
 				MouseDownEventPtr evt = new MouseDownEvent;
-				evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+				evt->pos = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 
 				if		(msg == WM_LBUTTONDOWN || msg == WM_LBUTTONDBLCLK) { evt->button = MouseButton::Left; }
 				else if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONDBLCLK) { evt->button = MouseButton::Right; }
@@ -490,7 +535,7 @@ namespace kiwano
 			case WM_RBUTTONUP:
 			{
 				MouseUpEventPtr evt = new MouseUpEvent;
-				evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+				evt->pos = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 
 				if		(msg == WM_LBUTTONUP) { evt->button = MouseButton::Left; }
 				else if (msg == WM_RBUTTONUP) { evt->button = MouseButton::Right; }
@@ -503,7 +548,7 @@ namespace kiwano
 			case WM_MOUSEMOVE:
 			{
 				MouseMoveEventPtr evt = new MouseMoveEvent;
-				evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+				evt->pos = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 				window->PushEvent(evt);
 			}
 			break;
@@ -511,7 +556,7 @@ namespace kiwano
 			case WM_MOUSEWHEEL:
 			{
 				MouseWheelEventPtr evt = new MouseWheelEvent;
-				evt->pos = Point(((float)(int)(short)LOWORD(lparam)), ((float)(int)(short)HIWORD(lparam)));
+				evt->pos = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 				evt->wheel = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
 				window->PushEvent(evt);
 			}
@@ -525,7 +570,7 @@ namespace kiwano
 				}
 				else
 				{
-					// KGE_SYS_LOG(L"WindowImpl resized");
+					// KGE_SYS_LOG(L"Window resized");
 
 					window->SetInternalSize(((uint32_t)(short)LOWORD(lparam)), ((uint32_t)(short)HIWORD(lparam)));
 
@@ -539,12 +584,9 @@ namespace kiwano
 
 			case WM_MOVE:
 			{
-				int x = ((int)(short)LOWORD(lparam));
-				int y = ((int)(short)HIWORD(lparam));
-
 				WindowMovedEventPtr evt = new WindowMovedEvent;
-				evt->x = x;
-				evt->y = y;
+				evt->x = GET_X_LPARAM(lparam);
+				evt->y = GET_Y_LPARAM(lparam);
 				window->PushEvent(evt);
 			}
 			break;
