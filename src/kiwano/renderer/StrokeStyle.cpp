@@ -70,7 +70,7 @@ namespace kiwano
 	StrokeStyle StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size, float dash_offset)
 	{
 		StrokeStyle stroke_style;
-		Renderer::instance().CreateStrokeStyle(stroke_style, cap, line_join, dash_array, dash_size, dash_offset);
+		Renderer::Instance().CreateStrokeStyle(stroke_style, cap, line_join, dash_array, dash_size, dash_offset);
 		return stroke_style;
 	}
 

@@ -42,12 +42,12 @@ namespace kiwano
 
 		if (!text_format_ || (dirty_flag_ & DirtyFlag::DirtyFormat))
 		{
-			Renderer::instance().CreateTextFormat(*this);
+			Renderer::Instance().CreateTextFormat(*this);
 		}
 
 		if (dirty_flag_ & DirtyFlag::DirtyLayout)
 		{
-			Renderer::instance().CreateTextLayout(*this);
+			Renderer::Instance().CreateTextLayout(*this);
 
 			if (text_layout_)
 			{

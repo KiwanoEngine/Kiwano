@@ -42,7 +42,7 @@ namespace kiwano
 
 		bool Sound::Load(String const& file_path)
 		{
-			if (!FileSystem::instance().IsFileExists(file_path))
+			if (!FileSystem::Instance().IsFileExists(file_path))
 			{
 				KGE_WARN(L"Media file '%s' not found", file_path.c_str());
 				return false;
@@ -53,7 +53,7 @@ namespace kiwano
 				Close();
 			}
 
-			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
+			String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
 
 			HRESULT hr = transcoder_.LoadMediaFile(full_path);
 			if (FAILED(hr))
@@ -62,7 +62,7 @@ namespace kiwano
 				return false;
 			}
 
-			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
+			if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
 				return false;
@@ -86,7 +86,7 @@ namespace kiwano
 				return false;
 			}
 
-			if (!AudioEngine::instance().CreateSound(*this, transcoder_.GetBuffer()))
+			if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
 			{
 				Close();
 				return false;

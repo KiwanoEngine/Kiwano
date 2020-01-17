@@ -79,23 +79,26 @@ namespace kiwano
 	typedef HWND WindowHandle;
 #endif
 
-
 	/**
 	* \~chinese
 	* @brief 窗口类，控制窗口标题、大小、图标等
 	*/
 	class KGE_API Window
-		: public Singleton<Window>
+		: protected Noncopyable
 	{
-		friend Singleton<Window>;
-
 	public:
+		/**
+		* \~chinese
+		* @brief 获取窗口实例
+		*/
+		static Window& Instance();
+
 		/**
 		* \~chinese
 		* @brief 初始化窗口
 		* @param config 窗口设置
 		*/
-		void Init(WindowConfig const& config);
+		virtual bool Create(WindowConfig const& config) = 0;
 
 		/**
 		* \~chinese
@@ -116,28 +119,34 @@ namespace kiwano
 		* @brief 获取窗口宽度
 		* @return 窗口宽度
 		*/
-		float GetWidth() const;
+		uint32_t GetWidth() const;
 
 		/**
 		* \~chinese
 		* @brief 获取窗口高度
 		* @return 窗口高度
 		*/
-		float GetHeight() const;
+		uint32_t GetHeight() const;
+
+		/**
+		* \~chinese
+		* @brief 获取窗口句柄
+		*/
+		virtual WindowHandle GetHandle() const = 0;
 
 		/**
 		* \~chinese
 		* @brief 设置标题
 		* @param title 标题
 		*/
-		void SetTitle(String const& title);
+		virtual void SetTitle(String const& title) = 0;
 
 		/**
 		* \~chinese
 		* @brief 设置窗口图标
 		* @param icon_resource 图标资源ID
 		*/
-		void SetIcon(uint32_t icon_resource);
+		virtual void SetIcon(uint32_t icon_resource) = 0;
 
 		/**
 		* \~chinese
@@ -145,7 +154,7 @@ namespace kiwano
 		* @param width 窗口宽度
 		* @param height 窗口高度
 		*/
-		void Resize(int width, int height);
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		/**
 		* \~chinese
@@ -154,14 +163,14 @@ namespace kiwano
 		* @param width 窗口宽度
 		* @param height 窗口高度
 		*/
-		void SetFullscreen(bool fullscreen, int width, int height);
+		virtual void SetFullscreen(bool fullscreen) = 0;
 
 		/**
 		* \~chinese
 		* @brief 设置鼠标指针类型
 		* @param cursor 鼠标指针类型
 		*/
-		void SetCursor(CursorType cursor);
+		virtual void SetCursor(CursorType cursor) = 0;
 
 		/**
 		* \~chinese
@@ -172,47 +181,46 @@ namespace kiwano
 
 		/**
 		* \~chinese
-		* @brief 获取窗口句柄
-		*/
-		WindowHandle GetHandle() const;
-
-		/**
-		* \~chinese
 		* @brief 是否需要关闭
 		*/
-		bool ShouldClose();
+		virtual bool ShouldClose() = 0;
 
 		/**
 		* \~chinese
 		* @brief 销毁窗口
 		*/
-		void Destroy();
+		virtual void Destroy();
 
-	private:
+	protected:
 		Window();
 
 		~Window();
 
 		void PushEvent(EventPtr evt);
 
-#if defined(KGE_WIN32)
-		DWORD GetWindowStyle() const;
+		void SetInternalSize(uint32_t width, uint32_t height);
 
-		void UpdateCursor();
+		void SetInternalTitle(String const& title);
 
-		void SetActive(bool actived);
-
-		static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
-#endif
+		virtual void PumpEvents() = 0;
 
 	private:
-		bool					resizable_;
-		bool					is_fullscreen_;
-		WindowHandle			handle_;
+		bool					should_close_;
 		uint32_t				width_;
 		uint32_t				height_;
-		wchar_t*				device_name_;
-		CursorType				mouse_cursor_;
+		String					title_;
 		std::queue<EventPtr>	event_queue_;
 	};
+
+	inline void Window::SetInternalSize(uint32_t width, uint32_t height)
+	{
+		width_ = width;
+		height_ = height;
+	}
+
+	inline void Window::SetInternalTitle(String const& title)
+	{
+		title_ = title;
+	}
+
 }

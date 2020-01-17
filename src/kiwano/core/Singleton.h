@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2020 Kiwano - Nomango
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,83 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#pragma once
 
 namespace kiwano
 {
 
-	WindowConfig::WindowConfig(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen)
-		: title(title)
-		, width(width)
-		, height(height)
-		, icon(icon)
-		, resizable(resizable)
-		, fullscreen(fullscreen)
-	{
-	}
+template <typename _Ty>
+struct Singleton
+{
+protected:
+	Singleton() = default;
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
 
-	Window::Window()
-		: should_close_(false)
-		, width_(0)
-		, height_(0)
+private:
+	struct ObjectCreator
 	{
-	}
-
-	Window::~Window()
-	{
-	}
-
-	EventPtr Window::PollEvent()
-	{
-		PumpEvents();
-
-		EventPtr evt;
-		if (!event_queue_.empty())
+		ObjectCreator()
 		{
-			evt = event_queue_.front();
-			event_queue_.pop();
-		}
-		return evt;
-	}
-
-	String Window::GetTitle() const
-	{
-		return title_;
-	}
-
-	Size Window::GetSize() const
-	{
-		return Size(float(width_), float(height_));
-	}
-
-	uint32_t Window::GetWidth() const
-	{
-		return width_;
-	}
-
-	uint32_t Window::GetHeight() const
-	{
-		return height_;
-	}
-
-	bool Window::ShouldClose()
-	{
-		return should_close_;
-	}
-
-	void Window::PushEvent(EventPtr evt)
-	{
-		event_queue_.push(evt);
-	}
-
-	void Window::Destroy()
-	{
-		while (!event_queue_.empty())
-		{
-			event_queue_.pop();
+			(void)Singleton<_Ty>::Instance();
 		}
 
-		should_close_ = true;
-	}
+		inline void Dummy() const {}
+	};
+	static ObjectCreator creator_;
 
-}
+public:
+	using object_type = _Ty;
+
+	static inline object_type& Instance()
+	{
+		static object_type instance;
+		creator_.Dummy();
+		return instance;
+	}
+};
+
+template <typename _Ty>
+typename Singleton<_Ty>::ObjectCreator Singleton<_Ty>::creator_;
+
+
+}  // namespace kiwano

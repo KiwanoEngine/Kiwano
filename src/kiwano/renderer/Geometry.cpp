@@ -118,35 +118,35 @@ namespace kiwano
 	Geometry Geometry::CreateLine(Point const& begin, Point const& end)
 	{
 		Geometry output;
-		Renderer::instance().CreateLineGeometry(output, begin, end);
+		Renderer::Instance().CreateLineGeometry(output, begin, end);
 		return output;
 	}
 
 	Geometry Geometry::CreateRect(Rect const& rect)
 	{
 		Geometry output;
-		Renderer::instance().CreateRectGeometry(output, rect);
+		Renderer::Instance().CreateRectGeometry(output, rect);
 		return output;
 	}
 
 	Geometry Geometry::CreateRoundedRect(Rect const& rect, Vec2 const& radius)
 	{
 		Geometry output;
-		Renderer::instance().CreateRoundedRectGeometry(output, rect, radius);
+		Renderer::Instance().CreateRoundedRectGeometry(output, rect, radius);
 		return output;
 	}
 
 	Geometry Geometry::CreateCircle(Point const& center, float radius)
 	{
 		Geometry output;
-		Renderer::instance().CreateEllipseGeometry(output, center, Vec2{ radius, radius });
+		Renderer::Instance().CreateEllipseGeometry(output, center, Vec2{ radius, radius });
 		return output;
 	}
 
 	Geometry Geometry::CreateEllipse(Point const& center, Vec2 const& radius)
 	{
 		Geometry output;
-		Renderer::instance().CreateEllipseGeometry(output, center, radius);
+		Renderer::Instance().CreateEllipseGeometry(output, center, radius);
 		return output;
 	}
 

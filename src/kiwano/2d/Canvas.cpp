@@ -318,7 +318,7 @@ namespace kiwano
 	{
 		if (!ctx_)
 		{
-			Renderer::instance().CreateTextureRenderTarget(ctx_);
+			Renderer::Instance().CreateTextureRenderTarget(ctx_);
 		}
 
 		if (!stroke_brush_)

@@ -26,52 +26,66 @@
 
 namespace
 {
-	std::streambuf* cout_buffer, * cerr_buffer;
-	std::fstream console_output, console_error;
+	std::streambuf* cin_buffer, * cout_buffer, * cerr_buffer;
+	std::fstream console_input, console_output, console_error;
 
-	std::wstreambuf* wcout_buffer, * wcerr_buffer;
-	std::wfstream wconsole_output, wconsole_error;
+	std::wstreambuf* wcin_buffer, * wcout_buffer, * wcerr_buffer;
+	std::wfstream wconsole_input, wconsole_output, wconsole_error;
 
 	void RedirectStdIO()
 	{
+		cin_buffer = std::cin.rdbuf();
 		cout_buffer = std::cout.rdbuf();
 		cerr_buffer = std::cerr.rdbuf();
+		wcin_buffer = std::wcin.rdbuf();
 		wcout_buffer = std::wcout.rdbuf();
 		wcerr_buffer = std::wcerr.rdbuf();
 
+		console_input.open("CONIN$", std::ios::in);
 		console_output.open("CONOUT$", std::ios::out);
 		console_error.open("CONOUT$", std::ios::out);
+		wconsole_input.open("CONIN$", std::ios::in);
 		wconsole_output.open("CONOUT$", std::ios::out);
 		wconsole_error.open("CONOUT$", std::ios::out);
 
 		FILE* dummy;
 		freopen_s(&dummy, "CONOUT$", "w+t", stdout);
+		freopen_s(&dummy, "CONIN$", "r+t", stdin);
 		freopen_s(&dummy, "CONOUT$", "w+t", stderr);
 		(void)dummy;
 
+		std::cin.rdbuf(console_input.rdbuf());
 		std::cout.rdbuf(console_output.rdbuf());
 		std::cerr.rdbuf(console_error.rdbuf());
+		std::wcin.rdbuf(wconsole_input.rdbuf());
 		std::wcout.rdbuf(wconsole_output.rdbuf());
 		std::wcerr.rdbuf(wconsole_error.rdbuf());
 	}
 
 	void ResetStdIO()
 	{
+		console_input.close();
 		console_output.close();
 		console_error.close();
+		wconsole_input.close();
 		wconsole_output.close();
 		wconsole_error.close();
 
+		std::cin.rdbuf(cin_buffer);
 		std::cout.rdbuf(cout_buffer);
 		std::cerr.rdbuf(cerr_buffer);
+		std::wcin.rdbuf(wcin_buffer);
 		std::wcout.rdbuf(wcout_buffer);
 		std::wcerr.rdbuf(wcerr_buffer);
 
 		fclose(stdout);
+		fclose(stdin);
 		fclose(stderr);
 
+		cin_buffer = nullptr;
 		cout_buffer = nullptr;
 		cerr_buffer = nullptr;
+		wcin_buffer = nullptr;
 		wcout_buffer = nullptr;
 		wcerr_buffer = nullptr;
 	}

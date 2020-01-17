@@ -26,11 +26,6 @@
 
 namespace kiwano
 {
-	RenderConfig::RenderConfig(Color clear_color, bool vsync)
-		: clear_color(clear_color)
-		, vsync(vsync)
-	{
-	}
 
 	Renderer::Renderer()
 		: target_window_(nullptr)
@@ -43,20 +38,14 @@ namespace kiwano
 	{
 	}
 
-	void Renderer::Init(RenderConfig const& config)
-	{
-		SetClearColor(config.clear_color);
-		SetVSyncEnabled(config.vsync);
-	}
-
 	void Renderer::SetupComponent()
 	{
 		KGE_SYS_LOG(L"Creating device resources");
 
 		win32::ThrowIfFailed(::CoInitialize(nullptr));
 
-		target_window_ = Window::instance().GetHandle();
-		output_size_ = Window::instance().GetSize();
+		target_window_ = Window::Instance().GetHandle();
+		output_size_ = Window::Instance().GetSize();
 
 		d2d_res_ = nullptr;
 		d3d_res_ = nullptr;
@@ -210,7 +199,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::instance().IsFileExists(file_path))
+		if (!FileSystem::Instance().IsFileExists(file_path))
 		{
 			KGE_WARN(L"Texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -218,7 +207,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
+			String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -328,7 +317,7 @@ namespace kiwano
 			hr = E_UNEXPECTED;
 		}
 
-		if (!FileSystem::instance().IsFileExists(file_path))
+		if (!FileSystem::Instance().IsFileExists(file_path))
 		{
 			KGE_WARN(L"Gif texture file '%s' not found!", file_path.c_str());
 			hr = E_FAIL;
@@ -336,7 +325,7 @@ namespace kiwano
 
 		if (SUCCEEDED(hr))
 		{
-			String full_path = FileSystem::instance().GetFullPathForFile(file_path);
+			String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
 
 			ComPtr<IWICBitmapDecoder> decoder;
 			hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -560,13 +549,13 @@ namespace kiwano
 		{
 			for (auto& file_path : full_paths)
 			{
-				if (!FileSystem::instance().IsFileExists(file_path))
+				if (!FileSystem::Instance().IsFileExists(file_path))
 				{
 					KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
 					hr = E_FAIL;
 				}
 
-				file_path = FileSystem::instance().GetFullPathForFile(file_path);
+				file_path = FileSystem::Instance().GetFullPathForFile(file_path);
 			}
 		}
 

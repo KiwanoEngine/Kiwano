@@ -38,7 +38,7 @@ namespace kiwano
 		if (!IsOpened())
 		{
 			path_geo_.reset();
-			Renderer::instance().CreateGeometrySink(*this);
+			Renderer::Instance().CreateGeometrySink(*this);
 
 			win32::ThrowIfFailed(path_geo_->Open(&sink_));
 		}

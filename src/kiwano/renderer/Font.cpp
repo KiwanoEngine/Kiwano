@@ -41,7 +41,7 @@ namespace kiwano
 	{
 		try
 		{
-			Renderer::instance().CreateFontCollection(*this, files);
+			Renderer::Instance().CreateFontCollection(*this, files);
 		}
 		catch (std::runtime_error&)
 		{
@@ -54,7 +54,7 @@ namespace kiwano
 	{
 		try
 		{
-			Renderer::instance().CreateFontCollection(*this, resources);
+			Renderer::Instance().CreateFontCollection(*this, resources);
 		}
 		catch (std::runtime_error&)
 		{

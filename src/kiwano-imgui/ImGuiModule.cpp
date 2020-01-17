@@ -29,7 +29,7 @@ namespace kiwano
 			ImGui::StyleColorsDark();
 
 			// Setup Platform/Renderer bindings
-			target_window_ = Renderer::instance().GetTargetWindow();
+			target_window_ = Renderer::Instance().GetTargetWindow();
 
 			io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
 			io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;          // We can honor io.WantSetMousePos requests (optional, rarely used)
@@ -54,7 +54,7 @@ namespace kiwano
 			io.KeyMap[ImGuiKey_Y] = KeyCode::Y;
 			io.KeyMap[ImGuiKey_Z] = KeyCode::Z;
 
-			ImGui_Impl_Init(Renderer::instance());
+			ImGui_Impl_Init(Renderer::Instance());
 		}
 
 		void ImGuiModule::DestroyComponent()
@@ -71,10 +71,10 @@ namespace kiwano
 			io.DeltaTime = dt.Seconds();
 
 			// Read keyboard modifiers inputs
-			io.KeyCtrl = Input::instance().IsDown(KeyCode::Ctrl);
-			io.KeyShift = Input::instance().IsDown(KeyCode::Shift);
-			io.KeyAlt = Input::instance().IsDown(KeyCode::Alt);
-			io.KeySuper = Input::instance().IsDown(KeyCode::Super);
+			io.KeyCtrl = Input::Instance().IsDown(KeyCode::Ctrl);
+			io.KeyShift = Input::Instance().IsDown(KeyCode::Shift);
+			io.KeyAlt = Input::Instance().IsDown(KeyCode::Alt);
+			io.KeySuper = Input::Instance().IsDown(KeyCode::Super);
 			// io.KeysDown[], io.MousePos, io.MouseDown[], io.MouseWheel: filled by the HandleEvent function below.
 
 			// Update OS mouse position
@@ -155,7 +155,7 @@ namespace kiwano
 			KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
 
 			// Setup display size (every frame to accommodate for window resizing)
-			Size display_size = Renderer::instance().GetOutputSize();
+			Size display_size = Renderer::Instance().GetOutputSize();
 			io.DisplaySize = ImVec2(display_size.x, display_size.y);
 
 			ImGui::NewFrame();
@@ -180,7 +180,7 @@ namespace kiwano
 				::SetCursorPos(pos.x, pos.y);
 			}
 
-			Point pos = Input::instance().GetMousePos();
+			Point pos = Input::Instance().GetMousePos();
 			io.MousePos = ImVec2(pos.x, pos.y);
 		}
 
@@ -202,7 +202,7 @@ namespace kiwano
 			case ImGuiMouseCursor_Hand:         cursor = CursorType::Hand; break;
 			}
 
-			Window::instance().SetCursor(cursor);
+			Window::Instance().SetCursor(cursor);
 		}
 
 	}

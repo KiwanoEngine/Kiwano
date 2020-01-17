@@ -36,31 +36,12 @@ namespace kiwano
 		Queue<FunctionToPerform> functions_to_perform_;
 	}
 
-	Config::Config(String const& title, uint32_t width, uint32_t height, uint32_t icon)
-		: debug(false)
-	{
-		window.title = title;
-		window.width = width;
-		window.height = height;
-		window.icon = icon;
-	}
-
-	Config::Config(WindowConfig const& wnd_config, RenderConfig const& render_config)
-		: debug(false)
-	{
-		window = wnd_config;
-		render = render_config;
-	}
-}
-
-namespace kiwano
-{
 	Application::Application()
 		: time_scale_(1.f)
 	{
-		Use(&Renderer::instance());
-		Use(&Input::instance());
-		Use(&Director::instance());
+		Use(&Renderer::Instance());
+		Use(&Input::Instance());
+		Use(&Director::Instance());
 	}
 
 	Application::~Application()
@@ -68,21 +49,18 @@ namespace kiwano
 		Destroy();
 	}
 
-	void Application::Run(const Config& config)
+	void Application::Run(bool debug)
 	{
-		Window::instance().Init(config.window);
-		Renderer::instance().Init(config.render);
-
 		// Setup all components
 		for (auto c : comps_)
 		{
 			c->SetupComponent();
 		}
 
-		if (config.debug)
+		if (debug)
 		{
-			Director::instance().ShowDebugInfo(true);
-			Renderer::instance().SetCollectingStatus(true);
+			Director::Instance().ShowDebugInfo(true);
+			Renderer::Instance().SetCollectingStatus(true);
 		}
 
 		// Everything is ready
@@ -90,7 +68,7 @@ namespace kiwano
 
 		last_update_time_ = Time::Now();
 
-		Window& window = Window::instance();
+		Window& window = Window::Instance();
 		while (!window.ShouldClose())
 		{
 			while (EventPtr evt = window.PollEvent())
@@ -105,20 +83,23 @@ namespace kiwano
 
 	void Application::Quit()
 	{
-		Window::instance().Destroy();
+		Window::Instance().Destroy();
 	}
 
 	void Application::Destroy()
 	{
 		// Clear all resources
-		Director::instance().ClearStages();
-		ResourceCache::instance().Clear();
-		TextureCache::instance().Clear();
+		Director::Instance().ClearStages();
+		ResourceCache::Instance().Clear();
+		TextureCache::Instance().Clear();
 
 		for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
 		{
 			(*iter)->DestroyComponent();
 		}
+		render_comps_.clear();
+		update_comps_.clear();
+		event_comps_.clear();
 		comps_.clear();
 	}
 
@@ -209,7 +190,7 @@ namespace kiwano
 		}
 
 		// Rendering
-		Renderer& renderer = Renderer::instance();
+		Renderer& renderer = Renderer::Instance();
 		for (auto c : render_comps_)
 		{
 			c->OnRender(renderer);

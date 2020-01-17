@@ -30,6 +30,7 @@
 
 #include <3rd-party/OuterC/oc/oc.h>
 #include <kiwano/macros.h>
+#include <kiwano/core/Singleton.h>
 
 namespace kiwano
 {
@@ -112,11 +113,6 @@ namespace kiwano
 	/// \~chinese
 	/// @brief JSON对象容器
 	using Json = oc::basic_json<Map, Vector, String, int, double, bool, std::allocator>;
-
-	/// \~chinese
-	/// @brief 单例模板
-	template <typename _Ty>
-	using Singleton = oc::singleton<_Ty>;
 
 	/// \~chinese
 	/// @brief 侵入式链表容器

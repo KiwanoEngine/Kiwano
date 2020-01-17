@@ -33,43 +33,6 @@ namespace kiwano
 {
 	/**
 	* \~chinese
-	* @brief 应用程序配置
-	* @details 启动 Kiwano 应用程序前的初始化选项
-	*/
-	struct Config
-	{
-		WindowConfig window;	///< 窗口配置
-		RenderConfig render;	///< 渲染配置
-		bool debug;				///< 启用调试模式
-
-		/**
-		* \~chinese
-		* @param title 窗口标题
-		* @param width 窗口宽度
-		* @param height 窗口高度
-		* @param icon 窗口图标的资源ID
-		*/
-		Config(
-			String const& title	= L"Kiwano Game",
-			uint32_t width		= 640,
-			uint32_t height		= 480,
-			uint32_t icon		= 0
-		);
-
-		/**
-		* \~chinese
-		* @param wnd_config 窗口配置
-		* @param render_config 渲染配置
-		*/
-		Config(
-			WindowConfig const& wnd_config,
-			RenderConfig const& render_config = RenderConfig()
-		);
-	};
-
-
-	/**
-	* \~chinese
 	* @brief 应用程序，控制游戏的整个生命周期，包括初始化、启动、结束以及事件分发等
 	*/
 	class KGE_API Application
@@ -85,23 +48,23 @@ namespace kiwano
 		* @brief 初始化完成处理
 		* @details 重载该函数以在应用程序初始化完成后自动执行
 		*/
-		virtual void OnReady() {}
+		virtual void OnReady();
 
 		/**
 		* \~chinese
 		* @brief 应用程序销毁处理
 		* @details 重载该函数以处理应用程序销毁时的行为，如完成资源回收等
 		*/
-		virtual void OnDestroy() {}
+		virtual void OnDestroy();
 
 		/**
 		* \~chinese
 		* @brief 启动应用程序
 		* @details 初始化所有功能组件后执行 OnReady 函数
-		* @param config 初始化配置
+		* @param debug 是否启用调试模式
 		* @note 该函数是阻塞的，应用程序结束时函数返回
 		*/
-		void Run(Config const& config = Config());
+		void Run(bool debug = false);
 
 		/**
 		* \~chinese
@@ -148,9 +111,17 @@ namespace kiwano
 		static void PreformInMainThread(Function<void()> func);
 
 	private:
-		void Render();
-
+		/**
+		* \~chinese
+		* @brief 更新所有组件
+		*/
 		void Update();
+
+		/**
+		* \~chinese
+		* @brief 渲染所有组件
+		*/
+		void Render();
 
 	private:
 		float						time_scale_;
@@ -160,4 +131,12 @@ namespace kiwano
 		Vector<UpdateComponent*>	update_comps_;
 		Vector<EventComponent*>		event_comps_;
 	};
+
+	inline void Application::OnReady()
+	{
+	}
+
+	inline void Application::OnDestroy()
+	{
+	}
 }

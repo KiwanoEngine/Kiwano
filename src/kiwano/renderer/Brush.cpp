@@ -90,17 +90,17 @@ namespace kiwano
 				return;
 			}
 		}
-		Renderer::instance().CreateSolidBrush(*this, color);
+		Renderer::Instance().CreateSolidBrush(*this, color);
 	}
 
 	void Brush::SetStyle(LinearGradientStyle const& style)
 	{
-		Renderer::instance().CreateLinearGradientBrush(*this, style);
+		Renderer::Instance().CreateLinearGradientBrush(*this, style);
 	}
 
 	void Brush::SetStyle(RadialGradientStyle const& style)
 	{
-		Renderer::instance().CreateRadialGradientBrush(*this, style);
+		Renderer::Instance().CreateRadialGradientBrush(*this, style);
 	}
 
 	void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)

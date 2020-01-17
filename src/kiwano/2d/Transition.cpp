@@ -60,7 +60,7 @@ namespace kiwano
 
 		out_stage_ = prev;
 		in_stage_ = next;
-		window_size_ = Renderer::instance().GetOutputSize();
+		window_size_ = Renderer::Instance().GetOutputSize();
 
 		if (in_stage_)
 		{

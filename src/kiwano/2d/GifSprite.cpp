@@ -34,13 +34,13 @@ namespace kiwano
 
 	bool GifSprite::Load(String const& file_path)
 	{
-		GifImagePtr image = TextureCache::instance().AddOrGetGifImage(file_path);
+		GifImagePtr image = TextureCache::Instance().AddOrGetGifImage(file_path);
 		return Load(image);
 	}
 
 	bool GifSprite::Load(Resource const& res)
 	{
-		GifImagePtr image = TextureCache::instance().AddOrGetGifImage(res);
+		GifImagePtr image = TextureCache::Instance().AddOrGetGifImage(res);
 		return Load(image);
 	}
 
@@ -58,7 +58,7 @@ namespace kiwano
 
 			if (!frame_rt_)
 			{
-				Renderer::instance().CreateTextureRenderTarget(frame_rt_);
+				Renderer::Instance().CreateTextureRenderTarget(frame_rt_);
 			}
 
 			if (gif_->GetFramesCount() > 0)

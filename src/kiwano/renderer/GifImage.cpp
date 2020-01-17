@@ -33,7 +33,7 @@ namespace kiwano
 
 	bool GifImage::Load(String const& file_path)
 	{
-		Renderer::instance().CreateGifImage(*this, file_path);
+		Renderer::Instance().CreateGifImage(*this, file_path);
 
 		if (IsValid())
 		{
@@ -49,7 +49,7 @@ namespace kiwano
 
 	bool GifImage::Load(Resource const& res)
 	{
-		Renderer::instance().CreateGifImage(*this, res);
+		Renderer::Instance().CreateGifImage(*this, res);
 
 		if (IsValid())
 		{
@@ -71,7 +71,7 @@ namespace kiwano
 	GifImage::Frame GifImage::GetFrame(uint32_t index)
 	{
 		Frame frame;
-		Renderer::instance().CreateGifImageFrame(frame, *this, index);
+		Renderer::Instance().CreateGifImageFrame(frame, *this, index);
 		return frame;
 	}
 

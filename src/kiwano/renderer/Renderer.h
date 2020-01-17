@@ -52,21 +52,6 @@ namespace kiwano
 	* @{
 	*/
 
-	/**
-	* \~chinese
-	* @brief 渲染设置
-	*/
-	struct RenderConfig
-	{
-		Color	clear_color;	///< 清屏颜色
-		bool	vsync;			///< 垂直同步
-
-		RenderConfig(
-			Color clear_color	= Color::Black,
-			bool vsync			= true
-		);
-	};
-
 
 	/**
 	* \~chinese
@@ -294,8 +279,6 @@ namespace kiwano
 		ID3DDeviceResources* GetD3DDeviceResources();
 
 	public:
-		void Init(RenderConfig const& config);
-
 		void SetupComponent() override;
 
 		void DestroyComponent() override;

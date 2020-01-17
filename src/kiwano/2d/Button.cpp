@@ -95,14 +95,14 @@ namespace kiwano
 
 			if (status == Status::Normal)
 			{
-				Window::instance().SetCursor(CursorType::Arrow);
+				Window::Instance().SetCursor(CursorType::Arrow);
 
 				if (mouse_out_callback_)
 					mouse_out_callback_(this);
 			}
 			else if (status == Status::Hover)
 			{
-				Window::instance().SetCursor(CursorType::Hand);
+				Window::Instance().SetCursor(CursorType::Hand);
 
 				if (old_status == Status::Pressed)
 				{
