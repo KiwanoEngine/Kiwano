@@ -6,7 +6,7 @@
 [![GitHub release](https://img.shields.io/github/release/nomango/kiwano)](https://github.com/Nomango/Kiwano/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/nomango/kiwano)](https://github.com/Nomango/Kiwano/blob/master/LICENSE)
 
-English | [¼òÌåÖÐÎÄ](./README-zh.md)
+English | [ç®€ä½“ä¸­æ–‡](./README-zh.md)
 
 ## Introduction
 Kiwano is a open-source 2D C++ game engine, only support win32 platform.
