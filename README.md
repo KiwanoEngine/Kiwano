@@ -6,6 +6,8 @@
 [![GitHub release](https://img.shields.io/github/release/nomango/kiwano)](https://github.com/Nomango/Kiwano/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/nomango/kiwano)](https://github.com/Nomango/Kiwano/blob/master/LICENSE)
 
+English | [¼òÌåÖÐÎÄ](./README-zh.md)
+
 ## Introduction
 Kiwano is a open-source 2D C++ game engine, only support win32 platform.
 
@@ -20,12 +22,13 @@ More docs and examples will be added later.
 ## Features
 * Scene management
 * Transitions between scenes
-* Actions behaviours
+* Action behaviours
 * Buttons and menus
 * Texture atlas support
 * Audio support
 * Custom data storage
-* Direct2D based
+* Physical engine (based on Box2D)
+* GUI system (based on ImGui)
 
 ## Install
 
@@ -51,8 +54,7 @@ More docs and examples will be added later.
 6. Now you can build your own applications based on Kiwano source code !
 
 ## Next plan
-* GUI system
-* Physical engine
+* Cross-platform
 * Particle system
 
 ## Contact
