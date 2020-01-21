@@ -2,13 +2,11 @@
 
 namespace kiwano
 {
-	Event::Event(EventType const& type)
-		: type_(type)
-	{
-	}
-
-	Event::~Event()
-	{
-	}
-
+Event::Event(EventType const& type)
+    : type_(type)
+{
 }
+
+Event::~Event() {}
+
+}  // namespace kiwano

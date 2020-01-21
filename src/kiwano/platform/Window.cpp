@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,73 +23,72 @@
 namespace kiwano
 {
 
-	WindowConfig::WindowConfig(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen)
-		: title(title)
-		, width(width)
-		, height(height)
-		, icon(icon)
-		, resizable(resizable)
-		, fullscreen(fullscreen)
-	{
-	}
-
-	Window::Window()
-		: should_close_(false)
-		, width_(0)
-		, height_(0)
-	{
-	}
-
-	Window::~Window()
-	{
-	}
-
-	EventPtr Window::PollEvent()
-	{
-		PumpEvents();
-
-		EventPtr evt;
-		if (!event_queue_.empty())
-		{
-			evt = event_queue_.front();
-			event_queue_.pop();
-		}
-		return evt;
-	}
-
-	String Window::GetTitle() const
-	{
-		return title_;
-	}
-
-	Size Window::GetSize() const
-	{
-		return Size(float(width_), float(height_));
-	}
-
-	uint32_t Window::GetWidth() const
-	{
-		return width_;
-	}
-
-	uint32_t Window::GetHeight() const
-	{
-		return height_;
-	}
-
-	bool Window::ShouldClose()
-	{
-		return should_close_;
-	}
-
-	void Window::PushEvent(EventPtr evt)
-	{
-		event_queue_.push(evt);
-	}
-
-	void Window::Destroy()
-	{
-		should_close_ = true;
-	}
-
+WindowConfig::WindowConfig(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                           bool fullscreen)
+    : title(title)
+    , width(width)
+    , height(height)
+    , icon(icon)
+    , resizable(resizable)
+    , fullscreen(fullscreen)
+{
 }
+
+Window::Window()
+    : should_close_(false)
+    , width_(0)
+    , height_(0)
+{
+}
+
+Window::~Window() {}
+
+EventPtr Window::PollEvent()
+{
+    PumpEvents();
+
+    EventPtr evt;
+    if (!event_queue_.empty())
+    {
+        evt = event_queue_.front();
+        event_queue_.pop();
+    }
+    return evt;
+}
+
+String Window::GetTitle() const
+{
+    return title_;
+}
+
+Size Window::GetSize() const
+{
+    return Size(float(width_), float(height_));
+}
+
+uint32_t Window::GetWidth() const
+{
+    return width_;
+}
+
+uint32_t Window::GetHeight() const
+{
+    return height_;
+}
+
+bool Window::ShouldClose()
+{
+    return should_close_;
+}
+
+void Window::PushEvent(EventPtr evt)
+{
+    event_queue_.push(evt);
+}
+
+void Window::Destroy()
+{
+    should_close_ = true;
+}
+
+}  // namespace kiwano

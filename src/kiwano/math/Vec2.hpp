@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,100 +23,112 @@
 
 namespace kiwano
 {
-	namespace math
-	{
-		template <typename _Ty>
-		struct Vec2T
-		{
-			using value_type = _Ty;
+namespace math
+{
+template <typename _Ty>
+struct Vec2T
+{
+    using value_type = _Ty;
 
-			value_type x;
-			value_type y;
+    value_type x;
+    value_type y;
 
-			Vec2T() : x(value_type(0)), y(value_type(0)) {}
+    Vec2T()
+        : x(value_type(0))
+        , y(value_type(0))
+    {
+    }
 
-			Vec2T(value_type x, value_type y) : x(x), y(y) {}
+    Vec2T(value_type x, value_type y)
+        : x(x)
+        , y(y)
+    {
+    }
 
-			Vec2T(const Vec2T& other) : x(other.x), y(other.y) {}
+    Vec2T(const Vec2T& other)
+        : x(other.x)
+        , y(other.y)
+    {
+    }
 
-			inline value_type Length() const
-			{
-				return static_cast<value_type>(math::Sqrt(static_cast<float>(x * x + y * y)));
-			}
+    inline value_type Length() const
+    {
+        return static_cast<value_type>(math::Sqrt(static_cast<float>(x * x + y * y)));
+    }
 
-			inline bool IsOrigin() const
-			{
-				return (x == 0) && (y == 0);
-			}
+    inline bool IsOrigin() const
+    {
+        return (x == 0) && (y == 0);
+    }
 
-			inline void Set(value_type x, value_type y)
-			{
-				this->x = x;
-				this->y = y;
-			}
+    inline void Set(value_type x, value_type y)
+    {
+        this->x = x;
+        this->y = y;
+    }
 
-			inline const Vec2T operator + (const Vec2T & other) const
-			{
-				return Vec2T(x + other.x, y + other.y);
-			}
+    inline const Vec2T operator+(const Vec2T& other) const
+    {
+        return Vec2T(x + other.x, y + other.y);
+    }
 
-			inline const Vec2T operator - (const Vec2T & other) const
-			{
-				return Vec2T(x - other.x, y - other.y);
-			}
+    inline const Vec2T operator-(const Vec2T& other) const
+    {
+        return Vec2T(x - other.x, y - other.y);
+    }
 
-			inline const Vec2T operator * (value_type val) const
-			{
-				return Vec2T(x * val, y * val);
-			}
+    inline const Vec2T operator*(value_type val) const
+    {
+        return Vec2T(x * val, y * val);
+    }
 
-			inline const Vec2T operator / (value_type val) const
-			{
-				return Vec2T(x / val, y / val);
-			}
+    inline const Vec2T operator/(value_type val) const
+    {
+        return Vec2T(x / val, y / val);
+    }
 
-			inline const Vec2T operator - () const
-			{
-				return Vec2T(-x, -y);
-			}
+    inline const Vec2T operator-() const
+    {
+        return Vec2T(-x, -y);
+    }
 
-			inline Vec2T& operator += (const Vec2T& other)
-			{
-				x += other.x;
-				y += other.y;
-				return (*this);
-			}
+    inline Vec2T& operator+=(const Vec2T& other)
+    {
+        x += other.x;
+        y += other.y;
+        return (*this);
+    }
 
-			inline Vec2T& operator -= (const Vec2T& other)
-			{
-				x -= other.x;
-				y -= other.y;
-				return (*this);
-			}
+    inline Vec2T& operator-=(const Vec2T& other)
+    {
+        x -= other.x;
+        y -= other.y;
+        return (*this);
+    }
 
-			inline Vec2T& operator *= (value_type val)
-			{
-				x *= val;
-				y *= val;
-				return (*this);
-			}
+    inline Vec2T& operator*=(value_type val)
+    {
+        x *= val;
+        y *= val;
+        return (*this);
+    }
 
-			inline Vec2T& operator /= (value_type val)
-			{
-				x /= val;
-				y /= val;
-				return (*this);
-			}
+    inline Vec2T& operator/=(value_type val)
+    {
+        x /= val;
+        y /= val;
+        return (*this);
+    }
 
-			inline bool operator== (const Vec2T& other) const
-			{
-				return (x == other.x) && (y == other.y);
-			}
+    inline bool operator==(const Vec2T& other) const
+    {
+        return (x == other.x) && (y == other.y);
+    }
 
-			inline bool operator!= (const Vec2T& other) const
-			{
-				return (x != other.x) || (y != other.y);
-			}
-		};
-	}
-}
+    inline bool operator!=(const Vec2T& other) const
+    {
+        return (x != other.x) || (y != other.y);
+    }
+};
+}  // namespace math
+}  // namespace kiwano

@@ -28,7 +28,7 @@
     <Filter Include="render">
       <UniqueIdentifier>{adb44ca9-674a-4b77-993f-d65193d8ab06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="render\dx">
+    <Filter Include="render\DirectX">
       <UniqueIdentifier>{fd281702-0006-46d2-8fd1-28c502464164}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -222,27 +222,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Time.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\D2DDeviceResources.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\D3D10DeviceResources.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\D3D11DeviceResources.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\D3DDeviceResourcesBase.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\FontCollectionLoader.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\helper.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\dx\TextRenderer.h">
-      <Filter>render\dx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\Brush.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -284,6 +263,27 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\TextureCache.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h">
+      <Filter>render\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,21 +431,6 @@
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\dx\D2DDeviceResources.cpp">
-      <Filter>render\dx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\dx\D3D10DeviceResources.cpp">
-      <Filter>render\dx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\dx\D3D11DeviceResources.cpp">
-      <Filter>render\dx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\dx\FontCollectionLoader.cpp">
-      <Filter>render\dx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\dx\TextRenderer.cpp">
-      <Filter>render\dx</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\Brush.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -484,6 +469,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp">
+      <Filter>render\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

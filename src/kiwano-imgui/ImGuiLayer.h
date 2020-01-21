@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,49 +23,48 @@
 
 namespace kiwano
 {
-	namespace imgui
-	{
-		KGE_DECLARE_SMART_PTR(ImGuiLayer);
+namespace imgui
+{
+KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
-		/// \~chinese
-		/// @brief ImGui管道
-		using ImGuiPipeline = Function<void()>;
+/// \~chinese
+/// @brief ImGui管道
+using ImGuiPipeline = Function<void()>;
 
-		/**
-		* \~chinese
-		* @brief ImGui图层
-		*/
-		class ImGuiLayer
-			: public Layer
-		{
-		public:
-			ImGuiLayer();
+/**
+ * \~chinese
+ * @brief ImGui图层
+ */
+class ImGuiLayer : public Layer
+{
+public:
+    ImGuiLayer();
 
-			virtual ~ImGuiLayer();
+    virtual ~ImGuiLayer();
 
-			/// \~chinese
-			/// @brief 添加 ImGui 元素
-			/// @param name 元素名称
-			/// @param item 管道
-			void AddItem(String const& name, ImGuiPipeline const& item);
+    /// \~chinese
+    /// @brief 添加 ImGui 元素
+    /// @param name 元素名称
+    /// @param item 管道
+    void AddItem(String const& name, ImGuiPipeline const& item);
 
-			/// \~chinese
-			/// @brief 移除 ImGui 元素
-			/// @param name 元素名称
-			void RemoveItem(String const& name);
+    /// \~chinese
+    /// @brief 移除 ImGui 元素
+    /// @param name 元素名称
+    void RemoveItem(String const& name);
 
-			// 移除所有元素
-			/// \~chinese
-			/// @brief 移除所有元素
-			void RemoveAllItems();
+    // 移除所有元素
+    /// \~chinese
+    /// @brief 移除所有元素
+    void RemoveAllItems();
 
-		public:
-			void OnRender(RenderContext& ctx) override;
+public:
+    void OnRender(RenderContext& ctx) override;
 
-			bool CheckVisibility(RenderContext& ctx) const override;
+    bool CheckVisibility(RenderContext& ctx) const override;
 
-		private:
-			Map<String, ImGuiPipeline> pipelines_;
-		};
-	}
-}
+private:
+    Map<String, ImGuiPipeline> pipelines_;
+};
+}  // namespace imgui
+}  // namespace kiwano
