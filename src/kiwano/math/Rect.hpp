@@ -151,8 +151,7 @@ public:
 
     static inline RectT Infinite()
     {
-        return RectT{ -math::constants::FLOAT_MAX, -math::constants::FLOAT_MAX, math::constants::FLOAT_MAX,
-                      math::constants::FLOAT_MAX };
+        return RectT{ -math::FLOAT_MAX, -math::FLOAT_MAX, math::FLOAT_MAX, math::FLOAT_MAX };
     }
 };
 }  // namespace math

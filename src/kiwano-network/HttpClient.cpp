@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <3rd-party/curl/curl.h>  // CURL
 #include <codecvt>
-#include <kiwano-network/HttpClient.h>
-#include <kiwano-network/HttpRequest.h>
-#include <kiwano-network/HttpResponse.hpp>
+#include <thread>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
-#include <thread>
+#include <kiwano-network/HttpRequest.h>
+#include <kiwano-network/HttpResponse.hpp>
+#include <kiwano-network/HttpClient.h>
+#include <3rd-party/curl/curl.h>  // CURL
 
 namespace
 {

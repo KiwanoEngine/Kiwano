@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/Resource.h>
+#include <kiwano/render/DirectX/helper.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
 #include <dwrite.h>
-#include <kiwano/core/Resource.h>
-#include <kiwano/render/dx/helper.h>
 
 namespace kiwano
 {

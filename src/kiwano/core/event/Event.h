@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Keys.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/event/EventType.h>
 #include <kiwano/math/math.h>

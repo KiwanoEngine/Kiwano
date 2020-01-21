@@ -1,13 +1,14 @@
 // Copyright (C) 2019 Nomango
 
-#include <kiwano-imgui/ImGuiModule.h>
-#include <kiwano-imgui/imgui_impl.h>
+
 #include <kiwano/core/Common.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano-imgui/ImGuiModule.h>
+#include <kiwano-imgui/imgui_impl.h>
 
 namespace kiwano
 {

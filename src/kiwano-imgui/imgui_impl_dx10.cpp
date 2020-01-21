@@ -3,8 +3,8 @@
 #include <kiwano-imgui/imgui_impl_dx10.h>
 
 // DirectX
-#include <d3d10.h>
 #include <d3d10_1.h>
+#include <d3d10.h>
 #include <d3dcompiler.h>
 #include <stdio.h>
 

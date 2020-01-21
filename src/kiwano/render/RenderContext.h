@@ -26,7 +26,7 @@
 #include <kiwano/render/LayerArea.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/render/dx/TextRenderer.h>
+#include <kiwano/render/DirectX/TextRenderer.h>
 
 namespace kiwano
 {

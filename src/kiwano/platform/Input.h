@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Component.h>
+#include <kiwano/core/Keys.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/macros.h>
 #include <kiwano/math/math.h>

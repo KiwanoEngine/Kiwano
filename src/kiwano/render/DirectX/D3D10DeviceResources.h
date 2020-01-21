@@ -19,11 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-
-#include <d3d10_1.h>
 #include <kiwano/macros.h>
-#include <kiwano/render/dx/D3DDeviceResourcesBase.h>
-#include <kiwano/render/dx/helper.h>
+#include <kiwano/render/DirectX/helper.h>
+#include <kiwano/render/DirectX/D3DDeviceResourcesBase.h>
+#include <d3d10_1.h>
 
 namespace kiwano
 {

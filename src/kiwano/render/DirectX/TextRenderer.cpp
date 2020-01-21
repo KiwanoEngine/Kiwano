@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/dx/TextRenderer.h>
+#include <kiwano/render/DirectX/TextRenderer.h>
 
 namespace kiwano
 {

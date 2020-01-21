@@ -25,12 +25,12 @@
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/render/TextStyle.hpp>
-#include <kiwano/render/dx/FontCollectionLoader.h>
+#include <kiwano/render/DirectX/FontCollectionLoader.h>
 
 #if defined(KGE_USE_DIRECTX10)
-#include <kiwano/render/dx/D3D10DeviceResources.h>
+#include <kiwano/render/DirectX/D3D10DeviceResources.h>
 #else
-#include <kiwano/render/dx/D3D11DeviceResources.h>
+#include <kiwano/render/DirectX/D3D11DeviceResources.h>
 #endif
 
 namespace kiwano

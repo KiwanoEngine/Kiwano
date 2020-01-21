@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/render/DirectX/D2DDeviceResources.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/render/dx/D2DDeviceResources.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")

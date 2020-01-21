@@ -18,7 +18,7 @@
 // _Out_ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/dx/FontCollectionLoader.h>
+#include <kiwano/render/DirectX/FontCollectionLoader.h>
 
 namespace kiwano
 {

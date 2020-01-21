@@ -71,7 +71,7 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: false
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 ReflowComments: true
-SortIncludes: true
+SortIncludes: false
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false

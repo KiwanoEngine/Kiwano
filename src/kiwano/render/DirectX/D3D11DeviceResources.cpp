@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Logger.h>
-#include <kiwano/render/dx/D3D11DeviceResources.h>
+#include <kiwano/render/DirectX/D3D11DeviceResources.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4800)
