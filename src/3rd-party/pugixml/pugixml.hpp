@@ -1447,7 +1447,7 @@ namespace std
 // Make sure implementation is included in header-only mode
 // Use macro expansion in #include to work around QMake (QTBUG-11923)
 #if defined(PUGIXML_HEADER_ONLY) && !defined(PUGIXML_SOURCE)
-#	define PUGIXML_SOURCE "pugixml.cpp"
+#	define PUGIXML_SOURCE "pugixml-impl.hpp"
 #	include PUGIXML_SOURCE
 #endif
 

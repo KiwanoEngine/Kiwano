@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <3rd-party/pugixml/pugixml.hpp>
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
+#include <3rd-party/pugixml/pugixml.hpp>
 
 namespace kiwano
 {
