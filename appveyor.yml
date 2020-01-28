@@ -19,7 +19,6 @@ pull_requests:
 environment:
   global:
     time_out_mins: 5
-    job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
     flag_to_deploy: false
     appveyor_api_token:
       secure: UJFCbRNHMOqQg3e3Kv/ZnaIqqwXAt+5HDldetaZsZ5E=
@@ -46,13 +45,12 @@ for:
     only:
       - master
   environment:
-   matrix:
+    matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      VS_PLATFORM_TOOLSET: v142
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      VS_PLATFORM_TOOLSET: v141
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      VS_PLATFORM_TOOLSET: v140
+    global:
+      job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
 -
   branches:
     except:
@@ -62,7 +60,8 @@ for:
   environment:
     matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      VS_PLATFORM_TOOLSET: v142
+    global:
+      job_to_deploy: 2 # 1(images) * 1(platform) * 2(configuration)
 
 configuration:
 - Debug
@@ -90,9 +89,9 @@ after_build:
 
 artifacts:
 - path: projects/output/**/*.lib
-  name: $(appveyor_project_name)-v$(appveyor_build_version)-$(VS_PLATFORM_TOOLSET).$(platform).$(configuration)
+  name: PublishedLibraries
 - path: projects/output/**/*.pdb
-  name: $(appveyor_project_name)-v$(appveyor_build_version)-$(VS_PLATFORM_TOOLSET).$(platform).$(configuration)
+  name: PublishedSymbols
 
 before_deploy:
 - ps: .\scripts\appveyor\coapp_make.ps1
@@ -100,9 +99,9 @@ before_deploy:
 deploy:
 - provider: GitHub
   repository: KiwanoEngine/Kiwano
-  tag: v$(appveyor_build_version)
-  release: v$(appveyor_build_version)
-  description: Kiwano-v$(appveyor_build_version) releases.
+  tag: v$(APPVEYOR_BUILD_VERSION)
+  release: v$(APPVEYOR_BUILD_VERSION)
+  description: Kiwano-v$(APPVEYOR_BUILD_VERSION) releases.
   auth_token:
     secure: pDsK6i03d4qRjtrNXcbhLpAquso/muJWgDSWJHnxP7b6p54kXEvptB67J+1kJOhq
   artifact: /.*\.nupkg/
