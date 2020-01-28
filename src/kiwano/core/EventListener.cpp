@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,30 +23,28 @@
 
 namespace kiwano
 {
-	EventListener::EventListener()
-		: type_()
-		, callback_()
-		, running_(true)
-		, removeable_(false)
-	{
-	}
-
-	EventListener::EventListener(EventType type, Callback const& callback)
-		: type_(type)
-		, callback_(callback)
-		, running_(true)
-		, removeable_(false)
-	{
-	}
-
-	EventListener::EventListener(String const& name, EventType type, Callback const& callback)
-		: EventListener(type, callback)
-	{
-		SetName(name);
-	}
-
-	EventListener::~EventListener()
-	{
-	}
-
+EventListener::EventListener()
+    : type_()
+    , callback_()
+    , running_(true)
+    , removeable_(false)
+    , swallow_(false)
+{
 }
+
+EventListener::EventListener(EventType type, Callback const& callback)
+    : EventListener(String(), type, callback)
+{
+}
+
+EventListener::EventListener(String const& name, EventType type, Callback const& callback)
+    : EventListener()
+{
+    SetName(name);
+    SetEventType(type);
+    SetCallback(callback);
+}
+
+EventListener::~EventListener() {}
+
+}  // namespace kiwano

@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,57 +19,51 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/common.h>
+#include <kiwano/core/Common.h>
 #include <kiwano/core/Component.h>
 
 namespace kiwano
 {
-	namespace imgui
-	{
-		/**
-		* \~chinese
-		* @brief ImGuiÄ£¿é
-		*/
-		class ImGuiModule
-			: public Singleton<ImGuiModule>
-			, public RenderComponent
-			, public UpdateComponent
-			, public EventComponent
-		{
-			friend Singleton<ImGuiModule>;
+namespace imgui
+{
+/**
+ * \~chinese
+ * @brief ImGuiÄ£¿é
+ */
+class ImGuiModule
+    : public Singleton<ImGuiModule>
+    , public RenderComponent
+    , public UpdateComponent
+    , public EventComponent
+{
+    friend Singleton<ImGuiModule>;
 
-		public:
-			ImGuiModule();
+public:
+    ImGuiModule();
 
-			void SetupComponent() override;
+    void SetupComponent() override;
 
-			void DestroyComponent() override;
+    void DestroyComponent() override;
 
-			void BeforeRender() override;
+    void BeforeRender() override;
 
-			void AfterRender() override;
+    void AfterRender() override;
 
-			void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+    void HandleEvent(Event* evt) override;
 
-			void OnUpdate(Duration dt) override;
+    void OnUpdate(Duration dt) override;
 
-		private:
-			void Init(HWND hwnd);
+private:
+    void NewFrame();
 
-			void NewFrame();
+    void Render();
 
-			void Render();
+    void UpdateMousePos();
 
-			void UpdateMousePos();
+    void UpdateMouseCursor();
 
-			void UpdateMouseCursor();
-
-			void UpdateGamepads();
-
-		private:
-			bool has_gamepad_;
-			bool want_update_has_gamepad_;
-			HWND target_window_;
-		};
-	}
-}
+private:
+    WindowHandle target_window_;
+};
+}  // namespace imgui
+}  // namespace kiwano

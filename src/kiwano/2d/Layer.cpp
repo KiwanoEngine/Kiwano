@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,71 +20,63 @@
 
 #pragma once
 #include <kiwano/2d/Layer.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
-	Layer::Layer()
-		: swallow_(false)
-	{
-	}
-
-	Layer::~Layer()
-	{
-	}
-
-	void Layer::SetClipRect(Rect const& clip_rect)
-	{
-		area_.SetAreaRect(clip_rect);
-	}
-
-	void Layer::SetOpacity(float opacity)
-	{
-		// Actor::SetOpacity(opacity);
-		area_.SetOpacity(opacity);
-	}
-
-	void Layer::SetMaskGeometry(Geometry const& mask)
-	{
-		area_.SetMaskGeometry(mask);
-	}
-
-	void Layer::SetMaskTransform(Matrix3x2 const& transform)
-	{
-		area_.SetMaskTransform(transform);
-	}
-
-	void Layer::Dispatch(Event& evt)
-	{
-		if (!IsVisible())
-			return;
-
-		if (!swallow_)
-		{
-			ActorPtr prev;
-			for (auto child = GetAllChildren().last_item(); child; child = prev)
-			{
-				prev = child->prev_item();
-				child->Dispatch(evt);
-			}
-		}
-
-		EventDispatcher::Dispatch(evt);
-	}
-
-	void Layer::Render(RenderTarget* rt)
-	{
-		rt->PushLayer(area_);
-
-		Actor::Render(rt);
-
-		rt->PopLayer();
-	}
-
-	bool Layer::CheckVisibilty(RenderTarget* rt) const
-	{
-		// Do not need to render Layer
-		return false;
-	}
-
+Layer::Layer()
+    : swallow_(false)
+{
 }
+
+Layer::~Layer() {}
+
+void Layer::SetClipRect(Rect const& clip_rect)
+{
+    area_.SetAreaRect(clip_rect);
+}
+
+void Layer::SetOpacity(float opacity)
+{
+    // Actor::SetOpacity(opacity);
+    area_.SetOpacity(opacity);
+}
+
+void Layer::SetMaskGeometry(Geometry const& mask)
+{
+    area_.SetMaskGeometry(mask);
+}
+
+void Layer::SetMaskTransform(Matrix3x2 const& transform)
+{
+    area_.SetMaskTransform(transform);
+}
+
+bool Layer::DispatchEvent(Event* evt)
+{
+    if (!IsVisible())
+        return true;
+
+    if (swallow_)
+    {
+        return EventDispatcher::DispatchEvent(evt);
+    }
+    return Actor::DispatchEvent(evt);
+}
+
+void Layer::Render(RenderContext& ctx)
+{
+    ctx.PushLayer(area_);
+
+    Actor::Render(ctx);
+
+    ctx.PopLayer();
+}
+
+bool Layer::CheckVisibility(RenderContext& ctx) const
+{
+    // Do not need to render Layer
+    return false;
+}
+
+}  // namespace kiwano

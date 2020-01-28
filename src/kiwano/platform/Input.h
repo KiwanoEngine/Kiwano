@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,100 +19,124 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/macros.h>
-#include <kiwano/core/common.h>
-#include <kiwano/math/math.h>
-#include <kiwano/core/keys.h>
+#include <kiwano/core/Common.h>
 #include <kiwano/core/Component.h>
+#include <kiwano/core/Keys.h>
+#include <kiwano/core/event/Event.h>
+#include <kiwano/macros.h>
+#include <kiwano/math/math.h>
 
 namespace kiwano
 {
-	/**
-	* \~chinese
-	* @brief 输入设备实例，可获取鼠标和键盘的按键状态
-	*/
-	class KGE_API Input
-		: public Singleton<Input>
-		, public UpdateComponent
-		, public EventComponent
-	{
-		friend Singleton<Input>;
+/**
+ * \~chinese
+ * @brief 输入设备实例，可获取鼠标和键盘的按键状态
+ */
+class KGE_API Input
+    : public Singleton<Input>
+    , public UpdateComponent
+    , public EventComponent
+{
+    friend Singleton<Input>;
 
-	public:
-		/**
-		* \~chinese
-		* @brief 检测键盘或鼠标按键是否正被按下
-		* @param key_or_btn 键值
-		* @return 是否正被按下
-		* @see kiwano::KeyCode kiwano::MouseButton
-		*/
-		bool IsDown(int key_or_btn);
+public:
+    /**
+     * \~chinese
+     * @brief 检测键盘按键是否正被按下
+     * @param key 键值
+     */
+    bool IsDown(KeyCode key) const;
 
-		/**
-		* \~chinese
-		* @brief 检测键盘或鼠标按键是否刚被点击
-		* @param key_or_btn 键值
-		* @return 是否刚被点击
-		* @see kiwano::KeyCode kiwano::MouseButton
-		*/
-		bool WasPressed(int key_or_btn);
+    /**
+     * \~chinese
+     * @brief 检测键盘按键是否刚被点击
+     * @param key 键值
+     */
+    bool WasPressed(KeyCode key) const;
 
-		/**
-		* \~chinese
-		* @brief 检测键盘或鼠标按键是否刚抬起
-		* @param key_or_btn 键值
-		* @return 是否刚抬起
-		* @see kiwano::KeyCode kiwano::MouseButton
-		*/
-		bool WasReleased(int key_or_btn);
+    /**
+     * \~chinese
+     * @brief 检测键盘按键是否刚抬起
+     * @param key 键值
+     */
+    bool WasReleased(KeyCode key) const;
+    /**
+     * \~chinese
+     * @brief 检测鼠标按键是否正被按下
+     * @param btn 鼠标键值
+     */
+    bool IsDown(MouseButton btn) const;
 
-		/**
-		* \~chinese
-		* @brief 获得鼠标 x 坐标
-		* @return 鼠标 x 坐标
-		*/
-		float GetMouseX();
+    /**
+     * \~chinese
+     * @brief 检测鼠标按键是否刚被点击
+     * @param btn 鼠标键值
+     */
+    bool WasPressed(MouseButton btn) const;
 
-		/**
-		* \~chinese
-		* @brief 获得鼠标 y 坐标
-		* @return 鼠标 y 坐标
-		*/
-		float GetMouseY();
+    /**
+     * \~chinese
+     * @brief 检测鼠标按键是否刚抬起
+     * @param btn 鼠标键值
+     */
+    bool WasReleased(MouseButton btn) const;
 
-		/**
-		* \~chinese
-		* @brief 获得鼠标坐标
-		* @return 鼠标坐标
-		*/
-		Point GetMousePos();
+    /**
+     * \~chinese
+     * @brief 获得鼠标 x 坐标
+     * @return 鼠标 x 坐标
+     */
+    float GetMouseX() const;
 
-	public:
-		void SetupComponent() override {}
+    /**
+     * \~chinese
+     * @brief 获得鼠标 y 坐标
+     * @return 鼠标 y 坐标
+     */
+    float GetMouseY() const;
 
-		void DestroyComponent() override {}
+    /**
+     * \~chinese
+     * @brief 获得鼠标坐标
+     * @return 鼠标坐标
+     */
+    Point GetMousePos() const;
 
-		void AfterUpdate() override;
+public:
+    void SetupComponent() override {}
 
-		void HandleMessage(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam) override;
+    void DestroyComponent() override {}
 
-		void UpdateKey(int, bool);
+    void AfterUpdate() override;
 
-		void UpdateMousePos(float, float);
+    void HandleEvent(Event* evt) override;
 
-	private:
-		Input();
+private:
+    Input();
 
-		~Input();
+    ~Input();
 
-	private:
-		static const int KEY_NUM = 256;
+    void UpdateKey(KeyCode key, bool down);
 
-		bool want_update_;
-		bool keys_[KEY_NUM];
-		bool keys_pressed_[KEY_NUM];
-		bool keys_released_[KEY_NUM];
-		float mouse_pos_x_;
-		float mouse_pos_y_;
-	};
-}
+    void UpdateButton(MouseButton btn, bool down);
+
+    void UpdateMousePos(const Point& pos);
+
+private:
+    static const int KEY_NUM    = int(KeyCode::Last);
+    static const int BUTTON_NUM = int(MouseButton::Last);
+
+    bool  want_update_keys_;
+    bool  want_update_buttons_;
+    Point mouse_pos_;
+
+    enum KeyIndex : size_t
+    {
+        Current = 0,
+        Prev
+    };
+
+    std::array<bool, BUTTON_NUM> buttons_[2];
+    std::array<bool, KEY_NUM>    keys_[2];
+};
+}  // namespace kiwano

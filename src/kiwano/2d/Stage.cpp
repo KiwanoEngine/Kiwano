@@ -1,15 +1,15 @@
 // Copyright (c) 2016-2018 Kiwano - Nomango
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,49 +20,47 @@
 
 #include <kiwano/2d/Stage.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/renderer/Renderer.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
-	Stage::Stage()
-	{
-		SetStage(this);
+Stage::Stage()
+{
+    SetStage(this);
 
-		SetAnchor(Vec2{ 0, 0 });
-		SetSize(Renderer::instance().GetOutputSize());
-	}
-
-	Stage::~Stage()
-	{
-	}
-
-	void Stage::OnEnter()
-	{
-		KGE_SYS_LOG(L"Stage entered");
-	}
-
-	void Stage::OnExit()
-	{
-		KGE_SYS_LOG(L"Stage exited");
-	}
-
-	void Stage::RenderBorder(RenderTarget* rt)
-	{
-		rt->SetBrushOpacity(1.0f);
-
-		if (!border_fill_brush_)
-		{
-			border_fill_brush_ = new Brush;
-			border_fill_brush_->SetColor(Color(Color::Red, .4f));
-		}
-
-		if (!border_stroke_brush_)
-		{
-			border_stroke_brush_ = new Brush;
-			border_stroke_brush_->SetColor(Color(Color::Red, .8f));
-		}
-
-		Actor::RenderBorder(rt);
-	}
-
+    SetAnchor(Vec2{ 0, 0 });
+    SetSize(Renderer::Instance().GetOutputSize());
 }
+
+Stage::~Stage() {}
+
+void Stage::OnEnter()
+{
+    KGE_SYS_LOG(L"Stage entered");
+}
+
+void Stage::OnExit()
+{
+    KGE_SYS_LOG(L"Stage exited");
+}
+
+void Stage::RenderBorder(RenderContext& ctx)
+{
+    ctx.SetBrushOpacity(GetDisplayedOpacity());
+
+    if (!border_fill_brush_)
+    {
+        border_fill_brush_ = new Brush;
+        border_fill_brush_->SetColor(Color(Color::Red, .4f));
+    }
+
+    if (!border_stroke_brush_)
+    {
+        border_stroke_brush_ = new Brush;
+        border_stroke_brush_->SetColor(Color(Color::Red, .8f));
+    }
+
+    Actor::RenderBorder(ctx);
+}
+
+}  // namespace kiwano
