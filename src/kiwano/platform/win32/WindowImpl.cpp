@@ -103,7 +103,8 @@ public:
 
     ~WindowImpl();
 
-    bool Create(WindowConfig const& config) override;
+    void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                bool fullscreen) override;
 
     WindowHandle GetHandle() const override;
 
@@ -192,7 +193,8 @@ WindowImpl::WindowImpl()
 
 WindowImpl::~WindowImpl() {}
 
-bool WindowImpl::Create(WindowConfig const& config)
+void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                        bool fullscreen)
 {
     HINSTANCE  hinst   = GetModuleHandleW(nullptr);
     WNDCLASSEX wcex    = { 0 };
@@ -208,9 +210,9 @@ bool WindowImpl::Create(WindowConfig const& config)
     wcex.lpszMenuName  = nullptr;
     wcex.hCursor       = ::LoadCursorW(hinst, IDC_ARROW);
 
-    if (config.icon)
+    if (icon)
     {
-        wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(config.icon), IMAGE_ICON, 0, 0,
+        wcex.hIcon = (HICON)::LoadImageW(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0,
                                          LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
     }
 
@@ -231,13 +233,10 @@ bool WindowImpl::Create(WindowConfig const& config)
     device_name_ = new wchar_t[len + 1];
     lstrcpyW(device_name_, monitor_info_ex.szDevice);
 
-    uint32_t width  = config.width;
-    uint32_t height = config.height;
-    int      left   = -1;
-    int      top    = -1;
+    int left = -1, top = -1;
 
-    resizable_     = config.resizable;
-    is_fullscreen_ = config.fullscreen;
+    resizable_     = resizable;
+    is_fullscreen_ = fullscreen;
 
     if (is_fullscreen_)
     {
@@ -264,17 +263,19 @@ bool WindowImpl::Create(WindowConfig const& config)
         height = win_height;
     }
 
-    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, KGE_WND_CLASS_NAME, config.title.c_str(),
-                                GetStyle(), left, top, width, height, nullptr, nullptr, hinst, nullptr);
+    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, KGE_WND_CLASS_NAME, title.c_str(), GetStyle(), left,
+                                top, width, height, nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
         ::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
+
         KGE_ERROR(L"Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
-        return false;
+        throw std::runtime_error("Create window failed");
     }
 
-    SetInternalSize(width, height);
+    width_ = width;
+    height_ = height;
 
     // disable imm
     ::ImmAssociateContext(handle_, nullptr);
@@ -289,7 +290,6 @@ bool WindowImpl::Create(WindowConfig const& config)
     {
         ChangeFullScreenResolution(width, height, device_name_);
     }
-    return true;
 }
 
 WindowHandle WindowImpl::GetHandle() const
@@ -591,7 +591,8 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         {
             // KGE_SYS_LOG(L"Window resized");
 
-            window->SetInternalSize(((uint32_t)(short)LOWORD(lparam)), ((uint32_t)(short)HIWORD(lparam)));
+            window->width_ = ((uint32_t)(short)LOWORD(lparam));
+            window->height_ = ((uint32_t)(short)HIWORD(lparam));
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
             evt->width                = window->GetWidth();
@@ -626,11 +627,10 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG(L"Window title changed");
 
-        String title = String::cstr(reinterpret_cast<LPCWSTR>(lparam));
-        window->SetInternalTitle(title);
+        window->title_ = String::cstr(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
-        evt->title                     = title;
+        evt->title                     = window->title_;
         window->PushEvent(evt);
     }
     break;

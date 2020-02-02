@@ -23,17 +23,6 @@
 namespace kiwano
 {
 
-WindowConfig::WindowConfig(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                           bool fullscreen)
-    : title(title)
-    , width(width)
-    , height(height)
-    , icon(icon)
-    , resizable(resizable)
-    , fullscreen(fullscreen)
-{
-}
-
 Window::Window()
     : should_close_(false)
     , width_(0)

@@ -26,6 +26,7 @@
 
 namespace kiwano
 {
+
 /**
  * \~chinese
  * @brief 鼠标指针类型
@@ -42,35 +43,15 @@ enum class CursorType
     SizeNWSE,   ///< 指向左上到右下方向的箭头
 };
 
-/**
- * \~chinese
- * @brief 窗口设置
- */
-struct WindowConfig
-{
-    String   title;       ///< 标题
-    uint32_t width;       ///< 宽度
-    uint32_t height;      ///< 高度
-    uint32_t icon;        ///< 图标资源 ID
-    bool     resizable;   ///< 窗口大小可拉伸
-    bool     fullscreen;  ///< 全屏模式
-
-    /**
-     * \~chinese
-     * @brief 构建窗口设置
-     * @param title 标题
-     * @param width 宽度
-     * @param height 高度
-     * @param icon 图标资源ID
-     * @param resizable 窗口大小可拉伸
-     * @param fullscreen 全屏模式
-     */
-    WindowConfig(String const& title = L"Kiwano Game", uint32_t width = 640, uint32_t height = 480, uint32_t icon = 0,
-                 bool resizable = false, bool fullscreen = false);
-};
 
 #if defined(KGE_WIN32)
+
+/**
+ * \~chinese
+ * @brief 窗口句柄
+ */
 typedef HWND WindowHandle;
+
 #endif
 
 /**
@@ -89,9 +70,16 @@ public:
     /**
      * \~chinese
      * @brief 初始化窗口
-     * @param config 窗口设置
+     * @param title 标题
+     * @param width 宽度
+     * @param height 高度
+     * @param icon 图标资源ID
+     * @param resizable 窗口大小可拉伸
+     * @param fullscreen 全屏模式
+     * @throw std::runtime_error 窗口创建失败时抛出
      */
-    virtual bool Create(WindowConfig const& config) = 0;
+    virtual void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0, bool resizable = false,
+                        bool fullscreen = false) = 0;
 
     /**
      * \~chinese
@@ -168,10 +156,17 @@ public:
     /**
      * \~chinese
      * @brief 轮询窗口事件
-     * @return
-     * 返回事件队列中的第一个事件并将其从队列中移除，若事件队列为空则返回空指针
+     * @return 返回事件队列中的第一个事件并将其从队列中移除\n
+     *         若事件队列为空则返回空指针
      */
     EventPtr PollEvent();
+
+    /**
+     * \~chinese
+     * @brief 将窗口事件放入队列
+     * @param evt 窗口事件
+     */
+    void PushEvent(EventPtr evt);
 
     /**
      * \~chinese
@@ -190,15 +185,9 @@ protected:
 
     ~Window();
 
-    void PushEvent(EventPtr evt);
-
-    void SetInternalSize(uint32_t width, uint32_t height);
-
-    void SetInternalTitle(String const& title);
-
     virtual void PumpEvents() = 0;
 
-private:
+protected:
     bool                 should_close_;
     uint32_t             width_;
     uint32_t             height_;
@@ -206,14 +195,4 @@ private:
     std::queue<EventPtr> event_queue_;
 };
 
-inline void Window::SetInternalSize(uint32_t width, uint32_t height)
-{
-    width_  = width;
-    height_ = height;
-}
-
-inline void Window::SetInternalTitle(String const& title)
-{
-    title_ = title;
-}
 }  // namespace kiwano
