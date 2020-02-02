@@ -1,4 +1,4 @@
-![Kiwano Logo](https://github.com/Nomango/Kiwano/raw/master/logo/logo_text_h.png)
+![Kiwano Logo](./logo/logo_text_h.png)
 
 # Kiwano Game Engine
 
