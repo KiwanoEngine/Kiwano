@@ -88,40 +88,4 @@ void ActionWalk::UpdateTween(Actor* target, float percent)
     }
 }
 
-void ActionWalk::BeginPath()
-{
-    sink_.BeginPath();
-}
-
-void ActionWalk::EndPath(bool closed)
-{
-    sink_.EndPath(closed);
-    path_ = sink_.GetGeometry();
-}
-
-void ActionWalk::AddLine(Point const& point)
-{
-    sink_.AddLine(point);
-}
-
-void ActionWalk::AddLines(Vector<Point> const& points)
-{
-    sink_.AddLines(points);
-}
-
-void ActionWalk::AddBezier(Point const& point1, Point const& point2, Point const& point3)
-{
-    sink_.AddBezier(point1, point2, point3);
-}
-
-void ActionWalk::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
-{
-    sink_.AddArc(point, radius, rotation, clockwise, is_small);
-}
-
-void ActionWalk::ClearPath()
-{
-    path_.Clear();
-}
-
 }  // namespace kiwano

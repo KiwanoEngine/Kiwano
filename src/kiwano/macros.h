@@ -100,6 +100,10 @@
 #define KGE_DEBUG
 #endif
 
+#define KGE_SUPPRESS_WARNING_PUSH __pragma(warning(push))
+#define KGE_SUPPRESS_WARNING(CODE) __pragma(warning(disable : CODE))
+#define KGE_SUPPRESS_WARNING_POP __pragma(warning(pop))
+
 #ifndef KGE_ASSERT
 #ifdef KGE_DEBUG
 #define KGE_ASSERT(EXPR)                                                                                      \
@@ -129,7 +133,7 @@
  * C++ Standard Library, compiling a debug release (/MTd) and
  * where the compiler error message refers to _Container_base.
  */
-#pragma warning(disable : 4251)
+KGE_SUPPRESS_WARNING(4251)
 #endif
 
 #define KGE_NOT_USED(VAR) ((void)VAR)

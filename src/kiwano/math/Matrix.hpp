@@ -85,8 +85,8 @@ struct Matrix3x2T
     {
     }
 
-#pragma warning(push)
-#pragma warning(disable : 26495)  // ignore warning "always initialize member variables"
+KGE_SUPPRESS_WARNING_PUSH
+KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variables"
 
     template <typename _MTy>
     Matrix3x2T(_MTy const& other)
@@ -95,7 +95,7 @@ struct Matrix3x2T
             m[i] = other[i];
     }
 
-#pragma warning(pop)
+KGE_SUPPRESS_WARNING_POP
 
     inline value_type operator[](uint32_t index) const
     {

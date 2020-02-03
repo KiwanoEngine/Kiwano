@@ -21,10 +21,10 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/render/DirectX/D3D11DeviceResources.h>
 
-#pragma warning(push)
-#pragma warning(disable : 4800)
+KGE_SUPPRESS_WARNING_PUSH
+KGE_SUPPRESS_WARNING(4800)   // Implicit conversion from 'type' to bool
 #include <versionhelpers.h>  // IsWindows10OrGreater
-#pragma warning(pop)
+KGE_SUPPRESS_WARNING_POP
 
 #pragma comment(lib, "d3d11.lib")
 

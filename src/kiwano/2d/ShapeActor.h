@@ -34,7 +34,6 @@ KGE_DECLARE_SMART_PTR(RoundRectActor);
 KGE_DECLARE_SMART_PTR(CircleActor);
 KGE_DECLARE_SMART_PTR(EllipseActor);
 KGE_DECLARE_SMART_PTR(PolygonActor);
-KGE_DECLARE_SMART_PTR(PathShapeActor);
 
 /**
  * \addtogroup Actors
@@ -289,58 +288,6 @@ public:
     void SetVertices(Vector<Point> const& points);
 };
 
-/// \~chinese
-/// @brief 路径图形角色
-class KGE_API PathShapeActor : public ShapeActor
-{
-public:
-    PathShapeActor();
-
-    virtual ~PathShapeActor();
-
-    /// \~chinese
-    /// @brief 开始添加路径
-    /// @param begin_pos 起始点
-    void BeginPath(Point const& begin_pos = Point());
-
-    /// \~chinese
-    /// @brief 结束添加路径
-    /// @param closed 路径是否闭合
-    void EndPath(bool closed = true);
-
-    /// \~chinese
-    /// @brief 添加一条线段
-    /// @param point 线段端点
-    void AddLine(Point const& point);
-
-    /// \~chinese
-    /// @brief 添加多条线段
-    /// @param points 线段端点集合
-    void AddLines(Vector<Point> const& points);
-
-    /// \~chinese
-    /// @brief 添加一条三次方贝塞尔曲线
-    /// @param point1 贝塞尔曲线的第一个控制点
-    /// @param point2 贝塞尔曲线的第二个控制点
-    /// @param point3 贝塞尔曲线的终点
-    void AddBezier(Point const& point1, Point const& point2, Point const& point3);
-
-    /// \~chinese
-    /// @brief 添加弧线
-    /// @param point 椭圆圆心
-    /// @param radius 椭圆半径
-    /// @param rotation 椭圆旋转角度
-    /// @param clockwise 顺时针 or 逆时针
-    /// @param is_small 是否取小于 180° 的弧
-    void AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true, bool is_small = true);
-
-    /// \~chinese
-    /// @brief 清除路径
-    void ClearPath();
-
-private:
-    GeometrySink sink_;
-};
 
 /** @} */
 

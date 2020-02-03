@@ -22,10 +22,10 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/macros.h>
 
-#pragma warning(push)
-#pragma warning(disable : 4091)
-#include <dbghelp.h>
-#pragma warning(pop)
+KGE_SUPPRESS_WARNING_PUSH
+KGE_SUPPRESS_WARNING(4091)
+#include <dbghelp.h>  // ignored on left of 'type' when no variable is declared
+KGE_SUPPRESS_WARNING_POP
 
 namespace kiwano
 {
