@@ -104,10 +104,11 @@ void DebugActor::OnUpdate(Duration dt)
     }
 #endif
 
-    ss << "Render: " << Renderer::Instance().GetStatus().duration.Milliseconds() << "ms" << std::endl;
+    const auto& status = Renderer::Instance().GetContext().GetStatus();
 
-    ss << "Primitives / sec: " << std::fixed << Renderer::Instance().GetStatus().primitives * frame_time_.size()
-       << std::endl;
+    ss << "Render: " << status.duration.Milliseconds() << "ms" << std::endl;
+
+    ss << "Primitives / sec: " << std::fixed << status.primitives * frame_time_.size() << std::endl;
 
     ss << "Memory: ";
     {

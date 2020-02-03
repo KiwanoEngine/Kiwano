@@ -58,9 +58,7 @@ typedef ID3D11DeviceResources ID3DDeviceResources;
  */
 class KGE_API Renderer
     : public Singleton<Renderer>
-    , public RenderComponent
     , public EventComponent
-    , public RenderContext
 {
     friend Singleton<Renderer>;
 
@@ -202,6 +200,26 @@ public:
 
 public:
     /// \~chinese
+    /// @brief 开始渲染
+    void BeginDraw();
+
+    /// \~chinese
+    /// @brief 结束渲染
+    void EndDraw();
+
+    /// \~chinese
+    /// @brief 清除绘制内容
+    void Clear();
+
+    /// \~chinese
+    /// @brief 将绘制内容呈现至窗口
+    void Present();
+
+    /// \~chinese
+    /// @brief 获取渲染上下文
+    RenderContext& GetContext();
+
+    /// \~chinese
     /// @brief 获取目标窗口
     WindowHandle GetTargetWindow() const;
 
@@ -222,10 +240,6 @@ public:
 
     void DestroyComponent() override;
 
-    void BeforeRender() override;
-
-    void AfterRender() override;
-
     void HandleEvent(Event* evt) override;
 
 private:
@@ -238,14 +252,14 @@ private:
     void ResizeTarget(uint32_t width, uint32_t height);
 
 private:
-    bool         vsync_;
-    WindowHandle target_window_;
-    Color        clear_color_;
-    Size         output_size_;
+    bool          vsync_;
+    WindowHandle  target_window_;
+    Color         clear_color_;
+    Size          output_size_;
+    RenderContext render_ctx_;
 
     ComPtr<ID2DDeviceResources>           d2d_res_;
     ComPtr<ID3DDeviceResources>           d3d_res_;
-    ComPtr<ID2D1DrawingStateBlock>        drawing_state_block_;
     ComPtr<IFontCollectionLoader>         font_collection_loader_;
     ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
     ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
@@ -266,6 +280,11 @@ inline Size const& Renderer::GetOutputSize() const
 inline Color const& Renderer::GetClearColor() const
 {
     return clear_color_;
+}
+
+inline RenderContext& Renderer::GetContext()
+{
+    return render_ctx_;
 }
 
 inline ID2DDeviceResources* Renderer::GetD2DDeviceResources()

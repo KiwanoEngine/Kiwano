@@ -54,10 +54,6 @@ public:
     void OnUpdate(Duration dt) override;
 
 private:
-    void NewFrame();
-
-    void Render();
-
     void UpdateMousePos();
 
     void UpdateMouseCursor();

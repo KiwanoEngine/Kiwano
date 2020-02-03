@@ -238,19 +238,28 @@ private:
     /// @brief 增加渲染图元数量
     void IncreasePrimitivesCount(uint32_t increase = 1) const;
 
-private:
-    bool                      antialias_;
-    bool                      fast_global_transform_;
-    float                     brush_opacity_;
-    TextAntialiasMode         text_antialias_;
-    ComPtr<ITextRenderer>     text_renderer_;
-    ComPtr<ID2D1RenderTarget> render_ctx_;
-    BrushPtr                  current_brush_;
-    Rect                      visible_size_;
-    Matrix3x2                 global_transform_;
+    /// \~chinese
+    /// @brief 保存绘制状态
+    void SaveDrawingState();
 
-    mutable bool   collecting_status_;
-    mutable Status status_;
+    /// \~chinese
+    /// @brief 恢复绘制状态
+    void RestoreDrawingState();
+
+private:
+    bool              antialias_;
+    bool              fast_global_transform_;
+    mutable bool      collecting_status_;
+    float             brush_opacity_;
+    TextAntialiasMode text_antialias_;
+    BrushPtr          current_brush_;
+    Rect              visible_size_;
+    Matrix3x2         global_transform_;
+    mutable Status    status_;
+
+    ComPtr<ITextRenderer>          text_renderer_;
+    ComPtr<ID2D1RenderTarget>      render_target_;
+    ComPtr<ID2D1DrawingStateBlock> drawing_state_;
 };
 
 /// \~chinese
@@ -296,8 +305,8 @@ inline RenderContext::Status const& RenderContext::GetStatus() const
 
 inline ComPtr<ID2D1RenderTarget> RenderContext::GetRenderTarget() const
 {
-    KGE_ASSERT(render_ctx_);
-    return render_ctx_;
+    KGE_ASSERT(render_target_);
+    return render_target_;
 }
 
 inline ComPtr<ITextRenderer> RenderContext::GetTextRenderer() const

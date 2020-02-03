@@ -234,7 +234,8 @@ HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_
 
     // Create the Direct2D device object and a corresponding context.
     ComPtr<ID2D1Device> device;
-    HRESULT             hr = factory_->CreateDevice(dxgi_device.get(), &device);
+
+    HRESULT hr = factory_->CreateDevice(dxgi_device.get(), &device);
 
     if (SUCCEEDED(hr))
     {
@@ -261,7 +262,8 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
     // Create a Direct2D target bitmap associated with the
     // swap chain back buffer and set it as the current target.
     ComPtr<IDXGISurface> dxgi_back_buffer;
-    HRESULT              hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
+
+    HRESULT hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
 
     if (SUCCEEDED(hr))
     {
@@ -342,7 +344,8 @@ HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>&
         return E_UNEXPECTED;
 
     ComPtr<ID2D1Bitmap> output;
-    HRESULT             hr = device_context_->CreateBitmapFromWicBitmap(converter.get(), properties, &output);
+
+    HRESULT hr = device_context_->CreateBitmapFromWicBitmap(converter.get(), properties, &output);
 
     if (SUCCEEDED(hr))
     {
@@ -358,7 +361,8 @@ HRESULT D2DDeviceResources::CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapD
         return E_UNEXPECTED;
 
     ComPtr<IWICBitmapDecoder> decoder_output;
-    HRESULT                   hr = imaging_factory_->CreateDecoderFromFilename(file_path.c_str(), nullptr, GENERIC_READ,
+
+    HRESULT hr = imaging_factory_->CreateDecoderFromFilename(file_path.c_str(), nullptr, GENERIC_READ,
                                                              WICDecodeMetadataCacheOnLoad, &decoder_output);
 
     if (SUCCEEDED(hr))

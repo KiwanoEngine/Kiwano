@@ -90,12 +90,23 @@ void ImGuiModule::OnUpdate(Duration dt)
 
 void ImGuiModule::BeforeRender()
 {
-    NewFrame();
+    ImGui_Impl_NewFrame();
+
+    ImGuiIO& io = ImGui::GetIO();
+    KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
+
+    // Setup display size (every frame to accommodate for window resizing)
+    Size display_size = Renderer::Instance().GetOutputSize();
+    io.DisplaySize    = ImVec2(display_size.x, display_size.y);
+
+    ImGui::NewFrame();
 }
 
 void ImGuiModule::AfterRender()
 {
-    Render();
+    ImGui::Render();
+
+    ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImGuiModule::HandleEvent(Event* evt)
@@ -155,27 +166,6 @@ void ImGuiModule::HandleEvent(Event* evt)
             io.AddInputCharacter(static_cast<ImWchar>(ch));
         }
     }
-}
-
-void ImGuiModule::NewFrame()
-{
-    ImGui_Impl_NewFrame();
-
-    ImGuiIO& io = ImGui::GetIO();
-    KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
-
-    // Setup display size (every frame to accommodate for window resizing)
-    Size display_size = Renderer::Instance().GetOutputSize();
-    io.DisplaySize    = ImVec2(display_size.x, display_size.y);
-
-    ImGui::NewFrame();
-}
-
-void ImGuiModule::Render()
-{
-    ImGui::Render();
-
-    ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImGuiModule::UpdateMousePos()

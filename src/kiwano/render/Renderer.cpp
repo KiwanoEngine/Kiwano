@@ -45,9 +45,8 @@ void Renderer::SetupComponent()
     target_window_ = Window::Instance().GetHandle();
     output_size_   = Window::Instance().GetSize();
 
-    d2d_res_             = nullptr;
-    d3d_res_             = nullptr;
-    drawing_state_block_ = nullptr;
+    d2d_res_ = nullptr;
+    d3d_res_ = nullptr;
 
     HRESULT hr = target_window_ ? S_OK : E_FAIL;
 
@@ -61,16 +60,10 @@ void Renderer::SetupComponent()
         {
             hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
 
-            // DrawingStateBlock
-            if (SUCCEEDED(hr))
-            {
-                hr = d2d_res_->GetFactory()->CreateDrawingStateBlock(&drawing_state_block_);
-            }
-
             // Other device resources
             if (SUCCEEDED(hr))
             {
-                hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+                hr = render_ctx_.CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
             }
 
             // FontFileLoader and FontCollectionLoader
@@ -116,7 +109,7 @@ void Renderer::DestroyComponent()
 {
     KGE_SYS_LOG(L"Destroying device resources");
 
-    DiscardDeviceResources();
+    render_ctx_.DiscardDeviceResources();
 
     d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
     res_font_file_loader_.reset();
@@ -124,34 +117,39 @@ void Renderer::DestroyComponent()
     d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.get());
     res_font_collection_loader_.reset();
 
-    drawing_state_block_.reset();
     d2d_res_.reset();
     d3d_res_.reset();
 
     ::CoUninitialize();
 }
 
-void Renderer::BeforeRender()
+void Renderer::BeginDraw()
 {
-    KGE_ASSERT(d3d_res_ && IsValid());
+    KGE_ASSERT(render_ctx_.IsValid());
+
+    render_ctx_.SaveDrawingState();
+    render_ctx_.BeginDraw();
+}
+
+void Renderer::EndDraw()
+{
+    KGE_ASSERT(render_ctx_.IsValid());
+
+    render_ctx_.EndDraw();
+    render_ctx_.RestoreDrawingState();
+}
+
+void Renderer::Clear()
+{
+    KGE_ASSERT(d3d_res_);
 
     HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
-
-    if (SUCCEEDED(hr))
-    {
-        GetRenderTarget()->SaveDrawingState(drawing_state_block_.get());
-        BeginDraw();
-    }
-
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::AfterRender()
+void Renderer::Present()
 {
-    KGE_ASSERT(d3d_res_ && IsValid());
-
-    EndDraw();
-    GetRenderTarget()->RestoreDrawingState(drawing_state_block_.get());
+    KGE_ASSERT(d3d_res_);
 
     HRESULT hr = d3d_res_->Present(vsync_);
 
@@ -175,7 +173,7 @@ void Renderer::HandleEvent(Event* evt)
 
 HRESULT Renderer::HandleDeviceLost()
 {
-    KGE_ASSERT(d3d_res_ && d2d_res_ && render_ctx_);
+    KGE_ASSERT(d3d_res_ && d2d_res_ && render_ctx_.IsValid());
 
     HRESULT hr = d3d_res_->HandleDeviceLost();
 
@@ -186,7 +184,7 @@ HRESULT Renderer::HandleDeviceLost()
 
     if (SUCCEEDED(hr))
     {
-        hr = CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+        hr = render_ctx_.CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
     }
     return hr;
 }
@@ -939,7 +937,8 @@ void Renderer::ResizeTarget(uint32_t width, uint32_t height)
     {
         output_size_.x = static_cast<float>(width);
         output_size_.y = static_cast<float>(height);
-        hr             = d3d_res_->SetLogicalSize(output_size_);
+
+        hr = d3d_res_->SetLogicalSize(output_size_);
     }
 
     if (SUCCEEDED(hr))
@@ -949,7 +948,7 @@ void Renderer::ResizeTarget(uint32_t width, uint32_t height)
 
     if (SUCCEEDED(hr))
     {
-        Resize(reinterpret_cast<const Size&>(GetRenderTarget()->GetSize()));
+        render_ctx_.Resize(output_size_);
     }
 
     win32::ThrowIfFailed(hr);

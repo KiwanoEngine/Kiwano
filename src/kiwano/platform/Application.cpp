@@ -62,7 +62,7 @@ void Application::Run(bool debug)
     if (debug)
     {
         Director::Instance().ShowDebugInfo(true);
-        Renderer::Instance().SetCollectingStatus(true);
+        Renderer::Instance().GetContext().SetCollectingStatus(true);
     }
 
     // Everything is ready
@@ -185,6 +185,9 @@ void Application::Update()
 
 void Application::Render()
 {
+    Renderer& renderer = Renderer::Instance();
+    renderer.Clear();
+
     // Before render
     for (auto c : render_comps_)
     {
@@ -192,17 +195,20 @@ void Application::Render()
     }
 
     // Rendering
-    Renderer& renderer = Renderer::Instance();
+    renderer.BeginDraw();
     for (auto c : render_comps_)
     {
-        c->OnRender(renderer);
+        c->OnRender(renderer.GetContext());
     }
+    renderer.EndDraw();
 
     // After render
     for (auto rit = render_comps_.rbegin(); rit != render_comps_.rend(); ++rit)
     {
         (*rit)->AfterRender();
     }
+
+    renderer.Present();
 }
 
 void Application::DispatchEvent(Event* evt)
