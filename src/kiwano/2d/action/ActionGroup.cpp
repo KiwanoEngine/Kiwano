@@ -29,12 +29,12 @@ namespace kiwano
 //-------------------------------------------------------
 
 ActionGroup::ActionGroup()
-    : sequence_(true)
+    : sync_(false)
 {
 }
 
-ActionGroup::ActionGroup(Vector<ActionPtr> const& actions, bool sequence)
-    : sequence_(sequence)
+ActionGroup::ActionGroup(Vector<ActionPtr> const& actions, bool sync)
+    : sync_(sync)
 {
     this->Add(actions);
 }
@@ -52,7 +52,7 @@ void ActionGroup::Init(Actor* target)
     current_ = actions_.first_item();
     current_->Restart(target);  // init first action
 
-    if (!sequence_)
+    if (sync_)
     {
         // init all actions
         for (; current_; current_ = current_->next_item())
@@ -64,7 +64,7 @@ void ActionGroup::Init(Actor* target)
 
 void ActionGroup::Update(Actor* target, Duration dt)
 {
-    if (sequence_)
+    if (!sync_)
     {
         if (current_)
         {
@@ -116,30 +116,29 @@ void ActionGroup::Add(Vector<ActionPtr> const& actions)
 
 ActionPtr ActionGroup::Clone() const
 {
-    auto group = new (std::nothrow) ActionGroup();
-    if (group)
+    Vector<ActionPtr> actions;
+    if (!actions_.empty())
     {
-        for (auto action = actions_.first_item(); action; action = action->next_item())
+        for (auto action = actions_.last_item(); action; action = action->prev_item())
         {
-            if (action)
-            {
-                group->Add(action->Clone());
-            }
+            actions.push_back(action->Clone());
         }
     }
+    ActionPtr group = new (std::nothrow) ActionGroup(actions, sync_);
     return group;
 }
 
 ActionPtr ActionGroup::Reverse() const
 {
-    auto group = new (std::nothrow) ActionGroup();
-    if (group && !actions_.empty())
+    Vector<ActionPtr> actions;
+    if (!actions_.empty())
     {
         for (auto action = actions_.last_item(); action; action = action->prev_item())
         {
-            group->Add(action->Reverse());
+            actions.push_back(action->Reverse());
         }
     }
+    ActionPtr group = new (std::nothrow) ActionGroup(actions, sync_);
     return group;
 }
 

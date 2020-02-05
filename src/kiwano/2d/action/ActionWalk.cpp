@@ -32,7 +32,7 @@ ActionWalk::ActionWalk(Duration duration, bool rotating, float start, float end,
 {
 }
 
-ActionWalk::ActionWalk(Duration duration, Geometry const& path, bool rotating, float start, float end, EaseFunc func)
+ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float start, float end, EaseFunc func)
     : ActionWalk(duration, rotating, start, end, func)
 {
     path_ = path;
@@ -60,14 +60,14 @@ ActionPtr ActionWalk::Reverse() const
 
 void ActionWalk::Init(Actor* target)
 {
-    if (!path_.IsValid())
+    if (!path_ || !path_->IsValid())
     {
         Done();
         return;
     }
 
     start_pos_ = target->GetPosition();
-    length_    = path_.GetLength();
+    length_    = path_->GetLength();
 }
 
 void ActionWalk::UpdateTween(Actor* target, float percent)
@@ -75,7 +75,7 @@ void ActionWalk::UpdateTween(Actor* target, float percent)
     float distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 
     Point point, tangent;
-    if (path_.ComputePointAtLength(distance, point, tangent))
+    if (path_->ComputePointAtLength(distance, point, tangent))
     {
         target->SetPosition(start_pos_ + point);
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/Geometry.h>
+#include <kiwano/render/Shape.h>
 
 namespace kiwano
 {
@@ -55,7 +55,7 @@ public:
 
     /// \~chinese
     /// @brief 获取几何蒙层
-    Geometry const& GetMaskGeometry() const;
+    ShapePtr GetMaskShape() const;
 
     /// \~chinese
     /// @brief 获取几何蒙层变换
@@ -71,7 +71,7 @@ public:
 
     /// \~chinese
     /// @brief 设置几何蒙层
-    void SetMaskGeometry(Geometry const& mask);
+    void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
     /// @brief 设置几何蒙层变换
@@ -85,7 +85,7 @@ private:
 private:
     Rect               area_;
     float              opacity_;
-    Geometry           mask_;
+    ShapePtr           mask_;
     Matrix3x2          mask_transform_;
     ComPtr<ID2D1Layer> layer_;
 };
@@ -107,7 +107,7 @@ inline float LayerArea::GetOpacity() const
     return opacity_;
 }
 
-inline Geometry const& LayerArea::GetMaskGeometry() const
+inline ShapePtr LayerArea::GetMaskShape() const
 {
     return mask_;
 }
@@ -127,7 +127,7 @@ inline void LayerArea::SetOpacity(float opacity)
     opacity_ = opacity;
 }
 
-inline void LayerArea::SetMaskGeometry(Geometry const& mask)
+inline void LayerArea::SetMaskShape(ShapePtr mask)
 {
     mask_ = mask;
 }

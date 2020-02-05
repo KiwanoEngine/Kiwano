@@ -18,21 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/Geometry.h>
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/Shape.h>
+#include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
 
-Geometry::Geometry() {}
+Shape::Shape() {}
 
-bool Geometry::IsValid() const
+bool Shape::IsValid() const
 {
     return geo_ != nullptr;
 }
 
-Rect Geometry::GetBoundingBox() const
+Rect Shape::GetBoundingBox() const
 {
     Rect bounds;
     if (geo_)
@@ -43,7 +43,7 @@ Rect Geometry::GetBoundingBox() const
     return bounds;
 }
 
-Rect Geometry::GetBoundingBox(Matrix3x2 const& transform) const
+Rect Shape::GetBoundingBox(Matrix3x2 const& transform) const
 {
     Rect bounds;
     if (geo_)
@@ -54,7 +54,7 @@ Rect Geometry::GetBoundingBox(Matrix3x2 const& transform) const
     return bounds;
 }
 
-float Geometry::GetLength() const
+float Shape::GetLength() const
 {
     float length = 0.f;
     if (geo_)
@@ -65,7 +65,7 @@ float Geometry::GetLength() const
     return length;
 }
 
-bool Geometry::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
+bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
 {
     if (geo_)
     {
@@ -77,12 +77,12 @@ bool Geometry::ComputePointAtLength(float length, Point& point, Vec2& tangent) c
     return false;
 }
 
-void Geometry::Clear()
+void Shape::Clear()
 {
     geo_.reset();
 }
 
-float Geometry::ComputeArea() const
+float Shape::ComputeArea() const
 {
     if (!geo_)
         return 0.f;
@@ -93,7 +93,7 @@ float Geometry::ComputeArea() const
     return area;
 }
 
-bool Geometry::ContainsPoint(Point const& point, const Matrix3x2* transform) const
+bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
 {
     if (!geo_)
         return false;
@@ -105,38 +105,38 @@ bool Geometry::ContainsPoint(Point const& point, const Matrix3x2* transform) con
     return !!ret;
 }
 
-Geometry Geometry::CreateLine(Point const& begin, Point const& end)
+ShapePtr Shape::CreateLine(Point const& begin, Point const& end)
 {
-    Geometry output;
-    Renderer::Instance().CreateLineGeometry(output, begin, end);
+    ShapePtr output = new Shape;
+    Renderer::Instance().CreateLineShape(*output, begin, end);
     return output;
 }
 
-Geometry Geometry::CreateRect(Rect const& rect)
+ShapePtr Shape::CreateRect(Rect const& rect)
 {
-    Geometry output;
-    Renderer::Instance().CreateRectGeometry(output, rect);
+    ShapePtr output = new Shape;
+    Renderer::Instance().CreateRectShape(*output, rect);
     return output;
 }
 
-Geometry Geometry::CreateRoundedRect(Rect const& rect, Vec2 const& radius)
+ShapePtr Shape::CreateRoundedRect(Rect const& rect, Vec2 const& radius)
 {
-    Geometry output;
-    Renderer::Instance().CreateRoundedRectGeometry(output, rect, radius);
+    ShapePtr output = new Shape;
+    Renderer::Instance().CreateRoundedRectShape(*output, rect, radius);
     return output;
 }
 
-Geometry Geometry::CreateCircle(Point const& center, float radius)
+ShapePtr Shape::CreateCircle(Point const& center, float radius)
 {
-    Geometry output;
-    Renderer::Instance().CreateEllipseGeometry(output, center, Vec2{ radius, radius });
+    ShapePtr output = new Shape;
+    Renderer::Instance().CreateEllipseShape(*output, center, Vec2{ radius, radius });
     return output;
 }
 
-Geometry Geometry::CreateEllipse(Point const& center, Vec2 const& radius)
+ShapePtr Shape::CreateEllipse(Point const& center, Vec2 const& radius)
 {
-    Geometry output;
-    Renderer::Instance().CreateEllipseGeometry(output, center, radius);
+    ShapePtr output = new Shape;
+    Renderer::Instance().CreateEllipseShape(*output, center, radius);
     return output;
 }
 

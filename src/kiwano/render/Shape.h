@@ -19,13 +19,16 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
 
 namespace kiwano
 {
 class RenderContext;
 class Renderer;
-class GeometrySink;
+class ShapeSink;
+
+KGE_DECLARE_SMART_PTR(Shape);
 
 /**
  * \addtogroup Render
@@ -36,14 +39,14 @@ class GeometrySink;
  * \~chinese
  * @brief 几何形状
  */
-class KGE_API Geometry
+class KGE_API Shape : public virtual ObjectBase
 {
     friend class RenderContext;
     friend class Renderer;
-    friend class GeometrySink;
+    friend class ShapeSink;
 
 public:
-    Geometry();
+    Shape();
 
     /// \~chinese
     /// @brief 是否有效
@@ -88,35 +91,35 @@ public:
     /// @brief 创建线段
     /// @param begin 线段起点
     /// @param end 线段终点
-    static Geometry CreateLine(Point const& begin, Point const& end);
+    static ShapePtr CreateLine(Point const& begin, Point const& end);
 
     /// \~chinese
     /// @brief 创建矩形
     /// @param rect 矩形
-    static Geometry CreateRect(Rect const& rect);
+    static ShapePtr CreateRect(Rect const& rect);
 
     /// \~chinese
     /// @brief 创建圆角矩形
     /// @param rect 矩形
     /// @param radius 矩形圆角半径
-    static Geometry CreateRoundedRect(Rect const& rect, Vec2 const& radius);
+    static ShapePtr CreateRoundedRect(Rect const& rect, Vec2 const& radius);
 
     /// \~chinese
     /// @brief 创建圆形
     /// @param center 圆形原点
     /// @param radius 圆形半径
-    static Geometry CreateCircle(Point const& center, float radius);
+    static ShapePtr CreateCircle(Point const& center, float radius);
 
     /// \~chinese
     /// @brief 创建椭圆形
     /// @param center 椭圆原点
     /// @param radius 椭圆半径
-    static Geometry CreateEllipse(Point const& center, Vec2 const& radius);
+    static ShapePtr CreateEllipse(Point const& center, Vec2 const& radius);
 
 private:
     ComPtr<ID2D1Geometry> GetGeometry() const;
 
-    void SetGeometry(ComPtr<ID2D1Geometry> geometry);
+    void SetGeometry(ComPtr<ID2D1Geometry> shape);
 
 private:
     ComPtr<ID2D1Geometry> geo_;
@@ -124,13 +127,14 @@ private:
 
 /** @} */
 
-inline ComPtr<ID2D1Geometry> Geometry::GetGeometry() const
+inline ComPtr<ID2D1Geometry> Shape::GetGeometry() const
 {
     return geo_;
 }
 
-inline void Geometry::SetGeometry(ComPtr<ID2D1Geometry> geometry)
+inline void Shape::SetGeometry(ComPtr<ID2D1Geometry> shape)
 {
-    geo_ = geometry;
+    geo_ = shape;
 }
+
 }  // namespace kiwano

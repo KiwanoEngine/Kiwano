@@ -18,67 +18,70 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
 
-GeometrySink::GeometrySink() {}
+ShapeSink::ShapeSink() {}
 
-GeometrySink::~GeometrySink()
+ShapeSink::~ShapeSink()
 {
     Close();
 }
 
-void GeometrySink::Open()
+void ShapeSink::Open()
 {
     if (!IsOpened())
     {
         path_geo_.reset();
-        Renderer::Instance().CreateGeometrySink(*this);
+        Renderer::Instance().CreateShapeSink(*this);
 
         win32::ThrowIfFailed(path_geo_->Open(&sink_));
     }
 }
 
-void GeometrySink::Close()
+void ShapeSink::Close()
 {
     if (IsOpened())
     {
         win32::ThrowIfFailed(sink_->Close());
         sink_.reset();
     }
+
+    shape_ = new Shape;
+    shape_->SetGeometry(path_geo_);
 }
 
-bool GeometrySink::IsOpened() const
+bool ShapeSink::IsOpened() const
 {
     return sink_ != nullptr;
 }
 
-Geometry GeometrySink::GetGeometry()
+ShapePtr ShapeSink::GetShape()
 {
     Close();
-
-    Geometry geo;
-    geo.SetGeometry(path_geo_);
-    return geo;
+    return shape_;
 }
 
-GeometrySink& GeometrySink::AddGeometry(Geometry const& input, const Matrix3x2* input_matrix)
+ShapeSink& ShapeSink::AddShape(ShapePtr input, const Matrix3x2* input_matrix)
 {
     if (!IsOpened())
     {
         Open();
     }
 
-    ComPtr<ID2D1Geometry> geo = input.geo_;
-    win32::ThrowIfFailed(
-        geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.get()));
+    if (input && input->IsValid())
+    {
+        ComPtr<ID2D1Geometry> geo = input->GetGeometry();
+        win32::ThrowIfFailed(
+            geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.get()));
+    }
     return (*this);
 }
 
-GeometrySink& GeometrySink::BeginPath(Point const& begin_pos)
+ShapeSink& ShapeSink::BeginPath(Point const& begin_pos)
 {
     if (!IsOpened())
     {
@@ -89,35 +92,35 @@ GeometrySink& GeometrySink::BeginPath(Point const& begin_pos)
     return (*this);
 }
 
-GeometrySink& GeometrySink::EndPath(bool closed)
+ShapeSink& ShapeSink::EndPath(bool closed)
 {
     KGE_ASSERT(sink_);
     sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
     return (*this);
 }
 
-GeometrySink& GeometrySink::AddLine(Point const& point)
+ShapeSink& ShapeSink::AddLine(Point const& point)
 {
     KGE_ASSERT(sink_);
     sink_->AddLine(DX::ConvertToPoint2F(point));
     return (*this);
 }
 
-GeometrySink& GeometrySink::AddLines(Vector<Point> const& points)
+ShapeSink& ShapeSink::AddLines(Vector<Point> const& points)
 {
     KGE_ASSERT(sink_);
     sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(&points[0]), static_cast<uint32_t>(points.size()));
     return (*this);
 }
 
-GeometrySink& kiwano::GeometrySink::AddLines(const Point* points, size_t count)
+ShapeSink& kiwano::ShapeSink::AddLines(const Point* points, size_t count)
 {
     KGE_ASSERT(sink_);
     sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), UINT32(count));
     return (*this);
 }
 
-GeometrySink& GeometrySink::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+ShapeSink& ShapeSink::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 {
     KGE_ASSERT(sink_);
     sink_->AddBezier(
@@ -125,8 +128,7 @@ GeometrySink& GeometrySink::AddBezier(Point const& point1, Point const& point2, 
     return (*this);
 }
 
-GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise,
-                                   bool is_small)
+ShapeSink& ShapeSink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 {
     KGE_ASSERT(sink_);
     sink_->AddArc(D2D1::ArcSegment(DX::ConvertToPoint2F(point), DX::ConvertToSizeF(radius), rotation,
@@ -135,8 +137,7 @@ GeometrySink& GeometrySink::AddArc(Point const& point, Size const& radius, float
     return (*this);
 }
 
-GeometrySink& GeometrySink::Combine(Geometry const& geo_a, Geometry const& geo_b, CombineMode mode,
-                                    const Matrix3x2* matrix)
+ShapeSink& ShapeSink::Combine(Shape const& geo_a, Shape const& geo_b, CombineMode mode, const Matrix3x2* matrix)
 {
     if (!IsOpened())
     {
@@ -150,7 +151,7 @@ GeometrySink& GeometrySink::Combine(Geometry const& geo_a, Geometry const& geo_b
     return (*this);
 }
 
-void GeometrySink::Clear()
+void ShapeSink::Clear()
 {
     Close();
 

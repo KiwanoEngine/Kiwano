@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/Geometry.h>
+#include <kiwano/render/Shape.h>
 
 namespace kiwano
 {
@@ -43,14 +43,14 @@ enum class CombineMode
 
 /// \~chinese
 /// @brief 几何形状生成器
-class KGE_API GeometrySink : protected Noncopyable
+class KGE_API ShapeSink : protected Noncopyable
 {
     friend class Renderer;
 
 public:
-    GeometrySink();
+    ShapeSink();
 
-    ~GeometrySink();
+    ~ShapeSink();
 
     /// \~chinese
     /// @brief 打开输入流
@@ -68,48 +68,48 @@ public:
     /// \~chinese
     /// @brief 获取生成的几何形状
     /// @note 若还未关闭输入流，则自动关闭
-    Geometry GetGeometry();
+    ShapePtr GetShape();
 
     /// \~chinese
     /// @brief 添加几何形状的轮廓
     /// @param input 输入的形状
     /// @param input_matrix 应用到输入形状上的二维变换
     /// @note 若还未打开输入流，则自动打开
-    GeometrySink& AddGeometry(Geometry const& input, const Matrix3x2* input_matrix = nullptr);
+    ShapeSink& AddShape(ShapePtr input, const Matrix3x2* input_matrix = nullptr);
 
     /// \~chinese
     /// @brief 开始添加路径
     /// @param begin_pos 路径起始点
     /// @note 若还未打开输入流，则自动打开
-    GeometrySink& BeginPath(Point const& begin_pos = Point());
+    ShapeSink& BeginPath(Point const& begin_pos = Point());
 
     /// \~chinese
     /// @brief 结束路径
     /// @param closed 路径是否闭合
-    GeometrySink& EndPath(bool closed = false);
+    ShapeSink& EndPath(bool closed = false);
 
     /// \~chinese
     /// @brief 添加一条线段
     /// @param point 端点
-    GeometrySink& AddLine(Point const& point);
+    ShapeSink& AddLine(Point const& point);
 
     /// \~chinese
     /// @brief 添加多条线段
     /// @param points 端点集合
-    GeometrySink& AddLines(Vector<Point> const& points);
+    ShapeSink& AddLines(Vector<Point> const& points);
 
     /// \~chinese
     /// @brief 添加多条线段
     /// @param points 端点数组
     /// @param count 端点数量
-    GeometrySink& AddLines(const Point* points, size_t count);
+    ShapeSink& AddLines(const Point* points, size_t count);
 
     /// \~chinese
     /// @brief 添加一条三次方贝塞尔曲线
     /// @param point1 贝塞尔曲线的第一个控制点
     /// @param point2 贝塞尔曲线的第二个控制点
     /// @param point3 贝塞尔曲线的终点
-    GeometrySink& AddBezier(Point const& point1, Point const& point2, Point const& point3);
+    ShapeSink& AddBezier(Point const& point1, Point const& point2, Point const& point3);
 
     /// \~chinese
     /// @brief 添加弧线
@@ -118,7 +118,7 @@ public:
     /// @param rotation 椭圆旋转角度
     /// @param clockwise 顺时针 or 逆时针
     /// @param is_small 是否取小于 180° 的弧
-    GeometrySink& AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true,
+    ShapeSink& AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true,
                          bool is_small = true);
 
     /// \~chinese
@@ -128,7 +128,7 @@ public:
     /// @param mode 组合方式
     /// @param matrix 应用到输入形状B上的二维变换
     /// @note 若还未打开输入流，则自动打开
-    GeometrySink& Combine(Geometry const& geo_a, Geometry const& geo_b, CombineMode mode,
+    ShapeSink& Combine(Shape const& geo_a, Shape const& geo_b, CombineMode mode,
                           const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
@@ -145,28 +145,29 @@ private:
     void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink);
 
 private:
+    ShapePtr                  shape_;
     ComPtr<ID2D1PathGeometry> path_geo_;
     ComPtr<ID2D1GeometrySink> sink_;
 };
 
 /** @} */
 
-inline ComPtr<ID2D1PathGeometry> GeometrySink::GetPathGeometry() const
+inline ComPtr<ID2D1PathGeometry> ShapeSink::GetPathGeometry() const
 {
     return path_geo_;
 }
 
-inline void GeometrySink::SetPathGeometry(ComPtr<ID2D1PathGeometry> path)
+inline void ShapeSink::SetPathGeometry(ComPtr<ID2D1PathGeometry> path)
 {
     path_geo_ = path;
 }
 
-inline ComPtr<ID2D1GeometrySink> GeometrySink::GetGeometrySink() const
+inline ComPtr<ID2D1GeometrySink> ShapeSink::GetGeometrySink() const
 {
     return sink_;
 }
 
-inline void GeometrySink::SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)
+inline void ShapeSink::SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)
 {
     sink_ = sink;
 }

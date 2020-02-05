@@ -318,7 +318,7 @@ public:
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    static inline TweenHelper Walk(Duration duration, Geometry const& path, bool rotating = false, float start = 0.f,
+    static inline TweenHelper Walk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
                                    float end = 1.f)
     {
         return TweenHelper(new kiwano::ActionWalk(duration, path, rotating, start, end));
@@ -353,18 +353,10 @@ public:
     /// \~chinese
     /// @brief 动画组合
     /// @param actions 动画集合
-    /// @param sequence 动画按顺序依次执行或同时执行
-    static inline ActionHelper Group(Vector<ActionPtr> const& actions, bool sequence = true)
+    /// @param sync 同步执行
+    static inline ActionHelper Group(Vector<ActionPtr> const& actions, bool sync = false)
     {
-        return ActionHelper(new kiwano::ActionGroup(actions, sequence));
-    }
-
-    /// \~chinese
-    /// @brief 同步动画组合
-    /// @param actions 动画集合
-    static inline ActionHelper Multiple(Vector<ActionPtr> const& actions)
-    {
-        return ActionHelper(new kiwano::ActionGroup(actions, false));
+        return ActionHelper(new kiwano::ActionGroup(actions, sync));
     }
 };
 

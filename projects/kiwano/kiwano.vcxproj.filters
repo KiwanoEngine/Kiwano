@@ -231,12 +231,6 @@
     <ClInclude Include="..\..\src\kiwano\render\Font.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\Geometry.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\GeometrySink.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -284,6 +278,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h">
       <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\Shape.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -440,12 +440,6 @@
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\Geometry.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\GeometrySink.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -484,6 +478,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp">
       <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Shape.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

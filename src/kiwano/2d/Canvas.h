@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
@@ -54,6 +54,11 @@ public:
     void EndDraw();
 
     /// \~chinese
+    /// @brief 画形状轮廓
+    /// @param shape 形状
+    void DrawShape(ShapePtr shape);
+
+    /// \~chinese
     /// @brief 画线段
     /// @param begin 线段起点
     /// @param end 线段终点
@@ -81,6 +86,11 @@ public:
     /// @param rect 矩形
     /// @param radius 矩形圆角半径
     void DrawRoundedRect(Rect const& rect, Vec2 const& radius);
+
+    /// \~chinese
+    /// @brief 填充形状
+    /// @param shape 形状
+    void FillShape(ShapePtr shape);
 
     /// \~chinese
     /// @brief 填充圆形
@@ -269,12 +279,12 @@ private:
     void UpdateCache() const;
 
 private:
-    float        stroke_width_;
-    TextStyle    text_style_;
-    StrokeStyle  stroke_style_;
-    GeometrySink geo_sink_;
-    BrushPtr     fill_brush_;
-    BrushPtr     stroke_brush_;
+    float       stroke_width_;
+    TextStyle   text_style_;
+    StrokeStyle stroke_style_;
+    ShapeSink   shape_sink_;
+    BrushPtr    fill_brush_;
+    BrushPtr    stroke_brush_;
 
     mutable bool                    cache_expired_;
     mutable TexturePtr              texture_cached_;

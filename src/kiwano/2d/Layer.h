@@ -65,7 +65,7 @@ public:
     /// \~chinese
     /// @brief 设置几何蒙层
     /// @param mask 蒙层的几何形状
-    void SetMaskGeometry(Geometry const& mask);
+    void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
     /// @brief 设置几何蒙层的二维变换

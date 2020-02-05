@@ -22,7 +22,7 @@
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/render/Brush.h>
-#include <kiwano/render/Geometry.h>
+#include <kiwano/render/Shape.h>
 #include <kiwano/render/LayerArea.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
@@ -73,11 +73,11 @@ public:
 
     /// \~chinese
     /// @brief 是否有效
-    void DrawGeometry(Geometry const& geometry, float stroke_width, const StrokeStyle& stroke = StrokeStyle());
+    void DrawShape(Shape const& shape, float stroke_width, const StrokeStyle& stroke = StrokeStyle());
 
     /// \~chinese
     /// @brief 是否有效
-    void FillGeometry(Geometry const& geometry);
+    void FillShape(Shape const& shape);
 
     /// \~chinese
     /// @brief 是否有效

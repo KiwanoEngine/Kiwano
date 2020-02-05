@@ -101,28 +101,28 @@ void RenderContext::EndDraw()
     }
 }
 
-void RenderContext::DrawGeometry(Geometry const& geometry, float stroke_width, const StrokeStyle& stroke)
+void RenderContext::DrawShape(Shape const& shape, float stroke_width, const StrokeStyle& stroke)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (geometry.IsValid())
+    if (shape.IsValid())
     {
-        render_target_->DrawGeometry(geometry.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
-                                  stroke.GetStrokeStyle().get());
+        render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
+                                     stroke.GetStrokeStyle().get());
 
         IncreasePrimitivesCount();
     }
 }
 
-void RenderContext::FillGeometry(Geometry const& geometry)
+void RenderContext::FillShape(Shape const& shape)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (geometry.IsValid())
+    if (shape.IsValid())
     {
-        render_target_->FillGeometry(geometry.GetGeometry().get(), current_brush_->GetBrush().get());
+        render_target_->FillGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get());
 
         IncreasePrimitivesCount();
     }
@@ -133,8 +133,8 @@ void RenderContext::DrawLine(Point const& point1, Point const& point2, float str
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), current_brush_->GetBrush().get(),
-                          stroke_width, stroke.GetStrokeStyle().get());
+    render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
+                             current_brush_->GetBrush().get(), stroke_width, stroke.GetStrokeStyle().get());
 
     IncreasePrimitivesCount();
 }
@@ -145,7 +145,7 @@ void RenderContext::DrawRectangle(Rect const& rect, float stroke_width, const St
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
-                               stroke.GetStrokeStyle().get());
+                                  stroke.GetStrokeStyle().get());
 
     IncreasePrimitivesCount();
 }
@@ -167,7 +167,7 @@ void RenderContext::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, f
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                      current_brush_->GetBrush().get(), stroke_width, stroke.GetStrokeStyle().get());
+                                         current_brush_->GetBrush().get(), stroke_width, stroke.GetStrokeStyle().get());
 
     IncreasePrimitivesCount();
 }
@@ -178,7 +178,7 @@ void RenderContext::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                      current_brush_->GetBrush().get());
+                                         current_brush_->GetBrush().get());
 
     IncreasePrimitivesCount();
 }
@@ -189,7 +189,7 @@ void RenderContext::DrawEllipse(Point const& center, Vec2 const& radius, float s
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                             current_brush_->GetBrush().get(), stroke_width, stroke.GetStrokeStyle().get());
+                                current_brush_->GetBrush().get(), stroke_width, stroke.GetStrokeStyle().get());
 
     IncreasePrimitivesCount();
 }
@@ -200,7 +200,7 @@ void RenderContext::FillEllipse(Point const& center, Vec2 const& radius)
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                             current_brush_->GetBrush().get());
+                                current_brush_->GetBrush().get());
 
     IncreasePrimitivesCount();
 }
@@ -221,7 +221,7 @@ void RenderContext::DrawTexture(Texture const& texture, const Rect* src_rect, co
                         : D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
         render_target_->DrawBitmap(texture.GetBitmap().get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
-                                brush_opacity_, mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
+                                   brush_opacity_, mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
 
         IncreasePrimitivesCount();
     }
@@ -269,7 +269,8 @@ void RenderContext::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, 
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
     ComPtr<ID2D1Bitmap> saved_bitmap;
-    HRESULT hr = render_target_->CreateBitmap(D2D1::SizeU(size.x, size.y), D2D1::BitmapProperties(format), &saved_bitmap);
+    HRESULT             hr =
+        render_target_->CreateBitmap(D2D1::SizeU(size.x, size.y), D2D1::BitmapProperties(format), &saved_bitmap);
 
     if (SUCCEEDED(hr))
     {
@@ -285,7 +286,7 @@ void RenderContext::PushClipRect(Rect const& clip_rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     render_target_->PushAxisAlignedClip(DX::ConvertToRectF(clip_rect),
-                                     antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED);
+                                        antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED);
 }
 
 void RenderContext::PopClipRect()
@@ -314,8 +315,12 @@ void RenderContext::PushLayer(LayerArea& layer)
 
     if (layer.IsValid())
     {
+        ComPtr<ID2D1Geometry> mask;
+        if (layer.GetMaskShape())
+            mask = layer.GetMaskShape()->GetGeometry();
+
         render_target_->PushLayer(
-            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetAreaRect()), layer.GetMaskGeometry().GetGeometry().get(),
+            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetAreaRect()), mask.get(),
                                   antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
                                   DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
                                   D2D1_LAYER_OPTIONS_NONE),

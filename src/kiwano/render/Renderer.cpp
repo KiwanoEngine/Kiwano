@@ -21,7 +21,7 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/Renderer.h>
 
 namespace kiwano
@@ -629,7 +629,7 @@ void Renderer::CreateTextLayout(TextLayout& layout)
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos)
+void Renderer::CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -659,13 +659,13 @@ void Renderer::CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point c
 
     if (SUCCEEDED(hr))
     {
-        geo.SetGeometry(path_geo);
+        shape.SetGeometry(path_geo);
     }
 
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
+void Renderer::CreateRectShape(Shape& shape, Rect const& rect)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -681,13 +681,13 @@ void Renderer::CreateRectGeometry(Geometry& geo, Rect const& rect)
 
     if (SUCCEEDED(hr))
     {
-        geo.SetGeometry(output);
+        shape.SetGeometry(output);
     }
 
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius)
+void Renderer::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -704,13 +704,13 @@ void Renderer::CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 c
 
     if (SUCCEEDED(hr))
     {
-        geo.SetGeometry(output);
+        shape.SetGeometry(output);
     }
 
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius)
+void Renderer::CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -727,13 +727,13 @@ void Renderer::CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 co
 
     if (SUCCEEDED(hr))
     {
-        geo.SetGeometry(output);
+        shape.SetGeometry(output);
     }
 
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateGeometrySink(GeometrySink& sink)
+void Renderer::CreateShapeSink(ShapeSink& sink)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)

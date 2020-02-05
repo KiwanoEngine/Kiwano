@@ -137,32 +137,32 @@ public:
     /// @param[out] geo 形状
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
-    void CreateLineGeometry(Geometry& geo, Point const& begin_pos, Point const& end_pos);
+    void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos);
 
     /// \~chinese
     /// @brief 创建矩形形状
     /// @param[out] geo 形状
     /// @param[in] rect 矩形大小
-    void CreateRectGeometry(Geometry& geo, Rect const& rect);
+    void CreateRectShape(Shape& shape, Rect const& rect);
 
     /// \~chinese
     /// @brief 创建圆角矩形形状
     /// @param[out] geo 形状
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
-    void CreateRoundedRectGeometry(Geometry& geo, Rect const& rect, Vec2 const& radius);
+    void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius);
 
     /// \~chinese
     /// @brief 创建椭圆形状
     /// @param[out] geo 形状
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
-    void CreateEllipseGeometry(Geometry& geo, Point const& center, Vec2 const& radius);
+    void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius);
 
     /// \~chinese
     /// @brief 创建几何图形生成器
     /// @param[out] sink 形状生成器
-    void CreateGeometrySink(GeometrySink& sink);
+    void CreateShapeSink(ShapeSink& sink);
 
     /// \~chinese
     /// @brief 创建纹理渲染上下文

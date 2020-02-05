@@ -42,8 +42,8 @@ public:
     /// \~chinese
     /// @brief 动画组合
     /// @param actions 动画集合
-    /// @param sequence 动画按顺序依次执行或同时执行
-    explicit ActionGroup(Vector<ActionPtr> const& actions, bool sequence = true);
+    /// @param sync 同步执行
+    explicit ActionGroup(Vector<ActionPtr> const& actions, bool sync = false);
 
     virtual ~ActionGroup();
 
@@ -75,7 +75,7 @@ protected:
     void Update(Actor* target, Duration dt) override;
 
 private:
-    bool       sequence_;
+    bool       sync_;
     ActionPtr  current_;
     ActionList actions_;
 };

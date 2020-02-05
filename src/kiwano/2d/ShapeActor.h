@@ -21,8 +21,8 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/render/Brush.h>
-#include <kiwano/render/Geometry.h>
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/Shape.h>
+#include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/StrokeStyle.h>
 
 namespace kiwano
@@ -71,7 +71,7 @@ public:
 
     /// \~chinese
     /// @brief 获取形状
-    Geometry GetGeometry() const;
+    ShapePtr GetShape() const;
 
     /// \~chinese
     /// @brief 获取边界
@@ -115,7 +115,7 @@ public:
 
     /// \~chinese
     /// @brief 设置几何形状
-    void SetGeometry(Geometry const& geometry);
+    void SetShape(ShapePtr shape);
 
     void OnRender(RenderContext& ctx) override;
 
@@ -128,7 +128,7 @@ private:
     float       stroke_width_;
     StrokeStyle stroke_style_;
     Rect        bounds_;
-    Geometry    geo_;
+    ShapePtr    shape_;
 };
 
 /// \~chinese
@@ -333,9 +333,9 @@ inline const StrokeStyle& ShapeActor::GetStrokeStyle() const
 {
     return stroke_style_;
 }
-inline Geometry ShapeActor::GetGeometry() const
+inline ShapePtr ShapeActor::GetShape() const
 {
-    return geo_;
+    return shape_;
 }
 
 inline Point const& LineActor::GetBeginPoint() const

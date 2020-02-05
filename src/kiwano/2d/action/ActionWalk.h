@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/2d/action/ActionTween.h>
-#include <kiwano/render/Geometry.h>
-#include <kiwano/render/GeometrySink.h>
+#include <kiwano/render/Shape.h>
+#include <kiwano/render/ShapeSink.h>
 
 namespace kiwano
 {
@@ -49,12 +49,12 @@ public:
     /// \~chinese
     /// @brief 构造路径行走动画
     /// @param duration 持续时长
-    /// @param path 路径几何形状
+    /// @param path 路径形状
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
     /// @param func 动画速度缓动函数
-    ActionWalk(Duration duration, Geometry const& path, bool rotating = false, float start = 0.f, float end = 1.f,
+    ActionWalk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f,
                EaseFunc func = nullptr);
 
     /// \~chinese
@@ -67,11 +67,11 @@ public:
 
     /// \~chinese
     /// @brief 获取路线
-    Geometry const& GetPath() const;
+    ShapePtr const& GetPath() const;
 
     /// \~chinese
     /// @brief 设置路径几何形状
-    void SetPath(Geometry const& path);
+    void SetPath(ShapePtr path);
 
 protected:
     void Init(Actor* target) override;
@@ -79,22 +79,22 @@ protected:
     void UpdateTween(Actor* target, float percent) override;
 
 private:
-    bool         rotating_;
-    float        start_;
-    float        end_;
-    float        length_;
-    Point        start_pos_;
-    Geometry     path_;
+    bool     rotating_;
+    float    start_;
+    float    end_;
+    float    length_;
+    Point    start_pos_;
+    ShapePtr path_;
 };
 
 /** @} */
 
-inline Geometry const& ActionWalk::GetPath() const
+inline ShapePtr const& ActionWalk::GetPath() const
 {
     return path_;
 }
 
-inline void ActionWalk::SetPath(Geometry const& path)
+inline void ActionWalk::SetPath(ShapePtr path)
 {
     path_ = path;
 }

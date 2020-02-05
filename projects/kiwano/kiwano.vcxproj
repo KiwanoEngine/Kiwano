@@ -73,8 +73,8 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
-    <ClInclude Include="..\..\src\kiwano\render\Geometry.h" />
-    <ClInclude Include="..\..\src\kiwano\render\GeometrySink.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
+    <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h" />
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h" />
     <ClInclude Include="..\..\src\kiwano\render\LayerArea.h" />
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h" />
@@ -142,8 +142,8 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\Geometry.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\GeometrySink.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\LayerArea.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp" />

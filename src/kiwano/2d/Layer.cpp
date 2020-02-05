@@ -42,9 +42,9 @@ void Layer::SetOpacity(float opacity)
     area_.SetOpacity(opacity);
 }
 
-void Layer::SetMaskGeometry(Geometry const& mask)
+void Layer::SetMaskShape(ShapePtr mask)
 {
-    area_.SetMaskGeometry(mask);
+    area_.SetMaskShape(mask);
 }
 
 void Layer::SetMaskTransform(Matrix3x2 const& transform)

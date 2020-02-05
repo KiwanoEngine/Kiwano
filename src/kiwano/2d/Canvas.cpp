@@ -106,6 +106,17 @@ void Canvas::PopClipRect()
     ctx_->PopClipRect();
 }
 
+void Canvas::DrawShape(ShapePtr shape)
+{
+    if (!shape)
+        return;
+
+    InitRenderTargetAndBrushs();
+    ctx_->SetCurrentBrush(stroke_brush_);
+    ctx_->DrawShape(*shape, stroke_width_, stroke_style_);
+    cache_expired_ = true;
+}
+
 void Canvas::DrawLine(Point const& begin, Point const& end)
 {
     InitRenderTargetAndBrushs();
@@ -143,6 +154,17 @@ void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
     InitRenderTargetAndBrushs();
     ctx_->SetCurrentBrush(stroke_brush_);
     ctx_->DrawRoundedRectangle(rect, radius, stroke_width_, stroke_style_);
+    cache_expired_ = true;
+}
+
+void Canvas::FillShape(ShapePtr shape)
+{
+    if (!shape)
+        return;
+
+    InitRenderTargetAndBrushs();
+    ctx_->SetCurrentBrush(fill_brush_);
+    ctx_->FillShape(*shape);
     cache_expired_ = true;
 }
 
@@ -207,39 +229,39 @@ void Canvas::DrawTextLayout(TextLayout const& layout, Point const& point)
 
 void Canvas::BeginPath(Point const& begin_pos)
 {
-    geo_sink_.BeginPath(begin_pos);
+    shape_sink_.BeginPath(begin_pos);
 }
 
 void Canvas::EndPath(bool closed)
 {
-    geo_sink_.EndPath(closed);
+    shape_sink_.EndPath(closed);
 }
 
 void Canvas::AddLine(Point const& point)
 {
-    geo_sink_.AddLine(point);
+    shape_sink_.AddLine(point);
 }
 
 void Canvas::AddLines(Vector<Point> const& points)
 {
-    geo_sink_.AddLines(points);
+    shape_sink_.AddLines(points);
 }
 
 void Canvas::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 {
-    geo_sink_.AddBezier(point1, point2, point3);
+    shape_sink_.AddBezier(point1, point2, point3);
 }
 
 void Canvas::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 {
-    geo_sink_.AddArc(point, radius, rotation, clockwise, is_small);
+    shape_sink_.AddArc(point, radius, rotation, clockwise, is_small);
 }
 
 void Canvas::StrokePath()
 {
     InitRenderTargetAndBrushs();
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawGeometry(geo_sink_.GetGeometry(), stroke_width_, stroke_style_);
+    ctx_->DrawShape(*shape_sink_.GetShape(), stroke_width_, stroke_style_);
     cache_expired_ = true;
 }
 
@@ -247,7 +269,7 @@ void Canvas::FillPath()
 {
     InitRenderTargetAndBrushs();
     ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillGeometry(geo_sink_.GetGeometry());
+    ctx_->FillShape(*shape_sink_.GetShape());
     cache_expired_ = true;
 }
 

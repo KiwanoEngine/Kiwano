@@ -24,6 +24,7 @@
 
 namespace kiwano
 {
+
 ShapeActor::ShapeActor()
     : stroke_width_(1.f)
     , stroke_style_()
@@ -39,15 +40,18 @@ Rect ShapeActor::GetBounds() const
 
 Rect ShapeActor::GetBoundingBox() const
 {
-    if (!geo_.IsValid())
+    if (!shape_)
         return Rect{};
 
-    return geo_.GetBoundingBox(GetTransformMatrix());
+    return shape_->GetBoundingBox(GetTransformMatrix());
 }
 
 bool ShapeActor::ContainsPoint(const Point& point) const
 {
-    return geo_.ContainsPoint(point, &GetTransformMatrix());
+    if (!shape_)
+        return false;
+
+    return shape_->ContainsPoint(point, &GetTransformMatrix());
 }
 
 void ShapeActor::SetStrokeWidth(float width)
@@ -60,12 +64,12 @@ void ShapeActor::SetStrokeStyle(const StrokeStyle& stroke_style)
     stroke_style_ = stroke_style;
 }
 
-void ShapeActor::SetGeometry(Geometry const& geometry)
+void ShapeActor::SetShape(ShapePtr shape)
 {
-    geo_ = geometry;
-    if (geo_.IsValid())
+    shape_ = shape;
+    if (shape_)
     {
-        bounds_ = geo_.GetBoundingBox();
+        bounds_ = shape_->GetBoundingBox();
         SetSize(bounds_.GetSize());
     }
     else
@@ -77,29 +81,25 @@ void ShapeActor::SetGeometry(Geometry const& geometry)
 
 void ShapeActor::OnRender(RenderContext& ctx)
 {
-    // Create default brush
-    if (!fill_brush_)
+    if (shape_)
     {
-        fill_brush_ = new Brush;
-        fill_brush_->SetColor(Color::White);
+        if (stroke_brush_)
+        {
+            ctx.SetCurrentBrush(stroke_brush_);
+            ctx.DrawShape(*shape_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
+        }
+
+        if (fill_brush_)
+        {
+            ctx.SetCurrentBrush(fill_brush_);
+            ctx.FillShape(*shape_);
+        }
     }
-
-    if (!stroke_brush_)
-    {
-        stroke_brush_ = new Brush;
-        stroke_brush_->SetColor(Color::Transparent);
-    }
-
-    ctx.SetCurrentBrush(stroke_brush_);
-    ctx.DrawGeometry(geo_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
-
-    ctx.SetCurrentBrush(fill_brush_);
-    ctx.FillGeometry(geo_);
 }
 
 bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 {
-    return geo_.IsValid() && Actor::CheckVisibility(ctx);
+    return shape_ && Actor::CheckVisibility(ctx);
 }
 
 //-------------------------------------------------------
@@ -116,7 +116,7 @@ void LineActor::SetLine(Point const& begin, Point const& end)
     {
         begin_ = begin;
         end_   = end;
-        SetGeometry(Geometry::CreateLine(begin, end));
+        SetShape(Shape::CreateLine(begin, end));
     }
 }
 
@@ -133,7 +133,7 @@ void RectActor::SetRectSize(Size const& size)
     if (size != rect_size_)
     {
         rect_size_ = size;
-        SetGeometry(Geometry::CreateRect(Rect{ Point{}, size }));
+        SetShape(Shape::CreateRect(Rect{ Point{}, size }));
     }
 }
 
@@ -161,7 +161,7 @@ void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
     {
         rect_size_ = size;
         radius_    = radius;
-        SetGeometry(Geometry::CreateRoundedRect(Rect{ Point{}, size }, radius));
+        SetShape(Shape::CreateRoundedRect(Rect{ Point{}, size }, radius));
     }
 }
 
@@ -181,7 +181,7 @@ void CircleActor::SetRadius(float radius)
     if (radius_ != radius)
     {
         radius_ = radius;
-        SetGeometry(Geometry::CreateCircle(Point{ radius, radius }, radius));
+        SetShape(Shape::CreateCircle(Point{ radius, radius }, radius));
     }
 }
 
@@ -198,7 +198,7 @@ void EllipseActor::SetRadius(Vec2 const& radius)
     if (radius_ != radius)
     {
         radius_ = radius;
-        SetGeometry(Geometry::CreateEllipse(radius, radius));
+        SetShape(Shape::CreateEllipse(radius, radius));
     }
 }
 
@@ -214,8 +214,7 @@ void PolygonActor::SetVertices(Vector<Point> const& points)
 {
     if (points.size() > 1)
     {
-        SetGeometry(
-            GeometrySink().BeginPath(points[0]).AddLines(&points[1], points.size() - 1).EndPath(true).GetGeometry());
+        SetShape(ShapeSink().BeginPath(points[0]).AddLines(&points[1], points.size() - 1).EndPath(true).GetShape());
     }
 }
 
