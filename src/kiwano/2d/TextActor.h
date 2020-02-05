@@ -161,14 +161,6 @@ public:
     /// @details 文字布局是懒更新的，手动更新文字布局以更新节点状态
     void UpdateLayout();
 
-    /// \~chinese
-    /// @brief 设置默认文字样式
-    static void SetDefaultStyle(TextStyle const& style);
-
-    /// \~chinese
-    /// @brief 获取默认文字样式
-    static const TextStyle& GetDefaultStyle();
-
     void OnRender(RenderContext& ctx) override;
 
     void OnUpdate(Duration dt) override;

@@ -24,34 +24,6 @@
 
 namespace kiwano
 {
-namespace
-{
-TextStyle text_default_style;
-
-void InitDefaultTextStyle()
-{
-    static bool inited = false;
-    if (!inited)
-    {
-        inited = true;
-
-        // 默认使用白色画刷填充文字
-        text_default_style.fill_brush = new Brush;
-        text_default_style.fill_brush->SetColor(Color::White);
-    }
-}
-}  // namespace
-
-void TextActor::SetDefaultStyle(TextStyle const& style)
-{
-    text_default_style = style;
-}
-
-const TextStyle& TextActor::GetDefaultStyle()
-{
-    InitDefaultTextStyle();
-    return text_default_style;
-}
 
 TextActor::TextActor()
     : TextActor(String())
@@ -59,7 +31,7 @@ TextActor::TextActor()
 }
 
 TextActor::TextActor(String const& text)
-    : TextActor(text, GetDefaultStyle())
+    : TextActor(text, TextStyle())
 {
 }
 
@@ -111,7 +83,7 @@ bool TextActor::CheckVisibility(RenderContext& ctx) const
 
 void TextActor::SetFillColor(Color const& color)
 {
-    if (!text_layout_.GetFillBrush() || text_layout_.GetFillBrush() == GetDefaultStyle().fill_brush)
+    if (!text_layout_.GetFillBrush())
     {
         BrushPtr brush = new Brush;
         text_layout_.SetFillBrush(brush);
@@ -121,7 +93,7 @@ void TextActor::SetFillColor(Color const& color)
 
 void TextActor::SetOutlineColor(Color const& outline_color)
 {
-    if (!text_layout_.GetOutlineBrush() || text_layout_.GetOutlineBrush() == GetDefaultStyle().outline_brush)
+    if (!text_layout_.GetOutlineBrush())
     {
         BrushPtr brush = new Brush;
         text_layout_.SetOutlineBrush(brush);
