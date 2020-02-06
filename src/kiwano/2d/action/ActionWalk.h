@@ -70,7 +70,7 @@ public:
     ShapePtr const& GetPath() const;
 
     /// \~chinese
-    /// @brief 设置路径几何形状
+    /// @brief 设置路径形状
     void SetPath(ShapePtr path);
 
 protected:

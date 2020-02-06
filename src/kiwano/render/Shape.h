@@ -37,7 +37,7 @@ KGE_DECLARE_SMART_PTR(Shape);
 
 /**
  * \~chinese
- * @brief 几何形状
+ * @brief 形状
  */
 class KGE_API Shape : public virtual ObjectBase
 {

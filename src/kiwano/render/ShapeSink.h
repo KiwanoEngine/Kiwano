@@ -32,7 +32,7 @@ class Renderer;
  */
 
 /// \~chinese
-/// @brief 几何形状组合方式
+/// @brief 形状组合方式
 enum class CombineMode
 {
     Union,      ///< 并集 (A + B)
@@ -42,7 +42,7 @@ enum class CombineMode
 };
 
 /// \~chinese
-/// @brief 几何形状生成器
+/// @brief 形状生成器
 class KGE_API ShapeSink : protected Noncopyable
 {
     friend class Renderer;
@@ -66,12 +66,12 @@ public:
     bool IsOpened() const;
 
     /// \~chinese
-    /// @brief 获取生成的几何形状
+    /// @brief 获取生成的形状
     /// @note 若还未关闭输入流，则自动关闭
     ShapePtr GetShape();
 
     /// \~chinese
-    /// @brief 添加几何形状的轮廓
+    /// @brief 添加形状的轮廓
     /// @param input 输入的形状
     /// @param input_matrix 应用到输入形状上的二维变换
     /// @note 若还未打开输入流，则自动打开
@@ -122,7 +122,7 @@ public:
                          bool is_small = true);
 
     /// \~chinese
-    /// @brief 组合几何形状，并将结果输出到流中
+    /// @brief 组合形状，并将结果输出到流中
     /// @param geo_a 输入的形状A
     /// @param geo_b 输入的形状B
     /// @param mode 组合方式

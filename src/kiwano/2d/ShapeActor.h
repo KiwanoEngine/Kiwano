@@ -114,7 +114,7 @@ public:
     void SetStrokeStyle(const StrokeStyle& stroke_style);
 
     /// \~chinese
-    /// @brief 设置几何形状
+    /// @brief 设置形状
     void SetShape(ShapePtr shape);
 
     void OnRender(RenderContext& ctx) override;

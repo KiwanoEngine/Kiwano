@@ -64,7 +64,7 @@ public:
 
     /// \~chinese
     /// @brief 设置几何蒙层
-    /// @param mask 蒙层的几何形状
+    /// @param mask 蒙层的形状
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese

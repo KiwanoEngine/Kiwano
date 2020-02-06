@@ -314,7 +314,7 @@ public:
     /// \~chinese
     /// @brief 构造路径行走动画
     /// @param duration 持续时长
-    /// @param path 路径几何形状
+    /// @param path 路径形状
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
