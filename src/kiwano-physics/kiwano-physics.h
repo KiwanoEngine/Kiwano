@@ -25,5 +25,4 @@
 #include <kiwano-physics/ContactEvent.h>
 #include <kiwano-physics/Fixture.h>
 #include <kiwano-physics/Joint.h>
-#include <kiwano-physics/Shape.h>
 #include <kiwano-physics/World.h>

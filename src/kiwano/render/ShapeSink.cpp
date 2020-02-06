@@ -137,17 +137,20 @@ ShapeSink& ShapeSink::AddArc(Point const& point, Size const& radius, float rotat
     return (*this);
 }
 
-ShapeSink& ShapeSink::Combine(Shape const& geo_a, Shape const& geo_b, CombineMode mode, const Matrix3x2* matrix)
+ShapeSink& ShapeSink::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix)
 {
     if (!IsOpened())
     {
         Open();
     }
 
-    ComPtr<ID2D1Geometry> geo_a_raw = geo_a.geo_;
-    ComPtr<ID2D1Geometry> geo_b_raw = geo_b.geo_;
-    win32::ThrowIfFailed(geo_a_raw->CombineWithGeometry(geo_b_raw.get(), D2D1_COMBINE_MODE(mode),
-                                                        DX::ConvertToMatrix3x2F(matrix), sink_.get()));
+    if (shape_a && shape_b)
+    {
+        ComPtr<ID2D1Geometry> geo_a_raw = shape_a->geo_;
+        ComPtr<ID2D1Geometry> geo_b_raw = shape_b->geo_;
+        win32::ThrowIfFailed(geo_a_raw->CombineWithGeometry(geo_b_raw.get(), D2D1_COMBINE_MODE(mode),
+                                                            DX::ConvertToMatrix3x2F(matrix), sink_.get()));
+    }
     return (*this);
 }
 

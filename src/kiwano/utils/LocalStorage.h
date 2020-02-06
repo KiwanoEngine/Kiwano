@@ -20,10 +20,13 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/macros.h>
+#include <kiwano/core/ObjectBase.h>
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(LocalStorage);
+
 /// \~chinese
 /// @brief 本地存储
 /// @details LocalStorage是一个简易的持久化工具，存放（字符串-值）的键值对
@@ -34,7 +37,7 @@ namespace kiwano
 ///     data.SaveInt(L"best-score", 20);        // 保存最高分 20
 ///     int best = data.GetInt(L"best-score");  // 读取之前储存的最高分
 ///   @endcode
-class KGE_API LocalStorage
+class KGE_API LocalStorage : public virtual ObjectBase
 {
 public:
     /// \~chinese

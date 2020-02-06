@@ -24,6 +24,13 @@
 
 namespace kiwano
 {
+
+StagePtr Stage::Create()
+{
+    StagePtr ptr = new (std::nothrow) Stage;
+    return ptr;
+}
+
 Stage::Stage()
 {
     SetStage(this);

@@ -55,6 +55,36 @@ RadialGradientStyle::RadialGradientStyle(Point const& center, Vec2 const& offset
 {
 }
 
+BrushPtr Brush::Create(Color const& color)
+{
+    BrushPtr ptr = new (std::nothrow) Brush;
+    if (ptr)
+    {
+        ptr->SetColor(color);
+    }
+    return ptr;
+}
+
+BrushPtr Brush::Create(LinearGradientStyle const& style)
+{
+    BrushPtr ptr = new (std::nothrow) Brush;
+    if (ptr)
+    {
+        ptr->SetStyle(style);
+    }
+    return ptr;
+}
+
+BrushPtr Brush::Create(RadialGradientStyle const& style)
+{
+    BrushPtr ptr = new (std::nothrow) Brush;
+    if (ptr)
+    {
+        ptr->SetStyle(style);
+    }
+    return ptr;
+}
+
 Brush::Brush()
     : opacity_(1.f)
     , type_(Type::Unknown)
@@ -92,17 +122,17 @@ void Brush::SetColor(Color const& color)
             return;
         }
     }
-    Renderer::Instance().CreateSolidBrush(*this, color);
+    Renderer::Instance().CreateBrush(*this, color);
 }
 
 void Brush::SetStyle(LinearGradientStyle const& style)
 {
-    Renderer::Instance().CreateLinearGradientBrush(*this, style);
+    Renderer::Instance().CreateBrush(*this, style);
 }
 
 void Brush::SetStyle(RadialGradientStyle const& style)
 {
-    Renderer::Instance().CreateRadialGradientBrush(*this, style);
+    Renderer::Instance().CreateBrush(*this, style);
 }
 
 void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)

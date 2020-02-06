@@ -23,6 +23,31 @@
 namespace kiwano
 {
 
+TimerPtr Timer::Create(Callback const& cb, Duration interval, int times)
+{
+    TimerPtr ptr = new (std::nothrow) Timer;
+    if (ptr)
+    {
+        ptr->SetCallback(cb);
+        ptr->SetInterval(interval);
+        ptr->SetTotalRunTimes(times);
+    }
+    return ptr;
+}
+
+TimerPtr Timer::Create(String const& name, Callback const& cb, Duration interval, int times)
+{
+    TimerPtr ptr = new (std::nothrow) Timer;
+    if (ptr)
+    {
+        ptr->SetName(name);
+        ptr->SetCallback(cb);
+        ptr->SetInterval(interval);
+        ptr->SetTotalRunTimes(times);
+    }
+    return ptr;
+}
+
 Timer::Timer()
     : running_(true)
     , removeable_(false)
@@ -32,20 +57,6 @@ Timer::Timer()
     , elapsed_(0)
     , callback_()
 {
-}
-
-Timer::Timer(Callback const& cb, Duration interval, int times)
-    : Timer(String(), cb, interval, times)
-{
-}
-
-Timer::Timer(String const& name, Callback const& cb, Duration interval, int times)
-    : Timer()
-{
-    SetName(name);
-    SetCallback(cb);
-    SetInterval(interval);
-    SetTotalRunTimes(times);
 }
 
 void Timer::Update(Duration dt)

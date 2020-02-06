@@ -32,39 +32,37 @@ Contact::Contact()
 {
 }
 
-Contact::Contact(b2Contact* contact)
-    : Contact()
-{
-    SetB2Contact(contact);
-}
-
-Fixture Contact::GetFixtureA() const
+Fixture* Contact::GetFixtureA() const
 {
     KGE_ASSERT(contact_);
-    return Fixture(contact_->GetFixtureA());
+
+    Fixture* fixture = static_cast<Fixture*>(contact_->GetFixtureA()->GetUserData());
+    return fixture;
 }
 
-Fixture Contact::GetFixtureB() const
+Fixture* Contact::GetFixtureB() const
 {
     KGE_ASSERT(contact_);
-    return Fixture(contact_->GetFixtureB());
+
+    Fixture* fixture = static_cast<Fixture*>(contact_->GetFixtureB()->GetUserData());
+    return fixture;
 }
 
 Body* Contact::GetBodyA() const
 {
-    return GetFixtureA().GetBody();
+    return GetFixtureA()->GetBody();
 }
 
 Body* Contact::GetBodyB() const
 {
-    return GetFixtureB().GetBody();
+    return GetFixtureB()->GetBody();
 }
 
 void Contact::SetTangentSpeed(float speed)
 {
     KGE_ASSERT(contact_);
 
-    Body* body = GetFixtureA().GetBody();
+    Body* body = GetFixtureA()->GetBody();
     KGE_ASSERT(body);
 
     World* world = body->GetWorld();
@@ -77,7 +75,7 @@ float Contact::GetTangentSpeed() const
 {
     KGE_ASSERT(contact_);
 
-    const Body* body = GetFixtureA().GetBody();
+    const Body* body = GetFixtureA()->GetBody();
     KGE_ASSERT(body);
 
     const World* world = body->GetWorld();

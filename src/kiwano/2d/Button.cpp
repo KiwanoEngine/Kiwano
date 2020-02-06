@@ -30,21 +30,6 @@ Button::Button()
 {
 }
 
-Button::Button(const Callback& click)
-    : Button()
-{
-    this->SetClickCallback(click);
-}
-
-Button::Button(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out)
-    : Button()
-{
-    this->SetClickCallback(click);
-    this->SetPressedCallback(pressed);
-    this->SetMouseOverCallback(mouse_over);
-    this->SetMouseOutCallback(mouse_out);
-}
-
 Button::~Button() {}
 
 bool Button::IsEnable() const
@@ -157,18 +142,6 @@ void Button::UpdateStatus(Event* evt)
 }
 
 SpriteButton::SpriteButton()
-    : SpriteButton(nullptr, nullptr, nullptr, nullptr)
-{
-}
-
-SpriteButton::SpriteButton(Callback const& click)
-    : SpriteButton(click, nullptr, nullptr, nullptr)
-{
-}
-
-SpriteButton::SpriteButton(Callback const& click, Callback const& pressed, Callback const& mouse_over,
-                           Callback const& mouse_out)
-    : Button(click, pressed, mouse_over, mouse_out)
 {
     SetResponsible(true);
 
@@ -180,19 +153,31 @@ SpriteButton::SpriteButton(Callback const& click, Callback const& pressed, Callb
     AddListener<MouseClickEvent>(handler);
 }
 
+SpriteButtonPtr SpriteButton::Create(Callback const& click)
+{
+    SpriteButtonPtr ptr = new (std::nothrow) SpriteButton;
+    if (ptr)
+    {
+        ptr->SetClickCallback(click);
+    }
+    return ptr;
+}
+
+SpriteButtonPtr SpriteButton::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
+                                     Callback const& mouse_out)
+{
+    SpriteButtonPtr ptr = new (std::nothrow) SpriteButton;
+    if (ptr)
+    {
+        ptr->SetClickCallback(click);
+        ptr->SetPressedCallback(pressed);
+        ptr->SetMouseOverCallback(mouse_over);
+        ptr->SetMouseOutCallback(mouse_out);
+    }
+    return ptr;
+}
+
 TextButton::TextButton()
-    : TextButton(nullptr, nullptr, nullptr, nullptr)
-{
-}
-
-TextButton::TextButton(Callback const& click)
-    : TextButton(click, nullptr, nullptr, nullptr)
-{
-}
-
-TextButton::TextButton(Callback const& click, Callback const& pressed, Callback const& mouse_over,
-                       Callback const& mouse_out)
-    : Button(click, pressed, mouse_over, mouse_out)
 {
     SetResponsible(true);
 
@@ -202,6 +187,30 @@ TextButton::TextButton(Callback const& click, Callback const& pressed, Callback 
     AddListener<MouseDownEvent>(handler);
     AddListener<MouseUpEvent>(handler);
     AddListener<MouseClickEvent>(handler);
+}
+
+TextButtonPtr TextButton::Create(Callback const& click)
+{
+    TextButtonPtr ptr = new (std::nothrow) TextButton;
+    if (ptr)
+    {
+        ptr->SetClickCallback(click);
+    }
+    return ptr;
+}
+
+TextButtonPtr TextButton::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
+                                     Callback const& mouse_out)
+{
+    TextButtonPtr ptr = new (std::nothrow) TextButton;
+    if (ptr)
+    {
+        ptr->SetClickCallback(click);
+        ptr->SetPressedCallback(pressed);
+        ptr->SetMouseOverCallback(mouse_over);
+        ptr->SetMouseOutCallback(mouse_out);
+    }
+    return ptr;
 }
 
 }  // namespace kiwano

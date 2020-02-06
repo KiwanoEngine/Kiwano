@@ -24,6 +24,13 @@
 
 namespace kiwano
 {
+
+LayerPtr Layer::Create()
+{
+    LayerPtr ptr = new (std::nothrow) Layer;
+    return ptr;
+}
+
 Layer::Layer()
     : swallow_(false)
 {

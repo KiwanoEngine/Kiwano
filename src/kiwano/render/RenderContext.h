@@ -73,7 +73,7 @@ public:
 
     /// \~chinese
     /// @brief 是否有效
-    void DrawShape(Shape const& shape, float stroke_width, const StrokeStyle& stroke = StrokeStyle());
+    void DrawShape(Shape const& shape, float stroke_width, StrokeStylePtr stroke = nullptr);
 
     /// \~chinese
     /// @brief 是否有效
@@ -81,12 +81,11 @@ public:
 
     /// \~chinese
     /// @brief 是否有效
-    void DrawLine(Point const& point1, Point const& point2, float stroke_width,
-                  const StrokeStyle& stroke = StrokeStyle());
+    void DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStylePtr stroke = nullptr);
 
     /// \~chinese
     /// @brief 是否有效
-    void DrawRectangle(Rect const& rect, float stroke_width, const StrokeStyle& stroke = StrokeStyle());
+    void DrawRectangle(Rect const& rect, float stroke_width, StrokeStylePtr stroke = nullptr);
 
     /// \~chinese
     /// @brief 是否有效
@@ -95,7 +94,7 @@ public:
     /// \~chinese
     /// @brief 是否有效
     void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width,
-                              const StrokeStyle& stroke = StrokeStyle());
+                              StrokeStylePtr stroke = nullptr);
 
     /// \~chinese
     /// @brief 是否有效
@@ -103,8 +102,7 @@ public:
 
     /// \~chinese
     /// @brief 是否有效
-    void DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width,
-                     const StrokeStyle& stroke = StrokeStyle());
+    void DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStylePtr stroke = nullptr);
 
     /// \~chinese
     /// @brief 是否有效

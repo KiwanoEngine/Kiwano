@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 #include <kiwano/render/TextStyle.hpp>
 
 namespace kiwano
@@ -135,7 +135,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文字描边线相交样式
-    void SetOutlineStroke(const StrokeStyle& outline_stroke);
+    void SetOutlineStroke(StrokeStylePtr outline_stroke);
 
     /// \~chinese
     /// @brief 设置下划线
@@ -261,7 +261,7 @@ inline void TextLayout::SetOutlineWidth(float outline_width)
     style_.outline_width = outline_width;
 }
 
-inline void TextLayout::SetOutlineStroke(const StrokeStyle& outline_stroke)
+inline void TextLayout::SetOutlineStroke(StrokeStylePtr outline_stroke)
 {
     style_.outline_stroke = outline_stroke;
 }

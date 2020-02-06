@@ -151,6 +151,12 @@ public:
         }
     };
 
+    /// \~chinese
+    /// @brief 创建固定距离关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static DistanceJointPtr Create(World* world, Param const& param);
+
     DistanceJoint();
 
     /// \~chinese
@@ -210,6 +216,12 @@ public:
         }
     };
 
+    /// \~chinese
+    /// @brief 创建摩擦关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static FrictionJointPtr Create(World* world, Param const& param);
+
     FrictionJoint();
 
     /// \~chinese
@@ -263,6 +275,12 @@ public:
         }
     };
 
+    /// \~chinese
+    /// @brief 创建齿轮关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static GearJointPtr Create(World* world, Param const& param);
+
     GearJoint();
 
     /// \~chinese
@@ -309,6 +327,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建马达关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static MotorJointPtr Create(World* world, Param const& param);
 
     MotorJoint();
 
@@ -377,6 +401,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建平移关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static PrismaticJointPtr Create(World* world, Param const& param);
 
     PrismaticJoint();
 
@@ -477,6 +507,12 @@ public:
         }
     };
 
+    /// \~chinese
+    /// @brief 创建滑轮关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static PulleyJointPtr Create(World* world, Param const& param);
+
     PulleyJoint();
 
     /// \~chinese
@@ -554,6 +590,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建旋转关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static RevoluteJointPtr Create(World* world, Param const& param);
 
     RevoluteJoint();
 
@@ -650,6 +692,12 @@ public:
         }
     };
 
+    /// \~chinese
+    /// @brief 创建绳关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static RopeJointPtr Create(World* world, Param const& param);
+
     RopeJoint();
 
     /// \~chinese
@@ -694,6 +742,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建焊接关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static WeldJointPtr Create(World* world, Param const& param);
 
     WeldJoint();
 
@@ -764,6 +818,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建轮关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static WheelJointPtr Create(World* world, Param const& param);
 
     WheelJoint();
 
@@ -862,6 +922,12 @@ public:
         {
         }
     };
+
+    /// \~chinese
+    /// @brief 创建鼠标关节
+    /// @param world 物理世界
+    /// @param param 关节参数
+    static MouseJointPtr Create(World* world, Param const& param);
 
     MouseJoint();
 

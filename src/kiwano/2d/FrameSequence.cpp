@@ -23,12 +23,18 @@
 
 namespace kiwano
 {
-FrameSequence::FrameSequence() {}
 
-FrameSequence::FrameSequence(Vector<FramePtr> const& frames)
+FrameSequencePtr FrameSequence::Create(Vector<FramePtr> const& frames)
 {
-    this->AddFrames(frames);
+    FrameSequencePtr ptr = new (std::nothrow) FrameSequence;
+    if (ptr)
+    {
+        ptr->AddFrames(frames);
+    }
+    return ptr;
 }
+
+FrameSequence::FrameSequence() {}
 
 FrameSequence::~FrameSequence() {}
 

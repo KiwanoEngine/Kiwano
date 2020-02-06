@@ -24,9 +24,7 @@
 namespace kiwano
 {
 
-StrokeStyle::StrokeStyle() {}
-
-StrokeStyle StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset)
+StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset)
 {
     switch (dash)
     {
@@ -62,15 +60,20 @@ StrokeStyle StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, DashStyle
     default:
         break;
     }
-    return StrokeStyle();
+    return nullptr;
 }
 
-StrokeStyle StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size,
-                                float dash_offset)
+StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size,
+                                   float dash_offset)
 {
-    StrokeStyle stroke_style;
-    Renderer::Instance().CreateStrokeStyle(stroke_style, cap, line_join, dash_array, dash_size, dash_offset);
-    return stroke_style;
+    StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
+    if (ptr)
+    {
+        Renderer::Instance().CreateStrokeStyle(*ptr, cap, line_join, dash_array, dash_size, dash_offset);
+    }
+    return ptr;
 }
+
+StrokeStyle::StrokeStyle() {}
 
 }  // namespace kiwano

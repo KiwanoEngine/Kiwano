@@ -40,19 +40,17 @@ class KGE_API TextActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief 构建空的文本角色
-    TextActor();
-
-    /// \~chinese
-    /// @brief 构建文本角色
+    /// @brief 创建文本角色
     /// @param text 文字内容
-    explicit TextActor(const String& text);
+    static TextActorPtr Create(const String& text);
 
     /// \~chinese
-    /// @brief 构建文本角色
+    /// @brief 创建文本角色
     /// @param text 文字内容
     /// @param style 文本样式
-    TextActor(const String& text, const TextStyle& style);
+    static TextActorPtr Create(const String& text, const TextStyle& style);
+
+    TextActor();
 
     virtual ~TextActor();
 
@@ -146,7 +144,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文字描边线相交样式
-    void SetOutlineStroke(const StrokeStyle& outline_stroke);
+    void SetOutlineStroke(StrokeStylePtr outline_stroke);
 
     /// \~chinese
     /// @brief 设置是否显示下划线（默认值为 false）
@@ -286,7 +284,7 @@ inline void TextActor::SetOutlineWidth(float outline_width)
     text_layout_.SetOutlineWidth(outline_width);
 }
 
-inline void TextActor::SetOutlineStroke(const StrokeStyle& outline_stroke)
+inline void TextActor::SetOutlineStroke(StrokeStylePtr outline_stroke)
 {
     text_layout_.SetOutlineStroke(outline_stroke);
 }

@@ -69,18 +69,18 @@ struct FontWeight
 class KGE_API TextStyle
 {
 public:
-    FontPtr     font;            ///< 字体
-    String      font_family;     ///< 字体族
-    float       font_size;       ///< 字号
-    uint32_t    font_weight;     ///< 粗细值
-    bool        italic;          ///< 是否斜体
-    TextAlign   alignment;       ///< 对齐方式
-    float       wrap_width;      ///< 自动换行宽度
-    float       line_spacing;    ///< 行间距
-    BrushPtr    fill_brush;      ///< 填充画刷
-    BrushPtr    outline_brush;   ///< 描边画刷
-    float       outline_width;   ///< 描边线宽
-    StrokeStyle outline_stroke;  ///< 描边线样式
+    FontPtr        font;            ///< 字体
+    String         font_family;     ///< 字体族
+    float          font_size;       ///< 字号
+    uint32_t       font_weight;     ///< 粗细值
+    bool           italic;          ///< 是否斜体
+    TextAlign      alignment;       ///< 对齐方式
+    float          wrap_width;      ///< 自动换行宽度
+    float          line_spacing;    ///< 行间距
+    BrushPtr       fill_brush;      ///< 填充画刷
+    BrushPtr       outline_brush;   ///< 描边画刷
+    float          outline_width;   ///< 描边线宽
+    StrokeStylePtr outline_stroke;  ///< 描边线样式
 
 public:
     /**

@@ -24,6 +24,29 @@
 
 namespace kiwano
 {
+
+GifImagePtr GifImage::Create(String const& file_path)
+{
+    GifImagePtr ptr = new (std::nothrow) GifImage;
+    if (ptr)
+    {
+        if (!ptr->Load(file_path))
+            return nullptr;
+    }
+    return ptr;
+}
+
+GifImagePtr GifImage::Create(Resource const& res)
+{
+    GifImagePtr ptr = new (std::nothrow) GifImage;
+    if (ptr)
+    {
+        if (!ptr->Load(res))
+            return nullptr;
+    }
+    return ptr;
+}
+
 GifImage::GifImage()
     : frames_count_(0)
     , width_in_pixels_(0)

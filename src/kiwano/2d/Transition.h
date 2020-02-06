@@ -43,14 +43,15 @@ class KGE_API Transition : public virtual ObjectBase
     friend class Director;
 
 public:
-    /**
-     * \~chinese
-     * @brief 构建空的场景过渡动画
-     * @param duration 动画时长
-     */
-    explicit Transition(Duration duration);
+    Transition();
 
     virtual ~Transition();
+
+    /**
+     * \~chinese
+     * @brief 设置动画时长
+     */
+    void SetDuration(Duration dt);
 
     /**
      * \~chinese
@@ -115,10 +116,12 @@ class FadeTransition : public Transition
 public:
     /**
      * \~chinese
-     * @brief 构建淡入淡出过渡动画
+     * @brief 创建淡入淡出过渡动画
      * @param duration 动画时长
      */
-    explicit FadeTransition(Duration duration);
+    static FadeTransitionPtr Create(Duration duration);
+
+    FadeTransition();
 
 protected:
     void Update(Duration dt) override;
@@ -136,10 +139,12 @@ class EmergeTransition : public Transition
 public:
     /**
      * \~chinese
-     * @brief 构建渐变过渡动画
+     * @brief 创建渐变过渡动画
      * @param duration 动画时长
      */
-    explicit EmergeTransition(Duration duration);
+    static EmergeTransitionPtr Create(Duration duration);
+
+    EmergeTransition();
 
 protected:
     void Update(Duration dt) override;
@@ -157,10 +162,12 @@ class BoxTransition : public Transition
 public:
     /**
      * \~chinese
-     * @brief 构建盒状过渡动画
+     * @brief 创建盒状过渡动画
      * @param duration 动画时长
      */
-    explicit BoxTransition(Duration duration);
+    static BoxTransitionPtr Create(Duration duration);
+
+    BoxTransition();
 
 protected:
     void Update(Duration dt) override;
@@ -190,11 +197,13 @@ public:
 
     /**
      * \~chinese
-     * @brief 位移过渡动画
+     * @brief 创建位移过渡动画
      * @param duration 动画时长
      * @param type 位移方式
      */
-    explicit MoveTransition(Duration duration, Type type);
+    static MoveTransitionPtr Create(Duration duration, Type type);
+
+    MoveTransition();
 
 protected:
     void Update(Duration dt) override;
@@ -219,11 +228,13 @@ class RotationTransition : public Transition
 public:
     /**
      * \~chinese
-     * @brief 构建旋转过渡动画
+     * @brief 创建旋转过渡动画
      * @param duration 动画时长
      * @param rotation 旋转度数
      */
-    explicit RotationTransition(Duration duration, float rotation = 360);
+    static RotationTransitionPtr Create(Duration duration, float rotation = 360.0f);
+
+    RotationTransition();
 
 protected:
     void Update(Duration dt) override;
@@ -235,4 +246,11 @@ protected:
 private:
     float rotation_;
 };
+
+
+inline void Transition::SetDuration(Duration dt)
+{
+    duration_ = dt;
+}
+
 }  // namespace kiwano

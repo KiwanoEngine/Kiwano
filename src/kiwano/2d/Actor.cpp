@@ -27,14 +27,22 @@ namespace kiwano
 {
 namespace
 {
+
 float default_anchor_x = 0.f;
 float default_anchor_y = 0.f;
+
 }  // namespace
 
 void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 {
     default_anchor_x = anchor_x;
     default_anchor_y = anchor_y;
+}
+
+ActorPtr Actor::Create()
+{
+    ActorPtr ptr = new (std::nothrow) Actor;
+    return ptr;
 }
 
 Actor::Actor()

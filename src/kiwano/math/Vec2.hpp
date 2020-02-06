@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/math/scalar.h>
+#include <kiwano/math/Scalar.h>
 
 namespace kiwano
 {
@@ -28,18 +28,18 @@ namespace math
 template <typename _Ty>
 struct Vec2T
 {
-    using value_type = _Ty;
+    using ValueType = _Ty;
 
-    value_type x;
-    value_type y;
+    ValueType x;
+    ValueType y;
 
     Vec2T()
-        : x(value_type(0))
-        , y(value_type(0))
+        : x(ValueType(0))
+        , y(ValueType(0))
     {
     }
 
-    Vec2T(value_type x, value_type y)
+    Vec2T(ValueType x, ValueType y)
         : x(x)
         , y(y)
     {
@@ -51,9 +51,9 @@ struct Vec2T
     {
     }
 
-    inline value_type Length() const
+    inline ValueType Length() const
     {
-        return static_cast<value_type>(math::Sqrt(static_cast<float>(x * x + y * y)));
+        return static_cast<ValueType>(math::Sqrt(static_cast<float>(x * x + y * y)));
     }
 
     inline bool IsOrigin() const
@@ -61,7 +61,7 @@ struct Vec2T
         return (x == 0) && (y == 0);
     }
 
-    inline void Set(value_type x, value_type y)
+    inline void Set(ValueType x, ValueType y)
     {
         this->x = x;
         this->y = y;
@@ -77,12 +77,12 @@ struct Vec2T
         return Vec2T(x - other.x, y - other.y);
     }
 
-    inline const Vec2T operator*(value_type val) const
+    inline const Vec2T operator*(ValueType val) const
     {
         return Vec2T(x * val, y * val);
     }
 
-    inline const Vec2T operator/(value_type val) const
+    inline const Vec2T operator/(ValueType val) const
     {
         return Vec2T(x / val, y / val);
     }
@@ -106,14 +106,14 @@ struct Vec2T
         return (*this);
     }
 
-    inline Vec2T& operator*=(value_type val)
+    inline Vec2T& operator*=(ValueType val)
     {
         x *= val;
         y *= val;
         return (*this);
     }
 
-    inline Vec2T& operator/=(value_type val)
+    inline Vec2T& operator/=(ValueType val)
     {
         x /= val;
         y /= val;

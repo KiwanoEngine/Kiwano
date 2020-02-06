@@ -24,6 +24,13 @@ namespace kiwano
 {
 namespace audio
 {
+
+SoundPlayerPtr SoundPlayer::Create()
+{
+    SoundPlayerPtr ptr = new (std::nothrow) SoundPlayer;
+    return ptr;
+}
+
 SoundPlayer::SoundPlayer()
     : volume_(1.f)
 {

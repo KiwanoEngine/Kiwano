@@ -26,6 +26,19 @@ namespace kiwano
 namespace physics
 {
 
+BodyPtr Body::Create(World* world, Actor* actor, Type type)
+{
+    BodyPtr ptr = new (std::nothrow) Body;
+    if (ptr)
+    {
+        if (!ptr->InitBody(world, actor))
+            return nullptr;
+
+        ptr->SetType(type);
+    }
+    return ptr;
+}
+
 Body::Body()
     : body_(nullptr)
     , actor_(nullptr)
@@ -61,42 +74,67 @@ bool Body::InitBody(World* world, Actor* actor)
     return false;
 }
 
-Fixture Body::AddFixture(Shape* shape, const Fixture::Param& param)
+void Body::AddFixture(FixturePtr fixture)
 {
-    KGE_ASSERT(body_ && world_);
-    return Fixture(this, shape, param);
+    fixtures_.push_back(fixture);
 }
 
-Fixture Body::AddCircleShape(float radius, float density)
+Fixture* Body::AddCircleShape(float radius, float density, float friction, float restitution, bool is_sensor)
 {
-    return AddFixture(&CircleShape(radius), Fixture::Param(density));
+    Fixture::Param param(density, friction, restitution, is_sensor);
+    FixturePtr     fixture = Fixture::CreateCircle(this, param, radius);
+    AddFixture(fixture);
+    return fixture.get();
 }
 
-Fixture Body::AddBoxShape(Vec2 const& size, float density)
+Fixture* Body::AddRectShape(Vec2 const& size, float density, float friction, float restitution, bool is_sensor)
 {
-    return AddFixture(&BoxShape(size), Fixture::Param(density));
+    Fixture::Param param(density, friction, restitution, is_sensor);
+    FixturePtr     fixture = Fixture::CreateRect(this, param, size);
+    AddFixture(fixture);
+    return fixture.get();
 }
 
-Fixture Body::AddPolygonShape(Vector<Point> const& vertexs, float density)
+Fixture* Body::AddPolygonShape(Vector<Point> const& vertexs, float density, float friction, float restitution,
+                               bool is_sensor)
 {
-    return AddFixture(&PolygonShape(vertexs), Fixture::Param(density));
+    Fixture::Param param(density, friction, restitution, is_sensor);
+    FixturePtr     fixture = Fixture::CreatePolygon(this, param, vertexs);
+    AddFixture(fixture);
+    return fixture.get();
 }
 
-Fixture Body::AddEdgeShape(Point const& p1, Point const& p2, float density)
+Fixture* Body::AddEdgeShape(Point const& p1, Point const& p2, float density, float friction, float restitution,
+                            bool is_sensor)
 {
-    return AddFixture(&EdgeShape(p1, p2), Fixture::Param(density));
+    Fixture::Param param(density, friction, restitution, is_sensor);
+    FixturePtr     fixture = Fixture::CreateEdge(this, param, p1, p2);
+    AddFixture(fixture);
+    return fixture.get();
 }
 
-Fixture Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density)
+Fixture* Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density, float friction, float restitution,
+                             bool is_sensor)
 {
-    return AddFixture(&ChainShape(vertexs, loop), Fixture::Param(density));
+    Fixture::Param param(density, friction, restitution, is_sensor);
+    FixturePtr     fixture = Fixture::CreateChain(this, param, vertexs, loop);
+    AddFixture(fixture);
+    return fixture.get();
 }
 
-void Body::RemoveFixture(Fixture const& fixture)
+void Body::RemoveFixture(FixturePtr fixture)
 {
-    if (fixture.GetB2Fixture())
+    if (fixture)
     {
-        body_->DestroyFixture(fixture.GetB2Fixture());
+        body_->DestroyFixture(fixture->GetB2Fixture());
+
+        for (auto iter = fixtures_.begin(); iter != fixtures_.end();)
+        {
+            if (*iter == fixture)
+                iter = fixtures_.erase(iter);
+            else
+                ++iter;
+        }
     }
 }
 
@@ -248,6 +286,8 @@ void Body::SetB2Body(b2Body* body)
 
 void Body::Destroy()
 {
+    fixtures_.clear();
+
     if (world_)
     {
         world_->RemoveBody(this);

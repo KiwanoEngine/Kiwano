@@ -42,13 +42,13 @@ class AsyncTask : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief 构造异步任务
-    AsyncTask();
+    /// @brief 创建异步任务
+    /// @param func 异步回调函数
+    static AsyncTaskPtr Create(AsyncTaskFunc func);
 
     /// \~chinese
     /// @brief 构造异步任务
-    /// @param func 异步回调函数
-    AsyncTask(AsyncTaskFunc func);
+    AsyncTask();
 
     virtual ~AsyncTask();
 

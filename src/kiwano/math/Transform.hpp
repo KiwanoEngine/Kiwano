@@ -19,29 +19,63 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/math/math.h>
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/Matrix.hpp>
 
 namespace kiwano
 {
+namespace math
+{
+
 /**
  * \~chinese
  * @brief 二维放射变换
  */
-class Transform
+template <typename _Ty>
+class TransformT
 {
 public:
-    float rotation;  ///< 旋转
-    Point position;  ///< 坐标
-    Point scale;     ///< 缩放
-    Point skew;      ///< 错切角度
+    using ValueType = _Ty;
+
+    float            rotation;  ///< 旋转
+    Vec2T<ValueType> position;  ///< 坐标
+    Vec2T<ValueType> scale;     ///< 缩放
+    Vec2T<ValueType> skew;      ///< 错切角度
 
 public:
-    Transform();
+    TransformT();
 
     /// \~chinese
     /// @brief 将二维放射变换转换为矩阵
-    Matrix3x2 ToMatrix() const;
+    Matrix3x2T<ValueType> ToMatrix() const;
 
-    bool operator==(const Transform& rhs) const;
+    bool operator==(const TransformT& rhs) const;
 };
+
+template <typename _Ty>
+inline TransformT<_Ty>::TransformT()
+    : position()
+    , rotation(0.f)
+    , scale(1.f, 1.f)
+    , skew(0.f, 0.f)
+{
+}
+
+template <typename _Ty>
+Matrix3x2T<_Ty> TransformT<_Ty>::ToMatrix() const
+{
+    if (!skew.IsOrigin())
+    {
+        return Matrix3x2T<_Ty>::Skewing(skew) * Matrix3x2T<_Ty>::SRT(position, scale, rotation);
+    }
+    return Matrix3x2T<_Ty>::SRT(position, scale, rotation);
+}
+
+template <typename _Ty>
+bool TransformT<_Ty>::operator==(TransformT const& rhs) const
+{
+    return position == rhs.position && rotation == rhs.rotation && scale == rhs.scale && skew == rhs.skew;
+}
+
+}  // namespace math
 }  // namespace kiwano

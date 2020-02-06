@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\src\kiwano\math\Matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\math\rand.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\math\Rect.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -138,23 +135,8 @@
     <ClInclude Include="..\..\src\kiwano\core\Logger.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\math\math.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\ObjectBase.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Transform.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\math\constants.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\math\ease.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\math\scalar.h">
-      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
@@ -285,6 +267,24 @@
     <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Transform.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Constants.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\EaseFunctions.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Random.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Scalar.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -370,9 +370,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp">
       <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Component.cpp">
       <Filter>core</Filter>

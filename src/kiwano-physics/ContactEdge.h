@@ -36,6 +36,7 @@ class KGE_API ContactEdge
 {
 public:
     ContactEdge();
+
     ContactEdge(b2ContactEdge* edge);
 
     /// \~chinese
@@ -51,7 +52,8 @@ public:
     Contact GetContact() const;
 
     b2ContactEdge* GetB2ContactEdge() const;
-    void           SetB2ContactEdge(b2ContactEdge* edge);
+
+    void SetB2ContactEdge(b2ContactEdge* edge);
 
     bool operator==(const ContactEdge& rhs) const;
     bool operator!=(const ContactEdge& rhs) const;
@@ -174,28 +176,37 @@ inline bool ContactEdge::IsValid() const
 {
     return edge_ != nullptr;
 }
+
 inline Body* ContactEdge::GetOtherBody() const
 {
     KGE_ASSERT(edge_);
     return static_cast<Body*>(edge_->other->GetUserData());
 }
+
 inline Contact ContactEdge::GetContact() const
 {
     KGE_ASSERT(edge_);
-    return Contact(edge_->contact);
+
+    Contact contact;
+    contact.SetB2Contact(edge_->contact);
+    return contact;
 }
+
 inline b2ContactEdge* ContactEdge::GetB2ContactEdge() const
 {
     return edge_;
 }
+
 inline void ContactEdge::SetB2ContactEdge(b2ContactEdge* edge)
 {
     edge_ = edge;
 }
+
 inline bool ContactEdge::operator==(const ContactEdge& rhs) const
 {
     return edge_ == rhs.edge_;
 }
+
 inline bool ContactEdge::operator!=(const ContactEdge& rhs) const
 {
     return edge_ != rhs.edge_;

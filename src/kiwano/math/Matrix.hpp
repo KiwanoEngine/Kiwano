@@ -33,9 +33,9 @@ struct MatrixMultiply;
 template <typename _Ty>
 struct Matrix3x2T
 {
-    using value_type = _Ty;
-    using vec2_type  = Vec2T<value_type>;
-    using rect_type  = RectT<value_type>;
+    using ValueType = _Ty;
+    using Vec2Type  = Vec2T<ValueType>;
+    using RectType  = RectT<ValueType>;
 
     union {
         struct
@@ -59,7 +59,7 @@ struct Matrix3x2T
     {
     }
 
-    Matrix3x2T(value_type _11, value_type _12, value_type _21, value_type _22, value_type _31, value_type _32)
+    Matrix3x2T(ValueType _11, ValueType _12, ValueType _21, ValueType _22, ValueType _31, ValueType _32)
         : _11(_11)
         , _12(_12)
         , _21(_21)
@@ -69,7 +69,7 @@ struct Matrix3x2T
     {
     }
 
-    explicit Matrix3x2T(const value_type* p)
+    explicit Matrix3x2T(const ValueType* p)
     {
         for (int i = 0; i < 6; i++)
             m[i] = p[i];
@@ -97,12 +97,12 @@ KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variabl
 
 KGE_SUPPRESS_WARNING_POP
 
-    inline value_type operator[](uint32_t index) const
+    inline ValueType operator[](uint32_t index) const
     {
         return m[index];
     }
 
-    inline value_type& operator[](uint32_t index)
+    inline ValueType& operator[](uint32_t index)
     {
         return m[index];
     }
@@ -115,7 +115,7 @@ KGE_SUPPRESS_WARNING_POP
     }
 
     template <typename _Lty, typename _Rty>
-    inline Matrix3x2T& operator=(MatrixMultiply<value_type, _Lty, _Rty> const& other)
+    inline Matrix3x2T& operator=(MatrixMultiply<ValueType, _Lty, _Rty> const& other)
     {
         Matrix3x2T result(other);
         (*this) = result;
@@ -144,7 +144,7 @@ KGE_SUPPRESS_WARNING_POP
 
     inline Matrix3x2T Invert() const
     {
-        value_type det = 1.f / Determinant();
+        ValueType det = 1.f / Determinant();
         return Matrix3x2T(det * _22, -det * _12, -det * _21, det * _11, det * (_21 * _32 - _22 * _31),
                           det * (_12 * _31 - _11 * _32));
     }
@@ -154,84 +154,84 @@ KGE_SUPPRESS_WARNING_POP
         return 0 != Determinant();
     }
 
-    inline value_type Determinant() const
+    inline ValueType Determinant() const
     {
         return (_11 * _22) - (_12 * _21);
     }
 
-    inline vec2_type Transform(const vec2_type& v) const
+    inline Vec2Type Transform(const Vec2Type& v) const
     {
-        return vec2_type(v.x * _11 + v.y * _21 + _31, v.x * _12 + v.y * _22 + _32);
+        return Vec2Type(v.x * _11 + v.y * _21 + _31, v.x * _12 + v.y * _22 + _32);
     }
 
-    rect_type Transform(const rect_type& rect) const
+    RectType Transform(const RectType& rect) const
     {
-        vec2_type top_left     = Transform(rect.GetLeftTop());
-        vec2_type top_right    = Transform(rect.GetRightTop());
-        vec2_type bottom_left  = Transform(rect.GetLeftBottom());
-        vec2_type bottom_right = Transform(rect.GetRightBottom());
+        Vec2Type top_left     = Transform(rect.GetLeftTop());
+        Vec2Type top_right    = Transform(rect.GetRightTop());
+        Vec2Type bottom_left  = Transform(rect.GetLeftBottom());
+        Vec2Type bottom_right = Transform(rect.GetRightBottom());
 
-        value_type left   = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
-        value_type right  = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
-        value_type top    = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
-        value_type bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
+        ValueType left   = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
+        ValueType right  = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
+        ValueType top    = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
+        ValueType bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
 
-        return rect_type{ left, top, right, bottom };
+        return RectType{ left, top, right, bottom };
     }
 
-    inline void Translate(const vec2_type& v)
+    inline void Translate(const Vec2Type& v)
     {
         _31 += _11 * v.x + _21 * v.y;
         _32 += _12 * v.x + _22 * v.y;
     }
 
-    static inline Matrix3x2T Translation(const vec2_type& v)
+    static inline Matrix3x2T Translation(const Vec2Type& v)
     {
         return Matrix3x2T(1.f, 0.f, 0.f, 1.f, v.x, v.y);
     }
 
-    static inline Matrix3x2T Scaling(const vec2_type& v)
+    static inline Matrix3x2T Scaling(const Vec2Type& v)
     {
         return Matrix3x2T(v.x, 0.f, 0.f, v.y, 0.f, 0.f);
     }
 
-    static inline Matrix3x2T Scaling(const vec2_type& v, const vec2_type& center)
+    static inline Matrix3x2T Scaling(const Vec2Type& v, const Vec2Type& center)
     {
         return Matrix3x2T(v.x, 0.f, 0.f, v.y, center.x - v.x * center.x, center.y - v.y * center.y);
     }
 
-    static inline Matrix3x2T Rotation(value_type angle)
+    static inline Matrix3x2T Rotation(ValueType angle)
     {
-        value_type s = math::Sin(angle);
-        value_type c = math::Cos(angle);
+        ValueType s = math::Sin(angle);
+        ValueType c = math::Cos(angle);
         return Matrix3x2T(c, s, -s, c, 0.f, 0.f);
     }
 
-    static inline Matrix3x2T Rotation(value_type angle, const vec2_type& center)
+    static inline Matrix3x2T Rotation(ValueType angle, const Vec2Type& center)
     {
-        value_type s = math::Sin(angle);
-        value_type c = math::Cos(angle);
+        ValueType s = math::Sin(angle);
+        ValueType c = math::Cos(angle);
         return Matrix3x2T(c, s, -s, c, center.x * (1 - c) + center.y * s, center.y * (1 - c) - center.x * s);
     }
 
-    static inline Matrix3x2T SRT(const vec2_type& trans, const vec2_type& scale, value_type angle)
+    static inline Matrix3x2T SRT(const Vec2Type& trans, const Vec2Type& scale, ValueType angle)
     {
-        value_type s = math::Sin(angle);
-        value_type c = math::Cos(angle);
+        ValueType s = math::Sin(angle);
+        ValueType c = math::Cos(angle);
         return Matrix3x2T(c * scale.x, s * scale.x, -s * scale.y, c * scale.y, trans.x, trans.y);
     }
 
-    static inline Matrix3x2T Skewing(const vec2_type& angle)
+    static inline Matrix3x2T Skewing(const Vec2Type& angle)
     {
-        value_type tx = math::Tan(angle.x);
-        value_type ty = math::Tan(angle.y);
+        ValueType tx = math::Tan(angle.x);
+        ValueType ty = math::Tan(angle.y);
         return Matrix3x2T(1.f, -ty, -tx, 1.f, 0.f, 0.f);
     }
 
-    static inline Matrix3x2T Skewing(const vec2_type& angle, const vec2_type& center)
+    static inline Matrix3x2T Skewing(const Vec2Type& angle, const Vec2Type& center)
     {
-        value_type tx = math::Tan(angle.x);
-        value_type ty = math::Tan(angle.y);
+        ValueType tx = math::Tan(angle.x);
+        ValueType ty = math::Tan(angle.y);
         return Matrix3x2T(1.f, -ty, -tx, 1.f, center.y * tx, center.x * ty);
     }
 };

@@ -20,7 +20,7 @@
 
 #pragma once
 #include <cmath>
-#include <kiwano/math/constants.h>
+#include <kiwano/math/Constants.h>
 
 namespace kiwano
 {

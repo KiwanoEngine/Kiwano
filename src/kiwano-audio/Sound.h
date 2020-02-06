@@ -40,13 +40,23 @@ KGE_DECLARE_SMART_PTR(Sound);
 
 /**
  * \~chinese
- * @brief 音频
+ * @brief 音频对象
  */
 class KGE_API Sound : public virtual ObjectBase
 {
     friend class AudioEngine;
 
 public:
+    /// \~chinese
+    /// @brief 创建音频对象
+    /// @param res 本地音频文件路径
+    static SoundPtr Create(String const& file_path);
+
+    /// \~chinese
+    /// @brief 创建音频对象
+    /// @param res 音频资源
+    static SoundPtr Create(Resource const& res);
+
     Sound();
 
     virtual ~Sound();

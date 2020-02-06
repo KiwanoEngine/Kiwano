@@ -47,7 +47,7 @@ Timer* TimerManager::AddTimer(Timer::Callback const& cb, Duration interval, int 
 
 Timer* TimerManager::AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times)
 {
-    TimerPtr timer = new Timer(name, cb, interval, times);
+    TimerPtr timer = Timer::Create(name, cb, interval, times);
     return AddTimer(timer);
 }
 

@@ -27,10 +27,11 @@
 
 namespace kiwano
 {
+
 KGE_DECLARE_SMART_PTR(ShapeActor);
 KGE_DECLARE_SMART_PTR(LineActor);
 KGE_DECLARE_SMART_PTR(RectActor);
-KGE_DECLARE_SMART_PTR(RoundRectActor);
+KGE_DECLARE_SMART_PTR(RoundedRectActor);
 KGE_DECLARE_SMART_PTR(CircleActor);
 KGE_DECLARE_SMART_PTR(EllipseActor);
 KGE_DECLARE_SMART_PTR(PolygonActor);
@@ -42,13 +43,17 @@ KGE_DECLARE_SMART_PTR(PolygonActor);
 
 /**
  * \~chinese
- * @brief 二维形状角色
+ * @brief 形状角色
  */
 class KGE_API ShapeActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief 构造二维形状角色
+    /// @brief 创建形状角色
+    static ShapeActorPtr Create();
+
+    /// \~chinese
+    /// @brief 构造形状角色
     ShapeActor();
 
     virtual ~ShapeActor();
@@ -67,7 +72,7 @@ public:
 
     /// \~chinese
     /// @brief 获取线条样式
-    const StrokeStyle& GetStrokeStyle() const;
+    StrokeStylePtr GetStrokeStyle() const;
 
     /// \~chinese
     /// @brief 获取形状
@@ -111,7 +116,7 @@ public:
 
     /// \~chinese
     /// @brief 设置线条样式
-    void SetStrokeStyle(const StrokeStyle& stroke_style);
+    void SetStrokeStyle(StrokeStylePtr stroke_style);
 
     /// \~chinese
     /// @brief 设置形状
@@ -123,19 +128,25 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    BrushPtr    fill_brush_;
-    BrushPtr    stroke_brush_;
-    float       stroke_width_;
-    StrokeStyle stroke_style_;
-    Rect        bounds_;
-    ShapePtr    shape_;
+    BrushPtr       fill_brush_;
+    BrushPtr       stroke_brush_;
+    float          stroke_width_;
+    StrokeStylePtr stroke_style_;
+    Rect           bounds_;
+    ShapePtr       shape_;
 };
 
 /// \~chinese
-/// @brief 线段图形角色
+/// @brief 线段角色
 class KGE_API LineActor : public ShapeActor
 {
 public:
+    /// \~chinese
+    /// @brief 创建线段角色
+    /// @param begin 线段起点
+    /// @param end 线段终点
+    static LineActorPtr Create(Point const& begin, Point const& end);
+
     LineActor();
 
     virtual ~LineActor();
@@ -159,7 +170,7 @@ public:
     void SetEndPoint(Point const& end);
 
     /// \~chinese
-    /// @brief 设置矩形大小
+    /// @brief 设置线段起点和终点
     /// @param begin 线段起点
     /// @param end 线段终点
     void SetLine(Point const& begin, Point const& end);
@@ -174,6 +185,11 @@ private:
 class KGE_API RectActor : public ShapeActor
 {
 public:
+    /// \~chinese
+    /// @brief 创建矩形角色
+    /// @param size 矩形大小
+    static RectActorPtr Create(Size const& size);
+
     RectActor();
 
     virtual ~RectActor();
@@ -193,12 +209,18 @@ private:
 
 /// \~chinese
 /// @brief 圆角矩形角色
-class KGE_API RoundRectActor : public ShapeActor
+class KGE_API RoundedRectActor : public ShapeActor
 {
 public:
-    RoundRectActor();
+    /// \~chinese
+    /// @brief 创建圆角矩形角色
+    /// @param size 圆角矩形大小
+    /// @param radius 圆角半径
+    static RoundedRectActorPtr Create(Size const& size, Vec2 const& radius);
 
-    virtual ~RoundRectActor();
+    RoundedRectActor();
+
+    virtual ~RoundedRectActor();
 
     /// \~chinese
     /// @brief 获取圆角半径
@@ -234,6 +256,11 @@ private:
 class KGE_API CircleActor : public ShapeActor
 {
 public:
+    /// \~chinese
+    /// @brief 创建圆形角色
+    /// @param radius 圆形半径
+    static CircleActorPtr Create(float radius);
+
     CircleActor();
 
     virtual ~CircleActor();
@@ -256,6 +283,11 @@ private:
 class KGE_API EllipseActor : public ShapeActor
 {
 public:
+    /// \~chinese
+    /// @brief 创建椭圆角色
+    /// @param radius 椭圆半径
+    static EllipseActorPtr Create(Vec2 const& radius);
+
     EllipseActor();
 
     virtual ~EllipseActor();
@@ -278,6 +310,11 @@ private:
 class KGE_API PolygonActor : public ShapeActor
 {
 public:
+    /// \~chinese
+    /// @brief 创建多边形角色
+    /// @param points 多边形端点集合
+    static PolygonActorPtr Create(Vector<Point> const& points);
+
     PolygonActor();
 
     virtual ~PolygonActor();
@@ -329,7 +366,7 @@ inline float ShapeActor::GetStrokeWidth() const
 {
     return stroke_width_;
 }
-inline const StrokeStyle& ShapeActor::GetStrokeStyle() const
+inline StrokeStylePtr ShapeActor::GetStrokeStyle() const
 {
     return stroke_style_;
 }
@@ -360,11 +397,11 @@ inline Size const& RectActor::GetRectSize() const
     return rect_size_;
 }
 
-inline Vec2 RoundRectActor::GetRadius() const
+inline Vec2 RoundedRectActor::GetRadius() const
 {
     return radius_;
 }
-inline Size RoundRectActor::GetRectSize() const
+inline Size RoundedRectActor::GetRectSize() const
 {
     return GetSize();
 }

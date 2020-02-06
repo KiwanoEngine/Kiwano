@@ -54,7 +54,6 @@ public:
 
     /// \~chinese
     /// @brief 打开输入流
-    /// @details 打开流后可以使用
     void Open();
 
     /// \~chinese
@@ -123,13 +122,12 @@ public:
 
     /// \~chinese
     /// @brief 组合形状，并将结果输出到流中
-    /// @param geo_a 输入的形状A
-    /// @param geo_b 输入的形状B
+    /// @param shape_a 输入的形状A
+    /// @param shape_b 输入的形状B
     /// @param mode 组合方式
     /// @param matrix 应用到输入形状B上的二维变换
     /// @note 若还未打开输入流，则自动打开
-    ShapeSink& Combine(Shape const& geo_a, Shape const& geo_b, CombineMode mode,
-                          const Matrix3x2* matrix = nullptr);
+    ShapeSink& Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
     /// @brief 清空图形

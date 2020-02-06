@@ -46,6 +46,35 @@ class KGE_API Shape : public virtual ObjectBase
     friend class ShapeSink;
 
 public:
+    /// \~chinese
+    /// @brief 创建线段形状
+    /// @param begin 线段起点
+    /// @param end 线段终点
+    static ShapePtr CreateLine(Point const& begin, Point const& end);
+
+    /// \~chinese
+    /// @brief 创建矩形
+    /// @param rect 矩形
+    static ShapePtr CreateRect(Rect const& rect);
+
+    /// \~chinese
+    /// @brief 创建圆角矩形
+    /// @param rect 矩形
+    /// @param radius 矩形圆角半径
+    static ShapePtr CreateRoundedRect(Rect const& rect, Vec2 const& radius);
+
+    /// \~chinese
+    /// @brief 创建圆形
+    /// @param center 圆形原点
+    /// @param radius 圆形半径
+    static ShapePtr CreateCircle(Point const& center, float radius);
+
+    /// \~chinese
+    /// @brief 创建椭圆形
+    /// @param center 椭圆原点
+    /// @param radius 椭圆半径
+    static ShapePtr CreateEllipse(Point const& center, Vec2 const& radius);
+
     Shape();
 
     /// \~chinese
@@ -85,36 +114,6 @@ public:
     /// \~chinese
     /// @brief 清除形状
     void Clear();
-
-public:
-    /// \~chinese
-    /// @brief 创建线段
-    /// @param begin 线段起点
-    /// @param end 线段终点
-    static ShapePtr CreateLine(Point const& begin, Point const& end);
-
-    /// \~chinese
-    /// @brief 创建矩形
-    /// @param rect 矩形
-    static ShapePtr CreateRect(Rect const& rect);
-
-    /// \~chinese
-    /// @brief 创建圆角矩形
-    /// @param rect 矩形
-    /// @param radius 矩形圆角半径
-    static ShapePtr CreateRoundedRect(Rect const& rect, Vec2 const& radius);
-
-    /// \~chinese
-    /// @brief 创建圆形
-    /// @param center 圆形原点
-    /// @param radius 圆形半径
-    static ShapePtr CreateCircle(Point const& center, float radius);
-
-    /// \~chinese
-    /// @brief 创建椭圆形
-    /// @param center 椭圆原点
-    /// @param radius 椭圆半径
-    static ShapePtr CreateEllipse(Point const& center, Vec2 const& radius);
 
 private:
     ComPtr<ID2D1Geometry> GetGeometry() const;

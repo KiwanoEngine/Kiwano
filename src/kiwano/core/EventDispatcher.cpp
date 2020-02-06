@@ -63,13 +63,13 @@ EventListener* EventDispatcher::AddListener(EventListener* listener)
 
 EventListener* EventDispatcher::AddListener(String const& name, EventType type, EventListener::Callback callback)
 {
-    EventListenerPtr listener = new EventListener(name, type, callback);
+    EventListenerPtr listener = EventListener::Create(name, type, callback);
     return AddListener(listener);
 }
 
 EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback)
 {
-    EventListenerPtr listener = new EventListener(type, callback);
+    EventListenerPtr listener = EventListener::Create(type, callback);
     return AddListener(listener);
 }
 

@@ -39,7 +39,6 @@ class KGE_API Contact
 {
 public:
     Contact();
-    Contact(b2Contact* contact);
 
     /// \~chinese
     /// @brief 是否有效
@@ -59,11 +58,11 @@ public:
 
     /// \~chinese
     /// @brief 获取物体A的夹具
-    Fixture GetFixtureA() const;
+    Fixture* GetFixtureA() const;
 
     /// \~chinese
     /// @brief 获取物体B的夹具
-    Fixture GetFixtureB() const;
+    Fixture* GetFixtureB() const;
 
     /// \~chinese
     /// @brief 获取物体A
@@ -106,7 +105,8 @@ public:
     float GetTangentSpeed() const;
 
     b2Contact* GetB2Contact() const;
-    void       SetB2Contact(b2Contact* contact);
+
+    void SetB2Contact(b2Contact* contact);
 
     bool operator==(const Contact& rhs) const;
     bool operator!=(const Contact& rhs) const;
@@ -117,7 +117,7 @@ private:
 
 /// \~chinese
 /// @brief 物理接触列表
-class ContactList : public List<Contact>
+class ContactList
 {
     template <typename _Ty>
     class IteratorImpl : public std::iterator<std::forward_iterator_tag, _Ty>
@@ -206,7 +206,7 @@ public:
 
     inline iterator end()
     {
-        return iterator(nullptr);
+        return iterator(Contact());
     }
 
     inline const_iterator end() const
@@ -216,7 +216,7 @@ public:
 
     inline const_iterator cend() const
     {
-        return const_iterator(nullptr);
+        return const_iterator(Contact());
     }
 
 private:

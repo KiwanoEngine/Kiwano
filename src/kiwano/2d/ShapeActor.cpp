@@ -24,6 +24,11 @@
 
 namespace kiwano
 {
+ShapeActorPtr ShapeActor::Create()
+{
+    ShapeActorPtr ptr = new (std::nothrow) ShapeActor;
+    return ptr;
+}
 
 ShapeActor::ShapeActor()
     : stroke_width_(1.f)
@@ -59,7 +64,7 @@ void ShapeActor::SetStrokeWidth(float width)
     stroke_width_ = std::max(width, 0.f);
 }
 
-void ShapeActor::SetStrokeStyle(const StrokeStyle& stroke_style)
+void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)
 {
     stroke_style_ = stroke_style;
 }
@@ -106,6 +111,16 @@ bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 // LineActor
 //-------------------------------------------------------
 
+LineActorPtr LineActor::Create(Point const& begin, Point const& end)
+{
+    LineActorPtr ptr = new (std::nothrow) LineActor;
+    if (ptr)
+    {
+        ptr->SetLine(begin, end);
+    }
+    return ptr;
+}
+
 LineActor::LineActor() {}
 
 LineActor::~LineActor() {}
@@ -124,6 +139,16 @@ void LineActor::SetLine(Point const& begin, Point const& end)
 // RectActor
 //-------------------------------------------------------
 
+RectActorPtr RectActor::Create(Size const& size)
+{
+    RectActorPtr ptr = new (std::nothrow) RectActor;
+    if (ptr)
+    {
+        ptr->SetRectSize(size);
+    }
+    return ptr;
+}
+
 RectActor::RectActor() {}
 
 RectActor::~RectActor() {}
@@ -138,24 +163,34 @@ void RectActor::SetRectSize(Size const& size)
 }
 
 //-------------------------------------------------------
-// RoundRectActor
+// RoundedRectActor
 //-------------------------------------------------------
 
-RoundRectActor::RoundRectActor() {}
+RoundedRectActorPtr RoundedRectActor::Create(Size const& size, Vec2 const& radius)
+{
+    RoundedRectActorPtr ptr = new (std::nothrow) RoundedRectActor;
+    if (ptr)
+    {
+        ptr->SetRoundedRect(size, radius);
+    }
+    return ptr;
+}
 
-RoundRectActor::~RoundRectActor() {}
+RoundedRectActor::RoundedRectActor() {}
 
-void RoundRectActor::SetRadius(Vec2 const& radius)
+RoundedRectActor::~RoundedRectActor() {}
+
+void RoundedRectActor::SetRadius(Vec2 const& radius)
 {
     SetRoundedRect(GetSize(), radius);
 }
 
-void RoundRectActor::SetRectSize(Size const& size)
+void RoundedRectActor::SetRectSize(Size const& size)
 {
     SetRoundedRect(size, radius_);
 }
 
-void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
+void RoundedRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 {
     if (rect_size_ != size || radius_ != radius)
     {
@@ -168,6 +203,16 @@ void RoundRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
 //-------------------------------------------------------
 // CircleActor
 //-------------------------------------------------------
+
+CircleActorPtr CircleActor::Create(float radius)
+{
+    CircleActorPtr ptr = new (std::nothrow) CircleActor;
+    if (ptr)
+    {
+        ptr->SetRadius(radius);
+    }
+    return ptr;
+}
 
 CircleActor::CircleActor()
     : radius_(0.f)
@@ -189,6 +234,16 @@ void CircleActor::SetRadius(float radius)
 // EllipseActor
 //-------------------------------------------------------
 
+EllipseActorPtr EllipseActor::Create(Vec2 const& radius)
+{
+    EllipseActorPtr ptr = new (std::nothrow) EllipseActor;
+    if (ptr)
+    {
+        ptr->SetRadius(radius);
+    }
+    return ptr;
+}
+
 EllipseActor::EllipseActor() {}
 
 EllipseActor::~EllipseActor() {}
@@ -205,6 +260,16 @@ void EllipseActor::SetRadius(Vec2 const& radius)
 //-------------------------------------------------------
 // PolygonActor
 //-------------------------------------------------------
+
+PolygonActorPtr PolygonActor::Create(Vector<Point> const& points)
+{
+    PolygonActorPtr ptr = new (std::nothrow) PolygonActor;
+    if (ptr)
+    {
+        ptr->SetVertices(points);
+    }
+    return ptr;
+}
 
 PolygonActor::PolygonActor() {}
 

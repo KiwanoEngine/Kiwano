@@ -27,6 +27,27 @@ namespace kiwano
 {
 namespace audio
 {
+SoundPtr Sound::Create(String const& file_path)
+{
+    SoundPtr ptr = new (std::nothrow) Sound;
+    if (ptr)
+    {
+        if (!ptr->Load(file_path))
+            return nullptr;
+    }
+    return ptr;
+}
+
+SoundPtr Sound::Create(Resource const& res)
+{
+    SoundPtr ptr = new (std::nothrow) Sound;
+    if (ptr)
+    {
+        if (!ptr->Load(res))
+            return nullptr;
+    }
+    return ptr;
+}
 
 Sound::Sound()
     : opened_(false)

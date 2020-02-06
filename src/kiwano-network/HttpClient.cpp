@@ -294,18 +294,18 @@ void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
 
     switch (request->GetType())
     {
-    case HttpRequest::Type::Get:
+    case HttpType::Get:
         ok = Curl::GetRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
         break;
-    case HttpRequest::Type::Post:
+    case HttpType::Post:
         ok = Curl::PostRequest(this, headers, url, data, &response_code, &response_data, &response_header,
                                error_message);
         break;
-    case HttpRequest::Type::Put:
+    case HttpType::Put:
         ok =
             Curl::PutRequest(this, headers, url, data, &response_code, &response_data, &response_header, error_message);
         break;
-    case HttpRequest::Type::Delete:
+    case HttpType::Delete:
         ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
         break;
     default:

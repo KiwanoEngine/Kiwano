@@ -34,6 +34,21 @@ class KGE_API Frame : public virtual ObjectBase
 {
 public:
     /// \~chinese
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param file_path Í¼ÏñÂ·¾¶
+    static FramePtr Create(String const& file_path);
+
+    /// \~chinese
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param res Í¼Ïñ×ÊÔ´
+    static FramePtr Create(Resource const& res);
+
+    /// \~chinese
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param texture ÎÆÀí
+    static FramePtr Create(TexturePtr texture);
+
+    /// \~chinese
     /// @brief ¹¹½¨¿ÕÍ¼ÏñÖ¡
     Frame();
 
@@ -94,28 +109,35 @@ inline bool Frame::IsValid() const
 {
     return texture_ && texture_->IsValid();
 }
+
 inline float Frame::GetWidth() const
 {
     return crop_rect_.GetWidth();
 }
+
 inline float Frame::GetHeight() const
 {
     return crop_rect_.GetHeight();
 }
+
 inline Size Frame::GetSize() const
 {
     return crop_rect_.GetSize();
 }
+
 inline Point Frame::GetCropPoint() const
 {
     return crop_rect_.GetLeftTop();
 }
+
 inline Rect const& Frame::GetCropRect() const
 {
     return crop_rect_;
 }
+
 inline TexturePtr Frame::GetTexture() const
 {
     return texture_;
 }
+
 }  // namespace kiwano

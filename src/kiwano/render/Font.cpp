@@ -23,23 +23,36 @@
 
 namespace kiwano
 {
+
+FontPtr Font::Create(String const& file)
+{
+    FontPtr ptr = new (std::nothrow) Font;
+    if (ptr)
+    {
+        if (!ptr->Load(file))
+            return nullptr;
+    }
+    return ptr;
+}
+
+FontPtr Font::Create(Resource const& resource)
+{
+    FontPtr ptr = new (std::nothrow) Font;
+    if (ptr)
+    {
+        if (!ptr->Load(resource))
+            return nullptr;
+    }
+    return ptr;
+}
+
 Font::Font() {}
 
 bool Font::Load(String const& file)
 {
-    return Load(Vector<String>{ file });
-}
-
-bool Font::Load(Resource const& resource)
-{
-    return Load(Vector<Resource>{ resource });
-}
-
-bool Font::Load(Vector<String> const& files)
-{
     try
     {
-        Renderer::Instance().CreateFontCollection(*this, files);
+        Renderer::Instance().CreateFontCollection(*this, file);
     }
     catch (std::runtime_error&)
     {
@@ -48,11 +61,11 @@ bool Font::Load(Vector<String> const& files)
     return true;
 }
 
-bool Font::Load(Vector<Resource> const& resources)
+bool Font::Load(Resource const& resource)
 {
     try
     {
-        Renderer::Instance().CreateFontCollection(*this, resources);
+        Renderer::Instance().CreateFontCollection(*this, resource);
     }
     catch (std::runtime_error&)
     {

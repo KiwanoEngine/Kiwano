@@ -22,7 +22,7 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/macros.h>
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 
 namespace kiwano
 {

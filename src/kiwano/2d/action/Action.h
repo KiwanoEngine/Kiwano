@@ -23,7 +23,7 @@
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 
 namespace kiwano
 {
