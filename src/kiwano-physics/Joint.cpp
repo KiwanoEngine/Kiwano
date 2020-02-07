@@ -97,6 +97,17 @@ void Joint::Destroy()
 // DistanceJoint
 //
 
+DistanceJointPtr DistanceJoint::Create(World* world, Param const& param)
+{
+    DistanceJointPtr ptr = new (std::nothrow) DistanceJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
+
 DistanceJoint::DistanceJoint()
     : Joint()
     , raw_joint_(nullptr)
@@ -133,6 +144,17 @@ float DistanceJoint::GetLength() const
 //
 // FrictionJoint
 //
+
+FrictionJointPtr FrictionJoint::Create(World* world, Param const& param)
+{
+    FrictionJointPtr ptr = new (std::nothrow) FrictionJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 FrictionJoint::FrictionJoint()
     : Joint()
@@ -182,6 +204,17 @@ float FrictionJoint::GetMaxTorque() const
 // GearJoint
 //
 
+GearJointPtr GearJoint::Create(World* world, Param const& param)
+{
+    GearJointPtr ptr = new (std::nothrow) GearJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
+
 GearJoint::GearJoint()
     : Joint()
     , raw_joint_(nullptr)
@@ -217,6 +250,17 @@ float GearJoint::GetRatio() const
 //
 // MotorJoint
 //
+
+MotorJointPtr MotorJoint::Create(World* world, Param const& param)
+{
+    MotorJointPtr ptr = new (std::nothrow) MotorJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 MotorJoint::MotorJoint()
     : Joint()
@@ -266,6 +310,17 @@ float MotorJoint::GetMaxTorque() const
 //
 // PrismaticJoint
 //
+
+PrismaticJointPtr PrismaticJoint::Create(World* world, Param const& param)
+{
+    PrismaticJointPtr ptr = new (std::nothrow) PrismaticJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 PrismaticJoint::PrismaticJoint()
     : Joint()
@@ -325,6 +380,17 @@ void PrismaticJoint::SetLimits(float lower, float upper)
 //
 // PulleyJoint
 //
+
+PulleyJointPtr PulleyJoint::Create(World* world, Param const& param)
+{
+    PulleyJointPtr ptr = new (std::nothrow) PulleyJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 PulleyJoint::PulleyJoint()
     : Joint()
@@ -391,6 +457,17 @@ float PulleyJoint::GetCurrentLengthB() const
 //
 // RevoluteJoint
 //
+
+RevoluteJointPtr RevoluteJoint::Create(World* world, Param const& param)
+{
+    RevoluteJointPtr ptr = new (std::nothrow) RevoluteJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 RevoluteJoint::RevoluteJoint()
     : Joint()
@@ -462,6 +539,17 @@ float RevoluteJoint::GetMaxMotorTorque() const
 // RopeJoint
 //
 
+RopeJointPtr RopeJoint::Create(World* world, Param const& param)
+{
+    RopeJointPtr ptr = new (std::nothrow) RopeJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
+
 RopeJoint::RopeJoint()
     : Joint()
     , raw_joint_(nullptr)
@@ -500,6 +588,17 @@ float RopeJoint::GetMaxLength() const
 // WeldJoint
 //
 
+WeldJointPtr WeldJoint::Create(World* world, Param const& param)
+{
+    WeldJointPtr ptr = new (std::nothrow) WeldJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
+
 WeldJoint::WeldJoint()
     : Joint()
     , raw_joint_(nullptr)
@@ -523,6 +622,17 @@ bool WeldJoint::InitJoint(World* world, WeldJoint::Param const& param)
 //
 // WheelJoint
 //
+
+WheelJointPtr WheelJoint::Create(World* world, Param const& param)
+{
+    WheelJointPtr ptr = new (std::nothrow) WheelJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 WheelJoint::WheelJoint()
     : Joint()
@@ -575,6 +685,17 @@ float WheelJoint::GetMaxMotorTorque() const
 //
 // MouseJoint
 //
+
+MouseJointPtr MouseJoint::Create(World* world, Param const& param)
+{
+    MouseJointPtr ptr = new (std::nothrow) MouseJoint;
+    if (ptr)
+    {
+        if (!ptr->InitJoint(world, param))
+            return nullptr;
+    }
+    return ptr;
+}
 
 MouseJoint::MouseJoint()
     : Joint()

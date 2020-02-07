@@ -62,14 +62,20 @@ public:
     {
     }
 
-    void BeginContact(b2Contact* contact) override
+    void BeginContact(b2Contact* b2contact) override
     {
+        Contact contact;
+        contact.SetB2Contact(b2contact);
+
         ContactBeginEventPtr evt = new ContactBeginEvent(contact);
         world_->DispatchEvent(evt.get());
     }
 
-    void EndContact(b2Contact* contact) override
+    void EndContact(b2Contact* b2contact) override
     {
+        Contact contact;
+        contact.SetB2Contact(b2contact);
+
         ContactEndEventPtr evt = new ContactEndEvent(contact);
         world_->DispatchEvent(evt.get());
     }
@@ -229,7 +235,9 @@ void World::SetGravity(Vec2 gravity)
 
 ContactList World::GetContactList()
 {
-    return ContactList(Contact(world_.GetContactList()));
+    Contact contact;
+    contact.SetB2Contact(world_.GetContactList());
+    return ContactList(contact);
 }
 
 void World::Update(Duration dt)

@@ -24,6 +24,39 @@
 
 namespace kiwano
 {
+
+GifSpritePtr GifSprite::Create(String const& file_path)
+{
+    GifSpritePtr ptr = new (std::nothrow) GifSprite;
+    if (ptr)
+    {
+        if (!ptr->Load(file_path))
+            return nullptr;
+    }
+    return ptr;
+}
+
+GifSpritePtr GifSprite::Create(Resource const& res)
+{
+    GifSpritePtr ptr = new (std::nothrow) GifSprite;
+    if (ptr)
+    {
+        if (!ptr->Load(res))
+            return nullptr;
+    }
+    return ptr;
+}
+
+GifSpritePtr GifSprite::Create(GifImagePtr gif)
+{
+    GifSpritePtr ptr = new (std::nothrow) GifSprite;
+    if (ptr)
+    {
+        ptr->SetGifImage(gif);
+    }
+    return ptr;
+}
+
 GifSprite::GifSprite()
     : animating_(false)
     , next_index_(0)

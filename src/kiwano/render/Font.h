@@ -44,6 +44,14 @@ class Font : public virtual ObjectBase
     friend class Renderer;
 
 public:
+    /// \~chinese
+    /// @brief 创建字体
+    static FontPtr Create(String const& file);
+
+    /// \~chinese
+    /// @brief 创建字体
+    static FontPtr Create(Resource const& resource);
+
     Font();
 
     /// \~chinese
@@ -53,14 +61,6 @@ public:
     /// \~chinese
     /// @brief 加载字体资源
     bool Load(Resource const& resource);
-
-    /// \~chinese
-    /// @brief 加载多个字体文件
-    bool Load(Vector<String> const& files);
-
-    /// \~chinese
-    /// @brief 加载多个字体资源
-    bool Load(Vector<Resource> const& resources);
 
 private:
     ComPtr<IDWriteFontCollection> GetCollection() const;

@@ -42,6 +42,14 @@ class KGE_API GifImage : public virtual ObjectBase
     friend class Renderer;
 
 public:
+    /// \~chinese
+    /// @brief 创建GIF图片
+    static GifImagePtr Create(String const& file_path);
+
+    /// \~chinese
+    /// @brief 创建GIF图片
+    static GifImagePtr Create(Resource const& res);
+
     GifImage();
 
     /// \~chinese

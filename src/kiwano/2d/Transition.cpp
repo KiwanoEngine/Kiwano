@@ -31,9 +31,9 @@ namespace kiwano
 // Transition
 //-------------------------------------------------------
 
-Transition::Transition(Duration duration)
+Transition::Transition()
     : done_(false)
-    , duration_(duration)
+    , duration_()
     , delta_()
     , process_(0)
     , window_size_()
@@ -126,10 +126,17 @@ void Transition::Stop()
 // BoxTransition
 //-------------------------------------------------------
 
-BoxTransition::BoxTransition(Duration duration)
-    : Transition(duration)
+BoxTransitionPtr BoxTransition::Create(Duration duration)
 {
+    BoxTransitionPtr ptr = new (std::nothrow) BoxTransition;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+    }
+    return ptr;
 }
+
+BoxTransition::BoxTransition() {}
 
 void BoxTransition::Init(StagePtr prev, StagePtr next)
 {
@@ -160,10 +167,17 @@ void BoxTransition::Update(Duration dt)
 // EmergeTransition
 //-------------------------------------------------------
 
-EmergeTransition::EmergeTransition(Duration duration)
-    : Transition(duration)
+EmergeTransitionPtr EmergeTransition::Create(Duration duration)
 {
+    EmergeTransitionPtr ptr = new (std::nothrow) EmergeTransition;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+    }
+    return ptr;
 }
+
+EmergeTransition::EmergeTransition() {}
 
 void EmergeTransition::Init(StagePtr prev, StagePtr next)
 {
@@ -185,10 +199,17 @@ void EmergeTransition::Update(Duration dt)
 // FadeTransition
 //-------------------------------------------------------
 
-FadeTransition::FadeTransition(Duration duration)
-    : Transition(duration)
+FadeTransitionPtr FadeTransition::Create(Duration duration)
 {
+    FadeTransitionPtr ptr = new (std::nothrow) FadeTransition;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+    }
+    return ptr;
 }
+
+FadeTransition::FadeTransition() {}
 
 void FadeTransition::Init(StagePtr prev, StagePtr next)
 {
@@ -218,9 +239,19 @@ void FadeTransition::Update(Duration dt)
 // MoveTransition
 //-------------------------------------------------------
 
-MoveTransition::MoveTransition(Duration duration, Type type)
-    : Transition(duration)
-    , type_(type)
+MoveTransitionPtr MoveTransition::Create(Duration duration, Type type)
+{
+    MoveTransitionPtr ptr = new (std::nothrow) MoveTransition;
+    if (ptr)
+    {
+        ptr->type_ = type;
+        ptr->SetDuration(duration);
+    }
+    return ptr;
+}
+
+MoveTransition::MoveTransition()
+    : type_(Type::Left)
 {
 }
 
@@ -297,9 +328,19 @@ void MoveTransition::Reset()
 // RotationTransition
 //-------------------------------------------------------
 
-RotationTransition::RotationTransition(Duration duration, float rotation)
-    : Transition(duration)
-    , rotation_(rotation)
+RotationTransitionPtr RotationTransition::Create(Duration duration, float rotation)
+{
+    RotationTransitionPtr ptr = new (std::nothrow) RotationTransition;
+    if (ptr)
+    {
+        ptr->rotation_ = rotation;
+        ptr->SetDuration(duration);
+    }
+    return ptr;
+}
+
+RotationTransition::RotationTransition()
+    : rotation_(0.0f)
 {
 }
 

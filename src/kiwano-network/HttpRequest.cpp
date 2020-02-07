@@ -25,10 +25,50 @@ namespace kiwano
 {
 namespace network
 {
+
+HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, ResponseCallback const& callback)
+{
+    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    if (ptr)
+    {
+        ptr->SetUrl(url);
+        ptr->SetType(type);
+        ptr->SetResponseCallback(callback);
+    }
+    return ptr;
+}
+
+HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, String const& data, ResponseCallback const& callback)
+{
+    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    if (ptr)
+    {
+        ptr->SetUrl(url);
+        ptr->SetType(type);
+        ptr->SetData(data);
+        ptr->SetResponseCallback(callback);
+    }
+    return ptr;
+}
+
+HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, Json const& json, ResponseCallback const& callback)
+{
+    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    if (ptr)
+    {
+        ptr->SetUrl(url);
+        ptr->SetType(type);
+        ptr->SetJsonData(json);
+        ptr->SetResponseCallback(callback);
+    }
+    return ptr;
+}
+
 void HttpRequest::SetJsonData(Json const& json)
 {
     SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
     data_ = json.dump();
 }
+
 }  // namespace network
 }  // namespace kiwano

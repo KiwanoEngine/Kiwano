@@ -215,10 +215,9 @@ size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const&
     if (frames.empty())
         return 0;
 
-    FrameSequencePtr fs = new (std::nothrow) FrameSequence(frames);
+    FrameSequencePtr fs = FrameSequence::Create(frames);
     if (fs)
     {
-        fs->AddFrames(frames);
         AddObject(id, fs);
         return fs->GetFramesCount();
     }
@@ -356,8 +355,11 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
                 frames.push_back(frame);
             }
         }
-        FrameSequencePtr frame_seq = new FrameSequence(frames);
-        return !!loader->AddObject(*id, frame_seq);
+        FrameSequencePtr frame_seq = FrameSequence::Create(frames);
+        if (frame_seq)
+        {
+            return !!loader->AddObject(*id, frame_seq);
+        }
     }
     return false;
 }

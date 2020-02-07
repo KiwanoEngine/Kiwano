@@ -30,12 +30,14 @@
 // math
 //
 
-#include <kiwano/math/Matrix.hpp>
 #include <kiwano/math/Vec2.hpp>
-#include <kiwano/math/constants.h>
-#include <kiwano/math/ease.h>
-#include <kiwano/math/rand.h>
-#include <kiwano/math/scalar.h>
+#include <kiwano/math/Rect.hpp>
+#include <kiwano/math/Matrix.hpp>
+#include <kiwano/math/Transform.hpp>
+#include <kiwano/math/Constants.h>
+#include <kiwano/math/EaseFunctions.h>
+#include <kiwano/math/Random.h>
+#include <kiwano/math/Scalar.h>
 
 //
 // core
@@ -89,7 +91,6 @@
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/TextActor.h>
-#include <kiwano/2d/Transform.h>
 #include <kiwano/2d/Transition.h>
 #include <kiwano/2d/action/Action.h>
 #include <kiwano/2d/action/ActionDelay.h>

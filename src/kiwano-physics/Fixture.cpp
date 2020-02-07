@@ -27,47 +27,142 @@ namespace kiwano
 namespace physics
 {
 
+namespace
+{
+
+FixturePtr CreateFixture(Body* body, b2Shape* shape, const Fixture::Param& param)
+{
+    KGE_ASSERT(body);
+
+    b2Body* b2body = body->GetB2Body();
+    KGE_ASSERT(b2body);
+
+    b2FixtureDef fd;
+    fd.density     = param.density;
+    fd.friction    = param.friction;
+    fd.restitution = param.restitution;
+    fd.shape       = shape;
+
+    FixturePtr ptr = new (std::nothrow) Fixture;
+    if (ptr)
+    {
+        b2Fixture* fixture = b2body->CreateFixture(&fd);
+        if (fixture)
+        {
+            fixture->SetUserData(ptr.get());
+            ptr->SetB2Fixture(fixture);
+            return ptr;
+        }
+    }
+    return nullptr;
+}
+
+}  // namespace
+
+FixturePtr Fixture::CreateCircle(Body* body, Param const& param, float radius, Point const& offset)
+{
+    KGE_ASSERT(body);
+    World* world = body->GetWorld();
+
+    b2CircleShape shape;
+    shape.m_radius = world->Stage2World(radius);
+    shape.m_p      = world->Stage2World(offset);
+
+    return CreateFixture(body, &shape, param);
+}
+
+FixturePtr Fixture::CreateRect(Body* body, Param const& param, Size const& size, Point const& offset, float rotation)
+{
+    KGE_ASSERT(body);
+    World* world = body->GetWorld();
+
+    b2Vec2 b2size   = world->Stage2World(size);
+    b2Vec2 b2offset = world->Stage2World(offset);
+
+    b2PolygonShape shape;
+    shape.SetAsBox(b2size.x / 2, b2size.y / 2, b2offset, rotation);
+
+    return CreateFixture(body, &shape, param);
+}
+
+FixturePtr Fixture::CreatePolygon(Body* body, Param const& param, Vector<Point> const& vertexs)
+{
+    KGE_ASSERT(body);
+    World* world = body->GetWorld();
+
+    Vector<b2Vec2> b2vertexs;
+    b2vertexs.reserve(vertexs.size());
+    for (const auto& v : vertexs)
+    {
+        b2vertexs.push_back(world->Stage2World(v));
+    }
+
+    b2PolygonShape shape;
+    shape.Set(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+
+    return CreateFixture(body, &shape, param);
+}
+
+FixturePtr Fixture::CreateEdge(Body* body, Param const& param, Point const& p1, Point const& p2)
+{
+    KGE_ASSERT(body);
+    World* world = body->GetWorld();
+
+    b2Vec2 start = world->Stage2World(p1);
+    b2Vec2 end   = world->Stage2World(p2);
+
+    b2EdgeShape shape;
+    shape.Set(start, end);
+
+    return CreateFixture(body, &shape, param);
+}
+
+FixturePtr Fixture::CreateChain(Body* body, Param const& param, Vector<Point> const& vertexs, bool loop)
+{
+    KGE_ASSERT(body);
+    World* world = body->GetWorld();
+
+    Vector<b2Vec2> b2vertexs;
+    b2vertexs.reserve(vertexs.size());
+    for (const auto& v : vertexs)
+    {
+        b2vertexs.push_back(world->Stage2World(v));
+    }
+
+    b2ChainShape shape;
+    if (loop)
+    {
+        shape.CreateLoop(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+    }
+    else
+    {
+        shape.CreateChain(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+    }
+    return CreateFixture(body, &shape, param);
+}
+
 Fixture::Fixture()
     : fixture_(nullptr)
 {
 }
 
-Fixture::Fixture(b2Fixture* fixture)
-    : Fixture()
+Fixture::~Fixture()
 {
-    SetB2Fixture(fixture);
-}
-
-Fixture::Fixture(Body* body, Shape* shape, const Param& param)
-    : Fixture()
-{
-    KGE_ASSERT(body);
-
-    if (shape)
+    if (fixture_)
     {
-        shape->FitWorld(body->GetWorld());
-
-        b2Body*      b2body = body->GetB2Body();
-        b2FixtureDef fd;
-        fd.density     = param.density;
-        fd.friction    = param.friction;
-        fd.restitution = param.restitution;
-        fd.shape       = shape->GetB2Shape();
-        auto fixture   = b2body->CreateFixture(&fd);
-        SetB2Fixture(fixture);
+        b2Body* body = fixture_->GetBody();
+        if (body)
+        {
+            body->DestroyFixture(fixture_);
+        }
     }
 }
 
 Body* Fixture::GetBody() const
 {
+    fixture_->GetShape();
     KGE_ASSERT(fixture_);
     return static_cast<Body*>(fixture_->GetBody()->GetUserData());
-}
-
-Shape Fixture::GetShape() const
-{
-    KGE_ASSERT(fixture_);
-    return Shape(fixture_->GetShape());
 }
 
 void Fixture::GetMassData(float* mass, Point* center, float* inertia) const

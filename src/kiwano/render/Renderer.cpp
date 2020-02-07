@@ -502,7 +502,7 @@ void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, 
     }
 }
 
-void Renderer::CreateFontCollection(Font& font, Vector<String> const& file_paths)
+void Renderer::CreateFontCollection(Font& font, String const& file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -510,34 +510,28 @@ void Renderer::CreateFontCollection(Font& font, Vector<String> const& file_paths
         hr = E_UNEXPECTED;
     }
 
-    Vector<String> full_paths(file_paths);
-
     if (SUCCEEDED(hr))
     {
-        for (auto& file_path : full_paths)
+        if (!FileSystem::Instance().IsFileExists(file_path))
         {
-            if (!FileSystem::Instance().IsFileExists(file_path))
-            {
-                KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
-                hr = E_FAIL;
-            }
-
-            file_path = FileSystem::Instance().GetFullPathForFile(file_path);
+            KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
+            hr = E_FAIL;
         }
     }
 
     if (SUCCEEDED(hr))
     {
-        LPVOID   collection_key      = nullptr;
-        uint32_t collection_key_size = 0;
+        LPVOID   key       = nullptr;
+        uint32_t key_size  = 0;
+        String   full_path = FileSystem::Instance().GetFullPathForFile(file_path);
 
-        hr = font_collection_loader_->AddFilePaths(full_paths, &collection_key, &collection_key_size);
+        hr = font_collection_loader_->AddFilePaths({ full_path }, &key, &key_size);
 
         if (SUCCEEDED(hr))
         {
             ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(font_collection_loader_.get(), collection_key,
-                                                                          collection_key_size, &font_collection);
+            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(font_collection_loader_.get(), key, key_size,
+                                                                          &font_collection);
 
             if (SUCCEEDED(hr))
             {
@@ -549,7 +543,7 @@ void Renderer::CreateFontCollection(Font& font, Vector<String> const& file_paths
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
+void Renderer::CreateFontCollection(Font& font, Resource const& res)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -559,16 +553,16 @@ void Renderer::CreateFontCollection(Font& font, Vector<Resource> const& res_arr)
 
     if (SUCCEEDED(hr))
     {
-        LPVOID   collection_key      = nullptr;
-        uint32_t collection_key_size = 0;
+        LPVOID   key      = nullptr;
+        uint32_t key_size = 0;
 
-        hr = res_font_collection_loader_->AddResources(res_arr, &collection_key, &collection_key_size);
+        hr = res_font_collection_loader_->AddResources(Vector<Resource>{ res }, &key, &key_size);
 
         if (SUCCEEDED(hr))
         {
             ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(
-                res_font_collection_loader_.get(), collection_key, collection_key_size, &font_collection);
+            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(res_font_collection_loader_.get(), key,
+                                                                          key_size, &font_collection);
 
             if (SUCCEEDED(hr))
             {
@@ -789,7 +783,7 @@ void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
+void Renderer::CreateBrush(Brush& brush, Color const& color)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -811,7 +805,7 @@ void Renderer::CreateSolidBrush(Brush& brush, Color const& color)
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateLinearGradientBrush(Brush& brush, LinearGradientStyle const& style)
+void Renderer::CreateBrush(Brush& brush, LinearGradientStyle const& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -843,7 +837,7 @@ void Renderer::CreateLinearGradientBrush(Brush& brush, LinearGradientStyle const
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateRadialGradientBrush(Brush& brush, RadialGradientStyle const& style)
+void Renderer::CreateBrush(Brush& brush, RadialGradientStyle const& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)

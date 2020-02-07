@@ -25,6 +25,7 @@
 
 namespace kiwano
 {
+
 KGE_DECLARE_SMART_PTR(Canvas);
 
 /**
@@ -39,6 +40,10 @@ KGE_DECLARE_SMART_PTR(Canvas);
 class KGE_API Canvas : public Actor
 {
 public:
+    /// \~chinese
+    /// @brief 创建画布
+    static CanvasPtr Create();
+
     /// \~chinese
     /// @brief 构建空画布
     Canvas();
@@ -215,7 +220,7 @@ public:
     /// \~chinese
     /// @brief 设置轮廓样式
     /// @param stroke_style 轮廓样式
-    void SetStrokeStyle(const StrokeStyle& stroke_style);
+    void SetStrokeStyle(StrokeStylePtr stroke_style);
 
     /// \~chinese
     /// @brief 设置文字画刷样式
@@ -279,12 +284,12 @@ private:
     void UpdateCache() const;
 
 private:
-    float       stroke_width_;
-    TextStyle   text_style_;
-    StrokeStyle stroke_style_;
-    ShapeSink   shape_sink_;
-    BrushPtr    fill_brush_;
-    BrushPtr    stroke_brush_;
+    float          stroke_width_;
+    TextStyle      text_style_;
+    StrokeStylePtr stroke_style_;
+    ShapeSink      shape_sink_;
+    BrushPtr       fill_brush_;
+    BrushPtr       stroke_brush_;
 
     mutable bool                    cache_expired_;
     mutable TexturePtr              texture_cached_;
@@ -298,7 +303,7 @@ inline void Canvas::SetStrokeWidth(float width)
     stroke_width_ = std::max(width, 0.f);
 }
 
-inline void Canvas::SetStrokeStyle(const StrokeStyle& stroke_style)
+inline void Canvas::SetStrokeStyle(StrokeStylePtr stroke_style)
 {
     stroke_style_ = stroke_style;
 }

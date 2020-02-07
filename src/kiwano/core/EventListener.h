@@ -50,42 +50,40 @@ public:
     using Callback = Function<void(Event*)>;
 
     /// \~chinese
-    /// @brief 构造空监听器
+    /// @brief 创建监听器
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    static EventListenerPtr Create(EventType type, Callback const& callback);
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @param name 监听器名称
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    static EventListenerPtr Create(String const& name, EventType type, Callback const& callback);
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @tparam _EventTy 事件类型
+    /// @param callback 回调函数
+    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
+    static inline EventListenerPtr Create(Callback const& callback)
+    {
+        return EventListener::Create(KGE_EVENT(_EventTy), callback);
+    }
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @tparam _EventTy 事件类型
+    /// @param name 监听器名称
+    /// @param callback 回调函数
+    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
+    static inline EventListenerPtr Create(String const& name, Callback const& callback)
+    {
+        return EventListener::Create(name, KGE_EVENT(_EventTy), callback);
+    }
+
     EventListener();
-
-    /// \~chinese
-    /// @brief 构造监听器
-    /// @param type 监听的事件类型
-    /// @param callback 回调函数
-    EventListener(EventType type, Callback const& callback);
-
-    /// \~chinese
-    /// @brief 构造监听器
-    /// @param name 监听器名称
-    /// @param type 监听的事件类型
-    /// @param callback 回调函数
-    EventListener(String const& name, EventType type, Callback const& callback);
-
-    /// \~chinese
-    /// @brief 构造监听器
-    /// @tparam _EventTy 事件类型
-    /// @param callback 回调函数
-    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
-    inline EventListener(Callback const& callback)
-        : EventListener(KGE_EVENT(_EventTy), callback)
-    {
-    }
-
-    /// \~chinese
-    /// @brief 构造监听器
-    /// @tparam _EventTy 事件类型
-    /// @param name 监听器名称
-    /// @param callback 回调函数
-    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
-    inline EventListener(String const& name, Callback const& callback)
-        : EventListener(name, KGE_EVENT(_EventTy), callback)
-    {
-    }
 
     virtual ~EventListener();
 

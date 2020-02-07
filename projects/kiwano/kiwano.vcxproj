@@ -35,7 +35,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Transform.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h" />
     <ClInclude Include="..\..\src\kiwano\core\AsyncTask.h" />
     <ClInclude Include="..\..\src\kiwano\core\Component.h" />
@@ -48,13 +47,14 @@
     <ClInclude Include="..\..\src\kiwano\core\SmartPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
     <ClInclude Include="..\..\src\kiwano\core\TimerManager.h" />
-    <ClInclude Include="..\..\src\kiwano\math\constants.h" />
-    <ClInclude Include="..\..\src\kiwano\math\ease.h" />
-    <ClInclude Include="..\..\src\kiwano\math\math.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Constants.h" />
+    <ClInclude Include="..\..\src\kiwano\math\EaseFunctions.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Math.h" />
     <ClInclude Include="..\..\src\kiwano\math\Matrix.hpp" />
-    <ClInclude Include="..\..\src\kiwano\math\rand.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Random.h" />
     <ClInclude Include="..\..\src\kiwano\math\Rect.hpp" />
-    <ClInclude Include="..\..\src\kiwano\math\scalar.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Scalar.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Transform.hpp" />
     <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\Application.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
@@ -108,7 +108,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Transform.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Component.cpp" />

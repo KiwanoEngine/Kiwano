@@ -18,29 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/Transform.h>
+#pragma once
+#include <kiwano/core/Common.h>
+#include <kiwano/math/Vec2.hpp>
+#include <kiwano/math/Rect.hpp>
+#include <kiwano/math/Matrix.hpp>
+#include <kiwano/math/Transform.hpp>
+#include <kiwano/math/Constants.h>
+#include <kiwano/math/EaseFunctions.h>
+#include <kiwano/math/Scalar.h>
 
 namespace kiwano
 {
-Transform::Transform()
-    : position()
-    , rotation(0.f)
-    , scale(1.f, 1.f)
-    , skew(0.f, 0.f)
-{
-}
 
-Matrix3x2 Transform::ToMatrix() const
-{
-    if (!skew.IsOrigin())
-    {
-        return Matrix3x2::Skewing(skew) * Matrix3x2::SRT(position, scale, rotation);
-    }
-    return Matrix3x2::SRT(position, scale, rotation);
-}
+using Vec2      = kiwano::math::Vec2T<float>;
+using Rect      = kiwano::math::RectT<float>;
+using Matrix3x2 = kiwano::math::Matrix3x2T<float>;
+using Transform = kiwano::math::TransformT<float>;
 
-bool Transform::operator==(Transform const& rhs) const
-{
-    return position == rhs.position && rotation == rhs.rotation && scale == rhs.scale && skew == rhs.skew;
-}
+using Point = Vec2;
+using Size  = Vec2;
+
 }  // namespace kiwano

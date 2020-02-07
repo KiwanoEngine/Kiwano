@@ -24,6 +24,23 @@ namespace kiwano
 {
 namespace imgui
 {
+
+ImGuiLayerPtr ImGuiLayer::Create()
+{
+    ImGuiLayerPtr ptr = new (std::nothrow) ImGuiLayer;
+    return ptr;
+}
+
+ImGuiLayerPtr ImGuiLayer::Create(String const& name, ImGuiPipeline const& item)
+{
+    ImGuiLayerPtr ptr = new (std::nothrow) ImGuiLayer;
+    if (ptr)
+    {
+        ptr->AddItem(name, item);
+    }
+    return ptr;
+}
+
 ImGuiLayer::ImGuiLayer()
 {
     SetSwallowEvents(true);

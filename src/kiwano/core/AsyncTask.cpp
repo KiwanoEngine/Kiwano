@@ -23,15 +23,20 @@
 
 namespace kiwano
 {
+
+AsyncTaskPtr AsyncTask::Create(AsyncTaskFunc func)
+{
+    AsyncTaskPtr ptr = new (std::nothrow) AsyncTask;
+    if (ptr)
+    {
+        ptr->Then(func);
+    }
+    return ptr;
+}
+
 AsyncTask::AsyncTask()
     : thread_(Closure(this, &AsyncTask::TaskThread))
 {
-}
-
-AsyncTask::AsyncTask(AsyncTaskFunc func)
-    : AsyncTask()
-{
-    Then(func);
 }
 
 AsyncTask::~AsyncTask() {}

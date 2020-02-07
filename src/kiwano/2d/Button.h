@@ -41,19 +41,6 @@ public:
 
     Button();
 
-    /// \~chinese
-    /// @brief 构造按钮
-    /// @param click 按钮点击回调函数
-    explicit Button(Callback const& click);
-
-    /// \~chinese
-    /// @brief 构造按钮
-    /// @param click 按钮点击回调函数
-    /// @param pressed 按钮按下回调函数
-    /// @param mouse_over 按钮移入回调函数
-    /// @param mouse_out 按钮移出回调函数
-    Button(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
-
     virtual ~Button();
 
     /// \~chinese
@@ -126,17 +113,18 @@ public:
     SpriteButton();
 
     /// \~chinese
-    /// @brief 构造精灵按钮
+    /// @brief 创建精灵按钮
     /// @param click 按钮点击回调函数
-    explicit SpriteButton(Callback const& click);
+    static SpriteButtonPtr Create(Callback const& click);
 
     /// \~chinese
-    /// @brief 构造精灵按钮
+    /// @brief 创建精灵按钮
     /// @param click 按钮点击回调函数
     /// @param pressed 按钮按下回调函数
     /// @param mouse_over 按钮移入回调函数
     /// @param mouse_out 按钮移出回调函数
-    SpriteButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
+    static SpriteButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
+                                  Callback const& mouse_out);
 };
 
 /// \~chinese
@@ -149,16 +137,16 @@ public:
     TextButton();
 
     /// \~chinese
-    /// @brief 构造文字按钮
+    /// @brief 创建文字按钮
     /// @param click 按钮点击回调函数
-    explicit TextButton(Callback const& click);
+    static TextButtonPtr Create(Callback const& click);
 
     /// \~chinese
-    /// @brief 构造文字按钮
+    /// @brief 创建文字按钮
     /// @param click 按钮点击回调函数
     /// @param pressed 按钮按下回调函数
     /// @param mouse_over 按钮移入回调函数
     /// @param mouse_out 按钮移出回调函数
-    TextButton(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
+    static TextButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
 };
 }  // namespace kiwano

@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/event/EventType.h>
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 
 namespace kiwano
 {

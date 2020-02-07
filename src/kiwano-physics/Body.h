@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano-physics/ContactEdge.h>
 #include <kiwano-physics/Fixture.h>
-#include <kiwano-physics/Shape.h>
 #include <kiwano-physics/helper.h>
 
 namespace kiwano
@@ -51,6 +50,20 @@ public:
         Dynamic,     ///< 动态物体
     };
 
+    /// \~chinese
+    /// @brief 初始化
+    /// @param[in] world 物理世界
+    /// @param[in] actor 绑定的角色
+    /// @param[in] type 物体类型
+    static BodyPtr Create(World* world, ActorPtr actor, Type type);
+
+    /// \~chinese
+    /// @brief 初始化
+    /// @param[in] world 物理世界
+    /// @param[in] actor 绑定的角色
+    /// @param[in] type 物体类型
+    static BodyPtr Create(World* world, Actor* actor, Type type);
+
     Body();
 
     virtual ~Body();
@@ -69,49 +82,53 @@ public:
 
     /// \~chinese
     /// @brief 添加夹具
-    /// @param shape 物体形状
-    /// @param density 物体密度
-    Fixture AddFixture(Shape* shape, const Fixture::Param& param);
+    void AddFixture(FixturePtr fixture);
 
     /// \~chinese
     /// @brief 添加圆形夹具
     /// @param radius 圆形半径
     /// @param density 物体密度
-    Fixture AddCircleShape(float radius, float density = 0.f);
+    /// @param 
+    Fixture* AddCircleShape(float radius, float density, float friction = 0.2f, float restitution = 0.f,
+                            bool is_sensor = false);
 
     /// \~chinese
-    /// @brief 添加盒形夹具
-    /// @param size 盒大小
+    /// @brief 添加矩形夹具
+    /// @param size 矩形大小
     /// @param density 物体密度
-    Fixture AddBoxShape(Vec2 const& size, float density = 0.f);
+    Fixture* AddRectShape(Vec2 const& size, float density, float friction = 0.2f, float restitution = 0.f,
+                          bool is_sensor = false);
 
     /// \~chinese
     /// @brief 添加多边形夹具
     /// @param vertexs 多边形端点
     /// @param density 物体密度
-    Fixture AddPolygonShape(Vector<Point> const& vertexs, float density = 0.f);
+    Fixture* AddPolygonShape(Vector<Point> const& vertexs, float density, float friction = 0.2f,
+                             float restitution = 0.f, bool is_sensor = false);
 
     /// \~chinese
     /// @brief 添加线段形夹具
     /// @param p1 线段起点
     /// @param p2 线段终点
     /// @param density 物体密度
-    Fixture AddEdgeShape(Point const& p1, Point const& p2, float density = 0.f);
+    Fixture* AddEdgeShape(Point const& p1, Point const& p2, float density, float friction = 0.2f,
+                          float restitution = 0.f, bool is_sensor = false);
 
     /// \~chinese
     /// @brief 添加链条形夹具
     /// @param vertexs 链条端点
     /// @param loop 是否闭合
     /// @param density 物体密度
-    Fixture AddChainShape(Vector<Point> const& vertexs, bool loop, float density = 0.f);
+    Fixture* AddChainShape(Vector<Point> const& vertexs, bool loop, float density, float friction = 0.2f,
+                           float restitution = 0.f, bool is_sensor = false);
+
+    /// \~chinese
+    /// @brief 移除夹具
+    void RemoveFixture(FixturePtr fixture);
 
     /// \~chinese
     /// @brief 获取夹具列表
     FixtureList GetFixtureList() const;
-
-    /// \~chinese
-    /// @brief 移除夹具
-    void RemoveFixture(Fixture const& fixture);
 
     /// \~chinese
     /// @brief 获取接触边列表
@@ -318,9 +335,16 @@ private:
     uint16_t category_bits_;
     uint16_t mask_bits_;
     int16_t  group_index_;
+
+    Vector<FixturePtr> fixtures_;
 };
 
 /** @} */
+
+inline BodyPtr Body::Create(World* world, ActorPtr actor, Type type)
+{
+    return Body::Create(world, actor.get(), type);
+}
 
 inline bool Body::InitBody(World* world, ActorPtr actor)
 {
@@ -330,7 +354,12 @@ inline bool Body::InitBody(World* world, ActorPtr actor)
 inline FixtureList Body::GetFixtureList() const
 {
     KGE_ASSERT(body_);
-    return FixtureList(Fixture(body_->GetFixtureList()));
+
+    if (!body_->GetFixtureList())
+        return FixtureList();
+
+    Fixture* fixture = static_cast<Fixture*>(body_->GetFixtureList()->GetUserData());
+    return FixtureList(fixture);
 }
 
 inline ContactEdgeList Body::GetContactList() const

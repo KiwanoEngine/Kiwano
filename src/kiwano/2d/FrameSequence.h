@@ -35,13 +35,13 @@ class KGE_API FrameSequence : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief 构建空序列帧
-    FrameSequence();
+    /// @brief 创建序列帧
+    /// @param frames 图像帧集合
+    static FrameSequencePtr Create(Vector<FramePtr> const& frames);
 
     /// \~chinese
-    /// @brief 构建序列帧
-    /// @param frames 图像帧集合
-    explicit FrameSequence(Vector<FramePtr> const& frames);
+    /// @brief 构建空序列帧
+    FrameSequence();
 
     virtual ~FrameSequence();
 

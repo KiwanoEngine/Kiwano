@@ -19,7 +19,6 @@
     <ClInclude Include="..\..\src\kiwano-physics\helper.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Joint.h" />
     <ClInclude Include="..\..\src\kiwano-physics\kiwano-physics.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\Shape.h" />
     <ClInclude Include="..\..\src\kiwano-physics\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -29,7 +28,6 @@
     <ClCompile Include="..\..\src\kiwano-physics\ContactEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Fixture.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Joint.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

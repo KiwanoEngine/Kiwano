@@ -40,6 +40,10 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
 class KGE_API SoundPlayer : public virtual ObjectBase
 {
 public:
+    /// \~chinese
+    /// @brief ´´½¨ÒôÆµ²¥·ÅÆ÷
+    static SoundPlayerPtr Create();
+
     SoundPlayer();
 
     ~SoundPlayer();

@@ -25,22 +25,31 @@
 namespace kiwano
 {
 
+TextActorPtr TextActor::Create(const String& text)
+{
+    TextActorPtr ptr = new (std::nothrow) TextActor;
+    if (ptr)
+    {
+        ptr->SetText(text);
+    }
+    return ptr;
+}
+
+TextActorPtr TextActor::Create(const String& text, const TextStyle& style)
+{
+    TextActorPtr ptr = new (std::nothrow) TextActor;
+    if (ptr)
+    {
+        ptr->SetText(text);
+        ptr->SetStyle(style);
+    }
+    return ptr;
+}
+
 TextActor::TextActor()
-    : TextActor(String())
-{
-}
-
-TextActor::TextActor(String const& text)
-    : TextActor(text, TextStyle())
-{
-}
-
-TextActor::TextActor(String const& text, const TextStyle& style)
     : show_underline_(false)
     , show_strikethrough_(false)
 {
-    SetText(text);
-    SetStyle(style);
 }
 
 TextActor::~TextActor() {}

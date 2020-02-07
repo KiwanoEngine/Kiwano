@@ -114,13 +114,13 @@ public:
     /// @brief 创建字体集
     /// @param[out] font 字体
     /// @param[in] file_paths 字体文件路径
-    void CreateFontCollection(Font& font, Vector<String> const& file_paths);
+    void CreateFontCollection(Font& font, String const& file_path);
 
     /// \~chinese
     /// @brief 创建字体集
     /// @param[out] font 字体
     /// @param[in] res_arr 字体资源
-    void CreateFontCollection(Font& font, Vector<Resource> const& res_arr);
+    void CreateFontCollection(Font& font, Resource const& res);
 
     /// \~chinese
     /// @brief 创建文字格式
@@ -173,19 +173,19 @@ public:
     /// @brief 创建纯色画刷
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
-    void CreateSolidBrush(Brush& brush, Color const& color);
+    void CreateBrush(Brush& brush, Color const& color);
 
     /// \~chinese
     /// @brief 创建线性渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
-    void CreateLinearGradientBrush(Brush& brush, LinearGradientStyle const& style);
+    void CreateBrush(Brush& brush, LinearGradientStyle const& style);
 
     /// \~chinese
     /// @brief 创建径向渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
-    void CreateRadialGradientBrush(Brush& brush, RadialGradientStyle const& style);
+    void CreateBrush(Brush& brush, RadialGradientStyle const& style);
 
     /// \~chinese
     /// @brief 创建线条样式

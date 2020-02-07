@@ -19,13 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Transform.h>
 #include <kiwano/2d/action/ActionManager.h>
 #include <kiwano/core/EventDispatcher.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/TimerManager.h>
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 
 namespace kiwano
 {
@@ -70,6 +69,10 @@ public:
     /// \~chinese
     /// @brief 角色更新回调函数
     using UpdateCallback = Function<void(Duration)>;
+
+    /// \~chinese
+    /// @brief 创建角色
+    static ActorPtr Create();
 
     Actor();
 

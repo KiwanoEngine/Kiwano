@@ -58,6 +58,14 @@ class KGE_API Texture : public virtual ObjectBase
     friend class Renderer;
 
 public:
+    /// \~chinese
+    /// @brief 从本地文件创建纹理
+    static TexturePtr Create(String const& file_path);
+
+    /// \~chinese
+    /// @brief 从资源创建纹理
+    static TexturePtr Create(Resource const& res);
+
     Texture();
 
     virtual ~Texture();

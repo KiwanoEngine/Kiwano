@@ -29,21 +29,21 @@ template <typename _Ty>
 struct RectT
 {
 public:
-    using value_type = _Ty;
+    using ValueType = _Ty;
 
-    Vec2T<value_type> left_top;
-    Vec2T<value_type> right_bottom;
+    Vec2T<ValueType> left_top;
+    Vec2T<ValueType> right_bottom;
 
 public:
     RectT() {}
 
-    RectT(value_type left, value_type top, value_type right, value_type bottom)
+    RectT(ValueType left, ValueType top, ValueType right, ValueType bottom)
         : left_top(left, top)
         , right_bottom(right, bottom)
     {
     }
 
-    RectT(const Vec2T<value_type>& left_top, const Vec2T<value_type>& right_bottom)
+    RectT(const Vec2T<ValueType>& left_top, const Vec2T<ValueType>& right_bottom)
         : left_top(left_top)
         , right_bottom(right_bottom)
     {
@@ -67,70 +67,70 @@ public:
         return (left_top == rect.left_top) && (right_bottom == rect.right_bottom);
     }
 
-    inline void Set(value_type left, value_type top, value_type right, value_type bottom)
+    inline void Set(ValueType left, ValueType top, ValueType right, ValueType bottom)
     {
-        left_top     = Vec2T<value_type>{ left, top };
-        right_bottom = Vec2T<value_type>{ right, bottom };
+        left_top     = Vec2T<ValueType>{ left, top };
+        right_bottom = Vec2T<ValueType>{ right, bottom };
     }
 
-    inline Vec2T<value_type> GetCenter() const
+    inline Vec2T<ValueType> GetCenter() const
     {
-        return Vec2T<value_type>{ (left_top.x + right_bottom.x) / 2, (left_top.y + right_bottom.y) / 2 };
+        return Vec2T<ValueType>{ (left_top.x + right_bottom.x) / 2, (left_top.y + right_bottom.y) / 2 };
     }
 
-    inline Vec2T<value_type> GetLeftTop() const
+    inline Vec2T<ValueType> GetLeftTop() const
     {
         return left_top;
     }
 
-    inline Vec2T<value_type> GetRightBottom() const
+    inline Vec2T<ValueType> GetRightBottom() const
     {
         return right_bottom;
     }
 
-    inline Vec2T<value_type> GetRightTop() const
+    inline Vec2T<ValueType> GetRightTop() const
     {
-        return Vec2T<value_type>{ right_bottom.x, left_top.y };
+        return Vec2T<ValueType>{ right_bottom.x, left_top.y };
     }
 
-    inline Vec2T<value_type> GetLeftBottom() const
+    inline Vec2T<ValueType> GetLeftBottom() const
     {
-        return Vec2T<value_type>{ left_top.x, right_bottom.y };
+        return Vec2T<ValueType>{ left_top.x, right_bottom.y };
     }
 
-    inline value_type GetLeft() const
+    inline ValueType GetLeft() const
     {
         return left_top.x;
     }
 
-    inline value_type GetTop() const
+    inline ValueType GetTop() const
     {
         return left_top.y;
     }
 
-    inline value_type GetRight() const
+    inline ValueType GetRight() const
     {
         return right_bottom.x;
     }
 
-    inline value_type GetBottom() const
+    inline ValueType GetBottom() const
     {
         return right_bottom.y;
     }
 
-    inline value_type GetWidth() const
+    inline ValueType GetWidth() const
     {
         return right_bottom.x - left_top.x;
     }
 
-    inline value_type GetHeight() const
+    inline ValueType GetHeight() const
     {
         return right_bottom.y - left_top.y;
     }
 
-    inline Vec2T<value_type> GetSize() const
+    inline Vec2T<ValueType> GetSize() const
     {
-        return Vec2T<value_type>{ GetWidth(), GetHeight() };
+        return Vec2T<ValueType>{ GetWidth(), GetHeight() };
     }
 
     inline bool IsEmpty() const
@@ -138,7 +138,7 @@ public:
         return left_top.IsOrigin() && right_bottom.IsOrigin();
     }
 
-    inline bool ContainsPoint(const Vec2T<value_type>& point) const
+    inline bool ContainsPoint(const Vec2T<ValueType>& point) const
     {
         return point.x >= left_top.x && point.x <= right_bottom.x && point.y >= left_top.y && point.y <= right_bottom.y;
     }

@@ -46,23 +46,23 @@ public:
     using Callback = Function<void(Timer* /* self */, Duration /* dt */)>;
 
     /// \~chinese
-    /// @brief 构造空定时器
-    Timer();
-
-    /// \~chinese
-    /// @brief 构造定时器
+    /// @brief 创建定时器
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer(Callback const& cb, Duration interval, int times = -1);
+    static TimerPtr Create(Callback const& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief 构造定时器
+    /// @brief 创建定时器
     /// @param name 名称
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer(String const& name, Callback const& cb, Duration interval, int times = -1);
+    static TimerPtr Create(String const& name, Callback const& cb, Duration interval, int times = -1);
+
+    /// \~chinese
+    /// @brief 构造空定时器
+    Timer();
 
     /// \~chinese
     /// @brief 启动定时器

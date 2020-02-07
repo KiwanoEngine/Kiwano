@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/math/math.h>
+#include <kiwano/math/Math.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
 #include <kiwano/platform/win32/helper.h>

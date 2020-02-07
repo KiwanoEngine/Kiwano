@@ -36,6 +36,17 @@ KGE_DECLARE_SMART_PTR(HttpRequest);
  * @{
  */
 
+/// \~chinese
+/// @brief HTTP请求类型
+enum class HttpType
+{
+    Unknown,  ///< 未知
+    Get,      ///< HTTP GET请求
+    Post,     ///< HTTP POST请求
+    Put,      ///< HTTP PUT请求
+    Delete    ///< HTTP DELETE请求
+};
+
 /**
  * \~chinese
  * @brief HTTP请求
@@ -48,19 +59,31 @@ public:
     using ResponseCallback = Function<void(HttpRequest* /* request */, HttpResponse* /* response */)>;
 
     /// \~chinese
-    /// @brief 请求类型
-    enum class Type
-    {
-        Unknown,  ///< 未知
-        Get,      ///< HTTP GET请求
-        Post,     ///< HTTP POST请求
-        Put,      ///< HTTP PUT请求
-        Delete    ///< HTTP DELETE请求
-    };
+    /// @brief 创建HTTP请求
+    /// @param url 请求地址
+    /// @param type 请求类型
+    /// @param callback 响应回调函数
+    static HttpRequestPtr Create(String const& url, HttpType type, ResponseCallback const& callback);
+
+    /// \~chinese
+    /// @brief 创建HTTP请求
+    /// @param url 请求地址
+    /// @param type 请求类型
+    /// @param data 请求数据
+    /// @param callback 响应回调函数
+    static HttpRequestPtr Create(String const& url, HttpType type, String const& data, ResponseCallback const& callback);
+
+    /// \~chinese
+    /// @brief 创建HTTP请求
+    /// @param url 请求地址
+    /// @param type 请求类型
+    /// @param json 请求的JSON数据
+    /// @param callback 响应回调函数
+    static HttpRequestPtr Create(String const& url, HttpType type, Json const& json, ResponseCallback const& callback);
 
     HttpRequest();
 
-    HttpRequest(Type type);
+    HttpRequest(HttpType type);
 
     /// \~chinese
     /// @brief 设置请求地址
@@ -68,14 +91,14 @@ public:
 
     /// \~chinese
     /// @brief 设置请求类型
-    void SetType(Type type);
+    void SetType(HttpType type);
 
     /// \~chinese
-    /// @brief 设置请求携带的数据
+    /// @brief 设置请求数据
     void SetData(String const& data);
 
     /// \~chinese
-    /// @brief 设置请求携带的JSON数据
+    /// @brief 设置请求的JSON数据
     void SetJsonData(Json const& json);
 
     /// \~chinese
@@ -96,7 +119,7 @@ public:
 
     /// \~chinese
     /// @brief 获取请求类型
-    Type GetType() const;
+    HttpType GetType() const;
 
     /// \~chinese
     /// @brief 获取请求数据
@@ -115,7 +138,7 @@ public:
     ResponseCallback const& GetResponseCallback() const;
 
 private:
-    Type                type_;
+    HttpType                type_;
     String              url_;
     String              data_;
     Map<String, String> headers_;
@@ -125,11 +148,11 @@ private:
 /** @} */
 
 inline HttpRequest::HttpRequest()
-    : type_(Type::Unknown)
+    : type_(HttpType::Unknown)
 {
 }
 
-inline HttpRequest::HttpRequest(Type type)
+inline HttpRequest::HttpRequest(HttpType type)
     : type_(type)
 {
 }
@@ -144,12 +167,12 @@ inline String const& HttpRequest::GetUrl() const
     return url_;
 }
 
-inline void HttpRequest::SetType(Type type)
+inline void HttpRequest::SetType(HttpType type)
 {
     type_ = type;
 }
 
-inline HttpRequest::Type HttpRequest::GetType() const
+inline HttpType HttpRequest::GetType() const
 {
     return type_;
 }

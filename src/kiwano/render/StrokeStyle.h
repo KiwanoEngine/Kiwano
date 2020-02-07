@@ -19,12 +19,15 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
 
 namespace kiwano
 {
 class RenderContext;
 class Renderer;
+
+KGE_DECLARE_SMART_PTR(StrokeStyle);
 
 /**
  * \addtogroup Render
@@ -66,26 +69,20 @@ enum class DashStyle
 
 /// \~chinese
 /// @brief 线条样式
-class StrokeStyle
+class StrokeStyle : public virtual ObjectBase
 {
     friend class RenderContext;
     friend class Renderer;
 
 public:
-    StrokeStyle();
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
     /// \~chinese
     /// @brief 创建线条样式
     /// @param cap 线条端点样式
     /// @param line_join 线条交点样式
     /// @param dash 线条虚线样式
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStyle Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
-                              DashStyle dash = DashStyle::Solid, float dash_offset = 0.0f);
+    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
+                                 DashStyle dash = DashStyle::Solid, float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -94,8 +91,8 @@ public:
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_size 线条虚线数组大小
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStyle Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
-                              const float* dash_array = nullptr, size_t dash_size = 0, float dash_offset = 0.0f);
+    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
+                                 const float* dash_array = nullptr, size_t dash_size = 0, float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -105,11 +102,17 @@ public:
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_offset 线条虚线偏移量
     template <size_t _DashSize>
-    static StrokeStyle Create(CapStyle cap, LineJoinStyle                     line_join = LineJoinStyle::Miter,
-                              float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
+    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle                     line_join = LineJoinStyle::Miter,
+                                 float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
     {
         return StrokeStyle::Create(cap, line_join, dash_array, _DashSize, dash_offset);
     }
+
+    StrokeStyle();
+
+    /// \~chinese
+    /// @brief 是否有效
+    bool IsValid() const;
 
 private:
     ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;

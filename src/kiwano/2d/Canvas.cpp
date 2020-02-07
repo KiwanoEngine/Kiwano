@@ -24,6 +24,13 @@
 
 namespace kiwano
 {
+
+CanvasPtr Canvas::Create()
+{
+    CanvasPtr ptr = new (std::nothrow) Canvas;
+    return ptr;
+}
+
 Canvas::Canvas()
     : cache_expired_(false)
     , stroke_width_(1.0f)

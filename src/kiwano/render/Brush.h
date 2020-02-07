@@ -94,7 +94,20 @@ class KGE_API Brush : public virtual ObjectBase
 
 public:
     /// \~chinese
-    /// @brief 构造默认画刷
+    /// @brief 创建纯色画刷
+    /// @param color 画刷颜色
+    static BrushPtr Create(Color const& color);
+
+    /// \~chinese
+    /// @brief 创建线性渐变样式
+    /// @param style 线性渐变样式
+    static BrushPtr Create(LinearGradientStyle const& style);
+
+    /// \~chinese
+    /// @brief 创建径向渐变样式
+    /// @param style 径向渐变样式
+    static BrushPtr Create(RadialGradientStyle const& style);
+
     Brush();
 
     /// \~chinese

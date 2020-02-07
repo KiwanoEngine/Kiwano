@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/math/scalar.h>
+#include <kiwano/math/Scalar.h>
 
 namespace kiwano
 {
