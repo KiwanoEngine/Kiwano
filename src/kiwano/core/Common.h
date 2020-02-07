@@ -92,20 +92,6 @@ using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
 /// @brief 函数封装器
-/// @par
-///   使用函数封装器可以储存、复制和调用任何可调用目标，示例代码如下：
-///   @code
-///     Function<bool(int)> func1 = StaticFunc;               // bool
-///     StaticFunc(int x);
-///     Function<bool(int)> func2 = Closure(&t, &T::Func);    // bool
-///     T::Func(int x);
-///     Function<bool(int)> func3 = T::StaticFunc;            // static bool
-///     T::StaticFunc(int x);
-///     Function<bool(int)> func4 = [](int x) -> bool {};     // Lambda function
-///     Function<bool(int)> func5 = std::bind(&T::Func, &t);  // std::bind
-///     Function<bool(int)> func5 = Callable();               // Callable
-///     objects: struct Callable { bool operator()(int x) {} };
-///   @endcode
 template <typename _FuncTy>
 using Function = oc::function<_FuncTy>;
 

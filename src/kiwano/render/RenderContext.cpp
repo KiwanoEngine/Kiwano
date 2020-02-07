@@ -316,22 +316,20 @@ void RenderContext::DrawTextLayout(TextLayout const& layout, Point const& offset
     }
 }
 
-void RenderContext::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, D2D1_PIXEL_FORMAT format)
+void RenderContext::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
     ComPtr<ID2D1Bitmap> saved_bitmap;
-    HRESULT             hr =
-        render_target_->CreateBitmap(D2D1::SizeU(size.x, size.y), D2D1::BitmapProperties(format), &saved_bitmap);
+
+    HRESULT hr = render_target_->CreateBitmap(D2D1::SizeU(size.x, size.y), D2D1::BitmapProperties(), &saved_bitmap);
 
     if (SUCCEEDED(hr))
     {
         texture.SetBitmap(saved_bitmap);
     }
-    else
-    {
-        win32::ThrowIfFailed(hr);
-    }
+
+    win32::ThrowIfFailed(hr);
 }
 
 void RenderContext::PushClipRect(Rect const& clip_rect)

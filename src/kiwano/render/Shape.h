@@ -115,6 +115,7 @@ public:
     /// @brief Çå³ýÐÎ×´
     void Clear();
 
+#if defined(KGE_WIN32)
 private:
     ComPtr<ID2D1Geometry> GetGeometry() const;
 
@@ -122,10 +123,12 @@ private:
 
 private:
     ComPtr<ID2D1Geometry> geo_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1Geometry> Shape::GetGeometry() const
 {
     return geo_;
@@ -135,5 +138,6 @@ inline void Shape::SetGeometry(ComPtr<ID2D1Geometry> shape)
 {
     geo_ = shape;
 }
+#endif
 
 }  // namespace kiwano

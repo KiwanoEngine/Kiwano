@@ -165,6 +165,7 @@ public:
 
     void SetDirtyFlag(uint8_t flag);
 
+#if defined(KGE_WIN32)
 private:
     ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
@@ -174,11 +175,12 @@ private:
 
     void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
 
-private:
-    uint8_t dirty_flag_;
-
     ComPtr<IDWriteTextFormat> text_format_;
     ComPtr<IDWriteTextLayout> text_layout_;
+#endif
+
+private:
+    uint8_t dirty_flag_;
 
     String    text_;
     TextStyle style_;
@@ -216,16 +218,6 @@ inline void TextLayout::SetDirtyFlag(uint8_t flag)
     dirty_flag_ = flag;
 }
 
-inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
-{
-    return text_format_;
-}
-
-inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
-{
-    return text_layout_;
-}
-
 inline BrushPtr TextLayout::GetFillBrush() const
 {
     return style_.fill_brush;
@@ -239,16 +231,6 @@ inline BrushPtr TextLayout::GetOutlineBrush() const
 inline void TextLayout::SetFillBrush(BrushPtr brush)
 {
     style_.fill_brush = brush;
-}
-
-inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
-{
-    text_format_ = format;
-}
-
-inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)
-{
-    text_layout_ = layout;
 }
 
 inline void TextLayout::SetOutlineBrush(BrushPtr brush)
@@ -265,4 +247,27 @@ inline void TextLayout::SetOutlineStroke(StrokeStylePtr outline_stroke)
 {
     style_.outline_stroke = outline_stroke;
 }
+
+#if defined(KGE_WIN32)
+inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
+{
+    return text_format_;
+}
+
+inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
+{
+    return text_layout_;
+}
+
+inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
+{
+    text_format_ = format;
+}
+
+inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)
+{
+    text_layout_ = layout;
+}
+#endif
+
 }  // namespace kiwano

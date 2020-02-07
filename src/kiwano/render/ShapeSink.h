@@ -134,6 +134,10 @@ public:
     void Clear();
 
 private:
+    ShapePtr                  shape_;
+
+#if defined(KGE_WIN32)
+private:
     ComPtr<ID2D1PathGeometry> GetPathGeometry() const;
 
     void SetPathGeometry(ComPtr<ID2D1PathGeometry> path);
@@ -142,14 +146,14 @@ private:
 
     void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink);
 
-private:
-    ShapePtr                  shape_;
-    ComPtr<ID2D1PathGeometry> path_geo_;
     ComPtr<ID2D1GeometrySink> sink_;
+    ComPtr<ID2D1PathGeometry> path_geo_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1PathGeometry> ShapeSink::GetPathGeometry() const
 {
     return path_geo_;
@@ -169,4 +173,6 @@ inline void ShapeSink::SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)
 {
     sink_ = sink;
 }
+#endif
+
 }  // namespace kiwano

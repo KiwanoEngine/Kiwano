@@ -150,14 +150,17 @@ private:
     /// @brief …Ë÷√Õ∏√˜∂»
     void SetOpacity(float opacity);
 
+private:
+    Type  type_;
+    float opacity_;
+
+#if defined(KGE_WIN32)
     void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
 
     ComPtr<ID2D1Brush> GetBrush() const;
 
-private:
-    Type               type_;
-    float              opacity_;
     ComPtr<ID2D1Brush> raw_;
+#endif
 };
 
 /** @} */
@@ -167,8 +170,21 @@ inline Brush::Type Brush::GetType() const
     return type_;
 }
 
+#if defined(KGE_WIN32)
+inline void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
+{
+    type_ = type;
+    raw_  = brush;
+    if (raw_)
+    {
+        raw_->SetOpacity(opacity_);
+    }
+}
+
 inline ComPtr<ID2D1Brush> Brush::GetBrush() const
 {
     return raw_;
 }
+#endif
+
 }  // namespace kiwano

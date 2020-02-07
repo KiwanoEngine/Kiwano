@@ -83,15 +83,16 @@ bool GifSprite::Load(GifImagePtr gif)
     {
         gif_ = gif;
 
-        next_index_          = 0;
-        loop_count_          = 0;
-        frame_.disposal_type = GifImage::DisposalType::None;
+        next_index_ = 0;
+        loop_count_ = 0;
+        frame_      = GifImage::Frame();
 
-        SetSize(Size{ static_cast<float>(gif_->GetWidthInPixels()), static_cast<float>(gif_->GetHeightInPixels()) });
+        SetSize(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
 
         if (!frame_rt_)
         {
-            Renderer::Instance().CreateTextureRenderTarget(frame_rt_);
+            Size frame_size = GetSize();
+            Renderer::Instance().CreateTextureRenderTarget(frame_rt_, &frame_size);
         }
 
         if (gif_->GetFramesCount() > 0)
@@ -109,7 +110,7 @@ void GifSprite::OnRender(RenderContext& ctx)
     {
         PrepareToRender(ctx);
 
-        ctx.DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
+        ctx.DrawTexture(*frame_to_render_, nullptr, &GetBounds());
     }
 }
 
@@ -137,10 +138,10 @@ void GifSprite::SetGifImage(GifImagePtr gif)
 
 void GifSprite::RestartAnimation()
 {
-    animating_           = true;
-    next_index_          = 0;
-    loop_count_          = 0;
-    frame_.disposal_type = GifImage::DisposalType::None;
+    animating_  = true;
+    next_index_ = 0;
+    loop_count_ = 0;
+    frame_      = GifImage::Frame();
 }
 
 void GifSprite::ComposeNextFrame()
@@ -181,7 +182,7 @@ void GifSprite::DisposeCurrentFrame()
 void GifSprite::OverlayNextFrame()
 {
     KGE_ASSERT(frame_rt_);
-    KGE_ASSERT(gif_ && gif_->IsValid());
+    KGE_ASSERT(gif_);
 
     frame_ = gif_->GetFrame(next_index_);
 
@@ -196,6 +197,7 @@ void GifSprite::OverlayNextFrame()
 
         if (next_index_ == 0)
         {
+            frame_rt_->Clear();
             loop_count_++;
         }
 
@@ -217,6 +219,7 @@ void GifSprite::OverlayNextFrame()
         }
     }
 
+    // Execute callback
     if (IsLastFrame() && loop_cb_)
     {
         loop_cb_(loop_count_ - 1);
@@ -239,8 +242,7 @@ void GifSprite::SaveComposedFrame()
         if (!saved_frame_)
         {
             saved_frame_ = new Texture;
-            frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels(),
-                                     frame_to_be_saved->GetPixelFormat());
+            frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels());
         }
 
         saved_frame_->CopyFrom(frame_to_be_saved);

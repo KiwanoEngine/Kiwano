@@ -78,16 +78,18 @@ public:
     void SetMaskTransform(Matrix3x2 const& matrix);
 
 private:
-    ComPtr<ID2D1Layer> GetLayer() const;
-
-    void SetLayer(ComPtr<ID2D1Layer> layer);
-
-private:
     Rect               area_;
     float              opacity_;
     ShapePtr           mask_;
     Matrix3x2          mask_transform_;
+
+#if defined(KGE_WIN32)
+    ComPtr<ID2D1Layer> GetLayer() const;
+
+    void SetLayer(ComPtr<ID2D1Layer> layer);
+
     ComPtr<ID2D1Layer> layer_;
+#endif
 };
 
 /** @} */
@@ -137,6 +139,7 @@ inline void LayerArea::SetMaskTransform(Matrix3x2 const& matrix)
     mask_transform_ = matrix;
 }
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1Layer> LayerArea::GetLayer() const
 {
     return layer_;
@@ -146,4 +149,6 @@ inline void LayerArea::SetLayer(ComPtr<ID2D1Layer> layer)
 {
     layer_ = layer;
 }
+#endif
+
 }  // namespace kiwano

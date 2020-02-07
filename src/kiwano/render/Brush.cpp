@@ -112,16 +112,6 @@ void Brush::SetOpacity(float opacity)
 
 void Brush::SetColor(Color const& color)
 {
-    if (type_ == Type::SolidColor && raw_)
-    {
-        ComPtr<ID2D1SolidColorBrush> solid_brush;
-
-        if (SUCCEEDED(raw_->QueryInterface(&solid_brush)))
-        {
-            solid_brush->SetColor(DX::ConvertToColorF(color));
-            return;
-        }
-    }
     Renderer::Instance().CreateBrush(*this, color);
 }
 
@@ -133,16 +123,6 @@ void Brush::SetStyle(LinearGradientStyle const& style)
 void Brush::SetStyle(RadialGradientStyle const& style)
 {
     Renderer::Instance().CreateBrush(*this, style);
-}
-
-void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
-{
-    type_ = type;
-    raw_  = brush;
-    if (raw_)
-    {
-        raw_->SetOpacity(opacity_);
-    }
 }
 
 }  // namespace kiwano

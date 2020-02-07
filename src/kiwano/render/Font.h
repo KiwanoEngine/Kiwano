@@ -62,17 +62,19 @@ public:
     /// @brief 加载字体资源
     bool Load(Resource const& resource);
 
+#if defined(KGE_WIN32)
 private:
     ComPtr<IDWriteFontCollection> GetCollection() const;
 
     void SetCollection(ComPtr<IDWriteFontCollection> collection);
 
-private:
     ComPtr<IDWriteFontCollection> collection_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<IDWriteFontCollection> Font::GetCollection() const
 {
     return collection_;
@@ -82,4 +84,6 @@ inline void Font::SetCollection(ComPtr<IDWriteFontCollection> collection)
 {
     collection_ = collection;
 }
+#endif
+
 }  // namespace kiwano

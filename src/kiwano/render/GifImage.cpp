@@ -60,12 +60,10 @@ bool GifImage::Load(String const& file_path)
 
     if (IsValid())
     {
-        if (FAILED(GetGlobalMetadata()))
-        {
-            SetDecoder(nullptr);
-            return false;
-        }
-        return true;
+        if (GetGlobalMetadata())
+            return true;
+
+        SetDecoder(nullptr);
     }
     return false;
 }
@@ -76,12 +74,10 @@ bool GifImage::Load(Resource const& res)
 
     if (IsValid())
     {
-        if (FAILED(GetGlobalMetadata()))
-        {
-            SetDecoder(nullptr);
-            return false;
-        }
-        return true;
+        if (GetGlobalMetadata())
+            return true;
+
+        SetDecoder(nullptr);
     }
     return false;
 }
@@ -98,7 +94,8 @@ GifImage::Frame GifImage::GetFrame(uint32_t index)
     return frame;
 }
 
-HRESULT GifImage::GetGlobalMetadata()
+#if defined(KGE_WIN32)
+bool GifImage::GetGlobalMetadata()
 {
     HRESULT hr = decoder_ ? S_OK : E_FAIL;
 
@@ -194,7 +191,8 @@ HRESULT GifImage::GetGlobalMetadata()
             ::PropVariantClear(&prop_val);
         }
     }
-    return hr;
+    return SUCCEEDED(hr);
 }
+#endif
 
 }  // namespace kiwano

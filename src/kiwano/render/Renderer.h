@@ -167,7 +167,8 @@ public:
     /// \~chinese
     /// @brief 创建纹理渲染上下文
     /// @param[out] render_context 渲染上下文
-    void CreateTextureRenderTarget(TextureRenderContextPtr& render_context);
+    /// @param[in] desired_size 期望的输出大小
+    void CreateTextureRenderTarget(TextureRenderContextPtr& render_context, const Size* desired_size = nullptr);
 
     /// \~chinese
     /// @brief 创建纯色画刷

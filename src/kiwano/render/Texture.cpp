@@ -170,6 +170,17 @@ void Texture::SetInterpolationMode(InterpolationMode mode)
     }
 }
 
+void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
+{
+    default_interpolation_mode_ = mode;
+}
+
+InterpolationMode Texture::GetDefaultInterpolationMode()
+{
+    return default_interpolation_mode_;
+}
+
+#if defined(KGE_WIN32)
 D2D1_PIXEL_FORMAT Texture::GetPixelFormat() const
 {
     if (bitmap_)
@@ -188,15 +199,6 @@ void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
 {
     bitmap_ = bitmap;
 }
-
-void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
-{
-    default_interpolation_mode_ = mode;
-}
-
-InterpolationMode Texture::GetDefaultInterpolationMode()
-{
-    return default_interpolation_mode_;
-}
+#endif
 
 }  // namespace kiwano

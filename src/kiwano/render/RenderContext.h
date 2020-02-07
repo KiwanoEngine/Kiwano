@@ -122,7 +122,7 @@ public:
 
     /// \~chinese
     /// @brief 是否有效
-    void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size, D2D1_PIXEL_FORMAT format);
+    void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size);
 
     /// \~chinese
     /// @brief 是否有效

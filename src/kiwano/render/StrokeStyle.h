@@ -114,6 +114,7 @@ public:
     /// @brief  «∑Ò”––ß
     bool IsValid() const;
 
+#if defined(KGE_WIN32)
 private:
     ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;
 
@@ -121,15 +122,17 @@ private:
 
 private:
     ComPtr<ID2D1StrokeStyle> style_;
+#endif
 };
 
 /** @} */
 
 inline bool StrokeStyle::IsValid() const
 {
-    return true;  // Always valid
+    return style_ != nullptr;
 }
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
 {
     return style_;
@@ -139,4 +142,6 @@ inline void StrokeStyle::SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style)
 {
     style_ = style;
 }
+#endif
+
 }  // namespace kiwano

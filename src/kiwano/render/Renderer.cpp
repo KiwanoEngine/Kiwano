@@ -361,7 +361,8 @@ void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, 
     if (SUCCEEDED(hr))
     {
         ComPtr<IWICBitmapFrameDecode> wic_frame;
-        HRESULT                       hr = gif.GetDecoder()->GetFrame(UINT(frame_index), &wic_frame);
+
+        HRESULT hr = gif.GetDecoder()->GetFrame(UINT(frame_index), &wic_frame);
 
         if (SUCCEEDED(hr))
         {
@@ -459,7 +460,8 @@ void Renderer::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, 
                     if (SUCCEEDED(hr))
                     {
                         uint32_t udelay = 0;
-                        hr              = UIntMult(prop_val.uiVal, 10, &udelay);
+
+                        hr = UIntMult(prop_val.uiVal, 10, &udelay);
                         if (SUCCEEDED(hr))
                         {
                             frame.delay.SetMilliseconds(static_cast<long>(udelay));
@@ -749,7 +751,7 @@ void Renderer::CreateShapeSink(ShapeSink& sink)
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context)
+void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context, const Size* desired_size)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -757,16 +759,25 @@ void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context
         hr = E_UNEXPECTED;
     }
 
-    TextureRenderContextPtr output;
+    TextureRenderContextPtr output = new TextureRenderContext;
+
     if (SUCCEEDED(hr))
     {
         ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
-        hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&bitmap_rt);
+
+        if (desired_size)
+        {
+            hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(DX::ConvertToSizeF(*desired_size),
+                                                                            &bitmap_rt);
+        }
+        else
+        {
+            hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&bitmap_rt);
+        }
 
         if (SUCCEEDED(hr))
         {
-            output = new TextureRenderContext;
-            hr     = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
+            hr = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
         }
 
         if (SUCCEEDED(hr))
@@ -793,12 +804,24 @@ void Renderer::CreateBrush(Brush& brush, Color const& color)
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<ID2D1SolidColorBrush> output;
-        hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &output);
+        ComPtr<ID2D1SolidColorBrush> solid_brush;
 
-        if (SUCCEEDED(hr))
+        if (brush.GetType() == Brush::Type::SolidColor && brush.GetBrush())
         {
-            brush.SetBrush(output, Brush::Type::SolidColor);
+            hr = brush.GetBrush()->QueryInterface(&solid_brush);
+            if (SUCCEEDED(hr))
+            {
+                solid_brush->SetColor(DX::ConvertToColorF(color));
+            }
+        }
+        else
+        {
+            hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &solid_brush);
+
+            if (SUCCEEDED(hr))
+            {
+                brush.SetBrush(solid_brush, Brush::Type::SolidColor);
+            }
         }
     }
 

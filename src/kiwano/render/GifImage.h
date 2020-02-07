@@ -105,18 +105,20 @@ public:
     Frame GetFrame(uint32_t index);
 
 private:
-    ComPtr<IWICBitmapDecoder> GetDecoder() const;
-
-    void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
-
-    HRESULT GetGlobalMetadata();
+    bool GetGlobalMetadata();
 
 private:
     uint32_t frames_count_;
     uint32_t width_in_pixels_;
     uint32_t height_in_pixels_;
 
+#if defined(KGE_WIN32)
+    ComPtr<IWICBitmapDecoder> GetDecoder() const;
+
+    void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
+
     ComPtr<IWICBitmapDecoder> decoder_;
+#endif
 };
 
 /** @} */
@@ -141,6 +143,7 @@ inline uint32_t GifImage::GetFramesCount() const
     return frames_count_;
 }
 
+#if defined(KGE_WIN32)
 inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
 {
     return decoder_;
@@ -150,4 +153,6 @@ inline void GifImage::SetDecoder(ComPtr<IWICBitmapDecoder> decoder)
 {
     decoder_ = decoder;
 }
+#endif
+
 }  // namespace kiwano

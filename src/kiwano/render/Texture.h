@@ -42,9 +42,8 @@ KGE_DECLARE_SMART_PTR(Texture);
  */
 enum class InterpolationMode
 {
-    Linear,   ///< 双线性插值，对周围四个像素进行两次线性插值计算,
-              ///在图像放大时可能会模糊
-    Nearest,  ///< 最邻近插值，取最邻近的像素点的颜色值
+    Linear,  ///< 双线性插值，对周围四个像素进行两次线性插值计算，在图像放大时可能会模糊
+    Nearest  ///< 最邻近插值，取最邻近的像素点的颜色值
 };
 
 /**
@@ -111,10 +110,6 @@ public:
     InterpolationMode GetBitmapInterpolationMode() const;
 
     /// \~chinese
-    /// @brief 获取像素格式
-    D2D1_PIXEL_FORMAT GetPixelFormat() const;
-
-    /// \~chinese
     /// @brief 拷贝纹理
     /// @param copy_from 源纹理
     void CopyFrom(TexturePtr copy_from);
@@ -138,6 +133,7 @@ public:
     /// @brief 获取默认的像素插值方式
     static InterpolationMode GetDefaultInterpolationMode();
 
+#if defined(KGE_WIN32)
 private:
     /// \~chinese
     /// @brief 获取源位图
@@ -147,12 +143,19 @@ private:
     /// @brief 设置源位图
     void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
-private:
+    /// \~chinese
+    /// @brief 获取像素格式
+    D2D1_PIXEL_FORMAT GetPixelFormat() const;
+
     ComPtr<ID2D1Bitmap> bitmap_;
+#endif
+
+private:
     InterpolationMode   interpolation_mode_;
 
     static InterpolationMode default_interpolation_mode_;
 };
 
 /** @} */
+
 }  // namespace kiwano
