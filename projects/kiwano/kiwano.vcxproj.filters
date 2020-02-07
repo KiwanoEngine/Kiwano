@@ -285,6 +285,9 @@
     <ClInclude Include="..\..\src\kiwano\math\Scalar.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h">
+      <Filter>render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -480,6 +483,9 @@
       <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp">
       <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>

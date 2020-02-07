@@ -23,9 +23,6 @@
 
 namespace kiwano
 {
-//
-// RenderContext
-//
 
 RenderContext::RenderContext()
     : collecting_status_(false)
@@ -101,152 +98,6 @@ void RenderContext::EndDraw()
     }
 }
 
-void RenderContext::DrawShape(Shape const& shape, float stroke_width, StrokeStylePtr stroke)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (shape.IsValid())
-    {
-        if (stroke)
-        {
-            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
-                                         stroke->GetStrokeStyle().get());
-        }
-        else
-        {
-            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
-                                         nullptr);
-        }
-
-        IncreasePrimitivesCount();
-    }
-}
-
-void RenderContext::FillShape(Shape const& shape)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (shape.IsValid())
-    {
-        render_target_->FillGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get());
-
-        IncreasePrimitivesCount();
-    }
-}
-
-void RenderContext::DrawLine(Point const& point1, Point const& point2, float stroke_width, StrokeStylePtr stroke)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (stroke)
-    {
-        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                                 current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                                 current_brush_->GetBrush().get(), stroke_width, nullptr);
-    }
-
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::DrawRectangle(Rect const& rect, float stroke_width, StrokeStylePtr stroke)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (stroke)
-    {
-        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
-                                      stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
-                                      nullptr);
-    }
-
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::FillRectangle(Rect const& rect)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    render_target_->FillRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get());
-
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, float stroke_width,
-                                         StrokeStylePtr stroke)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (stroke)
-    {
-        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                             current_brush_->GetBrush().get(), stroke_width,
-                                             stroke->GetStrokeStyle().get());
-
-    }
-    else
-    {
-        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                             current_brush_->GetBrush().get(), stroke_width, nullptr);
-
-    }
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                         current_brush_->GetBrush().get());
-
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::DrawEllipse(Point const& center, Vec2 const& radius, float stroke_width, StrokeStylePtr stroke)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    if (stroke)
-    {
-        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                    current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                    current_brush_->GetBrush().get(), stroke_width, nullptr);
-    }
-
-    IncreasePrimitivesCount();
-}
-
-void RenderContext::FillEllipse(Point const& center, Vec2 const& radius)
-{
-    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
-
-    render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                current_brush_->GetBrush().get());
-
-    IncreasePrimitivesCount();
-}
-
 void RenderContext::DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect)
 {
     DrawTexture(texture, &src_rect, &dest_rect);
@@ -314,6 +165,150 @@ void RenderContext::DrawTextLayout(TextLayout const& layout, Point const& offset
             KGE_ERROR(L"Failed to draw text layout with HRESULT of %08X", hr);
         }
     }
+}
+
+void RenderContext::DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (shape.IsValid())
+    {
+        if (stroke)
+        {
+            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
+                                         stroke->GetStrokeStyle().get());
+        }
+        else
+        {
+            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
+                                         nullptr);
+        }
+
+        IncreasePrimitivesCount();
+    }
+}
+
+void RenderContext::DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (stroke)
+    {
+        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
+                                 current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
+    }
+    else
+    {
+        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
+                                 current_brush_->GetBrush().get(), stroke_width, nullptr);
+    }
+
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (stroke)
+    {
+        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
+                                      stroke->GetStrokeStyle().get());
+    }
+    else
+    {
+        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
+                                      nullptr);
+    }
+
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke,
+                                         float stroke_width)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (stroke)
+    {
+        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
+                                             current_brush_->GetBrush().get(), stroke_width,
+                                             stroke->GetStrokeStyle().get());
+    }
+    else
+    {
+        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
+                                             current_brush_->GetBrush().get(), stroke_width, nullptr);
+    }
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (stroke)
+    {
+        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
+                                    current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
+    }
+    else
+    {
+        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
+                                    current_brush_->GetBrush().get(), stroke_width, nullptr);
+    }
+
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::FillShape(Shape const& shape)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    if (shape.IsValid())
+    {
+        render_target_->FillGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get());
+
+        IncreasePrimitivesCount();
+    }
+}
+
+void RenderContext::FillRectangle(Rect const& rect)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    render_target_->FillRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get());
+
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
+                                         current_brush_->GetBrush().get());
+
+    IncreasePrimitivesCount();
+}
+
+void RenderContext::FillEllipse(Point const& center, Vec2 const& radius)
+{
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+    KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
+
+    render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
+                                current_brush_->GetBrush().get());
+
+    IncreasePrimitivesCount();
 }
 
 void RenderContext::CreateTexture(Texture& texture, math::Vec2T<uint32_t> size)
@@ -394,6 +389,15 @@ void RenderContext::Clear(Color const& clear_color)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     render_target_->Clear(DX::ConvertToColorF(clear_color));
+}
+
+Size RenderContext::GetSize() const
+{
+    if (render_target_)
+    {
+        return reinterpret_cast<const Size&>(render_target_->GetSize());
+    }
+    return Size();
 }
 
 void RenderContext::SetTransform(const Matrix3x2& matrix)
@@ -506,30 +510,6 @@ void RenderContext::RestoreDrawingState()
     {
         render_target_->RestoreDrawingState(drawing_state_.get());
     }
-}
-
-//
-// TextureRenderContext
-//
-
-TextureRenderContext::TextureRenderContext() {}
-
-bool TextureRenderContext::GetOutput(Texture& texture)
-{
-    HRESULT hr = E_FAIL;
-
-    if (bitmap_rt_)
-    {
-        ComPtr<ID2D1Bitmap> bitmap;
-
-        hr = bitmap_rt_->GetBitmap(&bitmap);
-
-        if (SUCCEEDED(hr))
-        {
-            texture.SetBitmap(bitmap);
-        }
-    }
-    return SUCCEEDED(hr);
 }
 
 }  // namespace kiwano

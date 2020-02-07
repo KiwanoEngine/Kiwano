@@ -22,7 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/RenderContext.h>
+#include <kiwano/render/TextureRenderContext.h>
 
 namespace kiwano
 {

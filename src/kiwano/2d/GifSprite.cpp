@@ -87,13 +87,13 @@ bool GifSprite::Load(GifImagePtr gif)
         loop_count_ = 0;
         frame_      = GifImage::Frame();
 
-        SetSize(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
-
         if (!frame_rt_)
         {
-            Size frame_size = GetSize();
-            Renderer::Instance().CreateTextureRenderTarget(frame_rt_, &frame_size);
+            Size frame_size = Size(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
+            frame_rt_       = TextureRenderContext::Create(frame_size);
         }
+
+        SetSize(frame_rt_->GetSize());
 
         if (gif_->GetFramesCount() > 0)
         {

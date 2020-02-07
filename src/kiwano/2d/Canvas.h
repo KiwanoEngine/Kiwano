@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/render/ShapeSink.h>
-#include <kiwano/render/RenderContext.h>
+#include <kiwano/render/TextureRenderContext.h>
 
 namespace kiwano
 {
@@ -35,20 +35,16 @@ KGE_DECLARE_SMART_PTR(Canvas);
 
 /**
  * \~chinese
- * @brief 画布，用于绘制图元
+ * @brief 画布
+ * @details 用于绘制图形、图像、文字等各种类型的图元，同时可以将绘制内容导出至图像
  */
 class KGE_API Canvas : public Actor
 {
 public:
     /// \~chinese
     /// @brief 创建画布
-    static CanvasPtr Create();
-
-    /// \~chinese
-    /// @brief 构建空画布
-    Canvas();
-
-    virtual ~Canvas();
+    /// @param size 画布大小
+    static CanvasPtr Create(Size const& size);
 
     /// \~chinese
     /// @brief 开始绘图
@@ -273,13 +269,17 @@ public:
     BrushPtr GetStrokeBrush() const;
 
     /// \~chinese
+    /// @brief 清空画布大小并重设画布大小
+    void ResizeAndClear(Size size);
+
+    /// \~chinese
     /// @brief 导出纹理
     TexturePtr ExportToTexture() const;
 
     void OnRender(RenderContext& ctx) override;
 
 private:
-    void InitRenderTargetAndBrushs();
+    Canvas();
 
     void UpdateCache() const;
 
@@ -298,6 +298,11 @@ private:
 
 /** @} */
 
+inline float Canvas::GetStrokeWidth() const
+{
+    return stroke_width_;
+}
+
 inline void Canvas::SetStrokeWidth(float width)
 {
     stroke_width_ = std::max(width, 0.f);
@@ -315,13 +320,19 @@ inline void Canvas::SetTextStyle(TextStyle const& text_style)
 
 inline void Canvas::SetStrokeColor(Color const& color)
 {
-    InitRenderTargetAndBrushs();
+    if (!stroke_brush_)
+    {
+        stroke_brush_ = new Brush;
+    }
     stroke_brush_->SetColor(color);
 }
 
 inline void Canvas::SetFillColor(Color const& color)
 {
-    InitRenderTargetAndBrushs();
+    if (!fill_brush_)
+    {
+        fill_brush_ = new Brush;
+    }
     fill_brush_->SetColor(color);
 }
 
@@ -344,4 +355,5 @@ inline BrushPtr Canvas::GetStrokeBrush() const
 {
     return stroke_brush_;
 }
+
 }  // namespace kiwano

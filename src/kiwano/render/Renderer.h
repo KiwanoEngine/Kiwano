@@ -23,8 +23,9 @@
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/RenderContext.h>
 #include <kiwano/render/TextStyle.hpp>
+#include <kiwano/render/RenderContext.h>
+#include <kiwano/render/TextureRenderContext.h>
 #include <kiwano/render/DirectX/FontCollectionLoader.h>
 
 #if defined(KGE_USE_DIRECTX10)
@@ -168,7 +169,7 @@ public:
     /// @brief 创建纹理渲染上下文
     /// @param[out] render_context 渲染上下文
     /// @param[in] desired_size 期望的输出大小
-    void CreateTextureRenderTarget(TextureRenderContextPtr& render_context, const Size* desired_size = nullptr);
+    void CreateTextureRenderContext(TextureRenderContext& render_context, const Size* desired_size = nullptr);
 
     /// \~chinese
     /// @brief 创建纯色画刷

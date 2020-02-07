@@ -751,15 +751,13 @@ void Renderer::CreateShapeSink(ShapeSink& sink)
     win32::ThrowIfFailed(hr);
 }
 
-void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context, const Size* desired_size)
+void Renderer::CreateTextureRenderContext(TextureRenderContext& render_context, const Size* desired_size)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
     {
         hr = E_UNEXPECTED;
     }
-
-    TextureRenderContextPtr output = new TextureRenderContext;
 
     if (SUCCEEDED(hr))
     {
@@ -777,18 +775,13 @@ void Renderer::CreateTextureRenderTarget(TextureRenderContextPtr& render_context
 
         if (SUCCEEDED(hr))
         {
-            hr = output->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
+            hr = render_context.CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
         }
 
         if (SUCCEEDED(hr))
         {
-            output->SetBitmapRenderTarget(bitmap_rt);
+            render_context.SetBitmapRenderTarget(bitmap_rt);
         }
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        render_context = output;
     }
 
     win32::ThrowIfFailed(hr);
