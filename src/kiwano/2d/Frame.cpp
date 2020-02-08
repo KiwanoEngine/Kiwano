@@ -60,7 +60,7 @@ Frame::Frame() {}
 
 bool Frame::Load(String const& file_path)
 {
-    TexturePtr texture = TextureCache::Instance().AddOrGetTexture(file_path);
+    TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(file_path);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -71,7 +71,7 @@ bool Frame::Load(String const& file_path)
 
 bool Frame::Load(Resource const& res)
 {
-    TexturePtr texture = TextureCache::Instance().AddOrGetTexture(res);
+    TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(res);
     if (texture->IsValid())
     {
         SetTexture(texture);

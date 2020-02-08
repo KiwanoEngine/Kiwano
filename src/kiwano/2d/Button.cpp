@@ -78,14 +78,14 @@ void Button::SetStatus(Status status)
 
         if (status == Status::Normal)
         {
-            Window::Instance().SetCursor(CursorType::Arrow);
+            Window::GetInstance().SetCursor(CursorType::Arrow);
 
             if (mouse_out_callback_)
                 mouse_out_callback_(this);
         }
         else if (status == Status::Hover)
         {
-            Window::Instance().SetCursor(CursorType::Hand);
+            Window::GetInstance().SetCursor(CursorType::Hand);
 
             if (old_status == Status::Pressed)
             {

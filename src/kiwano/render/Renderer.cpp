@@ -42,8 +42,8 @@ void Renderer::SetupComponent()
 
     win32::ThrowIfFailed(::CoInitialize(nullptr));
 
-    target_window_ = Window::Instance().GetHandle();
-    output_size_   = Window::Instance().GetSize();
+    target_window_ = Window::GetInstance().GetHandle();
+    output_size_   = Window::GetInstance().GetSize();
 
     d2d_res_ = nullptr;
     d3d_res_ = nullptr;
@@ -197,7 +197,7 @@ void Renderer::CreateTexture(Texture& texture, String const& file_path)
         hr = E_UNEXPECTED;
     }
 
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_WARN(L"Texture file '%s' not found!", file_path.c_str());
         hr = E_FAIL;
@@ -205,7 +205,7 @@ void Renderer::CreateTexture(Texture& texture, String const& file_path)
 
     if (SUCCEEDED(hr))
     {
-        String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -295,7 +295,7 @@ void Renderer::CreateGifImage(GifImage& gif, String const& file_path)
         hr = E_UNEXPECTED;
     }
 
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_WARN(L"Gif texture file '%s' not found!", file_path.c_str());
         hr = E_FAIL;
@@ -303,7 +303,7 @@ void Renderer::CreateGifImage(GifImage& gif, String const& file_path)
 
     if (SUCCEEDED(hr))
     {
-        String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
@@ -514,7 +514,7 @@ void Renderer::CreateFontCollection(Font& font, String const& file_path)
 
     if (SUCCEEDED(hr))
     {
-        if (!FileSystem::Instance().IsFileExists(file_path))
+        if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
             KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
             hr = E_FAIL;
@@ -525,7 +525,7 @@ void Renderer::CreateFontCollection(Font& font, String const& file_path)
     {
         LPVOID   key       = nullptr;
         uint32_t key_size  = 0;
-        String   full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+        String   full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
         hr = font_collection_loader_->AddFilePaths({ full_path }, &key, &key_size);
 

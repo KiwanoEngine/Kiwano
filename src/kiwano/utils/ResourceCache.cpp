@@ -53,7 +53,7 @@ ResourceCache::~ResourceCache()
 
 bool ResourceCache::LoadFromJsonFile(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: File not found.");
         return false;
@@ -65,7 +65,7 @@ bool ResourceCache::LoadFromJsonFile(String const& file_path)
 
     try
     {
-        String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
         ifs.open(full_path.c_str());
         ifs >> json_data;
         ifs.close();
@@ -116,13 +116,13 @@ bool ResourceCache::LoadFromJson(Json const& json_data)
 
 bool ResourceCache::LoadFromXmlFile(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_ERROR(L"ResourceCache::LoadFromXmlFile failed: File not found.");
         return false;
     }
 
-    String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
     pugi::xml_document     doc;
     pugi::xml_parse_result result = doc.load_file(full_path.c_str(), pugi::parse_default, pugi::encoding_auto);

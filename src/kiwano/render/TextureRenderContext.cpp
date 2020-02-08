@@ -32,7 +32,7 @@ TextureRenderContextPtr TextureRenderContext::Create()
     {
         try
         {
-            Renderer::Instance().CreateTextureRenderContext(*ptr);
+            Renderer::GetInstance().CreateTextureRenderContext(*ptr);
         }
         catch (std::exception)
         {
@@ -49,7 +49,7 @@ TextureRenderContextPtr TextureRenderContext::Create(Size const& desired_size)
     {
         try
         {
-            Renderer::Instance().CreateTextureRenderContext(*ptr, &desired_size);
+            Renderer::GetInstance().CreateTextureRenderContext(*ptr, &desired_size);
         }
         catch (std::exception)
         {

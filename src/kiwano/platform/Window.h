@@ -65,7 +65,7 @@ public:
      * \~chinese
      * @brief 获取窗口实例
      */
-    static Window& Instance();
+    static Window& GetInstance();
 
     /**
      * \~chinese

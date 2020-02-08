@@ -56,7 +56,7 @@ GifImage::GifImage()
 
 bool GifImage::Load(String const& file_path)
 {
-    Renderer::Instance().CreateGifImage(*this, file_path);
+    Renderer::GetInstance().CreateGifImage(*this, file_path);
 
     if (IsValid())
     {
@@ -70,7 +70,7 @@ bool GifImage::Load(String const& file_path)
 
 bool GifImage::Load(Resource const& res)
 {
-    Renderer::Instance().CreateGifImage(*this, res);
+    Renderer::GetInstance().CreateGifImage(*this, res);
 
     if (IsValid())
     {
@@ -90,7 +90,7 @@ bool GifImage::IsValid() const
 GifImage::Frame GifImage::GetFrame(uint32_t index)
 {
     Frame frame;
-    Renderer::Instance().CreateGifImageFrame(frame, *this, index);
+    Renderer::GetInstance().CreateGifImageFrame(frame, *this, index);
     return frame;
 }
 

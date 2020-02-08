@@ -42,12 +42,12 @@ void TextLayout::Update()
 
     if (!text_format_ || (dirty_flag_ & DirtyFlag::DirtyFormat))
     {
-        Renderer::Instance().CreateTextFormat(*this);
+        Renderer::GetInstance().CreateTextFormat(*this);
     }
 
     if (dirty_flag_ & DirtyFlag::DirtyLayout)
     {
-        Renderer::Instance().CreateTextLayout(*this);
+        Renderer::GetInstance().CreateTextLayout(*this);
 
         if (text_layout_)
         {

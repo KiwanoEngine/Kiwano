@@ -36,7 +36,7 @@ Stage::Stage()
     SetStage(this);
 
     SetAnchor(Vec2{ 0, 0 });
-    SetSize(Renderer::Instance().GetOutputSize());
+    SetSize(Renderer::GetInstance().GetOutputSize());
 }
 
 Stage::~Stage() {}

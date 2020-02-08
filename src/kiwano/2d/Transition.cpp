@@ -58,7 +58,7 @@ void Transition::Init(StagePtr prev, StagePtr next)
 
     out_stage_   = prev;
     in_stage_    = next;
-    window_size_ = Renderer::Instance().GetOutputSize();
+    window_size_ = Renderer::GetInstance().GetOutputSize();
 
     if (in_stage_)
     {

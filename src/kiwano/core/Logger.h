@@ -27,26 +27,26 @@
 #ifndef KGE_SYS_LOG
 #ifdef KGE_DEBUG
 #define KGE_SYS_LOG(FORMAT, ...) \
-    ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
+    ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
 #else
 #define KGE_SYS_LOG __noop
 #endif
 #endif
 
 #ifndef KGE_WARN
-#define KGE_WARN(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
+#define KGE_WARN(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR
-#define KGE_ERROR(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
+#define KGE_ERROR(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
 #endif
 
 #ifndef KGE_LOG
-#define KGE_LOG(...) ::kiwano::Logger::Instance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
+#define KGE_LOG(...) ::kiwano::Logger::GetInstance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
 #endif
 
 #ifndef KGE_LOGF
-#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
+#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
 #endif
 
 namespace kiwano

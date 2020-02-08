@@ -69,7 +69,7 @@ StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const 
     StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
     if (ptr)
     {
-        Renderer::Instance().CreateStrokeStyle(*ptr, cap, line_join, dash_array, dash_size, dash_offset);
+        Renderer::GetInstance().CreateStrokeStyle(*ptr, cap, line_join, dash_array, dash_size, dash_offset);
     }
     return ptr;
 }

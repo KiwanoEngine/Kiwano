@@ -36,7 +36,7 @@ void ShapeSink::Open()
     if (!IsOpened())
     {
         path_geo_.reset();
-        Renderer::Instance().CreateShapeSink(*this);
+        Renderer::GetInstance().CreateShapeSink(*this);
 
         win32::ThrowIfFailed(path_geo_->Open(&sink_));
     }

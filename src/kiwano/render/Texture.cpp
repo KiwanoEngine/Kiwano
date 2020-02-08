@@ -57,13 +57,13 @@ Texture::~Texture() {}
 
 bool Texture::Load(String const& file_path)
 {
-    Renderer::Instance().CreateTexture(*this, file_path);
+    Renderer::GetInstance().CreateTexture(*this, file_path);
     return IsValid();
 }
 
 bool Texture::Load(Resource const& res)
 {
-    Renderer::Instance().CreateTexture(*this, res);
+    Renderer::GetInstance().CreateTexture(*this, res);
     return IsValid();
 }
 

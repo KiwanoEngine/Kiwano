@@ -63,7 +63,7 @@ Sound::~Sound()
 
 bool Sound::Load(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_WARN(L"Media file '%s' not found", file_path.c_str());
         return false;
@@ -74,7 +74,7 @@ bool Sound::Load(String const& file_path)
         Close();
     }
 
-    String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
     HRESULT hr = transcoder_.LoadMediaFile(full_path);
     if (FAILED(hr))
@@ -83,7 +83,7 @@ bool Sound::Load(String const& file_path)
         return false;
     }
 
-    if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;
@@ -107,7 +107,7 @@ bool Sound::Load(Resource const& res)
         return false;
     }
 
-    if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;

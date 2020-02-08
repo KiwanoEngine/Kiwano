@@ -684,7 +684,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 namespace kiwano
 {
 
-Window& Window::Instance()
+Window& Window::GetInstance()
 {
     static win32::WindowImpl instance;
     return instance;

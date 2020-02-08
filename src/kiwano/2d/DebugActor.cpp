@@ -104,7 +104,7 @@ void DebugActor::OnUpdate(Duration dt)
     }
 #endif
 
-    const auto& status = Renderer::Instance().GetContext().GetStatus();
+    const auto& status = Renderer::GetInstance().GetContext().GetStatus();
 
     ss << "Render: " << status.duration.Milliseconds() << "ms" << std::endl;
 

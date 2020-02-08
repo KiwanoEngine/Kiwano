@@ -112,17 +112,17 @@ void Brush::SetOpacity(float opacity)
 
 void Brush::SetColor(Color const& color)
 {
-    Renderer::Instance().CreateBrush(*this, color);
+    Renderer::GetInstance().CreateBrush(*this, color);
 }
 
 void Brush::SetStyle(LinearGradientStyle const& style)
 {
-    Renderer::Instance().CreateBrush(*this, style);
+    Renderer::GetInstance().CreateBrush(*this, style);
 }
 
 void Brush::SetStyle(RadialGradientStyle const& style)
 {
-    Renderer::Instance().CreateBrush(*this, style);
+    Renderer::GetInstance().CreateBrush(*this, style);
 }
 
 }  // namespace kiwano
