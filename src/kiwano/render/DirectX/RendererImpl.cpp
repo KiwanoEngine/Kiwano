@@ -21,6 +21,7 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
+#include <kiwano/platform/win32/WindowImpl.h>
 #include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/DirectX/TextureRenderContextImpl.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
@@ -50,18 +51,18 @@ void RendererImpl::SetupComponent()
 
     win32::ThrowIfFailed(::CoInitialize(nullptr));
 
-    target_window_ = Window::GetInstance().GetHandle();
+    HWND target_window = WindowImpl::GetInstance().GetHandle();
     output_size_   = Window::GetInstance().GetSize();
 
     d2d_res_ = nullptr;
     d3d_res_ = nullptr;
 
-    HRESULT hr = target_window_ ? S_OK : E_FAIL;
+    HRESULT hr = target_window ? S_OK : E_FAIL;
 
     // Direct3D device resources
     if (SUCCEEDED(hr))
     {
-        hr = ID3DDeviceResources::Create(&d3d_res_, target_window_);
+        hr = ID3DDeviceResources::Create(&d3d_res_, target_window);
 
         // Direct2D device resources
         if (SUCCEEDED(hr))

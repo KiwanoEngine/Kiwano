@@ -26,6 +26,7 @@ namespace kiwano
 {
 namespace imgui
 {
+
 /**
  * \~chinese
  * @brief ImGuiÄ£¿é
@@ -57,9 +58,7 @@ private:
     void UpdateMousePos();
 
     void UpdateMouseCursor();
-
-private:
-    WindowHandle target_window_;
 };
+
 }  // namespace imgui
 }  // namespace kiwano

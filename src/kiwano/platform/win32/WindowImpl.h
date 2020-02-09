@@ -32,10 +32,10 @@ class KGE_API WindowImpl : public Window
 public:
     static WindowImpl& GetInstance();
 
+    HWND GetHandle() const;
+
     void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
                 bool fullscreen) override;
-
-    WindowHandle GetHandle() const override;
 
     void SetTitle(String const& title) override;
 
@@ -65,11 +65,11 @@ private:
     static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
 
 private:
-    bool         resizable_;
-    bool         is_fullscreen_;
-    wchar_t*     device_name_;
-    WindowHandle handle_;
-    CursorType   mouse_cursor_;
+    bool       resizable_;
+    bool       is_fullscreen_;
+    wchar_t*   device_name_;
+    HWND       handle_;
+    CursorType mouse_cursor_;
 
     std::array<KeyCode, 256> key_map_;
 };

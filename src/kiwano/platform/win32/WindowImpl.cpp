@@ -258,7 +258,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     }
 }
 
-WindowHandle WindowImpl::GetHandle() const
+HWND WindowImpl::GetHandle() const
 {
     return handle_;
 }

@@ -44,16 +44,6 @@ enum class CursorType
 };
 
 
-#if defined(KGE_WIN32)
-
-/**
- * \~chinese
- * @brief 窗口句柄
- */
-typedef HWND WindowHandle;
-
-#endif
-
 /**
  * \~chinese
  * @brief 窗口类，控制窗口标题、大小、图标等
@@ -108,12 +98,6 @@ public:
      * @return 窗口高度
      */
     uint32_t GetHeight() const;
-
-    /**
-     * \~chinese
-     * @brief 获取窗口句柄
-     */
-    virtual WindowHandle GetHandle() const = 0;
 
     /**
      * \~chinese

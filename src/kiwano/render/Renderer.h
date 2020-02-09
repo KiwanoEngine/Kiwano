@@ -20,7 +20,6 @@
 
 #pragma once
 #include <kiwano/core/Component.h>
-#include <kiwano/platform/Window.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.hpp>
@@ -205,10 +204,6 @@ public:
     virtual RenderContext& GetContext() = 0;
 
     /// \~chinese
-    /// @brief 获取目标窗口
-    virtual WindowHandle GetTargetWindow() const;
-
-    /// \~chinese
     /// @brief 获取渲染输出大小
     virtual Size GetOutputSize() const;
 
@@ -217,17 +212,11 @@ protected:
 
 protected:
     bool         vsync_;
-    WindowHandle target_window_;
     Color        clear_color_;
     Size         output_size_;
 };
 
 /** @} */
-
-inline WindowHandle Renderer::GetTargetWindow() const
-{
-    return target_window_;
-}
 
 inline Size Renderer::GetOutputSize() const
 {

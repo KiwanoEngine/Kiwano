@@ -24,8 +24,7 @@ namespace kiwano
 {
 
 Renderer::Renderer()
-    : target_window_(nullptr)
-    , vsync_(true)
+    : vsync_(true)
     , clear_color_(Color::Black)
 {
 }
