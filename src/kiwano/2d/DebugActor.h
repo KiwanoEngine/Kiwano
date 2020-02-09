@@ -48,10 +48,10 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    std::locale  comma_locale_;
-    BrushPtr     background_brush_;
-    TextLayout   debug_text_;
-    Vector<Time> frame_time_;
+    std::locale comma_locale_;
+    BrushPtr    background_brush_;
+    TextLayout  debug_text_;
+    List<Time>  frame_time_;
 };
 
 /** @} */

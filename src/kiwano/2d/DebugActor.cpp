@@ -78,17 +78,17 @@ void DebugActor::OnRender(RenderContext& ctx)
     ctx.SetCurrentBrush(background_brush_);
     ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
     ctx.DrawTextLayout(debug_text_, Point(10, 10));
-}
-
-void DebugActor::OnUpdate(Duration dt)
-{
-    KGE_NOT_USED(dt);
 
     frame_time_.push_back(Time::Now());
     while (frame_time_.back() - frame_time_.front() >= Duration::Second)
     {
         frame_time_.erase(frame_time_.begin());
     }
+}
+
+void DebugActor::OnUpdate(Duration dt)
+{
+    KGE_NOT_USED(dt);
 
     StringStream ss;
 
