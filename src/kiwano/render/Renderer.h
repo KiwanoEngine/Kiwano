@@ -26,22 +26,9 @@
 #include <kiwano/render/TextStyle.hpp>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/render/TextureRenderContext.h>
-#include <kiwano/render/DirectX/FontCollectionLoader.h>
-
-#if defined(KGE_USE_DIRECTX10)
-#include <kiwano/render/DirectX/D3D10DeviceResources.h>
-#else
-#include <kiwano/render/DirectX/D3D11DeviceResources.h>
-#endif
 
 namespace kiwano
 {
-
-#if defined(KGE_USE_DIRECTX10)
-typedef ID3D10DeviceResources ID3DDeviceResources;
-#else
-typedef ID3D11DeviceResources ID3DDeviceResources;
-#endif
 
 /**
  * \~chinese
@@ -57,137 +44,127 @@ typedef ID3D11DeviceResources ID3DDeviceResources;
  * \~chinese
  * @brief 渲染器
  */
-class KGE_API Renderer
-    : public Singleton<Renderer>
-    , public EventComponent
+class KGE_API Renderer : public EventComponent
 {
-    friend Singleton<Renderer>;
-
 public:
     /// \~chinese
+    /// @brief 获取实例
+    static Renderer& GetInstance();
+
+    /// \~chinese
     /// @brief 获取清屏颜色
-    Color const& GetClearColor() const;
+    virtual Color GetClearColor() const;
 
     /// \~chinese
     /// @brief 设置清屏颜色
-    void SetClearColor(Color const& clear_color);
+    virtual void SetClearColor(Color const& clear_color);
 
     /// \~chinese
     /// @brief 开启或关闭垂直同步
-    void SetVSyncEnabled(bool enabled);
-
-    /// \~chinese
-    /// @brief 设置DPI
-    void SetDpi(float dpi);
+    virtual void SetVSyncEnabled(bool enabled);
 
     /// \~chinese
     /// @brief 创建纹理
     /// @param[out] texture 纹理
     /// @param[in] file_path 图片路径
-    void CreateTexture(Texture& texture, String const& file_path);
+    virtual void CreateTexture(Texture& texture, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建纹理
     /// @param[out] texture 纹理
     /// @param[in] resource 图片资源
-    void CreateTexture(Texture& texture, Resource const& resource);
+    virtual void CreateTexture(Texture& texture, Resource const& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
-    void CreateGifImage(GifImage& gif, String const& file_path);
+    virtual void CreateGifImage(GifImage& gif, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像
     /// @param[out] gif GIF图像
     /// @param[in] resource 图片资源
-    void CreateGifImage(GifImage& gif, Resource const& resource);
+    virtual void CreateGifImage(GifImage& gif, Resource const& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像帧
     /// @param[out] frame GIF图像帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
-    void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index);
+    virtual void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index) = 0;
 
     /// \~chinese
     /// @brief 创建字体集
     /// @param[out] font 字体
     /// @param[in] file_paths 字体文件路径
-    void CreateFontCollection(Font& font, String const& file_path);
+    virtual void CreateFontCollection(Font& font, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建字体集
     /// @param[out] font 字体
     /// @param[in] res_arr 字体资源
-    void CreateFontCollection(Font& font, Resource const& res);
+    virtual void CreateFontCollection(Font& font, Resource const& res) = 0;
 
     /// \~chinese
     /// @brief 创建文字格式
     /// @param[out] layout 字体布局
-    void CreateTextFormat(TextLayout& layout);
+    virtual void CreateTextFormat(TextLayout& layout) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局
     /// @param[out] layout 字体布局
-    void CreateTextLayout(TextLayout& layout);
+    virtual void CreateTextLayout(TextLayout& layout) = 0;
 
     /// \~chinese
     /// @brief 创建线段形状
     /// @param[out] geo 形状
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
-    void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos);
+    virtual void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) = 0;
 
     /// \~chinese
     /// @brief 创建矩形形状
     /// @param[out] geo 形状
     /// @param[in] rect 矩形大小
-    void CreateRectShape(Shape& shape, Rect const& rect);
+    virtual void CreateRectShape(Shape& shape, Rect const& rect) = 0;
 
     /// \~chinese
     /// @brief 创建圆角矩形形状
     /// @param[out] geo 形状
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
-    void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius);
+    virtual void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 创建椭圆形状
     /// @param[out] geo 形状
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
-    void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius);
+    virtual void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 创建几何图形生成器
     /// @param[out] sink 形状生成器
-    void CreateShapeSink(ShapeSink& sink);
-
-    /// \~chinese
-    /// @brief 创建纹理渲染上下文
-    /// @param[out] render_context 渲染上下文
-    /// @param[in] desired_size 期望的输出大小
-    void CreateTextureRenderContext(TextureRenderContext& render_context, const Size* desired_size = nullptr);
+    virtual void CreateShapeSink(ShapeSink& sink) = 0;
 
     /// \~chinese
     /// @brief 创建纯色画刷
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
-    void CreateBrush(Brush& brush, Color const& color);
+    virtual void CreateBrush(Brush& brush, Color const& color) = 0;
 
     /// \~chinese
     /// @brief 创建线性渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
-    void CreateBrush(Brush& brush, LinearGradientStyle const& style);
+    virtual void CreateBrush(Brush& brush, LinearGradientStyle const& style) = 0;
 
     /// \~chinese
     /// @brief 创建径向渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
-    void CreateBrush(Brush& brush, RadialGradientStyle const& style);
+    virtual void CreateBrush(Brush& brush, RadialGradientStyle const& style) = 0;
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -197,74 +174,52 @@ public:
     /// @param[in] dash_array 虚线长度与间隙数组
     /// @param[in] dash_size 虚线数组大小
     /// @param[in] dash_offset 虚线偏移量
-    void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
-                           size_t dash_size, float dash_offset);
+    virtual void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
+                                   const float* dash_array, size_t dash_size, float dash_offset) = 0;
+
+    /// \~chinese
+    /// @brief 创建纹理渲染上下文
+    /// @param[in] desired_size 期望的输出大小
+    /// @return 纹理渲染上下文
+    virtual TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) = 0;
 
 public:
     /// \~chinese
     /// @brief 开始渲染
-    void BeginDraw();
+    virtual void BeginDraw() = 0;
 
     /// \~chinese
     /// @brief 结束渲染
-    void EndDraw();
+    virtual void EndDraw() = 0;
 
     /// \~chinese
     /// @brief 清除绘制内容
-    void Clear();
+    virtual void Clear() = 0;
 
     /// \~chinese
     /// @brief 将绘制内容呈现至窗口
-    void Present();
+    virtual void Present() = 0;
 
     /// \~chinese
     /// @brief 获取渲染上下文
-    RenderContext& GetContext();
+    virtual RenderContext& GetContext() = 0;
 
     /// \~chinese
     /// @brief 获取目标窗口
-    WindowHandle GetTargetWindow() const;
+    virtual WindowHandle GetTargetWindow() const;
 
     /// \~chinese
     /// @brief 获取渲染输出大小
-    Size const& GetOutputSize() const;
+    virtual Size GetOutputSize() const;
 
-    /// \~chinese
-    /// @brief 获取Direct2D设备资源
-    ID2DDeviceResources* GetD2DDeviceResources();
-
-    /// \~chinese
-    /// @brief 获取Direct3D设备资源
-    ID3DDeviceResources* GetD3DDeviceResources();
-
-public:
-    void SetupComponent() override;
-
-    void DestroyComponent() override;
-
-    void HandleEvent(Event* evt) override;
-
-private:
+protected:
     Renderer();
 
-    ~Renderer();
-
-    HRESULT HandleDeviceLost();
-
-    void ResizeTarget(uint32_t width, uint32_t height);
-
-private:
-    bool          vsync_;
-    WindowHandle  target_window_;
-    Color         clear_color_;
-    Size          output_size_;
-    RenderContext render_ctx_;
-
-    ComPtr<ID2DDeviceResources>           d2d_res_;
-    ComPtr<ID3DDeviceResources>           d3d_res_;
-    ComPtr<IFontCollectionLoader>         font_collection_loader_;
-    ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
-    ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
+protected:
+    bool         vsync_;
+    WindowHandle target_window_;
+    Color        clear_color_;
+    Size         output_size_;
 };
 
 /** @} */
@@ -274,30 +229,24 @@ inline WindowHandle Renderer::GetTargetWindow() const
     return target_window_;
 }
 
-inline Size const& Renderer::GetOutputSize() const
+inline Size Renderer::GetOutputSize() const
 {
     return output_size_;
 }
 
-inline Color const& Renderer::GetClearColor() const
+inline Color Renderer::GetClearColor() const
 {
     return clear_color_;
 }
 
-inline RenderContext& Renderer::GetContext()
+inline void Renderer::SetVSyncEnabled(bool enabled)
 {
-    return render_ctx_;
+    vsync_ = enabled;
 }
 
-inline ID2DDeviceResources* Renderer::GetD2DDeviceResources()
+inline void Renderer::SetClearColor(const Color& color)
 {
-    KGE_ASSERT(d2d_res_);
-    return d2d_res_.get();
+    clear_color_ = color;
 }
 
-inline ID3DDeviceResources* Renderer::GetD3DDeviceResources()
-{
-    KGE_ASSERT(d3d_res_);
-    return d3d_res_.get();
-}
 }  // namespace kiwano

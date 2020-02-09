@@ -23,8 +23,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 /**
  * \addtogroup Render
@@ -45,8 +43,6 @@ enum class CombineMode
 /// @brief ÐÎ×´Éú³ÉÆ÷
 class KGE_API ShapeSink : protected Noncopyable
 {
-    friend class Renderer;
-
 public:
     ShapeSink();
 
@@ -137,7 +133,7 @@ private:
     ShapePtr                  shape_;
 
 #if defined(KGE_WIN32)
-private:
+public:
     ComPtr<ID2D1PathGeometry> GetPathGeometry() const;
 
     void SetPathGeometry(ComPtr<ID2D1PathGeometry> path);
@@ -146,6 +142,7 @@ private:
 
     void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink);
 
+private:
     ComPtr<ID2D1GeometrySink> sink_;
     ComPtr<ID2D1PathGeometry> path_geo_;
 #endif

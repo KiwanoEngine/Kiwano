@@ -86,28 +86,13 @@ BrushPtr Brush::Create(RadialGradientStyle const& style)
 }
 
 Brush::Brush()
-    : opacity_(1.f)
-    , type_(Type::Unknown)
+    : type_(Type::Unknown)
 {
 }
 
 bool Brush::IsValid() const
 {
     return raw_ != nullptr;
-}
-
-float Brush::GetOpacity() const
-{
-    return opacity_;
-}
-
-void Brush::SetOpacity(float opacity)
-{
-    opacity_ = opacity;
-    if (raw_)
-    {
-        raw_->SetOpacity(opacity);
-    }
 }
 
 void Brush::SetColor(Color const& color)

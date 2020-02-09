@@ -35,6 +35,8 @@ CanvasPtr Canvas::Create(Size const& size)
             ptr->ctx_          = TextureRenderContext::Create();
             ptr->stroke_brush_ = Brush::Create(Color::White);
             ptr->fill_brush_   = Brush::Create(Color::White);
+
+            ptr->SetSize(ptr->ctx_->GetSize());
         }
         catch (std::exception)
         {
@@ -71,9 +73,7 @@ void Canvas::OnRender(RenderContext& ctx)
     if (texture_cached_ && texture_cached_->IsValid())
     {
         PrepareToRender(ctx);
-
-        Rect bitmap_rect(0.f, 0.f, texture_cached_->GetWidth(), texture_cached_->GetHeight());
-        ctx.DrawTexture(*texture_cached_, bitmap_rect, bitmap_rect);
+        ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
     }
 }
 

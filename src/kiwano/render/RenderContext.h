@@ -60,42 +60,36 @@ class KGE_API RenderContext : public virtual ObjectBase
 public:
     /// \~chinese
     /// @brief 是否有效
-    bool IsValid() const;
+    virtual bool IsValid() const = 0;
 
     /// \~chinese
     /// @brief 开始渲染
-    void BeginDraw();
+    virtual void BeginDraw();
 
     /// \~chinese
     /// @brief 结束渲染
-    void EndDraw();
+    virtual void EndDraw();
 
     /// \~chinese
     /// @brief 绘制纹理
     /// @param texture 纹理
     /// @param src_rect 源纹理裁剪矩形
     /// @param dest_rect 绘制的目标区域
-    void DrawTexture(Texture const& texture, Rect const& src_rect, Rect const& dest_rect);
-
-    /// \~chinese
-    /// @brief 绘制纹理
-    /// @param texture 纹理
-    /// @param src_rect 源纹理裁剪矩形
-    /// @param dest_rect 绘制的目标区域
-    void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr);
+    virtual void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr,
+                             const Rect* dest_rect = nullptr) = 0;
 
     /// \~chinese
     /// @brief 绘制文本布局
     /// @param layout 文本布局
     /// @param offset 偏移量
-    void DrawTextLayout(TextLayout const& layout, Point const& offset = Point());
+    virtual void DrawTextLayout(TextLayout const& layout, Point const& offset = Point()) = 0;
 
     /// \~chinese
     /// @brief 绘制形状轮廓
     /// @param shape 形状
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    void DrawShape(Shape const& shape, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f);
+    virtual void DrawShape(Shape const& shape, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
 
     /// \~chinese
     /// @brief 绘制线段
@@ -103,14 +97,15 @@ public:
     /// @param point2 线段终点
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f);
+    virtual void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke = nullptr,
+                          float stroke_width = 1.0f) = 0;
 
     /// \~chinese
     /// @brief 绘制矩形边框
     /// @param rect 矩形
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    void DrawRectangle(Rect const& rect, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f);
+    virtual void DrawRectangle(Rect const& rect, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
 
     /// \~chinese
     /// @brief 绘制圆角矩形边框
@@ -118,8 +113,8 @@ public:
     /// @param radius 圆角半径
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                              float stroke_width = 1.0f);
+    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
+                                      float stroke_width = 1.0f) = 0;
 
     /// \~chinese
     /// @brief 绘制椭圆边框
@@ -127,115 +122,115 @@ public:
     /// @param radius 椭圆半径
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                     float stroke_width = 1.0f);
+    virtual void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
+                             float stroke_width = 1.0f) = 0;
 
     /// \~chinese
     /// @brief 填充形状
     /// @param shape 形状
-    void FillShape(Shape const& shape);
+    virtual void FillShape(Shape const& shape) = 0;
 
     /// \~chinese
     /// @brief 填充矩形
     /// @param rect 矩形
-    void FillRectangle(Rect const& rect);
+    virtual void FillRectangle(Rect const& rect) = 0;
 
     /// \~chinese
     /// @brief 填充圆角矩形
     /// @param rect 矩形
     /// @param radius 圆角半径
-    void FillRoundedRectangle(Rect const& rect, Vec2 const& radius);
+    virtual void FillRoundedRectangle(Rect const& rect, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 填充椭圆
     /// @param center 圆心
     /// @param radius 椭圆半径
-    void FillEllipse(Point const& center, Vec2 const& radius);
+    virtual void FillEllipse(Point const& center, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 创建纹理
     /// @param texture 纹理
     /// @param size 纹理像素大小
-    void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size);
+    virtual void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) = 0;
 
     /// \~chinese
     /// @brief 设置绘制的裁剪区域
     /// @param clip_rect 裁剪矩形
-    void PushClipRect(Rect const& clip_rect);
+    virtual void PushClipRect(Rect const& clip_rect) = 0;
 
     /// \~chinese
     /// @brief 取消上一次设置的绘制裁剪区域
-    void PopClipRect();
+    virtual void PopClipRect() = 0;
 
     /// \~chinese
     /// @brief 设置图层区域
     /// @param layer 图层区域
-    void PushLayer(LayerArea& layer);
+    virtual void PushLayer(LayerArea& layer) = 0;
 
     /// \~chinese
     /// @brief 取消上一次设置的图层区域
-    void PopLayer();
+    virtual void PopLayer() = 0;
 
     /// \~chinese
     /// @brief 清空渲染内容
-    void Clear();
+    virtual void Clear() = 0;
 
     /// \~chinese
     /// @brief 使用纯色清空渲染内容
     /// @param clear_color 清屏颜色
-    void Clear(Color const& clear_color);
+    virtual void Clear(Color const& clear_color) = 0;
 
     /// \~chinese
     /// @brief 获取渲染区域大小
-    Size GetSize() const;
+    virtual Size GetSize() const = 0;
 
     /// \~chinese
     /// @brief 获取画刷透明度
-    float GetBrushOpacity() const;
+    virtual float GetBrushOpacity() const;
 
     /// \~chinese
     /// @brief 获取当前画刷
-    BrushPtr GetCurrentBrush() const;
+    virtual BrushPtr GetCurrentBrush() const;
 
     /// \~chinese
     /// @brief 获取全局二维变换
-    Matrix3x2 GetGlobalTransform() const;
+    virtual const Matrix3x2& GetGlobalTransform() const;
 
     /// \~chinese
     /// @brief 设置画刷透明度
-    void SetBrushOpacity(float opacity);
+    virtual void SetBrushOpacity(float opacity);
 
     /// \~chinese
     /// @brief 设置当前画刷
-    void SetCurrentBrush(BrushPtr brush);
-
-    /// \~chinese
-    /// @brief 设置上下文的二维变换
-    void SetTransform(const Matrix3x2& matrix);
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    void SetGlobalTransform(const Matrix3x2& matrix);
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    void SetGlobalTransform(const Matrix3x2* matrix);
+    virtual void SetCurrentBrush(BrushPtr brush);
 
     /// \~chinese
     /// @brief 设置抗锯齿模式
-    void SetAntialiasMode(bool enabled);
+    virtual void SetAntialiasMode(bool enabled) = 0;
 
     /// \~chinese
     /// @brief 设置文字抗锯齿模式
-    void SetTextAntialiasMode(TextAntialiasMode mode);
+    virtual void SetTextAntialiasMode(TextAntialiasMode mode) = 0;
 
     /// \~chinese
     /// @brief 检查边界是否在视区内
-    bool CheckVisibility(Rect const& bounds, Matrix3x2 const& transform);
+    virtual bool CheckVisibility(Rect const& bounds, Matrix3x2 const& transform) = 0;
 
     /// \~chinese
     /// @brief 重设渲染上下文大小
-    void Resize(Size const& size);
+    virtual void Resize(Size const& size) = 0;
+
+    /// \~chinese
+    /// @brief 设置上下文的二维变换
+    virtual void SetTransform(const Matrix3x2& matrix) = 0;
+
+    /// \~chinese
+    /// @brief 设置全局二维变换
+    virtual void SetGlobalTransform(const Matrix3x2& matrix);
+
+    /// \~chinese
+    /// @brief 设置全局二维变换
+    virtual void SetGlobalTransform(const Matrix3x2* matrix);
 
 public:
     /// \~chinese
@@ -260,32 +255,11 @@ public:
 protected:
     RenderContext();
 
-    ComPtr<ID2D1RenderTarget> GetRenderTarget() const;
-
-    ComPtr<ITextRenderer> GetTextRenderer() const;
-
-private:
-    /// \~chinese
-    /// @brief 创建设备依赖资源
-    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> ctx);
-
-    /// \~chinese
-    /// @brief 销毁设备依赖资源
-    void DiscardDeviceResources();
-
     /// \~chinese
     /// @brief 增加渲染图元数量
     void IncreasePrimitivesCount(uint32_t increase = 1) const;
 
-    /// \~chinese
-    /// @brief 保存绘制状态
-    void SaveDrawingState();
-
-    /// \~chinese
-    /// @brief 恢复绘制状态
-    void RestoreDrawingState();
-
-private:
+protected:
     bool              antialias_;
     bool              fast_global_transform_;
     mutable bool      collecting_status_;
@@ -295,10 +269,6 @@ private:
     Rect              visible_size_;
     Matrix3x2         global_transform_;
     mutable Status    status_;
-
-    ComPtr<ITextRenderer>          text_renderer_;
-    ComPtr<ID2D1RenderTarget>      render_target_;
-    ComPtr<ID2D1DrawingStateBlock> drawing_state_;
 };
 
 /** @} */
@@ -311,52 +281,6 @@ inline RenderContext::Status::Status()
 inline RenderContext::Status const& RenderContext::GetStatus() const
 {
     return status_;
-}
-
-inline ComPtr<ID2D1RenderTarget> RenderContext::GetRenderTarget() const
-{
-    KGE_ASSERT(render_target_);
-    return render_target_;
-}
-
-inline ComPtr<ITextRenderer> RenderContext::GetTextRenderer() const
-{
-    KGE_ASSERT(text_renderer_);
-    return text_renderer_;
-}
-
-inline float RenderContext::GetBrushOpacity() const
-{
-    return brush_opacity_;
-}
-
-inline BrushPtr RenderContext::GetCurrentBrush() const
-{
-    return current_brush_;
-}
-
-inline Matrix3x2 RenderContext::GetGlobalTransform() const
-{
-    return global_transform_;
-}
-
-inline void RenderContext::SetBrushOpacity(float opacity)
-{
-    brush_opacity_ = opacity;
-}
-
-inline void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
-{
-    SetGlobalTransform(&matrix);
-}
-
-inline void RenderContext::SetCurrentBrush(BrushPtr brush)
-{
-    current_brush_ = brush;
-    if (current_brush_)
-    {
-        current_brush_->SetOpacity(brush_opacity_);
-    }
 }
 
 }  // namespace kiwano

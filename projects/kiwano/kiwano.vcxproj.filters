@@ -288,6 +288,18 @@
     <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -487,6 +499,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp">
+      <Filter>render\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

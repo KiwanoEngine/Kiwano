@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(Brush);
 
@@ -89,9 +87,6 @@ struct RadialGradientStyle
  */
 class KGE_API Brush : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 创建纯色画刷
@@ -142,23 +137,15 @@ public:
     Type GetType() const;
 
 private:
-    /// \~chinese
-    /// @brief 获取透明度
-    float GetOpacity() const;
-
-    /// \~chinese
-    /// @brief 设置透明度
-    void SetOpacity(float opacity);
-
-private:
-    Type  type_;
-    float opacity_;
+    Type type_;
 
 #if defined(KGE_WIN32)
+public:
     void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
 
     ComPtr<ID2D1Brush> GetBrush() const;
 
+private:
     ComPtr<ID2D1Brush> raw_;
 #endif
 };
@@ -175,10 +162,6 @@ inline void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
 {
     type_ = type;
     raw_  = brush;
-    if (raw_)
-    {
-        raw_->SetOpacity(opacity_);
-    }
 }
 
 inline ComPtr<ID2D1Brush> Brush::GetBrush() const

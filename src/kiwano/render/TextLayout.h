@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 /**
  * \addtogroup Render
@@ -36,9 +34,6 @@ class Renderer;
 /// @brief 文本布局
 class KGE_API TextLayout
 {
-    friend class RenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 构造空的文本布局
@@ -165,8 +160,13 @@ public:
 
     void SetDirtyFlag(uint8_t flag);
 
-#if defined(KGE_WIN32)
 private:
+    uint8_t   dirty_flag_;
+    String    text_;
+    TextStyle style_;
+
+#if defined(KGE_WIN32)
+public:
     ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
     void SetTextFormat(ComPtr<IDWriteTextFormat> format);
@@ -175,15 +175,10 @@ private:
 
     void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
 
+private:
     ComPtr<IDWriteTextFormat> text_format_;
     ComPtr<IDWriteTextLayout> text_layout_;
 #endif
-
-private:
-    uint8_t dirty_flag_;
-
-    String    text_;
-    TextStyle style_;
 };
 
 /** @} */

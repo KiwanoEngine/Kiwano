@@ -58,7 +58,7 @@ void ImGuiModule::SetupComponent()
     io.KeyMap[ImGuiKey_Y]          = (int)KeyCode::Y;
     io.KeyMap[ImGuiKey_Z]          = (int)KeyCode::Z;
 
-    ImGui_Impl_Init(Renderer::GetInstance());
+    ImGui_Impl_Init();
 }
 
 void ImGuiModule::DestroyComponent()

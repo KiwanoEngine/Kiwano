@@ -23,8 +23,6 @@
 
 namespace kiwano
 {
-class Renderer;
-
 KGE_DECLARE_SMART_PTR(TextureRenderContext);
 
 /**
@@ -35,10 +33,8 @@ KGE_DECLARE_SMART_PTR(TextureRenderContext);
 /// \~chinese
 /// @brief 纹理渲染上下文
 /// @details 纹理渲染上下文将渲染输出到一个纹理对象中
-class KGE_API TextureRenderContext : public RenderContext
+class KGE_API TextureRenderContext : public virtual RenderContext
 {
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 创建纹理渲染上下文
@@ -50,40 +46,12 @@ public:
     static TextureRenderContextPtr Create(Size const& desired_size);
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
-    /// \~chinese
     /// @brief 获取渲染输出
     /// @param[out] texture 纹理输出
     /// @return 操作是否成功
-    bool GetOutput(Texture& texture);
-
-private:
-    TextureRenderContext();
-
-    ComPtr<ID2D1BitmapRenderTarget> GetBitmapRenderTarget() const;
-
-    void SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> ctx);
-
-private:
-    ComPtr<ID2D1BitmapRenderTarget> bitmap_rt_;
+    virtual bool GetOutput(Texture& texture) = 0;
 };
 
 /** @} */
 
-inline bool TextureRenderContext::IsValid() const
-{
-    return bitmap_rt_ != nullptr;
-}
-
-inline ComPtr<ID2D1BitmapRenderTarget> TextureRenderContext::GetBitmapRenderTarget() const
-{
-    return bitmap_rt_;
-}
-
-inline void TextureRenderContext::SetBitmapRenderTarget(ComPtr<ID2D1BitmapRenderTarget> ctx)
-{
-    bitmap_rt_ = ctx;
-}
 }  // namespace kiwano

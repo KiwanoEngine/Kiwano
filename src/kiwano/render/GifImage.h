@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class Renderer;
-
 KGE_DECLARE_SMART_PTR(GifImage);
 
 /**
@@ -39,8 +37,6 @@ KGE_DECLARE_SMART_PTR(GifImage);
  */
 class KGE_API GifImage : public virtual ObjectBase
 {
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief ´´½¨GIFÍ¼Æ¬
@@ -113,10 +109,12 @@ private:
     uint32_t height_in_pixels_;
 
 #if defined(KGE_WIN32)
+public:
     ComPtr<IWICBitmapDecoder> GetDecoder() const;
 
     void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
 
+private:
     ComPtr<IWICBitmapDecoder> decoder_;
 #endif
 };

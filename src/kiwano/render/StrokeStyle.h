@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(StrokeStyle);
 
@@ -71,9 +69,6 @@ enum class DashStyle
 /// @brief 线条样式
 class StrokeStyle : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 创建线条样式
@@ -115,7 +110,7 @@ public:
     bool IsValid() const;
 
 #if defined(KGE_WIN32)
-private:
+public:
     ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;
 
     void SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style);

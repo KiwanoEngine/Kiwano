@@ -24,9 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class TextureRenderContext;
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(Texture);
 
@@ -52,10 +49,6 @@ enum class InterpolationMode
  */
 class KGE_API Texture : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class TextureRenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 从本地文件创建纹理
@@ -133,8 +126,13 @@ public:
     /// @brief 获取默认的像素插值方式
     static InterpolationMode GetDefaultInterpolationMode();
 
-#if defined(KGE_WIN32)
 private:
+    InterpolationMode   interpolation_mode_;
+
+    static InterpolationMode default_interpolation_mode_;
+
+#if defined(KGE_WIN32)
+public:
     /// \~chinese
     /// @brief 获取源位图
     ComPtr<ID2D1Bitmap> GetBitmap() const;
@@ -143,17 +141,9 @@ private:
     /// @brief 设置源位图
     void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
-    /// \~chinese
-    /// @brief 获取像素格式
-    D2D1_PIXEL_FORMAT GetPixelFormat() const;
-
+private:
     ComPtr<ID2D1Bitmap> bitmap_;
 #endif
-
-private:
-    InterpolationMode   interpolation_mode_;
-
-    static InterpolationMode default_interpolation_mode_;
 };
 
 /** @} */

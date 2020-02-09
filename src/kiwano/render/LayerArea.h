@@ -23,7 +23,6 @@
 
 namespace kiwano
 {
-class RenderContext;
 
 /**
  * \addtogroup Render
@@ -36,8 +35,6 @@ class RenderContext;
  */
 class KGE_API LayerArea
 {
-    friend class RenderContext;
-
 public:
     LayerArea();
 
@@ -84,10 +81,12 @@ private:
     Matrix3x2          mask_transform_;
 
 #if defined(KGE_WIN32)
+public:
     ComPtr<ID2D1Layer> GetLayer() const;
 
     void SetLayer(ComPtr<ID2D1Layer> layer);
 
+private:
     ComPtr<ID2D1Layer> layer_;
 #endif
 };

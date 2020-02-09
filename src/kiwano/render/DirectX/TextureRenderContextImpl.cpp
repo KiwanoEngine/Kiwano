@@ -19,38 +19,28 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Logger.h>
-#include <kiwano/render/TextureRenderContext.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/DirectX/TextureRenderContextImpl.h>
 
 namespace kiwano
 {
 
-TextureRenderContextPtr TextureRenderContext::Create()
+bool TextureRenderContextImpl::GetOutput(Texture& texture)
 {
-    TextureRenderContextPtr ptr;
-    try
-    {
-        ptr = Renderer::GetInstance().CreateTextureRenderContext(nullptr);
-    }
-    catch (std::exception&)
-    {
-        return nullptr;
-    }
-    return ptr;
-}
+    HRESULT hr = E_FAIL;
 
-TextureRenderContextPtr TextureRenderContext::Create(Size const& desired_size)
-{
-    TextureRenderContextPtr ptr;
-    try
+    if (bitmap_rt_)
     {
-        ptr = Renderer::GetInstance().CreateTextureRenderContext(&desired_size);
+        ComPtr<ID2D1Bitmap> bitmap;
+
+        hr = bitmap_rt_->GetBitmap(&bitmap);
+
+        if (SUCCEEDED(hr))
+        {
+            texture.SetBitmap(bitmap);
+        }
     }
-    catch (std::exception&)
-    {
-        return nullptr;
-    }
-    return ptr;
+    return SUCCEEDED(hr);
 }
 
 }  // namespace kiwano

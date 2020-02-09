@@ -63,11 +63,12 @@ public:
     bool Load(Resource const& resource);
 
 #if defined(KGE_WIN32)
-private:
+public:
     ComPtr<IDWriteFontCollection> GetCollection() const;
 
     void SetCollection(ComPtr<IDWriteFontCollection> collection);
 
+private:
     ComPtr<IDWriteFontCollection> collection_;
 #endif
 };

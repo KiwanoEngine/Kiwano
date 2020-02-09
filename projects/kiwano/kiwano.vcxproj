@@ -62,6 +62,7 @@
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
     <ClInclude Include="..\..\src\kiwano\render\Brush.h" />
     <ClInclude Include="..\..\src\kiwano\render\Color.h" />
@@ -71,7 +72,10 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h" />
@@ -140,7 +144,10 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp" />

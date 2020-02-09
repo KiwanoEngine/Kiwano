@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#include <kiwano/platform/win32/WindowImpl.h>
 
 #if defined(KGE_WIN32)
 
@@ -38,8 +38,19 @@
 
 namespace kiwano
 {
-namespace win32
+
+
+Window& Window::GetInstance()
 {
+    return WindowImpl::GetInstance();
+}
+
+WindowImpl& WindowImpl::GetInstance()
+{
+    static WindowImpl instance;
+    return instance;
+}
+
 namespace
 {
 MONITORINFOEX GetMoniterInfoEx(HWND hwnd)
@@ -95,51 +106,6 @@ void RestoreResolution(WCHAR* device_name)
     ::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 }
 }  // namespace
-
-class KGE_API WindowImpl : public kiwano::Window
-{
-public:
-    WindowImpl();
-
-    ~WindowImpl();
-
-    void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                bool fullscreen) override;
-
-    WindowHandle GetHandle() const override;
-
-    void SetTitle(String const& title) override;
-
-    void SetIcon(uint32_t icon_resource) override;
-
-    void Resize(uint32_t width, uint32_t height) override;
-
-    void SetFullscreen(bool fullscreen) override;
-
-    void SetCursor(CursorType cursor) override;
-
-    void Destroy() override;
-
-private:
-    void PumpEvents() override;
-
-    DWORD GetStyle() const;
-
-    void UpdateCursor();
-
-    void SetActive(bool actived);
-
-    static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
-
-private:
-    bool         resizable_;
-    bool         is_fullscreen_;
-    wchar_t*     device_name_;
-    WindowHandle handle_;
-    CursorType   mouse_cursor_;
-
-    std::array<KeyCode, 256> key_map_;
-};
 
 WindowImpl::WindowImpl()
     : handle_(nullptr)
@@ -676,18 +642,6 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     }
 
     return ::DefWindowProcW(hwnd, msg, wparam, lparam);
-}
-
-}  // namespace win32
-}  // namespace kiwano
-
-namespace kiwano
-{
-
-Window& Window::GetInstance()
-{
-    static win32::WindowImpl instance;
-    return instance;
 }
 
 }  // namespace kiwano

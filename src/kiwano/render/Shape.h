@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 class ShapeSink;
 
 KGE_DECLARE_SMART_PTR(Shape);
@@ -41,8 +39,6 @@ KGE_DECLARE_SMART_PTR(Shape);
  */
 class KGE_API Shape : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class Renderer;
     friend class ShapeSink;
 
 public:
@@ -116,7 +112,7 @@ public:
     void Clear();
 
 #if defined(KGE_WIN32)
-private:
+public:
     ComPtr<ID2D1Geometry> GetGeometry() const;
 
     void SetGeometry(ComPtr<ID2D1Geometry> shape);

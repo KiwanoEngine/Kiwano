@@ -181,15 +181,6 @@ InterpolationMode Texture::GetDefaultInterpolationMode()
 }
 
 #if defined(KGE_WIN32)
-D2D1_PIXEL_FORMAT Texture::GetPixelFormat() const
-{
-    if (bitmap_)
-    {
-        return bitmap_->GetPixelFormat();
-    }
-    return D2D1_PIXEL_FORMAT();
-}
-
 ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
 {
     return bitmap_;
