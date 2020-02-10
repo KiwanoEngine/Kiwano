@@ -66,7 +66,7 @@ HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, Json const&
 
 void HttpRequest::SetJsonData(Json const& json)
 {
-    SetHeader(L"Content-Type", L"application/json;charset=UTF-8");
+    SetHeader("Content-Type", "application/json;charset=UTF-8");
     data_ = json.dump();
 }
 

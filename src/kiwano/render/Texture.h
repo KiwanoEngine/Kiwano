@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/Resource.h>
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
 
 namespace kiwano

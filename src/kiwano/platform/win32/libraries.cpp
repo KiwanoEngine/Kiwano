@@ -27,6 +27,7 @@ namespace win32
 {
 namespace dlls
 {
+
 Shlwapi::Shlwapi()
     : shlwapi()
     , PathFileExistsW(nullptr)
@@ -39,10 +40,11 @@ Shlwapi::Shlwapi()
     }
     else
     {
-        KGE_ERROR(L"Load shlapi.dll failed");
+        KGE_ERROR("Load shlapi.dll failed");
         throw std::runtime_error("Load shlapi.dll failed");
     }
 }
+
 }  // namespace dlls
 }  // namespace win32
 }  // namespace kiwano

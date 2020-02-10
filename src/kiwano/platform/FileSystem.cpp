@@ -32,9 +32,9 @@ inline String ConvertPathFormat(String const& path)
     String result = path;
     for (size_t i = 0; i < len; i++)
     {
-        if (result[i] == L'\\')
+        if (result[i] == '\\')
         {
-            result[i] = L'/';
+            result[i] = '/';
         }
     }
     return result;
@@ -42,7 +42,7 @@ inline String ConvertPathFormat(String const& path)
 
 inline bool IsFileExists(String const& path)
 {
-    DWORD dwAttrib = ::GetFileAttributesW(path.c_str());
+    DWORD dwAttrib = ::GetFileAttributesA(path.c_str());
 
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
@@ -55,9 +55,9 @@ FileSystem::~FileSystem() {}
 void FileSystem::AddSearchPath(String const& path)
 {
     String search_path = ConvertPathFormat(path);
-    if (!search_path.empty() && search_path[search_path.length() - 1] != L'/')
+    if (!search_path.empty() && search_path[search_path.length() - 1] != '/')
     {
-        search_path += L"/";
+        search_path += "/";
     }
 
     search_paths_.push_back(search_path);
@@ -70,9 +70,9 @@ void FileSystem::SetSearchPaths(Vector<String> const& paths)
     for (auto& path : search_paths_)
     {
         path = ConvertPathFormat(path);
-        if (!path.empty() && path[path.length() - 1] != L'/')
+        if (!path.empty() && path[path.length() - 1] != '/')
         {
-            path += L"/";
+            path += "/";
         }
     }
 }
@@ -81,7 +81,7 @@ String FileSystem::GetFullPathForFile(String const& file) const
 {
     if (file.empty())
     {
-        return L"";
+        return "";
     }
 
     if (IsAbsolutePath(file))
@@ -126,7 +126,7 @@ String FileSystem::GetFullPathForFile(String const& file) const
     }
 
     // File not found
-    return L"";
+    return "";
 }
 
 void FileSystem::AddFileLookupRule(String const& key, String const& file_path)
@@ -157,12 +157,12 @@ bool FileSystem::IsFileExists(String const& file_path) const
 bool FileSystem::IsAbsolutePath(String const& path) const
 {
     // like "C:\some.file"
-    return path.length() > 2 && ((std::isalpha(path[0]) && path[1] == L':') || (path[0] == L'/' && path[1] == L'/'));
+    return path.length() > 2 && ((std::isalpha(path[0]) && path[1] == ':') || (path[0] == '/' && path[1] == '/'));
 }
 
 bool FileSystem::RemoveFile(String const& file_path) const
 {
-    if (::DeleteFileW(file_path.c_str()))
+    if (::DeleteFileA(file_path.c_str()))
         return true;
     return false;
 }
@@ -170,7 +170,7 @@ bool FileSystem::RemoveFile(String const& file_path) const
 bool FileSystem::ExtractResourceToFile(Resource const& res, String const& dest_file_name) const
 {
     HANDLE file_handle =
-        ::CreateFileW(dest_file_name.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        ::CreateFileA(dest_file_name.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (file_handle == INVALID_HANDLE_VALUE)
         return false;
@@ -187,7 +187,7 @@ bool FileSystem::ExtractResourceToFile(Resource const& res, String const& dest_f
     else
     {
         ::CloseHandle(file_handle);
-        ::DeleteFile(dest_file_name.c_str());
+        ::DeleteFileA(dest_file_name.c_str());
     }
     return false;
 }

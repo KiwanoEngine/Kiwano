@@ -94,12 +94,13 @@ const Duration Duration::Hour   = 60 * Duration::Minute;
 
 namespace
 {
-const auto duration_regex = std::wregex(LR"(^[-+]?([0-9]*(\.[0-9]*)?(h|m|s|ms)+)+$)");
+const auto duration_regex = std::regex(R"(^[-+]?([0-9]*(\.[0-9]*)?(h|m|s|ms)+)+$)");
 
 typedef std::unordered_map<String, Duration> UnitMap;
-const auto                                   unit_map = UnitMap{
-    { L"ms", Duration::Ms }, { L"s", Duration::Second }, { L"m", Duration::Minute }, { L"h", Duration::Hour }
-};
+
+const auto unit_map =
+    UnitMap{ { "ms", Duration::Ms }, { "s", Duration::Second }, { "m", Duration::Minute }, { "h", Duration::Hour } };
+
 }  // namespace
 
 Duration::Duration()
@@ -137,14 +138,14 @@ String Duration::ToString() const
 {
     if (IsZero())
     {
-        return String(L"0s");
+        return String("0s");
     }
 
     String result;
     long   total_ms = milliseconds_;
     if (total_ms < 0)
     {
-        result.append(L"-");
+        result.append("-");
         total_ms = -total_ms;
     }
 
@@ -155,21 +156,21 @@ String Duration::ToString() const
 
     if (hour)
     {
-        result.append(String::parse(hour)).append(L"h");
-        result.append(String::parse(min)).append(L"m");
+        result.append(String::parse(hour)).append("h");
+        result.append(String::parse(min)).append("m");
     }
     else if (min)
     {
-        result.append(String::parse(min)).append(L"m");
+        result.append(String::parse(min)).append("m");
     }
 
     if (ms != 0)
     {
-        result.append(String::parse(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f)).append(L"s");
+        result.append(String::parse(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f)).append("s");
     }
     else if (sec != 0)
     {
-        result.append(String::parse(sec)).append(L"s");
+        result.append(String::parse(sec)).append("s");
     }
     return result;
 }
@@ -359,15 +360,15 @@ Duration Duration::Parse(const String& format)
         throw std::runtime_error("Duration::Parse failed, invalid duration");
     }
 
-    if (format.empty() || format == L"0")
+    if (format.empty() || format == "0")
     {
         return ret;
     }
 
     // ·ûºÅÎ»
-    if (format[0] == L'-' || format[0] == L'+')
+    if (format[0] == '-' || format[0] == '+')
     {
-        negative = (format[0] == L'-');
+        negative = (format[0] == '-');
         pos++;
     }
 
@@ -378,35 +379,37 @@ Duration Duration::Parse(const String& format)
         for (; i < len; ++i)
         {
             wchar_t ch = format[i];
-            if (!(ch == L'.' || L'0' <= ch && ch <= L'9'))
+            if (!(ch == '.' || '0' <= ch && ch <= '9'))
             {
                 break;
             }
         }
 
         String num_str = format.substr(pos, i - pos);
-        pos            = i;
 
-        if (num_str.empty() || num_str == L".")
+        pos = i;
+
+        if (num_str.empty() || num_str == ".")
             throw std::runtime_error("Duration::Parse failed, invalid duration");
 
         // µ¥Î»
         for (; i < len; ++i)
         {
             wchar_t ch = format[i];
-            if (ch == L'.' || L'0' <= ch && ch <= L'9')
+            if (ch == '.' || '0' <= ch && ch <= '9')
             {
                 break;
             }
         }
 
         String unit_str = format.substr(pos, i - pos);
-        pos             = i;
+
+        pos = i;
 
         if (unit_map.find(unit_str) == unit_map.end())
             throw std::runtime_error("Duration::Parse failed, invalid duration");
 
-        double   num  = std::wcstod(num_str.c_str(), nullptr);
+        double   num  = std::stod(num_str.c_str());
         Duration unit = unit_map.at(unit_str);
         ret += unit * num;
     }

@@ -37,7 +37,7 @@ AudioEngine::~AudioEngine() {}
 
 void AudioEngine::SetupComponent()
 {
-    KGE_SYS_LOG(L"Creating audio resources");
+    KGE_SYS_LOG("Creating audio resources");
 
     HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -56,7 +56,7 @@ void AudioEngine::SetupComponent()
 
 void AudioEngine::DestroyComponent()
 {
-    KGE_SYS_LOG(L"Destroying audio resources");
+    KGE_SYS_LOG("Destroying audio resources");
 
     if (mastering_voice_)
     {

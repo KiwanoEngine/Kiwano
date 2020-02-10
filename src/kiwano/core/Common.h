@@ -19,9 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <3rd-party/OuterC/oc/oc.h>
-#include <kiwano/core/Singleton.h>
-#include <kiwano/macros.h>
 #include <list>
 #include <map>
 #include <queue>
@@ -30,25 +27,42 @@
 #include <stack>
 #include <unordered_map>
 #include <unordered_set>
+#include <kiwano/macros.h>
+#include <kiwano/core/Singleton.h>
+#include <3rd-party/OuterC/oc/oc.h>
+#include <3rd-party/nlohmann/json.hpp>
 
 namespace kiwano
 {
-/// \~chinese
-/// @brief 字符串容器
-using String = oc::wstring;
 
 /// \~chinese
-/// @brief 窄字符串容器
-using ByteString = oc::string;
+/// @brief 输入流
+using InputStream = std::istream;
+
+/// \~chinese
+/// @brief 输出流
+using OutputStream = std::ostream;
+
+/// \~chinese
+/// @brief 字符串容器
+using String = oc::string;
+
+/// \~chinese
+/// @brief 宽字符串容器
+using WideString = oc::wstring;
 
 /// \~chinese
 /// @brief 字符串流
-using StringStream = std::wstringstream;
+using StringStream = std::stringstream;
+
+/// \~chinese
+/// @brief 宽字符串流
+using WideStringStream = std::wstringstream;
 
 /// \~chinese
 /// @brief 线性数组容器
 template <typename _Ty, typename... _Args>
-using Vector = oc::vector<_Ty, _Args...>;
+using Vector = std::vector<_Ty, _Args...>;
 
 /// \~chinese
 /// @brief 链表容器
@@ -100,10 +114,6 @@ using Function = oc::function<_FuncTy>;
 using Any = oc::any;
 
 /// \~chinese
-/// @brief JSON对象容器
-using Json = oc::basic_json<Map, Vector, String, int, double, bool, std::allocator>;
-
-/// \~chinese
 /// @brief 侵入式链表容器
 template <typename _Ty>
 using IntrusiveList = oc::intrusive_list<_Ty>;
@@ -117,6 +127,10 @@ using IntrusiveListItem = oc::intrusive_list_item<_Ty>;
 /// @brief 侵入式智能指针
 template <typename _Ty, typename _RefProxyTy>
 using IntrusivePtr = oc::intrusive_ptr<_Ty, _RefProxyTy>;
+
+/// \~chinese
+/// @brief JSON对象容器
+using Json = nlohmann::basic_json<Map, Vector, String>;
 
 /// \~chinese
 /// @brief 不可拷贝对象
@@ -138,13 +152,14 @@ inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...) c
     return oc::closure(ptr, func);
 }
 
-inline ByteString WideToMultiByte(const String& str)
+inline String WideToMultiByte(const WideString& str)
 {
     return oc::wide_to_string(str);
 }
 
-inline String MultiByteToWide(const ByteString& str)
+inline WideString MultiByteToWide(const String& str)
 {
     return oc::string_to_wide(str);
 }
+
 }  // namespace kiwano

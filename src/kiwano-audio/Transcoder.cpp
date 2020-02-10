@@ -76,7 +76,7 @@ HRESULT Transcoder::LoadMediaFile(String const& file_path)
 
     ComPtr<IMFSourceReader> reader;
 
-    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(file_path.c_str(), nullptr, &reader);
+    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(MultiByteToWide(file_path).c_str(), nullptr, &reader);
 
     if (SUCCEEDED(hr))
     {
@@ -105,7 +105,7 @@ HRESULT Transcoder::LoadMediaResource(Resource const& res)
 
     if (stream == nullptr)
     {
-        KGE_ERROR(L"SHCreateMemStream failed");
+        KGE_ERROR("SHCreateMemStream failed");
         return E_OUTOFMEMORY;
     }
 
@@ -198,7 +198,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
 
         if (data == nullptr)
         {
-            KGE_ERROR(L"Low memory");
+            KGE_ERROR("Low memory");
             hr = E_OUTOFMEMORY;
         }
         else

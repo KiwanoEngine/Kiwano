@@ -22,6 +22,7 @@
 
 namespace kiwano
 {
+
 LocalStorage::LocalStorage(String const& file_path, String const& field)
 {
     SetFilePath(file_path);
@@ -30,75 +31,76 @@ LocalStorage::LocalStorage(String const& file_path, String const& field)
 
 bool LocalStorage::Exists(String const& key) const
 {
-    wchar_t temp[256] = { 0 };
-    ::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), L"", temp, 255, file_path_.c_str());
-    return temp[0] == L'\0';
+    char temp[256] = { 0 };
+    ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), "", temp, 255, file_path_.c_str());
+    return temp[0] == '\0';
 }
 
 bool LocalStorage::SaveInt(String const& key, int val) const
 {
-    BOOL ret = ::WritePrivateProfileStringW(field_name_.c_str(), key.c_str(), std::to_wstring(val).c_str(),
-                                            file_path_.c_str());
+    BOOL ret =
+        ::WritePrivateProfileStringA(field_name_.c_str(), key.c_str(), std::to_string(val).c_str(), file_path_.c_str());
     return ret == TRUE;
 }
 
 bool LocalStorage::SaveFloat(String const& key, float val) const
 {
-    BOOL ret = ::WritePrivateProfileStringW(field_name_.c_str(), key.c_str(), std::to_wstring(val).c_str(),
-                                            file_path_.c_str());
+    BOOL ret =
+        ::WritePrivateProfileStringA(field_name_.c_str(), key.c_str(), std::to_string(val).c_str(), file_path_.c_str());
     return ret == TRUE;
 }
 
 bool LocalStorage::SaveDouble(String const& key, double val) const
 {
-    BOOL ret = ::WritePrivateProfileStringW(field_name_.c_str(), key.c_str(), std::to_wstring(val).c_str(),
-                                            file_path_.c_str());
+    BOOL ret =
+        ::WritePrivateProfileStringA(field_name_.c_str(), key.c_str(), std::to_string(val).c_str(), file_path_.c_str());
     return ret == TRUE;
 }
 
 bool LocalStorage::SaveBool(String const& key, bool val) const
 {
-    BOOL ret = ::WritePrivateProfileStringW(field_name_.c_str(), key.c_str(), (val ? L"1" : L"0"), file_path_.c_str());
+    BOOL ret = ::WritePrivateProfileStringA(field_name_.c_str(), key.c_str(), (val ? "1" : "0"), file_path_.c_str());
     return ret == TRUE;
 }
 
 bool LocalStorage::SaveString(String const& key, String const& val) const
 {
-    BOOL ret = ::WritePrivateProfileStringW(field_name_.c_str(), key.c_str(), val.c_str(), file_path_.c_str());
+    BOOL ret = ::WritePrivateProfileStringA(field_name_.c_str(), key.c_str(), val.c_str(), file_path_.c_str());
     return ret == TRUE;
 }
 
 int LocalStorage::GetInt(String const& key, int default_value) const
 {
-    return ::GetPrivateProfileIntW(field_name_.c_str(), key.c_str(), default_value, file_path_.c_str());
+    return ::GetPrivateProfileIntA(field_name_.c_str(), key.c_str(), default_value, file_path_.c_str());
 }
 
 float LocalStorage::GetFloat(String const& key, float default_value) const
 {
-    wchar_t temp[32]    = { 0 };
-    String  default_str = String::parse(default_value);
-    ::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
+    char   temp[32]    = { 0 };
+    String default_str = String::parse(default_value);
+    ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
     return std::stof(temp);
 }
 
 double LocalStorage::GetDouble(String const& key, double default_value) const
 {
-    wchar_t temp[32]    = { 0 };
-    String  default_str = String::parse(default_value);
-    ::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
+    char   temp[32]    = { 0 };
+    String default_str = String::parse(default_value);
+    ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
     return std::stod(temp);
 }
 
 bool LocalStorage::GetBool(String const& key, bool default_value) const
 {
-    int nValue = ::GetPrivateProfileIntW(field_name_.c_str(), key.c_str(), default_value ? 1 : 0, file_path_.c_str());
+    int nValue = ::GetPrivateProfileIntA(field_name_.c_str(), key.c_str(), default_value ? 1 : 0, file_path_.c_str());
     return nValue == TRUE;
 }
 
 String LocalStorage::GetString(String const& key, String const& default_value) const
 {
-    wchar_t temp[256] = { 0 };
-    ::GetPrivateProfileStringW(field_name_.c_str(), key.c_str(), default_value.c_str(), temp, 255, file_path_.c_str());
+    char temp[256] = { 0 };
+    ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), default_value.c_str(), temp, 255, file_path_.c_str());
     return temp;
 }
+
 }  // namespace kiwano

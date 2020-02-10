@@ -34,7 +34,6 @@
 #define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
 #define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
-#define KGE_WND_CLASS_NAME L"KiwanoAppWnd"
 
 namespace kiwano
 {
@@ -98,7 +97,7 @@ void ChangeFullScreenResolution(uint32_t width, uint32_t height, WCHAR* device_n
     mode.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
     if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-        KGE_ERROR(L"ChangeDisplaySettings failed");
+        KGE_ERROR("ChangeDisplaySettings failed");
 }
 
 void RestoreResolution(WCHAR* device_name)
@@ -165,7 +164,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     HINSTANCE  hinst   = GetModuleHandleW(nullptr);
     WNDCLASSEX wcex    = { 0 };
     wcex.cbSize        = sizeof(WNDCLASSEX);
-    wcex.lpszClassName = KGE_WND_CLASS_NAME;
+    wcex.lpszClassName = L"KiwanoAppWnd";
     wcex.style         = CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
     wcex.lpfnWndProc   = WindowImpl::WndProc;
     wcex.hIcon         = nullptr;
@@ -229,14 +228,14 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
         height = win_height;
     }
 
-    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, KGE_WND_CLASS_NAME, title.c_str(), GetStyle(), left,
+    handle_ = ::CreateWindowExA(is_fullscreen_ ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(), left,
                                 top, width, height, nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
-        ::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
+        ::UnregisterClassW(L"KiwanoAppWnd", hinst);
 
-        KGE_ERROR(L"Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
+        KGE_ERROR("Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
         throw std::runtime_error("Create window failed");
     }
 
@@ -276,7 +275,7 @@ void WindowImpl::PumpEvents()
 void WindowImpl::SetTitle(String const& title)
 {
     if (handle_)
-        ::SetWindowTextW(handle_, title.c_str());
+        ::SetWindowTextA(handle_, title.c_str());
 }
 
 void WindowImpl::SetIcon(uint32_t icon_resource)
@@ -551,11 +550,11 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
-            KGE_SYS_LOG(L"Window minimized");
+            KGE_SYS_LOG("Window minimized");
         }
         else
         {
-            // KGE_SYS_LOG(L"Window resized");
+            // KGE_SYS_LOG("Window resized");
 
             window->width_ = ((uint32_t)(short)LOWORD(lparam));
             window->height_ = ((uint32_t)(short)HIWORD(lparam));
@@ -591,9 +590,9 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETTEXT:
     {
-        KGE_SYS_LOG(L"Window title changed");
+        KGE_SYS_LOG("Window title changed");
 
-        window->title_ = String::cstr(reinterpret_cast<LPCWSTR>(lparam));
+        window->title_ = WideToMultiByte(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
         evt->title                     = window->title_;
@@ -603,13 +602,13 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETICON:
     {
-        KGE_SYS_LOG(L"Window icon changed");
+        KGE_SYS_LOG("Window icon changed");
     }
     break;
 
     case WM_DISPLAYCHANGE:
     {
-        KGE_SYS_LOG(L"The display resolution has changed");
+        KGE_SYS_LOG("The display resolution has changed");
 
         ::InvalidateRect(hwnd, nullptr, FALSE);
     }
@@ -623,7 +622,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_CLOSE:
     {
-        KGE_SYS_LOG(L"Window is closing");
+        KGE_SYS_LOG("Window is closing");
 
         WindowClosedEventPtr evt = new WindowClosedEvent;
         window->PushEvent(evt);
@@ -633,7 +632,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_DESTROY:
     {
-        KGE_SYS_LOG(L"Window was destroyed");
+        KGE_SYS_LOG("Window was destroyed");
 
         ::PostQuitMessage(0);
         return 0;

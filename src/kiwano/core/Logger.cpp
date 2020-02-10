@@ -141,7 +141,7 @@ const WORD reset = white;
 }  // namespace console_colors
 
 #define DECLARE_HANDLE_COLOR(NAME, HANDLE_NAME, COLOR)                                   \
-    inline std::wostream&(NAME)(std::wostream & _out)                                    \
+    inline OutputStream&(NAME)(OutputStream & _out)                                      \
     {                                                                                    \
         ::SetConsoleTextAttribute(::GetStdHandle(HANDLE_NAME), console_colors::##COLOR); \
         return _out;                                                                     \
@@ -175,8 +175,8 @@ Logger::Logger()
     : enabled_(true)
     , default_stdout_color_(0)
     , default_stderr_color_(0)
-    , output_stream_(std::wcout.rdbuf())
-    , error_stream_(std::wcerr.rdbuf())
+    , output_stream_(std::cout.rdbuf())
+    , error_stream_(std::cerr.rdbuf())
 {
     ResetOutputStream();
 }
@@ -186,7 +186,7 @@ Logger::~Logger()
     FreeAllocatedConsole();
 }
 
-void Logger::Printf(Level level, const wchar_t* format, ...)
+void Logger::Printf(Level level, const char* format, ...)
 {
     if (!enabled_)
         return;
@@ -200,11 +200,11 @@ void Logger::Printf(Level level, const wchar_t* format, ...)
         va_list args = nullptr;
         va_start(args, format);
 
-        static wchar_t temp_buffer[1024 * 3 + 1];
-        const auto     len = ::_vscwprintf(format, args) + 1;
-        ::_vsnwprintf_s(temp_buffer, len, len, format, args);
+        static char temp_buffer[1024 * 3 + 1];
+        const auto     len = ::_vscprintf(format, args) + 1;
+        ::_vsnprintf_s(temp_buffer, len, len, format, args);
 
-        sstream << ' ' << temp_buffer << L"\r\n";
+        sstream << ' ' << temp_buffer << "\r\n";
 
         va_end(args);
     }
@@ -219,16 +219,16 @@ void Logger::Prepare(Level level, StringStream& sstream)
     switch (level)
     {
     case Level::Info:
-        prefix = L"[INFO] ";
+        prefix = "[INFO] ";
         break;
     case Level::System:
-        prefix = L"[SYSTEM] ";
+        prefix = "[SYSTEM] ";
         break;
     case Level::Warning:
-        prefix = L"[WARN] ";
+        prefix = "[WARN] ";
         break;
     case Level::Error:
-        prefix = L"[ERROR] ";
+        prefix = "[ERROR] ";
         break;
     }
 
@@ -236,11 +236,13 @@ void Logger::Prepare(Level level, StringStream& sstream)
     time_t  unix = std::time(nullptr);
     std::tm tmbuf;
     localtime_s(&tmbuf, &unix);
-    sstream << prefix << std::put_time(&tmbuf, L"%H:%M:%S ");
+    sstream << prefix << std::put_time(&tmbuf, "%H:%M:%S ");
 }
 
 void Logger::Output(Level level, StringStream& sstream)
 {
+    using ConsoleColor = Function<OutputStream&(OutputStream&)>;
+
     OutputStream* ostream = nullptr;
     ConsoleColor  color   = nullptr;
 
@@ -269,7 +271,7 @@ void Logger::Output(Level level, StringStream& sstream)
     {
         auto output = sstream.str();
         color(*ostream) << output << std::flush;
-        ::OutputDebugStringW(output.c_str());
+        ::OutputDebugStringA(output.c_str());
 
         ResetConsoleColor();
     }
@@ -297,20 +299,20 @@ void Logger::ResetOutputStream()
 
         // replace the C++ global locale with the user-preferred locale
         (void)std::locale::global(std::locale(""));
-        (void)std::wcout.imbue(std::locale());
-        (void)std::wcerr.imbue(std::locale());
+        (void)std::cout.imbue(std::locale());
+        (void)std::cerr.imbue(std::locale());
 
-        RedirectOutputStreamBuffer(std::wcout.rdbuf());
-        RedirectErrorStreamBuffer(std::wcerr.rdbuf());
+        RedirectOutputStreamBuffer(std::cout.rdbuf());
+        RedirectErrorStreamBuffer(std::cerr.rdbuf());
     }
 }
 
-std::wstreambuf* Logger::RedirectOutputStreamBuffer(std::wstreambuf* buf)
+std::streambuf* Logger::RedirectOutputStreamBuffer(std::streambuf* buf)
 {
     return output_stream_.rdbuf(buf);
 }
 
-std::wstreambuf* Logger::RedirectErrorStreamBuffer(std::wstreambuf* buf)
+std::streambuf* Logger::RedirectErrorStreamBuffer(std::streambuf* buf)
 {
     return error_stream_.rdbuf(buf);
 }
@@ -329,7 +331,7 @@ void Logger::ShowConsole(bool show)
             HWND console = ::AllocateConsole();
             if (!console)
             {
-                KGE_WARN(L"AllocConsole failed");
+                KGE_WARN("AllocConsole failed");
             }
             else
             {

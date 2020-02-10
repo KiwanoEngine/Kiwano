@@ -254,7 +254,7 @@ STDMETHODIMP FontFileEnumerator::SetFilePaths(Vector<String> const& filePaths)
 {
     try
     {
-        filePaths_.assign(filePaths);
+        filePaths_.assign(filePaths.begin(), filePaths.end());
     }
     catch (std::bad_alloc&)
     {
@@ -305,7 +305,9 @@ HRESULT STDMETHODCALLTYPE FontFileEnumerator::MoveNext(_Out_ BOOL* hasCurrentFil
 
     if (nextIndex_ < filePaths_.size())
     {
-        hr = pFactory_->CreateFontFileReference(filePaths_[nextIndex_].c_str(), NULL, &currentFile_);
+        WideString file_name = MultiByteToWide(filePaths_[nextIndex_]);
+
+        hr = pFactory_->CreateFontFileReference(file_name.c_str(), NULL, &currentFile_);
 
         if (SUCCEEDED(hr))
         {
@@ -671,7 +673,7 @@ STDMETHODIMP ResourceFontFileEnumerator::SetResources(Vector<Resource> const& re
 {
     try
     {
-        resources_.assign(resources);
+        resources_.assign(resources.begin(), resources.end());
     }
     catch (std::bad_alloc&)
     {

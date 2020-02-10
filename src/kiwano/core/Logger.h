@@ -71,18 +71,10 @@ public:
     };
 
     /// \~chinese
-    /// @brief 输出流
-    using OutputStream = std::wostream;
-
-    /// \~chinese
-    /// @brief 控制台颜色
-    using ConsoleColor = Function<OutputStream&(OutputStream&)>;
-
-    /// \~chinese
     /// @brief 打印日志
     /// @param level 日志级别
     /// @param format 格式字符串
-    void Printf(Level level, const wchar_t* format, ...);
+    void Printf(Level level, const char* format, ...);
 
     /// \~chinese
     /// @brief 打印日志
@@ -113,19 +105,19 @@ public:
 
     /// \~chinese
     /// @brief 获取输出流
-    std::wostream& GetOutputStream();
+    OutputStream& GetOutputStream();
 
     /// \~chinese
     /// @brief 获取错误流
-    std::wostream& GetErrorStream();
+    OutputStream& GetErrorStream();
 
     /// \~chinese
     /// @brief 重定向输出流
-    std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
+    std::streambuf* RedirectOutputStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
     /// @brief 重定向错误流
-    std::wstreambuf* RedirectErrorStreamBuffer(std::wstreambuf* buf);
+    std::streambuf* RedirectErrorStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
     /// @brief 重置输出流
@@ -190,7 +182,7 @@ void Logger::Println(Level level, _Args&&... args)
     // Format message
     (void)std::initializer_list<int>{ ((sstream << ' ' << args), 0)... };
 
-    sstream << L"\r\n";
+    sstream << "\r\n";
 
     Output(level, sstream);
 }
@@ -201,18 +193,18 @@ inline void Logger::ResetConsoleColor() const
     ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
 }
 
-inline Logger::OutputStream& Logger::DefaultOutputColor(OutputStream& out)
+inline OutputStream& Logger::DefaultOutputColor(OutputStream& out)
 {
     ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
     return out;
 }
 
-inline std::wostream& Logger::GetOutputStream()
+inline OutputStream& Logger::GetOutputStream()
 {
     return output_stream_;
 }
 
-inline std::wostream& Logger::GetErrorStream()
+inline OutputStream& Logger::GetErrorStream()
 {
     return error_stream_;
 }

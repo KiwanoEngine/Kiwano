@@ -29,10 +29,10 @@ namespace kiwano
  * @brief 资源
  * @details
  *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 L"WAVE"，名称标识符为
+ *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
  * IDR_WAVE_1，那么可以这样指定该资源:
  *   @code
- *     Resource(IDR_WAVE_1, L"WAVE");
+ *     Resource(IDR_WAVE_1, "WAVE");
  *   @endcode
  *   了解资源的更多信息:
  * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources

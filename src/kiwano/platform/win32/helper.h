@@ -49,7 +49,7 @@ inline void WarnIfFailed(HRESULT hr)
     {
         PrintCallStack();
 
-        KGE_WARN(L"Failed with HRESULT of %08X", hr);
+        KGE_WARN("Failed with HRESULT of %08X", hr);
     }
 }
 

@@ -47,7 +47,7 @@ RendererImpl::RendererImpl()
 
 void RendererImpl::SetupComponent()
 {
-    KGE_SYS_LOG(L"Creating device resources");
+    KGE_SYS_LOG("Creating device resources");
 
     win32::ThrowIfFailed(::CoInitialize(nullptr));
 
@@ -116,7 +116,7 @@ void RendererImpl::SetupComponent()
 
 void RendererImpl::DestroyComponent()
 {
-    KGE_SYS_LOG(L"Destroying device resources");
+    KGE_SYS_LOG("Destroying device resources");
 
     d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
     res_font_file_loader_.reset();
@@ -205,16 +205,16 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARN(L"Texture file '%s' not found!", file_path.c_str());
+        KGE_WARN("Texture file '%s' not found!", file_path.c_str());
         hr = E_FAIL;
     }
 
     if (SUCCEEDED(hr))
     {
-        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
+        WideString full_path = MultiByteToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
-        hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
+        hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
 
         if (SUCCEEDED(hr))
         {
@@ -244,7 +244,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (FAILED(hr))
     {
-        KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
+        KGE_WARN("Load texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -258,29 +258,36 @@ void RendererImpl::CreateTexture(Texture& texture, Resource const& resource)
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<IWICBitmapDecoder> decoder;
-        hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, resource);
+        Resource::Data data = resource.GetData();
+
+        hr = data ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
         {
-            ComPtr<IWICBitmapFrameDecode> source;
-            hr = decoder->GetFrame(0, &source);
+            ComPtr<IWICBitmapDecoder> decoder;
+            hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, data.buffer, (DWORD)data.size);
 
             if (SUCCEEDED(hr))
             {
-                ComPtr<IWICFormatConverter> converter;
-                hr = d2d_res_->CreateBitmapConverter(converter, source, GUID_WICPixelFormat32bppPBGRA,
-                                                     WICBitmapDitherTypeNone, nullptr, 0.f,
-                                                     WICBitmapPaletteTypeMedianCut);
+                ComPtr<IWICBitmapFrameDecode> source;
+                hr = decoder->GetFrame(0, &source);
 
                 if (SUCCEEDED(hr))
                 {
-                    ComPtr<ID2D1Bitmap> bitmap;
-                    hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+                    ComPtr<IWICFormatConverter> converter;
+                    hr = d2d_res_->CreateBitmapConverter(converter, source, GUID_WICPixelFormat32bppPBGRA,
+                                                         WICBitmapDitherTypeNone, nullptr, 0.f,
+                                                         WICBitmapPaletteTypeMedianCut);
 
                     if (SUCCEEDED(hr))
                     {
-                        texture.SetBitmap(bitmap);
+                        ComPtr<ID2D1Bitmap> bitmap;
+                        hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+
+                        if (SUCCEEDED(hr))
+                        {
+                            texture.SetBitmap(bitmap);
+                        }
                     }
                 }
             }
@@ -289,7 +296,7 @@ void RendererImpl::CreateTexture(Texture& texture, Resource const& resource)
 
     if (FAILED(hr))
     {
-        KGE_WARN(L"Load texture failed with HRESULT of %08X!", hr);
+        KGE_WARN("Load texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -303,16 +310,16 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARN(L"Gif texture file '%s' not found!", file_path.c_str());
+        KGE_WARN("Gif texture file '%s' not found!", file_path.c_str());
         hr = E_FAIL;
     }
 
     if (SUCCEEDED(hr))
     {
-        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
+        WideString full_path = MultiByteToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
-        hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path);
+        hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
 
         if (SUCCEEDED(hr))
         {
@@ -322,7 +329,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
 
     if (FAILED(hr))
     {
-        KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
+        KGE_WARN("Load GIF texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -336,18 +343,25 @@ void RendererImpl::CreateGifImage(GifImage& gif, Resource const& resource)
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<IWICBitmapDecoder> decoder;
-        hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, resource);
+        Resource::Data data = resource.GetData();
+
+        hr = data ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
         {
-            gif.SetDecoder(decoder);
+            ComPtr<IWICBitmapDecoder> decoder;
+            hr = d2d_res_->CreateBitmapDecoderFromResource(decoder, data.buffer, (DWORD)data.size);
+
+            if (SUCCEEDED(hr))
+            {
+                gif.SetDecoder(decoder);
+            }
         }
     }
 
     if (FAILED(hr))
     {
-        KGE_WARN(L"Load GIF texture failed with HRESULT of %08X!", hr);
+        KGE_WARN("Load GIF texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -506,7 +520,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& g
 
     if (FAILED(hr))
     {
-        KGE_WARN(L"Load GIF frame failed with HRESULT of %08X!", hr);
+        KGE_WARN("Load GIF frame failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -522,7 +536,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
     {
         if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
-            KGE_WARN(L"Font file '%s' not found!", file_path.c_str());
+            KGE_WARN("Font file '%s' not found!", file_path.c_str());
             hr = E_FAIL;
         }
     }
@@ -595,10 +609,10 @@ void RendererImpl::CreateTextFormat(TextLayout& layout)
     {
         const TextStyle& style = layout.GetStyle();
 
-        hr = d2d_res_->CreateTextFormat(output, style.font_family, style.font ? style.font->GetCollection() : nullptr,
-                                        DWRITE_FONT_WEIGHT(style.font_weight),
-                                        style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-                                        DWRITE_FONT_STRETCH_NORMAL, style.font_size);
+        hr = d2d_res_->CreateTextFormat(
+            output, MultiByteToWide(style.font_family).c_str(), style.font ? style.font->GetCollection() : nullptr,
+            DWRITE_FONT_WEIGHT(style.font_weight), style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+            DWRITE_FONT_STRETCH_NORMAL, style.font_size);
     }
 
     if (SUCCEEDED(hr))
@@ -620,7 +634,9 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
     ComPtr<IDWriteTextLayout> output;
     if (SUCCEEDED(hr))
     {
-        hr = d2d_res_->CreateTextLayout(output, layout.GetText(), layout.GetTextFormat());
+        WideString text = MultiByteToWide(layout.GetText());
+
+        hr = d2d_res_->CreateTextLayout(output, text.c_str(), text.length(), layout.GetTextFormat());
     }
 
     if (SUCCEEDED(hr))
@@ -941,7 +957,7 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
 
     if (SUCCEEDED(hr))
     {
-        hr = d2d_res_->SetLogicalSize(output_size_);
+        hr = d2d_res_->SetLogicalSize(output_size_.x, output_size_.y);
     }
 
     if (SUCCEEDED(hr))

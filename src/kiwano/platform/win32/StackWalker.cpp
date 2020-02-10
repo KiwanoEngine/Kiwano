@@ -117,9 +117,9 @@ struct DbgHelp
 DbgHelp g_DbgHelp;
 }  // namespace
 
-void PrintErrorCode(LPCWSTR lpszFunction)
+void PrintErrorCode(LPCSTR lpszFunction)
 {
-    KGE_ERROR(L"%s failed with HRESULT of %08X", lpszFunction, HRESULT_FROM_WIN32(GetLastError()));
+    KGE_ERROR("%s failed with HRESULT of %08X", lpszFunction, HRESULT_FROM_WIN32(GetLastError()));
 }
 
 void PrintCallStackOnContext(PCONTEXT pContext)
@@ -165,14 +165,14 @@ void PrintCallStackOnContext(PCONTEXT pContext)
     constexpr int STACKWALK_MAX_NAMELEN = 1024;
     BYTE          symbolBuffer[sizeof(IMAGEHLP_SYMBOL64) + STACKWALK_MAX_NAMELEN];
 
-    KGE_ERROR(L"==========  Stack trace  ==========");
+    KGE_ERROR("==========  Stack trace  ==========");
 
     while (true)
     {
         if (!g_DbgHelp.StackWalk64(dwMachineType, hProcess, hThread, &sf, pContext, NULL,
                                    g_DbgHelp.SymFunctionTableAccess64, g_DbgHelp.SymGetModuleBase64, NULL))
         {
-            PrintErrorCode(L"StackWalk64");
+            PrintErrorCode("StackWalk64");
             break;
         }
 
@@ -190,7 +190,7 @@ void PrintCallStackOnContext(PCONTEXT pContext)
         DWORD64 dwDisplacement;
         if (!g_DbgHelp.SymGetSymFromAddr64(hProcess, sf.AddrPC.Offset, &dwDisplacement, pSymbol))
         {
-            PrintErrorCode(L"SymGetSymFromAddr64");
+            PrintErrorCode("SymGetSymFromAddr64");
             break;
         }
 
@@ -201,14 +201,11 @@ void PrintCallStackOnContext(PCONTEXT pContext)
         DWORD dwLineDisplacement;
         if (g_DbgHelp.SymGetLineFromAddr64(hProcess, sf.AddrPC.Offset, &dwLineDisplacement, &lineInfo))
         {
-            String functionName = MultiByteToWide(pSymbol->Name);
-            String fileName     = MultiByteToWide(lineInfo.FileName);
-            KGE_ERROR(L"%s (%d): %s", fileName.c_str(), lineInfo.LineNumber, functionName.c_str());
+            KGE_ERROR("%s (%d): %s", lineInfo.FileName, lineInfo.LineNumber, pSymbol->Name);
         }
         else
         {
-            String functionName = MultiByteToWide(pSymbol->Name);
-            KGE_ERROR(L"(filename not available): %s", functionName.c_str());
+            KGE_ERROR("(filename not available): %s", pSymbol->Name);
         }
 
         if (sf.AddrReturn.Offset == 0)
@@ -236,5 +233,6 @@ void PrintCallStack()
 
     g_DbgHelp.SymCleanup(hProcess);
 }
+
 }  // namespace win32
 }  // namespace kiwano

@@ -34,7 +34,7 @@ class comma_numpunct : public std::numpunct<wchar_t>
 private:
     virtual wchar_t do_thousands_sep() const override
     {
-        return L',';
+        return ',';
     }
 
     virtual std::string do_grouping() const override
@@ -46,7 +46,7 @@ private:
 
 DebugActor::DebugActor()
 {
-    SetName(L"kiwano-debug-actor");
+    SetName("kiwano-debug-actor");
     SetPosition(Point{ 10, 10 });
     SetResponsible(true);
     SetCascadeOpacityEnabled(true);
@@ -60,7 +60,7 @@ DebugActor::DebugActor()
     fill_brush->SetColor(Color::White);
 
     TextStyle style;
-    style.font_family  = L"Arial";
+    style.font_family  = "Arial";
     style.font_size    = 16.f;
     style.font_weight  = FontWeight::Normal;
     style.line_spacing = 20.f;

@@ -43,12 +43,12 @@ Stage::~Stage() {}
 
 void Stage::OnEnter()
 {
-    KGE_SYS_LOG(L"Stage entered");
+    KGE_SYS_LOG("Stage entered");
 }
 
 void Stage::OnExit()
 {
-    KGE_SYS_LOG(L"Stage exited");
+    KGE_SYS_LOG("Stage exited");
 }
 
 void Stage::RenderBorder(RenderContext& ctx)

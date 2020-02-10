@@ -111,7 +111,7 @@ void Application::Use(ComponentBase* component)
     {
 
 #if defined(KGE_DEBUG)
-        if (comps_.contains(component))
+        if (std::find(comps_.begin(), comps_.end(), component) != comps_.end())
         {
             KGE_ASSERT(false && "Component already exists!");
         }

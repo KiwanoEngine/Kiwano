@@ -34,8 +34,8 @@ KGE_DECLARE_SMART_PTR(LocalStorage);
 /// 例如, 保存游戏最高分, 以便下次进行游戏时读取:
 ///   @code
 ///     LocalStorage data;                      // 创建数据对象
-///     data.SaveInt(L"best-score", 20);        // 保存最高分 20
-///     int best = data.GetInt(L"best-score");  // 读取之前储存的最高分
+///     data.SaveInt("best-score", 20);        // 保存最高分 20
+///     int best = data.GetInt("best-score");  // 读取之前储存的最高分
 ///   @endcode
 class KGE_API LocalStorage : public virtual ObjectBase
 {
@@ -44,7 +44,7 @@ public:
     /// @brief 构建本地存储对象
     /// @param file_path 文件储存路径
     /// @param field 字段名
-    LocalStorage(String const& file_path = L"data.ini", String const& field = L"defalut");
+    LocalStorage(String const& file_path = "data.ini", String const& field = "defalut");
 
     /// \~chinese
     /// @brief 获取文件储存路径
