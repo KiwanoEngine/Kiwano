@@ -240,12 +240,12 @@ public:
 
     /// \~chinese
     /// @brief 添加一个图层
-    /// @param area 图层区域
-    void PushLayerArea(LayerArea& area);
+    /// @param layer 图层
+    void PushLayer(Layer& layer);
 
     /// \~chinese
     /// @brief 删除最近添加的图层
-    void PopLayerArea();
+    void PopLayer();
 
     /// \~chinese
     /// @brief 添加一个裁剪区域

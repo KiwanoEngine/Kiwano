@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 
 namespace kiwano
 {
-LayerArea::LayerArea()
+Layer::Layer()
     : opacity_(1.f)
-    , area_(Rect::Infinite())
+    , clip_rect_(Rect::Infinite())
 {
 }
 

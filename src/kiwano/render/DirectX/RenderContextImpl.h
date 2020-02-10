@@ -70,7 +70,7 @@ public:
 
     void PopClipRect() override;
 
-    void PushLayer(LayerArea& layer) override;
+    void PushLayer(Layer& layer) override;
 
     void PopLayer() override;
 

@@ -23,7 +23,7 @@
 #include <kiwano/core/Time.h>
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Shape.h>
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
 #include <kiwano/render/DirectX/TextRenderer.h>
@@ -165,7 +165,7 @@ public:
     /// \~chinese
     /// @brief 设置图层区域
     /// @param layer 图层区域
-    virtual void PushLayer(LayerArea& layer) = 0;
+    virtual void PushLayer(Layer& layer) = 0;
 
     /// \~chinese
     /// @brief 取消上一次设置的图层区域

@@ -19,47 +19,47 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Layer.h>
+#include <kiwano/2d/LayerActor.h>
 #include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
 
-LayerPtr Layer::Create()
+LayerActorPtr LayerActor::Create()
 {
-    LayerPtr ptr = new (std::nothrow) Layer;
+    LayerActorPtr ptr = new (std::nothrow) LayerActor;
     return ptr;
 }
 
-Layer::Layer()
+LayerActor::LayerActor()
     : swallow_(false)
 {
 }
 
-Layer::~Layer() {}
+LayerActor::~LayerActor() {}
 
-void Layer::SetClipRect(Rect const& clip_rect)
+void LayerActor::SetClipRect(Rect const& clip_rect)
 {
-    area_.SetAreaRect(clip_rect);
+    layer_.SetClipRect(clip_rect);
 }
 
-void Layer::SetOpacity(float opacity)
+void LayerActor::SetOpacity(float opacity)
 {
     // Actor::SetOpacity(opacity);
-    area_.SetOpacity(opacity);
+    layer_.SetOpacity(opacity);
 }
 
-void Layer::SetMaskShape(ShapePtr mask)
+void LayerActor::SetMaskShape(ShapePtr mask)
 {
-    area_.SetMaskShape(mask);
+    layer_.SetMaskShape(mask);
 }
 
-void Layer::SetMaskTransform(Matrix3x2 const& transform)
+void LayerActor::SetMaskTransform(Matrix3x2 const& transform)
 {
-    area_.SetMaskTransform(transform);
+    layer_.SetMaskTransform(transform);
 }
 
-bool Layer::DispatchEvent(Event* evt)
+bool LayerActor::DispatchEvent(Event* evt)
 {
     if (!IsVisible())
         return true;
@@ -71,18 +71,18 @@ bool Layer::DispatchEvent(Event* evt)
     return Actor::DispatchEvent(evt);
 }
 
-void Layer::Render(RenderContext& ctx)
+void LayerActor::Render(RenderContext& ctx)
 {
-    ctx.PushLayer(area_);
+    ctx.PushLayer(layer_);
 
     Actor::Render(ctx);
 
     ctx.PopLayer();
 }
 
-bool Layer::CheckVisibility(RenderContext& ctx) const
+bool LayerActor::CheckVisibility(RenderContext& ctx) const
 {
-    // Do not need to render Layer
+    // Do not need to render LayerActor
     return false;
 }
 

@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Stage.h>
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 
 namespace kiwano
 {
@@ -102,8 +102,8 @@ protected:
     Size      window_size_;
     StagePtr  out_stage_;
     StagePtr  in_stage_;
-    LayerArea out_layer_;
-    LayerArea in_layer_;
+    Layer out_layer_;
+    Layer in_layer_;
 };
 
 /**

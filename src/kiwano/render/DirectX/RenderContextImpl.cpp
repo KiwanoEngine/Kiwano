@@ -330,7 +330,7 @@ void RenderContextImpl::PopClipRect()
     render_target_->PopAxisAlignedClip();
 }
 
-void RenderContextImpl::PushLayer(LayerArea& layer)
+void RenderContextImpl::PushLayer(Layer& layer)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     if (!layer.IsValid())
@@ -356,7 +356,7 @@ void RenderContextImpl::PushLayer(LayerArea& layer)
             mask = layer.GetMaskShape()->GetGeometry();
 
         render_target_->PushLayer(
-            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetAreaRect()), mask.get(),
+            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.get(),
                                   antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
                                   DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
                                   D2D1_LAYER_OPTIONS_NONE),

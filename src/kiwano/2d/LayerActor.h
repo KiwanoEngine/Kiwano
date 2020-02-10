@@ -20,12 +20,12 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Layer);
+KGE_DECLARE_SMART_PTR(LayerActor);
 
 /**
  * \addtogroup Actors
@@ -36,16 +36,16 @@ KGE_DECLARE_SMART_PTR(Layer);
  * \~chinese
  * @brief 图层
  */
-class KGE_API Layer : public Actor
+class KGE_API LayerActor : public Actor
 {
 public:
     /// \~chinese
     /// @brief 创建图层
-    static LayerPtr Create();
+    static LayerActorPtr Create();
 
-    Layer();
+    LayerActor();
 
-    virtual ~Layer();
+    virtual ~LayerActor();
 
     /// \~chinese
     /// @brief 是否开启消息吞没
@@ -79,11 +79,11 @@ public:
     /// \~chinese
     /// @brief 设置图层区域
     /// @param area 图层区域属性
-    void SetArea(LayerArea const& area);
+    void SetLayer(Layer const& layer);
 
     /// \~chinese
     /// @brief 获取图层区域
-    LayerArea const& GetArea() const;
+    Layer const& GetLayer() const;
 
     bool DispatchEvent(Event* evt) override;
 
@@ -93,29 +93,29 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool      swallow_;
-    LayerArea area_;
+    bool  swallow_;
+    Layer layer_;
 };
 
 /** @} */
 
-inline bool Layer::IsSwallowEventsEnabled() const
+inline bool LayerActor::IsSwallowEventsEnabled() const
 {
     return swallow_;
 }
 
-inline void Layer::SetSwallowEvents(bool enabled)
+inline void LayerActor::SetSwallowEvents(bool enabled)
 {
     swallow_ = enabled;
 }
 
-inline void Layer::SetArea(LayerArea const& area)
+inline void LayerActor::SetLayer(Layer const& layer)
 {
-    area_ = area;
+    layer_ = layer;
 }
 
-inline LayerArea const& Layer::GetArea() const
+inline Layer const& LayerActor::GetLayer() const
 {
-    return area_;
+    return layer_;
 }
 }  // namespace kiwano

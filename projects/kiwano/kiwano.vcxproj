@@ -31,7 +31,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h" />
     <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Layer.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
@@ -81,7 +81,7 @@
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h" />
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h" />
-    <ClInclude Include="..\..\src\kiwano\render\LayerArea.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Layer.h" />
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\render\Renderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\StrokeStyle.h" />
@@ -109,7 +109,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Layer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
@@ -154,7 +154,7 @@
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\LayerArea.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Renderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\StrokeStyle.cpp" />

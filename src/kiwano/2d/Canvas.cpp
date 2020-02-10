@@ -95,13 +95,13 @@ void Canvas::SetBrushTransform(Matrix3x2 const& transform)
     ctx_->SetTransform(transform);
 }
 
-void Canvas::PushLayerArea(LayerArea& area)
+void Canvas::PushLayer(Layer& layer)
 {
     KGE_ASSERT(ctx_);
-    ctx_->PushLayer(area);
+    ctx_->PushLayer(layer);
 }
 
-void Canvas::PopLayerArea()
+void Canvas::PopLayer()
 {
     KGE_ASSERT(ctx_);
     ctx_->PopLayer();

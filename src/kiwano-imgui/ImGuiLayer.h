@@ -35,7 +35,7 @@ using ImGuiPipeline = Function<void()>;
  * \~chinese
  * @brief ImGui图层
  */
-class ImGuiLayer : public Layer
+class ImGuiLayer : public LayerActor
 {
 public:
     /// \~chinese

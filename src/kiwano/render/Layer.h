@@ -33,18 +33,18 @@ namespace kiwano
  * \~chinese
  * @brief 图层区域
  */
-class KGE_API LayerArea
+class KGE_API Layer
 {
 public:
-    LayerArea();
+    Layer();
 
     /// \~chinese
     /// @brief 是否有效
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief 获取图层区域
-    Rect const& GetAreaRect() const;
+    /// @brief 获取图层裁剪区域
+    Rect const& GetClipRect() const;
 
     /// \~chinese
     /// @brief 获取图层透明度
@@ -59,8 +59,8 @@ public:
     Matrix3x2 const& GetMaskTransform() const;
 
     /// \~chinese
-    /// @brief 设置图层区域
-    void SetAreaRect(Rect const& area);
+    /// @brief 设置图层裁剪区域
+    void SetClipRect(Rect const& rect);
 
     /// \~chinese
     /// @brief 设置图层透明度
@@ -75,10 +75,10 @@ public:
     void SetMaskTransform(Matrix3x2 const& matrix);
 
 private:
-    Rect               area_;
-    float              opacity_;
-    ShapePtr           mask_;
-    Matrix3x2          mask_transform_;
+    Rect      clip_rect_;
+    float     opacity_;
+    ShapePtr  mask_;
+    Matrix3x2 mask_transform_;
 
 #if defined(KGE_WIN32)
 public:
@@ -93,58 +93,58 @@ private:
 
 /** @} */
 
-inline bool LayerArea::IsValid() const
+inline bool Layer::IsValid() const
 {
     return layer_ != nullptr;
 }
 
-inline Rect const& LayerArea::GetAreaRect() const
+inline Rect const& Layer::GetClipRect() const
 {
-    return area_;
+    return clip_rect_;
 }
 
-inline float LayerArea::GetOpacity() const
+inline float Layer::GetOpacity() const
 {
     return opacity_;
 }
 
-inline ShapePtr LayerArea::GetMaskShape() const
+inline ShapePtr Layer::GetMaskShape() const
 {
     return mask_;
 }
 
-inline Matrix3x2 const& LayerArea::GetMaskTransform() const
+inline Matrix3x2 const& Layer::GetMaskTransform() const
 {
     return mask_transform_;
 }
 
-inline void LayerArea::SetAreaRect(Rect const& area)
+inline void Layer::SetClipRect(Rect const& rect)
 {
-    area_ = area;
+    clip_rect_ = rect;
 }
 
-inline void LayerArea::SetOpacity(float opacity)
+inline void Layer::SetOpacity(float opacity)
 {
     opacity_ = opacity;
 }
 
-inline void LayerArea::SetMaskShape(ShapePtr mask)
+inline void Layer::SetMaskShape(ShapePtr mask)
 {
     mask_ = mask;
 }
 
-inline void LayerArea::SetMaskTransform(Matrix3x2 const& matrix)
+inline void Layer::SetMaskTransform(Matrix3x2 const& matrix)
 {
     mask_transform_ = matrix;
 }
 
 #if defined(KGE_WIN32)
-inline ComPtr<ID2D1Layer> LayerArea::GetLayer() const
+inline ComPtr<ID2D1Layer> Layer::GetLayer() const
 {
     return layer_;
 }
 
-inline void LayerArea::SetLayer(ComPtr<ID2D1Layer> layer)
+inline void Layer::SetLayer(ComPtr<ID2D1Layer> layer)
 {
     layer_ = layer;
 }
