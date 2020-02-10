@@ -33,13 +33,13 @@ namespace kiwano
  */
 
 /// \~chinese
-/// @brief ¶¯»­¸¨ÖúÀà
+/// @brief åŠ¨ç”»è¾…åŠ©ç±»
 struct ActionHelper
 {
     using DoneCallback = Action::DoneCallback;
 
     /// \~chinese
-    /// @brief ÉèÖÃÑ­»·´ÎÊı
+    /// @brief è®¾ç½®å¾ªç¯æ¬¡æ•°
     inline ActionHelper& SetLoops(int loops)
     {
         core->SetLoops(loops);
@@ -47,7 +47,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­ÑÓ³Ù
+    /// @brief è®¾ç½®åŠ¨ç”»å»¶è¿Ÿ
     inline ActionHelper& SetDelay(Duration delay)
     {
         core->SetDelay(delay);
@@ -55,7 +55,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­½áÊø»Øµ÷º¯Êı
+    /// @brief è®¾ç½®åŠ¨ç”»ç»“æŸå›è°ƒå‡½æ•°
     inline ActionHelper& SetDoneCallback(DoneCallback const& cb)
     {
         core->SetDoneCallback(cb);
@@ -63,7 +63,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
     inline ActionHelper& SetLoopDoneCallback(DoneCallback const& cb)
     {
         core->SetLoopDoneCallback(cb);
@@ -71,7 +71,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief ¶¯»­½áÊøÊ±ÒÆ³ıÄ¿±ê½ÇÉ«
+    /// @brief åŠ¨ç”»ç»“æŸæ—¶ç§»é™¤ç›®æ ‡è§’è‰²
     inline ActionHelper& RemoveTargetWhenDone()
     {
         core->RemoveTargetWhenDone();
@@ -79,7 +79,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃÃû³Æ
+    /// @brief è®¾ç½®åç§°
     inline ActionHelper& SetName(String const& name)
     {
         core->SetName(name);
@@ -87,7 +87,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief »ñÈ¡Ö¸Õë
+    /// @brief è·å–æŒ‡é’ˆ
     inline ActionPtr Get() const
     {
         return core;
@@ -108,13 +108,13 @@ private:
 };
 
 /// \~chinese
-/// @brief ²¹¼ä¶¯»­¸¨ÖúÀà
+/// @brief è¡¥é—´åŠ¨ç”»è¾…åŠ©ç±»
 struct TweenHelper
 {
     using DoneCallback = Action::DoneCallback;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­³ÖĞøÊ±³¤
+    /// @brief è®¾ç½®åŠ¨ç”»æŒç»­æ—¶é•¿
     inline TweenHelper& SetDuration(Duration dur)
     {
         core->SetDuration(dur);
@@ -122,7 +122,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃÑ­»·´ÎÊı
+    /// @brief è®¾ç½®å¾ªç¯æ¬¡æ•°
     inline TweenHelper& SetLoops(int loops)
     {
         core->SetLoops(loops);
@@ -130,7 +130,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ»º¶¯º¯Êı
+    /// @brief è®¾ç½®ç¼“åŠ¨å‡½æ•°
     inline TweenHelper& SetEaseFunc(EaseFunc ease)
     {
         core->SetEaseFunc(ease);
@@ -138,7 +138,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­ÑÓ³Ù
+    /// @brief è®¾ç½®åŠ¨ç”»å»¶è¿Ÿ
     inline TweenHelper& SetDelay(Duration delay)
     {
         core->SetDelay(delay);
@@ -146,7 +146,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­½áÊø»Øµ÷º¯Êı
+    /// @brief è®¾ç½®åŠ¨ç”»ç»“æŸå›è°ƒå‡½æ•°
     inline TweenHelper& SetDoneCallback(DoneCallback const& cb)
     {
         core->SetDoneCallback(cb);
@@ -154,7 +154,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
     inline TweenHelper& SetLoopDoneCallback(DoneCallback const& cb)
     {
         core->SetLoopDoneCallback(cb);
@@ -162,7 +162,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ¶¯»­½áÊøÊ±ÒÆ³ıÄ¿±ê½ÇÉ«
+    /// @brief åŠ¨ç”»ç»“æŸæ—¶ç§»é™¤ç›®æ ‡è§’è‰²
     inline TweenHelper& RemoveTargetWhenDone()
     {
         core->RemoveTargetWhenDone();
@@ -170,7 +170,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief ÉèÖÃÃû³Æ
+    /// @brief è®¾ç½®åç§°
     inline TweenHelper& SetName(String const& name)
     {
         core->SetName(name);
@@ -178,7 +178,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief »ñÈ¡Ö¸Õë
+    /// @brief è·å–æŒ‡é’ˆ
     inline ActionTweenPtr Get() const
     {
         return core;
@@ -204,120 +204,120 @@ private:
 };
 
 /// \~chinese
-/// @brief ¶¯»­¹¹ÔìÆ÷
+/// @brief åŠ¨ç”»æ„é€ å™¨
 struct Tween
 {
 public:
     /// \~chinese
-    /// @brief ¹¹ÔìÏà¶ÔÎ»ÒÆ¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param vector ÒÆ¶¯ÏòÁ¿
+    /// @brief æ„é€ ç›¸å¯¹ä½ç§»åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param vector ç§»åŠ¨å‘é‡
     static inline TweenHelper MoveBy(Duration dur, Point const& vector)
     {
         return TweenHelper(new kiwano::ActionMoveBy(dur, vector));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÎ»ÒÆ¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param pos Ä¿µÄ×ø±ê
+    /// @brief æ„é€ ä½ç§»åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param pos ç›®çš„åæ ‡
     static inline TweenHelper MoveTo(Duration dur, Point const& pos)
     {
         return TweenHelper(new kiwano::ActionMoveTo(dur, pos));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÏà¶ÔÌøÔ¾¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param vec ÌøÔ¾Î»ÒÆÏòÁ¿
-    /// @param height ÌøÔ¾¸ß¶È
-    /// @param jumps ÌøÔ¾´ÎÊı
+    /// @brief æ„é€ ç›¸å¯¹è·³è·ƒåŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param vec è·³è·ƒä½ç§»å‘é‡
+    /// @param height è·³è·ƒé«˜åº¦
+    /// @param jumps è·³è·ƒæ¬¡æ•°
     static inline TweenHelper JumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1)
     {
         return TweenHelper(new kiwano::ActionJumpBy(duration, vec, height, jumps));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÌøÔ¾¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param pos Ä¿µÄ×ø±ê
-    /// @param height ÌøÔ¾¸ß¶È
-    /// @param jumps ÌøÔ¾´ÎÊı
+    /// @brief æ„é€ è·³è·ƒåŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param pos ç›®çš„åæ ‡
+    /// @param height è·³è·ƒé«˜åº¦
+    /// @param jumps è·³è·ƒæ¬¡æ•°
     static inline TweenHelper JumpTo(Duration duration, Point const& pos, float height, int jumps = 1)
     {
         return TweenHelper(new kiwano::ActionJumpTo(duration, pos, height, jumps));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÏà¶ÔËõ·Å¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param scale_x ºáÏòËõ·ÅÏà¶Ô±ä»¯Öµ
-    /// @param scale_y ×İÏòËõ·ÅÏà¶Ô±ä»¯Öµ
+    /// @brief æ„é€ ç›¸å¯¹ç¼©æ”¾åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @param scale_y çºµå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
     static inline TweenHelper ScaleBy(Duration dur, float scale_x, float scale_y)
     {
         return TweenHelper(new kiwano::ActionScaleBy(dur, scale_x, scale_y));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìËõ·Å¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param scale_x ºáÏòËõ·ÅÄ¿±êÖµ
-    /// @param scale_y ×İÏòËõ·ÅÄ¿±êÖµ
+    /// @brief æ„é€ ç¼©æ”¾åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @param scale_y çºµå‘ç¼©æ”¾ç›®æ ‡å€¼
     static inline TweenHelper ScaleTo(Duration dur, float scale_x, float scale_y)
     {
         return TweenHelper(new kiwano::ActionScaleTo(dur, scale_x, scale_y));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÍ¸Ã÷¶È½¥±ä¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param opacity Ä¿±êÍ¸Ã÷¶È
+    /// @brief æ„é€ é€æ˜åº¦æ¸å˜åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param opacity ç›®æ ‡é€æ˜åº¦
     static inline TweenHelper FadeTo(Duration dur, float opacity)
     {
         return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
     }
 
     /// \~chinese
-    /// @brief ¹¹Ôìµ­Èë¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
+    /// @brief æ„é€ æ·¡å…¥åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
     static inline TweenHelper FadeIn(Duration dur)
     {
         return TweenHelper(new kiwano::ActionFadeIn(dur));
     }
 
     /// \~chinese
-    /// @brief ¹¹Ôìµ­³ö¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
+    /// @brief æ„é€ æ·¡å‡ºåŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
     static inline TweenHelper FadeOut(Duration dur)
     {
         return TweenHelper(new kiwano::ActionFadeOut(dur));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÏà¶ÔĞı×ª¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param rotation ½Ç¶ÈÏà¶Ô±ä»¯Öµ
+    /// @brief æ„é€ ç›¸å¯¹æ—‹è½¬åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param rotation è§’åº¦ç›¸å¯¹å˜åŒ–å€¼
     static inline TweenHelper RotateBy(Duration dur, float rotation)
     {
         return TweenHelper(new kiwano::ActionRotateBy(dur, rotation));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìĞı×ª¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param rotation Ä¿±ê½Ç¶È
+    /// @brief æ„é€ æ—‹è½¬åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param rotation ç›®æ ‡è§’åº¦
     static inline TweenHelper RotateTo(Duration dur, float rotation)
     {
         return TweenHelper(new kiwano::ActionRotateTo(dur, rotation));
     }
 
     /// \~chinese
-    /// @brief ¹¹ÔìÂ·¾¶ĞĞ×ß¶¯»­
-    /// @param duration ³ÖĞøÊ±³¤
-    /// @param path Â·¾¶ĞÎ×´
-    /// @param rotating ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
-    /// @param start Â·¾¶Æğµã£¨°Ù·Ö±È£©
-    /// @param end Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
+    /// @brief æ„é€ è·¯å¾„è¡Œèµ°åŠ¨ç”»
+    /// @param duration æŒç»­æ—¶é•¿
+    /// @param path è·¯å¾„å½¢çŠ¶
+    /// @param rotating æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
+    /// @param start è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @param end è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
     static inline TweenHelper Walk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
                                    float end = 1.f)
     {
@@ -325,35 +325,35 @@ public:
     }
 
     /// \~chinese
-    /// @brief ¹¹½¨Ö¡¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param[in] frame_seq ĞòÁĞÖ¡
+    /// @brief æ„å»ºå¸§åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param[in] frame_seq åºåˆ—å¸§
     static inline TweenHelper Animation(Duration dur, FrameSequencePtr frames)
     {
         return TweenHelper(new kiwano::Animation(dur, frames));
     }
 
     /// \~chinese
-    /// @brief ¹¹Ôì×Ô¶¨Òå¶¯»­
-    /// @param duration ¶¯»­Ê±³¤
-    /// @param tween_func ¶¯»­»Øµ÷º¯Êı
+    /// @brief æ„é€ è‡ªå®šä¹‰åŠ¨ç”»
+    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @param tween_func åŠ¨ç”»å›è°ƒå‡½æ•°
     static inline TweenHelper Custom(Duration dur, ActionCustom::TweenFunc tween_func)
     {
         return TweenHelper(new kiwano::ActionCustom(dur, tween_func));
     }
 
     /// \~chinese
-    /// @brief ¹¹½¨ÑÓÊ±¶¯»­
-    /// @param delay ÑÓÊ±Ê±³¤
+    /// @brief æ„å»ºå»¶æ—¶åŠ¨ç”»
+    /// @param delay å»¶æ—¶æ—¶é•¿
     static inline ActionHelper Delay(Duration delay)
     {
         return ActionHelper(new kiwano::ActionDelay(delay));
     }
 
     /// \~chinese
-    /// @brief ¶¯»­×éºÏ
-    /// @param actions ¶¯»­¼¯ºÏ
-    /// @param sync Í¬²½Ö´ĞĞ
+    /// @brief åŠ¨ç”»ç»„åˆ
+    /// @param actions åŠ¨ç”»é›†åˆ
+    /// @param sync åŒæ­¥æ‰§è¡Œ
     static inline ActionHelper Group(Vector<ActionPtr> const& actions, bool sync = false)
     {
         return ActionHelper(new kiwano::ActionGroup(actions, sync));

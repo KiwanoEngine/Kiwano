@@ -34,74 +34,74 @@ class Body;
  */
 
 /// \~chinese
-/// @brief ÎïÀí½Ó´¥
+/// @brief ç‰©ç†æ¥è§¦
 class KGE_API Contact
 {
 public:
     Contact();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÊÇ½Ó´¥
+    /// @brief æ˜¯å¦æ˜¯æ¥è§¦
     bool IsTouching() const;
 
     /// \~chinese
-    /// @brief ÆôÓÃ»ò½ûÓÃ (½ö×÷ÓÃÓÚÒ»¸öÊ±¼ä²½)
+    /// @brief å¯ç”¨æˆ–ç¦ç”¨ (ä»…ä½œç”¨äºä¸€ä¸ªæ—¶é—´æ­¥)
     void SetEnabled(bool flag);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃ
+    /// @brief æ˜¯å¦å¯ç”¨
     bool IsEnabled() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåAµÄ¼Ğ¾ß
+    /// @brief è·å–ç‰©ä½“Açš„å¤¹å…·
     Fixture* GetFixtureA() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåBµÄ¼Ğ¾ß
+    /// @brief è·å–ç‰©ä½“Bçš„å¤¹å…·
     Fixture* GetFixtureB() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåA
+    /// @brief è·å–ç‰©ä½“A
     Body* GetBodyA() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåB
+    /// @brief è·å–ç‰©ä½“B
     Body* GetBodyB() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÄ¦²ÁÁ¦
+    /// @brief è®¾ç½®æ‘©æ“¦åŠ›
     void SetFriction(float friction);
 
     /// \~chinese
-    /// @brief »ñÈ¡Ä¦²ÁÁ¦
+    /// @brief è·å–æ‘©æ“¦åŠ›
     float GetFriction() const;
 
     /// \~chinese
-    /// @brief ÖØÖÃÄ¦²ÁÁ¦
+    /// @brief é‡ç½®æ‘©æ“¦åŠ›
     void ResetFriction();
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯ĞÔ»Ö¸´
+    /// @brief è®¾ç½®å¼¹æ€§æ¢å¤
     void SetRestitution(float restitution);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯ĞÔ»Ö¸´
+    /// @brief è·å–å¼¹æ€§æ¢å¤
     float GetRestitution() const;
 
     /// \~chinese
-    /// @brief ÖØÖÃµ¯ĞÔ»Ö¸´
+    /// @brief é‡ç½®å¼¹æ€§æ¢å¤
     void ResetRestitution();
 
     /// \~chinese
-    /// @brief ÉèÖÃÇĞÏßËÙ¶È
+    /// @brief è®¾ç½®åˆ‡çº¿é€Ÿåº¦
     void SetTangentSpeed(float speed);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÇĞÏßËÙ¶È
+    /// @brief è·å–åˆ‡çº¿é€Ÿåº¦
     float GetTangentSpeed() const;
 
     b2Contact* GetB2Contact() const;
@@ -116,7 +116,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ÎïÀí½Ó´¥ÁĞ±í
+/// @brief ç‰©ç†æ¥è§¦åˆ—è¡¨
 class ContactList
 {
     template <typename _Ty>

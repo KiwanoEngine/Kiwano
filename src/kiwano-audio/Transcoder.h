@@ -37,7 +37,7 @@ class Sound;
 
 /**
  * \~chinese
- * @brief ÒôÆµ½âÂëÆ÷
+ * @brief éŸ³é¢‘è§£ç å™¨
  */
 class KGE_API Transcoder
 {
@@ -46,13 +46,13 @@ class KGE_API Transcoder
 public:
     /**
      * \~chinese
-     * @brief ÒôÆµÊı¾İ»º³å
+     * @brief éŸ³é¢‘æ•°æ®ç¼“å†²
      */
     struct Buffer
     {
-        BYTE*               data;    ///< ÒôÆµÊı¾İ
-        uint32_t            size;    ///< ÒôÆµÊı¾İ´óĞ¡
-        const WAVEFORMATEX* format;  ///< ÒôÆµÊı¾İ¸ñÊ½
+        BYTE*               data;    ///< éŸ³é¢‘æ•°æ®
+        uint32_t            size;    ///< éŸ³é¢‘æ•°æ®å¤§å°
+        const WAVEFORMATEX* format;  ///< éŸ³é¢‘æ•°æ®æ ¼å¼
     };
 
     Transcoder();
@@ -60,24 +60,24 @@ public:
     ~Transcoder();
 
     /// \~chinese
-    /// @brief »ñÈ¡Êı¾İ»º³å
+    /// @brief è·å–æ•°æ®ç¼“å†²
     Buffer GetBuffer() const;
 
     /// \~chinese
-    /// @brief Çå¿ÕÊı¾İ»º³å
+    /// @brief æ¸…ç©ºæ•°æ®ç¼“å†²
     void ClearBuffer();
 
 private:
     /// \~chinese
-    /// @brief ½âÂë±¾µØÒôÆµÎÄ¼ş
+    /// @brief è§£ç æœ¬åœ°éŸ³é¢‘æ–‡ä»¶
     HRESULT LoadMediaFile(String const& file_path);
 
     /// \~chinese
-    /// @brief ½âÂëÒôÆµ×ÊÔ´
+    /// @brief è§£ç éŸ³é¢‘èµ„æº
     HRESULT LoadMediaResource(Resource const& res);
 
     /// \~chinese
-    /// @brief ¶ÁÈ¡ÒôÆµÔ´Êı¾İ
+    /// @brief è¯»å–éŸ³é¢‘æºæ•°æ®
     HRESULT ReadSource(IMFSourceReader* reader);
 
 private:

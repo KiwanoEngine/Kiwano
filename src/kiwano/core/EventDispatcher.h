@@ -25,40 +25,40 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief ÊÂ¼ş·Ö·¢ÏµÍ³
+ * @brief äº‹ä»¶åˆ†å‘ç³»ç»Ÿ
  */
 class KGE_API EventDispatcher
 {
 public:
     /// \~chinese
-    /// @brief ¼àÌıÆ÷ÁĞ±í
+    /// @brief ç›‘å¬å™¨åˆ—è¡¨
     using Listeners = IntrusiveList<EventListenerPtr>;
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @brief æ·»åŠ ç›‘å¬å™¨
     EventListener* AddListener(EventListenerPtr listener);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @brief æ·»åŠ ç›‘å¬å™¨
     EventListener* AddListener(EventListener* listener);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief æ·»åŠ ç›‘å¬å™¨
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     EventListener* AddListener(EventType type, EventListener::Callback callback);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
-    /// @param name ¼àÌıÆ÷Ãû³Æ
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief æ·»åŠ ç›‘å¬å™¨
+    /// @param name ç›‘å¬å™¨åç§°
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     EventListener* AddListener(String const& name, EventType type, EventListener::Callback callback);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
-    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief æ·»åŠ ç›‘å¬å™¨
+    /// @tparam _EventTy äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     EventListener* AddListener(EventListener::Callback callback)
     {
@@ -66,10 +66,10 @@ public:
     }
 
     /// \~chinese
-    /// @brief Ìí¼Ó¼àÌıÆ÷
-    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
-    /// @param name ¼àÌıÆ÷Ãû³Æ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief æ·»åŠ ç›‘å¬å™¨
+    /// @tparam _EventTy äº‹ä»¶ç±»å‹
+    /// @param name ç›‘å¬å™¨åç§°
+    /// @param callback å›è°ƒå‡½æ•°
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>>
     EventListener* AddListener(String const& name, EventListener::Callback callback)
     {
@@ -77,55 +77,55 @@ public:
     }
 
     /// \~chinese
-    /// @brief Æô¶¯¼àÌıÆ÷
-    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @brief å¯åŠ¨ç›‘å¬å™¨
+    /// @param name ç›‘å¬å™¨åç§°
     void StartListeners(String const& name);
 
     /// \~chinese
-    /// @brief Í£Ö¹¼àÌıÆ÷
-    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @brief åœæ­¢ç›‘å¬å™¨
+    /// @param name ç›‘å¬å™¨åç§°
     void StopListeners(String const& name);
 
     /// \~chinese
-    /// @brief ÒÆ³ı¼àÌıÆ÷
-    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @brief ç§»é™¤ç›‘å¬å™¨
+    /// @param name ç›‘å¬å™¨åç§°
     void RemoveListeners(String const& name);
 
     /// \~chinese
-    /// @brief Æô¶¯¼àÌıÆ÷
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @brief å¯åŠ¨ç›‘å¬å™¨
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
     void StartListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief Í£Ö¹¼àÌıÆ÷
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @brief åœæ­¢ç›‘å¬å™¨
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
     void StopListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief ÒÆ³ı¼àÌıÆ÷
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @brief ç§»é™¤ç›‘å¬å™¨
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
     void RemoveListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief Æô¶¯ËùÓĞ¼àÌıÆ÷
+    /// @brief å¯åŠ¨æ‰€æœ‰ç›‘å¬å™¨
     void StartAllListeners();
 
     /// \~chinese
-    /// @brief Í£Ö¹ËùÓĞ¼àÌıÆ÷
+    /// @brief åœæ­¢æ‰€æœ‰ç›‘å¬å™¨
     void StopAllListeners();
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞ¼àÌıÆ÷
+    /// @brief ç§»é™¤æ‰€æœ‰ç›‘å¬å™¨
     void RemoveAllListeners();
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞ¼àÌıÆ÷
+    /// @brief è·å–æ‰€æœ‰ç›‘å¬å™¨
     const Listeners& GetAllListeners() const;
 
     /// \~chinese
-    /// @brief ·Ö·¢ÊÂ¼ş
-    /// @param evt ÊÂ¼ş
-    /// @return ÊÇ·ñ¼ÌĞø·Ö·¢¸ÃÊÂ¼ş
+    /// @brief åˆ†å‘äº‹ä»¶
+    /// @param evt äº‹ä»¶
+    /// @return æ˜¯å¦ç»§ç»­åˆ†å‘è¯¥äº‹ä»¶
     bool DispatchEvent(Event* evt);
 
 private:

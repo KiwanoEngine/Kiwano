@@ -161,7 +161,7 @@ void RendererImpl::Present()
 
     if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
     {
-        // Èç¹û Direct3D Éè±¸ÔÚÖ´ÐÐ¹ý³ÌÖÐÏûÊ§£¬½«¶ªÆúµ±Ç°µÄÉè±¸Ïà¹Ø×ÊÔ´
+        // å¦‚æžœ Direct3D è®¾å¤‡åœ¨æ‰§è¡Œè¿‡ç¨‹ä¸­æ¶ˆå¤±ï¼Œå°†ä¸¢å¼ƒå½“å‰çš„è®¾å¤‡ç›¸å…³èµ„æº
         hr = HandleDeviceLost();
     }
 

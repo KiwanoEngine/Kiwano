@@ -29,21 +29,21 @@ namespace kiwano
  */
 
 /// \~chinese
-/// @brief 延时动画
+/// @brief 寤舵椂鍔ㄧ敾
 class KGE_API ActionDelay : public Action
 {
 public:
     /// \~chinese
-    /// @brief 构建延时动画
-    /// @param delay 延时时长
+    /// @brief 鏋勫缓寤舵椂鍔ㄧ敾
+    /// @param delay 寤舵椂鏃堕暱
     ActionDelay(Duration delay);
 
     /// \~chinese
-    /// @brief 获取该动画的拷贝对象
+    /// @brief 鑾峰彇璇ュ姩鐢荤殑鎷疯礉瀵硅薄
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief 获取该动画的倒转
+    /// @brief 鑾峰彇璇ュ姩鐢荤殑鍊掕浆
     ActionPtr Reverse() const override;
 };
 

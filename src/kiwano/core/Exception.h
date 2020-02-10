@@ -28,7 +28,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief Òì³£
+ * @brief å¼‚å¸¸
  */
 class KGE_API Exception : public std::exception
 {
@@ -36,18 +36,18 @@ public:
     Exception();
 
     /// \~chinese
-    /// @brief ¹¹ÔìÒì³£
-    /// @param message ÃèÊöÒì³£µÄĞÅÏ¢
+    /// @brief æ„é€ å¼‚å¸¸
+    /// @param message æè¿°å¼‚å¸¸çš„ä¿¡æ¯
     explicit Exception(String const& message);
 
     virtual ~Exception();
 
     /// \~chinese
-    /// @brief ×ªÎª½âÊÍĞÔ×Ö·û´®
+    /// @brief è½¬ä¸ºè§£é‡Šæ€§å­—ç¬¦ä¸²
     const String& ToString() const;
 
     /// \~chinese
-    /// @brief ×ªÎª½âÊÍĞÔ×Ö·û´®
+    /// @brief è½¬ä¸ºè§£é‡Šæ€§å­—ç¬¦ä¸²
     virtual const char* what() const override;
 
 protected:
@@ -56,27 +56,27 @@ protected:
 
 /**
  * \~chinese
- * @brief ÏµÍ³Òì³£
+ * @brief ç³»ç»Ÿå¼‚å¸¸
  */
 class SystemException : public Exception
 {
 public:
 #if defined(KGE_WIN32)
     /// \~chinese
-    /// @brief ´íÎó´úÂëÀàĞÍ
+    /// @brief é”™è¯¯ä»£ç ç±»å‹
     typedef HRESULT ErrorCodeType;
 #endif
 
     SystemException();
 
     /// \~chinese
-    /// @brief ¹¹ÔìÏµÍ³Òì³£
-    /// @param code ´íÎó´úÂë
-    /// @param message ÃèÊöÒì³£µÄĞÅÏ¢
+    /// @brief æ„é€ ç³»ç»Ÿå¼‚å¸¸
+    /// @param code é”™è¯¯ä»£ç 
+    /// @param message æè¿°å¼‚å¸¸çš„ä¿¡æ¯
     SystemException(ErrorCodeType code, String const& message);
 
     /// \~chinese
-    /// @brief »ñÈ¡´íÎó´úÂë
+    /// @brief è·å–é”™è¯¯ä»£ç 
     ErrorCodeType GetErrorCode() const;
 
 private:

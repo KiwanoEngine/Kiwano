@@ -320,7 +320,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
         }
     }
 
-    if (file.empty())
+    if (!file.empty())
     {
         // Simple image
         FramePtr frame = new (std::nothrow) Frame;

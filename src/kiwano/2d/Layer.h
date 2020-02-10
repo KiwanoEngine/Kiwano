@@ -34,13 +34,13 @@ KGE_DECLARE_SMART_PTR(Layer);
 
 /**
  * \~chinese
- * @brief Í¼²ã
+ * @brief å›¾å±‚
  */
 class KGE_API Layer : public Actor
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨Í¼²ã
+    /// @brief åˆ›å»ºå›¾å±‚
     static LayerPtr Create();
 
     Layer();
@@ -48,41 +48,41 @@ public:
     virtual ~Layer();
 
     /// \~chinese
-    /// @brief ÊÇ·ñ¿ªÆôÏûÏ¢ÍÌÃ»
+    /// @brief æ˜¯å¦å¼€å¯æ¶ˆæ¯åæ²¡
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÏûÏ¢ÍÌÃ»¹¦ÄÜ
-    /// @param enabled ÊÇ·ñÆôÓÃ
+    /// @brief è®¾ç½®æ¶ˆæ¯åæ²¡åŠŸèƒ½
+    /// @param enabled æ˜¯å¦å¯ç”¨
     void SetSwallowEvents(bool enabled);
 
     /// \~chinese
-    /// @brief ÉèÖÃ²Ã¼ôÇøÓò
-    /// @param clip_rect ²Ã¼ô¾ØĞÎ
+    /// @brief è®¾ç½®è£å‰ªåŒºåŸŸ
+    /// @param clip_rect è£å‰ªçŸ©å½¢
     void SetClipRect(Rect const& clip_rect);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
-    /// @param opacity Í¸Ã÷¶È
+    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
+    /// @param opacity é€æ˜åº¦
     void SetOpacity(float opacity) override;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã
-    /// @param mask ÃÉ²ãµÄĞÎ×´
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚
+    /// @param mask è’™å±‚çš„å½¢çŠ¶
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ãµÄ¶şÎ¬±ä»»
-    /// @param transform Ó¦ÓÃÓÚÃÉ²ãµÄ¶şÎ¬±ä»»
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚çš„äºŒç»´å˜æ¢
+    /// @param transform åº”ç”¨äºè’™å±‚çš„äºŒç»´å˜æ¢
     void SetMaskTransform(Matrix3x2 const& transform);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÇøÓò
-    /// @param area Í¼²ãÇøÓòÊôĞÔ
+    /// @brief è®¾ç½®å›¾å±‚åŒºåŸŸ
+    /// @param area å›¾å±‚åŒºåŸŸå±æ€§
     void SetArea(LayerArea const& area);
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÇøÓò
+    /// @brief è·å–å›¾å±‚åŒºåŸŸ
     LayerArea const& GetArea() const;
 
     bool DispatchEvent(Event* evt) override;

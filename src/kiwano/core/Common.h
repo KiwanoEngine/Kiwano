@@ -25,6 +25,7 @@
 #include <set>
 #include <sstream>
 #include <stack>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <kiwano/macros.h>
@@ -36,108 +37,108 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief ÊäÈëÁ÷
+/// @brief è¾“å…¥æµ
 using InputStream = std::istream;
 
 /// \~chinese
-/// @brief Êä³öÁ÷
+/// @brief è¾“å‡ºæµ
 using OutputStream = std::ostream;
 
 /// \~chinese
-/// @brief ×Ö·û´®ÈİÆ÷
+/// @brief å­—ç¬¦ä¸²å®¹å™¨
 using String = oc::string;
 
 /// \~chinese
-/// @brief ¿í×Ö·û´®ÈİÆ÷
+/// @brief å®½å­—ç¬¦ä¸²å®¹å™¨
 using WideString = oc::wstring;
 
 /// \~chinese
-/// @brief ×Ö·û´®Á÷
+/// @brief å­—ç¬¦ä¸²æµ
 using StringStream = std::stringstream;
 
 /// \~chinese
-/// @brief ¿í×Ö·û´®Á÷
+/// @brief å®½å­—ç¬¦ä¸²æµ
 using WideStringStream = std::wstringstream;
 
 /// \~chinese
-/// @brief ÏßĞÔÊı×éÈİÆ÷
+/// @brief çº¿æ€§æ•°ç»„å®¹å™¨
 template <typename _Ty, typename... _Args>
 using Vector = std::vector<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief Á´±íÈİÆ÷
+/// @brief é“¾è¡¨å®¹å™¨
 template <typename _Ty, typename... _Args>
 using List = std::list<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief ¶ÓÁĞÈİÆ÷
+/// @brief é˜Ÿåˆ—å®¹å™¨
 template <typename _Ty, typename... _Args>
 using Queue = std::queue<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief ¼¯ºÏÈİÆ÷
+/// @brief é›†åˆå®¹å™¨
 template <typename _Ty, typename... _Args>
 using Set = std::set<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief ¶ÔÈİÆ÷
+/// @brief å¯¹å®¹å™¨
 template <typename _Ty1, typename _Ty2>
 using Pair = std::pair<_Ty1, _Ty2>;
 
 /// \~chinese
-/// @brief ÎŞĞò¼¯ºÏÈİÆ÷
+/// @brief æ— åºé›†åˆå®¹å™¨
 template <typename _Ty, typename... _Args>
 using UnorderedSet = std::unordered_set<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief Õ»ÈİÆ÷
+/// @brief æ ˆå®¹å™¨
 template <typename _Ty, typename... _Args>
 using Stack = std::stack<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief ×Ö·û´®ÈİÆ÷
+/// @brief å­—ç¬¦ä¸²å®¹å™¨
 template <typename _Kty, typename _Ty, typename... _Args>
 using Map = std::map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
-/// @brief ×Ö·û´®ÈİÆ÷
+/// @brief å­—ç¬¦ä¸²å®¹å™¨
 template <typename _Kty, typename _Ty, typename... _Args>
 using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
-/// @brief º¯Êı·â×°Æ÷
+/// @brief å‡½æ•°å°è£…å™¨
 template <typename _FuncTy>
 using Function = oc::function<_FuncTy>;
 
 /// \~chinese
-/// @brief µ¥ÖµÈİÆ÷
+/// @brief å•å€¼å®¹å™¨
 using Any = oc::any;
 
 /// \~chinese
-/// @brief ÇÖÈëÊ½Á´±íÈİÆ÷
+/// @brief ä¾µå…¥å¼é“¾è¡¨å®¹å™¨
 template <typename _Ty>
 using IntrusiveList = oc::intrusive_list<_Ty>;
 
 /// \~chinese
-/// @brief ÇÖÈëÊ½Á´±íÔªËØ
+/// @brief ä¾µå…¥å¼é“¾è¡¨å…ƒç´ 
 template <typename _Ty>
 using IntrusiveListItem = oc::intrusive_list_item<_Ty>;
 
 /// \~chinese
-/// @brief ÇÖÈëÊ½ÖÇÄÜÖ¸Õë
+/// @brief ä¾µå…¥å¼æ™ºèƒ½æŒ‡é’ˆ
 template <typename _Ty, typename _RefProxyTy>
 using IntrusivePtr = oc::intrusive_ptr<_Ty, _RefProxyTy>;
 
 /// \~chinese
-/// @brief JSON¶ÔÏóÈİÆ÷
+/// @brief JSONå¯¹è±¡å®¹å™¨
 using Json = nlohmann::basic_json<Map, Vector, String>;
 
 /// \~chinese
-/// @brief ²»¿É¿½±´¶ÔÏó
+/// @brief ä¸å¯æ‹·è´å¯¹è±¡
 using Noncopyable = oc::noncopyable;
 
 /// \~chinese
-/// @brief ±Õ°üº¯Êı
+/// @brief é—­åŒ…å‡½æ•°
 template <typename _Ty, typename _Uty, typename _Ret, typename... _Args>
 inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...))
 {
@@ -145,21 +146,43 @@ inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...))
 }
 
 /// \~chinese
-/// @brief ±Õ°üº¯Êı
+/// @brief é—­åŒ…å‡½æ•°
 template <typename _Ty, typename _Uty, typename _Ret, typename... _Args>
 inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...) const)
 {
     return oc::closure(ptr, func);
 }
 
+#if defined(KGE_WIN32)
+
 inline String WideToMultiByte(const WideString& str)
 {
-    return oc::wide_to_string(str);
+    int chars_num = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+    if (chars_num)
+    {
+        String result;
+        result.resize(chars_num);
+
+        ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &result[0], chars_num, NULL, NULL);
+        return result;
+    }
+    return String();
 }
 
 inline WideString MultiByteToWide(const String& str)
 {
-    return oc::string_to_wide(str);
+    int wchars_num = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+    if (wchars_num)
+    {
+        WideString result;
+        result.resize(wchars_num);
+
+        ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &result[0], wchars_num);
+        return result;
+    }
+    return WideString();
 }
+
+#endif  // KGE_WIN32
 
 }  // namespace kiwano

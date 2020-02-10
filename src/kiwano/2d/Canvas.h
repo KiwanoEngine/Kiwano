@@ -35,245 +35,245 @@ KGE_DECLARE_SMART_PTR(Canvas);
 
 /**
  * \~chinese
- * @brief »­²¼
- * @details ÓÃÓÚ»æÖÆÍ¼ĞÎ¡¢Í¼Ïñ¡¢ÎÄ×ÖµÈ¸÷ÖÖÀàĞÍµÄÍ¼Ôª£¬Í¬Ê±¿ÉÒÔ½«»æÖÆÄÚÈİµ¼³öÖÁÍ¼Ïñ
+ * @brief ç”»å¸ƒ
+ * @details ç”¨äºç»˜åˆ¶å›¾å½¢ã€å›¾åƒã€æ–‡å­—ç­‰å„ç§ç±»å‹çš„å›¾å…ƒï¼ŒåŒæ—¶å¯ä»¥å°†ç»˜åˆ¶å†…å®¹å¯¼å‡ºè‡³å›¾åƒ
  */
 class KGE_API Canvas : public Actor
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨»­²¼
-    /// @param size »­²¼´óĞ¡
+    /// @brief åˆ›å»ºç”»å¸ƒ
+    /// @param size ç”»å¸ƒå¤§å°
     static CanvasPtr Create(Size const& size);
 
     /// \~chinese
-    /// @brief ¿ªÊ¼»æÍ¼
+    /// @brief å¼€å§‹ç»˜å›¾
     void BeginDraw();
 
     /// \~chinese
-    /// @brief ½áÊø»æÍ¼
+    /// @brief ç»“æŸç»˜å›¾
     void EndDraw();
 
     /// \~chinese
-    /// @brief »­ĞÎ×´ÂÖÀª
-    /// @param shape ĞÎ×´
+    /// @brief ç”»å½¢çŠ¶è½®å»“
+    /// @param shape å½¢çŠ¶
     void DrawShape(ShapePtr shape);
 
     /// \~chinese
-    /// @brief »­Ïß¶Î
-    /// @param begin Ïß¶ÎÆğµã
-    /// @param end Ïß¶ÎÖÕµã
+    /// @brief ç”»çº¿æ®µ
+    /// @param begin çº¿æ®µèµ·ç‚¹
+    /// @param end çº¿æ®µç»ˆç‚¹
     void DrawLine(Point const& begin, Point const& end);
 
     /// \~chinese
-    /// @brief »­Ô²ĞÎ±ß¿ò
-    /// @param center Ô²ĞÎÔ­µã
-    /// @param radius Ô²ĞÎ°ë¾¶
+    /// @brief ç”»åœ†å½¢è¾¹æ¡†
+    /// @param center åœ†å½¢åŸç‚¹
+    /// @param radius åœ†å½¢åŠå¾„
     void DrawCircle(Point const& center, float radius);
 
     /// \~chinese
-    /// @brief »­ÍÖÔ²ĞÎ±ß¿ò
-    /// @param center ÍÖÔ²Ô­µã
-    /// @param radius ÍÖÔ²°ë¾¶
+    /// @brief ç”»æ¤­åœ†å½¢è¾¹æ¡†
+    /// @param center æ¤­åœ†åŸç‚¹
+    /// @param radius æ¤­åœ†åŠå¾„
     void DrawEllipse(Point const& center, Vec2 const& radius);
 
     /// \~chinese
-    /// @brief »­¾ØĞÎ±ß¿ò
-    /// @param rect ¾ØĞÎ
+    /// @brief ç”»çŸ©å½¢è¾¹æ¡†
+    /// @param rect çŸ©å½¢
     void DrawRect(Rect const& rect);
 
     /// \~chinese
-    /// @brief »­Ô²½Ç¾ØĞÎ±ß¿ò
-    /// @param rect ¾ØĞÎ
-    /// @param radius ¾ØĞÎÔ²½Ç°ë¾¶
+    /// @brief ç”»åœ†è§’çŸ©å½¢è¾¹æ¡†
+    /// @param rect çŸ©å½¢
+    /// @param radius çŸ©å½¢åœ†è§’åŠå¾„
     void DrawRoundedRect(Rect const& rect, Vec2 const& radius);
 
     /// \~chinese
-    /// @brief Ìî³äĞÎ×´
-    /// @param shape ĞÎ×´
+    /// @brief å¡«å……å½¢çŠ¶
+    /// @param shape å½¢çŠ¶
     void FillShape(ShapePtr shape);
 
     /// \~chinese
-    /// @brief Ìî³äÔ²ĞÎ
-    /// @param center Ô²ĞÎÔ­µã
-    /// @param radius Ô²ĞÎ°ë¾¶
+    /// @brief å¡«å……åœ†å½¢
+    /// @param center åœ†å½¢åŸç‚¹
+    /// @param radius åœ†å½¢åŠå¾„
     void FillCircle(Point const& center, float radius);
 
     /// \~chinese
-    /// @brief Ìî³äÍÖÔ²ĞÎ
-    /// @param center ÍÖÔ²Ô­µã
-    /// @param radius ÍÖÔ²°ë¾¶
+    /// @brief å¡«å……æ¤­åœ†å½¢
+    /// @param center æ¤­åœ†åŸç‚¹
+    /// @param radius æ¤­åœ†åŠå¾„
     void FillEllipse(Point const& center, Vec2 const& radius);
 
     /// \~chinese
-    /// @brief Ìî³ä¾ØĞÎ
-    /// @param rect ¾ØĞÎ
+    /// @brief å¡«å……çŸ©å½¢
+    /// @param rect çŸ©å½¢
     void FillRect(Rect const& rect);
 
     /// \~chinese
-    /// @brief Ìî³äÔ²½Ç¾ØĞÎ
-    /// @param rect ¾ØĞÎ
-    /// @param radius ¾ØĞÎÔ²½Ç°ë¾¶
+    /// @brief å¡«å……åœ†è§’çŸ©å½¢
+    /// @param rect çŸ©å½¢
+    /// @param radius çŸ©å½¢åœ†è§’åŠå¾„
     void FillRoundedRect(Rect const& rect, Vec2 const& radius);
 
     /// \~chinese
-    /// @brief »æÖÆÎÆÀí
-    /// @param texture ÎÆÀí
-    /// @param src_rect ÎÆÀí²Ã¼ôÇøÓò
-    /// @param dest_rect »æÖÆÄ¿±êÇøÓò
+    /// @brief ç»˜åˆ¶çº¹ç†
+    /// @param texture çº¹ç†
+    /// @param src_rect çº¹ç†è£å‰ªåŒºåŸŸ
+    /// @param dest_rect ç»˜åˆ¶ç›®æ ‡åŒºåŸŸ
     void DrawTexture(TexturePtr texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr);
 
     /// \~chinese
-    /// @brief »æÖÆÎÄ×Ö²¼¾Ö
-    /// @param text ÎÄ×Ö
-    /// @param point »æÖÆÎÄ×ÖµÄÎ»ÖÃ
+    /// @brief ç»˜åˆ¶æ–‡å­—å¸ƒå±€
+    /// @param text æ–‡å­—
+    /// @param point ç»˜åˆ¶æ–‡å­—çš„ä½ç½®
     void DrawTextLayout(String const& text, Point const& point);
 
     /// \~chinese
-    /// @brief »æÖÆÎÄ×Ö²¼¾Ö
-    /// @param layout ÎÄ×Ö²¼¾Ö
-    /// @param point »æÖÆ²¼¾ÖµÄÎ»ÖÃ
+    /// @brief ç»˜åˆ¶æ–‡å­—å¸ƒå±€
+    /// @param layout æ–‡å­—å¸ƒå±€
+    /// @param point ç»˜åˆ¶å¸ƒå±€çš„ä½ç½®
     void DrawTextLayout(TextLayout const& layout, Point const& point);
 
     /// \~chinese
-    /// @brief ¿ªÊ¼»æÖÆÂ·¾¶
-    /// @param begin_pos Â·¾¶ÆğÊ¼µã
+    /// @brief å¼€å§‹ç»˜åˆ¶è·¯å¾„
+    /// @param begin_pos è·¯å¾„èµ·å§‹ç‚¹
     void BeginPath(Point const& begin_pos);
 
     /// \~chinese
-    /// @brief ½áÊøÂ·¾¶
-    /// @param closed Â·¾¶ÊÇ·ñ±ÕºÏ
+    /// @brief ç»“æŸè·¯å¾„
+    /// @param closed è·¯å¾„æ˜¯å¦é—­åˆ
     void EndPath(bool closed = false);
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»ÌõÏß¶Î
-    /// @param point ¶Ëµã
+    /// @brief æ·»åŠ ä¸€æ¡çº¿æ®µ
+    /// @param point ç«¯ç‚¹
     void AddLine(Point const& point);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶àÌõÏß¶Î
-    /// @param points ¶Ëµã¼¯ºÏ
+    /// @brief æ·»åŠ å¤šæ¡çº¿æ®µ
+    /// @param points ç«¯ç‚¹é›†åˆ
     void AddLines(Vector<Point> const& points);
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»ÌõÈı´Î·½±´Èû¶ûÇúÏß
-    /// @param point1 ±´Èû¶ûÇúÏßµÄµÚÒ»¸ö¿ØÖÆµã
-    /// @param point2 ±´Èû¶ûÇúÏßµÄµÚ¶ş¸ö¿ØÖÆµã
-    /// @param point3 ±´Èû¶ûÇúÏßµÄÖÕµã
+    /// @brief æ·»åŠ ä¸€æ¡ä¸‰æ¬¡æ–¹è´å¡å°”æ›²çº¿
+    /// @param point1 è´å¡å°”æ›²çº¿çš„ç¬¬ä¸€ä¸ªæ§åˆ¶ç‚¹
+    /// @param point2 è´å¡å°”æ›²çº¿çš„ç¬¬äºŒä¸ªæ§åˆ¶ç‚¹
+    /// @param point3 è´å¡å°”æ›²çº¿çš„ç»ˆç‚¹
     void AddBezier(Point const& point1, Point const& point2, Point const& point3);
 
     /// \~chinese
-    /// @brief Ìí¼Ó»¡Ïß
-    /// @param point ÖÕµã
-    /// @param radius ÍÖÔ²°ë¾¶
-    /// @param rotation ÍÖÔ²Ğı×ª½Ç¶È
-    /// @param clockwise Ë³Ê±Õë or ÄæÊ±Õë
-    /// @param is_small ÊÇ·ñÈ¡Ğ¡ÓÚ 180¡ã µÄ»¡
+    /// @brief æ·»åŠ å¼§çº¿
+    /// @param point ç»ˆç‚¹
+    /// @param radius æ¤­åœ†åŠå¾„
+    /// @param rotation æ¤­åœ†æ—‹è½¬è§’åº¦
+    /// @param clockwise é¡ºæ—¶é’ˆ or é€†æ—¶é’ˆ
+    /// @param is_small æ˜¯å¦å–å°äº 180Â° çš„å¼§
     void AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true, bool is_small = true);
 
     /// \~chinese
-    /// @brief ÒÔÃè±ßµÄ·½Ê½»æÖÆÂ·¾¶
+    /// @brief ä»¥æè¾¹çš„æ–¹å¼ç»˜åˆ¶è·¯å¾„
     void StrokePath();
 
     /// \~chinese
-    /// @brief ÒÔÌî³äµÄ·½Ê½»æÖÆÂ·¾¶
+    /// @brief ä»¥å¡«å……çš„æ–¹å¼ç»˜åˆ¶è·¯å¾„
     void FillPath();
 
     /// \~chinese
-    /// @brief Çå¿Õ»­²¼
+    /// @brief æ¸…ç©ºç”»å¸ƒ
     void Clear();
 
     /// \~chinese
-    /// @brief Çå¿Õ»­²¼
-    /// @param clear_color Çå¿ÕÑÕÉ«
+    /// @brief æ¸…ç©ºç”»å¸ƒ
+    /// @param clear_color æ¸…ç©ºé¢œè‰²
     void Clear(Color const& clear_color);
 
     /// \~chinese
-    /// @brief ÉèÖÃÌî³äÑÕÉ«
-    /// @param color Ìî³äÑÕÉ«
+    /// @brief è®¾ç½®å¡«å……é¢œè‰²
+    /// @param color å¡«å……é¢œè‰²
     void SetFillColor(Color const& color);
 
     /// \~chinese
-    /// @brief ÉèÖÃÌî³ä»­Ë¢
-    /// @param[in] brush Ìî³ä»­Ë¢
+    /// @brief è®¾ç½®å¡«å……ç”»åˆ·
+    /// @param[in] brush å¡«å……ç”»åˆ·
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂÖÀªÑÕÉ«
-    /// @param color ÂÖÀªÑÕÉ«
+    /// @brief è®¾ç½®è½®å»“é¢œè‰²
+    /// @param color è½®å»“é¢œè‰²
     void SetStrokeColor(Color const& color);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂÖÀª»­Ë¢
-    /// @param[in] brush ÂÖÀª»­Ë¢
+    /// @brief è®¾ç½®è½®å»“ç”»åˆ·
+    /// @param[in] brush è½®å»“ç”»åˆ·
     void SetStrokeBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂÖÀª¿í¶È
-    /// @param width ÂÖÀª¿í¶È
+    /// @brief è®¾ç½®è½®å»“å®½åº¦
+    /// @param width è½®å»“å®½åº¦
     void SetStrokeWidth(float width);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂÖÀªÑùÊ½
-    /// @param stroke_style ÂÖÀªÑùÊ½
+    /// @brief è®¾ç½®è½®å»“æ ·å¼
+    /// @param stroke_style è½®å»“æ ·å¼
     void SetStrokeStyle(StrokeStylePtr stroke_style);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×Ö»­Ë¢ÑùÊ½
-    /// @param text_style ÎÄ×Ö»­Ë¢ÑùÊ½
+    /// @brief è®¾ç½®æ–‡å­—ç”»åˆ·æ ·å¼
+    /// @param text_style æ–‡å­—ç”»åˆ·æ ·å¼
     void SetTextStyle(TextStyle const& text_style);
 
     /// \~chinese
-    /// @brief ÉèÖÃ»­Ë¢
-    /// @param[in] brush »­Ë¢
+    /// @brief è®¾ç½®ç”»åˆ·
+    /// @param[in] brush ç”»åˆ·
     void SetBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃ»­Ë¢¶şÎ¬±ä»»
-    /// @param transform ¶şÎ¬±ä»»
+    /// @brief è®¾ç½®ç”»åˆ·äºŒç»´å˜æ¢
+    /// @param transform äºŒç»´å˜æ¢
     void SetBrushTransform(Transform const& transform);
 
     /// \~chinese
-    /// @brief ÉèÖÃ»­Ë¢¶şÎ¬±ä»»¾ØÕó
-    /// @param transform ¶şÎ¬±ä»»¾ØÕó
+    /// @brief è®¾ç½®ç”»åˆ·äºŒç»´å˜æ¢çŸ©é˜µ
+    /// @param transform äºŒç»´å˜æ¢çŸ©é˜µ
     void SetBrushTransform(Matrix3x2 const& transform);
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»¸öÍ¼²ã
-    /// @param area Í¼²ãÇøÓò
+    /// @brief æ·»åŠ ä¸€ä¸ªå›¾å±‚
+    /// @param area å›¾å±‚åŒºåŸŸ
     void PushLayerArea(LayerArea& area);
 
     /// \~chinese
-    /// @brief É¾³ı×î½üÌí¼ÓµÄÍ¼²ã
+    /// @brief åˆ é™¤æœ€è¿‘æ·»åŠ çš„å›¾å±‚
     void PopLayerArea();
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»¸ö²Ã¼ôÇøÓò
-    /// @param clip_rect ²Ã¼ô¾ØĞÎ
+    /// @brief æ·»åŠ ä¸€ä¸ªè£å‰ªåŒºåŸŸ
+    /// @param clip_rect è£å‰ªçŸ©å½¢
     void PushClipRect(Rect const& clip_rect);
 
     /// \~chinese
-    /// @brief É¾³ı×î½üÌí¼ÓµÄ²Ã¼ôÇøÓò
+    /// @brief åˆ é™¤æœ€è¿‘æ·»åŠ çš„è£å‰ªåŒºåŸŸ
     void PopClipRect();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÂÖÀª¿í¶È
+    /// @brief è·å–è½®å»“å®½åº¦
     float GetStrokeWidth() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ìî³ä»­Ë¢
+    /// @brief è·å–å¡«å……ç”»åˆ·
     BrushPtr GetFillBrush() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÂÖÀª»­Ë¢
+    /// @brief è·å–è½®å»“ç”»åˆ·
     BrushPtr GetStrokeBrush() const;
 
     /// \~chinese
-    /// @brief Çå¿Õ»­²¼´óĞ¡²¢ÖØÉè»­²¼´óĞ¡
+    /// @brief æ¸…ç©ºç”»å¸ƒå¤§å°å¹¶é‡è®¾ç”»å¸ƒå¤§å°
     void ResizeAndClear(Size size);
 
     /// \~chinese
-    /// @brief µ¼³öÎÆÀí
+    /// @brief å¯¼å‡ºçº¹ç†
     TexturePtr ExportToTexture() const;
 
     void OnRender(RenderContext& ctx) override;

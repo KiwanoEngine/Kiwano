@@ -29,17 +29,17 @@ class Event;
 
 /**
  * \~chinese
- * @brief »ù´¡¹¦ÄÜ×é¼ş
+ * @brief åŸºç¡€åŠŸèƒ½ç»„ä»¶
  */
 class KGE_API ComponentBase
 {
 public:
     /// \~chinese
-    /// @brief Æô¶¯×é¼ş
+    /// @brief å¯åŠ¨ç»„ä»¶
     virtual void SetupComponent() = 0;
 
     /// \~chinese
-    /// @brief Ïú»Ù×é¼ş
+    /// @brief é”€æ¯ç»„ä»¶
     virtual void DestroyComponent() = 0;
 
     bool Check(const int flag);
@@ -53,22 +53,22 @@ protected:
 
 /**
  * \~chinese
- * @brief äÖÈ¾Ö§³Ö×é¼ş
+ * @brief æ¸²æŸ“æ”¯æŒç»„ä»¶
  */
 class KGE_API RenderComponent : public virtual ComponentBase
 {
 public:
     /// \~chinese
-    /// @brief äÖÈ¾Ç°
+    /// @brief æ¸²æŸ“å‰
     virtual void BeforeRender() {}
 
     /// \~chinese
-    /// @brief äÖÈ¾Ê±
-    /// @param ctx äÖÈ¾ÉÏÏÂÎÄ
+    /// @brief æ¸²æŸ“æ—¶
+    /// @param ctx æ¸²æŸ“ä¸Šä¸‹æ–‡
     virtual void OnRender(RenderContext& ctx) {}
 
     /// \~chinese
-    /// @brief äÖÈ¾ºó
+    /// @brief æ¸²æŸ“å
     virtual void AfterRender() {}
 
 public:
@@ -79,22 +79,22 @@ public:
 
 /**
  * \~chinese
- * @brief ¸üĞÂÖ§³Ö×é¼ş
+ * @brief æ›´æ–°æ”¯æŒç»„ä»¶
  */
 class KGE_API UpdateComponent : public virtual ComponentBase
 {
 public:
     /// \~chinese
-    /// @brief ¸üĞÂÇ°
+    /// @brief æ›´æ–°å‰
     virtual void BeforeUpdate() {}
 
     /// \~chinese
-    /// @brief ¸üĞÂÊ±
-    /// @param dt ¼ä¸ôÊ±¼ä
+    /// @brief æ›´æ–°æ—¶
+    /// @param dt é—´éš”æ—¶é—´
     virtual void OnUpdate(Duration dt) {}
 
     /// \~chinese
-    /// @brief ¸üĞÂºó
+    /// @brief æ›´æ–°å
     virtual void AfterUpdate() {}
 
 public:
@@ -105,14 +105,14 @@ public:
 
 /**
  * \~chinese
- * @brief ÊÂ¼şÖ§³Ö×é¼ş
+ * @brief äº‹ä»¶æ”¯æŒç»„ä»¶
  */
 class KGE_API EventComponent : public virtual ComponentBase
 {
 public:
     /// \~chinese
-    /// @brief ÊÂ¼ş´¦Àí
-    /// @param evt ÊÂ¼ş
+    /// @brief äº‹ä»¶å¤„ç†
+    /// @param evt äº‹ä»¶
     virtual void HandleEvent(Event* evt) {}
 
 public:

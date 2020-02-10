@@ -39,7 +39,6 @@
 namespace kiwano
 {
 
-
 Window& Window::GetInstance()
 {
     return WindowImpl::GetInstance();
@@ -229,8 +228,10 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
         height = win_height;
     }
 
-    handle_ = ::CreateWindowExA(is_fullscreen_ ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(), left,
-                                top, width, height, nullptr, nullptr, hinst, nullptr);
+    WideString wide_title = MultiByteToWide(title);
+
+    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, L"KiwanoAppWnd", wide_title.c_str(), GetStyle(),
+                                left, top, width, height, nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
@@ -240,7 +241,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
         throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
 
-    width_ = width;
+    width_  = width;
     height_ = height;
 
     // disable imm
@@ -276,7 +277,10 @@ void WindowImpl::PumpEvents()
 void WindowImpl::SetTitle(String const& title)
 {
     if (handle_)
-        ::SetWindowTextA(handle_, title.c_str());
+    {
+        WideString wide_title = MultiByteToWide(title);
+        ::SetWindowTextW(handle_, wide_title.c_str());
+    }
 }
 
 void WindowImpl::SetIcon(uint32_t icon_resource)
@@ -557,7 +561,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         {
             // KGE_SYS_LOG("Window resized");
 
-            window->width_ = ((uint32_t)(short)LOWORD(lparam));
+            window->width_  = ((uint32_t)(short)LOWORD(lparam));
             window->height_ = ((uint32_t)(short)HIWORD(lparam));
 
             WindowResizedEventPtr evt = new WindowResizedEvent;

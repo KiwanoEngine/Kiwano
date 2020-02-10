@@ -31,7 +31,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief Í¼²ãÇøÓò
+ * @brief å›¾å±‚åŒºåŸŸ
  */
 class KGE_API LayerArea
 {
@@ -39,39 +39,39 @@ public:
     LayerArea();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÇøÓò
+    /// @brief è·å–å›¾å±‚åŒºåŸŸ
     Rect const& GetAreaRect() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÍ¸Ã÷¶È
+    /// @brief è·å–å›¾å±‚é€æ˜åº¦
     float GetOpacity() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã
+    /// @brief è·å–å‡ ä½•è’™å±‚
     ShapePtr GetMaskShape() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã±ä»»
+    /// @brief è·å–å‡ ä½•è’™å±‚å˜æ¢
     Matrix3x2 const& GetMaskTransform() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÇøÓò
+    /// @brief è®¾ç½®å›¾å±‚åŒºåŸŸ
     void SetAreaRect(Rect const& area);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
+    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
     void SetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã±ä»»
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚å˜æ¢
     void SetMaskTransform(Matrix3x2 const& matrix);
 
 private:

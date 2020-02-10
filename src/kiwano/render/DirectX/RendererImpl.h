@@ -95,11 +95,11 @@ public:
     RenderContext& GetContext();
 
     /// \~chinese
-    /// @brief 获取Direct2D设备资源
+    /// @brief 鑾峰彇Direct2D璁惧璧勬簮
     ID2DDeviceResources* GetD2DDeviceResources();
 
     /// \~chinese
-    /// @brief 获取Direct3D设备资源
+    /// @brief 鑾峰彇Direct3D璁惧璧勬簮
     ID3DDeviceResources* GetD3DDeviceResources();
 
 public:

@@ -31,7 +31,7 @@ namespace physics
  */
 
 /// \~chinese
-/// @brief ½Ó´¥±ß
+/// @brief æ¥è§¦è¾¹
 class KGE_API ContactEdge
 {
 public:
@@ -40,15 +40,15 @@ public:
     ContactEdge(b2ContactEdge* edge);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡½Ó´¥ÎïÌå
+    /// @brief è·å–æ¥è§¦ç‰©ä½“
     Body* GetOtherBody() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡½Ó´¥
+    /// @brief è·å–æ¥è§¦
     Contact GetContact() const;
 
     b2ContactEdge* GetB2ContactEdge() const;
@@ -63,7 +63,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ÎïÀí½Ó´¥±ßÁĞ±í
+/// @brief ç‰©ç†æ¥è§¦è¾¹åˆ—è¡¨
 class ContactEdgeList
 {
     template <typename _Ty>

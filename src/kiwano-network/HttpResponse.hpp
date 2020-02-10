@@ -34,7 +34,7 @@ KGE_DECLARE_SMART_PTR(HttpResponse);
 
 /**
  * \~chinese
- * @brief HTTPÏìÓ¦
+ * @brief HTTPå“åº”
  */
 class KGE_API HttpResponse : public virtual ObjectBase
 {
@@ -42,47 +42,47 @@ public:
     HttpResponse(HttpRequestPtr request);
 
     /// \~chinese
-    /// @brief »ñÈ¡¶ÔÓ¦µÄHTTPÇëÇó
+    /// @brief è·å–å¯¹åº”çš„HTTPè¯·æ±‚
     HttpRequestPtr GetRequest() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏìÓ¦×´Ì¬
+    /// @brief è·å–å“åº”çŠ¶æ€
     bool IsSucceed() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡HTTP×´Ì¬Âë
+    /// @brief è·å–HTTPçŠ¶æ€ç 
     long GetResponseCode() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏìÓ¦Í·
+    /// @brief è·å–å“åº”å¤´
     String GetHeader() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏìÓ¦Êı¾İ
+    /// @brief è·å–å“åº”æ•°æ®
     String const& GetData() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡´íÎóĞÅÏ¢
+    /// @brief è·å–é”™è¯¯ä¿¡æ¯
     String const& GetError() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÏìÓ¦×´Ì¬
+    /// @brief è®¾ç½®å“åº”çŠ¶æ€
     void SetSucceed(bool succeed);
 
     /// \~chinese
-    /// @brief ÉèÖÃHTTP×´Ì¬Âë
+    /// @brief è®¾ç½®HTTPçŠ¶æ€ç 
     void SetResponseCode(long response_code);
 
     /// \~chinese
-    /// @brief ÉèÖÃÏìÓ¦Í·
+    /// @brief è®¾ç½®å“åº”å¤´
     void SetHeader(String const& response_header);
 
     /// \~chinese
-    /// @brief ÉèÖÃÏìÓ¦Êı¾İ
+    /// @brief è®¾ç½®å“åº”æ•°æ®
     void SetData(String const& response_data);
 
     /// \~chinese
-    /// @brief ÉèÖÃ´íÎóĞÅÏ¢
+    /// @brief è®¾ç½®é”™è¯¯ä¿¡æ¯
     void SetError(String const& error_buffer);
 
 private:

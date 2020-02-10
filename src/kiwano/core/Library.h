@@ -25,43 +25,43 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief DLL¿â
+ * @brief DLLåº“
  */
 class KGE_API Library
 {
 public:
     /// \~chinese
-    /// @brief ¹¹ÔìDLL¿â
+    /// @brief æ„é€ DLLåº“
     Library();
 
     /// \~chinese
-    /// @brief ¹¹ÔìDLL¿â
-    /// @param lib DLLÎÄ¼şÂ·¾¶
+    /// @brief æ„é€ DLLåº“
+    /// @param lib DLLæ–‡ä»¶è·¯å¾„
     Library(String const& lib);
 
     virtual ~Library();
 
     /// \~chinese
-    /// @brief ¼ÓÔØDLL
-    /// @param lib DLLÎÄ¼şÂ·¾¶
+    /// @brief åŠ è½½DLL
+    /// @param lib DLLæ–‡ä»¶è·¯å¾„
     bool Load(String const& lib);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief ÊÍ·ÅDLL
+    /// @brief é‡Šæ”¾DLL
     void Free();
 
     /// \~chinese
-    /// @brief ¼ìË÷Ö¸¶¨µÄDLLÖĞµÄÊä³ö¿âº¯ÊıµØÖ·
-    /// @param proc_name º¯ÊıÃû
+    /// @brief æ£€ç´¢æŒ‡å®šçš„DLLä¸­çš„è¾“å‡ºåº“å‡½æ•°åœ°å€
+    /// @param proc_name å‡½æ•°å
     FARPROC GetProcess(String const& proc_name);
 
     /// \~chinese
-    /// @brief ¼ìË÷Ö¸¶¨µÄDLLÖĞµÄÊä³ö¿âº¯ÊıµØÖ·
-    /// @param proc_name º¯ÊıÃû
+    /// @brief æ£€ç´¢æŒ‡å®šçš„DLLä¸­çš„è¾“å‡ºåº“å‡½æ•°åœ°å€
+    /// @param proc_name å‡½æ•°å
     template <typename _Proc>
     inline _Proc GetProcess(String const& proc_name)
     {

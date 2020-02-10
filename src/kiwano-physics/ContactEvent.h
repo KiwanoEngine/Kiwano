@@ -35,11 +35,11 @@ KGE_DECLARE_SMART_PTR(ContactEndEvent);
  */
 
 /// \~chinese
-/// @brief ÎïÀí½Ó´¥¿ªÊ¼ÊÂ¼ş
+/// @brief ç‰©ç†æ¥è§¦å¼€å§‹äº‹ä»¶
 class KGE_API ContactBeginEvent : public Event
 {
 public:
-    Contact contact;  ///< ²úÉúµÄ½Ó´¥
+    Contact contact;  ///< äº§ç”Ÿçš„æ¥è§¦
 
     ContactBeginEvent();
 
@@ -47,11 +47,11 @@ public:
 };
 
 /// \~chinese
-/// @brief ÎïÀí½Ó´¥½áÊøÊÂ¼ş
+/// @brief ç‰©ç†æ¥è§¦ç»“æŸäº‹ä»¶
 class KGE_API ContactEndEvent : public Event
 {
 public:
-    Contact contact;  ///< ²úÉúµÄ½Ó´¥
+    Contact contact;  ///< äº§ç”Ÿçš„æ¥è§¦
 
     ContactEndEvent();
 

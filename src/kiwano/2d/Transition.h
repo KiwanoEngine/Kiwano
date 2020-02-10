@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(RotationTransition);
 
 /**
  * \~chinese
- * @brief ÎèÌ¨¹ı¶É¶¯»­
+ * @brief èˆå°è¿‡æ¸¡åŠ¨ç”»
  */
 class KGE_API Transition : public virtual ObjectBase
 {
@@ -49,48 +49,48 @@ public:
 
     /**
      * \~chinese
-     * @brief ÉèÖÃ¶¯»­Ê±³¤
+     * @brief è®¾ç½®åŠ¨ç”»æ—¶é•¿
      */
     void SetDuration(Duration dt);
 
     /**
      * \~chinese
-     * @brief ³¡¾°¹ı¶É¶¯»­ÊÇ·ñÒÑ½áÊø
+     * @brief åœºæ™¯è¿‡æ¸¡åŠ¨ç”»æ˜¯å¦å·²ç»“æŸ
      */
     bool IsDone();
 
 protected:
     /**
      * \~chinese
-     * @brief ³õÊ¼»¯³¡¾°¹ı¶É¶¯»­
-     * @param[in] prev ×ª³ö³¡¾°
-     * @param[in] next ×ªÈë³¡¾°
+     * @brief åˆå§‹åŒ–åœºæ™¯è¿‡æ¸¡åŠ¨ç”»
+     * @param[in] prev è½¬å‡ºåœºæ™¯
+     * @param[in] next è½¬å…¥åœºæ™¯
      */
     virtual void Init(StagePtr prev, StagePtr next);
 
     /**
      * \~chinese
-     * @brief ¸üĞÂ¹ı¶É¶¯»­
-     * @param dt ¾àÉÏÒ»´Î¸üĞÂµÄÊ±¼ä¼ä¸ô
+     * @brief æ›´æ–°è¿‡æ¸¡åŠ¨ç”»
+     * @param dt è·ä¸Šä¸€æ¬¡æ›´æ–°çš„æ—¶é—´é—´éš”
      */
     virtual void Update(Duration dt);
 
     /**
      * \~chinese
-     * @brief äÖÈ¾¹ı¶È¶¯»­
-     * @param[in] ctx äÖÈ¾ÉÏÏÂÎÄ
+     * @brief æ¸²æŸ“è¿‡åº¦åŠ¨ç”»
+     * @param[in] ctx æ¸²æŸ“ä¸Šä¸‹æ–‡
      */
     virtual void Render(RenderContext& ctx);
 
     /**
      * \~chinese
-     * @brief Í£Ö¹¶¯»­
+     * @brief åœæ­¢åŠ¨ç”»
      */
     virtual void Stop();
 
     /**
      * \~chinese
-     * @brief ÖØÖÃ¶¯»­
+     * @brief é‡ç½®åŠ¨ç”»
      */
     virtual void Reset() {}
 
@@ -108,16 +108,16 @@ protected:
 
 /**
  * \~chinese
- * @brief µ­Èëµ­³ö¹ı¶É¶¯»­
- * @details Ç°Ò»³¡¾°µ­³ö¶¯»­½áÊøºó£¬ºóÒ»³¡¾°µ­Èë
+ * @brief æ·¡å…¥æ·¡å‡ºè¿‡æ¸¡åŠ¨ç”»
+ * @details å‰ä¸€åœºæ™¯æ·¡å‡ºåŠ¨ç”»ç»“æŸåï¼Œåä¸€åœºæ™¯æ·¡å…¥
  */
 class FadeTransition : public Transition
 {
 public:
     /**
      * \~chinese
-     * @brief ´´½¨µ­Èëµ­³ö¹ı¶É¶¯»­
-     * @param duration ¶¯»­Ê±³¤
+     * @brief åˆ›å»ºæ·¡å…¥æ·¡å‡ºè¿‡æ¸¡åŠ¨ç”»
+     * @param duration åŠ¨ç”»æ—¶é•¿
      */
     static FadeTransitionPtr Create(Duration duration);
 
@@ -131,16 +131,16 @@ protected:
 
 /**
  * \~chinese
- * @brief ½¥±ä¹ı¶É¶¯»­
- * @details Ç°Ò»³¡¾°µ­³ö¶¯»­µÄÍ¬Ê±£¬ºóÒ»³¡¾°µ­Èë
+ * @brief æ¸å˜è¿‡æ¸¡åŠ¨ç”»
+ * @details å‰ä¸€åœºæ™¯æ·¡å‡ºåŠ¨ç”»çš„åŒæ—¶ï¼Œåä¸€åœºæ™¯æ·¡å…¥
  */
 class EmergeTransition : public Transition
 {
 public:
     /**
      * \~chinese
-     * @brief ´´½¨½¥±ä¹ı¶É¶¯»­
-     * @param duration ¶¯»­Ê±³¤
+     * @brief åˆ›å»ºæ¸å˜è¿‡æ¸¡åŠ¨ç”»
+     * @param duration åŠ¨ç”»æ—¶é•¿
      */
     static EmergeTransitionPtr Create(Duration duration);
 
@@ -154,16 +154,16 @@ protected:
 
 /**
  * \~chinese
- * @brief ºĞ×´¹ı¶É¶¯»­
- * @details Ç°Ò»³¡¾°ÒÔºĞ×´ÊÕËõÖÁÏûÊ§£¬ºóÒ»³¡¾°ÒÔºĞ×´À©´ó
+ * @brief ç›’çŠ¶è¿‡æ¸¡åŠ¨ç”»
+ * @details å‰ä¸€åœºæ™¯ä»¥ç›’çŠ¶æ”¶ç¼©è‡³æ¶ˆå¤±ï¼Œåä¸€åœºæ™¯ä»¥ç›’çŠ¶æ‰©å¤§
  */
 class BoxTransition : public Transition
 {
 public:
     /**
      * \~chinese
-     * @brief ´´½¨ºĞ×´¹ı¶É¶¯»­
-     * @param duration ¶¯»­Ê±³¤
+     * @brief åˆ›å»ºç›’çŠ¶è¿‡æ¸¡åŠ¨ç”»
+     * @param duration åŠ¨ç”»æ—¶é•¿
      */
     static BoxTransitionPtr Create(Duration duration);
 
@@ -177,29 +177,29 @@ protected:
 
 /**
  * \~chinese
- * @brief Î»ÒÆ¹ı¶É¶¯»­
- * @details Á½³¡¾°ÒÔÎ»ÒÆµÄ·½Ê½ÇĞ»»
+ * @brief ä½ç§»è¿‡æ¸¡åŠ¨ç”»
+ * @details ä¸¤åœºæ™¯ä»¥ä½ç§»çš„æ–¹å¼åˆ‡æ¢
  */
 class MoveTransition : public Transition
 {
 public:
     /**
      * \~chinese
-     * @brief Î»ÒÆ·½Ê½
+     * @brief ä½ç§»æ–¹å¼
      */
     enum class Type : int
     {
-        Up,    ///< ÉÏÒÆ
-        Down,  ///< ÏÂÒÆ
-        Left,  ///< ×óÒÆ
-        Right  ///< ÓÒÒÆ
+        Up,    ///< ä¸Šç§»
+        Down,  ///< ä¸‹ç§»
+        Left,  ///< å·¦ç§»
+        Right  ///< å³ç§»
     };
 
     /**
      * \~chinese
-     * @brief ´´½¨Î»ÒÆ¹ı¶É¶¯»­
-     * @param duration ¶¯»­Ê±³¤
-     * @param type Î»ÒÆ·½Ê½
+     * @brief åˆ›å»ºä½ç§»è¿‡æ¸¡åŠ¨ç”»
+     * @param duration åŠ¨ç”»æ—¶é•¿
+     * @param type ä½ç§»æ–¹å¼
      */
     static MoveTransitionPtr Create(Duration duration, Type type);
 
@@ -220,17 +220,17 @@ private:
 
 /**
  * \~chinese
- * @brief Ğı×ª¹ı¶É¶¯»­
- * @details Ç°Ò»³¡¾°ÒÔĞı×ª·½Ê½ÊÕËõÖÁÏûÊ§£¬ºóÒ»³¡¾°ÒÔĞı×ª·½Ê½À©´ó
+ * @brief æ—‹è½¬è¿‡æ¸¡åŠ¨ç”»
+ * @details å‰ä¸€åœºæ™¯ä»¥æ—‹è½¬æ–¹å¼æ”¶ç¼©è‡³æ¶ˆå¤±ï¼Œåä¸€åœºæ™¯ä»¥æ—‹è½¬æ–¹å¼æ‰©å¤§
  */
 class RotationTransition : public Transition
 {
 public:
     /**
      * \~chinese
-     * @brief ´´½¨Ğı×ª¹ı¶É¶¯»­
-     * @param duration ¶¯»­Ê±³¤
-     * @param rotation Ğı×ª¶ÈÊı
+     * @brief åˆ›å»ºæ—‹è½¬è¿‡æ¸¡åŠ¨ç”»
+     * @param duration åŠ¨ç”»æ—¶é•¿
+     * @param rotation æ—‹è½¬åº¦æ•°
      */
     static RotationTransitionPtr Create(Duration duration, float rotation = 360.0f);
 

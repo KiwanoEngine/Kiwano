@@ -53,7 +53,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief ÈÕÖ¾
+ * @brief æ—¥å¿—
  */
 class KGE_API Logger : public Singleton<Logger>
 {
@@ -61,66 +61,66 @@ class KGE_API Logger : public Singleton<Logger>
 
 public:
     /// \~chinese
-    /// @brief ÈÕÖ¾¼¶±ğ
+    /// @brief æ—¥å¿—çº§åˆ«
     enum class Level
     {
-        Info,     ///< ĞÅÏ¢
-        System,   ///< ÏµÍ³
-        Warning,  ///< ¾¯¸æ
-        Error     ///< ´íÎó
+        Info,     ///< ä¿¡æ¯
+        System,   ///< ç³»ç»Ÿ
+        Warning,  ///< è­¦å‘Š
+        Error     ///< é”™è¯¯
     };
 
     /// \~chinese
-    /// @brief ´òÓ¡ÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param format ¸ñÊ½×Ö·û´®
+    /// @brief æ‰“å°æ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param format æ ¼å¼å­—ç¬¦ä¸²
     void Printf(Level level, const char* format, ...);
 
     /// \~chinese
-    /// @brief ´òÓ¡ÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param args ²ÎÊı
+    /// @brief æ‰“å°æ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param args å‚æ•°
     template <typename... _Args>
     void Print(Level level, _Args&&... args);
 
     /// \~chinese
-    /// @brief ´òÓ¡Ò»ĞĞÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param args ²ÎÊı
+    /// @brief æ‰“å°ä¸€è¡Œæ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param args å‚æ•°
     template <typename... _Args>
     void Println(Level level, _Args&&... args);
 
     /// \~chinese
-    /// @brief ÏÔÊ¾»ò¹Ø±Õ¿ØÖÆÌ¨
-    /// @note ´Ë²Ù×÷»áÖØÖÃÊä³öÁ÷
+    /// @brief æ˜¾ç¤ºæˆ–å…³é—­æ§åˆ¶å°
+    /// @note æ­¤æ“ä½œä¼šé‡ç½®è¾“å‡ºæµ
     void ShowConsole(bool show);
 
     /// \~chinese
-    /// @brief ÆôÓÃÈÕÖ¾
+    /// @brief å¯ç”¨æ—¥å¿—
     void Enable();
 
     /// \~chinese
-    /// @brief ½ûÓÃÈÕÖ¾
+    /// @brief ç¦ç”¨æ—¥å¿—
     void Disable();
 
     /// \~chinese
-    /// @brief »ñÈ¡Êä³öÁ÷
+    /// @brief è·å–è¾“å‡ºæµ
     OutputStream& GetOutputStream();
 
     /// \~chinese
-    /// @brief »ñÈ¡´íÎóÁ÷
+    /// @brief è·å–é”™è¯¯æµ
     OutputStream& GetErrorStream();
 
     /// \~chinese
-    /// @brief ÖØ¶¨ÏòÊä³öÁ÷
+    /// @brief é‡å®šå‘è¾“å‡ºæµ
     std::streambuf* RedirectOutputStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief ÖØ¶¨Ïò´íÎóÁ÷
+    /// @brief é‡å®šå‘é”™è¯¯æµ
     std::streambuf* RedirectErrorStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief ÖØÖÃÊä³öÁ÷
+    /// @brief é‡ç½®è¾“å‡ºæµ
     void ResetOutputStream();
 
 private:

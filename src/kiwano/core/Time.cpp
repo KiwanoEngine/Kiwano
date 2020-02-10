@@ -366,7 +366,7 @@ Duration Duration::Parse(const String& format)
         return ret;
     }
 
-    // ∑˚∫≈Œª
+    // Á¨¶Âè∑‰Ωç
     if (format[0] == '-' || format[0] == '+')
     {
         negative = (format[0] == '-');
@@ -375,7 +375,7 @@ Duration Duration::Parse(const String& format)
 
     while (pos < len)
     {
-        //  ˝÷µ
+        // Êï∞ÂÄº
         size_t i = pos;
         for (; i < len; ++i)
         {
@@ -393,7 +393,7 @@ Duration Duration::Parse(const String& format)
         if (num_str.empty() || num_str == ".")
             throw Exception("Duration::Parse failed, invalid duration");
 
-        // µ•Œª
+        // Âçï‰Ωç
         for (; i < len; ++i)
         {
             wchar_t ch = format[i];

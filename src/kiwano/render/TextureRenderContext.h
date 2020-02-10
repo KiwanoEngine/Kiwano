@@ -31,24 +31,24 @@ KGE_DECLARE_SMART_PTR(TextureRenderContext);
  */
 
 /// \~chinese
-/// @brief ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ
-/// @details ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ½«äÖÈ¾Êä³öµ½Ò»¸öÎÆÀí¶ÔÏóÖĞ
+/// @brief çº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡
+/// @details çº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡å°†æ¸²æŸ“è¾“å‡ºåˆ°ä¸€ä¸ªçº¹ç†å¯¹è±¡ä¸­
 class KGE_API TextureRenderContext : public virtual RenderContext
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ
+    /// @brief åˆ›å»ºçº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡
     static TextureRenderContextPtr Create();
 
     /// \~chinese
-    /// @brief ´´½¨ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ
-    /// @param size ÆÚÍûµÄÊä³ö´óĞ¡
+    /// @brief åˆ›å»ºçº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡
+    /// @param size æœŸæœ›çš„è¾“å‡ºå¤§å°
     static TextureRenderContextPtr Create(Size const& desired_size);
 
     /// \~chinese
-    /// @brief »ñÈ¡äÖÈ¾Êä³ö
-    /// @param[out] texture ÎÆÀíÊä³ö
-    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
+    /// @brief è·å–æ¸²æŸ“è¾“å‡º
+    /// @param[out] texture çº¹ç†è¾“å‡º
+    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
     virtual bool GetOutput(Texture& texture) = 0;
 };
 

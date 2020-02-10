@@ -33,7 +33,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief Ó¦ÓÃ³ÌĞò£¬¿ØÖÆÓÎÏ·µÄÕû¸öÉúÃüÖÜÆÚ£¬°üÀ¨³õÊ¼»¯¡¢Æô¶¯¡¢½áÊøÒÔ¼°ÊÂ¼ş·Ö·¢µÈ
+ * @brief åº”ç”¨ç¨‹åºï¼Œæ§åˆ¶æ¸¸æˆçš„æ•´ä¸ªç”Ÿå‘½å‘¨æœŸï¼ŒåŒ…æ‹¬åˆå§‹åŒ–ã€å¯åŠ¨ã€ç»“æŸä»¥åŠäº‹ä»¶åˆ†å‘ç­‰
  */
 class KGE_API Application : protected Noncopyable
 {
@@ -44,81 +44,81 @@ public:
 
     /**
      * \~chinese
-     * @brief ³õÊ¼»¯Íê³É´¦Àí
-     * @details ÖØÔØ¸Ãº¯ÊıÒÔÔÚÓ¦ÓÃ³ÌĞò³õÊ¼»¯Íê³Éºó×Ô¶¯Ö´ĞĞ
+     * @brief åˆå§‹åŒ–å®Œæˆå¤„ç†
+     * @details é‡è½½è¯¥å‡½æ•°ä»¥åœ¨åº”ç”¨ç¨‹åºåˆå§‹åŒ–å®Œæˆåè‡ªåŠ¨æ‰§è¡Œ
      */
     virtual void OnReady();
 
     /**
      * \~chinese
-     * @brief Ó¦ÓÃ³ÌĞòÏú»Ù´¦Àí
-     * @details ÖØÔØ¸Ãº¯ÊıÒÔ´¦ÀíÓ¦ÓÃ³ÌĞòÏú»ÙÊ±µÄĞĞÎª£¬ÈçÍê³É×ÊÔ´»ØÊÕµÈ
+     * @brief åº”ç”¨ç¨‹åºé”€æ¯å¤„ç†
+     * @details é‡è½½è¯¥å‡½æ•°ä»¥å¤„ç†åº”ç”¨ç¨‹åºé”€æ¯æ—¶çš„è¡Œä¸ºï¼Œå¦‚å®Œæˆèµ„æºå›æ”¶ç­‰
      */
     virtual void OnDestroy();
 
     /**
      * \~chinese
-     * @brief Æô¶¯Ó¦ÓÃ³ÌĞò
-     * @details ³õÊ¼»¯ËùÓĞ¹¦ÄÜ×é¼şºóÖ´ĞĞ OnReady º¯Êı
-     * @param debug ÊÇ·ñÆôÓÃµ÷ÊÔÄ£Ê½
-     * @note ¸Ãº¯ÊıÊÇ×èÈûµÄ£¬Ó¦ÓÃ³ÌĞò½áÊøÊ±º¯Êı·µ»Ø
+     * @brief å¯åŠ¨åº”ç”¨ç¨‹åº
+     * @details åˆå§‹åŒ–æ‰€æœ‰åŠŸèƒ½ç»„ä»¶åæ‰§è¡Œ OnReady å‡½æ•°
+     * @param debug æ˜¯å¦å¯ç”¨è°ƒè¯•æ¨¡å¼
+     * @note è¯¥å‡½æ•°æ˜¯é˜»å¡çš„ï¼Œåº”ç”¨ç¨‹åºç»“æŸæ—¶å‡½æ•°è¿”å›
      */
     void Run(bool debug = false);
 
     /**
      * \~chinese
-     * @brief ÖÕÖ¹Ó¦ÓÃ³ÌĞò
+     * @brief ç»ˆæ­¢åº”ç”¨ç¨‹åº
      */
     void Quit();
 
     /**
      * \~chinese
-     * @brief Ïú»ÙÓÎÏ·ÔËĞĞ¹ı³ÌÖĞ²úÉúµÄËùÓĞ×ÊÔ´
+     * @brief é”€æ¯æ¸¸æˆè¿è¡Œè¿‡ç¨‹ä¸­äº§ç”Ÿçš„æ‰€æœ‰èµ„æº
      */
     void Destroy();
 
     /**
      * \~chinese
-     * @brief Ìí¼Ó¹¦ÄÜ×é¼ş
-     * @param[in] component ¹¦ÄÜ×é¼ş
+     * @brief æ·»åŠ åŠŸèƒ½ç»„ä»¶
+     * @param[in] component åŠŸèƒ½ç»„ä»¶
      */
     void Use(ComponentBase* component);
 
     /**
      * \~chinese
-     * @brief ÉèÖÃÊ±¼äËõ·ÅÒò×Ó
-     * @details ÉèÖÃÊ±¼äËõ·ÅÒò×Ó¿ÉµÈ±ÈÀı·Å´ó»òËõĞ¡Ê±¼ä½ø¶È
-     * @param scale_factor Ëõ·ÅÒò×Ó
-     * @warning ÉèÖÃÎª¸ºÊı¿ÉÄÜµ¼ÖÂ¶¯»­ÏµÍ³ÎÉÂÒ
+     * @brief è®¾ç½®æ—¶é—´ç¼©æ”¾å› å­
+     * @details è®¾ç½®æ—¶é—´ç¼©æ”¾å› å­å¯ç­‰æ¯”ä¾‹æ”¾å¤§æˆ–ç¼©å°æ—¶é—´è¿›åº¦
+     * @param scale_factor ç¼©æ”¾å› å­
+     * @warning è®¾ç½®ä¸ºè´Ÿæ•°å¯èƒ½å¯¼è‡´åŠ¨ç”»ç³»ç»Ÿç´Šä¹±
      */
     void SetTimeScale(float scale_factor);
 
     /**
      * \~chinese
-     * @brief ·Ö·¢ÊÂ¼ş
-     * @details ½«ÊÂ¼ş·Ö·¢¸øËùÓĞÊÂ¼ş¹¦ÄÜ×é¼ş
-     * @param evt ÊÂ¼ş
+     * @brief åˆ†å‘äº‹ä»¶
+     * @details å°†äº‹ä»¶åˆ†å‘ç»™æ‰€æœ‰äº‹ä»¶åŠŸèƒ½ç»„ä»¶
+     * @param evt äº‹ä»¶
      */
     void DispatchEvent(Event* evt);
 
     /**
      * \~chinese
-     * @brief ÔÚÖ÷Ïß³ÌÖĞÖ´ĞĞº¯Êı
-     * @details Ìá¹©ÔÚÆäËûÏß³Ìµ÷ÓÃ Kiwano º¯ÊıµÄÄÜÁ¦
-     * @param func ĞèÒªÖ´ĞĞµÄº¯Êı
+     * @brief åœ¨ä¸»çº¿ç¨‹ä¸­æ‰§è¡Œå‡½æ•°
+     * @details æä¾›åœ¨å…¶ä»–çº¿ç¨‹è°ƒç”¨ Kiwano å‡½æ•°çš„èƒ½åŠ›
+     * @param func éœ€è¦æ‰§è¡Œçš„å‡½æ•°
      */
     static void PreformInMainThread(Function<void()> func);
 
 private:
     /**
      * \~chinese
-     * @brief ¸üĞÂËùÓĞ×é¼ş
+     * @brief æ›´æ–°æ‰€æœ‰ç»„ä»¶
      */
     void Update();
 
     /**
      * \~chinese
-     * @brief äÖÈ¾ËùÓĞ×é¼ş
+     * @brief æ¸²æŸ“æ‰€æœ‰ç»„ä»¶
      */
     void Render();
 

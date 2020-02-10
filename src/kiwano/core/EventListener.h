@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(EventListener);
 
 /**
  * \~chinese
- * @brief ÊÂ¼ş¼àÌıÆ÷
+ * @brief äº‹ä»¶ç›‘å¬å™¨
  */
 class KGE_API EventListener
     : public virtual ObjectBase
@@ -46,26 +46,26 @@ class KGE_API EventListener
 
 public:
     /// \~chinese
-    /// @brief ¼àÌıÆ÷»Øµ÷º¯Êı
+    /// @brief ç›‘å¬å™¨å›è°ƒå‡½æ•°
     using Callback = Function<void(Event*)>;
 
     /// \~chinese
-    /// @brief ´´½¨¼àÌıÆ÷
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç›‘å¬å™¨
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     static EventListenerPtr Create(EventType type, Callback const& callback);
 
     /// \~chinese
-    /// @brief ´´½¨¼àÌıÆ÷
-    /// @param name ¼àÌıÆ÷Ãû³Æ
-    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç›‘å¬å™¨
+    /// @param name ç›‘å¬å™¨åç§°
+    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     static EventListenerPtr Create(String const& name, EventType type, Callback const& callback);
 
     /// \~chinese
-    /// @brief ´´½¨¼àÌıÆ÷
-    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç›‘å¬å™¨
+    /// @tparam _EventTy äº‹ä»¶ç±»å‹
+    /// @param callback å›è°ƒå‡½æ•°
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     static inline EventListenerPtr Create(Callback const& callback)
     {
@@ -73,10 +73,10 @@ public:
     }
 
     /// \~chinese
-    /// @brief ´´½¨¼àÌıÆ÷
-    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
-    /// @param name ¼àÌıÆ÷Ãû³Æ
-    /// @param callback »Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç›‘å¬å™¨
+    /// @tparam _EventTy äº‹ä»¶ç±»å‹
+    /// @param name ç›‘å¬å™¨åç§°
+    /// @param callback å›è°ƒå‡½æ•°
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     static inline EventListenerPtr Create(String const& name, Callback const& callback)
     {
@@ -88,53 +88,53 @@ public:
     virtual ~EventListener();
 
     /// \~chinese
-    /// @brief Æô¶¯¼àÌıÆ÷
+    /// @brief å¯åŠ¨ç›‘å¬å™¨
     void Start();
 
     /// \~chinese
-    /// @brief Í£Ö¹¼àÌıÆ÷
+    /// @brief åœæ­¢ç›‘å¬å™¨
     void Stop();
 
     /// \~chinese
-    /// @brief ÒÆ³ı¼àÌıÆ÷
+    /// @brief ç§»é™¤ç›‘å¬å™¨
     void Remove();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÕıÔÚÔËĞĞ
+    /// @brief æ˜¯å¦æ­£åœ¨è¿è¡Œ
     bool IsRunning() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñ¿ÉÒÆ³ı
+    /// @brief æ˜¯å¦å¯ç§»é™¤
     bool IsRemoveable() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñ¿ªÆôÏûÏ¢ÍÌÃ»
+    /// @brief æ˜¯å¦å¼€å¯æ¶ˆæ¯åæ²¡
     bool IsSwallowEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÏûÏ¢ÍÌÃ»¹¦ÄÜ
-    /// @param enabled ÊÇ·ñÆôÓÃ
+    /// @brief è®¾ç½®æ¶ˆæ¯åæ²¡åŠŸèƒ½
+    /// @param enabled æ˜¯å¦å¯ç”¨
     void SetSwallowEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief »ñÈ¡»Øµ÷º¯Êı
+    /// @brief è·å–å›è°ƒå‡½æ•°
     const Callback& GetCallback() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®å›è°ƒå‡½æ•°
     void SetCallback(Callback const& cb);
 
     /// \~chinese
-    /// @brief »ñÈ¡¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @brief è·å–ç›‘å¬çš„äº‹ä»¶ç±»å‹
     EventType GetEventType() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @brief è®¾ç½®ç›‘å¬çš„äº‹ä»¶ç±»å‹
     void SetEventType(EventType const& type);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼àÌıµÄÊÂ¼şÀàĞÍ
-    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
+    /// @brief è®¾ç½®ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @tparam _EventTy äº‹ä»¶ç±»å‹
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     inline void SetEventType()
     {
@@ -142,7 +142,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief ½ÓÊÕÏûÏ¢
+    /// @brief æ¥æ”¶æ¶ˆæ¯
     void Receive(Event* evt);
 
 private:

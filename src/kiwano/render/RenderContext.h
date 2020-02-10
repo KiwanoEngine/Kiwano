@@ -40,223 +40,223 @@ KGE_DECLARE_SMART_PTR(RenderContext);
  */
 
 /// \~chinese
-/// @brief ÎÄ×Ö¿¹¾â³İÄ£Ê½
+/// @brief æ–‡å­—æŠ—é”¯é½¿æ¨¡å¼
 enum class TextAntialiasMode
 {
-    Default,    ///< ÏµÍ³Ä¬ÈÏ
-    ClearType,  ///< ClearType ¿¹¾â³İ
-    GrayScale,  ///< »Ò¶È¿¹¾â³İ
-    None        ///< ²»ÆôÓÃ¿¹¾â³İ
+    Default,    ///< ç³»ç»Ÿé»˜è®¤
+    ClearType,  ///< ClearType æŠ—é”¯é½¿
+    GrayScale,  ///< ç°åº¦æŠ—é”¯é½¿
+    None        ///< ä¸å¯ç”¨æŠ—é”¯é½¿
 };
 
 /// \~chinese
-/// @brief äÖÈ¾ÉÏÏÂÎÄ
+/// @brief æ¸²æŸ“ä¸Šä¸‹æ–‡
 /// @details
-/// äÖÈ¾ÉÏÏÂÎÄ½«Íê³É»ù´¡Í¼ÔªµÄ»æÖÆ£¬²¢½«»æÖÆ½á¹ûÊä³öµ½ÌØ¶¨µÄÄ¿±êÖĞ£¨Èç´°¿Ú»òÎÆÀí£©
+/// æ¸²æŸ“ä¸Šä¸‹æ–‡å°†å®ŒæˆåŸºç¡€å›¾å…ƒçš„ç»˜åˆ¶ï¼Œå¹¶å°†ç»˜åˆ¶ç»“æœè¾“å‡ºåˆ°ç‰¹å®šçš„ç›®æ ‡ä¸­ï¼ˆå¦‚çª—å£æˆ–çº¹ç†ï¼‰
 class KGE_API RenderContext : public virtual ObjectBase
 {
     friend class Renderer;
 
 public:
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     virtual bool IsValid() const = 0;
 
     /// \~chinese
-    /// @brief ¿ªÊ¼äÖÈ¾
+    /// @brief å¼€å§‹æ¸²æŸ“
     virtual void BeginDraw();
 
     /// \~chinese
-    /// @brief ½áÊøäÖÈ¾
+    /// @brief ç»“æŸæ¸²æŸ“
     virtual void EndDraw();
 
     /// \~chinese
-    /// @brief »æÖÆÎÆÀí
-    /// @param texture ÎÆÀí
-    /// @param src_rect Ô´ÎÆÀí²Ã¼ô¾ØĞÎ
-    /// @param dest_rect »æÖÆµÄÄ¿±êÇøÓò
+    /// @brief ç»˜åˆ¶çº¹ç†
+    /// @param texture çº¹ç†
+    /// @param src_rect æºçº¹ç†è£å‰ªçŸ©å½¢
+    /// @param dest_rect ç»˜åˆ¶çš„ç›®æ ‡åŒºåŸŸ
     virtual void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr,
                              const Rect* dest_rect = nullptr) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆÎÄ±¾²¼¾Ö
-    /// @param layout ÎÄ±¾²¼¾Ö
-    /// @param offset Æ«ÒÆÁ¿
+    /// @brief ç»˜åˆ¶æ–‡æœ¬å¸ƒå±€
+    /// @param layout æ–‡æœ¬å¸ƒå±€
+    /// @param offset åç§»é‡
     virtual void DrawTextLayout(TextLayout const& layout, Point const& offset = Point()) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆĞÎ×´ÂÖÀª
-    /// @param shape ĞÎ×´
-    /// @param stroke ÏßÌõÑùÊ½
-    /// @param stroke_width ÏßÌõ¿í¶È
+    /// @brief ç»˜åˆ¶å½¢çŠ¶è½®å»“
+    /// @param shape å½¢çŠ¶
+    /// @param stroke çº¿æ¡æ ·å¼
+    /// @param stroke_width çº¿æ¡å®½åº¦
     virtual void DrawShape(Shape const& shape, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆÏß¶Î
-    /// @param point1 Ïß¶ÎÆğµã
-    /// @param point2 Ïß¶ÎÖÕµã
-    /// @param stroke ÏßÌõÑùÊ½
-    /// @param stroke_width ÏßÌõ¿í¶È
+    /// @brief ç»˜åˆ¶çº¿æ®µ
+    /// @param point1 çº¿æ®µèµ·ç‚¹
+    /// @param point2 çº¿æ®µç»ˆç‚¹
+    /// @param stroke çº¿æ¡æ ·å¼
+    /// @param stroke_width çº¿æ¡å®½åº¦
     virtual void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke = nullptr,
                           float stroke_width = 1.0f) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆ¾ØĞÎ±ß¿ò
-    /// @param rect ¾ØĞÎ
-    /// @param stroke ÏßÌõÑùÊ½
-    /// @param stroke_width ÏßÌõ¿í¶È
+    /// @brief ç»˜åˆ¶çŸ©å½¢è¾¹æ¡†
+    /// @param rect çŸ©å½¢
+    /// @param stroke çº¿æ¡æ ·å¼
+    /// @param stroke_width çº¿æ¡å®½åº¦
     virtual void DrawRectangle(Rect const& rect, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆÔ²½Ç¾ØĞÎ±ß¿ò
-    /// @param rect ¾ØĞÎ
-    /// @param radius Ô²½Ç°ë¾¶
-    /// @param stroke ÏßÌõÑùÊ½
-    /// @param stroke_width ÏßÌõ¿í¶È
+    /// @brief ç»˜åˆ¶åœ†è§’çŸ©å½¢è¾¹æ¡†
+    /// @param rect çŸ©å½¢
+    /// @param radius åœ†è§’åŠå¾„
+    /// @param stroke çº¿æ¡æ ·å¼
+    /// @param stroke_width çº¿æ¡å®½åº¦
     virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
                                       float stroke_width = 1.0f) = 0;
 
     /// \~chinese
-    /// @brief »æÖÆÍÖÔ²±ß¿ò
-    /// @param center Ô²ĞÄ
-    /// @param radius ÍÖÔ²°ë¾¶
-    /// @param stroke ÏßÌõÑùÊ½
-    /// @param stroke_width ÏßÌõ¿í¶È
+    /// @brief ç»˜åˆ¶æ¤­åœ†è¾¹æ¡†
+    /// @param center åœ†å¿ƒ
+    /// @param radius æ¤­åœ†åŠå¾„
+    /// @param stroke çº¿æ¡æ ·å¼
+    /// @param stroke_width çº¿æ¡å®½åº¦
     virtual void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
                              float stroke_width = 1.0f) = 0;
 
     /// \~chinese
-    /// @brief Ìî³äĞÎ×´
-    /// @param shape ĞÎ×´
+    /// @brief å¡«å……å½¢çŠ¶
+    /// @param shape å½¢çŠ¶
     virtual void FillShape(Shape const& shape) = 0;
 
     /// \~chinese
-    /// @brief Ìî³ä¾ØĞÎ
-    /// @param rect ¾ØĞÎ
+    /// @brief å¡«å……çŸ©å½¢
+    /// @param rect çŸ©å½¢
     virtual void FillRectangle(Rect const& rect) = 0;
 
     /// \~chinese
-    /// @brief Ìî³äÔ²½Ç¾ØĞÎ
-    /// @param rect ¾ØĞÎ
-    /// @param radius Ô²½Ç°ë¾¶
+    /// @brief å¡«å……åœ†è§’çŸ©å½¢
+    /// @param rect çŸ©å½¢
+    /// @param radius åœ†è§’åŠå¾„
     virtual void FillRoundedRectangle(Rect const& rect, Vec2 const& radius) = 0;
 
     /// \~chinese
-    /// @brief Ìî³äÍÖÔ²
-    /// @param center Ô²ĞÄ
-    /// @param radius ÍÖÔ²°ë¾¶
+    /// @brief å¡«å……æ¤­åœ†
+    /// @param center åœ†å¿ƒ
+    /// @param radius æ¤­åœ†åŠå¾„
     virtual void FillEllipse(Point const& center, Vec2 const& radius) = 0;
 
     /// \~chinese
-    /// @brief ´´½¨ÎÆÀí
-    /// @param texture ÎÆÀí
-    /// @param size ÎÆÀíÏñËØ´óĞ¡
+    /// @brief åˆ›å»ºçº¹ç†
+    /// @param texture çº¹ç†
+    /// @param size çº¹ç†åƒç´ å¤§å°
     virtual void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) = 0;
 
     /// \~chinese
-    /// @brief ÉèÖÃ»æÖÆµÄ²Ã¼ôÇøÓò
-    /// @param clip_rect ²Ã¼ô¾ØĞÎ
+    /// @brief è®¾ç½®ç»˜åˆ¶çš„è£å‰ªåŒºåŸŸ
+    /// @param clip_rect è£å‰ªçŸ©å½¢
     virtual void PushClipRect(Rect const& clip_rect) = 0;
 
     /// \~chinese
-    /// @brief È¡ÏûÉÏÒ»´ÎÉèÖÃµÄ»æÖÆ²Ã¼ôÇøÓò
+    /// @brief å–æ¶ˆä¸Šä¸€æ¬¡è®¾ç½®çš„ç»˜åˆ¶è£å‰ªåŒºåŸŸ
     virtual void PopClipRect() = 0;
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÇøÓò
-    /// @param layer Í¼²ãÇøÓò
+    /// @brief è®¾ç½®å›¾å±‚åŒºåŸŸ
+    /// @param layer å›¾å±‚åŒºåŸŸ
     virtual void PushLayer(LayerArea& layer) = 0;
 
     /// \~chinese
-    /// @brief È¡ÏûÉÏÒ»´ÎÉèÖÃµÄÍ¼²ãÇøÓò
+    /// @brief å–æ¶ˆä¸Šä¸€æ¬¡è®¾ç½®çš„å›¾å±‚åŒºåŸŸ
     virtual void PopLayer() = 0;
 
     /// \~chinese
-    /// @brief Çå¿ÕäÖÈ¾ÄÚÈİ
+    /// @brief æ¸…ç©ºæ¸²æŸ“å†…å®¹
     virtual void Clear() = 0;
 
     /// \~chinese
-    /// @brief Ê¹ÓÃ´¿É«Çå¿ÕäÖÈ¾ÄÚÈİ
-    /// @param clear_color ÇåÆÁÑÕÉ«
+    /// @brief ä½¿ç”¨çº¯è‰²æ¸…ç©ºæ¸²æŸ“å†…å®¹
+    /// @param clear_color æ¸…å±é¢œè‰²
     virtual void Clear(Color const& clear_color) = 0;
 
     /// \~chinese
-    /// @brief »ñÈ¡äÖÈ¾ÇøÓò´óĞ¡
+    /// @brief è·å–æ¸²æŸ“åŒºåŸŸå¤§å°
     virtual Size GetSize() const = 0;
 
     /// \~chinese
-    /// @brief »ñÈ¡»­Ë¢Í¸Ã÷¶È
+    /// @brief è·å–ç”»åˆ·é€æ˜åº¦
     virtual float GetBrushOpacity() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡µ±Ç°»­Ë¢
+    /// @brief è·å–å½“å‰ç”»åˆ·
     virtual BrushPtr GetCurrentBrush() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡È«¾Ö¶şÎ¬±ä»»
+    /// @brief è·å–å…¨å±€äºŒç»´å˜æ¢
     virtual const Matrix3x2& GetGlobalTransform() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ»­Ë¢Í¸Ã÷¶È
+    /// @brief è®¾ç½®ç”»åˆ·é€æ˜åº¦
     virtual void SetBrushOpacity(float opacity);
 
     /// \~chinese
-    /// @brief ÉèÖÃµ±Ç°»­Ë¢
+    /// @brief è®¾ç½®å½“å‰ç”»åˆ·
     virtual void SetCurrentBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¿¹¾â³İÄ£Ê½
+    /// @brief è®¾ç½®æŠ—é”¯é½¿æ¨¡å¼
     virtual void SetAntialiasMode(bool enabled) = 0;
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×Ö¿¹¾â³İÄ£Ê½
+    /// @brief è®¾ç½®æ–‡å­—æŠ—é”¯é½¿æ¨¡å¼
     virtual void SetTextAntialiasMode(TextAntialiasMode mode) = 0;
 
     /// \~chinese
-    /// @brief ¼ì²é±ß½çÊÇ·ñÔÚÊÓÇøÄÚ
+    /// @brief æ£€æŸ¥è¾¹ç•Œæ˜¯å¦åœ¨è§†åŒºå†…
     virtual bool CheckVisibility(Rect const& bounds, Matrix3x2 const& transform) = 0;
 
     /// \~chinese
-    /// @brief ÖØÉèäÖÈ¾ÉÏÏÂÎÄ´óĞ¡
+    /// @brief é‡è®¾æ¸²æŸ“ä¸Šä¸‹æ–‡å¤§å°
     virtual void Resize(Size const& size) = 0;
 
     /// \~chinese
-    /// @brief ÉèÖÃÉÏÏÂÎÄµÄ¶şÎ¬±ä»»
+    /// @brief è®¾ç½®ä¸Šä¸‹æ–‡çš„äºŒç»´å˜æ¢
     virtual void SetTransform(const Matrix3x2& matrix) = 0;
 
     /// \~chinese
-    /// @brief ÉèÖÃÈ«¾Ö¶şÎ¬±ä»»
+    /// @brief è®¾ç½®å…¨å±€äºŒç»´å˜æ¢
     virtual void SetGlobalTransform(const Matrix3x2& matrix);
 
     /// \~chinese
-    /// @brief ÉèÖÃÈ«¾Ö¶şÎ¬±ä»»
+    /// @brief è®¾ç½®å…¨å±€äºŒç»´å˜æ¢
     virtual void SetGlobalTransform(const Matrix3x2* matrix);
 
 public:
     /// \~chinese
-    /// @brief äÖÈ¾ÉÏÏÂÎÄ×´Ì¬
+    /// @brief æ¸²æŸ“ä¸Šä¸‹æ–‡çŠ¶æ€
     struct Status
     {
-        uint32_t primitives;  ///< äÖÈ¾Í¼ÔªÊıÁ¿
-        Time     start;       ///< äÖÈ¾ÆğÊ¼Ê±¼ä
-        Duration duration;    ///< äÖÈ¾Ê±³¤
+        uint32_t primitives;  ///< æ¸²æŸ“å›¾å…ƒæ•°é‡
+        Time     start;       ///< æ¸²æŸ“èµ·å§‹æ—¶é—´
+        Duration duration;    ///< æ¸²æŸ“æ—¶é•¿
 
         Status();
     };
 
     /// \~chinese
-    /// @brief ÆôÓÃ»ò½ûÓÃ×´Ì¬ÊÕ¼¯¹¦ÄÜ
+    /// @brief å¯ç”¨æˆ–ç¦ç”¨çŠ¶æ€æ”¶é›†åŠŸèƒ½
     void SetCollectingStatus(bool enable);
 
     /// \~chinese
-    /// @brief »ñÈ¡äÖÈ¾ÉÏÏÂÎÄ×´Ì¬
+    /// @brief è·å–æ¸²æŸ“ä¸Šä¸‹æ–‡çŠ¶æ€
     Status const& GetStatus() const;
 
 protected:
     RenderContext();
 
     /// \~chinese
-    /// @brief Ôö¼ÓäÖÈ¾Í¼ÔªÊıÁ¿
+    /// @brief å¢åŠ æ¸²æŸ“å›¾å…ƒæ•°é‡
     void IncreasePrimitivesCount(uint32_t increase = 1) const;
 
 protected:

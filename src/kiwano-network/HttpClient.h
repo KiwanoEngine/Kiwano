@@ -30,7 +30,7 @@ namespace network
 {
 /**
  * \~chinese
- * \defgroup Network ÍøÂçÍ¨ĞÅ
+ * \defgroup Network ç½‘ç»œé€šä¿¡
  */
 
 /**
@@ -40,7 +40,7 @@ namespace network
 
 /**
  * \~chinese
- * @brief HTTP¿Í»§¶Ë
+ * @brief HTTPå®¢æˆ·ç«¯
  */
 class KGE_API HttpClient
     : public Singleton<HttpClient>
@@ -50,33 +50,33 @@ class KGE_API HttpClient
 
 public:
     /// \~chinese
-    /// @brief ·¢ËÍHTTPÇëÇó
-    /// @param[in] request HTTPÇëÇó
-    /// @details ·¢ËÍÇëÇóºó£¬ÎŞÂÛ½áÊø»òÊ§°Ü¶¼½«µ÷ÓÃÇëÇóµÄÏìÓ¦»Øµ÷º¯Êı
+    /// @brief å‘é€HTTPè¯·æ±‚
+    /// @param[in] request HTTPè¯·æ±‚
+    /// @details å‘é€è¯·æ±‚åï¼Œæ— è®ºç»“æŸæˆ–å¤±è´¥éƒ½å°†è°ƒç”¨è¯·æ±‚çš„å“åº”å›è°ƒå‡½æ•°
     void Send(HttpRequestPtr request);
 
     /// \~chinese
-    /// @brief ÉèÖÃÁ¬½Ó³¬Ê±Ê±³¤
+    /// @brief è®¾ç½®è¿æ¥è¶…æ—¶æ—¶é•¿
     void SetTimeoutForConnect(Duration timeout);
 
     /// \~chinese
-    /// @brief »ñÈ¡Á¬½Ó³¬Ê±Ê±³¤
+    /// @brief è·å–è¿æ¥è¶…æ—¶æ—¶é•¿
     Duration GetTimeoutForConnect() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶ÁÈ¡³¬Ê±Ê±³¤
+    /// @brief è®¾ç½®è¯»å–è¶…æ—¶æ—¶é•¿
     void SetTimeoutForRead(Duration timeout);
 
     /// \~chinese
-    /// @brief »ñÈ¡¶ÁÈ¡³¬Ê±Ê±³¤
+    /// @brief è·å–è¯»å–è¶…æ—¶æ—¶é•¿
     Duration GetTimeoutForRead() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃSSLÖ¤ÊéµØÖ·
+    /// @brief è®¾ç½®SSLè¯ä¹¦åœ°å€
     void SetSSLVerification(String const& root_certificate_path);
 
     /// \~chinese
-    /// @brief »ñÈ¡SSLÖ¤ÊéµØÖ·
+    /// @brief è·å–SSLè¯ä¹¦åœ°å€
     String const& GetSSLVerification() const;
 
 public:

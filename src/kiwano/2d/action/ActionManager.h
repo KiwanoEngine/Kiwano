@@ -30,47 +30,47 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief ¶¯»­¹ÜÀíÆ÷
+ * @brief åŠ¨ç”»ç®¡ç†å™¨
  */
 class KGE_API ActionManager
 {
 public:
     /// \~chinese
-    /// @brief ¶¯»­ÁĞ±í
+    /// @brief åŠ¨ç”»åˆ—è¡¨
     using Actions = IntrusiveList<ActionPtr>;
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¯»­
+    /// @brief æ·»åŠ åŠ¨ç”»
     Action* AddAction(ActionPtr action);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¯»­
+    /// @brief æ·»åŠ åŠ¨ç”»
     Action* AddAction(Action* action);
 
     /// \~chinese
-    /// @brief ¼ÌĞøËùÓĞÔİÍ£¶¯»­
+    /// @brief ç»§ç»­æ‰€æœ‰æš‚åœåŠ¨ç”»
     void ResumeAllActions();
 
     /// \~chinese
-    /// @brief ÔİÍ£ËùÓĞ¶¯»­
+    /// @brief æš‚åœæ‰€æœ‰åŠ¨ç”»
     void PauseAllActions();
 
     /// \~chinese
-    /// @brief Í£Ö¹ËùÓĞ¶¯»­
+    /// @brief åœæ­¢æ‰€æœ‰åŠ¨ç”»
     void StopAllActions();
 
     /// \~chinese
-    /// @brief »ñÈ¡Ö¸¶¨Ãû³ÆµÄ¶¯»­
-    /// @param name ¶¯»­Ãû³Æ
+    /// @brief è·å–æŒ‡å®šåç§°çš„åŠ¨ç”»
+    /// @param name åŠ¨ç”»åç§°
     ActionPtr GetAction(String const& name);
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞ¶¯»­
+    /// @brief è·å–æ‰€æœ‰åŠ¨ç”»
     Actions const& GetAllActions() const;
 
 protected:
     /// \~chinese
-    /// @brief ¸üĞÂ¶¯»­
+    /// @brief æ›´æ–°åŠ¨ç”»
     void UpdateActions(Actor* target, Duration dt);
 
 private:

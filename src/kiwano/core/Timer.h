@@ -29,8 +29,8 @@ class TimerManager;
 KGE_DECLARE_SMART_PTR(Timer);
 
 /// \~chinese
-/// @brief ¶¨Ê±Æ÷
-/// @details ¶¨Ê±Æ÷ÓÃÓÚÃ¿¸ôÒ»¶ÎÊ±¼äÖ´ĞĞÒ»´Î»Øµ÷º¯Êı£¬ÇÒ¿ÉÒÔÖ¸¶¨Ö´ĞĞ×Ü´ÎÊı
+/// @brief å®šæ—¶å™¨
+/// @details å®šæ—¶å™¨ç”¨äºæ¯éš”ä¸€æ®µæ—¶é—´æ‰§è¡Œä¸€æ¬¡å›è°ƒå‡½æ•°ï¼Œä¸”å¯ä»¥æŒ‡å®šæ‰§è¡Œæ€»æ¬¡æ•°
 class KGE_API Timer
     : public virtual ObjectBase
     , protected IntrusiveListItem<TimerPtr>
@@ -40,85 +40,85 @@ class KGE_API Timer
 
 public:
     /// \~chinese
-    /// @brief ¶¨Ê±Æ÷»Øµ÷º¯Êı
+    /// @brief å®šæ—¶å™¨å›è°ƒå‡½æ•°
     /// @details
-    /// »Øµ÷º¯ÊıµÚÒ»¸ö²ÎÊıÊÇ¶¨Ê±Æ÷×ÔÉí£¬µÚ¶ş¸ö²ÎÊıÊÇ¾àÀëÉÏ´Î¸üĞÂµÄÊ±¼ä¼ä¸ô
+    /// å›è°ƒå‡½æ•°ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯å®šæ—¶å™¨è‡ªèº«ï¼Œç¬¬äºŒä¸ªå‚æ•°æ˜¯è·ç¦»ä¸Šæ¬¡æ›´æ–°çš„æ—¶é—´é—´éš”
     using Callback = Function<void(Timer* /* self */, Duration /* dt */)>;
 
     /// \~chinese
-    /// @brief ´´½¨¶¨Ê±Æ÷
-    /// @param cb »Øµ÷º¯Êı
-    /// @param interval Ê±¼ä¼ä¸ô
-    /// @param times Ö´ĞĞ´ÎÊı£¨Éè -1 ÎªÓÀ¾ÃÖ´ĞĞ£©
+    /// @brief åˆ›å»ºå®šæ—¶å™¨
+    /// @param cb å›è°ƒå‡½æ•°
+    /// @param interval æ—¶é—´é—´éš”
+    /// @param times æ‰§è¡Œæ¬¡æ•°ï¼ˆè®¾ -1 ä¸ºæ°¸ä¹…æ‰§è¡Œï¼‰
     static TimerPtr Create(Callback const& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief ´´½¨¶¨Ê±Æ÷
-    /// @param name Ãû³Æ
-    /// @param cb »Øµ÷º¯Êı
-    /// @param interval Ê±¼ä¼ä¸ô
-    /// @param times Ö´ĞĞ´ÎÊı£¨Éè -1 ÎªÓÀ¾ÃÖ´ĞĞ£©
+    /// @brief åˆ›å»ºå®šæ—¶å™¨
+    /// @param name åç§°
+    /// @param cb å›è°ƒå‡½æ•°
+    /// @param interval æ—¶é—´é—´éš”
+    /// @param times æ‰§è¡Œæ¬¡æ•°ï¼ˆè®¾ -1 ä¸ºæ°¸ä¹…æ‰§è¡Œï¼‰
     static TimerPtr Create(String const& name, Callback const& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief ¹¹Ôì¿Õ¶¨Ê±Æ÷
+    /// @brief æ„é€ ç©ºå®šæ—¶å™¨
     Timer();
 
     /// \~chinese
-    /// @brief Æô¶¯¶¨Ê±Æ÷
+    /// @brief å¯åŠ¨å®šæ—¶å™¨
     void Start();
 
     /// \~chinese
-    /// @brief Í£Ö¹¶¨Ê±Æ÷
+    /// @brief åœæ­¢å®šæ—¶å™¨
     void Stop();
 
     /// \~chinese
-    /// @brief ÒÆ³ı¶¨Ê±Æ÷
+    /// @brief ç§»é™¤å®šæ—¶å™¨
     void Remove();
 
     /// \~chinese
-    /// @brief ¶¨Ê±Æ÷ÊÇ·ñÔÚÔËĞĞ
+    /// @brief å®šæ—¶å™¨æ˜¯å¦åœ¨è¿è¡Œ
     bool IsRunning() const;
 
     /// \~chinese
-    /// @brief ¶¨Ê±Æ÷ÊÇ·ñ¿ÉÒÆ³ı
+    /// @brief å®šæ—¶å™¨æ˜¯å¦å¯ç§»é™¤
     bool IsRemoveable() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¶¨Ê±Æ÷Ö´ĞĞ¹ı»Øµ÷º¯ÊıµÄ´ÎÊı
+    /// @brief è·å–å®šæ—¶å™¨æ‰§è¡Œè¿‡å›è°ƒå‡½æ•°çš„æ¬¡æ•°
     int GetRunTimes() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¶¨Ê±Æ÷Ö´ĞĞ»Øµ÷º¯ÊıµÄ×Ü´ÎÊı
+    /// @brief è·å–å®šæ—¶å™¨æ‰§è¡Œå›è°ƒå‡½æ•°çš„æ€»æ¬¡æ•°
     int GetTotalRunTimes() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¨Ê±Æ÷Ö´ĞĞ»Øµ÷º¯ÊıµÄ×Ü´ÎÊı
+    /// @brief è®¾ç½®å®šæ—¶å™¨æ‰§è¡Œå›è°ƒå‡½æ•°çš„æ€»æ¬¡æ•°
     void SetTotalRunTimes(int times);
 
     /// \~chinese
-    /// @brief »ñÈ¡¶¨Ê±Æ÷Ö´ĞĞÊ±¼ä¼ä¸ô
+    /// @brief è·å–å®šæ—¶å™¨æ‰§è¡Œæ—¶é—´é—´éš”
     Duration GetInterval() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¨Ê±Æ÷Ö´ĞĞÊ±¼ä¼ä¸ô
+    /// @brief è®¾ç½®å®šæ—¶å™¨æ‰§è¡Œæ—¶é—´é—´éš”
     void SetInterval(Duration interval);
 
     /// \~chinese
-    /// @brief »ñÈ¡¶¨Ê±Æ÷»Øµ÷º¯Êı
+    /// @brief è·å–å®šæ—¶å™¨å›è°ƒå‡½æ•°
     Callback GetCallback() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶¨Ê±Æ÷»Øµ÷º¯Êı
+    /// @brief è®¾ç½®å®šæ—¶å™¨å›è°ƒå‡½æ•°
     void SetCallback(const Callback& callback);
 
 private:
     /// \~chinese
-    /// @brief ¸üĞÂ¶¨Ê±Æ÷
+    /// @brief æ›´æ–°å®šæ—¶å™¨
     void Update(Duration dt);
 
     /// \~chinese
-    /// @brief ÖØÖÃ¶¨Ê±Æ÷
+    /// @brief é‡ç½®å®šæ—¶å™¨
     void Reset();
 
 private:

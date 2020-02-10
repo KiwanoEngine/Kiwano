@@ -31,7 +31,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief µ÷ÊÔ½Úµã
+ * @brief è°ƒè¯•èŠ‚ç‚¹
  */
 class KGE_API DebugActor : public Actor
 {

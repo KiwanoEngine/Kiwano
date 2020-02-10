@@ -29,51 +29,51 @@ KGE_DECLARE_SMART_PTR(FrameSequence);
 
 /**
  * \~chinese
- * @brief ĞòÁĞÖ¡
+ * @brief åºåˆ—å¸§
  */
 class KGE_API FrameSequence : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨ĞòÁĞÖ¡
-    /// @param frames Í¼ÏñÖ¡¼¯ºÏ
+    /// @brief åˆ›å»ºåºåˆ—å¸§
+    /// @param frames å›¾åƒå¸§é›†åˆ
     static FrameSequencePtr Create(Vector<FramePtr> const& frames);
 
     /// \~chinese
-    /// @brief ¹¹½¨¿ÕĞòÁĞÖ¡
+    /// @brief æ„å»ºç©ºåºåˆ—å¸§
     FrameSequence();
 
     virtual ~FrameSequence();
 
     /// \~chinese
-    /// @brief Ìí¼Ó¹Ø¼üÖ¡
-    /// @param frame Í¼ÏñÖ¡
+    /// @brief æ·»åŠ å…³é”®å¸§
+    /// @param frame å›¾åƒå¸§
     void AddFrame(FramePtr frame);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶à¸ö¹Ø¼üÖ¡
-    /// @param frames Í¼ÏñÖ¡¼¯ºÏ
+    /// @brief æ·»åŠ å¤šä¸ªå…³é”®å¸§
+    /// @param frames å›¾åƒå¸§é›†åˆ
     void AddFrames(Vector<FramePtr> const& frames);
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø¼üÖ¡
-    /// @param index Í¼ÏñÖ¡ÏÂ±ê
+    /// @brief è·å–å…³é”®å¸§
+    /// @param index å›¾åƒå¸§ä¸‹æ ‡
     FramePtr GetFrame(size_t index) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞ¹Ø¼üÖ¡
+    /// @brief è·å–æ‰€æœ‰å…³é”®å¸§
     Vector<FramePtr> const& GetFrames() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø¼üÖ¡ÊıÁ¿
+    /// @brief è·å–å…³é”®å¸§æ•°é‡
     size_t GetFramesCount() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ĞòÁĞÖ¡µÄ¿½±´¶ÔÏó
+    /// @brief è·å–åºåˆ—å¸§çš„æ‹·è´å¯¹è±¡
     FrameSequencePtr Clone() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ĞòÁĞÖ¡µÄµ¹×ª
+    /// @brief è·å–åºåˆ—å¸§çš„å€’è½¬
     FrameSequencePtr Reverse() const;
 
 private:

@@ -35,13 +35,13 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
 
 /**
  * \~chinese
- * @brief ÒôÆµ²¥·ÅÆ÷
+ * @brief éŸ³é¢‘æ’­æ”¾å™¨
  */
 class KGE_API SoundPlayer : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨ÒôÆµ²¥·ÅÆ÷
+    /// @brief åˆ›å»ºéŸ³é¢‘æ’­æ”¾å™¨
     static SoundPlayerPtr Create();
 
     SoundPlayer();
@@ -49,66 +49,66 @@ public:
     ~SoundPlayer();
 
     /// \~chinese
-    /// @brief ¼ÓÔØ±¾µØÒôÆµÎÄ¼ş
-    /// @param file_path ±¾µØÒôÆµÎÄ¼şÂ·¾¶
-    /// @return ÒôÆµ±êÊ¶·û
+    /// @brief åŠ è½½æœ¬åœ°éŸ³é¢‘æ–‡ä»¶
+    /// @param file_path æœ¬åœ°éŸ³é¢‘æ–‡ä»¶è·¯å¾„
+    /// @return éŸ³é¢‘æ ‡è¯†ç¬¦
     size_t Load(String const& file_path);
 
     /// \~chinese
-    /// @brief ¼ÓÔØÒôÆµ×ÊÔ´
-    /// @param res ÒôÆµ×ÊÔ´
-    /// @return ÒôÆµ±êÊ¶·û
+    /// @brief åŠ è½½éŸ³é¢‘èµ„æº
+    /// @param res éŸ³é¢‘èµ„æº
+    /// @return éŸ³é¢‘æ ‡è¯†ç¬¦
     size_t Load(Resource const& res);
 
     /// \~chinese
-    /// @brief ²¥·ÅÒôÆµ
-    /// @param id ÒôÆµ±êÊ¶·û
-    /// @param loop_count ²¥·ÅÑ­»·´ÎÊı£¬ÉèÖÃ -1 ÎªÑ­»·²¥·Å
+    /// @brief æ’­æ”¾éŸ³é¢‘
+    /// @param id éŸ³é¢‘æ ‡è¯†ç¬¦
+    /// @param loop_count æ’­æ”¾å¾ªç¯æ¬¡æ•°ï¼Œè®¾ç½® -1 ä¸ºå¾ªç¯æ’­æ”¾
     void Play(size_t id, int loop_count = 0);
 
     /// \~chinese
-    /// @brief ÔİÍ£ÒôÆµ
-    /// @param id ÒôÆµ±êÊ¶·û
+    /// @brief æš‚åœéŸ³é¢‘
+    /// @param id éŸ³é¢‘æ ‡è¯†ç¬¦
     void Pause(size_t id);
 
     /// \~chinese
-    /// @brief ¼ÌĞø²¥·ÅÒôÆµ
-    /// @param id ÒôÆµ±êÊ¶·û
+    /// @brief ç»§ç»­æ’­æ”¾éŸ³é¢‘
+    /// @param id éŸ³é¢‘æ ‡è¯†ç¬¦
     void Resume(size_t id);
 
     /// \~chinese
-    /// @brief Í£Ö¹ÒôÆµ
-    /// @param id ÒôÆµ±êÊ¶·û
+    /// @brief åœæ­¢éŸ³é¢‘
+    /// @param id éŸ³é¢‘æ ‡è¯†ç¬¦
     void Stop(size_t id);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÒôÆµ²¥·Å×´Ì¬
-    /// @param id ÒôÆµ±êÊ¶·û
+    /// @brief è·å–éŸ³é¢‘æ’­æ”¾çŠ¶æ€
+    /// @param id éŸ³é¢‘æ ‡è¯†ç¬¦
     bool IsPlaying(size_t id);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÒôÁ¿
+    /// @brief è·å–éŸ³é‡
     float GetVolume() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÒôÁ¿
-    /// @param volume ÒôÁ¿´óĞ¡£¬1.0 ÎªÔ­Ê¼ÒôÁ¿, ´óÓÚ 1 Îª·Å´óÒôÁ¿, 0 Îª×îĞ¡ÒôÁ¿
+    /// @brief è®¾ç½®éŸ³é‡
+    /// @param volume éŸ³é‡å¤§å°ï¼Œ1.0 ä¸ºåŸå§‹éŸ³é‡, å¤§äº 1 ä¸ºæ”¾å¤§éŸ³é‡, 0 ä¸ºæœ€å°éŸ³é‡
     void SetVolume(float volume);
 
     /// \~chinese
-    /// @brief ÔİÍ£ËùÓĞÒôÆµ
+    /// @brief æš‚åœæ‰€æœ‰éŸ³é¢‘
     void PauseAll();
 
     /// \~chinese
-    /// @brief ¼ÌĞø²¥·ÅËùÓĞÒôÆµ
+    /// @brief ç»§ç»­æ’­æ”¾æ‰€æœ‰éŸ³é¢‘
     void ResumeAll();
 
     /// \~chinese
-    /// @brief Í£Ö¹ËùÓĞÒôÆµ
+    /// @brief åœæ­¢æ‰€æœ‰éŸ³é¢‘
     void StopAll();
 
     /// \~chinese
-    /// @brief Çå³ı»º´æ
+    /// @brief æ¸…é™¤ç¼“å­˜
     void ClearCache();
 
 private:

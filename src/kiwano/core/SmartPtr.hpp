@@ -26,7 +26,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief Ä¬ÈÏµÄÖÇÄÜÖ¸Õë´úÀí
+ * @brief é»˜è®¤çš„æ™ºèƒ½æŒ‡é’ˆä»£ç†
  */
 struct DefaultSmartPtrRefProxy
 {
@@ -45,7 +45,7 @@ struct DefaultSmartPtrRefProxy
 
 /**
  * \~chinese
- * @brief ÖÇÄÜÖ¸Õë
+ * @brief æ™ºèƒ½æŒ‡é’ˆ
  */
 template <typename _Ty>
 using SmartPtr = IntrusivePtr<_Ty, DefaultSmartPtrRefProxy>;
