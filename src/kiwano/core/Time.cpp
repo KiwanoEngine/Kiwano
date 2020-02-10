@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/Time.h>
 #include <regex>
@@ -357,7 +358,7 @@ Duration Duration::Parse(const String& format)
 
     if (!std::regex_match(format.c_str(), duration_regex))
     {
-        throw std::runtime_error("Duration::Parse failed, invalid duration");
+        throw Exception("Duration::Parse failed, invalid duration");
     }
 
     if (format.empty() || format == "0")
@@ -390,7 +391,7 @@ Duration Duration::Parse(const String& format)
         pos = i;
 
         if (num_str.empty() || num_str == ".")
-            throw std::runtime_error("Duration::Parse failed, invalid duration");
+            throw Exception("Duration::Parse failed, invalid duration");
 
         // µ¥Î»
         for (; i < len; ++i)
@@ -407,7 +408,7 @@ Duration Duration::Parse(const String& format)
         pos = i;
 
         if (unit_map.find(unit_str) == unit_map.end())
-            throw std::runtime_error("Duration::Parse failed, invalid duration");
+            throw Exception("Duration::Parse failed, invalid duration");
 
         double   num  = std::stod(num_str.c_str());
         Duration unit = unit_map.at(unit_str);

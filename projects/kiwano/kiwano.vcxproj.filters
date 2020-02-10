@@ -300,6 +300,9 @@
     <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Exception.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp">
       <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Exception.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

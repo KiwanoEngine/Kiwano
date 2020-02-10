@@ -18,37 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
-namespace win32
+
+Exception::Exception()
 {
-void PrintCallStack();
-
-void PrintCallStackOnContext(PCONTEXT pContext);
-
-inline void ThrowIfFailed(HRESULT hr, const String& message)
-{
-    if (FAILED(hr))
-    {
-        PrintCallStack();
-
-        throw SystemException(hr, message);
-    }
 }
 
-inline void WarnIfFailed(HRESULT hr, const String& message)
+Exception::Exception(String const& message)
+    : message_(message)
 {
-    if (FAILED(hr))
-    {
-        PrintCallStack();
-
-        KGE_WARN("Failed with HRESULT of %08X: ", hr, message.c_str());
-    }
 }
 
-}  // namespace win32
+Exception::~Exception()
+{
+}
+
+const String& Exception::ToString() const
+{
+    return message_;
+}
+
+const char* Exception::what() const
+{
+    return message_.c_str();
+}
+
+SystemException::SystemException()
+    : code_(0)
+{
+}
+
+SystemException::SystemException(ErrorCodeType code, String const& message)
+    : Exception(message)
+    , code_(code)
+{
+}
+
 }  // namespace kiwano

@@ -107,7 +107,7 @@ struct KGE_API Duration
     ///   例如: "300ms", "-1.5h", "2h45m"
     ///   允许的时间单位有 "ms", "s", "m", "h"
     /// @return 解析出的时间段
-    /// @throw std::runtime_error 传入了一个不合法的格式
+    /// @throw kiwano::Exception 传入一个不合法的格式时抛出
     static Duration Parse(const String& str);
 
     static const Duration Ms;      ///< 毫秒

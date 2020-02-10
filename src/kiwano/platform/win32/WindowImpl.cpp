@@ -24,6 +24,7 @@
 
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
@@ -236,7 +237,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
         ::UnregisterClassW(L"KiwanoAppWnd", hinst);
 
         KGE_ERROR("Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
-        throw std::runtime_error("Create window failed");
+        throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
 
     width_ = width;

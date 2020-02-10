@@ -139,7 +139,7 @@ void Texture::CopyFrom(TexturePtr copy_from)
     {
         HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
-        win32::ThrowIfFailed(hr);
+        win32::ThrowIfFailed(hr, "Copy texture data failed");
     }
 }
 
@@ -152,7 +152,7 @@ void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& 
             &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()), uint32_t(src_rect.GetRight()),
                          uint32_t(src_rect.GetBottom())));
 
-        win32::ThrowIfFailed(hr);
+        win32::ThrowIfFailed(hr, "Copy texture data failed");
     }
 }
 

@@ -51,7 +51,7 @@ void AudioEngine::SetupComponent()
         hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create audio resources failed");
 }
 
 void AudioEngine::DestroyComponent()
@@ -100,7 +100,7 @@ bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
         }
     }
 
-    win32::WarnIfFailed(hr);
+    win32::WarnIfFailed(hr, "Create sound failed");
     return SUCCEEDED(hr);
 }
 

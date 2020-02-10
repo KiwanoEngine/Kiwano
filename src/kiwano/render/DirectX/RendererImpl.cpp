@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
@@ -49,7 +50,7 @@ void RendererImpl::SetupComponent()
 {
     KGE_SYS_LOG("Creating device resources");
 
-    win32::ThrowIfFailed(::CoInitialize(nullptr));
+    win32::ThrowIfFailed(::CoInitialize(nullptr), "CoInitialize failed");
 
     HWND target_window = WindowImpl::GetInstance().GetHandle();
     output_size_   = Window::GetInstance().GetSize();
@@ -111,7 +112,7 @@ void RendererImpl::SetupComponent()
         }
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create render resources failed");
 }
 
 void RendererImpl::DestroyComponent()
@@ -149,8 +150,7 @@ void RendererImpl::Clear()
 {
     KGE_ASSERT(d3d_res_);
 
-    HRESULT hr = d3d_res_->ClearRenderTarget(clear_color_);
-    win32::ThrowIfFailed(hr);
+    d3d_res_->ClearRenderTarget(clear_color_);
 }
 
 void RendererImpl::Present()
@@ -165,7 +165,7 @@ void RendererImpl::Present()
         hr = HandleDeviceLost();
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Unexpected DXGI exception");
 }
 
 void RendererImpl::HandleEvent(Event* evt)
@@ -244,7 +244,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (FAILED(hr))
     {
-        KGE_WARN("Load texture failed with HRESULT of %08X!", hr);
+        win32::ThrowIfFailed(hr, "Load texture failed");
     }
 }
 
@@ -562,7 +562,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
         }
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
@@ -593,7 +593,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
         }
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateTextFormat(TextLayout& layout)
@@ -620,7 +620,7 @@ void RendererImpl::CreateTextFormat(TextLayout& layout)
         layout.SetTextFormat(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create text format failed");
 }
 
 void RendererImpl::CreateTextLayout(TextLayout& layout)
@@ -644,7 +644,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
         layout.SetTextLayout(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create text layout failed");
 }
 
 void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos)
@@ -680,7 +680,7 @@ void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point c
         shape.SetGeometry(path_geo);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
@@ -702,7 +702,7 @@ void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create ID2D1RectangleGeometry failed");
 }
 
 void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius)
@@ -725,7 +725,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 c
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create ID2D1RoundedRectangleGeometry failed");
 }
 
 void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius)
@@ -748,7 +748,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 co
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create ID2D1EllipseGeometry failed");
 }
 
 void RendererImpl::CreateShapeSink(ShapeSink& sink)
@@ -770,7 +770,133 @@ void RendererImpl::CreateShapeSink(ShapeSink& sink)
         sink.SetPathGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
+}
+
+void RendererImpl::CreateBrush(Brush& brush, Color const& color)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ID2D1SolidColorBrush> solid_brush;
+
+        if (brush.GetType() == Brush::Type::SolidColor && brush.GetBrush())
+        {
+            hr = brush.GetBrush()->QueryInterface(&solid_brush);
+            if (SUCCEEDED(hr))
+            {
+                solid_brush->SetColor(DX::ConvertToColorF(color));
+            }
+        }
+        else
+        {
+            hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &solid_brush);
+
+            if (SUCCEEDED(hr))
+            {
+                brush.SetBrush(solid_brush, Brush::Type::SolidColor);
+            }
+        }
+    }
+
+    win32::ThrowIfFailed(hr, "Create ID2D1SolidBrush failed");
+}
+
+void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ID2D1GradientStopCollection> collection;
+        hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+            reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]), UINT32(style.stops.size()), D2D1_GAMMA_2_2,
+            D2D1_EXTEND_MODE(style.extend_mode), &collection);
+
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<ID2D1LinearGradientBrush> output;
+            hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
+                D2D1::LinearGradientBrushProperties(DX::ConvertToPoint2F(style.begin), DX::ConvertToPoint2F(style.end)),
+                collection.get(), &output);
+
+            if (SUCCEEDED(hr))
+            {
+                brush.SetBrush(output, Brush::Type::LinearGradient);
+            }
+        }
+    }
+
+    win32::ThrowIfFailed(hr, "Create ID2D1LinearGradientBrush failed");
+}
+
+void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ID2D1GradientStopCollection> collection;
+        hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
+            reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]), UINT32(style.stops.size()), D2D1_GAMMA_2_2,
+            D2D1_EXTEND_MODE(style.extend_mode), &collection);
+
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<ID2D1RadialGradientBrush> output;
+            hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
+                D2D1::RadialGradientBrushProperties(DX::ConvertToPoint2F(style.center),
+                                                    DX::ConvertToPoint2F(style.offset), style.radius.x, style.radius.y),
+                collection.get(), &output);
+
+            if (SUCCEEDED(hr))
+            {
+                brush.SetBrush(output, Brush::Type::RadialGradient);
+            }
+        }
+    }
+
+    win32::ThrowIfFailed(hr, "Create ID2D1RadialGradientBrush failed");
+}
+
+void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
+                                 const float* dash_array, size_t dash_size, float dash_offset)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        D2D1_STROKE_STYLE_PROPERTIES style =
+            D2D1::StrokeStyleProperties(D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap),
+                                        D2D1_LINE_JOIN(line_join), 10.0f, D2D1_DASH_STYLE_CUSTOM, dash_offset);
+
+        ComPtr<ID2D1StrokeStyle> output;
+        hr = d2d_res_->GetFactory()->CreateStrokeStyle(style, dash_array, dash_size, &output);
+
+        if (SUCCEEDED(hr))
+        {
+            stroke_style.SetStrokeStyle(output);
+        }
+    }
+
+    win32::ThrowIfFailed(hr, "Create ID2D1StrokeStyle failed");
 }
 
 TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* desired_size)
@@ -814,132 +940,6 @@ TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* des
     return nullptr;
 }
 
-void RendererImpl::CreateBrush(Brush& brush, Color const& color)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        ComPtr<ID2D1SolidColorBrush> solid_brush;
-
-        if (brush.GetType() == Brush::Type::SolidColor && brush.GetBrush())
-        {
-            hr = brush.GetBrush()->QueryInterface(&solid_brush);
-            if (SUCCEEDED(hr))
-            {
-                solid_brush->SetColor(DX::ConvertToColorF(color));
-            }
-        }
-        else
-        {
-            hr = d2d_res_->GetDeviceContext()->CreateSolidColorBrush(DX::ConvertToColorF(color), &solid_brush);
-
-            if (SUCCEEDED(hr))
-            {
-                brush.SetBrush(solid_brush, Brush::Type::SolidColor);
-            }
-        }
-    }
-
-    win32::ThrowIfFailed(hr);
-}
-
-void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        ComPtr<ID2D1GradientStopCollection> collection;
-        hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
-            reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]), UINT32(style.stops.size()), D2D1_GAMMA_2_2,
-            D2D1_EXTEND_MODE(style.extend_mode), &collection);
-
-        if (SUCCEEDED(hr))
-        {
-            ComPtr<ID2D1LinearGradientBrush> output;
-            hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
-                D2D1::LinearGradientBrushProperties(DX::ConvertToPoint2F(style.begin), DX::ConvertToPoint2F(style.end)),
-                collection.get(), &output);
-
-            if (SUCCEEDED(hr))
-            {
-                brush.SetBrush(output, Brush::Type::LinearGradient);
-            }
-        }
-    }
-
-    win32::ThrowIfFailed(hr);
-}
-
-void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        ComPtr<ID2D1GradientStopCollection> collection;
-        hr = d2d_res_->GetDeviceContext()->CreateGradientStopCollection(
-            reinterpret_cast<const D2D1_GRADIENT_STOP*>(&style.stops[0]), UINT32(style.stops.size()), D2D1_GAMMA_2_2,
-            D2D1_EXTEND_MODE(style.extend_mode), &collection);
-
-        if (SUCCEEDED(hr))
-        {
-            ComPtr<ID2D1RadialGradientBrush> output;
-            hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
-                D2D1::RadialGradientBrushProperties(DX::ConvertToPoint2F(style.center),
-                                                    DX::ConvertToPoint2F(style.offset), style.radius.x, style.radius.y),
-                collection.get(), &output);
-
-            if (SUCCEEDED(hr))
-            {
-                brush.SetBrush(output, Brush::Type::RadialGradient);
-            }
-        }
-    }
-
-    win32::ThrowIfFailed(hr);
-}
-
-void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
-                                 const float* dash_array, size_t dash_size, float dash_offset)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        D2D1_STROKE_STYLE_PROPERTIES style =
-            D2D1::StrokeStyleProperties(D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap),
-                                        D2D1_LINE_JOIN(line_join), 10.0f, D2D1_DASH_STYLE_CUSTOM, dash_offset);
-
-        ComPtr<ID2D1StrokeStyle> output;
-        hr = d2d_res_->GetFactory()->CreateStrokeStyle(style, dash_array, dash_size, &output);
-
-        if (SUCCEEDED(hr))
-        {
-            stroke_style.SetStrokeStyle(output);
-        }
-    }
-
-    win32::ThrowIfFailed(hr);
-}
-
 void RendererImpl::Resize(uint32_t width, uint32_t height)
 {
     HRESULT hr = S_OK;
@@ -965,7 +965,7 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
         render_ctx_->Resize(output_size_);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Resize render target failed");
 }
 
 }  // namespace kiwano

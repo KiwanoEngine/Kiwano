@@ -66,7 +66,7 @@ public:
      * @param icon 图标资源ID
      * @param resizable 窗口大小可拉伸
      * @param fullscreen 全屏模式
-     * @throw std::runtime_error 窗口创建失败时抛出
+     * @throw kiwano::SystemException 窗口创建失败时抛出
      */
     virtual void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0, bool resizable = false,
                         bool fullscreen = false) = 0;

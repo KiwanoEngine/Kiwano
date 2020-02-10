@@ -67,7 +67,7 @@ struct D3D10DeviceResources : public ID3D10DeviceResources
 public:
     HRESULT Present(bool vsync);
 
-    HRESULT ClearRenderTarget(Color& clear_color);
+    void ClearRenderTarget(Color& clear_color);
 
     HRESULT HandleDeviceLost();
 
@@ -164,14 +164,13 @@ HRESULT D3D10DeviceResources::Present(bool vsync)
     return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
 }
 
-HRESULT D3D10DeviceResources::ClearRenderTarget(Color& clear_color)
+void D3D10DeviceResources::ClearRenderTarget(Color& clear_color)
 {
     KGE_ASSERT(device_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
 
     auto rt_view = rt_view_.get();
     device_->OMSetRenderTargets(1, &rt_view, ds_view_.get());
     device_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
-    return S_OK;
 }
 
 void D3D10DeviceResources::DiscardResources()

@@ -19,6 +19,7 @@
     <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Exception.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />

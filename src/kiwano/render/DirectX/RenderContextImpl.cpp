@@ -86,7 +86,7 @@ void RenderContextImpl::BeginDraw()
 
 void RenderContextImpl::EndDraw()
 {
-    win32::ThrowIfFailed(render_target_->EndDraw());
+    win32::ThrowIfFailed(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
 
     RenderContext::EndDraw();
 
@@ -314,7 +314,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
         texture.SetBitmap(saved_bitmap);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create texture failed");
 }
 
 void RenderContextImpl::PushClipRect(Rect const& clip_rect)
@@ -336,7 +336,8 @@ void RenderContextImpl::PushLayer(LayerArea& layer)
     if (!layer.IsValid())
     {
         ComPtr<ID2D1Layer> output;
-        HRESULT            hr = render_target_->CreateLayer(&output);
+
+        HRESULT hr = render_target_->CreateLayer(&output);
 
         if (SUCCEEDED(hr))
         {
@@ -344,7 +345,7 @@ void RenderContextImpl::PushLayer(LayerArea& layer)
         }
         else
         {
-            win32::ThrowIfFailed(hr);
+            win32::ThrowIfFailed(hr, "Create ID2D1Layer failed");
         }
     }
 

@@ -19,36 +19,73 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/core/Common.h>
+#include <kiwano/macros.h>
+#include <stdexcept>
 
 namespace kiwano
 {
-namespace win32
+
+/**
+ * \~chinese
+ * @brief 异常
+ */
+class KGE_API Exception : public std::exception
 {
-void PrintCallStack();
+public:
+    Exception();
 
-void PrintCallStackOnContext(PCONTEXT pContext);
+    /// \~chinese
+    /// @brief 构造异常
+    /// @param message 描述异常的信息
+    explicit Exception(String const& message);
 
-inline void ThrowIfFailed(HRESULT hr, const String& message)
+    virtual ~Exception();
+
+    /// \~chinese
+    /// @brief 转为解释性字符串
+    const String& ToString() const;
+
+    /// \~chinese
+    /// @brief 转为解释性字符串
+    virtual const char* what() const override;
+
+protected:
+    String message_;
+};
+
+/**
+ * \~chinese
+ * @brief 系统异常
+ */
+class SystemException : public Exception
 {
-    if (FAILED(hr))
-    {
-        PrintCallStack();
+public:
+#if defined(KGE_WIN32)
+    /// \~chinese
+    /// @brief 错误代码类型
+    typedef HRESULT ErrorCodeType;
+#endif
 
-        throw SystemException(hr, message);
-    }
+    SystemException();
+
+    /// \~chinese
+    /// @brief 构造系统异常
+    /// @param code 错误代码
+    /// @param message 描述异常的信息
+    SystemException(ErrorCodeType code, String const& message);
+
+    /// \~chinese
+    /// @brief 获取错误代码
+    ErrorCodeType GetErrorCode() const;
+
+private:
+    ErrorCodeType code_;
+};
+
+inline SystemException::ErrorCodeType SystemException::GetErrorCode() const
+{
+    return code_;
 }
 
-inline void WarnIfFailed(HRESULT hr, const String& message)
-{
-    if (FAILED(hr))
-    {
-        PrintCallStack();
-
-        KGE_WARN("Failed with HRESULT of %08X: ", hr, message.c_str());
-    }
-}
-
-}  // namespace win32
 }  // namespace kiwano
