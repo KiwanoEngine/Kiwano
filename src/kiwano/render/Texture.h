@@ -20,13 +20,11 @@
 
 #pragma once
 #include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/Resource.h>
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
 
 namespace kiwano
 {
-class RenderContext;
-class TextureRenderContext;
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(Texture);
 
@@ -37,33 +35,28 @@ KGE_DECLARE_SMART_PTR(Texture);
 
 /**
  * \~chinese
- * @brief ²åÖµÄ£Ê½
- * @details ²åÖµÄ£Ê½Ö¸¶¨ÁËÎ»Í¼ÔÚËõ·ÅºÍĞı×ªÊ±ÏñËØÑÕÉ«µÄ¼ÆËã·½Ê½
+ * @brief æ’å€¼æ¨¡å¼
+ * @details æ’å€¼æ¨¡å¼æŒ‡å®šäº†ä½å›¾åœ¨ç¼©æ”¾å’Œæ—‹è½¬æ—¶åƒç´ é¢œè‰²çš„è®¡ç®—æ–¹å¼
  */
 enum class InterpolationMode
 {
-    Linear,   ///< Ë«ÏßĞÔ²åÖµ£¬¶ÔÖÜÎ§ËÄ¸öÏñËØ½øĞĞÁ½´ÎÏßĞÔ²åÖµ¼ÆËã,
-              ///ÔÚÍ¼Ïñ·Å´óÊ±¿ÉÄÜ»áÄ£ºı
-    Nearest,  ///< ×îÁÚ½ü²åÖµ£¬È¡×îÁÚ½üµÄÏñËØµãµÄÑÕÉ«Öµ
+    Linear,  ///< åŒçº¿æ€§æ’å€¼ï¼Œå¯¹å‘¨å›´å››ä¸ªåƒç´ è¿›è¡Œä¸¤æ¬¡çº¿æ€§æ’å€¼è®¡ç®—ï¼Œåœ¨å›¾åƒæ”¾å¤§æ—¶å¯èƒ½ä¼šæ¨¡ç³Š
+    Nearest  ///< æœ€é‚»è¿‘æ’å€¼ï¼Œå–æœ€é‚»è¿‘çš„åƒç´ ç‚¹çš„é¢œè‰²å€¼
 };
 
 /**
  * \~chinese
- * @brief ÎÆÀí
+ * @brief çº¹ç†
  */
 class KGE_API Texture : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class TextureRenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
-    /// @brief ´Ó±¾µØÎÄ¼ş´´½¨ÎÆÀí
+    /// @brief ä»æœ¬åœ°æ–‡ä»¶åˆ›å»ºçº¹ç†
     static TexturePtr Create(String const& file_path);
 
     /// \~chinese
-    /// @brief ´Ó×ÊÔ´´´½¨ÎÆÀí
+    /// @brief ä»èµ„æºåˆ›å»ºçº¹ç†
     static TexturePtr Create(Resource const& res);
 
     Texture();
@@ -71,88 +64,89 @@ public:
     virtual ~Texture();
 
     /// \~chinese
-    /// @brief ¼ÓÔØ±¾µØÎÄ¼ş
+    /// @brief åŠ è½½æœ¬åœ°æ–‡ä»¶
     bool Load(String const& file_path);
 
     /// \~chinese
-    /// @brief ¼ÓÔØ×ÊÔ´
+    /// @brief åŠ è½½èµ„æº
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÆÀí¿í¶È
+    /// @brief è·å–çº¹ç†å®½åº¦
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÆÀí¸ß¶È
+    /// @brief è·å–çº¹ç†é«˜åº¦
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÆÀí´óĞ¡
+    /// @brief è·å–çº¹ç†å¤§å°
     Size GetSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ¿í¶È
+    /// @brief è·å–åƒç´ å®½åº¦
     uint32_t GetWidthInPixels() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ¸ß¶È
+    /// @brief è·å–åƒç´ é«˜åº¦
     uint32_t GetHeightInPixels() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ´óĞ¡
+    /// @brief è·å–åƒç´ å¤§å°
     math::Vec2T<uint32_t> GetSizeInPixels() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ²åÖµ·½Ê½
+    /// @brief è·å–åƒç´ æ’å€¼æ–¹å¼
     InterpolationMode GetBitmapInterpolationMode() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ¸ñÊ½
-    D2D1_PIXEL_FORMAT GetPixelFormat() const;
-
-    /// \~chinese
-    /// @brief ¿½±´ÎÆÀí
-    /// @param copy_from Ô´ÎÆÀí
+    /// @brief æ‹·è´çº¹ç†
+    /// @param copy_from æºçº¹ç†
     void CopyFrom(TexturePtr copy_from);
 
     /// \~chinese
-    /// @brief ¿½±´ÎÆÀí
-    /// @param copy_from Ô´ÎÆÀí
-    /// @param src_rect Ô´ÎÆÀí²Ã¼ô¾ØĞÎ
-    /// @param dest_point ¿½±´ÖÁÄ¿±êÎ»ÖÃ
+    /// @brief æ‹·è´çº¹ç†
+    /// @param copy_from æºçº¹ç†
+    /// @param src_rect æºçº¹ç†è£å‰ªçŸ©å½¢
+    /// @param dest_point æ‹·è´è‡³ç›®æ ‡ä½ç½®
     void CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point);
 
     /// \~chinese
-    /// @brief ÉèÖÃÏñËØ²åÖµ·½Ê½
+    /// @brief è®¾ç½®åƒç´ æ’å€¼æ–¹å¼
     void SetInterpolationMode(InterpolationMode mode);
 
     /// \~chinese
-    /// @brief ÉèÖÃÄ¬ÈÏµÄÏñËØ²åÖµ·½Ê½
+    /// @brief è®¾ç½®é»˜è®¤çš„åƒç´ æ’å€¼æ–¹å¼
     static void SetDefaultInterpolationMode(InterpolationMode mode);
 
     /// \~chinese
-    /// @brief »ñÈ¡Ä¬ÈÏµÄÏñËØ²åÖµ·½Ê½
+    /// @brief è·å–é»˜è®¤çš„åƒç´ æ’å€¼æ–¹å¼
     static InterpolationMode GetDefaultInterpolationMode();
 
 private:
+    InterpolationMode   interpolation_mode_;
+
+    static InterpolationMode default_interpolation_mode_;
+
+#if defined(KGE_WIN32)
+public:
     /// \~chinese
-    /// @brief »ñÈ¡Ô´Î»Í¼
+    /// @brief è·å–æºä½å›¾
     ComPtr<ID2D1Bitmap> GetBitmap() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÔ´Î»Í¼
+    /// @brief è®¾ç½®æºä½å›¾
     void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
 private:
     ComPtr<ID2D1Bitmap> bitmap_;
-    InterpolationMode   interpolation_mode_;
-
-    static InterpolationMode default_interpolation_mode_;
+#endif
 };
 
 /** @} */
+
 }  // namespace kiwano

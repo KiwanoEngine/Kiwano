@@ -27,33 +27,33 @@
 #ifndef KGE_SYS_LOG
 #ifdef KGE_DEBUG
 #define KGE_SYS_LOG(FORMAT, ...) \
-    ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
+    ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
 #else
 #define KGE_SYS_LOG __noop
 #endif
 #endif
 
 #ifndef KGE_WARN
-#define KGE_WARN(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
+#define KGE_WARN(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
 #endif
 
 #ifndef KGE_ERROR
-#define KGE_ERROR(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
+#define KGE_ERROR(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
 #endif
 
 #ifndef KGE_LOG
-#define KGE_LOG(...) ::kiwano::Logger::Instance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
+#define KGE_LOG(...) ::kiwano::Logger::GetInstance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
 #endif
 
 #ifndef KGE_LOGF
-#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::Instance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
+#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
 #endif
 
 namespace kiwano
 {
 /**
  * \~chinese
- * @brief ÈÕÖ¾
+ * @brief æ—¥å¿—
  */
 class KGE_API Logger : public Singleton<Logger>
 {
@@ -61,74 +61,66 @@ class KGE_API Logger : public Singleton<Logger>
 
 public:
     /// \~chinese
-    /// @brief ÈÕÖ¾¼¶±ğ
+    /// @brief æ—¥å¿—çº§åˆ«
     enum class Level
     {
-        Info,     ///< ĞÅÏ¢
-        System,   ///< ÏµÍ³
-        Warning,  ///< ¾¯¸æ
-        Error     ///< ´íÎó
+        Info,     ///< ä¿¡æ¯
+        System,   ///< ç³»ç»Ÿ
+        Warning,  ///< è­¦å‘Š
+        Error     ///< é”™è¯¯
     };
 
     /// \~chinese
-    /// @brief Êä³öÁ÷
-    using OutputStream = std::wostream;
+    /// @brief æ‰“å°æ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param format æ ¼å¼å­—ç¬¦ä¸²
+    void Printf(Level level, const char* format, ...);
 
     /// \~chinese
-    /// @brief ¿ØÖÆÌ¨ÑÕÉ«
-    using ConsoleColor = Function<OutputStream&(OutputStream&)>;
-
-    /// \~chinese
-    /// @brief ´òÓ¡ÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param format ¸ñÊ½×Ö·û´®
-    void Printf(Level level, const wchar_t* format, ...);
-
-    /// \~chinese
-    /// @brief ´òÓ¡ÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param args ²ÎÊı
+    /// @brief æ‰“å°æ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param args å‚æ•°
     template <typename... _Args>
     void Print(Level level, _Args&&... args);
 
     /// \~chinese
-    /// @brief ´òÓ¡Ò»ĞĞÈÕÖ¾
-    /// @param level ÈÕÖ¾¼¶±ğ
-    /// @param args ²ÎÊı
+    /// @brief æ‰“å°ä¸€è¡Œæ—¥å¿—
+    /// @param level æ—¥å¿—çº§åˆ«
+    /// @param args å‚æ•°
     template <typename... _Args>
     void Println(Level level, _Args&&... args);
 
     /// \~chinese
-    /// @brief ÏÔÊ¾»ò¹Ø±Õ¿ØÖÆÌ¨
-    /// @note ´Ë²Ù×÷»áÖØÖÃÊä³öÁ÷
+    /// @brief æ˜¾ç¤ºæˆ–å…³é—­æ§åˆ¶å°
+    /// @note æ­¤æ“ä½œä¼šé‡ç½®è¾“å‡ºæµ
     void ShowConsole(bool show);
 
     /// \~chinese
-    /// @brief ÆôÓÃÈÕÖ¾
+    /// @brief å¯ç”¨æ—¥å¿—
     void Enable();
 
     /// \~chinese
-    /// @brief ½ûÓÃÈÕÖ¾
+    /// @brief ç¦ç”¨æ—¥å¿—
     void Disable();
 
     /// \~chinese
-    /// @brief »ñÈ¡Êä³öÁ÷
-    std::wostream& GetOutputStream();
+    /// @brief è·å–è¾“å‡ºæµ
+    OutputStream& GetOutputStream();
 
     /// \~chinese
-    /// @brief »ñÈ¡´íÎóÁ÷
-    std::wostream& GetErrorStream();
+    /// @brief è·å–é”™è¯¯æµ
+    OutputStream& GetErrorStream();
 
     /// \~chinese
-    /// @brief ÖØ¶¨ÏòÊä³öÁ÷
-    std::wstreambuf* RedirectOutputStreamBuffer(std::wstreambuf* buf);
+    /// @brief é‡å®šå‘è¾“å‡ºæµ
+    std::streambuf* RedirectOutputStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief ÖØ¶¨Ïò´íÎóÁ÷
-    std::wstreambuf* RedirectErrorStreamBuffer(std::wstreambuf* buf);
+    /// @brief é‡å®šå‘é”™è¯¯æµ
+    std::streambuf* RedirectErrorStreamBuffer(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief ÖØÖÃÊä³öÁ÷
+    /// @brief é‡ç½®è¾“å‡ºæµ
     void ResetOutputStream();
 
 private:
@@ -190,7 +182,7 @@ void Logger::Println(Level level, _Args&&... args)
     // Format message
     (void)std::initializer_list<int>{ ((sstream << ' ' << args), 0)... };
 
-    sstream << L"\r\n";
+    sstream << "\r\n";
 
     Output(level, sstream);
 }
@@ -201,18 +193,18 @@ inline void Logger::ResetConsoleColor() const
     ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
 }
 
-inline Logger::OutputStream& Logger::DefaultOutputColor(OutputStream& out)
+inline OutputStream& Logger::DefaultOutputColor(OutputStream& out)
 {
     ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
     return out;
 }
 
-inline std::wostream& Logger::GetOutputStream()
+inline OutputStream& Logger::GetOutputStream()
 {
     return output_stream_;
 }
 
-inline std::wostream& Logger::GetErrorStream()
+inline OutputStream& Logger::GetErrorStream()
 {
     return error_stream_;
 }

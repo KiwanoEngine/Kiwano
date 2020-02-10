@@ -26,21 +26,21 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief ÒıÓÃ¼ÆÊıÆ÷
+ * @brief å¼•ç”¨è®¡æ•°å™¨
  */
 class KGE_API RefCounter : protected Noncopyable
 {
 public:
     /// \~chinese
-    /// @brief Ôö¼ÓÒıÓÃ¼ÆÊı
+    /// @brief å¢åŠ å¼•ç”¨è®¡æ•°
     void Retain();
 
     /// \~chinese
-    /// @brief ¼õÉÙÒıÓÃ¼ÆÊı
+    /// @brief å‡å°‘å¼•ç”¨è®¡æ•°
     void Release();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÒıÓÃ¼ÆÊı
+    /// @brief è·å–å¼•ç”¨è®¡æ•°
     long GetRefCount() const;
 
 protected:

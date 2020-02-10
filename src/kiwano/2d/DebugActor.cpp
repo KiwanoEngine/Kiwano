@@ -34,7 +34,7 @@ class comma_numpunct : public std::numpunct<wchar_t>
 private:
     virtual wchar_t do_thousands_sep() const override
     {
-        return L',';
+        return ',';
     }
 
     virtual std::string do_grouping() const override
@@ -46,7 +46,7 @@ private:
 
 DebugActor::DebugActor()
 {
-    SetName(L"kiwano-debug-actor");
+    SetName("kiwano-debug-actor");
     SetPosition(Point{ 10, 10 });
     SetResponsible(true);
     SetCascadeOpacityEnabled(true);
@@ -60,7 +60,7 @@ DebugActor::DebugActor()
     fill_brush->SetColor(Color::White);
 
     TextStyle style;
-    style.font_family  = L"Arial";
+    style.font_family  = "Arial";
     style.font_size    = 16.f;
     style.font_weight  = FontWeight::Normal;
     style.line_spacing = 20.f;
@@ -78,17 +78,17 @@ void DebugActor::OnRender(RenderContext& ctx)
     ctx.SetCurrentBrush(background_brush_);
     ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
     ctx.DrawTextLayout(debug_text_, Point(10, 10));
-}
-
-void DebugActor::OnUpdate(Duration dt)
-{
-    KGE_NOT_USED(dt);
 
     frame_time_.push_back(Time::Now());
     while (frame_time_.back() - frame_time_.front() >= Duration::Second)
     {
         frame_time_.erase(frame_time_.begin());
     }
+}
+
+void DebugActor::OnUpdate(Duration dt)
+{
+    KGE_NOT_USED(dt);
 
     StringStream ss;
 
@@ -104,7 +104,7 @@ void DebugActor::OnUpdate(Duration dt)
     }
 #endif
 
-    const auto& status = Renderer::Instance().GetContext().GetStatus();
+    const auto& status = Renderer::GetInstance().GetContext().GetStatus();
 
     ss << "Render: " << status.duration.Milliseconds() << "ms" << std::endl;
 

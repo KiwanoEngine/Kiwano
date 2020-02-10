@@ -20,12 +20,12 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Layer);
+KGE_DECLARE_SMART_PTR(LayerActor);
 
 /**
  * \addtogroup Actors
@@ -34,56 +34,56 @@ KGE_DECLARE_SMART_PTR(Layer);
 
 /**
  * \~chinese
- * @brief Í¼²ã
+ * @brief å›¾å±‚
  */
-class KGE_API Layer : public Actor
+class KGE_API LayerActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨Í¼²ã
-    static LayerPtr Create();
+    /// @brief åˆ›å»ºå›¾å±‚
+    static LayerActorPtr Create();
 
-    Layer();
+    LayerActor();
 
-    virtual ~Layer();
+    virtual ~LayerActor();
 
     /// \~chinese
-    /// @brief ÊÇ·ñ¿ªÆôÏûÏ¢ÍÌÃ»
+    /// @brief æ˜¯å¦å¼€å¯æ¶ˆæ¯åæ²¡
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÏûÏ¢ÍÌÃ»¹¦ÄÜ
-    /// @param enabled ÊÇ·ñÆôÓÃ
+    /// @brief è®¾ç½®æ¶ˆæ¯åæ²¡åŠŸèƒ½
+    /// @param enabled æ˜¯å¦å¯ç”¨
     void SetSwallowEvents(bool enabled);
 
     /// \~chinese
-    /// @brief ÉèÖÃ²Ã¼ôÇøÓò
-    /// @param clip_rect ²Ã¼ô¾ØĞÎ
+    /// @brief è®¾ç½®è£å‰ªåŒºåŸŸ
+    /// @param clip_rect è£å‰ªçŸ©å½¢
     void SetClipRect(Rect const& clip_rect);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
-    /// @param opacity Í¸Ã÷¶È
+    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
+    /// @param opacity é€æ˜åº¦
     void SetOpacity(float opacity) override;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã
-    /// @param mask ÃÉ²ãµÄĞÎ×´
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚
+    /// @param mask è’™å±‚çš„å½¢çŠ¶
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ãµÄ¶şÎ¬±ä»»
-    /// @param transform Ó¦ÓÃÓÚÃÉ²ãµÄ¶şÎ¬±ä»»
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚çš„äºŒç»´å˜æ¢
+    /// @param transform åº”ç”¨äºè’™å±‚çš„äºŒç»´å˜æ¢
     void SetMaskTransform(Matrix3x2 const& transform);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÇøÓò
-    /// @param area Í¼²ãÇøÓòÊôĞÔ
-    void SetArea(LayerArea const& area);
+    /// @brief è®¾ç½®å›¾å±‚åŒºåŸŸ
+    /// @param area å›¾å±‚åŒºåŸŸå±æ€§
+    void SetLayer(Layer const& layer);
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÇøÓò
-    LayerArea const& GetArea() const;
+    /// @brief è·å–å›¾å±‚åŒºåŸŸ
+    Layer const& GetLayer() const;
 
     bool DispatchEvent(Event* evt) override;
 
@@ -93,29 +93,29 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool      swallow_;
-    LayerArea area_;
+    bool  swallow_;
+    Layer layer_;
 };
 
 /** @} */
 
-inline bool Layer::IsSwallowEventsEnabled() const
+inline bool LayerActor::IsSwallowEventsEnabled() const
 {
     return swallow_;
 }
 
-inline void Layer::SetSwallowEvents(bool enabled)
+inline void LayerActor::SetSwallowEvents(bool enabled)
 {
     swallow_ = enabled;
 }
 
-inline void Layer::SetArea(LayerArea const& area)
+inline void LayerActor::SetLayer(Layer const& layer)
 {
-    area_ = area;
+    layer_ = layer;
 }
 
-inline LayerArea const& Layer::GetArea() const
+inline Layer const& LayerActor::GetLayer() const
 {
-    return area_;
+    return layer_;
 }
 }  // namespace kiwano

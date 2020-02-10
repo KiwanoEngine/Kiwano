@@ -36,7 +36,7 @@ private:
     {
         ObjectCreator()
         {
-            (void)Singleton<_Ty>::Instance();
+            (void)Singleton<_Ty>::GetInstance();
         }
 
         inline void Dummy() const {}
@@ -46,7 +46,7 @@ private:
 public:
     using object_type = _Ty;
 
-    static inline object_type& Instance()
+    static inline object_type& GetInstance()
     {
         static object_type instance;
         creator_.Dummy();

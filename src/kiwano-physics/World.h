@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(World);
 
 /**
  * \~chinese
- * \defgroup Physics ÎïÀíÒıÇæ
+ * \defgroup Physics ç‰©ç†å¼•æ“
  */
 
 /**
@@ -40,7 +40,7 @@ KGE_DECLARE_SMART_PTR(World);
 
 /**
  * \~chinese
- * @brief ÎïÀíÊÀ½ç
+ * @brief ç‰©ç†ä¸–ç•Œ
  */
 class KGE_API World : public Stage
 {
@@ -53,53 +53,53 @@ public:
     virtual ~World();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÖØÁ¦ [N]
+    /// @brief è·å–é‡åŠ› [N]
     Vec2 GetGravity() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÖØÁ¦ [N]
+    /// @brief è®¾ç½®é‡åŠ› [N]
     void SetGravity(Vec2 gravity);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÀí½Ó´¥ÁĞ±í
+    /// @brief è·å–ç‰©ç†æ¥è§¦åˆ—è¡¨
     ContactList GetContactList();
 
     /// \~chinese
-    /// @brief »ñÈ¡È«¾ÖËõ·Å±ÈÀı
-    /// @details Ëõ·Å±ÈÀıÊÇÖ¸ÓÉÎïÀíÊÀ½çµÄµ¥Î»Ã××ª»»µ½ÆÁÄ»ÏñËØµÄ±ÈÀı£¬Ä¬ÈÏ±ÈÀıÎª1:100
+    /// @brief è·å–å…¨å±€ç¼©æ”¾æ¯”ä¾‹
+    /// @details ç¼©æ”¾æ¯”ä¾‹æ˜¯æŒ‡ç”±ç‰©ç†ä¸–ç•Œçš„å•ä½ç±³è½¬æ¢åˆ°å±å¹•åƒç´ çš„æ¯”ä¾‹ï¼Œé»˜è®¤æ¯”ä¾‹ä¸º1:100
     float GetGlobalScale() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÈ«¾ÖËõ·Å±ÈÀı
-    /// @details Ëõ·Å±ÈÀıÊÇÖ¸ÓÉÎïÀíÊÀ½çµÄµ¥Î»Ã××ª»»µ½ÆÁÄ»ÏñËØµÄ±ÈÀı£¬Ä¬ÈÏ±ÈÀıÎª1:100
+    /// @brief è®¾ç½®å…¨å±€ç¼©æ”¾æ¯”ä¾‹
+    /// @details ç¼©æ”¾æ¯”ä¾‹æ˜¯æŒ‡ç”±ç‰©ç†ä¸–ç•Œçš„å•ä½ç±³è½¬æ¢åˆ°å±å¹•åƒç´ çš„æ¯”ä¾‹ï¼Œé»˜è®¤æ¯”ä¾‹ä¸º1:100
     void SetGlobalScale(float scale);
 
     /// \~chinese
-    /// @brief ÓÎÏ·ÊÀ½çµ¥Î»×ª»»ÎªÎïÀíÊÀ½çµ¥Î»
-    /// @details ¸ù¾İÈ«¾ÖËõ·Å±ÈÀı½«ÎïÀíÊÀ½çµÄµ¥Î»Ã××ª»»ÎªÏñËØµ¥Î»
+    /// @brief æ¸¸æˆä¸–ç•Œå•ä½è½¬æ¢ä¸ºç‰©ç†ä¸–ç•Œå•ä½
+    /// @details æ ¹æ®å…¨å±€ç¼©æ”¾æ¯”ä¾‹å°†ç‰©ç†ä¸–ç•Œçš„å•ä½ç±³è½¬æ¢ä¸ºåƒç´ å•ä½
     float World2Stage(float value) const;
 
     /// \~chinese
-    /// @brief ÓÎÏ·ÊÀ½çµ¥Î»×ª»»ÎªÎïÀíÊÀ½çµ¥Î»
-    /// @details ¸ù¾İÈ«¾ÖËõ·Å±ÈÀı½«ÎïÀíÊÀ½çµÄµ¥Î»Ã××ª»»ÎªÏñËØµ¥Î»
+    /// @brief æ¸¸æˆä¸–ç•Œå•ä½è½¬æ¢ä¸ºç‰©ç†ä¸–ç•Œå•ä½
+    /// @details æ ¹æ®å…¨å±€ç¼©æ”¾æ¯”ä¾‹å°†ç‰©ç†ä¸–ç•Œçš„å•ä½ç±³è½¬æ¢ä¸ºåƒç´ å•ä½
     Vec2 World2Stage(const b2Vec2& pos) const;
 
     /// \~chinese
-    /// @brief ÎïÀíÊÀ½çµ¥Î»×ª»»ÎªÓÎÏ·ÊÀ½çµ¥Î»
-    /// @details ¸ù¾İÈ«¾ÖËõ·Å±ÈÀı½«ÏñËØµ¥Î»×ª»»ÎªÎïÀíÊÀ½çµÄµ¥Î»Ã×
+    /// @brief ç‰©ç†ä¸–ç•Œå•ä½è½¬æ¢ä¸ºæ¸¸æˆä¸–ç•Œå•ä½
+    /// @details æ ¹æ®å…¨å±€ç¼©æ”¾æ¯”ä¾‹å°†åƒç´ å•ä½è½¬æ¢ä¸ºç‰©ç†ä¸–ç•Œçš„å•ä½ç±³
     float Stage2World(float value) const;
 
     /// \~chinese
-    /// @brief ÎïÀíÊÀ½çµ¥Î»×ª»»ÎªÓÎÏ·ÊÀ½çµ¥Î»
-    /// @details ¸ù¾İÈ«¾ÖËõ·Å±ÈÀı½«ÏñËØµ¥Î»×ª»»ÎªÎïÀíÊÀ½çµÄµ¥Î»Ã×
+    /// @brief ç‰©ç†ä¸–ç•Œå•ä½è½¬æ¢ä¸ºæ¸¸æˆä¸–ç•Œå•ä½
+    /// @details æ ¹æ®å…¨å±€ç¼©æ”¾æ¯”ä¾‹å°†åƒç´ å•ä½è½¬æ¢ä¸ºç‰©ç†ä¸–ç•Œçš„å•ä½ç±³
     b2Vec2 Stage2World(const Vec2& pos) const;
 
     /// \~chinese
-    /// @brief ÉèÖÃËÙ¶Èµü´ú´ÎÊı, Ä¬ÈÏÎª 6
+    /// @brief è®¾ç½®é€Ÿåº¦è¿­ä»£æ¬¡æ•°, é»˜è®¤ä¸º 6
     void SetVelocityIterations(int vel_iter);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎ»ÖÃµü´ú´ÎÊı, Ä¬ÈÏÎª 2
+    /// @brief è®¾ç½®ä½ç½®è¿­ä»£æ¬¡æ•°, é»˜è®¤ä¸º 2
     void SetPositionIterations(int pos_iter);
 
     b2World* GetB2World();
@@ -108,27 +108,27 @@ public:
 
 private:
     /// \~chinese
-    /// @brief ÒÆ³ıÎïÌå
+    /// @brief ç§»é™¤ç‰©ä½“
     void RemoveBody(Body* body);
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞÎïÌå
+    /// @brief ç§»é™¤æ‰€æœ‰ç‰©ä½“
     void RemoveAllBodies();
 
     /// \~chinese
-    /// @brief Ìí¼Ó¹Ø½Ú
+    /// @brief æ·»åŠ å…³èŠ‚
     void AddJoint(Joint* joint);
 
     /// \~chinese
-    /// @brief ÒÆ³ı¹Ø½Ú
+    /// @brief ç§»é™¤å…³èŠ‚
     void RemoveJoint(Joint* joint);
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞ¹Ø½Ú
+    /// @brief ç§»é™¤æ‰€æœ‰å…³èŠ‚
     void RemoveAllJoints();
 
     /// \~chinese
-    /// @brief ¹Ø½Ú±»ÒÆ³ı
+    /// @brief å…³èŠ‚è¢«ç§»é™¤
     void JointRemoved(b2Joint* joint);
 
 protected:

@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 /**
  * \addtogroup Render
@@ -33,132 +31,129 @@ class Renderer;
  */
 
 /// \~chinese
-/// @brief ÎÄ±¾²¼¾Ö
+/// @brief æ–‡æœ¬å¸ƒå±€
 class KGE_API TextLayout
 {
-    friend class RenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
-    /// @brief ¹¹Ôì¿ÕµÄÎÄ±¾²¼¾Ö
+    /// @brief æ„é€ ç©ºçš„æ–‡æœ¬å¸ƒå±€
     TextLayout();
 
     /// \~chinese
-    /// @brief ÎÄ±¾²¼¾ÖÊÇ·ñÓĞĞ§
+    /// @brief æ–‡æœ¬å¸ƒå±€æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief ÎÄ±¾²¼¾ÖÊÇ·ñ³Â¾É
+    /// @brief æ–‡æœ¬å¸ƒå±€æ˜¯å¦é™ˆæ—§
     bool IsDirty() const;
 
     /// \~chinese
-    /// @brief ¸üĞÂÎÄ±¾²¼¾Ö
-    /// @note ÎÄ±¾²¼¾ÖÊÇÀÁ¸üĞÂµÄ£¬ÔÚĞŞ¸ÄÎÄ±¾²¼¾ÖµÄÊôĞÔºóĞèÒªÊÖ¶¯¸üĞÂ
+    /// @brief æ›´æ–°æ–‡æœ¬å¸ƒå±€
+    /// @note æ–‡æœ¬å¸ƒå±€æ˜¯æ‡’æ›´æ–°çš„ï¼Œåœ¨ä¿®æ”¹æ–‡æœ¬å¸ƒå±€çš„å±æ€§åéœ€è¦æ‰‹åŠ¨æ›´æ–°
     void Update();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾
+    /// @brief è·å–æ–‡æœ¬
     const String& GetText() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾ÑùÊ½
+    /// @brief è·å–æ–‡æœ¬æ ·å¼
     const TextStyle& GetStyle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾ĞĞÊı
+    /// @brief è·å–æ–‡æœ¬è¡Œæ•°
     uint32_t GetLineCount() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾²¼¾Ö´óĞ¡
+    /// @brief è·å–æ–‡æœ¬å¸ƒå±€å¤§å°
     Size GetLayoutSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ìî³ä»­Ë¢
+    /// @brief è·å–å¡«å……ç”»åˆ·
     BrushPtr GetFillBrush() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ãè±ß»­Ë¢
+    /// @brief è·å–æè¾¹ç”»åˆ·
     BrushPtr GetOutlineBrush() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾
+    /// @brief è®¾ç½®æ–‡æœ¬
     void SetText(const String& text);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾ÑùÊ½
+    /// @brief è®¾ç½®æ–‡æœ¬æ ·å¼
     void SetStyle(const TextStyle& style);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå
+    /// @brief è®¾ç½®å­—ä½“
     void SetFont(FontPtr font);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå×å
+    /// @brief è®¾ç½®å­—ä½“æ—
     void SetFontFamily(String const& family);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖºÅ£¨Ä¬ÈÏÖµÎª 18£©
+    /// @brief è®¾ç½®å­—å·ï¼ˆé»˜è®¤å€¼ä¸º 18ï¼‰
     void SetFontSize(float size);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå´ÖÏ¸Öµ£¨Ä¬ÈÏÖµÎª FontWeight::Normal£©
+    /// @brief è®¾ç½®å­—ä½“ç²—ç»†å€¼ï¼ˆé»˜è®¤å€¼ä¸º FontWeight::Normalï¼‰
     void SetFontWeight(uint32_t weight);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÌî³ä»­Ë¢
+    /// @brief è®¾ç½®æ–‡å­—å¡«å……ç”»åˆ·
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖĞ±Ìå£¨Ä¬ÈÏÖµÎª false£©
+    /// @brief è®¾ç½®æ–‡å­—æ–œä½“ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
     void SetItalic(bool italic);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾×Ô¶¯»»ĞĞµÄ¿í¶È
+    /// @brief è®¾ç½®æ–‡æœ¬è‡ªåŠ¨æ¢è¡Œçš„å®½åº¦
     void SetWrapWidth(float wrap_width);
 
     /// \~chinese
-    /// @brief ÉèÖÃĞĞ¼ä¾à£¨Ä¬ÈÏÎª 0£©
+    /// @brief è®¾ç½®è¡Œé—´è·ï¼ˆé»˜è®¤ä¸º 0ï¼‰
     void SetLineSpacing(float line_spacing);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶ÔÆë·½Ê½
+    /// @brief è®¾ç½®å¯¹é½æ–¹å¼
     void SetAlignment(TextAlign align);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ß»­Ë¢
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹ç”»åˆ·
     void SetOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÏß¿í
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹çº¿å®½
     void SetOutlineWidth(float outline_width);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÏßÏà½»ÑùÊ½
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹çº¿ç›¸äº¤æ ·å¼
     void SetOutlineStroke(StrokeStylePtr outline_stroke);
 
     /// \~chinese
-    /// @brief ÉèÖÃÏÂ»®Ïß
-    /// @param enable ÊÇ·ñÏÔÊ¾ÏÂ»®Ïß
-    /// @param start ÆğÊ¼Î»ÖÃ
-    /// @param length ³¤¶È
+    /// @brief è®¾ç½®ä¸‹åˆ’çº¿
+    /// @param enable æ˜¯å¦æ˜¾ç¤ºä¸‹åˆ’çº¿
+    /// @param start èµ·å§‹ä½ç½®
+    /// @param length é•¿åº¦
     void SetUnderline(bool enable, uint32_t start, uint32_t length);
 
     /// \~chinese
-    /// @brief ÉèÖÃÉ¾³ıÏß
-    /// @param enable ÊÇ·ñÏÔÊ¾É¾³ıÏß
-    /// @param start ÆğÊ¼Î»ÖÃ
-    /// @param length ³¤¶È
+    /// @brief è®¾ç½®åˆ é™¤çº¿
+    /// @param enable æ˜¯å¦æ˜¾ç¤ºåˆ é™¤çº¿
+    /// @param start èµ·å§‹ä½ç½®
+    /// @param length é•¿åº¦
     void SetStrikethrough(bool enable, uint32_t start, uint32_t length);
 
     /// \~chinese
-    /// @brief ÔàÊı¾İ±êÖ¾
+    /// @brief è„æ•°æ®æ ‡å¿—
     enum DirtyFlag : uint8_t
     {
-        Clean       = 0,       ///< ¸É¾»Êı¾İ
-        DirtyFormat = 1,       ///< ÎÄ×Ö¸ñÊ½´ı¸üĞÂ
-        DirtyLayout = 1 << 1,  ///< ÎÄ×Ö²¼¾Ö´ı¸üĞÂ
-        Updated     = 1 << 2,  ///< Êı¾İÒÑ¸üĞÂ
+        Clean       = 0,       ///< å¹²å‡€æ•°æ®
+        DirtyFormat = 1,       ///< æ–‡å­—æ ¼å¼å¾…æ›´æ–°
+        DirtyLayout = 1 << 1,  ///< æ–‡å­—å¸ƒå±€å¾…æ›´æ–°
+        Updated     = 1 << 2,  ///< æ•°æ®å·²æ›´æ–°
     };
 
     uint8_t GetDirtyFlag() const;
@@ -166,6 +161,12 @@ public:
     void SetDirtyFlag(uint8_t flag);
 
 private:
+    uint8_t   dirty_flag_;
+    String    text_;
+    TextStyle style_;
+
+#if defined(KGE_WIN32)
+public:
     ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
     void SetTextFormat(ComPtr<IDWriteTextFormat> format);
@@ -175,13 +176,9 @@ private:
     void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
 
 private:
-    uint8_t dirty_flag_;
-
     ComPtr<IDWriteTextFormat> text_format_;
     ComPtr<IDWriteTextLayout> text_layout_;
-
-    String    text_;
-    TextStyle style_;
+#endif
 };
 
 /** @} */
@@ -216,16 +213,6 @@ inline void TextLayout::SetDirtyFlag(uint8_t flag)
     dirty_flag_ = flag;
 }
 
-inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
-{
-    return text_format_;
-}
-
-inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
-{
-    return text_layout_;
-}
-
 inline BrushPtr TextLayout::GetFillBrush() const
 {
     return style_.fill_brush;
@@ -239,16 +226,6 @@ inline BrushPtr TextLayout::GetOutlineBrush() const
 inline void TextLayout::SetFillBrush(BrushPtr brush)
 {
     style_.fill_brush = brush;
-}
-
-inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
-{
-    text_format_ = format;
-}
-
-inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)
-{
-    text_layout_ = layout;
 }
 
 inline void TextLayout::SetOutlineBrush(BrushPtr brush)
@@ -265,4 +242,27 @@ inline void TextLayout::SetOutlineStroke(StrokeStylePtr outline_stroke)
 {
     style_.outline_stroke = outline_stroke;
 }
+
+#if defined(KGE_WIN32)
+inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
+{
+    return text_format_;
+}
+
+inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
+{
+    return text_layout_;
+}
+
+inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
+{
+    text_format_ = format;
+}
+
+inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)
+{
+    text_layout_ = layout;
+}
+#endif
+
 }  // namespace kiwano

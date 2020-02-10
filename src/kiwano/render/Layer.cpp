@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2016-2019 Kiwano - Nomango
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,72 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/Layer.h>
-#include <kiwano/render/Renderer.h>
+#include <kiwano/render/Layer.h>
 
 namespace kiwano
 {
-
-LayerPtr Layer::Create()
-{
-    LayerPtr ptr = new (std::nothrow) Layer;
-    return ptr;
-}
-
 Layer::Layer()
-    : swallow_(false)
+    : opacity_(1.f)
+    , clip_rect_(Rect::Infinite())
 {
-}
-
-Layer::~Layer() {}
-
-void Layer::SetClipRect(Rect const& clip_rect)
-{
-    area_.SetAreaRect(clip_rect);
-}
-
-void Layer::SetOpacity(float opacity)
-{
-    // Actor::SetOpacity(opacity);
-    area_.SetOpacity(opacity);
-}
-
-void Layer::SetMaskShape(ShapePtr mask)
-{
-    area_.SetMaskShape(mask);
-}
-
-void Layer::SetMaskTransform(Matrix3x2 const& transform)
-{
-    area_.SetMaskTransform(transform);
-}
-
-bool Layer::DispatchEvent(Event* evt)
-{
-    if (!IsVisible())
-        return true;
-
-    if (swallow_)
-    {
-        return EventDispatcher::DispatchEvent(evt);
-    }
-    return Actor::DispatchEvent(evt);
-}
-
-void Layer::Render(RenderContext& ctx)
-{
-    ctx.PushLayer(area_);
-
-    Actor::Render(ctx);
-
-    ctx.PopLayer();
-}
-
-bool Layer::CheckVisibility(RenderContext& ctx) const
-{
-    // Do not need to render Layer
-    return false;
 }
 
 }  // namespace kiwano

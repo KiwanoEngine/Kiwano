@@ -18,6 +18,7 @@ class vector
 public:
 	using value_type				= _Ty;
 	using size_type					= size_t;
+	using difference_type			= ptrdiff_t;
 	using reference					= value_type&;
 	using const_reference			= const value_type&;
 	using iterator					= value_type*;
@@ -70,6 +71,7 @@ public:
 	inline bool						empty() const							{ return size_ == 0; }
 	inline size_type				size() const							{ return size_; }
 	inline size_type				size_in_bytes() const					{ return size_ * ((size_type)sizeof(_Ty)); }
+	inline size_type				max_size() const						{ return std::numeric_limits<difference_type>::max(); }
 	inline size_type				capacity() const						{ return capacity_; }
 	inline reference				operator[](size_type off)				{ if (off < 0 || off >= size_) throw std::out_of_range("vector subscript out of range"); return data_[off]; }
 	inline const_reference			operator[](size_type off) const			{ if (off < 0 || off >= size_) throw std::out_of_range("vector subscript out of range"); return data_[off]; }

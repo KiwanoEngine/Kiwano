@@ -67,13 +67,13 @@ GifSprite::GifSprite()
 
 bool GifSprite::Load(String const& file_path)
 {
-    GifImagePtr image = TextureCache::Instance().AddOrGetGifImage(file_path);
+    GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(file_path);
     return Load(image);
 }
 
 bool GifSprite::Load(Resource const& res)
 {
-    GifImagePtr image = TextureCache::Instance().AddOrGetGifImage(res);
+    GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(res);
     return Load(image);
 }
 
@@ -83,16 +83,17 @@ bool GifSprite::Load(GifImagePtr gif)
     {
         gif_ = gif;
 
-        next_index_          = 0;
-        loop_count_          = 0;
-        frame_.disposal_type = GifImage::DisposalType::None;
-
-        SetSize(Size{ static_cast<float>(gif_->GetWidthInPixels()), static_cast<float>(gif_->GetHeightInPixels()) });
+        next_index_ = 0;
+        loop_count_ = 0;
+        frame_      = GifImage::Frame();
 
         if (!frame_rt_)
         {
-            Renderer::Instance().CreateTextureRenderTarget(frame_rt_);
+            Size frame_size = Size(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
+            frame_rt_       = TextureRenderContext::Create(frame_size);
         }
+
+        SetSize(frame_rt_->GetSize());
 
         if (gif_->GetFramesCount() > 0)
         {
@@ -109,7 +110,7 @@ void GifSprite::OnRender(RenderContext& ctx)
     {
         PrepareToRender(ctx);
 
-        ctx.DrawTexture(*frame_to_render_, &frame_.rect, nullptr);
+        ctx.DrawTexture(*frame_to_render_, nullptr, &GetBounds());
     }
 }
 
@@ -137,10 +138,10 @@ void GifSprite::SetGifImage(GifImagePtr gif)
 
 void GifSprite::RestartAnimation()
 {
-    animating_           = true;
-    next_index_          = 0;
-    loop_count_          = 0;
-    frame_.disposal_type = GifImage::DisposalType::None;
+    animating_  = true;
+    next_index_ = 0;
+    loop_count_ = 0;
+    frame_      = GifImage::Frame();
 }
 
 void GifSprite::ComposeNextFrame()
@@ -181,7 +182,7 @@ void GifSprite::DisposeCurrentFrame()
 void GifSprite::OverlayNextFrame()
 {
     KGE_ASSERT(frame_rt_);
-    KGE_ASSERT(gif_ && gif_->IsValid());
+    KGE_ASSERT(gif_);
 
     frame_ = gif_->GetFrame(next_index_);
 
@@ -196,6 +197,7 @@ void GifSprite::OverlayNextFrame()
 
         if (next_index_ == 0)
         {
+            frame_rt_->Clear();
             loop_count_++;
         }
 
@@ -217,6 +219,7 @@ void GifSprite::OverlayNextFrame()
         }
     }
 
+    // Execute callback
     if (IsLastFrame() && loop_cb_)
     {
         loop_cb_(loop_count_ - 1);
@@ -239,8 +242,7 @@ void GifSprite::SaveComposedFrame()
         if (!saved_frame_)
         {
             saved_frame_ = new Texture;
-            frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels(),
-                                     frame_to_be_saved->GetPixelFormat());
+            frame_rt_->CreateTexture(*saved_frame_, frame_to_be_saved->GetSizeInPixels());
         }
 
         saved_frame_->CopyFrom(frame_to_be_saved);

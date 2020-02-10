@@ -34,20 +34,20 @@ KGE_DECLARE_SMART_PTR(TextActor);
 
 /**
  * \~chinese
- * @brief ÎÄ±¾½ÇÉ«
+ * @brief æ–‡æœ¬è§’è‰²
  */
 class KGE_API TextActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨ÎÄ±¾½ÇÉ«
-    /// @param text ÎÄ×ÖÄÚÈİ
+    /// @brief åˆ›å»ºæ–‡æœ¬è§’è‰²
+    /// @param text æ–‡å­—å†…å®¹
     static TextActorPtr Create(const String& text);
 
     /// \~chinese
-    /// @brief ´´½¨ÎÄ±¾½ÇÉ«
-    /// @param text ÎÄ×ÖÄÚÈİ
-    /// @param style ÎÄ±¾ÑùÊ½
+    /// @brief åˆ›å»ºæ–‡æœ¬è§’è‰²
+    /// @param text æ–‡å­—å†…å®¹
+    /// @param style æ–‡æœ¬æ ·å¼
     static TextActorPtr Create(const String& text, const TextStyle& style);
 
     TextActor();
@@ -55,108 +55,108 @@ public:
     virtual ~TextActor();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾
+    /// @brief è·å–æ–‡æœ¬
     const String& GetText() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾ÑùÊ½
+    /// @brief è·å–æ–‡æœ¬æ ·å¼
     const TextStyle& GetStyle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾²¼¾Ö
+    /// @brief è·å–æ–‡æœ¬å¸ƒå±€
     const TextLayout& GetLayout() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÄ±¾²¼¾Ö´óĞ¡
+    /// @brief è·å–æ–‡æœ¬å¸ƒå±€å¤§å°
     Size GetLayoutSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ìî³ä»­Ë¢
+    /// @brief è·å–å¡«å……ç”»åˆ·
     BrushPtr GetFillBrush() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ãè±ß»­Ë¢
+    /// @brief è·å–æè¾¹ç”»åˆ·
     BrushPtr GetOutlineBrush() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡×ÖÌå
+    /// @brief è·å–å­—ä½“
     FontPtr GetFont() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾
+    /// @brief è®¾ç½®æ–‡æœ¬
     void SetText(String const& text);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾ÑùÊ½
+    /// @brief è®¾ç½®æ–‡æœ¬æ ·å¼
     void SetStyle(const TextStyle& style);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå
+    /// @brief è®¾ç½®å­—ä½“
     void SetFont(FontPtr font);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå×å
+    /// @brief è®¾ç½®å­—ä½“æ—
     void SetFontFamily(String const& family);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖºÅ£¨Ä¬ÈÏÖµÎª 18£©
+    /// @brief è®¾ç½®å­—å·ï¼ˆé»˜è®¤å€¼ä¸º 18ï¼‰
     void SetFontSize(float size);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ÖÌå´ÖÏ¸Öµ£¨Ä¬ÈÏÖµÎª FontWeight::Normal£©
+    /// @brief è®¾ç½®å­—ä½“ç²—ç»†å€¼ï¼ˆé»˜è®¤å€¼ä¸º FontWeight::Normalï¼‰
     void SetFontWeight(uint32_t weight);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÌî³ä»­Ë¢
+    /// @brief è®¾ç½®æ–‡å­—å¡«å……ç”»åˆ·
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÌî³äÑÕÉ«£¨Ä¬ÈÏÖµÎª Color::White£©
+    /// @brief è®¾ç½®æ–‡å­—å¡«å……é¢œè‰²ï¼ˆé»˜è®¤å€¼ä¸º Color::Whiteï¼‰
     void SetFillColor(Color const& color);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖĞ±Ìå£¨Ä¬ÈÏÖµÎª false£©
+    /// @brief è®¾ç½®æ–‡å­—æ–œä½“ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
     void SetItalic(bool italic);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ±¾×Ô¶¯»»ĞĞµÄ¿í¶È£¨Ä¬ÈÏÎª 0£©
+    /// @brief è®¾ç½®æ–‡æœ¬è‡ªåŠ¨æ¢è¡Œçš„å®½åº¦ï¼ˆé»˜è®¤ä¸º 0ï¼‰
     void SetWrapWidth(float wrap_width);
 
     /// \~chinese
-    /// @brief ÉèÖÃĞĞ¼ä¾à£¨Ä¬ÈÏÎª 0£©
+    /// @brief è®¾ç½®è¡Œé—´è·ï¼ˆé»˜è®¤ä¸º 0ï¼‰
     void SetLineSpacing(float line_spacing);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶ÔÆë·½Ê½£¨Ä¬ÈÏÎª TextAlign::Left£©
+    /// @brief è®¾ç½®å¯¹é½æ–¹å¼ï¼ˆé»˜è®¤ä¸º TextAlign::Leftï¼‰
     void SetAlignment(TextAlign align);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ß»­Ë¢
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹ç”»åˆ·
     void SetOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÑÕÉ«
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹é¢œè‰²
     void SetOutlineColor(Color const& outline_color);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÏß¿í
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹çº¿å®½
     void SetOutlineWidth(float outline_width);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÏßÏà½»ÑùÊ½
+    /// @brief è®¾ç½®æ–‡å­—æè¾¹çº¿ç›¸äº¤æ ·å¼
     void SetOutlineStroke(StrokeStylePtr outline_stroke);
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÏÔÊ¾ÏÂ»®Ïß£¨Ä¬ÈÏÖµÎª false£©
+    /// @brief è®¾ç½®æ˜¯å¦æ˜¾ç¤ºä¸‹åˆ’çº¿ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
     void SetUnderline(bool enable);
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÏÔÊ¾É¾³ıÏß£¨Ä¬ÈÏÖµÎª false£©
+    /// @brief è®¾ç½®æ˜¯å¦æ˜¾ç¤ºåˆ é™¤çº¿ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
     void SetStrikethrough(bool enable);
 
     /// \~chinese
-    /// @brief ¸üĞÂÎÄ×Ö²¼¾Ö
-    /// @details ÎÄ×Ö²¼¾ÖÊÇÀÁ¸üĞÂµÄ£¬ÊÖ¶¯¸üĞÂÎÄ×Ö²¼¾ÖÒÔ¸üĞÂ½Úµã×´Ì¬
+    /// @brief æ›´æ–°æ–‡å­—å¸ƒå±€
+    /// @details æ–‡å­—å¸ƒå±€æ˜¯æ‡’æ›´æ–°çš„ï¼Œæ‰‹åŠ¨æ›´æ–°æ–‡å­—å¸ƒå±€ä»¥æ›´æ–°èŠ‚ç‚¹çŠ¶æ€
     void UpdateLayout();
 
     void OnRender(RenderContext& ctx) override;

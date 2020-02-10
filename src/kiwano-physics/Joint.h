@@ -45,34 +45,34 @@ KGE_DECLARE_SMART_PTR(WheelJoint);
  */
 
 /// \~chinese
-/// @brief ¹Ø½Ú
+/// @brief å…³èŠ‚
 class KGE_API Joint : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ¹Ø½ÚÀàÐÍ
+    /// @brief å…³èŠ‚ç±»åž‹
     enum class Type
     {
-        Unknown = 0,  ///< Î´Öª
-        Revolute,     ///< Ðý×ª¹Ø½Ú
-        Prismatic,    ///< Æ½ÒÆ¹Ø½Ú
-        Distance,     ///< ¹Ì¶¨¾àÀë¹Ø½Ú
-        Pulley,       ///< »¬ÂÖ¹Ø½Ú
-        Mouse,        ///< Êó±ê¹Ø½Ú
-        Gear,         ///< ³ÝÂÖ¹Ø½Ú
-        Wheel,        ///< ÂÖ¹Ø½Ú
-        Weld,         ///< º¸½Ó¹Ø½Ú
-        Friction,     ///< Ä¦²Á¹Ø½Ú
-        Rope,         ///< Éþ¹Ø½Ú
-        Motor         ///< Âí´ï¹Ø½Ú
+        Unknown = 0,  ///< æœªçŸ¥
+        Revolute,     ///< æ—‹è½¬å…³èŠ‚
+        Prismatic,    ///< å¹³ç§»å…³èŠ‚
+        Distance,     ///< å›ºå®šè·ç¦»å…³èŠ‚
+        Pulley,       ///< æ»‘è½®å…³èŠ‚
+        Mouse,        ///< é¼ æ ‡å…³èŠ‚
+        Gear,         ///< é½¿è½®å…³èŠ‚
+        Wheel,        ///< è½®å…³èŠ‚
+        Weld,         ///< ç„ŠæŽ¥å…³èŠ‚
+        Friction,     ///< æ‘©æ“¦å…³èŠ‚
+        Rope,         ///< ç»³å…³èŠ‚
+        Motor         ///< é©¬è¾¾å…³èŠ‚
     };
 
     /// \~chinese
-    /// @brief ¹Ø½Ú»ù´¡²ÎÊý
+    /// @brief å…³èŠ‚åŸºç¡€å‚æ•°
     struct ParamBase
     {
-        Body* body_a;  ///< ¹Ø½ÚÁ¬½ÓµÄÎïÌåA
-        Body* body_b;  ///< ¹Ø½ÚÁ¬½ÓµÄÎïÌåB
+        Body* body_a;  ///< å…³èŠ‚è¿žæŽ¥çš„ç‰©ä½“A
+        Body* body_b;  ///< å…³èŠ‚è¿žæŽ¥çš„ç‰©ä½“B
 
         ParamBase(Body* body_a, Body* body_b)
             : body_a(body_a)
@@ -92,23 +92,23 @@ public:
     virtual ~Joint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, b2JointDef* joint_def);
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½ÚÁ¬½ÓµÄÎïÌåA
+    /// @brief èŽ·å–å…³èŠ‚è¿žæŽ¥çš„ç‰©ä½“A
     BodyPtr GetBodyA() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½ÚÁ¬½ÓµÄÎïÌåB
+    /// @brief èŽ·å–å…³èŠ‚è¿žæŽ¥çš„ç‰©ä½“B
     BodyPtr GetBodyB() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÀíÊÀ½ç
+    /// @brief èŽ·å–ç‰©ç†ä¸–ç•Œ
     World* GetWorld() const;
 
     /// \~chinese
-    /// @brief Ïú»Ù¹Ø½Ú
+    /// @brief é”€æ¯å…³èŠ‚
     void Destroy();
 
     b2Joint* GetB2Joint() const;
@@ -121,18 +121,18 @@ private:
 };
 
 /// \~chinese
-/// @brief ¹Ì¶¨¾àÀë¹Ø½Ú
+/// @brief å›ºå®šè·ç¦»å…³èŠ‚
 class KGE_API DistanceJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief ¹Ì¶¨¾àÀë¹Ø½Ú²ÎÊý
+    /// @brief å›ºå®šè·ç¦»å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor_a;       ///< ¹Ø½ÚÔÚÎïÌåAÉÏµÄÁ¬½Óµã
-        Point anchor_b;       ///< ¹Ø½ÚÔÚÎïÌåBÉÏµÄÁ¬½Óµã
-        float frequency_hz;   ///< ÏìÓ¦ËÙ¶È£¬ÊýÖµÔ½¸ß¹Ø½ÚÏìÓ¦µÄËÙ¶ÈÔ½¿ì£¬¿´ÉÏÈ¥Ô½¼á¹Ì
-        float damping_ratio;  ///< ×èÄáÂÊ£¬ÖµÔ½´ó¹Ø½ÚÔË¶¯×èÄáÔ½´ó
+        Point anchor_a;       ///< å…³èŠ‚åœ¨ç‰©ä½“Aä¸Šçš„è¿žæŽ¥ç‚¹
+        Point anchor_b;       ///< å…³èŠ‚åœ¨ç‰©ä½“Bä¸Šçš„è¿žæŽ¥ç‚¹
+        float frequency_hz;   ///< å“åº”é€Ÿåº¦ï¼Œæ•°å€¼è¶Šé«˜å…³èŠ‚å“åº”çš„é€Ÿåº¦è¶Šå¿«ï¼Œçœ‹ä¸ŠåŽ»è¶Šåšå›º
+        float damping_ratio;  ///< é˜»å°¼çŽ‡ï¼Œå€¼è¶Šå¤§å…³èŠ‚è¿åŠ¨é˜»å°¼è¶Šå¤§
 
         Param(Body* body_a, Body* body_b, Point const& anchor_a, Point const& anchor_b, float frequency_hz = 0.f,
               float damping_ratio = 0.f)
@@ -152,39 +152,39 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨¹Ì¶¨¾àÀë¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºå›ºå®šè·ç¦»å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static DistanceJointPtr Create(World* world, Param const& param);
 
     DistanceJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¹Ø½Ú³¤¶È
+    /// @brief è®¾ç½®å…³èŠ‚é•¿åº¦
     void SetLength(float length);
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Ú³¤¶È
+    /// @brief èŽ·å–å…³èŠ‚é•¿åº¦
     float GetLength() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯»ÉÏìÓ¦ËÙ¶È [ºÕ×È]
+    /// @brief è®¾ç½®å¼¹ç°§å“åº”é€Ÿåº¦ [èµ«å…¹]
     void SetFrequency(float hz);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯»ÉÏìÓ¦ËÙ¶È [ºÕ×È]
+    /// @brief èŽ·å–å¼¹ç°§å“åº”é€Ÿåº¦ [èµ«å…¹]
     float GetFrequency() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×èÄáÂÊ
+    /// @brief è®¾ç½®é˜»å°¼çŽ‡
     void SetDampingRatio(float ratio);
 
     /// \~chinese
-    /// @brief »ñÈ¡×èÄáÂÊ
+    /// @brief èŽ·å–é˜»å°¼çŽ‡
     float GetDampingRatio() const;
 
 private:
@@ -192,15 +192,15 @@ private:
 };
 
 /// \~chinese
-/// @brief Ä¦²Á¹Ø½Ú
+/// @brief æ‘©æ“¦å…³èŠ‚
 class KGE_API FrictionJoint : public Joint
 {
 public:
     struct Param : public Joint::ParamBase
     {
-        Point anchor;      ///< Ä¦²Á×÷ÓÃµã
-        float max_force;   ///< ×î´óÄ¦²ÁÁ¦
-        float max_torque;  ///< ×î´óÅ¤Á¦
+        Point anchor;      ///< æ‘©æ“¦ä½œç”¨ç‚¹
+        float max_force;   ///< æœ€å¤§æ‘©æ“¦åŠ›
+        float max_torque;  ///< æœ€å¤§æ‰­åŠ›
 
         Param(Body* body_a, Body* body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
             : ParamBase(body_a, body_b)
@@ -217,31 +217,31 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Ä¦²Á¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºæ‘©æ“¦å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static FrictionJointPtr Create(World* world, Param const& param);
 
     FrictionJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´óÄ¦²ÁÁ¦
+    /// @brief è®¾ç½®æœ€å¤§æ‘©æ“¦åŠ›
     void SetMaxForce(float force);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÄ¦²ÁÁ¦
+    /// @brief èŽ·å–æœ€å¤§æ‘©æ“¦åŠ›
     float GetMaxForce() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´ó×ª¾Ø
+    /// @brief è®¾ç½®æœ€å¤§è½¬çŸ©
     void SetMaxTorque(float torque);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´ó×ª¾Ø
+    /// @brief èŽ·å–æœ€å¤§è½¬çŸ©
     float GetMaxTorque() const;
 
 private:
@@ -249,17 +249,17 @@ private:
 };
 
 /// \~chinese
-/// @brief ³ÝÂÖ¹Ø½Ú
+/// @brief é½¿è½®å…³èŠ‚
 class KGE_API GearJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief ³ÝÂÖ¹Ø½Ú²ÎÊý
+    /// @brief é½¿è½®å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Joint* joint_a;  ///< ¹Ø½ÚA£¨Ðý×ª¹Ø½Ú/Æ½ÒÆ¹Ø½Ú£©
-        Joint* joint_b;  ///< ¹Ø½ÚB£¨Ðý×ª¹Ø½Ú/Æ½ÒÆ¹Ø½Ú£©
-        float  ratio;    ///< ³ÝÂÖ´«¶¯±È
+        Joint* joint_a;  ///< å…³èŠ‚Aï¼ˆæ—‹è½¬å…³èŠ‚/å¹³ç§»å…³èŠ‚ï¼‰
+        Joint* joint_b;  ///< å…³èŠ‚Bï¼ˆæ—‹è½¬å…³èŠ‚/å¹³ç§»å…³èŠ‚ï¼‰
+        float  ratio;    ///< é½¿è½®ä¼ åŠ¨æ¯”
 
         Param(Joint* joint_a, Joint* joint_b, float ratio = 1.f)
             : ParamBase(nullptr, nullptr)
@@ -276,23 +276,23 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨³ÝÂÖ¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºé½¿è½®å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static GearJointPtr Create(World* world, Param const& param);
 
     GearJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief Éè¶¨³ÝÂÖ´«¶¯±È
+    /// @brief è®¾å®šé½¿è½®ä¼ åŠ¨æ¯”
     void SetRatio(float ratio);
 
     /// \~chinese
-    /// @brief »ñÈ¡³ÝÂÖ´«¶¯±È
+    /// @brief èŽ·å–é½¿è½®ä¼ åŠ¨æ¯”
     float GetRatio() const;
 
 private:
@@ -300,17 +300,17 @@ private:
 };
 
 /// \~chinese
-/// @brief Âí´ï¹Ø½Ú
+/// @brief é©¬è¾¾å…³èŠ‚
 class KGE_API MotorJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief Âí´ï¹Ø½Ú²ÎÊý
+    /// @brief é©¬è¾¾å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        float max_force;          ///< ×î´óÄ¦²ÁÁ¦
-        float max_torque;         ///< ×î´ó×ª¾Ø
-        float correction_factor;  ///< Î»ÖÃ½ÃÕýÒò×Ó£¨·¶Î§ 0-1£©
+        float max_force;          ///< æœ€å¤§æ‘©æ“¦åŠ›
+        float max_torque;         ///< æœ€å¤§è½¬çŸ©
+        float correction_factor;  ///< ä½ç½®çŸ«æ­£å› å­ï¼ˆèŒƒå›´ 0-1ï¼‰
 
         Param(Body* body_a, Body* body_b, float max_force = 1.f, float max_torque = 100.f,
               float correction_factor = 0.3f)
@@ -329,31 +329,31 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Âí´ï¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºé©¬è¾¾å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static MotorJointPtr Create(World* world, Param const& param);
 
     MotorJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´óÄ¦²ÁÁ¦
+    /// @brief è®¾ç½®æœ€å¤§æ‘©æ“¦åŠ›
     void SetMaxForce(float force);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÄ¦²ÁÁ¦
+    /// @brief èŽ·å–æœ€å¤§æ‘©æ“¦åŠ›
     float GetMaxForce() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´ó×ª¾Ø
+    /// @brief è®¾ç½®æœ€å¤§è½¬çŸ©
     void SetMaxTorque(float torque);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´ó×ª¾Ø
+    /// @brief èŽ·å–æœ€å¤§è½¬çŸ©
     float GetMaxTorque() const;
 
 private:
@@ -361,22 +361,22 @@ private:
 };
 
 /// \~chinese
-/// @brief Æ½ÒÆ¹Ø½Ú
+/// @brief å¹³ç§»å…³èŠ‚
 class KGE_API PrismaticJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief Æ½ÒÆ¹Ø½Ú²ÎÊý
+    /// @brief å¹³ç§»å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor;             ///< ¹Ø½ÚÎ»ÖÃ
-        Vec2  axis;               ///< ÎïÌåA»¬¶¯µÄ·½Ïò
-        bool  enable_limit;       ///< ÊÇ·ñÆôÓÃÏÞÖÆ
-        float lower_translation;  ///< ÒÆ¶¯µÄ×îÐ¡ÏÞÖÆ£¬Óë·½ÏòÍ¬ÏòÎªÕý£¬·´ÏòÎª¸º£¬ÆôÓÃÏÞÖÆºó²ÅÓÐÐ§¹û
-        float upper_translation;  ///< ÒÆ¶¯µÄ×î´óÏÞÖÆ£¬Óë·½ÏòÍ¬ÏòÎªÕý£¬·´ÏòÎª¸º£¬ÆôÓÃÏÞÖÆºó²ÅÓÐÐ§¹û
-        bool  enable_motor;       ///< ÊÇ·ñÆôÓÃÂí´ï
-        float max_motor_force;    ///< ×î´óÂí´ïÁ¦ [N]
-        float motor_speed;        ///< Âí´ï×ªËÙ [degree/s]
+        Point anchor;             ///< å…³èŠ‚ä½ç½®
+        Vec2  axis;               ///< ç‰©ä½“Aæ»‘åŠ¨çš„æ–¹å‘
+        bool  enable_limit;       ///< æ˜¯å¦å¯ç”¨é™åˆ¶
+        float lower_translation;  ///< ç§»åŠ¨çš„æœ€å°é™åˆ¶ï¼Œä¸Žæ–¹å‘åŒå‘ä¸ºæ­£ï¼Œåå‘ä¸ºè´Ÿï¼Œå¯ç”¨é™åˆ¶åŽæ‰æœ‰æ•ˆæžœ
+        float upper_translation;  ///< ç§»åŠ¨çš„æœ€å¤§é™åˆ¶ï¼Œä¸Žæ–¹å‘åŒå‘ä¸ºæ­£ï¼Œåå‘ä¸ºè´Ÿï¼Œå¯ç”¨é™åˆ¶åŽæ‰æœ‰æ•ˆæžœ
+        bool  enable_motor;       ///< æ˜¯å¦å¯ç”¨é©¬è¾¾
+        float max_motor_force;    ///< æœ€å¤§é©¬è¾¾åŠ› [N]
+        float motor_speed;        ///< é©¬è¾¾è½¬é€Ÿ [degree/s]
 
         Param(Body* body_a, Body* body_b, Point const& anchor, Vec2 const& axis, bool enable_limit = false,
               float lower_translation = 0.0f, float upper_translation = 0.0f, bool enable_motor = false,
@@ -403,71 +403,71 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Æ½ÒÆ¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºå¹³ç§»å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static PrismaticJointPtr Create(World* world, Param const& param);
 
     PrismaticJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief »ñÈ¡²Î¿¼½Ç
+    /// @brief èŽ·å–å‚è€ƒè§’
     float GetReferenceAngle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Ú×ª»»
+    /// @brief èŽ·å–å…³èŠ‚è½¬æ¢
     float GetJointTranslation() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½ÚËÙ¶È
+    /// @brief èŽ·å–å…³èŠ‚é€Ÿåº¦
     float GetJointSpeed() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃ¹Ø½ÚÏÞÖÆ
+    /// @brief æ˜¯å¦å¯ç”¨å…³èŠ‚é™åˆ¶
     bool IsLimitEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÆôÓÃ¹Ø½ÚÏÞÖÆ
+    /// @brief è®¾ç½®æ˜¯å¦å¯ç”¨å…³èŠ‚é™åˆ¶
     void EnableLimit(bool flag);
 
     /// \~chinese
-    /// @brief »ñÈ¡Æ½ÒÆ×îÐ¡ÏÞÖÆ
+    /// @brief èŽ·å–å¹³ç§»æœ€å°é™åˆ¶
     float GetLowerLimit() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Æ½ÒÆ×î´óÏÞÖÆ
+    /// @brief èŽ·å–å¹³ç§»æœ€å¤§é™åˆ¶
     float GetUpperLimit() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¹Ø½ÚÏÞÖÆ
+    /// @brief è®¾ç½®å…³èŠ‚é™åˆ¶
     void SetLimits(float lower, float upper);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃÂí´ï
+    /// @brief æ˜¯å¦å¯ç”¨é©¬è¾¾
     bool IsMotorEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÆôÓÃÂí´ï
+    /// @brief è®¾ç½®æ˜¯å¦å¯ç”¨é©¬è¾¾
     void EnableMotor(bool flag);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂí´ï×ªËÙ [degree/s]
+    /// @brief è®¾ç½®é©¬è¾¾è½¬é€Ÿ [degree/s]
     void SetMotorSpeed(float speed);
 
     /// \~chinese
-    /// @brief »ñÈ¡Âí´ï×ªËÙ [degree/s]
+    /// @brief èŽ·å–é©¬è¾¾è½¬é€Ÿ [degree/s]
     float GetMotorSpeed() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´óÂí´ïÁ¦ [N]
+    /// @brief è®¾ç½®æœ€å¤§é©¬è¾¾åŠ› [N]
     void SetMaxMotorForce(float force);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÂí´ïÁ¦ [N]
+    /// @brief èŽ·å–æœ€å¤§é©¬è¾¾åŠ› [N]
     float GetMaxMotorForce() const;
 
 private:
@@ -475,19 +475,19 @@ private:
 };
 
 /// \~chinese
-/// @brief »¬ÂÖ¹Ø½Ú
+/// @brief æ»‘è½®å…³èŠ‚
 class KGE_API PulleyJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief »¬ÂÖ¹Ø½Ú²ÎÊý
+    /// @brief æ»‘è½®å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor_a;         ///< ¹Ø½ÚÔÚÎïÌåAÉÏµÄ×÷ÓÃµã
-        Point anchor_b;         ///< ¹Ø½ÚÔÚÎïÌåBÉÏµÄ×÷ÓÃµã
-        Point ground_anchor_a;  ///< ÎïÌåA¶ÔÓ¦µÄ»¬ÂÖµÄÎ»ÖÃ
-        Point ground_anchor_b;  ///< ÎïÌåB¶ÔÓ¦µÄ»¬ÂÖµÄÎ»ÖÃ
-        float ratio;            ///< »¬ÂÖ±È£¬¹Ø½Ú´«¶¯Ê±£¬»¬ÂÖÉÏÉýºÍÏÂ½µµÄÁ½Í·µÄÎ»ÒÆ±ÈÀý
+        Point anchor_a;         ///< å…³èŠ‚åœ¨ç‰©ä½“Aä¸Šçš„ä½œç”¨ç‚¹
+        Point anchor_b;         ///< å…³èŠ‚åœ¨ç‰©ä½“Bä¸Šçš„ä½œç”¨ç‚¹
+        Point ground_anchor_a;  ///< ç‰©ä½“Aå¯¹åº”çš„æ»‘è½®çš„ä½ç½®
+        Point ground_anchor_b;  ///< ç‰©ä½“Bå¯¹åº”çš„æ»‘è½®çš„ä½ç½®
+        float ratio;            ///< æ»‘è½®æ¯”ï¼Œå…³èŠ‚ä¼ åŠ¨æ—¶ï¼Œæ»‘è½®ä¸Šå‡å’Œä¸‹é™çš„ä¸¤å¤´çš„ä½ç§»æ¯”ä¾‹
 
         Param(Body* body_a, Body* body_b, Point const& anchor_a, Point const& anchor_b, Point const& ground_anchor_a,
               Point const& ground_anchor_b, float ratio = 1.0f)
@@ -508,43 +508,43 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨»¬ÂÖ¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºæ»‘è½®å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static PulleyJointPtr Create(World* world, Param const& param);
 
     PulleyJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief ÎïÌåA¶ÔÓ¦µÄ»¬ÂÖµÄÎ»ÖÃ
+    /// @brief ç‰©ä½“Aå¯¹åº”çš„æ»‘è½®çš„ä½ç½®
     Point GetGroundAnchorA() const;
 
     /// \~chinese
-    /// @brief ÎïÌåB¶ÔÓ¦µÄ»¬ÂÖµÄÎ»ÖÃ
+    /// @brief ç‰©ä½“Bå¯¹åº”çš„æ»‘è½®çš„ä½ç½®
     Point GetGroundAnchorB() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡»¬ÂÖ´«¶¯±È
+    /// @brief èŽ·å–æ»‘è½®ä¼ åŠ¨æ¯”
     float GetRatio() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåAÓë»¬ÂÖµÄ¾àÀë
+    /// @brief èŽ·å–ç‰©ä½“Aä¸Žæ»‘è½®çš„è·ç¦»
     float GetLengthA() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåBÓë»¬ÂÖµÄ¾àÀë
+    /// @brief èŽ·å–ç‰©ä½“Bä¸Žæ»‘è½®çš„è·ç¦»
     float GetLengthB() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåAÓë»¬ÂÖµÄµ±Ç°¾àÀë
+    /// @brief èŽ·å–ç‰©ä½“Aä¸Žæ»‘è½®çš„å½“å‰è·ç¦»
     float GetCurrentLengthA() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåBÓë»¬ÂÖµÄµ±Ç°¾àÀë
+    /// @brief èŽ·å–ç‰©ä½“Bä¸Žæ»‘è½®çš„å½“å‰è·ç¦»
     float GetCurrentLengthB() const;
 
 private:
@@ -552,21 +552,21 @@ private:
 };
 
 /// \~chinese
-/// @brief Ðý×ª¹Ø½Ú
+/// @brief æ—‹è½¬å…³èŠ‚
 class KGE_API RevoluteJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief Ðý×ª¹Ø½Ú²ÎÊý
+    /// @brief æ—‹è½¬å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor;            ///< ¹Ø½ÚÎ»ÖÃ
-        bool  enable_limit;      ///< ÊÇ·ñÆôÓÃÏÞÖÆ
-        float lower_angle;       ///< ÒÆ¶¯µÄ×îÐ¡ÏÞÖÆ£¬Óë·½ÏòÍ¬ÏòÎªÕý£¬·´ÏòÎª¸º£¬ÆôÓÃÏÞÖÆºó²ÅÓÐÐ§¹û
-        float upper_angle;       ///< ÒÆ¶¯µÄ×î´óÏÞÖÆ£¬Óë·½ÏòÍ¬ÏòÎªÕý£¬·´ÏòÎª¸º£¬ÆôÓÃÏÞÖÆºó²ÅÓÐÐ§¹û
-        bool  enable_motor;      ///< ÊÇ·ñÆôÓÃÂí´ï
-        float max_motor_torque;  ///< ×î´óÂí´ïÁ¦ [N]
-        float motor_speed;       ///< Âí´ï×ªËÙ [degree/s]
+        Point anchor;            ///< å…³èŠ‚ä½ç½®
+        bool  enable_limit;      ///< æ˜¯å¦å¯ç”¨é™åˆ¶
+        float lower_angle;       ///< ç§»åŠ¨çš„æœ€å°é™åˆ¶ï¼Œä¸Žæ–¹å‘åŒå‘ä¸ºæ­£ï¼Œåå‘ä¸ºè´Ÿï¼Œå¯ç”¨é™åˆ¶åŽæ‰æœ‰æ•ˆæžœ
+        float upper_angle;       ///< ç§»åŠ¨çš„æœ€å¤§é™åˆ¶ï¼Œä¸Žæ–¹å‘åŒå‘ä¸ºæ­£ï¼Œåå‘ä¸ºè´Ÿï¼Œå¯ç”¨é™åˆ¶åŽæ‰æœ‰æ•ˆæžœ
+        bool  enable_motor;      ///< æ˜¯å¦å¯ç”¨é©¬è¾¾
+        float max_motor_torque;  ///< æœ€å¤§é©¬è¾¾åŠ› [N]
+        float motor_speed;       ///< é©¬è¾¾è½¬é€Ÿ [degree/s]
 
         Param(Body* body_a, Body* body_b, Point const& anchor, bool enable_limit = false, float lower_angle = 0.0f,
               float upper_angle = 0.0f, bool enable_motor = false, float max_motor_torque = 0.0f,
@@ -592,71 +592,71 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Ðý×ª¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºæ—‹è½¬å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static RevoluteJointPtr Create(World* world, Param const& param);
 
     RevoluteJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief »ñÈ¡²Î¿¼½Ç
+    /// @brief èŽ·å–å‚è€ƒè§’
     float GetReferenceAngle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Ú½Ç¶È
+    /// @brief èŽ·å–å…³èŠ‚è§’åº¦
     float GetJointAngle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½ÚËÙ¶È
+    /// @brief èŽ·å–å…³èŠ‚é€Ÿåº¦
     float GetJointSpeed() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃ¹Ø½ÚÏÞÖÆ
+    /// @brief æ˜¯å¦å¯ç”¨å…³èŠ‚é™åˆ¶
     bool IsLimitEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÆôÓÃ¹Ø½ÚÏÞÖÆ
+    /// @brief è®¾ç½®æ˜¯å¦å¯ç”¨å…³èŠ‚é™åˆ¶
     void EnableLimit(bool flag);
 
     /// \~chinese
-    /// @brief »ñÈ¡Æ½ÒÆ×îÐ¡ÏÞÖÆ
+    /// @brief èŽ·å–å¹³ç§»æœ€å°é™åˆ¶
     float GetLowerLimit() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Æ½ÒÆ×î´óÏÞÖÆ
+    /// @brief èŽ·å–å¹³ç§»æœ€å¤§é™åˆ¶
     float GetUpperLimit() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¹Ø½ÚÏÞÖÆ
+    /// @brief è®¾ç½®å…³èŠ‚é™åˆ¶
     void SetLimits(float lower, float upper);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃÂí´ï
+    /// @brief æ˜¯å¦å¯ç”¨é©¬è¾¾
     bool IsMotorEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÆôÓÃÂí´ï
+    /// @brief è®¾ç½®æ˜¯å¦å¯ç”¨é©¬è¾¾
     void EnableMotor(bool flag);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂí´ï×ªËÙ [degree/s]
+    /// @brief è®¾ç½®é©¬è¾¾è½¬é€Ÿ [degree/s]
     void SetMotorSpeed(float speed);
 
     /// \~chinese
-    /// @brief »ñÈ¡Âí´ï×ªËÙ [degree/s]
+    /// @brief èŽ·å–é©¬è¾¾è½¬é€Ÿ [degree/s]
     float GetMotorSpeed() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´óÂí´ï×ª¾Ø [N/m]
+    /// @brief è®¾ç½®æœ€å¤§é©¬è¾¾è½¬çŸ© [N/m]
     void SetMaxMotorTorque(float torque);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÂí´ï×ª¾Ø [N/m]
+    /// @brief èŽ·å–æœ€å¤§é©¬è¾¾è½¬çŸ© [N/m]
     float GetMaxMotorTorque() const;
 
 private:
@@ -664,17 +664,17 @@ private:
 };
 
 /// \~chinese
-/// @brief Éþ¹Ø½Ú
+/// @brief ç»³å…³èŠ‚
 class KGE_API RopeJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief Éþ¹Ø½Ú²ÎÊý
+    /// @brief ç»³å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point local_anchor_a;  ///< ¹Ø½ÚÔÚÎïÌåAÉÏµÄÁ¬½Óµã
-        Point local_anchor_b;  ///< ¹Ø½ÚÔÚÎïÌåBÉÏµÄÁ¬½Óµã
-        float max_length;      ///< ÉþË÷×î´ó³¤¶È
+        Point local_anchor_a;  ///< å…³èŠ‚åœ¨ç‰©ä½“Aä¸Šçš„è¿žæŽ¥ç‚¹
+        Point local_anchor_b;  ///< å…³èŠ‚åœ¨ç‰©ä½“Bä¸Šçš„è¿žæŽ¥ç‚¹
+        float max_length;      ///< ç»³ç´¢æœ€å¤§é•¿åº¦
 
         Param(Body* body_a, Body* body_b, Point const& local_anchor_a, Point const& local_anchor_b,
               float max_length = 0.f)
@@ -693,23 +693,23 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Éþ¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºç»³å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static RopeJointPtr Create(World* world, Param const& param);
 
     RopeJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¹Ø½Ú×î´ó³¤¶È
+    /// @brief è®¾ç½®å…³èŠ‚æœ€å¤§é•¿åº¦
     void SetMaxLength(float length);
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Ú×î´ó³¤¶È
+    /// @brief èŽ·å–å…³èŠ‚æœ€å¤§é•¿åº¦
     float GetMaxLength() const;
 
 private:
@@ -717,17 +717,17 @@ private:
 };
 
 /// \~chinese
-/// @brief º¸½Ó¹Ø½Ú
+/// @brief ç„ŠæŽ¥å…³èŠ‚
 class KGE_API WeldJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief º¸½Ó¹Ø½Ú²ÎÊý
+    /// @brief ç„ŠæŽ¥å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor;         ///< º¸½ÓÎ»ÖÃ
-        float frequency_hz;   ///< ÏìÓ¦ËÙ¶È£¬ÊýÖµÔ½¸ß¹Ø½ÚÏìÓ¦µÄËÙ¶ÈÔ½¿ì£¬¿´ÉÏÈ¥Ô½¼á¹Ì
-        float damping_ratio;  ///< ×èÄáÂÊ£¬ÖµÔ½´ó¹Ø½ÚÔË¶¯×èÄáÔ½´ó
+        Point anchor;         ///< ç„ŠæŽ¥ä½ç½®
+        float frequency_hz;   ///< å“åº”é€Ÿåº¦ï¼Œæ•°å€¼è¶Šé«˜å…³èŠ‚å“åº”çš„é€Ÿåº¦è¶Šå¿«ï¼Œçœ‹ä¸ŠåŽ»è¶Šåšå›º
+        float damping_ratio;  ///< é˜»å°¼çŽ‡ï¼Œå€¼è¶Šå¤§å…³èŠ‚è¿åŠ¨é˜»å°¼è¶Šå¤§
 
         Param(Body* body_a, Body* body_b, Point const& anchor, float frequency_hz = 0.f, float damping_ratio = 0.f)
             : ParamBase(body_a, body_b)
@@ -744,35 +744,35 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨º¸½Ó¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºç„ŠæŽ¥å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static WeldJointPtr Create(World* world, Param const& param);
 
     WeldJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎïÌåBÏà¶ÔÓÚÎïÌåAµÄ½Ç¶È
+    /// @brief èŽ·å–ç‰©ä½“Bç›¸å¯¹äºŽç‰©ä½“Açš„è§’åº¦
     float GetReferenceAngle() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯»ÉÏìÓ¦ËÙ¶È [ºÕ×È]
+    /// @brief è®¾ç½®å¼¹ç°§å“åº”é€Ÿåº¦ [èµ«å…¹]
     void SetFrequency(float hz);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯»ÉÏìÓ¦ËÙ¶È [ºÕ×È]
+    /// @brief èŽ·å–å¼¹ç°§å“åº”é€Ÿåº¦ [èµ«å…¹]
     float GetFrequency() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×èÄáÂÊ
+    /// @brief è®¾ç½®é˜»å°¼çŽ‡
     void SetDampingRatio(float ratio);
 
     /// \~chinese
-    /// @brief »ñÈ¡×èÄáÂÊ
+    /// @brief èŽ·å–é˜»å°¼çŽ‡
     float GetDampingRatio() const;
 
 private:
@@ -780,21 +780,21 @@ private:
 };
 
 /// \~chinese
-/// @brief ÂÖ¹Ø½Ú
+/// @brief è½®å…³èŠ‚
 class KGE_API WheelJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief ÂÖ¹Ø½Ú²ÎÊý
+    /// @brief è½®å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point anchor;            ///< ÂÖ¹Ø½ÚÎ»ÖÃ
-        Vec2  axis;              ///< ÎïÌåA»¬¶¯·½Ïò
-        bool  enable_motor;      ///< ÊÇ·ñÆôÓÃÂí´ï
-        float max_motor_torque;  ///< ×î´óÂí´ïÁ¦ [N]
-        float motor_speed;       ///< Âí´ï×ªËÙ [degree/s]
-        float frequency_hz;      ///< ÏìÓ¦ËÙ¶È£¬ÊýÖµÔ½¸ß¹Ø½ÚÏìÓ¦µÄËÙ¶ÈÔ½¿ì£¬¿´ÉÏÈ¥Ô½¼á¹Ì
-        float damping_ratio;     ///< µ¯»É×èÄáÂÊ£¬ÖµÔ½´ó¹Ø½ÚÔË¶¯×èÄáÔ½´ó
+        Point anchor;            ///< è½®å…³èŠ‚ä½ç½®
+        Vec2  axis;              ///< ç‰©ä½“Aæ»‘åŠ¨æ–¹å‘
+        bool  enable_motor;      ///< æ˜¯å¦å¯ç”¨é©¬è¾¾
+        float max_motor_torque;  ///< æœ€å¤§é©¬è¾¾åŠ› [N]
+        float motor_speed;       ///< é©¬è¾¾è½¬é€Ÿ [degree/s]
+        float frequency_hz;      ///< å“åº”é€Ÿåº¦ï¼Œæ•°å€¼è¶Šé«˜å…³èŠ‚å“åº”çš„é€Ÿåº¦è¶Šå¿«ï¼Œçœ‹ä¸ŠåŽ»è¶Šåšå›º
+        float damping_ratio;     ///< å¼¹ç°§é˜»å°¼çŽ‡ï¼Œå€¼è¶Šå¤§å…³èŠ‚è¿åŠ¨é˜»å°¼è¶Šå¤§
 
         Param(Body* body_a, Body* body_b, Point const& anchor, Vec2 const& axis, float frequency_hz = 2.0f,
               float damping_ratio = 0.7f, bool enable_motor = false, float max_motor_torque = 0.0f,
@@ -820,71 +820,71 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨ÂÖ¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºè½®å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static WheelJointPtr Create(World* world, Param const& param);
 
     WheelJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Úµ±Ç°µÄÆ½ÒÆ¾àÀë
+    /// @brief èŽ·å–å…³èŠ‚å½“å‰çš„å¹³ç§»è·ç¦»
     float GetJointTranslation() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Úµ±Ç°µÄÏßÐÔËÙ¶È
+    /// @brief èŽ·å–å…³èŠ‚å½“å‰çš„çº¿æ€§é€Ÿåº¦
     float GetJointLinearSpeed() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Úµ±Ç°µÄ½Ç¶È
+    /// @brief èŽ·å–å…³èŠ‚å½“å‰çš„è§’åº¦
     float GetJointAngle() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¹Ø½Úµ±Ç°µÄÐý×ªËÙ¶È
+    /// @brief èŽ·å–å…³èŠ‚å½“å‰çš„æ—‹è½¬é€Ÿåº¦
     float GetJointAngularSpeed() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃÂí´ï
+    /// @brief æ˜¯å¦å¯ç”¨é©¬è¾¾
     bool IsMotorEnabled() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÊÇ·ñÆôÓÃÂí´ï
+    /// @brief è®¾ç½®æ˜¯å¦å¯ç”¨é©¬è¾¾
     void EnableMotor(bool flag);
 
     /// \~chinese
-    /// @brief ÉèÖÃÂí´ï×ªËÙ [degree/s]
+    /// @brief è®¾ç½®é©¬è¾¾è½¬é€Ÿ [degree/s]
     void SetMotorSpeed(float speed);
 
     /// \~chinese
-    /// @brief »ñÈ¡Âí´ï×ªËÙ [degree/s]
+    /// @brief èŽ·å–é©¬è¾¾è½¬é€Ÿ [degree/s]
     float GetMotorSpeed() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×î´óÂí´ï×ª¾Ø [N/m]
+    /// @brief è®¾ç½®æœ€å¤§é©¬è¾¾è½¬çŸ© [N/m]
     void SetMaxMotorTorque(float torque);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÂí´ï×ª¾Ø [N/m]
+    /// @brief èŽ·å–æœ€å¤§é©¬è¾¾è½¬çŸ© [N/m]
     float GetMaxMotorTorque() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯»ÉÏìÓ¦ËÙ¶È
+    /// @brief è®¾ç½®å¼¹ç°§å“åº”é€Ÿåº¦
     void SetSpringFrequencyHz(float hz);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯»ÉÏìÓ¦ËÙ¶È
+    /// @brief èŽ·å–å¼¹ç°§å“åº”é€Ÿåº¦
     float GetSpringFrequencyHz() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯»É×èÄáÂÊ
+    /// @brief è®¾ç½®å¼¹ç°§é˜»å°¼çŽ‡
     void SetSpringDampingRatio(float ratio);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯»É×èÄáÂÊ
+    /// @brief èŽ·å–å¼¹ç°§é˜»å°¼çŽ‡
     float GetSpringDampingRatio() const;
 
 private:
@@ -892,19 +892,19 @@ private:
 };
 
 /// \~chinese
-/// @brief Êó±ê¹Ø½Ú
-/// @details ÓÃÓÚÊ¹ÉíÌåµÄÄ³¸öµã×·×ÙÊÀ½çÉÏµÄÖ¸¶¨µã£¬ÀýÈçÈÃÎïÌå×·×ÙÊó±êÎ»ÖÃ
+/// @brief é¼ æ ‡å…³èŠ‚
+/// @details ç”¨äºŽä½¿èº«ä½“çš„æŸä¸ªç‚¹è¿½è¸ªä¸–ç•Œä¸Šçš„æŒ‡å®šç‚¹ï¼Œä¾‹å¦‚è®©ç‰©ä½“è¿½è¸ªé¼ æ ‡ä½ç½®
 class KGE_API MouseJoint : public Joint
 {
 public:
     /// \~chinese
-    /// @brief Êó±ê¹Ø½Ú²ÎÊý
+    /// @brief é¼ æ ‡å…³èŠ‚å‚æ•°
     struct Param : public Joint::ParamBase
     {
-        Point target;         ///< ¹Ø½Ú×÷ÓÃÄ¿±êÎ»ÖÃ
-        float max_force;      ///< ×÷ÓÃÔÚÎïÌåAÉÏµÄ×î´óÁ¦
-        float frequency_hz;   ///< ÏìÓ¦ËÙ¶È£¬ÊýÖµÔ½¸ß¹Ø½ÚÏìÓ¦µÄËÙ¶ÈÔ½¿ì£¬¿´ÉÏÈ¥Ô½¼á¹Ì
-        float damping_ratio;  ///< ×èÄáÂÊ£¬ÖµÔ½´ó¹Ø½ÚÔË¶¯×èÄáÔ½´ó
+        Point target;         ///< å…³èŠ‚ä½œç”¨ç›®æ ‡ä½ç½®
+        float max_force;      ///< ä½œç”¨åœ¨ç‰©ä½“Aä¸Šçš„æœ€å¤§åŠ›
+        float frequency_hz;   ///< å“åº”é€Ÿåº¦ï¼Œæ•°å€¼è¶Šé«˜å…³èŠ‚å“åº”çš„é€Ÿåº¦è¶Šå¿«ï¼Œçœ‹ä¸ŠåŽ»è¶Šåšå›º
+        float damping_ratio;  ///< é˜»å°¼çŽ‡ï¼Œå€¼è¶Šå¤§å…³èŠ‚è¿åŠ¨é˜»å°¼è¶Šå¤§
 
         Param(Body* body_a, Body* body_b, Point const& target, float max_force, float frequency_hz = 5.0f,
               float damping_ratio = 0.7f)
@@ -924,39 +924,39 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Êó±ê¹Ø½Ú
-    /// @param world ÎïÀíÊÀ½ç
-    /// @param param ¹Ø½Ú²ÎÊý
+    /// @brief åˆ›å»ºé¼ æ ‡å…³èŠ‚
+    /// @param world ç‰©ç†ä¸–ç•Œ
+    /// @param param å…³èŠ‚å‚æ•°
     static MouseJointPtr Create(World* world, Param const& param);
 
     MouseJoint();
 
     /// \~chinese
-    /// @brief ³õÊ¼»¯¹Ø½Ú
+    /// @brief åˆå§‹åŒ–å…³èŠ‚
     bool InitJoint(World* world, Param const& param);
 
     /// \~chinese
-    /// @brief Éè¶¨×î´óÄ¦²ÁÁ¦ [N]
+    /// @brief è®¾å®šæœ€å¤§æ‘©æ“¦åŠ› [N]
     void SetMaxForce(float force);
 
     /// \~chinese
-    /// @brief »ñÈ¡×î´óÄ¦²ÁÁ¦ [N]
+    /// @brief èŽ·å–æœ€å¤§æ‘©æ“¦åŠ› [N]
     float GetMaxForce() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÏìÓ¦ËÙ¶È [hz]
+    /// @brief è®¾ç½®å“åº”é€Ÿåº¦ [hz]
     void SetFrequency(float hz);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏìÓ¦ËÙ¶È [hz]
+    /// @brief èŽ·å–å“åº”é€Ÿåº¦ [hz]
     float GetFrequency() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ×èÄáÂÊ
+    /// @brief è®¾ç½®é˜»å°¼çŽ‡
     void SetDampingRatio(float ratio);
 
     /// \~chinese
-    /// @brief »ñÈ¡×èÄáÂÊ
+    /// @brief èŽ·å–é˜»å°¼çŽ‡
     float GetDampingRatio() const;
 
 private:

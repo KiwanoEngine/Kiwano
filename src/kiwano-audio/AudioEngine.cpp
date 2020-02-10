@@ -37,7 +37,7 @@ AudioEngine::~AudioEngine() {}
 
 void AudioEngine::SetupComponent()
 {
-    KGE_SYS_LOG(L"Creating audio resources");
+    KGE_SYS_LOG("Creating audio resources");
 
     HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -51,12 +51,12 @@ void AudioEngine::SetupComponent()
         hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
     }
 
-    win32::ThrowIfFailed(hr);
+    win32::ThrowIfFailed(hr, "Create audio resources failed");
 }
 
 void AudioEngine::DestroyComponent()
 {
-    KGE_SYS_LOG(L"Destroying audio resources");
+    KGE_SYS_LOG("Destroying audio resources");
 
     if (mastering_voice_)
     {
@@ -100,7 +100,7 @@ bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
         }
     }
 
-    win32::WarnIfFailed(hr);
+    win32::WarnIfFailed(hr, "Create sound failed");
     return SUCCEEDED(hr);
 }
 

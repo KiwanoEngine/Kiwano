@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <codecvt>
 #include <thread>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
@@ -34,48 +33,14 @@ using namespace kiwano::network;
 
 uint32_t write_data(void* buffer, uint32_t size, uint32_t nmemb, void* userp)
 {
-    ByteString* recv_buffer = (ByteString*)userp;
-    uint32_t    total       = size * nmemb;
+    String*  recv_buffer = (String*)userp;
+    uint32_t total       = size * nmemb;
 
     // add data to the end of recv_buffer
     // write data maybe called more than once in a single request
     recv_buffer->append((char*)buffer, total);
 
     return total;
-}
-
-ByteString convert_to_utf8(String const& str)
-{
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-    ByteString                                       result;
-
-    try
-    {
-        result = utf8_conv.to_bytes(str.c_str());
-    }
-    catch (std::range_error&)
-    {
-        // bad conversion
-        result = WideToMultiByte(str);
-    }
-    return result;
-}
-
-String convert_from_utf8(ByteString const& str)
-{
-    oc::string_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
-    String                                         result;
-
-    try
-    {
-        result = utf8_conv.from_bytes(str);
-    }
-    catch (std::range_error&)
-    {
-        // bad conversion
-        result = MultiByteToWide(str);
-    }
-    return result;
 }
 
 class Curl
@@ -102,8 +67,8 @@ public:
         }
     }
 
-    bool Init(HttpClient* client, Vector<ByteString> const& headers, ByteString const& url, ByteString* response_data,
-              ByteString* response_header, char* error_buffer)
+    bool Init(HttpClient* client, Vector<String> const& headers, String const& url, String* response_data,
+              String* response_header, char* error_buffer)
     {
         if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
             return false;
@@ -112,7 +77,7 @@ public:
         if (!SetOption(CURLOPT_CONNECTTIMEOUT, client->GetTimeoutForConnect()))
             return false;
 
-        const auto ssl_ca_file = wide_to_string(client->GetSSLVerification());
+        const String& ssl_ca_file = client->GetSSLVerification();
         if (ssl_ca_file.empty())
         {
             if (!SetOption(CURLOPT_SSL_VERIFYPEER, 0L))
@@ -167,8 +132,8 @@ public:
     }
 
 public:
-    static inline bool GetRequest(HttpClient* client, Vector<ByteString> const& headers, ByteString const& url,
-                                  long* response_code, ByteString* response_data, ByteString* response_header,
+    static inline bool GetRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+                                  long* response_code, String* response_data, String* response_header,
                                   char* error_buffer)
     {
         Curl curl;
@@ -176,9 +141,9 @@ public:
                && curl.SetOption(CURLOPT_FOLLOWLOCATION, true) && curl.Perform(response_code);
     }
 
-    static inline bool PostRequest(HttpClient* client, Vector<ByteString> const& headers, ByteString const& url,
-                                   ByteString const& request_data, long* response_code, ByteString* response_data,
-                                   ByteString* response_header, char* error_buffer)
+    static inline bool PostRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+                                   String const& request_data, long* response_code, String* response_data,
+                                   String* response_header, char* error_buffer)
     {
         Curl curl;
         return curl.Init(client, headers, url, response_data, response_header, error_buffer)
@@ -186,9 +151,9 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool PutRequest(HttpClient* client, Vector<ByteString> const& headers, ByteString const& url,
-                                  ByteString const& request_data, long* response_code, ByteString* response_data,
-                                  ByteString* response_header, char* error_buffer)
+    static inline bool PutRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+                                  String const& request_data, long* response_code, String* response_data,
+                                  String* response_header, char* error_buffer)
     {
         Curl curl;
         return curl.Init(client, headers, url, response_data, response_header, error_buffer)
@@ -197,8 +162,8 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool DeleteRequest(HttpClient* client, Vector<ByteString> const& headers, ByteString const& url,
-                                     long* response_code, ByteString* response_data, ByteString* response_header,
+    static inline bool DeleteRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+                                     long* response_code, String* response_data, String* response_header,
                                      char* error_buffer)
     {
         Curl curl;
@@ -276,20 +241,19 @@ void HttpClient::NetworkThread()
 
 void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
 {
-    bool       ok                 = false;
-    long       response_code      = 0;
-    char       error_message[256] = { 0 };
-    ByteString response_header;
-    ByteString response_data;
+    bool   ok                 = false;
+    long   response_code      = 0;
+    char   error_message[256] = { 0 };
+    String response_header;
+    String response_data;
+    String url  = request->GetUrl();
+    String data = request->GetData();
 
-    ByteString url  = convert_to_utf8(request->GetUrl());
-    ByteString data = convert_to_utf8(request->GetData());
-
-    Vector<ByteString> headers;
+    Vector<String> headers;
     headers.reserve(request->GetHeaders().size());
     for (const auto& pair : request->GetHeaders())
     {
-        headers.push_back(wide_to_string(pair.first) + ":" + wide_to_string(pair.second));
+        headers.push_back(pair.first + ":" + pair.second);
     }
 
     switch (request->GetType())
@@ -309,17 +273,17 @@ void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
         ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
         break;
     default:
-        KGE_ERROR(L"HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
+        KGE_ERROR("HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
         return;
     }
 
     response->SetResponseCode(response_code);
-    response->SetHeader(MultiByteToWide(response_header));
-    response->SetData(convert_from_utf8(response_data));
+    response->SetHeader(response_header);
+    response->SetData(response_data);
     if (!ok)
     {
         response->SetSucceed(false);
-        response->SetError(MultiByteToWide(error_message));
+        response->SetError(error_message);
     }
     else
     {

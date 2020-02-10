@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class Renderer;
-
 KGE_DECLARE_SMART_PTR(GifImage);
 
 /**
@@ -35,88 +33,90 @@ KGE_DECLARE_SMART_PTR(GifImage);
 
 /**
  * \~chinese
- * @brief GIFÍ¼Ïñ
+ * @brief GIFå›¾åƒ
  */
 class KGE_API GifImage : public virtual ObjectBase
 {
-    friend class Renderer;
-
 public:
     /// \~chinese
-    /// @brief ´´½¨GIFÍ¼Æ¬
+    /// @brief åˆ›å»ºGIFå›¾ç‰‡
     static GifImagePtr Create(String const& file_path);
 
     /// \~chinese
-    /// @brief ´´½¨GIFÍ¼Æ¬
+    /// @brief åˆ›å»ºGIFå›¾ç‰‡
     static GifImagePtr Create(Resource const& res);
 
     GifImage();
 
     /// \~chinese
-    /// @brief ¼ÓÔØ±¾µØGIFÍ¼Æ¬
+    /// @brief åŠ è½½æœ¬åœ°GIFå›¾ç‰‡
     bool Load(String const& file_path);
 
     /// \~chinese
-    /// @brief ¼ÓÔØGIF×ÊÔ´
+    /// @brief åŠ è½½GIFèµ„æº
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ¿í¶È
+    /// @brief è·å–åƒç´ å®½åº¦
     uint32_t GetWidthInPixels() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏñËØ¸ß¶È
+    /// @brief è·å–åƒç´ é«˜åº¦
     uint32_t GetHeightInPixels() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ö¡ÊıÁ¿
+    /// @brief è·å–å¸§æ•°é‡
     uint32_t GetFramesCount() const;
 
 public:
     /// \~chinese
-    /// @brief GIFÖ¡µÄ´¦ÖÃ·½Ê½
+    /// @brief GIFå¸§çš„å¤„ç½®æ–¹å¼
     enum class DisposalType
     {
-        Unknown,     ///< Î´Öª
-        None,        ///< ²»´¦Àí
-        Background,  ///< ±³¾°
-        Previous     ///< »Ö¸´Ç°Ò»Ö¡
+        Unknown,     ///< æœªçŸ¥
+        None,        ///< ä¸å¤„ç†
+        Background,  ///< èƒŒæ™¯
+        Previous     ///< æ¢å¤å‰ä¸€å¸§
     };
 
     /// \~chinese
-    /// @brief GIFÖ¡
+    /// @brief GIFå¸§
     struct Frame
     {
-        Duration     delay;          ///< Ö¡ÑÓ³Ù
-        TexturePtr   texture;        ///< Ö¡Í¼Ïñ
-        Rect         rect;           ///< »æÖÆÇøÓò
-        DisposalType disposal_type;  ///< ´¦ÖÃ·½Ê½
+        Duration     delay;          ///< å¸§å»¶è¿Ÿ
+        TexturePtr   texture;        ///< å¸§å›¾åƒ
+        Rect         rect;           ///< ç»˜åˆ¶åŒºåŸŸ
+        DisposalType disposal_type;  ///< å¤„ç½®æ–¹å¼
 
         Frame();
     };
 
     /// \~chinese
-    /// @brief »ñÈ¡GIFÖ¡
-    /// @param index Ö¡ÏÂ±ê
+    /// @brief è·å–GIFå¸§
+    /// @param index å¸§ä¸‹æ ‡
     Frame GetFrame(uint32_t index);
 
 private:
-    ComPtr<IWICBitmapDecoder> GetDecoder() const;
-
-    void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
-
-    HRESULT GetGlobalMetadata();
+    bool GetGlobalMetadata();
 
 private:
     uint32_t frames_count_;
     uint32_t width_in_pixels_;
     uint32_t height_in_pixels_;
 
+#if defined(KGE_WIN32)
+public:
+    ComPtr<IWICBitmapDecoder> GetDecoder() const;
+
+    void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
+
+private:
     ComPtr<IWICBitmapDecoder> decoder_;
+#endif
 };
 
 /** @} */
@@ -141,6 +141,7 @@ inline uint32_t GifImage::GetFramesCount() const
     return frames_count_;
 }
 
+#if defined(KGE_WIN32)
 inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
 {
     return decoder_;
@@ -150,4 +151,6 @@ inline void GifImage::SetDecoder(ComPtr<IWICBitmapDecoder> decoder)
 {
     decoder_ = decoder;
 }
+#endif
+
 }  // namespace kiwano

@@ -154,7 +154,7 @@ void Actor::RenderBorder(RenderContext& ctx)
         ctx.FillRectangle(bounds);
 
         ctx.SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
-        ctx.DrawRectangle(bounds, 2.f);
+        ctx.DrawRectangle(bounds, nullptr, 2.f);
     }
 
     for (auto child = children_.first_item(); child; child = child->next_item())
@@ -513,7 +513,7 @@ void Actor::AddChild(Actor* child, int zorder)
         {
             if (parent == child)
             {
-                KGE_ERROR(L"A actor cannot be its own parent");
+                KGE_ERROR("A actor cannot be its own parent");
                 return;
             }
         }

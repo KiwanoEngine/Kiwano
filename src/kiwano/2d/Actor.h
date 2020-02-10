@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(Actor);
 
 /**
  * \~chinese
- * \defgroup Actors »ù´¡½ÇÉ«
+ * \defgroup Actors åŸºç¡€è§’è‰²
  */
 
 /**
@@ -46,9 +46,9 @@ KGE_DECLARE_SMART_PTR(Actor);
 
 /**
  * \~chinese
- * @brief ½ÇÉ«
+ * @brief è§’è‰²
  * @details
- * ½ÇÉ«ÊÇÎèÌ¨ÉÏ×î»ù±¾µÄÔªËØ£¬ÊÇÍê³ÉäÖÈ¾¡¢¸üĞÂ¡¢ÊÂ¼ş·Ö·¢µÈ¹¦ÄÜµÄ×îĞ¡µ¥Î»£¬Ò²ÊÇ¶¯»­¡¢¶¨Ê±Æ÷¡¢ÊÂ¼ş¼àÌıµÈ¹¦ÄÜµÄÔØÌå
+ * è§’è‰²æ˜¯èˆå°ä¸Šæœ€åŸºæœ¬çš„å…ƒç´ ï¼Œæ˜¯å®Œæˆæ¸²æŸ“ã€æ›´æ–°ã€äº‹ä»¶åˆ†å‘ç­‰åŠŸèƒ½çš„æœ€å°å•ä½ï¼Œä¹Ÿæ˜¯åŠ¨ç”»ã€å®šæ—¶å™¨ã€äº‹ä»¶ç›‘å¬ç­‰åŠŸèƒ½çš„è½½ä½“
  */
 class KGE_API Actor
     : public virtual ObjectBase
@@ -63,15 +63,15 @@ class KGE_API Actor
 
 public:
     /// \~chinese
-    /// @brief ×Ó³ÉÔ±ÁĞ±í
+    /// @brief å­æˆå‘˜åˆ—è¡¨
     using Children = IntrusiveList<ActorPtr>;
 
     /// \~chinese
-    /// @brief ½ÇÉ«¸üĞÂ»Øµ÷º¯Êı
+    /// @brief è§’è‰²æ›´æ–°å›è°ƒå‡½æ•°
     using UpdateCallback = Function<void(Duration)>;
 
     /// \~chinese
-    /// @brief ´´½¨½ÇÉ«
+    /// @brief åˆ›å»ºè§’è‰²
     static ActorPtr Create();
 
     Actor();
@@ -79,372 +79,372 @@ public:
     virtual ~Actor();
 
     /// \~chinese
-    /// @brief ¸üĞÂ½ÇÉ«
-    /// @details Ã¿Ö¡»­ÃæË¢ĞÂÇ°µ÷ÓÃ¸Ãº¯Êı£¬ÖØÔØ¸Ãº¯ÊıÒÔÊµÏÖ½ÇÉ«µÄ¸üĞÂ´¦Àí
-    /// @param dt ¾àÉÏÒ»´Î¸üĞÂµÄÊ±¼ä¼ä¸ô
+    /// @brief æ›´æ–°è§’è‰²
+    /// @details æ¯å¸§ç”»é¢åˆ·æ–°å‰è°ƒç”¨è¯¥å‡½æ•°ï¼Œé‡è½½è¯¥å‡½æ•°ä»¥å®ç°è§’è‰²çš„æ›´æ–°å¤„ç†
+    /// @param dt è·ä¸Šä¸€æ¬¡æ›´æ–°çš„æ—¶é—´é—´éš”
     virtual void OnUpdate(Duration dt);
 
     /// \~chinese
-    /// @brief äÖÈ¾½ÇÉ«
+    /// @brief æ¸²æŸ“è§’è‰²
     /// @details
-    /// Ã¿Ö¡»­ÃæË¢ĞÂÊ±µ÷ÓÃ¸Ãº¯Êı£¬Ä¬ÈÏ²»½øĞĞäÖÈ¾£¬ÖØÔØ¸Ãº¯ÊıÒÔÊµÏÖ¾ßÌåäÖÈ¾¹ı³Ì
-    /// @param ctx äÖÈ¾ÉÏÏÂÎÄ
+    /// æ¯å¸§ç”»é¢åˆ·æ–°æ—¶è°ƒç”¨è¯¥å‡½æ•°ï¼Œé»˜è®¤ä¸è¿›è¡Œæ¸²æŸ“ï¼Œé‡è½½è¯¥å‡½æ•°ä»¥å®ç°å…·ä½“æ¸²æŸ“è¿‡ç¨‹
+    /// @param ctx æ¸²æŸ“ä¸Šä¸‹æ–‡
     virtual void OnRender(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏÔÊ¾×´Ì¬
+    /// @brief è·å–æ˜¾ç¤ºçŠ¶æ€
     bool IsVisible() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏìÓ¦×´Ì¬
+    /// @brief è·å–å“åº”çŠ¶æ€
     bool IsResponsible() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÆôÓÃ¼¶ÁªÍ¸Ã÷¶È
+    /// @brief æ˜¯å¦å¯ç”¨çº§è”é€æ˜åº¦
     bool IsCascadeOpacityEnabled() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ãû³ÆµÄ Hash Öµ
+    /// @brief è·å–åç§°çš„ Hash å€¼
     size_t GetHashName() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ Z ÖáË³Ğò
+    /// @brief è·å– Z è½´é¡ºåº
     int GetZOrder() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡×ø±ê
+    /// @brief è·å–åæ ‡
     Point const& GetPosition() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ x ×ø±ê
+    /// @brief è·å– x åæ ‡
     float GetPositionX() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ y ×ø±ê
+    /// @brief è·å– y åæ ‡
     float GetPositionY() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¿í¶È
+    /// @brief è·å–å®½åº¦
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸ß¶È
+    /// @brief è·å–é«˜åº¦
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡´óĞ¡
+    /// @brief è·å–å¤§å°
     Size const& GetSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ëõ·ÅºóµÄ¿í¶È
+    /// @brief è·å–ç¼©æ”¾åçš„å®½åº¦
     float GetScaledWidth() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ëõ·ÅºóµÄ¸ß¶È
+    /// @brief è·å–ç¼©æ”¾åçš„é«˜åº¦
     float GetScaledHeight() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ëõ·ÅºóµÄ´óĞ¡
+    /// @brief è·å–ç¼©æ”¾åçš„å¤§å°
     Size GetScaledSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ãªµã
+    /// @brief è·å–é”šç‚¹
     Point const& GetAnchor() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ x ·½ÏòÃªµã
+    /// @brief è·å– x æ–¹å‘é”šç‚¹
     float GetAnchorX() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ y ·½ÏòÃªµã
+    /// @brief è·å– y æ–¹å‘é”šç‚¹
     float GetAnchorY() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¸Ã÷¶È
+    /// @brief è·å–é€æ˜åº¦
     float GetOpacity() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÏÔÊ¾Í¸Ã÷¶È
+    /// @brief è·å–æ˜¾ç¤ºé€æ˜åº¦
     float GetDisplayedOpacity() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ğı×ª½Ç¶È
+    /// @brief è·å–æ—‹è½¬è§’åº¦
     float GetRotation() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Ëõ·Å±ÈÀı
+    /// @brief è·å–ç¼©æ”¾æ¯”ä¾‹
     Point const& GetScale() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ºáÏòËõ·Å±ÈÀı
+    /// @brief è·å–æ¨ªå‘ç¼©æ”¾æ¯”ä¾‹
     float GetScaleX() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡×İÏòËõ·Å±ÈÀı
+    /// @brief è·å–çºµå‘ç¼©æ”¾æ¯”ä¾‹
     float GetScaleY() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡´íÇĞ½Ç¶È
+    /// @brief è·å–é”™åˆ‡è§’åº¦
     Point const& GetSkew() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ºáÏò´íÇĞ½Ç¶È
+    /// @brief è·å–æ¨ªå‘é”™åˆ‡è§’åº¦
     float GetSkewX() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡×İÏò´íÇĞ½Ç¶È
+    /// @brief è·å–çºµå‘é”™åˆ‡è§’åº¦
     float GetSkewY() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡±ä»»
+    /// @brief è·å–å˜æ¢
     Transform GetTransform() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸¸½ÇÉ«
+    /// @brief è·å–çˆ¶è§’è‰²
     Actor* GetParent() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÔÚÎèÌ¨
+    /// @brief è·å–æ‰€åœ¨èˆå°
     Stage* GetStage() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡±ß¿ò
+    /// @brief è·å–è¾¹æ¡†
     virtual Rect GetBounds() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
+    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
     virtual Rect GetBoundingBox() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¶şÎ¬±ä»»¾ØÕó
+    /// @brief è·å–äºŒç»´å˜æ¢çŸ©é˜µ
     Matrix3x2 const& GetTransformMatrix() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¶şÎ¬±ä»»µÄÄæ¾ØÕó
+    /// @brief è·å–äºŒç»´å˜æ¢çš„é€†çŸ©é˜µ
     Matrix3x2 const& GetTransformInverseMatrix() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ½ÇÉ«ÊÇ·ñ¿É¼û
+    /// @brief è®¾ç½®è§’è‰²æ˜¯å¦å¯è§
     void SetVisible(bool val);
 
     /// \~chinese
-    /// @brief ÉèÖÃÃû³Æ
+    /// @brief è®¾ç½®åç§°
     void SetName(String const& name);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ø±ê
+    /// @brief è®¾ç½®åæ ‡
     virtual void SetPosition(Point const& point);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×ø±ê
+    /// @brief è®¾ç½®åæ ‡
     void SetPosition(float x, float y);
 
     /// \~chinese
-    /// @brief ÉèÖÃºá×ø±ê
+    /// @brief è®¾ç½®æ¨ªåæ ‡
     void SetPositionX(float x);
 
     /// \~chinese
-    /// @brief ÉèÖÃ×İ×ø±ê
+    /// @brief è®¾ç½®çºµåæ ‡
     void SetPositionY(float y);
 
     /// \~chinese
-    /// @brief ÒÆ¶¯×ø±ê
+    /// @brief ç§»åŠ¨åæ ‡
     void Move(Vec2 const& v);
 
     /// \~chinese
-    /// @brief ÒÆ¶¯×ø±ê
+    /// @brief ç§»åŠ¨åæ ‡
     void Move(float vx, float vy);
 
     /// \~chinese
-    /// @brief ÉèÖÃËõ·Å±ÈÀı£¬Ä¬ÈÏÎª (1.0, 1.0)
+    /// @brief è®¾ç½®ç¼©æ”¾æ¯”ä¾‹ï¼Œé»˜è®¤ä¸º (1.0, 1.0)
     virtual void SetScale(Vec2 const& scale);
 
     /// \~chinese
-    /// @brief ÉèÖÃËõ·Å±ÈÀı£¬Ä¬ÈÏÎª (1.0, 1.0)
+    /// @brief è®¾ç½®ç¼©æ”¾æ¯”ä¾‹ï¼Œé»˜è®¤ä¸º (1.0, 1.0)
     void SetScale(float scalex, float scaley);
 
     /// \~chinese
-    /// @brief ÉèÖÃ´íÇĞ½Ç¶È£¬Ä¬ÈÏÎª (0, 0)
+    /// @brief è®¾ç½®é”™åˆ‡è§’åº¦ï¼Œé»˜è®¤ä¸º (0, 0)
     virtual void SetSkew(Vec2 const& skew);
 
     /// \~chinese
-    /// @brief ÉèÖÃ´íÇĞ½Ç¶È£¬Ä¬ÈÏÎª (0, 0)
+    /// @brief è®¾ç½®é”™åˆ‡è§’åº¦ï¼Œé»˜è®¤ä¸º (0, 0)
     void SetSkew(float skewx, float skewy);
 
     /// \~chinese
-    /// @brief ÉèÖÃĞı×ª½Ç¶È£¬Ä¬ÈÏÎª 0
+    /// @brief è®¾ç½®æ—‹è½¬è§’åº¦ï¼Œé»˜è®¤ä¸º 0
     virtual void SetRotation(float rotation);
 
     /// \~chinese
-    /// @brief ÉèÖÃÃªµãÎ»ÖÃ£¬Ä¬ÈÏÎª (0, 0), ·¶Î§ [0, 1]
+    /// @brief è®¾ç½®é”šç‚¹ä½ç½®ï¼Œé»˜è®¤ä¸º (0, 0), èŒƒå›´ [0, 1]
     virtual void SetAnchor(Vec2 const& anchor);
 
     /// \~chinese
-    /// @brief ÉèÖÃÃªµãÎ»ÖÃ£¬Ä¬ÈÏÎª (0, 0), ·¶Î§ [0, 1]
+    /// @brief è®¾ç½®é”šç‚¹ä½ç½®ï¼Œé»˜è®¤ä¸º (0, 0), èŒƒå›´ [0, 1]
     void SetAnchor(float anchorx, float anchory);
 
     /// \~chinese
-    /// @brief ĞŞ¸Ä¿í¶È
+    /// @brief ä¿®æ”¹å®½åº¦
     virtual void SetWidth(float width);
 
     /// \~chinese
-    /// @brief ĞŞ¸Ä¸ß¶È
+    /// @brief ä¿®æ”¹é«˜åº¦
     virtual void SetHeight(float height);
 
     /// \~chinese
-    /// @brief ĞŞ¸Ä´óĞ¡
+    /// @brief ä¿®æ”¹å¤§å°
     virtual void SetSize(Size const& size);
 
     /// \~chinese
-    /// @brief ĞŞ¸Ä´óĞ¡
+    /// @brief ä¿®æ”¹å¤§å°
     void SetSize(float width, float height);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¸Ã÷¶È£¬Ä¬ÈÏÎª 1.0, ·¶Î§ [0, 1]
+    /// @brief è®¾ç½®é€æ˜åº¦ï¼Œé»˜è®¤ä¸º 1.0, èŒƒå›´ [0, 1]
     virtual void SetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief ÆôÓÃ»ò½ûÓÃ¼¶ÁªÍ¸Ã÷¶È
+    /// @brief å¯ç”¨æˆ–ç¦ç”¨çº§è”é€æ˜åº¦
     void SetCascadeOpacityEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¶şÎ¬·ÂÉä±ä»»
+    /// @brief è®¾ç½®äºŒç»´ä»¿å°„å˜æ¢
     void SetTransform(Transform const& transform);
 
     /// \~chinese
-    /// @brief ÉèÖÃ Z ÖáË³Ğò£¬Ä¬ÈÏÎª 0
+    /// @brief è®¾ç½® Z è½´é¡ºåºï¼Œé»˜è®¤ä¸º 0
     void SetZOrder(int zorder);
 
     /// \~chinese
-    /// @brief ÉèÖÃ½ÇÉ«ÊÇ·ñ¿ÉÏìÓ¦£¬Ä¬ÈÏÎª false
-    /// @details ¿ÉÏìÓ¦µÄ½ÇÉ«»áÊÕµ½Êó±êµÄ Hover | Out | Click ÏûÏ¢
+    /// @brief è®¾ç½®è§’è‰²æ˜¯å¦å¯å“åº”ï¼Œé»˜è®¤ä¸º false
+    /// @details å¯å“åº”çš„è§’è‰²ä¼šæ”¶åˆ°é¼ æ ‡çš„ Hover | Out | Click æ¶ˆæ¯
     void SetResponsible(bool enable);
 
     /// \~chinese
-    /// @brief Ìí¼Ó×Ó½ÇÉ«
+    /// @brief æ·»åŠ å­è§’è‰²
     void AddChild(ActorPtr child, int zorder = 0);
 
     /// \~chinese
-    /// @brief Ìí¼Ó×Ó½ÇÉ«
+    /// @brief æ·»åŠ å­è§’è‰²
     void AddChild(Actor* child, int zorder = 0);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶à¸ö×Ó½ÇÉ«
+    /// @brief æ·»åŠ å¤šä¸ªå­è§’è‰²
     void AddChildren(Vector<ActorPtr> const& children);
 
     /// \~chinese
-    /// @brief »ñÈ¡Ãû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
+    /// @brief è·å–åç§°ç›¸åŒçš„å­è§’è‰²
     Actor* GetChild(String const& name) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞÃû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
+    /// @brief è·å–æ‰€æœ‰åç§°ç›¸åŒçš„å­è§’è‰²
     Vector<ActorPtr> GetChildren(String const& name) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡È«²¿×Ó½ÇÉ«
+    /// @brief è·å–å…¨éƒ¨å­è§’è‰²
     Children& GetAllChildren();
 
     /// \~chinese
-    /// @brief »ñÈ¡È«²¿×Ó½ÇÉ«
+    /// @brief è·å–å…¨éƒ¨å­è§’è‰²
     Children const& GetAllChildren() const;
 
     /// \~chinese
-    /// @brief ÒÆ³ı×Ó½ÇÉ«
+    /// @brief ç§»é™¤å­è§’è‰²
     void RemoveChild(ActorPtr child);
 
     /// \~chinese
-    /// @brief ÒÆ³ı×Ó½ÇÉ«
+    /// @brief ç§»é™¤å­è§’è‰²
     void RemoveChild(Actor* child);
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞÃû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
+    /// @brief ç§»é™¤æ‰€æœ‰åç§°ç›¸åŒçš„å­è§’è‰²
     void RemoveChildren(String const& child_name);
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞ½ÇÉ«
+    /// @brief ç§»é™¤æ‰€æœ‰è§’è‰²
     void RemoveAllChildren();
 
     /// \~chinese
-    /// @brief ´Ó¸¸½ÇÉ«ÒÆ³ı
+    /// @brief ä»çˆ¶è§’è‰²ç§»é™¤
     void RemoveFromParent();
 
     /// \~chinese
-    /// @brief ÔİÍ£½ÇÉ«¸üĞÂ
+    /// @brief æš‚åœè§’è‰²æ›´æ–°
     void PauseUpdating();
 
     /// \~chinese
-    /// @brief ¼ÌĞø½ÇÉ«¸üĞÂ
+    /// @brief ç»§ç»­è§’è‰²æ›´æ–°
     void ResumeUpdating();
 
     /// \~chinese
-    /// @brief ½ÇÉ«¸üĞÂÊÇ·ñÔİÍ£
+    /// @brief è§’è‰²æ›´æ–°æ˜¯å¦æš‚åœ
     bool IsUpdatePausing() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¸üĞÂÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®æ›´æ–°æ—¶çš„å›è°ƒå‡½æ•°
     void SetCallbackOnUpdate(UpdateCallback const& cb);
 
     /// \~chinese
-    /// @brief »ñÈ¡¸üĞÂÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è·å–æ›´æ–°æ—¶çš„å›è°ƒå‡½æ•°
     UpdateCallback GetCallbackOnUpdate() const;
 
     /// \~chinese
-    /// @brief ÅĞ¶ÏµãÊÇ·ñÔÚ½ÇÉ«ÄÚ
+    /// @brief åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨è§’è‰²å†…
     virtual bool ContainsPoint(const Point& point) const;
 
     /// \~chinese
-    /// @brief äÖÈ¾½ÇÉ«±ß½ç
+    /// @brief æ¸²æŸ“è§’è‰²è¾¹ç•Œ
     void ShowBorder(bool show);
 
     /// \~chinese
-    /// @brief ·Ö·¢ÊÂ¼ş
-    /// @param evt ÊÂ¼ş
-    /// @return ÊÇ·ñ¼ÌĞø·Ö·¢¸ÃÊÂ¼ş
+    /// @brief åˆ†å‘äº‹ä»¶
+    /// @param evt äº‹ä»¶
+    /// @return æ˜¯å¦ç»§ç»­åˆ†å‘è¯¥äº‹ä»¶
     virtual bool DispatchEvent(Event* evt);
 
     /// \~chinese
-    /// @brief ÉèÖÃÄ¬ÈÏÃªµã
+    /// @brief è®¾ç½®é»˜è®¤é”šç‚¹
     static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
 protected:
     /// \~chinese
-    /// @brief ¸üĞÂ×ÔÉíºÍËùÓĞ×Ó½ÇÉ«
+    /// @brief æ›´æ–°è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²
     virtual void Update(Duration dt);
 
     /// \~chinese
-    /// @brief äÖÈ¾×ÔÉíºÍËùÓĞ×Ó½ÇÉ«
+    /// @brief æ¸²æŸ“è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²
     virtual void Render(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief »æÖÆ×ÔÉíºÍËùÓĞ×Ó½ÇÉ«µÄ±ß½ç
+    /// @brief ç»˜åˆ¶è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²çš„è¾¹ç•Œ
     virtual void RenderBorder(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief ¼ì²éÊÇ·ñÔÚäÖÈ¾ÉÏÏÂÎÄµÄÊÓÇøÄÚ
+    /// @brief æ£€æŸ¥æ˜¯å¦åœ¨æ¸²æŸ“ä¸Šä¸‹æ–‡çš„è§†åŒºå†…
     virtual bool CheckVisibility(RenderContext& ctx) const;
 
     /// \~chinese
-    /// @brief äÖÈ¾Ç°³õÊ¼»¯äÖÈ¾ÉÏÏÂÎÄ×´Ì¬£¬½öµ± CheckVisibility ·µ»ØÕæÊ±µ÷ÓÃ¸Ãº¯Êı
+    /// @brief æ¸²æŸ“å‰åˆå§‹åŒ–æ¸²æŸ“ä¸Šä¸‹æ–‡çŠ¶æ€ï¼Œä»…å½“ CheckVisibility è¿”å›çœŸæ—¶è°ƒç”¨è¯¥å‡½æ•°
     virtual void PrepareToRender(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief ¸üĞÂ×Ô¼ºµÄ¶şÎ¬±ä»»£¬²¢Í¨ÖªËùÓĞ×Ó½ÇÉ«
+    /// @brief æ›´æ–°è‡ªå·±çš„äºŒç»´å˜æ¢ï¼Œå¹¶é€šçŸ¥æ‰€æœ‰å­è§’è‰²
     void UpdateTransform() const;
 
     /// \~chinese
-    /// @brief ¸üĞÂ×Ô¼ººÍËùÓĞ×Ó½ÇÉ«µÄÍ¸Ã÷¶È
+    /// @brief æ›´æ–°è‡ªå·±å’Œæ‰€æœ‰å­è§’è‰²çš„é€æ˜åº¦
     void UpdateOpacity();
 
     /// \~chinese
-    /// @brief ½«ËùÓĞ×Ó½ÇÉ«°´ZÖáË³ĞòÅÅĞò
+    /// @brief å°†æ‰€æœ‰å­è§’è‰²æŒ‰Zè½´é¡ºåºæ’åº
     void Reorder();
 
     /// \~chinese
-    /// @brief ÉèÖÃ½ÚµãËùÔÚÎèÌ¨
+    /// @brief è®¾ç½®èŠ‚ç‚¹æ‰€åœ¨èˆå°
     void SetStage(Stage* stage);
 
     /// \~chinese
-    /// @brief ´¦ÀíÊÂ¼ş
+    /// @brief å¤„ç†äº‹ä»¶
     void HandleEvent(Event* evt);
 
 private:

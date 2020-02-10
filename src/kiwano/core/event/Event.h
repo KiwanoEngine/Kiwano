@@ -29,7 +29,7 @@ KGE_DECLARE_SMART_PTR(Event);
 
 /**
  * \~chinese
- * \defgroup Events ÊÂ¼ş
+ * \defgroup Events äº‹ä»¶
  */
 
 /**
@@ -38,35 +38,35 @@ KGE_DECLARE_SMART_PTR(Event);
  */
 
 /// \~chinese
-/// @brief ÊÂ¼ş
+/// @brief äº‹ä»¶
 class KGE_API Event : public RefCounter
 {
 public:
     /// \~chinese
-    /// @brief ¹¹ÔìÊÂ¼ş
+    /// @brief æ„é€ äº‹ä»¶
     Event(EventType const& type);
 
     virtual ~Event();
 
     /// \~chinese
-    /// @brief »ñÈ¡ÀàĞÍÊÂ¼ş
+    /// @brief è·å–ç±»å‹äº‹ä»¶
     const EventType& GetType() const;
 
     /// \~chinese
-    /// @brief ÅĞ¶ÏÊÂ¼şÀàĞÍ
-    /// @return ÊÇ·ñÊÇÖ¸¶¨ÊÂ¼şÀàĞÍ
+    /// @brief åˆ¤æ–­äº‹ä»¶ç±»å‹
+    /// @return æ˜¯å¦æ˜¯æŒ‡å®šäº‹ä»¶ç±»å‹
     template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
     bool IsType() const;
 
     /// \~chinese
-    /// @brief °²È«×ª»»ÎªÆäËûÀàĞÍÊÂ¼ş
-    /// @throw std::bad_cast ÀàĞÍÎŞ·¨×ª»»Ê±Å×³ö
+    /// @brief å®‰å…¨è½¬æ¢ä¸ºå…¶ä»–ç±»å‹äº‹ä»¶
+    /// @throw std::bad_cast ç±»å‹æ— æ³•è½¬æ¢æ—¶æŠ›å‡º
     template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
     const _Ty* SafeCast() const;
 
     /// \~chinese
-    /// @brief °²È«×ª»»ÎªÆäËûÀàĞÍÊÂ¼ş
-    /// @throw std::bad_cast ÀàĞÍÎŞ·¨×ª»»Ê±Å×³ö
+    /// @brief å®‰å…¨è½¬æ¢ä¸ºå…¶ä»–ç±»å‹äº‹ä»¶
+    /// @throw std::bad_cast ç±»å‹æ— æ³•è½¬æ¢æ—¶æŠ›å‡º
     template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
     _Ty* SafeCast();
 
@@ -75,14 +75,14 @@ private:
 };
 
 /// \~chinese
-/// @brief ÊÂ¼şÌØĞÔ£ºÅĞ¶ÏÖ¸¶¨ÀàĞÍÊÇ·ñÊÇÊÂ¼ş
+/// @brief äº‹ä»¶ç‰¹æ€§ï¼šåˆ¤æ–­æŒ‡å®šç±»å‹æ˜¯å¦æ˜¯äº‹ä»¶
 template <typename _Ty>
 struct IsEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value>
 {
 };
 
 /// \~chinese
-/// @brief ÊÂ¼şÌØĞÔ£ºÅĞ¶ÏÒ»¸öÊÂ¼şÄÜ·ñ°²È«×ª»»µ½ÁíÒ»ÊÂ¼şÀàĞÍ
+/// @brief äº‹ä»¶ç‰¹æ€§ï¼šåˆ¤æ–­ä¸€ä¸ªäº‹ä»¶èƒ½å¦å®‰å…¨è½¬æ¢åˆ°å¦ä¸€äº‹ä»¶ç±»å‹
 template <typename _Ty, typename = typename std::enable_if<IsEvent<_Ty>::value, int>::type>
 struct IsEventType
 {

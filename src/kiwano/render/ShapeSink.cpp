@@ -36,9 +36,9 @@ void ShapeSink::Open()
     if (!IsOpened())
     {
         path_geo_.reset();
-        Renderer::Instance().CreateShapeSink(*this);
+        Renderer::GetInstance().CreateShapeSink(*this);
 
-        win32::ThrowIfFailed(path_geo_->Open(&sink_));
+        win32::ThrowIfFailed(path_geo_->Open(&sink_), "Open ID2D1GeometrySink failed");
     }
 }
 
@@ -46,7 +46,7 @@ void ShapeSink::Close()
 {
     if (IsOpened())
     {
-        win32::ThrowIfFailed(sink_->Close());
+        win32::ThrowIfFailed(sink_->Close(), "Close ID2D1GeometrySink failed");
         sink_.reset();
     }
 
@@ -75,8 +75,10 @@ ShapeSink& ShapeSink::AddShape(ShapePtr input, const Matrix3x2* input_matrix)
     if (input && input->IsValid())
     {
         ComPtr<ID2D1Geometry> geo = input->GetGeometry();
-        win32::ThrowIfFailed(
-            geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.get()));
+
+        HRESULT hr =
+            geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.get());
+        win32::ThrowIfFailed(hr, "Get outline of ID2D1Geometry failed");
     }
     return (*this);
 }
@@ -148,8 +150,10 @@ ShapeSink& ShapeSink::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mo
     {
         ComPtr<ID2D1Geometry> geo_a_raw = shape_a->geo_;
         ComPtr<ID2D1Geometry> geo_b_raw = shape_b->geo_;
-        win32::ThrowIfFailed(geo_a_raw->CombineWithGeometry(geo_b_raw.get(), D2D1_COMBINE_MODE(mode),
-                                                            DX::ConvertToMatrix3x2F(matrix), sink_.get()));
+
+        HRESULT hr = geo_a_raw->CombineWithGeometry(geo_b_raw.get(), D2D1_COMBINE_MODE(mode),
+                                                    DX::ConvertToMatrix3x2F(matrix), sink_.get());
+        win32::ThrowIfFailed(hr, "Combine ID2D1Geometry failed");
     }
     return (*this);
 }

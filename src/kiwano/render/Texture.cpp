@@ -57,13 +57,13 @@ Texture::~Texture() {}
 
 bool Texture::Load(String const& file_path)
 {
-    Renderer::Instance().CreateTexture(*this, file_path);
+    Renderer::GetInstance().CreateTexture(*this, file_path);
     return IsValid();
 }
 
 bool Texture::Load(Resource const& res)
 {
-    Renderer::Instance().CreateTexture(*this, res);
+    Renderer::GetInstance().CreateTexture(*this, res);
     return IsValid();
 }
 
@@ -139,7 +139,7 @@ void Texture::CopyFrom(TexturePtr copy_from)
     {
         HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
-        win32::ThrowIfFailed(hr);
+        win32::ThrowIfFailed(hr, "Copy texture data failed");
     }
 }
 
@@ -152,7 +152,7 @@ void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& 
             &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()), uint32_t(src_rect.GetRight()),
                          uint32_t(src_rect.GetBottom())));
 
-        win32::ThrowIfFailed(hr);
+        win32::ThrowIfFailed(hr, "Copy texture data failed");
     }
 }
 
@@ -170,25 +170,6 @@ void Texture::SetInterpolationMode(InterpolationMode mode)
     }
 }
 
-D2D1_PIXEL_FORMAT Texture::GetPixelFormat() const
-{
-    if (bitmap_)
-    {
-        return bitmap_->GetPixelFormat();
-    }
-    return D2D1_PIXEL_FORMAT();
-}
-
-ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
-{
-    return bitmap_;
-}
-
-void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
-{
-    bitmap_ = bitmap;
-}
-
 void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
 {
     default_interpolation_mode_ = mode;
@@ -198,5 +179,17 @@ InterpolationMode Texture::GetDefaultInterpolationMode()
 {
     return default_interpolation_mode_;
 }
+
+#if defined(KGE_WIN32)
+ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
+{
+    return bitmap_;
+}
+
+void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
+{
+    bitmap_ = bitmap;
+}
+#endif
 
 }  // namespace kiwano

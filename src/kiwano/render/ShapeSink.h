@@ -23,8 +23,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 /**
  * \addtogroup Render
@@ -32,108 +30,110 @@ class Renderer;
  */
 
 /// \~chinese
-/// @brief ĞÎ×´×éºÏ·½Ê½
+/// @brief å½¢çŠ¶ç»„åˆæ–¹å¼
 enum class CombineMode
 {
-    Union,      ///< ²¢¼¯ (A + B)
-    Intersect,  ///< ½»¼¯ (A + B)
-    Xor,        ///< ¶Ô³Æ²î¼¯ ((A - B) + (B - A))
-    Exclude     ///< ²î¼¯ (A - B)
+    Union,      ///< å¹¶é›† (A + B)
+    Intersect,  ///< äº¤é›† (A + B)
+    Xor,        ///< å¯¹ç§°å·®é›† ((A - B) + (B - A))
+    Exclude     ///< å·®é›† (A - B)
 };
 
 /// \~chinese
-/// @brief ĞÎ×´Éú³ÉÆ÷
+/// @brief å½¢çŠ¶ç”Ÿæˆå™¨
 class KGE_API ShapeSink : protected Noncopyable
 {
-    friend class Renderer;
-
 public:
     ShapeSink();
 
     ~ShapeSink();
 
     /// \~chinese
-    /// @brief ´ò¿ªÊäÈëÁ÷
+    /// @brief æ‰“å¼€è¾“å…¥æµ
     void Open();
 
     /// \~chinese
-    /// @brief ¹Ø±ÕÊäÈëÁ÷
+    /// @brief å…³é—­è¾“å…¥æµ
     void Close();
 
     /// \~chinese
-    /// @brief ÊäÈëÁ÷ÊÇ·ñÒÑ¾­´ò¿ª
+    /// @brief è¾“å…¥æµæ˜¯å¦å·²ç»æ‰“å¼€
     bool IsOpened() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Éú³ÉµÄĞÎ×´
-    /// @note Èô»¹Î´¹Ø±ÕÊäÈëÁ÷£¬Ôò×Ô¶¯¹Ø±Õ
+    /// @brief è·å–ç”Ÿæˆçš„å½¢çŠ¶
+    /// @note è‹¥è¿˜æœªå…³é—­è¾“å…¥æµï¼Œåˆ™è‡ªåŠ¨å…³é—­
     ShapePtr GetShape();
 
     /// \~chinese
-    /// @brief Ìí¼ÓĞÎ×´µÄÂÖÀª
-    /// @param input ÊäÈëµÄĞÎ×´
-    /// @param input_matrix Ó¦ÓÃµ½ÊäÈëĞÎ×´ÉÏµÄ¶şÎ¬±ä»»
-    /// @note Èô»¹Î´´ò¿ªÊäÈëÁ÷£¬Ôò×Ô¶¯´ò¿ª
+    /// @brief æ·»åŠ å½¢çŠ¶çš„è½®å»“
+    /// @param input è¾“å…¥çš„å½¢çŠ¶
+    /// @param input_matrix åº”ç”¨åˆ°è¾“å…¥å½¢çŠ¶ä¸Šçš„äºŒç»´å˜æ¢
+    /// @note è‹¥è¿˜æœªæ‰“å¼€è¾“å…¥æµï¼Œåˆ™è‡ªåŠ¨æ‰“å¼€
     ShapeSink& AddShape(ShapePtr input, const Matrix3x2* input_matrix = nullptr);
 
     /// \~chinese
-    /// @brief ¿ªÊ¼Ìí¼ÓÂ·¾¶
-    /// @param begin_pos Â·¾¶ÆğÊ¼µã
-    /// @note Èô»¹Î´´ò¿ªÊäÈëÁ÷£¬Ôò×Ô¶¯´ò¿ª
+    /// @brief å¼€å§‹æ·»åŠ è·¯å¾„
+    /// @param begin_pos è·¯å¾„èµ·å§‹ç‚¹
+    /// @note è‹¥è¿˜æœªæ‰“å¼€è¾“å…¥æµï¼Œåˆ™è‡ªåŠ¨æ‰“å¼€
     ShapeSink& BeginPath(Point const& begin_pos = Point());
 
     /// \~chinese
-    /// @brief ½áÊøÂ·¾¶
-    /// @param closed Â·¾¶ÊÇ·ñ±ÕºÏ
+    /// @brief ç»“æŸè·¯å¾„
+    /// @param closed è·¯å¾„æ˜¯å¦é—­åˆ
     ShapeSink& EndPath(bool closed = false);
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»ÌõÏß¶Î
-    /// @param point ¶Ëµã
+    /// @brief æ·»åŠ ä¸€æ¡çº¿æ®µ
+    /// @param point ç«¯ç‚¹
     ShapeSink& AddLine(Point const& point);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶àÌõÏß¶Î
-    /// @param points ¶Ëµã¼¯ºÏ
+    /// @brief æ·»åŠ å¤šæ¡çº¿æ®µ
+    /// @param points ç«¯ç‚¹é›†åˆ
     ShapeSink& AddLines(Vector<Point> const& points);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶àÌõÏß¶Î
-    /// @param points ¶ËµãÊı×é
-    /// @param count ¶ËµãÊıÁ¿
+    /// @brief æ·»åŠ å¤šæ¡çº¿æ®µ
+    /// @param points ç«¯ç‚¹æ•°ç»„
+    /// @param count ç«¯ç‚¹æ•°é‡
     ShapeSink& AddLines(const Point* points, size_t count);
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒ»ÌõÈı´Î·½±´Èû¶ûÇúÏß
-    /// @param point1 ±´Èû¶ûÇúÏßµÄµÚÒ»¸ö¿ØÖÆµã
-    /// @param point2 ±´Èû¶ûÇúÏßµÄµÚ¶ş¸ö¿ØÖÆµã
-    /// @param point3 ±´Èû¶ûÇúÏßµÄÖÕµã
+    /// @brief æ·»åŠ ä¸€æ¡ä¸‰æ¬¡æ–¹è´å¡å°”æ›²çº¿
+    /// @param point1 è´å¡å°”æ›²çº¿çš„ç¬¬ä¸€ä¸ªæ§åˆ¶ç‚¹
+    /// @param point2 è´å¡å°”æ›²çº¿çš„ç¬¬äºŒä¸ªæ§åˆ¶ç‚¹
+    /// @param point3 è´å¡å°”æ›²çº¿çš„ç»ˆç‚¹
     ShapeSink& AddBezier(Point const& point1, Point const& point2, Point const& point3);
 
     /// \~chinese
-    /// @brief Ìí¼Ó»¡Ïß
-    /// @param point ÖÕµã
-    /// @param radius ÍÖÔ²°ë¾¶
-    /// @param rotation ÍÖÔ²Ğı×ª½Ç¶È
-    /// @param clockwise Ë³Ê±Õë or ÄæÊ±Õë
-    /// @param is_small ÊÇ·ñÈ¡Ğ¡ÓÚ 180¡ã µÄ»¡
+    /// @brief æ·»åŠ å¼§çº¿
+    /// @param point ç»ˆç‚¹
+    /// @param radius æ¤­åœ†åŠå¾„
+    /// @param rotation æ¤­åœ†æ—‹è½¬è§’åº¦
+    /// @param clockwise é¡ºæ—¶é’ˆ or é€†æ—¶é’ˆ
+    /// @param is_small æ˜¯å¦å–å°äº 180Â° çš„å¼§
     ShapeSink& AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true,
                          bool is_small = true);
 
     /// \~chinese
-    /// @brief ×éºÏĞÎ×´£¬²¢½«½á¹ûÊä³öµ½Á÷ÖĞ
-    /// @param shape_a ÊäÈëµÄĞÎ×´A
-    /// @param shape_b ÊäÈëµÄĞÎ×´B
-    /// @param mode ×éºÏ·½Ê½
-    /// @param matrix Ó¦ÓÃµ½ÊäÈëĞÎ×´BÉÏµÄ¶şÎ¬±ä»»
-    /// @note Èô»¹Î´´ò¿ªÊäÈëÁ÷£¬Ôò×Ô¶¯´ò¿ª
+    /// @brief ç»„åˆå½¢çŠ¶ï¼Œå¹¶å°†ç»“æœè¾“å‡ºåˆ°æµä¸­
+    /// @param shape_a è¾“å…¥çš„å½¢çŠ¶A
+    /// @param shape_b è¾“å…¥çš„å½¢çŠ¶B
+    /// @param mode ç»„åˆæ–¹å¼
+    /// @param matrix åº”ç”¨åˆ°è¾“å…¥å½¢çŠ¶Bä¸Šçš„äºŒç»´å˜æ¢
+    /// @note è‹¥è¿˜æœªæ‰“å¼€è¾“å…¥æµï¼Œåˆ™è‡ªåŠ¨æ‰“å¼€
     ShapeSink& Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
-    /// @brief Çå¿ÕÍ¼ĞÎ
+    /// @brief æ¸…ç©ºå›¾å½¢
     void Clear();
 
 private:
+    ShapePtr                  shape_;
+
+#if defined(KGE_WIN32)
+public:
     ComPtr<ID2D1PathGeometry> GetPathGeometry() const;
 
     void SetPathGeometry(ComPtr<ID2D1PathGeometry> path);
@@ -143,13 +143,14 @@ private:
     void SetGeometrySink(ComPtr<ID2D1GeometrySink> sink);
 
 private:
-    ShapePtr                  shape_;
-    ComPtr<ID2D1PathGeometry> path_geo_;
     ComPtr<ID2D1GeometrySink> sink_;
+    ComPtr<ID2D1PathGeometry> path_geo_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1PathGeometry> ShapeSink::GetPathGeometry() const
 {
     return path_geo_;
@@ -169,4 +170,6 @@ inline void ShapeSink::SetGeometrySink(ComPtr<ID2D1GeometrySink> sink)
 {
     sink_ = sink;
 }
+#endif
+
 }  // namespace kiwano

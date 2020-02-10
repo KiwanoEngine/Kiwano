@@ -51,7 +51,7 @@ XAudio2::XAudio2()
     }
     else
     {
-        KGE_ERROR(L"Load xaudio2.dll failed");
+        KGE_ERROR("Load xaudio2.dll failed");
         throw std::runtime_error("Load xaudio2.dll failed");
     }
 }
@@ -79,7 +79,7 @@ MediaFoundation::MediaFoundation()
     }
     else
     {
-        KGE_ERROR(L"Load Mfplat.dll failed");
+        KGE_ERROR("Load Mfplat.dll failed");
         throw std::runtime_error("Load Mfplat.dll failed");
     }
 
@@ -92,7 +92,7 @@ MediaFoundation::MediaFoundation()
     }
     else
     {
-        KGE_ERROR(L"Load Mfreadwrite.dll failed");
+        KGE_ERROR("Load Mfreadwrite.dll failed");
         throw std::runtime_error("Load Mfreadwrite.dll failed");
     }
 }

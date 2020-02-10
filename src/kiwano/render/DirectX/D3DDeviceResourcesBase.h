@@ -29,7 +29,7 @@ ID3DDeviceResourcesBase : public IUnknown
 public:
     virtual HRESULT Present(bool vsync) = 0;
 
-    virtual HRESULT ClearRenderTarget(Color & clear_color) = 0;
+    virtual void ClearRenderTarget(Color & clear_color) = 0;
 
     virtual HRESULT HandleDeviceLost() = 0;
 

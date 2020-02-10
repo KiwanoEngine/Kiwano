@@ -76,7 +76,7 @@ HRESULT Transcoder::LoadMediaFile(String const& file_path)
 
     ComPtr<IMFSourceReader> reader;
 
-    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(file_path.c_str(), nullptr, &reader);
+    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(MultiByteToWide(file_path).c_str(), nullptr, &reader);
 
     if (SUCCEEDED(hr))
     {
@@ -105,7 +105,7 @@ HRESULT Transcoder::LoadMediaResource(Resource const& res)
 
     if (stream == nullptr)
     {
-        KGE_ERROR(L"SHCreateMemStream failed");
+        KGE_ERROR("SHCreateMemStream failed");
         return E_OUTOFMEMORY;
     }
 
@@ -147,25 +147,25 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
         hr = partial_type->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
     }
 
-    // …Ë÷√ source reader µƒ√ΩÃÂ¿‡–Õ£¨À¸Ω´ π”√∫œ  µƒΩ‚¬Î∆˜»•Ω‚¬Î’‚∏ˆ“Ù∆µ
+    // ËÆæÁΩÆ source reader ÁöÑÂ™í‰ΩìÁ±ªÂûãÔºåÂÆÉÂ∞Ü‰ΩøÁî®ÂêàÈÄÇÁöÑËß£Á†ÅÂô®ÂéªËß£Á†ÅËøô‰∏™Èü≥È¢ë
     if (SUCCEEDED(hr))
     {
         hr = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, partial_type.get());
     }
 
-    // ¥” IMFMediaType ÷–ªÒ»° WAVEFORMAT Ω·ππ
+    // ‰ªé IMFMediaType ‰∏≠Ëé∑Âèñ WAVEFORMAT ÁªìÊûÑ
     if (SUCCEEDED(hr))
     {
         hr = reader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &uncompressed_type);
     }
 
-    // ÷∏∂®“Ù∆µ¡˜
+    // ÊåáÂÆöÈü≥È¢ëÊµÅ
     if (SUCCEEDED(hr))
     {
         hr = reader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, true);
     }
 
-    // ªÒ»° WAVEFORMAT  ˝æ›
+    // Ëé∑Âèñ WAVEFORMAT Êï∞ÊçÆ
     if (SUCCEEDED(hr))
     {
         uint32_t size = 0;
@@ -173,7 +173,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
             uncompressed_type.get(), &wave_format_, &size, (DWORD)MFWaveFormatExConvertFlag_Normal);
     }
 
-    // π¿À„“Ù∆µ¡˜¥Û–°
+    // ‰º∞ÁÆóÈü≥È¢ëÊµÅÂ§ßÂ∞è
     if (SUCCEEDED(hr))
     {
         PROPVARIANT prop;
@@ -186,7 +186,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
         PropVariantClear(&prop);
     }
 
-    // ∂¡»°“Ù∆µ ˝æ›
+    // ËØªÂèñÈü≥È¢ëÊï∞ÊçÆ
     if (SUCCEEDED(hr))
     {
         DWORD flags    = 0;
@@ -198,7 +198,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
 
         if (data == nullptr)
         {
-            KGE_ERROR(L"Low memory");
+            KGE_ERROR("Low memory");
             hr = E_OUTOFMEMORY;
         }
         else

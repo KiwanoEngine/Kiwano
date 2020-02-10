@@ -41,9 +41,9 @@ Queue<FunctionToPerform> functions_to_perform_;
 Application::Application()
     : time_scale_(1.f)
 {
-    Use(&Renderer::Instance());
-    Use(&Input::Instance());
-    Use(&Director::Instance());
+    Use(&Renderer::GetInstance());
+    Use(&Input::GetInstance());
+    Use(&Director::GetInstance());
 }
 
 Application::~Application()
@@ -61,8 +61,8 @@ void Application::Run(bool debug)
 
     if (debug)
     {
-        Director::Instance().ShowDebugInfo(true);
-        Renderer::Instance().GetContext().SetCollectingStatus(true);
+        Director::GetInstance().ShowDebugInfo(true);
+        Renderer::GetInstance().GetContext().SetCollectingStatus(true);
     }
 
     // Everything is ready
@@ -70,7 +70,7 @@ void Application::Run(bool debug)
 
     last_update_time_ = Time::Now();
 
-    Window& window = Window::Instance();
+    Window& window = Window::GetInstance();
     while (!window.ShouldClose())
     {
         while (EventPtr evt = window.PollEvent())
@@ -85,15 +85,15 @@ void Application::Run(bool debug)
 
 void Application::Quit()
 {
-    Window::Instance().Destroy();
+    Window::GetInstance().Destroy();
 }
 
 void Application::Destroy()
 {
     // Clear all resources
-    Director::Instance().ClearStages();
-    ResourceCache::Instance().Clear();
-    TextureCache::Instance().Clear();
+    Director::GetInstance().ClearStages();
+    ResourceCache::GetInstance().Clear();
+    TextureCache::GetInstance().Clear();
 
     for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
     {
@@ -111,7 +111,7 @@ void Application::Use(ComponentBase* component)
     {
 
 #if defined(KGE_DEBUG)
-        if (comps_.contains(component))
+        if (std::find(comps_.begin(), comps_.end(), component) != comps_.end())
         {
             KGE_ASSERT(false && "Component already exists!");
         }
@@ -185,7 +185,7 @@ void Application::Update()
 
 void Application::Render()
 {
-    Renderer& renderer = Renderer::Instance();
+    Renderer& renderer = Renderer::GetInstance();
     renderer.Clear();
 
     // Before render

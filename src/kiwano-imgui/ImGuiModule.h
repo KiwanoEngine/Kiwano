@@ -26,9 +26,10 @@ namespace kiwano
 {
 namespace imgui
 {
+
 /**
  * \~chinese
- * @brief ImGuiÄ£¿é
+ * @brief ImGuiæ¨¡å—
  */
 class ImGuiModule
     : public Singleton<ImGuiModule>
@@ -57,9 +58,7 @@ private:
     void UpdateMousePos();
 
     void UpdateMouseCursor();
-
-private:
-    WindowHandle target_window_;
 };
+
 }  // namespace imgui
 }  // namespace kiwano

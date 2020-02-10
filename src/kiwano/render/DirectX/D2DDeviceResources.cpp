@@ -48,21 +48,21 @@ public:
                                       _In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
                                       _In_ ComPtr<IWICFormatConverter> converter) override;
 
-    HRESULT CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder>& decoder, const String& file_path) override;
+    HRESULT CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder>& decoder, _In_ LPCWSTR file_path) override;
 
-    HRESULT CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder,
-                                            const Resource&                  resource) override;
+    HRESULT CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder, _In_ void* data,
+                                            DWORD data_size) override;
 
-    HRESULT CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& text_format, String const& family,
+    HRESULT CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& text_format, _In_ LPCWSTR family,
                              _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                              DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size) override;
 
-    HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, String const& text,
-                             _In_ ComPtr<IDWriteTextFormat> text_format) override;
+    HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ LPCWSTR text,
+                             UINT32 length, _In_ ComPtr<IDWriteTextFormat> text_format) override;
 
     HRESULT SetDpi(float dpi) override;
 
-    HRESULT SetLogicalSize(Size logical_size) override;
+    HRESULT SetLogicalSize(float width, float height) override;
 
     HRESULT HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_device,
                              _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) override;
@@ -292,7 +292,7 @@ HRESULT D2DDeviceResources::SetDpi(float dpi)
     return CreateWindowSizeDependentResources();
 }
 
-HRESULT D2DDeviceResources::SetLogicalSize(Size)
+HRESULT D2DDeviceResources::SetLogicalSize(float width, float height)
 {
     return CreateWindowSizeDependentResources();
 }
@@ -355,14 +355,14 @@ HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>&
 }
 
 HRESULT D2DDeviceResources::CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder>& decoder,
-                                                        const String&                    file_path)
+                                                        _In_ LPCWSTR                     file_path)
 {
     if (!imaging_factory_)
         return E_UNEXPECTED;
 
     ComPtr<IWICBitmapDecoder> decoder_output;
 
-    HRESULT hr = imaging_factory_->CreateDecoderFromFilename(file_path.c_str(), nullptr, GENERIC_READ,
+    HRESULT hr = imaging_factory_->CreateDecoderFromFilename(file_path, nullptr, GENERIC_READ,
                                                              WICDecodeMetadataCacheOnLoad, &decoder_output);
 
     if (SUCCEEDED(hr))
@@ -372,14 +372,13 @@ HRESULT D2DDeviceResources::CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapD
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder,
-                                                            const Resource&                  resource)
+HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder, _In_ void* data,
+                                                            DWORD data_size)
 {
     if (!imaging_factory_)
         return E_UNEXPECTED;
 
-    Resource::Data res_data = resource.GetData();
-    HRESULT        hr       = res_data ? S_OK : E_FAIL;
+    HRESULT hr = data ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
     {
@@ -388,7 +387,7 @@ HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBit
 
         if (SUCCEEDED(hr))
         {
-            hr = stream->InitializeFromMemory(static_cast<WICInProcPointer>(res_data.buffer), res_data.size);
+            hr = stream->InitializeFromMemory(static_cast<WICInProcPointer>(data), data_size);
         }
 
         if (SUCCEEDED(hr))
@@ -406,7 +405,7 @@ HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBit
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& text_format, String const& family,
+HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& text_format, _In_ LPCWSTR family,
                                              _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                                              DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size)
 {
@@ -414,7 +413,7 @@ HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& te
         return E_UNEXPECTED;
 
     ComPtr<IDWriteTextFormat> output;
-    HRESULT hr = dwrite_factory_->CreateTextFormat(family.c_str(), collection.get(), weight, style, stretch, font_size,
+    HRESULT hr = dwrite_factory_->CreateTextFormat(family, collection.get(), weight, style, stretch, font_size,
                                                    L"", &output);
 
     if (SUCCEEDED(hr))
@@ -424,15 +423,15 @@ HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& te
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, String const& text,
-                                             _In_ ComPtr<IDWriteTextFormat> text_format)
+HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ LPCWSTR text,
+                                             UINT32 length, _In_ ComPtr<IDWriteTextFormat> text_format)
 {
     if (!dwrite_factory_)
         return E_UNEXPECTED;
 
     ComPtr<IDWriteTextLayout> output;
-    HRESULT hr = dwrite_factory_->CreateTextLayout(text.c_str(), static_cast<UINT32>(text.length()), text_format.get(),
-                                                   0, 0, &output);
+
+    HRESULT hr = dwrite_factory_->CreateTextLayout(text, length, text_format.get(), 0, 0, &output);
 
     if (SUCCEEDED(hr))
     {

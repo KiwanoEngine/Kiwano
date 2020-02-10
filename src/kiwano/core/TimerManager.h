@@ -25,65 +25,65 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief ¶¨Ê±Æ÷¹ÜÀíÆ÷
+ * @brief å®šæ—¶å™¨ç®¡ç†å™¨
  */
 class KGE_API TimerManager
 {
 public:
     /// \~chinese
-    /// @brief ¶¨Ê±Æ÷ÁĞ±í
+    /// @brief å®šæ—¶å™¨åˆ—è¡¨
     using Timers = IntrusiveList<TimerPtr>;
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¨Ê±Æ÷
-    /// @param cb »Øµ÷º¯Êı
-    /// @param interval Ê±¼ä¼ä¸ô
-    /// @param times Ö´ĞĞ´ÎÊı£¨Éè -1 ÎªÓÀ¾ÃÖ´ĞĞ£©
+    /// @brief æ·»åŠ å®šæ—¶å™¨
+    /// @param cb å›è°ƒå‡½æ•°
+    /// @param interval æ—¶é—´é—´éš”
+    /// @param times æ‰§è¡Œæ¬¡æ•°ï¼ˆè®¾ -1 ä¸ºæ°¸ä¹…æ‰§è¡Œï¼‰
     Timer* AddTimer(Timer::Callback const& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¨Ê±Æ÷
-    /// @param name ¶¨Ê±Æ÷Ãû³Æ
-    /// @param cb »Øµ÷º¯Êı
-    /// @param interval Ê±¼ä¼ä¸ô
-    /// @param times Ö´ĞĞ´ÎÊı£¨Éè -1 ÎªÓÀ¾ÃÖ´ĞĞ£©
+    /// @brief æ·»åŠ å®šæ—¶å™¨
+    /// @param name å®šæ—¶å™¨åç§°
+    /// @param cb å›è°ƒå‡½æ•°
+    /// @param interval æ—¶é—´é—´éš”
+    /// @param times æ‰§è¡Œæ¬¡æ•°ï¼ˆè®¾ -1 ä¸ºæ°¸ä¹…æ‰§è¡Œï¼‰
     Timer* AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¨Ê±Æ÷
+    /// @brief æ·»åŠ å®šæ—¶å™¨
     Timer* AddTimer(TimerPtr timer);
 
     /// \~chinese
-    /// @brief Æô¶¯¶¨Ê±Æ÷
+    /// @brief å¯åŠ¨å®šæ—¶å™¨
     void StartTimers(String const& timer_name);
 
     /// \~chinese
-    /// @brief Í£Ö¹¶¨Ê±Æ÷
+    /// @brief åœæ­¢å®šæ—¶å™¨
     void StopTimers(String const& timer_name);
 
     /// \~chinese
-    /// @brief ÒÆ³ı¶¨Ê±Æ÷
+    /// @brief ç§»é™¤å®šæ—¶å™¨
     void RemoveTimers(String const& timer_name);
 
     /// \~chinese
-    /// @brief Æô¶¯ËùÓĞ¶¨Ê±Æ÷
+    /// @brief å¯åŠ¨æ‰€æœ‰å®šæ—¶å™¨
     void StartAllTimers();
 
     /// \~chinese
-    /// @brief Í£Ö¹ËùÓĞ¶¨Ê±Æ÷
+    /// @brief åœæ­¢æ‰€æœ‰å®šæ—¶å™¨
     void StopAllTimers();
 
     /// \~chinese
-    /// @brief ÒÆ³ıËùÓĞ¶¨Ê±Æ÷
+    /// @brief ç§»é™¤æ‰€æœ‰å®šæ—¶å™¨
     void RemoveAllTimers();
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞ¶¨Ê±Æ÷
+    /// @brief è·å–æ‰€æœ‰å®šæ—¶å™¨
     const Timers& GetAllTimers() const;
 
 protected:
     /// \~chinese
-    /// @brief ¸üĞÂ¶¨Ê±Æ÷
+    /// @brief æ›´æ–°å®šæ—¶å™¨
     void UpdateTimers(Duration dt);
 
 private:

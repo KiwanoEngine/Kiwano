@@ -20,6 +20,7 @@
 
 #include <fstream>
 #include <kiwano/core/Logger.h>
+#include <kiwano/core/Exception.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/utils/ResourceCache.h>
 
@@ -34,13 +35,13 @@ bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem);
 namespace
 {
 Map<String, Function<bool(ResourceCache*, Json const&)>> load_json_funcs = {
-    { L"latest", __resource_cache_01::LoadJsonData },
-    { L"0.1", __resource_cache_01::LoadJsonData },
+    { "latest", __resource_cache_01::LoadJsonData },
+    { "0.1", __resource_cache_01::LoadJsonData },
 };
 
 Map<String, Function<bool(ResourceCache*, const pugi::xml_node&)>> load_xml_funcs = {
-    { L"latest", __resource_cache_01::LoadXmlData },
-    { L"0.1", __resource_cache_01::LoadXmlData },
+    { "latest", __resource_cache_01::LoadXmlData },
+    { "0.1", __resource_cache_01::LoadXmlData },
 };
 }  // namespace
 
@@ -53,33 +54,32 @@ ResourceCache::~ResourceCache()
 
 bool ResourceCache::LoadFromJsonFile(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: File not found.");
+        KGE_ERROR("%s failed: File not found.", __FUNCTION__);
         return false;
     }
 
-    Json           json_data;
-    std::wifstream ifs;
+    Json json_data;
+
+    std::ifstream ifs;
     ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
     try
     {
-        String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
         ifs.open(full_path.c_str());
         ifs >> json_data;
         ifs.close();
     }
     catch (std::wifstream::failure& e)
     {
-        KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: Cannot open file. (%s)",
-                  oc::string_to_wide(e.what()).c_str());
+        KGE_ERROR("%s failed: Cannot open file. (%s)", __FUNCTION__, e.what());
         return false;
     }
-    catch (oc::json_exception& e)
+    catch (Json::exception& e)
     {
-        KGE_ERROR(L"ResourceCache::LoadFromJsonFile failed: Cannot parse to JSON. (%s)",
-                  oc::string_to_wide(e.what()).c_str());
+        KGE_ERROR("%s failed: Cannot parse to JSON. (%s)", __FUNCTION__, e.what());
         return false;
     }
     return LoadFromJson(json_data);
@@ -89,7 +89,7 @@ bool ResourceCache::LoadFromJson(Json const& json_data)
 {
     try
     {
-        String version = json_data[L"version"];
+        String version = json_data["version"];
 
         auto load = load_json_funcs.find(version);
         if (load != load_json_funcs.end())
@@ -98,17 +98,16 @@ bool ResourceCache::LoadFromJson(Json const& json_data)
         }
         else if (version.empty())
         {
-            return load_json_funcs[L"latest"](this, json_data);
+            return load_json_funcs["latest"](this, json_data);
         }
         else
         {
-            throw std::runtime_error("unknown JSON data version");
+            KGE_ERROR("%s failed: unknown resource data version", __FUNCTION__);
         }
     }
-    catch (std::exception& e)
+    catch (Json::exception& e)
     {
-        KGE_ERROR(L"ResourceCache::LoadFromJson failed: JSON data is invalid. (%s)",
-                  oc::string_to_wide(e.what()).c_str());
+        KGE_ERROR("%s failed: JSON data is invalid. (%s)", __FUNCTION__, e.what());
         return false;
     }
     return false;
@@ -116,13 +115,13 @@ bool ResourceCache::LoadFromJson(Json const& json_data)
 
 bool ResourceCache::LoadFromXmlFile(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_ERROR(L"ResourceCache::LoadFromXmlFile failed: File not found.");
+        KGE_ERROR("%s failed: File not found.", __FUNCTION__);
         return false;
     }
 
-    String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
     pugi::xml_document     doc;
     pugi::xml_parse_result result = doc.load_file(full_path.c_str(), pugi::parse_default, pugi::encoding_auto);
@@ -133,17 +132,17 @@ bool ResourceCache::LoadFromXmlFile(String const& file_path)
     }
     else
     {
-        KGE_ERROR(L"XML [%s] parsed with errors: %s", full_path.c_str(), result.description());
+        KGE_ERROR("%s failed: XML [%s] parsed with errors: %s", __FUNCTION__, full_path.c_str(), result.description());
         return false;
     }
 }
 
 bool ResourceCache::LoadFromXml(const pugi::xml_document& doc)
 {
-    if (pugi::xml_node root = doc.child(L"resources"))
+    if (pugi::xml_node root = doc.child("resources"))
     {
         String version;
-        if (auto version_node = root.child(L"version"))
+        if (auto version_node = root.child("version"))
             version = version_node.child_value();
 
         auto load = load_xml_funcs.find(version);
@@ -153,16 +152,13 @@ bool ResourceCache::LoadFromXml(const pugi::xml_document& doc)
         }
         else if (version.empty())
         {
-            return load_xml_funcs[L"latest"](this, root);
+            return load_xml_funcs["latest"](this, root);
         }
         else
         {
-            KGE_ERROR(L"Unknown  version");
-            return false;
+            KGE_ERROR("%s failed: unknown resource data version", __FUNCTION__);
         }
     }
-
-    KGE_ERROR(L"Unknown  version");
     return false;
 }
 
@@ -308,108 +304,102 @@ struct GlobalData
     String path;
 };
 
-bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* type,
-                          const String* file)
+bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id, const String& type,
+                          const String& file)
 {
-    if (!gdata || !id)
+    if (!gdata)
         return false;
 
-    if (type && (*type) == L"gif")
+    if (type == "gif")
     {
         // GIF image
         GifImagePtr gif = new (std::nothrow) GifImage;
-        if (gif && gif->Load(gdata->path + (*file)))
+        if (gif && gif->Load(gdata->path + file))
         {
-            return loader->AddObject(*id, gif);
+            return loader->AddObject(id, gif);
         }
     }
 
-    if (file && !(*file).empty())
+    if (!file.empty())
     {
         // Simple image
         FramePtr frame = new (std::nothrow) Frame;
-        if (frame && frame->Load(gdata->path + (*file)))
+        if (frame && frame->Load(gdata->path + file))
         {
-            return loader->AddObject(*id, frame);
+            return loader->AddObject(id, frame);
         }
     }
     return false;
 }
 
-bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id,
-                          const Vector<const wchar_t*>* files)
+bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id,
+                          const Vector<String>& files)
 {
-    if (!gdata || !id)
+    if (!gdata)
         return false;
+
+    if (files.empty())
+        return true;
 
     // Frames
-    if (files)
+    Vector<FramePtr> frames;
+    frames.reserve(files.size());
+    for (const auto& file : files)
     {
-        Vector<FramePtr> frames;
-        frames.reserve(files->size());
-        for (const auto& file : (*files))
+        FramePtr frame = new Frame;
+        if (frame->Load(gdata->path + file))
         {
-            FramePtr frame = new Frame;
-            if (frame->Load(gdata->path + (file)))
-            {
-                frames.push_back(frame);
-            }
+            frames.push_back(frame);
         }
-        FrameSequencePtr frame_seq = FrameSequence::Create(frames);
-        if (frame_seq)
-        {
-            return !!loader->AddObject(*id, frame_seq);
-        }
+    }
+    FrameSequencePtr frame_seq = FrameSequence::Create(frames);
+    if (frame_seq)
+    {
+        return !!loader->AddObject(id, frame_seq);
     }
     return false;
 }
 
-bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file, int rows,
+bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id, const String& file, int rows,
                           int cols, float padding_x, float padding_y)
 {
-    if (!gdata || !id)
+    if (!gdata)
         return false;
 
-    if (file)
+    if (!file.empty())
     {
-        if (!(*file).empty())
+        if (rows || cols)
         {
-            if (rows || cols)
+            // Frame slices
+            FramePtr frame = new (std::nothrow) Frame;
+            if (frame && frame->Load(gdata->path + file))
             {
-                // Frame slices
-                FramePtr frame = new (std::nothrow) Frame;
-                if (frame && frame->Load(gdata->path + (*file)))
-                {
-                    return !!loader->AddFrameSequence(*id, frame, std::max(cols, 1), std::max(rows, 1), padding_x,
-                                                      padding_y);
-                }
+                return !!loader->AddFrameSequence(id, frame, std::max(cols, 1), std::max(rows, 1), padding_x,
+                                                  padding_y);
             }
-            else
+        }
+        else
+        {
+            // Simple image
+            FramePtr frame = new (std::nothrow) Frame;
+            if (frame && frame->Load(gdata->path + file))
             {
-                // Simple image
-                FramePtr frame = new (std::nothrow) Frame;
-                if (frame && frame->Load(gdata->path + (*file)))
-                {
-                    return loader->AddObject(*id, frame);
-                }
+                return loader->AddObject(id, frame);
             }
         }
     }
     return false;
 }
 
-bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* id, const String* file)
+bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String& id, const String& file)
 {
-    if (!gdata || !id)
+    if (!gdata)
         return false;
 
-    if (file)
+    FontPtr font = new (std::nothrow) Font;
+    if (font && font->Load(gdata->path + file))
     {
-        FontPtr font = new (std::nothrow) Font;
-        if (font && font->Load(gdata->path + (*file)))
-        {
-            return loader->AddObject(*id, font);
-        }
+        return loader->AddObject(id, font);
     }
     return false;
 }
@@ -417,50 +407,50 @@ bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String* i
 bool LoadJsonData(ResourceCache* loader, Json const& json_data)
 {
     GlobalData global_data;
-    if (json_data.count(L"path"))
+    if (json_data.count("path"))
     {
-        global_data.path = json_data[L"path"];
+        global_data.path = json_data["path"];
     }
 
-    if (json_data.count(L"images"))
+    if (json_data.count("images"))
     {
-        for (const auto& image : json_data[L"images"])
+        for (const auto& image : json_data["images"])
         {
-            const String *id = nullptr, *type = nullptr, *file = nullptr;
-            int           rows = 0, cols = 0;
+            String id, type, file;
+            int    rows = 0, cols = 0;
 
-            if (image.count(L"id"))
-                id = &image[L"id"].as_string();
-            if (image.count(L"type"))
-                type = &image[L"type"].as_string();
-            if (image.count(L"file"))
-                file = &image[L"file"].as_string();
-            if (image.count(L"rows"))
-                rows = image[L"rows"].as_int();
-            if (image.count(L"cols"))
-                cols = image[L"cols"].as_int();
+            if (image.count("id"))
+                id = image["id"].get<String>();
+            if (image.count("type"))
+                type = image["type"].get<String>();
+            if (image.count("file"))
+                file = image["file"].get<String>();
+            if (image.count("rows"))
+                rows = image["rows"].get<int>();
+            if (image.count("cols"))
+                cols = image["cols"].get<int>();
 
             if (rows || cols)
             {
                 float padding_x = 0, padding_y = 0;
-                if (image.count(L"padding-x"))
-                    padding_x = image[L"padding-x"].get<float>();
-                if (image.count(L"padding-y"))
-                    padding_y = image[L"padding-y"].get<float>();
+                if (image.count("padding-x"))
+                    padding_x = image["padding-x"].get<float>();
+                if (image.count("padding-y"))
+                    padding_y = image["padding-y"].get<float>();
 
                 if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
                     return false;
             }
 
-            if (image.count(L"files"))
+            if (image.count("files"))
             {
-                Vector<const wchar_t*> files;
-                files.reserve(image[L"files"].size());
-                for (const auto& file : image[L"files"])
+                Vector<String> files;
+                files.reserve(image["files"].size());
+                for (const auto& file : image["files"])
                 {
-                    files.push_back(file.as_string().c_str());
+                    files.push_back(file.get<String>());
                 }
-                if (!LoadTexturesFromData(loader, &global_data, id, &files))
+                if (!LoadTexturesFromData(loader, &global_data, id, files))
                     return false;
             }
             else
@@ -471,16 +461,16 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
         }
     }
 
-    if (json_data.count(L"fonts"))
+    if (json_data.count("fonts"))
     {
-        for (const auto& font : json_data[L"fonts"])
+        for (const auto& font : json_data["fonts"])
         {
-            const String *id = nullptr, *file = nullptr;
+            String id, file;
 
-            if (font.count(L"id"))
-                id = &font[L"id"].as_string();
-            if (font.count(L"file"))
-                file = &font[L"file"].as_string();
+            if (font.count("id"))
+                id = font["id"].get<String>();
+            if (font.count("file"))
+                file = font["file"].get<String>();
 
             if (!LoadFontsFromData(loader, &global_data, id, file))
                 return false;
@@ -492,73 +482,73 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
 bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
 {
     GlobalData global_data;
-    if (auto path = elem.child(L"path"))
+    if (auto path = elem.child("path"))
     {
         global_data.path = path.child_value();
     }
 
-    if (auto images = elem.child(L"images"))
+    if (auto images = elem.child("images"))
     {
         for (auto image : images.children())
         {
             String id, type, file;
             int    rows = 0, cols = 0;
 
-            if (auto attr = image.attribute(L"id"))
+            if (auto attr = image.attribute("id"))
                 id.assign(attr.value());
-            if (auto attr = image.attribute(L"type"))
+            if (auto attr = image.attribute("type"))
                 type = attr.value();
-            if (auto attr = image.attribute(L"file"))
+            if (auto attr = image.attribute("file"))
                 file = attr.value();
-            if (auto attr = image.attribute(L"rows"))
+            if (auto attr = image.attribute("rows"))
                 rows = attr.as_int(0);
-            if (auto attr = image.attribute(L"cols"))
+            if (auto attr = image.attribute("cols"))
                 cols = attr.as_int(0);
 
             if (rows || cols)
             {
                 float padding_x = 0, padding_y = 0;
-                if (auto attr = image.attribute(L"padding-x"))
+                if (auto attr = image.attribute("padding-x"))
                     padding_x = attr.as_float(0.0f);
-                if (auto attr = image.attribute(L"padding-y"))
+                if (auto attr = image.attribute("padding-y"))
                     padding_y = attr.as_float(0.0f);
 
-                if (!LoadTexturesFromData(loader, &global_data, &id, &file, rows, cols, padding_x, padding_y))
+                if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
                     return false;
             }
 
             if (file.empty() && !image.empty())
             {
-                Vector<const wchar_t*> files_arr;
+                Vector<String> files_arr;
                 for (auto file : image.children())
                 {
-                    if (auto path = file.attribute(L"path"))
+                    if (auto path = file.attribute("path"))
                     {
                         files_arr.push_back(path.value());
                     }
                 }
-                if (!LoadTexturesFromData(loader, &global_data, &id, &files_arr))
+                if (!LoadTexturesFromData(loader, &global_data, id, files_arr))
                     return false;
             }
             else
             {
-                if (!LoadTexturesFromData(loader, &global_data, &id, &type, &file))
+                if (!LoadTexturesFromData(loader, &global_data, id, type, file))
                     return false;
             }
         }
     }
 
-    if (auto fonts = elem.child(L"fonts"))
+    if (auto fonts = elem.child("fonts"))
     {
         for (auto font : fonts.children())
         {
             String id, file;
-            if (auto attr = font.attribute(L"id"))
+            if (auto attr = font.attribute("id"))
                 id.assign(attr.value());
-            if (auto attr = font.attribute(L"file"))
+            if (auto attr = font.attribute("file"))
                 file = attr.value();
 
-            if (!LoadFontsFromData(loader, &global_data, &id, &file))
+            if (!LoadFontsFromData(loader, &global_data, id, file))
                 return false;
         }
     }

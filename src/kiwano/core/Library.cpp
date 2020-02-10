@@ -41,12 +41,6 @@ Library::~Library()
 
 bool Library::Load(String const& lib)
 {
-    instance_ = ::LoadLibraryW(lib.c_str());
-    return IsValid();
-}
-
-bool Library::Load(ByteString const& lib)
-{
     instance_ = ::LoadLibraryA(lib.c_str());
     return IsValid();
 }
@@ -65,7 +59,7 @@ void Library::Free()
     }
 }
 
-FARPROC Library::GetProcess(ByteString const& proc_name)
+FARPROC Library::GetProcess(String const& proc_name)
 {
     KGE_ASSERT(instance_ != nullptr);
 

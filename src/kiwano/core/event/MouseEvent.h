@@ -40,17 +40,17 @@ KGE_DECLARE_SMART_PTR(MouseWheelEvent);
  */
 
 /// \~chinese
-/// @brief Êó±êÊÂ¼þ
+/// @brief é¼ æ ‡äº‹ä»¶
 class KGE_API MouseEvent : public Event
 {
 public:
-    Point pos;  ///< Êó±êÎ»ÖÃ
+    Point pos;  ///< é¼ æ ‡ä½ç½®
 
     MouseEvent(EventType const& type);
 };
 
 /// \~chinese
-/// @brief Êó±êÒÆ¶¯ÊÂ¼þ
+/// @brief é¼ æ ‡ç§»åŠ¨äº‹ä»¶
 class KGE_API MouseMoveEvent : public MouseEvent
 {
 public:
@@ -58,37 +58,37 @@ public:
 };
 
 /// \~chinese
-/// @brief Êó±ê°´¼ü°´ÏÂÊÂ¼þ
+/// @brief é¼ æ ‡æŒ‰é”®æŒ‰ä¸‹äº‹ä»¶
 class KGE_API MouseDownEvent : public MouseEvent
 {
 public:
-    MouseButton button;  ///< Êó±ê¼üÖµ
+    MouseButton button;  ///< é¼ æ ‡é”®å€¼
 
     MouseDownEvent();
 };
 
 /// \~chinese
-/// @brief Êó±ê°´¼üÌ§ÆðÊÂ¼þ
+/// @brief é¼ æ ‡æŒ‰é”®æŠ¬èµ·äº‹ä»¶
 class KGE_API MouseUpEvent : public MouseEvent
 {
 public:
-    MouseButton button;  ///< Êó±ê¼üÖµ
+    MouseButton button;  ///< é¼ æ ‡é”®å€¼
 
     MouseUpEvent();
 };
 
 /// \~chinese
-/// @brief Êó±êµã»÷ÊÂ¼þ
+/// @brief é¼ æ ‡ç‚¹å‡»äº‹ä»¶
 class KGE_API MouseClickEvent : public MouseEvent
 {
 public:
-    MouseButton button;  ///< Êó±ê¼üÖµ
+    MouseButton button;  ///< é¼ æ ‡é”®å€¼
 
     MouseClickEvent();
 };
 
 /// \~chinese
-/// @brief Êó±êÒÆÈëÊÂ¼þ
+/// @brief é¼ æ ‡ç§»å…¥äº‹ä»¶
 class KGE_API MouseHoverEvent : public MouseEvent
 {
 public:
@@ -96,7 +96,7 @@ public:
 };
 
 /// \~chinese
-/// @brief Êó±êÒÆ³öÊÂ¼þ
+/// @brief é¼ æ ‡ç§»å‡ºäº‹ä»¶
 class KGE_API MouseOutEvent : public MouseEvent
 {
 public:
@@ -104,11 +104,11 @@ public:
 };
 
 /// \~chinese
-/// @brief Êó±ê¹öÂÖÊÂ¼þ
+/// @brief é¼ æ ‡æ»šè½®äº‹ä»¶
 class KGE_API MouseWheelEvent : public MouseEvent
 {
 public:
-    float wheel;  ///< ¹öÂÖÖµ
+    float wheel;  ///< æ»šè½®å€¼
 
     MouseWheelEvent();
 };

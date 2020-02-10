@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/macros.h>
-#include <stdexcept>
 
 namespace kiwano
 {
@@ -31,25 +30,23 @@ void PrintCallStack();
 
 void PrintCallStackOnContext(PCONTEXT pContext);
 
-inline void ThrowIfFailed(HRESULT hr)
+inline void ThrowIfFailed(HRESULT hr, const String& message)
 {
     if (FAILED(hr))
     {
         PrintCallStack();
 
-        static char buffer[32];
-        sprintf_s(buffer, "Failed with HRESULT of %08X", hr);
-        throw std::runtime_error(buffer);
+        throw SystemException(hr, message);
     }
 }
 
-inline void WarnIfFailed(HRESULT hr)
+inline void WarnIfFailed(HRESULT hr, const String& message)
 {
     if (FAILED(hr))
     {
         PrintCallStack();
 
-        KGE_WARN(L"Failed with HRESULT of %08X", hr);
+        KGE_WARN("Failed with HRESULT of %08X: ", hr, message.c_str());
     }
 }
 

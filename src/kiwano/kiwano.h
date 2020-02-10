@@ -70,7 +70,7 @@
 #include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/Texture.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/render/Renderer.h>
@@ -86,7 +86,7 @@
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/2d/Layer.h>
+#include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/Stage.h>

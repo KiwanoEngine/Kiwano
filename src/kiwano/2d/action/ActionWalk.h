@@ -33,44 +33,44 @@ KGE_DECLARE_SMART_PTR(ActionWalk);
  */
 
 /// \~chinese
-/// @brief Â·¾¶ĞĞ×ß¶¯»­
+/// @brief è·¯å¾„è¡Œèµ°åŠ¨ç”»
 class KGE_API ActionWalk : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief ¹¹ÔìÂ·¾¶ĞĞ×ß¶¯»­
-    /// @param duration ³ÖĞøÊ±³¤
-    /// @param rotating ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
-    /// @param start Â·¾¶Æğµã£¨°Ù·Ö±È£©
-    /// @param end Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
-    /// @param func ¶¯»­ËÙ¶È»º¶¯º¯Êı
+    /// @brief æ„é€ è·¯å¾„è¡Œèµ°åŠ¨ç”»
+    /// @param duration æŒç»­æ—¶é•¿
+    /// @param rotating æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
+    /// @param start è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @param end è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @param func åŠ¨ç”»é€Ÿåº¦ç¼“åŠ¨å‡½æ•°
     ActionWalk(Duration duration, bool rotating = false, float start = 0.f, float end = 1.f, EaseFunc func = nullptr);
 
     /// \~chinese
-    /// @brief ¹¹ÔìÂ·¾¶ĞĞ×ß¶¯»­
-    /// @param duration ³ÖĞøÊ±³¤
-    /// @param path Â·¾¶ĞÎ×´
-    /// @param rotating ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
-    /// @param start Â·¾¶Æğµã£¨°Ù·Ö±È£©
-    /// @param end Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
-    /// @param func ¶¯»­ËÙ¶È»º¶¯º¯Êı
+    /// @brief æ„é€ è·¯å¾„è¡Œèµ°åŠ¨ç”»
+    /// @param duration æŒç»­æ—¶é•¿
+    /// @param path è·¯å¾„å½¢çŠ¶
+    /// @param rotating æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
+    /// @param start è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @param end è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @param func åŠ¨ç”»é€Ÿåº¦ç¼“åŠ¨å‡½æ•°
     ActionWalk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f,
                EaseFunc func = nullptr);
 
     /// \~chinese
-    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
+    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
+    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
     ActionPtr Reverse() const override;
 
     /// \~chinese
-    /// @brief »ñÈ¡Â·Ïß
+    /// @brief è·å–è·¯çº¿
     ShapePtr const& GetPath() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÂ·¾¶ĞÎ×´
+    /// @brief è®¾ç½®è·¯å¾„å½¢çŠ¶
     void SetPath(ShapePtr path);
 
 protected:

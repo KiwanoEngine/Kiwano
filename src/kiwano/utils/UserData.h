@@ -24,61 +24,61 @@
 namespace kiwano
 {
 /// \~chinese
-/// @brief ÓÃ»§Êı¾İ
+/// @brief ç”¨æˆ·æ•°æ®
 /// @details
-/// UserDataÊÇÒ»¸ö¼òÒ×µÄÔËĞĞÊ±Êı¾İ¿â£¬´æ·Å£¨×Ö·û´®-Öµ£©µÄ¼üÖµ¶Ô£¬ÎŞ³Ö¾Ã»¯
+/// UserDataæ˜¯ä¸€ä¸ªç®€æ˜“çš„è¿è¡Œæ—¶æ•°æ®åº“ï¼Œå­˜æ”¾ï¼ˆå­—ç¬¦ä¸²-å€¼ï¼‰çš„é”®å€¼å¯¹ï¼Œæ— æŒä¹…åŒ–
 class KGE_API UserData : public Singleton<UserData>
 {
     friend Singleton<UserData>;
 
 public:
     /// \~chinese
-    /// @brief Êı¾İ×Öµä
+    /// @brief æ•°æ®å­—å…¸
     using DataMap = UnorderedMap<String, Any>;
 
     /// \~chinese
-    /// @brief ¼üÖµ¶Ô
+    /// @brief é”®å€¼å¯¹
     using DataPair = Pair<const String, Any>;
 
     /// \~chinese
-    /// @brief È¡Êı¾İ
-    /// @param key ¼ü
-    /// @param default_data Êı¾İ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
-    /// @return ¼ü¶ÔÓ¦µÄÖµÊı¾İ
+    /// @brief å–æ•°æ®
+    /// @param key é”®
+    /// @param default_data æ•°æ®ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
+    /// @return é”®å¯¹åº”çš„å€¼æ•°æ®
     Any Get(String const& key, Any const& default_data = Any()) const;
 
     /// \~chinese
-    /// @brief ´æÊı¾İ
-    /// @param key ¼ü
-    /// @param data Öµ
+    /// @brief å­˜æ•°æ®
+    /// @param key é”®
+    /// @param data å€¼
     void Set(String const& key, Any const& data);
 
     /// \~chinese
-    /// @brief ´æÊı¾İ
-    /// @param pair ¼üÖµ¶Ô
+    /// @brief å­˜æ•°æ®
+    /// @param pair é”®å€¼å¯¹
     void Set(DataPair const& pair);
 
     /// \~chinese
-    /// @brief ´æÊı¾İ
-    /// @param list ¼üÖµ¶ÔÁĞ±í
+    /// @brief å­˜æ•°æ®
+    /// @param list é”®å€¼å¯¹åˆ—è¡¨
     void Set(std::initializer_list<DataPair> const& list);
 
     /// \~chinese
-    /// @brief ´æÊı¾İ
-    /// @param map Êı¾İ×Öµä
+    /// @brief å­˜æ•°æ®
+    /// @param map æ•°æ®å­—å…¸
     void Set(DataMap const& map);
 
     /// \~chinese
-    /// @brief ÅĞ¶ÏÊÇ·ñ°üº¬¼ü¶ÔÓ¦µÄÊı¾İ
-    /// @param key ¼ü
+    /// @brief åˆ¤æ–­æ˜¯å¦åŒ…å«é”®å¯¹åº”çš„æ•°æ®
+    /// @param key é”®
     bool Contains(String const& key) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Êı¾İ×Öµä
+    /// @brief è·å–æ•°æ®å­—å…¸
     const DataMap& GetDataMap() const;
 
     /// \~chinese
-    /// @brief Çå¿ÕËùÓĞÊı¾İ
+    /// @brief æ¸…ç©ºæ‰€æœ‰æ•°æ®
     void Clear();
 
 private:

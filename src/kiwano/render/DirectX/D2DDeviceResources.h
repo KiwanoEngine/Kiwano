@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Resource.h>
 #include <kiwano/render/DirectX/helper.h>
 #include <d2d1.h>
 #include <d2d1_1.h>
@@ -43,21 +42,21 @@ public:
                                               _In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
                                               _In_ ComPtr<IWICFormatConverter> converter) = 0;
 
-    virtual HRESULT CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder> & decoder, const String& file_path) = 0;
+    virtual HRESULT CreateBitmapDecoderFromFile(_Out_ ComPtr<IWICBitmapDecoder> & decoder, _In_ LPCWSTR file_path) = 0;
 
-    virtual HRESULT CreateBitmapDecoderFromResource(_Out_           ComPtr<IWICBitmapDecoder> & decoder,
-                                                    const Resource& resource) = 0;
+    virtual HRESULT CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder> & decoder, _In_ void* data,
+                                                    DWORD data_size) = 0;
 
-    virtual HRESULT CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, String const& family,
+    virtual HRESULT CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat> & text_format, _In_ LPCWSTR family,
                                      _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                                      DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size) = 0;
 
-    virtual HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, String const& text,
-                                     _In_ ComPtr<IDWriteTextFormat> text_format) = 0;
+    virtual HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ LPCWSTR text,
+                                     UINT32 length, _In_ ComPtr<IDWriteTextFormat> text_format) = 0;
 
     virtual HRESULT SetDpi(float dpi) = 0;
 
-    virtual HRESULT SetLogicalSize(Size logical_size) = 0;
+    virtual HRESULT SetLogicalSize(float width, float height) = 0;
 
     virtual HRESULT HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_device,
                                      _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) = 0;
@@ -69,26 +68,31 @@ public:
         KGE_ASSERT(factory_);
         return factory_.get();
     }
+
     inline IWICImagingFactory* GetWICImagingFactory()
     {
         KGE_ASSERT(imaging_factory_);
         return imaging_factory_.get();
     }
+
     inline IDWriteFactory* GetDWriteFactory()
     {
         KGE_ASSERT(dwrite_factory_);
         return dwrite_factory_.get();
     }
+
     inline ID2D1Device* GetDevice()
     {
         KGE_ASSERT(device_);
         return device_.get();
     }
+
     inline ID2D1DeviceContext* GetDeviceContext()
     {
         KGE_ASSERT(device_context_);
         return device_context_.get();
     }
+
     inline ID2D1Bitmap1* GetTargetBitmap()
     {
         KGE_ASSERT(target_bitmap_);

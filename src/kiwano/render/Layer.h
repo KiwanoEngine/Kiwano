@@ -23,7 +23,6 @@
 
 namespace kiwano
 {
-class RenderContext;
 
 /**
  * \addtogroup Render
@@ -32,118 +31,123 @@ class RenderContext;
 
 /**
  * \~chinese
- * @brief Í¼²ãÇøÓò
+ * @brief å›¾å±‚åŒºåŸŸ
  */
-class KGE_API LayerArea
+class KGE_API Layer
 {
-    friend class RenderContext;
-
 public:
-    LayerArea();
+    Layer();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÇøÓò
-    Rect const& GetAreaRect() const;
+    /// @brief è·å–å›¾å±‚è£å‰ªåŒºåŸŸ
+    Rect const& GetClipRect() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼²ãÍ¸Ã÷¶È
+    /// @brief è·å–å›¾å±‚é€æ˜åº¦
     float GetOpacity() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã
+    /// @brief è·å–å‡ ä½•è’™å±‚
     ShapePtr GetMaskShape() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã±ä»»
+    /// @brief è·å–å‡ ä½•è’™å±‚å˜æ¢
     Matrix3x2 const& GetMaskTransform() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÇøÓò
-    void SetAreaRect(Rect const& area);
+    /// @brief è®¾ç½®å›¾å±‚è£å‰ªåŒºåŸŸ
+    void SetClipRect(Rect const& rect);
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
+    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
     void SetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã±ä»»
+    /// @brief è®¾ç½®å‡ ä½•è’™å±‚å˜æ¢
     void SetMaskTransform(Matrix3x2 const& matrix);
 
 private:
+    Rect      clip_rect_;
+    float     opacity_;
+    ShapePtr  mask_;
+    Matrix3x2 mask_transform_;
+
+#if defined(KGE_WIN32)
+public:
     ComPtr<ID2D1Layer> GetLayer() const;
 
     void SetLayer(ComPtr<ID2D1Layer> layer);
 
 private:
-    Rect               area_;
-    float              opacity_;
-    ShapePtr           mask_;
-    Matrix3x2          mask_transform_;
     ComPtr<ID2D1Layer> layer_;
+#endif
 };
 
 /** @} */
 
-inline bool LayerArea::IsValid() const
+inline bool Layer::IsValid() const
 {
     return layer_ != nullptr;
 }
 
-inline Rect const& LayerArea::GetAreaRect() const
+inline Rect const& Layer::GetClipRect() const
 {
-    return area_;
+    return clip_rect_;
 }
 
-inline float LayerArea::GetOpacity() const
+inline float Layer::GetOpacity() const
 {
     return opacity_;
 }
 
-inline ShapePtr LayerArea::GetMaskShape() const
+inline ShapePtr Layer::GetMaskShape() const
 {
     return mask_;
 }
 
-inline Matrix3x2 const& LayerArea::GetMaskTransform() const
+inline Matrix3x2 const& Layer::GetMaskTransform() const
 {
     return mask_transform_;
 }
 
-inline void LayerArea::SetAreaRect(Rect const& area)
+inline void Layer::SetClipRect(Rect const& rect)
 {
-    area_ = area;
+    clip_rect_ = rect;
 }
 
-inline void LayerArea::SetOpacity(float opacity)
+inline void Layer::SetOpacity(float opacity)
 {
     opacity_ = opacity;
 }
 
-inline void LayerArea::SetMaskShape(ShapePtr mask)
+inline void Layer::SetMaskShape(ShapePtr mask)
 {
     mask_ = mask;
 }
 
-inline void LayerArea::SetMaskTransform(Matrix3x2 const& matrix)
+inline void Layer::SetMaskTransform(Matrix3x2 const& matrix)
 {
     mask_transform_ = matrix;
 }
 
-inline ComPtr<ID2D1Layer> LayerArea::GetLayer() const
+#if defined(KGE_WIN32)
+inline ComPtr<ID2D1Layer> Layer::GetLayer() const
 {
     return layer_;
 }
 
-inline void LayerArea::SetLayer(ComPtr<ID2D1Layer> layer)
+inline void Layer::SetLayer(ComPtr<ID2D1Layer> layer)
 {
     layer_ = layer;
 }
+#endif
+
 }  // namespace kiwano

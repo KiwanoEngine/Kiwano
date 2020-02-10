@@ -18,14 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/LayerArea.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/render/TextureRenderContext.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
-LayerArea::LayerArea()
-    : opacity_(1.f)
-    , area_(Rect::Infinite())
+
+TextureRenderContextPtr TextureRenderContext::Create()
 {
+    TextureRenderContextPtr ptr;
+    try
+    {
+        ptr = Renderer::GetInstance().CreateTextureRenderContext(nullptr);
+    }
+    catch (std::exception&)
+    {
+        return nullptr;
+    }
+    return ptr;
+}
+
+TextureRenderContextPtr TextureRenderContext::Create(Size const& desired_size)
+{
+    TextureRenderContextPtr ptr;
+    try
+    {
+        ptr = Renderer::GetInstance().CreateTextureRenderContext(&desired_size);
+    }
+    catch (std::exception&)
+    {
+        return nullptr;
+    }
+    return ptr;
 }
 
 }  // namespace kiwano

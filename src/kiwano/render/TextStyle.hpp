@@ -33,18 +33,18 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief ÎÄ±¾¶ÔÆë·½Ê½
+ * @brief æ–‡æœ¬å¯¹é½æ–¹å¼
  */
 enum class TextAlign
 {
-    Left,   ///< ×ó¶ÔÆë
-    Right,  ///< ÓÒ¶ÔÆë
-    Center  ///< ¾ÓÖĞ¶ÔÆë
+    Left,   ///< å·¦å¯¹é½
+    Right,  ///< å³å¯¹é½
+    Center  ///< å±…ä¸­å¯¹é½
 };
 
 /**
  * \~chinese
- * @brief ×ÖÌå´ÖÏ¸Öµ
+ * @brief å­—ä½“ç²—ç»†å€¼
  */
 struct FontWeight
 {
@@ -53,7 +53,7 @@ struct FontWeight
         Thin       = 100U,
         ExtraLight = 200U,
         Light      = 300U,
-        Normal     = 400U,  ///< Õı³£
+        Normal     = 400U,  ///< æ­£å¸¸
         Medium     = 500U,
         Bold       = 700U,
         ExtraBold  = 800U,
@@ -64,37 +64,37 @@ struct FontWeight
 
 /**
  * \~chinese
- * @brief ÎÄ±¾ÑùÊ½
+ * @brief æ–‡æœ¬æ ·å¼
  */
 class KGE_API TextStyle
 {
 public:
-    FontPtr        font;            ///< ×ÖÌå
-    String         font_family;     ///< ×ÖÌå×å
-    float          font_size;       ///< ×ÖºÅ
-    uint32_t       font_weight;     ///< ´ÖÏ¸Öµ
-    bool           italic;          ///< ÊÇ·ñĞ±Ìå
-    TextAlign      alignment;       ///< ¶ÔÆë·½Ê½
-    float          wrap_width;      ///< ×Ô¶¯»»ĞĞ¿í¶È
-    float          line_spacing;    ///< ĞĞ¼ä¾à
-    BrushPtr       fill_brush;      ///< Ìî³ä»­Ë¢
-    BrushPtr       outline_brush;   ///< Ãè±ß»­Ë¢
-    float          outline_width;   ///< Ãè±ßÏß¿í
-    StrokeStylePtr outline_stroke;  ///< Ãè±ßÏßÑùÊ½
+    FontPtr        font;            ///< å­—ä½“
+    String         font_family;     ///< å­—ä½“æ—
+    float          font_size;       ///< å­—å·
+    uint32_t       font_weight;     ///< ç²—ç»†å€¼
+    bool           italic;          ///< æ˜¯å¦æ–œä½“
+    TextAlign      alignment;       ///< å¯¹é½æ–¹å¼
+    float          wrap_width;      ///< è‡ªåŠ¨æ¢è¡Œå®½åº¦
+    float          line_spacing;    ///< è¡Œé—´è·
+    BrushPtr       fill_brush;      ///< å¡«å……ç”»åˆ·
+    BrushPtr       outline_brush;   ///< æè¾¹ç”»åˆ·
+    float          outline_width;   ///< æè¾¹çº¿å®½
+    StrokeStylePtr outline_stroke;  ///< æè¾¹çº¿æ ·å¼
 
 public:
     /**
      * \~chinese
-     * @brief ¹¹½¨Ä¬ÈÏÎÄ±¾ÑùÊ½
+     * @brief æ„å»ºé»˜è®¤æ–‡æœ¬æ ·å¼
      */
     TextStyle();
 
     /**
      * \~chinese
-     * @brief ¹¹½¨ÎÄ±¾ÑùÊ½
-     * @param font_family ×ÖÌå×å
-     * @param font_size ×ÖÌå´óĞ¡
-     * @param font_weight ×ÖÌå´ÖÏ¸
+     * @brief æ„å»ºæ–‡æœ¬æ ·å¼
+     * @param font_family å­—ä½“æ—
+     * @param font_size å­—ä½“å¤§å°
+     * @param font_weight å­—ä½“ç²—ç»†
      */
     TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
 };

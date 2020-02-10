@@ -35,18 +35,18 @@ KGE_DECLARE_SMART_PTR(Fixture);
  */
 
 /// \~chinese
-/// @brief ÎïÀí¼Ğ¾ß
+/// @brief ç‰©ç†å¤¹å…·
 class Fixture : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ¼Ğ¾ß²ÎÊı
+    /// @brief å¤¹å…·å‚æ•°
     struct Param
     {
-        float density     = 0.0f;   ///< ÃÜ¶È
-        float friction    = 0.2f;   ///< Ä¦²ÁÁ¦
-        float restitution = 0.0f;   ///< µ¯ĞÔ»Ö¸´
-        bool  is_sensor   = false;  ///< ÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
+        float density     = 0.0f;   ///< å¯†åº¦
+        float friction    = 0.2f;   ///< æ‘©æ“¦åŠ›
+        float restitution = 0.0f;   ///< å¼¹æ€§æ¢å¤
+        bool  is_sensor   = false;  ///< æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
 
         Param() {}
 
@@ -60,44 +60,44 @@ public:
     };
 
     /// \~chinese
-    /// @brief ´´½¨Ô²ĞÎ¼Ğ¾ß
-    /// @param body Ìí¼Ó¼Ğ¾ßµÄÎïÌå
-    /// @param param ¼Ğ¾ß²ÎÊı
-    /// @param radius Ô²ĞÎ°ë¾¶
-    /// @param offset Æ«ÒÆÁ¿
+    /// @brief åˆ›å»ºåœ†å½¢å¤¹å…·
+    /// @param body æ·»åŠ å¤¹å…·çš„ç‰©ä½“
+    /// @param param å¤¹å…·å‚æ•°
+    /// @param radius åœ†å½¢åŠå¾„
+    /// @param offset åç§»é‡
     static FixturePtr CreateCircle(Body* body, Param const& param, float radius, Point const& offset = Point());
 
     /// \~chinese
-    /// @brief ´´½¨¾ØĞÎ¼Ğ¾ß
-    /// @param body Ìí¼Ó¼Ğ¾ßµÄÎïÌå
-    /// @param param ¼Ğ¾ß²ÎÊı
-    /// @param size ¾ØĞÎ´óĞ¡
-    /// @param offset Æ«ÒÆÁ¿
-    /// @param rotation Ğı×ª½Ç¶È
+    /// @brief åˆ›å»ºçŸ©å½¢å¤¹å…·
+    /// @param body æ·»åŠ å¤¹å…·çš„ç‰©ä½“
+    /// @param param å¤¹å…·å‚æ•°
+    /// @param size çŸ©å½¢å¤§å°
+    /// @param offset åç§»é‡
+    /// @param rotation æ—‹è½¬è§’åº¦
     static FixturePtr CreateRect(Body* body, Param const& param, Size const& size, Point const& offset = Point(),
                                  float rotation = 0.f);
 
     /// \~chinese
-    /// @brief ´´½¨¶à±ßĞÎ¼Ğ¾ß
-    /// @param body Ìí¼Ó¼Ğ¾ßµÄÎïÌå
-    /// @param param ¼Ğ¾ß²ÎÊı
-    /// @param vertexs ¶à±ßĞÎ¶¥µã
+    /// @brief åˆ›å»ºå¤šè¾¹å½¢å¤¹å…·
+    /// @param body æ·»åŠ å¤¹å…·çš„ç‰©ä½“
+    /// @param param å¤¹å…·å‚æ•°
+    /// @param vertexs å¤šè¾¹å½¢é¡¶ç‚¹
     static FixturePtr CreatePolygon(Body* body, Param const& param, Vector<Point> const& vertexs);
 
     /// \~chinese
-    /// @brief ´´½¨±ß¼Ğ¾ß
-    /// @param body Ìí¼Ó¼Ğ¾ßµÄÎïÌå
-    /// @param param ¼Ğ¾ß²ÎÊı
-    /// @param p1 ±ßµÄÆğµã
-    /// @param p2 ±ßµÄÖÕµã
+    /// @brief åˆ›å»ºè¾¹å¤¹å…·
+    /// @param body æ·»åŠ å¤¹å…·çš„ç‰©ä½“
+    /// @param param å¤¹å…·å‚æ•°
+    /// @param p1 è¾¹çš„èµ·ç‚¹
+    /// @param p2 è¾¹çš„ç»ˆç‚¹
     static FixturePtr CreateEdge(Body* body, Param const& param, Point const& p1, Point const& p2);
 
     /// \~chinese
-    /// @brief ´´½¨Á´Ìõ¼Ğ¾ß
-    /// @param body Ìí¼Ó¼Ğ¾ßµÄÎïÌå
-    /// @param param ¼Ğ¾ß²ÎÊı
-    /// @param vertexs Á´Ìõ¶¥µã
-    /// @param loop ÊÇ·ñÁ¬½ÓÁ´ÌõµÄÆğµãºÍÖÕµã
+    /// @brief åˆ›å»ºé“¾æ¡å¤¹å…·
+    /// @param body æ·»åŠ å¤¹å…·çš„ç‰©ä½“
+    /// @param param å¤¹å…·å‚æ•°
+    /// @param vertexs é“¾æ¡é¡¶ç‚¹
+    /// @param loop æ˜¯å¦è¿æ¥é“¾æ¡çš„èµ·ç‚¹å’Œç»ˆç‚¹
     static FixturePtr CreateChain(Body* body, Param const& param, Vector<Point> const& vertexs, bool loop = false);
 
     Fixture();
@@ -105,52 +105,52 @@ public:
     virtual ~Fixture();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¼Ğ¾ßËùÔÚµÄÎïÌå
+    /// @brief è·å–å¤¹å…·æ‰€åœ¨çš„ç‰©ä½“
     Body* GetBody() const;
 
     /// \~chinese
-    /// @brief ÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
+    /// @brief æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
     bool IsSensor() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ¼Ğ¾ßÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
-    /// @details ½Ó´¥´«¸ĞÆ÷Ö»»á²úÉúÎïÀí½Ó´¥£¬¶ø²»»áÓ°ÏìÎïÌåÔË¶¯
+    /// @brief è®¾ç½®å¤¹å…·æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
+    /// @details æ¥è§¦ä¼ æ„Ÿå™¨åªä¼šäº§ç”Ÿç‰©ç†æ¥è§¦ï¼Œè€Œä¸ä¼šå½±å“ç‰©ä½“è¿åŠ¨
     void SetSensor(bool sensor);
 
     /// \~chinese
-    /// @brief »ñÈ¡¼Ğ¾ßµÄÖÊÁ¿Êı¾İ
+    /// @brief è·å–å¤¹å…·çš„è´¨é‡æ•°æ®
     void GetMassData(float* mass, Point* center, float* inertia) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÃÜ¶È
+    /// @brief è·å–å¯†åº¦
     float GetDensity() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÃÜ¶È
+    /// @brief è®¾ç½®å¯†åº¦
     void SetDensity(float density);
 
     /// \~chinese
-    /// @brief »ñÈ¡Ä¦²ÁÁ¦ [N]
+    /// @brief è·å–æ‘©æ“¦åŠ› [N]
     float GetFriction() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÄ¦²ÁÁ¦ [N]
+    /// @brief è®¾ç½®æ‘©æ“¦åŠ› [N]
     void SetFriction(float friction);
 
     /// \~chinese
-    /// @brief »ñÈ¡µ¯ĞÔ»Ö¸´
+    /// @brief è·å–å¼¹æ€§æ¢å¤
     float GetRestitution() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃµ¯ĞÔ»Ö¸´
+    /// @brief è®¾ç½®å¼¹æ€§æ¢å¤
     void SetRestitution(float restitution);
 
     /// \~chinese
-    /// @brief µã²âÊÔ
+    /// @brief ç‚¹æµ‹è¯•
     bool TestPoint(const Point& p) const;
 
     b2Fixture* GetB2Fixture() const;
@@ -165,7 +165,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ÎïÀí¼Ğ¾ßÁĞ±í
+/// @brief ç‰©ç†å¤¹å…·åˆ—è¡¨
 class FixtureList
 {
     template <typename _Ty>

@@ -31,8 +31,8 @@ typedef Function<void()> AsyncTaskFunc;
 typedef Function<void()> AsyncTaskCallback;
 
 /// \~chinese
-/// @brief Òì²½ÈÎÎñ
-/// @details ÔÚ¶àÏß³ÌÏÂÖ´ĞĞÈÎÎñ²¢·µ»Ø
+/// @brief å¼‚æ­¥ä»»åŠ¡
+/// @details åœ¨å¤šçº¿ç¨‹ä¸‹æ‰§è¡Œä»»åŠ¡å¹¶è¿”å›
 ///   @code
 ///     AsyncTaskPtr task = new AsyncTask;
 ///     task->Then(DoSomething);
@@ -42,27 +42,27 @@ class AsyncTask : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨Òì²½ÈÎÎñ
-    /// @param func Òì²½»Øµ÷º¯Êı
+    /// @brief åˆ›å»ºå¼‚æ­¥ä»»åŠ¡
+    /// @param func å¼‚æ­¥å›è°ƒå‡½æ•°
     static AsyncTaskPtr Create(AsyncTaskFunc func);
 
     /// \~chinese
-    /// @brief ¹¹ÔìÒì²½ÈÎÎñ
+    /// @brief æ„é€ å¼‚æ­¥ä»»åŠ¡
     AsyncTask();
 
     virtual ~AsyncTask();
 
     /// \~chinese
-    /// @brief Ìí¼ÓÒì²½ÈÎÎñÁ´
+    /// @brief æ·»åŠ å¼‚æ­¥ä»»åŠ¡é“¾
     AsyncTask& Then(AsyncTaskFunc func);
 
     /// \~chinese
-    /// @brief ÉèÖÃÈÎÎñÖ´ĞĞÍê³ÉºóµÄ»Øµ÷º¯Êı
-    /// @note ¸Ãº¯ÊıÔÚ Kiwano Ö÷Ïß³ÌÖĞÖ´ĞĞ
+    /// @brief è®¾ç½®ä»»åŠ¡æ‰§è¡Œå®Œæˆåçš„å›è°ƒå‡½æ•°
+    /// @note è¯¥å‡½æ•°åœ¨ Kiwano ä¸»çº¿ç¨‹ä¸­æ‰§è¡Œ
     AsyncTask& SetCallback(AsyncTaskCallback callback);
 
     /// \~chinese
-    /// @brief Æô¶¯Òì²½ÈÎÎñ
+    /// @brief å¯åŠ¨å¼‚æ­¥ä»»åŠ¡
     void Start();
 
 private:

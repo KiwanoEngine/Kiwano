@@ -33,24 +33,24 @@ KGE_DECLARE_SMART_PTR(Sprite);
 
 /**
  * \~chinese
- * @brief ¾«Áé
+ * @brief ç²¾çµ
  */
 class KGE_API Sprite : public Actor
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨¾«Áé
-    /// @param file_path ±¾µØÍ¼Æ¬Â·¾¶
+    /// @brief åˆ›å»ºç²¾çµ
+    /// @param file_path æœ¬åœ°å›¾ç‰‡è·¯å¾„
     static SpritePtr Create(String const& file_path);
 
     /// \~chinese
-    /// @brief ´´½¨¾«Áé
-    /// @param res Í¼Æ¬×ÊÔ´
+    /// @brief åˆ›å»ºç²¾çµ
+    /// @param res å›¾ç‰‡èµ„æº
     static SpritePtr Create(Resource const& res);
 
     /// \~chinese
-    /// @brief ´´½¨¾«Áé
-    /// @param frame Í¼ÏñÖ¡
+    /// @brief åˆ›å»ºç²¾çµ
+    /// @param frame å›¾åƒå¸§
     static SpritePtr Create(FramePtr frame);
 
     Sprite();
@@ -58,27 +58,27 @@ public:
     virtual ~Sprite();
 
     /// \~chinese
-    /// @brief ¼ÓÔØ±¾µØÍ¼Æ¬
-    /// @param file_path ±¾µØÍ¼Æ¬Â·¾¶
+    /// @brief åŠ è½½æœ¬åœ°å›¾ç‰‡
+    /// @param file_path æœ¬åœ°å›¾ç‰‡è·¯å¾„
     bool Load(String const& file_path);
 
     /// \~chinese
-    /// @brief ¼ÓÔØÍ¼Ïñ×ÊÔ´
-    /// @param res Í¼Æ¬×ÊÔ´
+    /// @brief åŠ è½½å›¾åƒèµ„æº
+    /// @param res å›¾ç‰‡èµ„æº
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief Ê¹ÓÃ¾ØĞÎÇøÓò²Ã¼ô¾«Áé
-    /// @param crop_rect ²Ã¼ô¾ØĞÎ
+    /// @brief ä½¿ç”¨çŸ©å½¢åŒºåŸŸè£å‰ªç²¾çµ
+    /// @param crop_rect è£å‰ªçŸ©å½¢
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief »ñÈ¡Ö¡Í¼Ïñ
+    /// @brief è·å–å¸§å›¾åƒ
     FramePtr GetFrame() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃÍ¼ÏñÖ¡
-    /// @param[in] frame Í¼ÏñÖ¡
+    /// @brief è®¾ç½®å›¾åƒå¸§
+    /// @param[in] frame å›¾åƒå¸§
     void SetFrame(FramePtr frame);
 
     void OnRender(RenderContext& ctx) override;

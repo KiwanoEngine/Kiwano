@@ -30,13 +30,13 @@ KGE_DECLARE_SMART_PTR(TextButton);
 
 /**
  * \~chinese
- * @brief °´Å¥
+ * @brief æŒ‰é’®
  */
 class KGE_API Button : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief °´Å¥»Øµ÷º¯Êı
+    /// @brief æŒ‰é’®å›è°ƒå‡½æ•°
     using Callback = Function<void(Button* /* self */)>;
 
     Button();
@@ -44,53 +44,53 @@ public:
     virtual ~Button();
 
     /// \~chinese
-    /// @brief »ñÈ¡°´Å¥×´Ì¬ÊÇÆôÓÃ»¹ÊÇ½ûÓÃ
+    /// @brief è·å–æŒ‰é’®çŠ¶æ€æ˜¯å¯ç”¨è¿˜æ˜¯ç¦ç”¨
     bool IsEnable() const;
 
     /// \~chinese
-    /// @brief ÉèÖÃ°´Å¥ÆôÓÃ»ò½ûÓÃ
+    /// @brief è®¾ç½®æŒ‰é’®å¯ç”¨æˆ–ç¦ç”¨
     void SetEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief ÉèÖÃ°´Å¥µã»÷ºóµÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®æŒ‰é’®ç‚¹å‡»åçš„å›è°ƒå‡½æ•°
     void SetClickCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief ÉèÖÃ°´Å¥±»°´ÏÂÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®æŒ‰é’®è¢«æŒ‰ä¸‹æ—¶çš„å›è°ƒå‡½æ•°
     void SetPressedCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief ÉèÖÃ°´Å¥±»Ì§ÆğÊ±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®æŒ‰é’®è¢«æŠ¬èµ·æ—¶çš„å›è°ƒå‡½æ•°
     void SetReleasedCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief ÉèÖÃÊó±êÒÆÈë°´Å¥Ê±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®é¼ æ ‡ç§»å…¥æŒ‰é’®æ—¶çš„å›è°ƒå‡½æ•°
     void SetMouseOverCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief ÉèÖÃÊó±êÒÆ³ö°´Å¥Ê±µÄ»Øµ÷º¯Êı
+    /// @brief è®¾ç½®é¼ æ ‡ç§»å‡ºæŒ‰é’®æ—¶çš„å›è°ƒå‡½æ•°
     void SetMouseOutCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief °´Å¥×´Ì¬
+    /// @brief æŒ‰é’®çŠ¶æ€
     enum class Status
     {
-        Normal,  ///< ÆÕÍ¨
-        Hover,   ///< Êó±êÔÚ°´Å¥ÄÚ
-        Pressed  ///< ±»°´ÏÂ
+        Normal,  ///< æ™®é€š
+        Hover,   ///< é¼ æ ‡åœ¨æŒ‰é’®å†…
+        Pressed  ///< è¢«æŒ‰ä¸‹
     };
 
     /// \~chinese
-    /// @brief ÉèÖÃ°´Å¥×´Ì¬
+    /// @brief è®¾ç½®æŒ‰é’®çŠ¶æ€
     void SetStatus(Status status);
 
     /// \~chinese
-    /// @brief »ñÈ¡°´Å¥×´Ì¬
+    /// @brief è·å–æŒ‰é’®çŠ¶æ€
     Status GetStatus() const;
 
 protected:
     /// \~chinese
-    /// @brief ¸üĞÂ°´Å¥×´Ì¬
+    /// @brief æ›´æ–°æŒ‰é’®çŠ¶æ€
     void UpdateStatus(Event* evt);
 
 private:
@@ -104,7 +104,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ¾«Áé°´Å¥
+/// @brief ç²¾çµæŒ‰é’®
 class SpriteButton
     : public Sprite
     , public Button
@@ -113,22 +113,22 @@ public:
     SpriteButton();
 
     /// \~chinese
-    /// @brief ´´½¨¾«Áé°´Å¥
-    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç²¾çµæŒ‰é’®
+    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
     static SpriteButtonPtr Create(Callback const& click);
 
     /// \~chinese
-    /// @brief ´´½¨¾«Áé°´Å¥
-    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
-    /// @param pressed °´Å¥°´ÏÂ»Øµ÷º¯Êı
-    /// @param mouse_over °´Å¥ÒÆÈë»Øµ÷º¯Êı
-    /// @param mouse_out °´Å¥ÒÆ³ö»Øµ÷º¯Êı
+    /// @brief åˆ›å»ºç²¾çµæŒ‰é’®
+    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
+    /// @param pressed æŒ‰é’®æŒ‰ä¸‹å›è°ƒå‡½æ•°
+    /// @param mouse_over æŒ‰é’®ç§»å…¥å›è°ƒå‡½æ•°
+    /// @param mouse_out æŒ‰é’®ç§»å‡ºå›è°ƒå‡½æ•°
     static SpriteButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
                                   Callback const& mouse_out);
 };
 
 /// \~chinese
-/// @brief ÎÄ×Ö°´Å¥
+/// @brief æ–‡å­—æŒ‰é’®
 class TextButton
     : public TextActor
     , public Button
@@ -137,16 +137,16 @@ public:
     TextButton();
 
     /// \~chinese
-    /// @brief ´´½¨ÎÄ×Ö°´Å¥
-    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
+    /// @brief åˆ›å»ºæ–‡å­—æŒ‰é’®
+    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
     static TextButtonPtr Create(Callback const& click);
 
     /// \~chinese
-    /// @brief ´´½¨ÎÄ×Ö°´Å¥
-    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
-    /// @param pressed °´Å¥°´ÏÂ»Øµ÷º¯Êı
-    /// @param mouse_over °´Å¥ÒÆÈë»Øµ÷º¯Êı
-    /// @param mouse_out °´Å¥ÒÆ³ö»Øµ÷º¯Êı
+    /// @brief åˆ›å»ºæ–‡å­—æŒ‰é’®
+    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
+    /// @param pressed æŒ‰é’®æŒ‰ä¸‹å›è°ƒå‡½æ•°
+    /// @param mouse_over æŒ‰é’®ç§»å…¥å›è°ƒå‡½æ•°
+    /// @param mouse_out æŒ‰é’®ç§»å‡ºå›è°ƒå‡½æ•°
     static TextButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
 };
 }  // namespace kiwano

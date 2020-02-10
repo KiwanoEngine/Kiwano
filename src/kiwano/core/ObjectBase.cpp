@@ -88,9 +88,8 @@ void ObjectBase::SetName(String const& name)
 
 String ObjectBase::DumpObject()
 {
-    String name = oc::string_to_wide(typeid(*this).name());
-    return String::format(L"{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", name.c_str(), GetObjectID(), GetRefCount(),
-                          GetName().c_str());
+    return String::format("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*this).name(), GetObjectID(),
+                          GetRefCount(), GetName().c_str());
 }
 
 bool ObjectBase::IsTracingLeaks()
@@ -110,12 +109,12 @@ void ObjectBase::StopTracingLeaks()
 
 void ObjectBase::DumpTracingObjects()
 {
-    KGE_SYS_LOG(L"-------------------------- All Objects --------------------------");
+    KGE_SYS_LOG("-------------------------- All Objects --------------------------");
     for (const auto object : tracing_objects)
     {
-        KGE_SYS_LOG(L"%s", object->DumpObject().c_str());
+        KGE_SYS_LOG("%s", object->DumpObject().c_str());
     }
-    KGE_SYS_LOG(L"------------------------- Total size: %d -------------------------", tracing_objects.size());
+    KGE_SYS_LOG("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }
 
 Vector<ObjectBase*>& ObjectBase::GetTracingObjects()

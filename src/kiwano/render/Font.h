@@ -37,7 +37,7 @@ class Renderer;
 
 /**
  * \~chinese
- * @brief 字体
+ * @brief 瀛椾綋
  */
 class Font : public virtual ObjectBase
 {
@@ -45,34 +45,37 @@ class Font : public virtual ObjectBase
 
 public:
     /// \~chinese
-    /// @brief 创建字体
+    /// @brief 鍒涘缓瀛椾綋
     static FontPtr Create(String const& file);
 
     /// \~chinese
-    /// @brief 创建字体
+    /// @brief 鍒涘缓瀛椾綋
     static FontPtr Create(Resource const& resource);
 
     Font();
 
     /// \~chinese
-    /// @brief 加载字体文件
+    /// @brief 鍔犺浇瀛椾綋鏂囦欢
     bool Load(String const& file);
 
     /// \~chinese
-    /// @brief 加载字体资源
+    /// @brief 鍔犺浇瀛椾綋璧勬簮
     bool Load(Resource const& resource);
 
-private:
+#if defined(KGE_WIN32)
+public:
     ComPtr<IDWriteFontCollection> GetCollection() const;
 
     void SetCollection(ComPtr<IDWriteFontCollection> collection);
 
 private:
     ComPtr<IDWriteFontCollection> collection_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<IDWriteFontCollection> Font::GetCollection() const
 {
     return collection_;
@@ -82,4 +85,6 @@ inline void Font::SetCollection(ComPtr<IDWriteFontCollection> collection)
 {
     collection_ = collection;
 }
+#endif
+
 }  // namespace kiwano

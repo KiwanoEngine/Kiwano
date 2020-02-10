@@ -56,32 +56,28 @@ GifImage::GifImage()
 
 bool GifImage::Load(String const& file_path)
 {
-    Renderer::Instance().CreateGifImage(*this, file_path);
+    Renderer::GetInstance().CreateGifImage(*this, file_path);
 
     if (IsValid())
     {
-        if (FAILED(GetGlobalMetadata()))
-        {
-            SetDecoder(nullptr);
-            return false;
-        }
-        return true;
+        if (GetGlobalMetadata())
+            return true;
+
+        SetDecoder(nullptr);
     }
     return false;
 }
 
 bool GifImage::Load(Resource const& res)
 {
-    Renderer::Instance().CreateGifImage(*this, res);
+    Renderer::GetInstance().CreateGifImage(*this, res);
 
     if (IsValid())
     {
-        if (FAILED(GetGlobalMetadata()))
-        {
-            SetDecoder(nullptr);
-            return false;
-        }
-        return true;
+        if (GetGlobalMetadata())
+            return true;
+
+        SetDecoder(nullptr);
     }
     return false;
 }
@@ -94,11 +90,12 @@ bool GifImage::IsValid() const
 GifImage::Frame GifImage::GetFrame(uint32_t index)
 {
     Frame frame;
-    Renderer::Instance().CreateGifImageFrame(frame, *this, index);
+    Renderer::GetInstance().CreateGifImageFrame(frame, *this, index);
     return frame;
 }
 
-HRESULT GifImage::GetGlobalMetadata()
+#if defined(KGE_WIN32)
+bool GifImage::GetGlobalMetadata()
 {
     HRESULT hr = decoder_ ? S_OK : E_FAIL;
 
@@ -120,10 +117,10 @@ HRESULT GifImage::GetGlobalMetadata()
             PROPVARIANT prop_val;
             ::PropVariantInit(&prop_val);
 
-            // »ñÈ¡È«¾Ö frame ´óĞ¡
+            // è·å–å…¨å±€ frame å¤§å°
             if (SUCCEEDED(hr))
             {
-                // »ñÈ¡¿í¶È
+                // è·å–å®½åº¦
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Width", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -139,7 +136,7 @@ HRESULT GifImage::GetGlobalMetadata()
 
             if (SUCCEEDED(hr))
             {
-                // »ñÈ¡¸ß¶È
+                // è·å–é«˜åº¦
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Height", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -155,7 +152,7 @@ HRESULT GifImage::GetGlobalMetadata()
 
             if (SUCCEEDED(hr))
             {
-                // »ñµÃÏñËØ×İºá±È
+                // è·å¾—åƒç´ çºµæ¨ªæ¯”
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/PixelAspectRatio", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -165,11 +162,11 @@ HRESULT GifImage::GetGlobalMetadata()
                     {
                         if (prop_val.bVal != 0)
                         {
-                            // ĞèÒª¼ÆËã±ÈÂÊ
-                            // ×î¸ßÏñËØ 1£º4£¬×î¿íÏñËØ 4£º1£¬ÔöÁ¿Îª 1/64
+                            // éœ€è¦è®¡ç®—æ¯”ç‡
+                            // æœ€é«˜åƒç´  1ï¼š4ï¼Œæœ€å®½åƒç´  4ï¼š1ï¼Œå¢é‡ä¸º 1/64
                             float pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
 
-                            // ¸ù¾İÏñËØ³¤¿í±È¼ÆËãÏñËØÖĞµÄÍ¼Ïñ¿í¶ÈºÍ¸ß¶È£¬Ö»ËõĞ¡Í¼Ïñ
+                            // æ ¹æ®åƒç´ é•¿å®½æ¯”è®¡ç®—åƒç´ ä¸­çš„å›¾åƒå®½åº¦å’Œé«˜åº¦ï¼Œåªç¼©å°å›¾åƒ
                             if (pixel_asp_ratio > 1.f)
                             {
                                 width_in_pixels_  = width;
@@ -183,7 +180,7 @@ HRESULT GifImage::GetGlobalMetadata()
                         }
                         else
                         {
-                            // ÖµÎª 0, ËùÒÔÏñËØ±ÈÎª 1
+                            // å€¼ä¸º 0, æ‰€ä»¥åƒç´ æ¯”ä¸º 1
                             width_in_pixels_  = width;
                             height_in_pixels_ = height;
                         }
@@ -194,7 +191,8 @@ HRESULT GifImage::GetGlobalMetadata()
             ::PropVariantClear(&prop_val);
         }
     }
-    return hr;
+    return SUCCEEDED(hr);
 }
+#endif
 
 }  // namespace kiwano

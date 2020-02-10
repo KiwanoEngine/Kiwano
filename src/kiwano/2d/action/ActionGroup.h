@@ -31,7 +31,7 @@ KGE_DECLARE_SMART_PTR(ActionGroup);
  */
 
 /// \~chinese
-/// @brief ¶¯»­×éºÏ
+/// @brief åŠ¨ç”»ç»„åˆ
 class KGE_API ActionGroup : public Action
 {
 public:
@@ -40,33 +40,33 @@ public:
     ActionGroup();
 
     /// \~chinese
-    /// @brief ¶¯»­×éºÏ
-    /// @param actions ¶¯»­¼¯ºÏ
-    /// @param sync Í¬²½Ö´ĞĞ
+    /// @brief åŠ¨ç”»ç»„åˆ
+    /// @param actions åŠ¨ç”»é›†åˆ
+    /// @param sync åŒæ­¥æ‰§è¡Œ
     explicit ActionGroup(Vector<ActionPtr> const& actions, bool sync = false);
 
     virtual ~ActionGroup();
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶¯»­
-    /// @param action ¶¯»­
+    /// @brief æ·»åŠ åŠ¨ç”»
+    /// @param action åŠ¨ç”»
     void Add(ActionPtr action);
 
     /// \~chinese
-    /// @brief Ìí¼Ó¶à¸ö¶¯»­
-    /// @param actions ¶¯»­¼¯ºÏ
+    /// @brief æ·»åŠ å¤šä¸ªåŠ¨ç”»
+    /// @param actions åŠ¨ç”»é›†åˆ
     void Add(Vector<ActionPtr> const& actions);
 
     /// \~chinese
-    /// @brief »ñÈ¡ËùÓĞ¶¯»­
+    /// @brief è·å–æ‰€æœ‰åŠ¨ç”»
     ActionList const& GetActions() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
+    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
+    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
     ActionPtr Reverse() const override;
 
 protected:

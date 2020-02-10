@@ -91,7 +91,7 @@ void ShapeActor::OnRender(RenderContext& ctx)
         if (stroke_brush_)
         {
             ctx.SetCurrentBrush(stroke_brush_);
-            ctx.DrawShape(*shape_, stroke_width_ * 2 /* twice width for widening */, stroke_style_);
+            ctx.DrawShape(*shape_, stroke_style_, stroke_width_ * 2 /* twice width for widening */);
         }
 
         if (fill_brush_)

@@ -21,28 +21,28 @@
 #pragma once
 
 #ifndef __cplusplus
-#error Kiwano only supports C++
+#   error Kiwano only supports C++
 #endif
 
 #ifdef _WIN32
-#define KGE_WIN32
-#ifdef _WIN64
-#define KGE_WIN64
-#endif
+#       define KGE_WIN32
+#   ifdef _WIN64
+#       define KGE_WIN64
+#   endif
 #elif __ANDROID__
-#define KGE_ANDROID
+#   define KGE_ANDROID
 #elif __linux__
-#define KGE_LINUX
+#   define KGE_LINUX
 #elif __APPLE__
-#if TARGET_OS_IPHONE
-#define KGE_IPHONE
-#elif TARGET_OS_MAC
-#define KGE_MACOS
+#   if TARGET_OS_IPHONE
+#       define KGE_IPHONE
+#   elif TARGET_OS_MAC
+#       define KGE_MACOS
+#   else
+#       error "Unsupported Apple platform"
+#   endif
 #else
-#error "Unsupported Apple platform"
-#endif
-#else
-#error "Unsupported compiler"
+#   error "Unsupported compiler"
 #endif
 
 // C++ RunTime Header Files
@@ -56,48 +56,48 @@
 #ifdef KGE_WIN32
 
 #ifndef _MSC_VER
-#error Kiwano only supports MSVC compiler
+#   error Kiwano only supports MSVC compiler
 #endif
 
 #ifndef KGE_VS_VER
-#define KGE_VS_VER _MSC_VER
-#define KGE_VS_2013 1800
-#define KGE_VS_2015 1900
-#define KGE_VS_2017 1900
-#define KGE_VS_2019 1920
+#   define KGE_VS_VER _MSC_VER
+#   define KGE_VS_2013 1800
+#   define KGE_VS_2015 1900
+#   define KGE_VS_2017 1900
+#   define KGE_VS_2019 1920
 #endif
 
 #if KGE_VS_VER < KGE_VS_2015
-#error Kiwano only supports Visual Studio 2015 and above
+#   error Kiwano only supports Visual Studio 2015 and above
 #endif
 
 #ifndef WINVER
-#define WINVER 0x0700  // Allow use of features specific to Windows 7 or later
+#   define WINVER 0x0700  // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0700  // Allow use of features specific to Windows 7 or later
+#   define _WIN32_WINNT 0x0700  // Allow use of features specific to Windows 7 or later
 #endif
 
 #ifndef NTDDI_VERSION
-#define NTDDI_VERSION NTDDI_WIN7
+#   define NTDDI_VERSION NTDDI_WIN7
 #endif
 
 #ifndef UNICODE
-#define UNICODE
+#   define UNICODE
 #endif
 
 // Exclude rarely-used items from Windows headers
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#   define NOMINMAX
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define KGE_DEBUG
+#   define KGE_DEBUG
 #endif
 
 #define KGE_SUPPRESS_WARNING_PUSH __pragma(warning(push))
@@ -105,28 +105,28 @@
 #define KGE_SUPPRESS_WARNING_POP __pragma(warning(pop))
 
 #ifndef KGE_ASSERT
-#ifdef KGE_DEBUG
-#define KGE_ASSERT(EXPR)                                                                                      \
-    do                                                                                                        \
-    {                                                                                                         \
-        (void)((!!(EXPR)) || (_wassert(_CRT_WIDE(#EXPR), _CRT_WIDE(__FUNCTION__), (unsigned)(__LINE__)), 0)); \
-    } while (0)
-#else
-#define KGE_ASSERT __noop
-#endif
+#   ifdef KGE_DEBUG
+#       define KGE_ASSERT(EXPR)                                                                                   \
+        do                                                                                                        \
+        {                                                                                                         \
+            (void)((!!(EXPR)) || (_wassert(_CRT_WIDE(#EXPR), _CRT_WIDE(__FUNCTION__), (unsigned)(__LINE__)), 0)); \
+        } while (0)
+#   else
+#       define KGE_ASSERT __noop
+#   endif
 #endif
 
 #ifndef KGE_API
-#if defined(KGE_USE_DLL)
-#define KGE_API __declspec(dllimport)
-#elif defined(KGE_EXPORT_DLL)
-#define KGE_API __declspec(dllexport)
-#endif
+#   if defined(KGE_USE_DLL)
+#       define KGE_API __declspec(dllimport)
+#   elif defined(KGE_EXPORT_DLL)
+#       define KGE_API __declspec(dllexport)
+#   endif
 #endif
 
 #ifndef KGE_API
 /* Building or calling Kiwano as a static library */
-#define KGE_API
+#   define KGE_API
 #else
 /*
  * C4251 can be ignored if you are deriving from a type in the
@@ -136,8 +136,6 @@
 KGE_SUPPRESS_WARNING(4251)
 #endif
 
-#define KGE_NOT_USED(VAR) ((void)VAR)
-
 #define KGE_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
 
 // Windows Header Files
@@ -145,3 +143,5 @@ KGE_SUPPRESS_WARNING(4251)
 #include <windows.h>
 
 #endif  // KGE_WIN32
+
+#define KGE_NOT_USED(VAR) ((void)VAR)

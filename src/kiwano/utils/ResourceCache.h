@@ -29,43 +29,43 @@
 namespace kiwano
 {
 /// \~chinese
-/// @brief ×ÊÔ´»º´æ
-/// @details ×ÊÔ´»º´æ
+/// @brief èµ„æºç¼“å­˜
+/// @details èµ„æºç¼“å­˜
 class KGE_API ResourceCache : public Singleton<ResourceCache>
 {
     friend Singleton<ResourceCache>;
 
 public:
     /// \~chinese
-    /// @brief ´Ó JSON ÎÄ¼ş¼ÓÔØ×ÊÔ´ĞÅÏ¢
-    /// @param file_path JSONÎÄ¼şÂ·¾¶
+    /// @brief ä» JSON æ–‡ä»¶åŠ è½½èµ„æºä¿¡æ¯
+    /// @param file_path JSONæ–‡ä»¶è·¯å¾„
     bool LoadFromJsonFile(String const& file_path);
 
     /// \~chinese
-    /// @brief ´Ó JSON ¼ÓÔØ×ÊÔ´ĞÅÏ¢
-    /// @param json_data JSON¶ÔÏó
+    /// @brief ä» JSON åŠ è½½èµ„æºä¿¡æ¯
+    /// @param json_data JSONå¯¹è±¡
     bool LoadFromJson(Json const& json_data);
 
     /// \~chinese
-    /// @brief ´Ó XML ÎÄ¼ş¼ÓÔØ×ÊÔ´ĞÅÏ¢
-    /// @param file_path XMLÎÄ¼şÂ·¾¶
+    /// @brief ä» XML æ–‡ä»¶åŠ è½½èµ„æºä¿¡æ¯
+    /// @param file_path XMLæ–‡ä»¶è·¯å¾„
     bool LoadFromXmlFile(String const& file_path);
 
     /// \~chinese
-    /// @brief ´Ó XML ÎÄµµ¶ÔÏó¼ÓÔØ×ÊÔ´ĞÅÏ¢
-    /// @param doc XMLÎÄµµ¶ÔÏó
+    /// @brief ä» XML æ–‡æ¡£å¯¹è±¡åŠ è½½èµ„æºä¿¡æ¯
+    /// @param doc XMLæ–‡æ¡£å¯¹è±¡
     bool LoadFromXml(pugi::xml_document const& doc);
 
     /// \~chinese
-    /// @brief »ñÈ¡×ÊÔ´
-    /// @param id ¶ÔÏóID
+    /// @brief è·å–èµ„æº
+    /// @param id å¯¹è±¡ID
     ObjectBasePtr Get(String const& id) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡×ÊÔ´
-    /// @tparam _Ty ¶ÔÏóÀàĞÍ
-    /// @param id ¶ÔÏóID
-    /// @return Ö¸¶¨¶ÔÏóÀàĞÍµÄÖ¸Õë
+    /// @brief è·å–èµ„æº
+    /// @tparam _Ty å¯¹è±¡ç±»å‹
+    /// @param id å¯¹è±¡ID
+    /// @return æŒ‡å®šå¯¹è±¡ç±»å‹çš„æŒ‡é’ˆ
     template <typename _Ty>
     SmartPtr<_Ty> Get(String const& id) const
     {
@@ -73,52 +73,52 @@ public:
     }
 
     /// \~chinese
-    /// @brief ½«¶ÔÏó·ÅÈë»º´æ
-    /// @param id ¶ÔÏóID
-    /// @param obj ¶ÔÏó
+    /// @brief å°†å¯¹è±¡æ”¾å…¥ç¼“å­˜
+    /// @param id å¯¹è±¡ID
+    /// @param obj å¯¹è±¡
     bool AddObject(String const& id, ObjectBasePtr obj);
 
     /// \~chinese
-    /// @brief ´Ó¶à¸ö±¾µØÍ¼Æ¬¹¹½¨ĞòÁĞÖ¡£¬²¢·ÅÈë»º´æ
-    /// @param id ¶ÔÏóID
-    /// @param files ±¾µØÍ¼Æ¬Â·¾¶¼¯ºÏ
-    /// @return ĞòÁĞÖ¡µÄÖ¡ÊıÁ¿
+    /// @brief ä»å¤šä¸ªæœ¬åœ°å›¾ç‰‡æ„å»ºåºåˆ—å¸§ï¼Œå¹¶æ”¾å…¥ç¼“å­˜
+    /// @param id å¯¹è±¡ID
+    /// @param files æœ¬åœ°å›¾ç‰‡è·¯å¾„é›†åˆ
+    /// @return åºåˆ—å¸§çš„å¸§æ•°é‡
     size_t AddFrameSequence(String const& id, Vector<String> const& files);
 
     /// \~chinese
-    /// @brief ´Ó¶à¸öÍ¼Æ¬×ÊÔ´¹¹½¨ĞòÁĞÖ¡£¬²¢·ÅÈë»º´æ
-    /// @param id ¶ÔÏóID
-    /// @param resources Í¼Æ¬×ÊÔ´¼¯ºÏ
-    /// @return ĞòÁĞÖ¡µÄÖ¡ÊıÁ¿
+    /// @brief ä»å¤šä¸ªå›¾ç‰‡èµ„æºæ„å»ºåºåˆ—å¸§ï¼Œå¹¶æ”¾å…¥ç¼“å­˜
+    /// @param id å¯¹è±¡ID
+    /// @param resources å›¾ç‰‡èµ„æºé›†åˆ
+    /// @return åºåˆ—å¸§çš„å¸§æ•°é‡
     size_t AddFrameSequence(String const& id, Vector<Resource> const& resources);
 
     /// \~chinese
-    /// @brief ´Ó¶à¸öÍ¼ÏñÖ¡¹¹½¨ĞòÁĞÖ¡£¬²¢·ÅÈë»º´æ
-    /// @param id ¶ÔÏóID
-    /// @param frames Í¼ÏñÖ¡¼¯ºÏ
-    /// @return ĞòÁĞÖ¡µÄÖ¡ÊıÁ¿
+    /// @brief ä»å¤šä¸ªå›¾åƒå¸§æ„å»ºåºåˆ—å¸§ï¼Œå¹¶æ”¾å…¥ç¼“å­˜
+    /// @param id å¯¹è±¡ID
+    /// @param frames å›¾åƒå¸§é›†åˆ
+    /// @return åºåˆ—å¸§çš„å¸§æ•°é‡
     size_t AddFrameSequence(String const& id, Vector<FramePtr> const& frames);
 
     /// \~chinese
-    /// @brief ½«Í¼ÏñÖ¡°´ĞĞÁĞ·Ö¸î¹¹½¨ĞòÁĞÖ¡£¬²¢·ÅÈë»º´æ
-    /// @brief °´ĞĞÁĞÊı²Ã¼ôÍ¼Æ¬
-    /// @param id ¶ÔÏóID
-    /// @param frame Í¼ÏñÖ¡
-    /// @param cols ÁĞ
-    /// @param rows ĞĞ
-    /// @param padding_x X·½Ïò¼ä¸ô
-    /// @param padding_y Y·½Ïò¼ä¸ô
-    /// @return ĞòÁĞÖ¡µÄÖ¡ÊıÁ¿
+    /// @brief å°†å›¾åƒå¸§æŒ‰è¡Œåˆ—åˆ†å‰²æ„å»ºåºåˆ—å¸§ï¼Œå¹¶æ”¾å…¥ç¼“å­˜
+    /// @brief æŒ‰è¡Œåˆ—æ•°è£å‰ªå›¾ç‰‡
+    /// @param id å¯¹è±¡ID
+    /// @param frame å›¾åƒå¸§
+    /// @param cols åˆ—
+    /// @param rows è¡Œ
+    /// @param padding_x Xæ–¹å‘é—´éš”
+    /// @param padding_y Yæ–¹å‘é—´éš”
+    /// @return åºåˆ—å¸§çš„å¸§æ•°é‡
     size_t AddFrameSequence(String const& id, FramePtr frame, int cols, int rows = 1, float padding_x = 0,
                             float padding_y = 0);
 
     /// \~chinese
-    /// @brief É¾³ıÖ¸¶¨×ÊÔ´
-    /// @param id ¶ÔÏóID
+    /// @brief åˆ é™¤æŒ‡å®šèµ„æº
+    /// @param id å¯¹è±¡ID
     void Remove(String const& id);
 
     /// \~chinese
-    /// @brief Çå¿ÕËùÓĞ×ÊÔ´
+    /// @brief æ¸…ç©ºæ‰€æœ‰èµ„æº
     void Clear();
 
 private:

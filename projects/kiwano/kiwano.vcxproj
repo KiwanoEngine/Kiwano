@@ -19,6 +19,7 @@
     <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
@@ -30,7 +31,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h" />
     <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Layer.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
     <ClInclude Include="..\..\src\kiwano\render\Brush.h" />
     <ClInclude Include="..\..\src\kiwano\render\Color.h" />
@@ -71,12 +73,15 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h" />
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h" />
-    <ClInclude Include="..\..\src\kiwano\render\LayerArea.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Layer.h" />
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\render\Renderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\StrokeStyle.h" />
@@ -84,6 +89,7 @@
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.hpp" />
     <ClInclude Include="..\..\src\kiwano\render\Texture.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextureCache.h" />
+    <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h" />
@@ -103,7 +109,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Layer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
@@ -118,6 +124,7 @@
     <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Exception.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />
@@ -139,18 +146,22 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\LayerArea.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Renderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\StrokeStyle.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp" />
@@ -212,6 +223,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -230,6 +242,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

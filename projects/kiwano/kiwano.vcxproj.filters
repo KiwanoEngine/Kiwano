@@ -36,9 +36,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Layer.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -216,9 +213,6 @@
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\LayerArea.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -285,12 +279,33 @@
     <ClInclude Include="..\..\src\kiwano\math\Scalar.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Exception.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\Layer.h">
+      <Filter>render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Layer.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp">
@@ -440,9 +455,6 @@
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\LayerArea.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -480,6 +492,27 @@
       <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp">
+      <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Exception.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
       <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>

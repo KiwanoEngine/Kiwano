@@ -86,8 +86,7 @@ BrushPtr Brush::Create(RadialGradientStyle const& style)
 }
 
 Brush::Brush()
-    : opacity_(1.f)
-    , type_(Type::Unknown)
+    : type_(Type::Unknown)
 {
 }
 
@@ -96,53 +95,19 @@ bool Brush::IsValid() const
     return raw_ != nullptr;
 }
 
-float Brush::GetOpacity() const
-{
-    return opacity_;
-}
-
-void Brush::SetOpacity(float opacity)
-{
-    opacity_ = opacity;
-    if (raw_)
-    {
-        raw_->SetOpacity(opacity);
-    }
-}
-
 void Brush::SetColor(Color const& color)
 {
-    if (type_ == Type::SolidColor && raw_)
-    {
-        ComPtr<ID2D1SolidColorBrush> solid_brush;
-
-        if (SUCCEEDED(raw_->QueryInterface(&solid_brush)))
-        {
-            solid_brush->SetColor(DX::ConvertToColorF(color));
-            return;
-        }
-    }
-    Renderer::Instance().CreateBrush(*this, color);
+    Renderer::GetInstance().CreateBrush(*this, color);
 }
 
 void Brush::SetStyle(LinearGradientStyle const& style)
 {
-    Renderer::Instance().CreateBrush(*this, style);
+    Renderer::GetInstance().CreateBrush(*this, style);
 }
 
 void Brush::SetStyle(RadialGradientStyle const& style)
 {
-    Renderer::Instance().CreateBrush(*this, style);
-}
-
-void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
-{
-    type_ = type;
-    raw_  = brush;
-    if (raw_)
-    {
-        raw_->SetOpacity(opacity_);
-    }
+    Renderer::GetInstance().CreateBrush(*this, style);
 }
 
 }  // namespace kiwano

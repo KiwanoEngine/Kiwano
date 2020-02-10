@@ -63,9 +63,9 @@ Sound::~Sound()
 
 bool Sound::Load(String const& file_path)
 {
-    if (!FileSystem::Instance().IsFileExists(file_path))
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARN(L"Media file '%s' not found", file_path.c_str());
+        KGE_WARN("Media file '%s' not found", file_path.c_str());
         return false;
     }
 
@@ -74,16 +74,16 @@ bool Sound::Load(String const& file_path)
         Close();
     }
 
-    String full_path = FileSystem::Instance().GetFullPathForFile(file_path);
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
     HRESULT hr = transcoder_.LoadMediaFile(full_path);
     if (FAILED(hr))
     {
-        KGE_ERROR(L"Load media file failed with HRESULT of %08X", hr);
+        KGE_ERROR("Load media file failed with HRESULT of %08X", hr);
         return false;
     }
 
-    if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;
@@ -103,11 +103,11 @@ bool Sound::Load(Resource const& res)
     HRESULT hr = transcoder_.LoadMediaResource(res);
     if (FAILED(hr))
     {
-        KGE_ERROR(L"Load media resource failed with HRESULT of %08X", hr);
+        KGE_ERROR("Load media resource failed with HRESULT of %08X", hr);
         return false;
     }
 
-    if (!AudioEngine::Instance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;
@@ -126,7 +126,7 @@ void Sound::Play(int loop_count)
 {
     if (!opened_)
     {
-        KGE_ERROR(L"Sound must be opened first!");
+        KGE_ERROR("Sound must be opened first!");
         return;
     }
 
@@ -157,7 +157,7 @@ void Sound::Play(int loop_count)
 
     if (FAILED(hr))
     {
-        KGE_ERROR(L"Submitting source buffer failed with HRESULT of %08X", hr);
+        KGE_ERROR("Submitting source buffer failed with HRESULT of %08X", hr);
     }
 
     playing_ = SUCCEEDED(hr);

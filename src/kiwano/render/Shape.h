@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 class ShapeSink;
 
 KGE_DECLARE_SMART_PTR(Shape);
@@ -37,95 +35,96 @@ KGE_DECLARE_SMART_PTR(Shape);
 
 /**
  * \~chinese
- * @brief ĞÎ×´
+ * @brief å½¢çŠ¶
  */
 class KGE_API Shape : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class Renderer;
     friend class ShapeSink;
 
 public:
     /// \~chinese
-    /// @brief ´´½¨Ïß¶ÎĞÎ×´
-    /// @param begin Ïß¶ÎÆğµã
-    /// @param end Ïß¶ÎÖÕµã
+    /// @brief åˆ›å»ºçº¿æ®µå½¢çŠ¶
+    /// @param begin çº¿æ®µèµ·ç‚¹
+    /// @param end çº¿æ®µç»ˆç‚¹
     static ShapePtr CreateLine(Point const& begin, Point const& end);
 
     /// \~chinese
-    /// @brief ´´½¨¾ØĞÎ
-    /// @param rect ¾ØĞÎ
+    /// @brief åˆ›å»ºçŸ©å½¢
+    /// @param rect çŸ©å½¢
     static ShapePtr CreateRect(Rect const& rect);
 
     /// \~chinese
-    /// @brief ´´½¨Ô²½Ç¾ØĞÎ
-    /// @param rect ¾ØĞÎ
-    /// @param radius ¾ØĞÎÔ²½Ç°ë¾¶
+    /// @brief åˆ›å»ºåœ†è§’çŸ©å½¢
+    /// @param rect çŸ©å½¢
+    /// @param radius çŸ©å½¢åœ†è§’åŠå¾„
     static ShapePtr CreateRoundedRect(Rect const& rect, Vec2 const& radius);
 
     /// \~chinese
-    /// @brief ´´½¨Ô²ĞÎ
-    /// @param center Ô²ĞÎÔ­µã
-    /// @param radius Ô²ĞÎ°ë¾¶
+    /// @brief åˆ›å»ºåœ†å½¢
+    /// @param center åœ†å½¢åŸç‚¹
+    /// @param radius åœ†å½¢åŠå¾„
     static ShapePtr CreateCircle(Point const& center, float radius);
 
     /// \~chinese
-    /// @brief ´´½¨ÍÖÔ²ĞÎ
-    /// @param center ÍÖÔ²Ô­µã
-    /// @param radius ÍÖÔ²°ë¾¶
+    /// @brief åˆ›å»ºæ¤­åœ†å½¢
+    /// @param center æ¤­åœ†åŸç‚¹
+    /// @param radius æ¤­åœ†åŠå¾„
     static ShapePtr CreateEllipse(Point const& center, Vec2 const& radius);
 
     Shape();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
+    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
     Rect GetBoundingBox() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
-    /// @param transform ¶şÎ¬±ä»»
+    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
+    /// @param transform äºŒç»´å˜æ¢
     Rect GetBoundingBox(Matrix3x2 const& transform) const;
 
     /// \~chinese
-    /// @brief ÅĞ¶ÏÍ¼ĞÎÊÇ·ñ°üº¬µã
-    /// @param point µã
-    /// @param transform Ó¦ÓÃµ½µãÉÏµÄ¶şÎ¬±ä»»
+    /// @brief åˆ¤æ–­å›¾å½¢æ˜¯å¦åŒ…å«ç‚¹
+    /// @param point ç‚¹
+    /// @param transform åº”ç”¨åˆ°ç‚¹ä¸Šçš„äºŒç»´å˜æ¢
     bool ContainsPoint(Point const& point, const Matrix3x2* transform = nullptr) const;
 
     /// \~chinese
-    /// @brief »ñÈ¡Í¼ĞÎÕ¹¿ª³ÉÒ»ÌõÖ±ÏßµÄ³¤¶È
+    /// @brief è·å–å›¾å½¢å±•å¼€æˆä¸€æ¡ç›´çº¿çš„é•¿åº¦
     float GetLength() const;
 
     /// \~chinese
-    /// @brief ¼ÆËãÍ¼ĞÎÃæ»ı
+    /// @brief è®¡ç®—å›¾å½¢é¢ç§¯
     float ComputeArea() const;
 
     /// \~chinese
-    /// @brief ¼ÆËãÍ¼ĞÎÉÏµãµÄÎ»ÖÃºÍÇĞÏßÏòÁ¿
-    /// @param[in] length µãÔÚÍ¼ĞÎÉÏµÄÎ»ÖÃ£¬·¶Î§ [0.0 - 1.0]
-    /// @param[out] point µãµÄÎ»ÖÃ
-    /// @param[out] tangent µãµÄÇĞÏßÏòÁ¿
+    /// @brief è®¡ç®—å›¾å½¢ä¸Šç‚¹çš„ä½ç½®å’Œåˆ‡çº¿å‘é‡
+    /// @param[in] length ç‚¹åœ¨å›¾å½¢ä¸Šçš„ä½ç½®ï¼ŒèŒƒå›´ [0.0 - 1.0]
+    /// @param[out] point ç‚¹çš„ä½ç½®
+    /// @param[out] tangent ç‚¹çš„åˆ‡çº¿å‘é‡
     bool ComputePointAtLength(float length, Point& point, Vec2& tangent) const;
 
     /// \~chinese
-    /// @brief Çå³ıĞÎ×´
+    /// @brief æ¸…é™¤å½¢çŠ¶
     void Clear();
 
-private:
+#if defined(KGE_WIN32)
+public:
     ComPtr<ID2D1Geometry> GetGeometry() const;
 
     void SetGeometry(ComPtr<ID2D1Geometry> shape);
 
 private:
     ComPtr<ID2D1Geometry> geo_;
+#endif
 };
 
 /** @} */
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1Geometry> Shape::GetGeometry() const
 {
     return geo_;
@@ -135,5 +134,6 @@ inline void Shape::SetGeometry(ComPtr<ID2D1Geometry> shape)
 {
     geo_ = shape;
 }
+#endif
 
 }  // namespace kiwano

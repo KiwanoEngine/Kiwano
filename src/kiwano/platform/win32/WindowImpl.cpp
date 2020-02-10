@@ -18,12 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#include <kiwano/platform/win32/WindowImpl.h>
 
 #if defined(KGE_WIN32)
 
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
@@ -34,12 +35,21 @@
 #define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
 #define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
-#define KGE_WND_CLASS_NAME L"KiwanoAppWnd"
 
 namespace kiwano
 {
-namespace win32
+
+Window& Window::GetInstance()
 {
+    return WindowImpl::GetInstance();
+}
+
+WindowImpl& WindowImpl::GetInstance()
+{
+    static WindowImpl instance;
+    return instance;
+}
+
 namespace
 {
 MONITORINFOEX GetMoniterInfoEx(HWND hwnd)
@@ -87,7 +97,7 @@ void ChangeFullScreenResolution(uint32_t width, uint32_t height, WCHAR* device_n
     mode.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
     if (::ChangeDisplaySettingsExW(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-        KGE_ERROR(L"ChangeDisplaySettings failed");
+        KGE_ERROR("ChangeDisplaySettings failed");
 }
 
 void RestoreResolution(WCHAR* device_name)
@@ -95,51 +105,6 @@ void RestoreResolution(WCHAR* device_name)
     ::ChangeDisplaySettingsExW(device_name, NULL, NULL, 0, NULL);
 }
 }  // namespace
-
-class KGE_API WindowImpl : public kiwano::Window
-{
-public:
-    WindowImpl();
-
-    ~WindowImpl();
-
-    void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                bool fullscreen) override;
-
-    WindowHandle GetHandle() const override;
-
-    void SetTitle(String const& title) override;
-
-    void SetIcon(uint32_t icon_resource) override;
-
-    void Resize(uint32_t width, uint32_t height) override;
-
-    void SetFullscreen(bool fullscreen) override;
-
-    void SetCursor(CursorType cursor) override;
-
-    void Destroy() override;
-
-private:
-    void PumpEvents() override;
-
-    DWORD GetStyle() const;
-
-    void UpdateCursor();
-
-    void SetActive(bool actived);
-
-    static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
-
-private:
-    bool         resizable_;
-    bool         is_fullscreen_;
-    wchar_t*     device_name_;
-    WindowHandle handle_;
-    CursorType   mouse_cursor_;
-
-    std::array<KeyCode, 256> key_map_;
-};
 
 WindowImpl::WindowImpl()
     : handle_(nullptr)
@@ -199,7 +164,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     HINSTANCE  hinst   = GetModuleHandleW(nullptr);
     WNDCLASSEX wcex    = { 0 };
     wcex.cbSize        = sizeof(WNDCLASSEX);
-    wcex.lpszClassName = KGE_WND_CLASS_NAME;
+    wcex.lpszClassName = L"KiwanoAppWnd";
     wcex.style         = CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
     wcex.lpfnWndProc   = WindowImpl::WndProc;
     wcex.hIcon         = nullptr;
@@ -263,18 +228,20 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
         height = win_height;
     }
 
-    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, KGE_WND_CLASS_NAME, title.c_str(), GetStyle(), left,
-                                top, width, height, nullptr, nullptr, hinst, nullptr);
+    WideString wide_title = MultiByteToWide(title);
+
+    handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, L"KiwanoAppWnd", wide_title.c_str(), GetStyle(),
+                                left, top, width, height, nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
-        ::UnregisterClass(KGE_WND_CLASS_NAME, hinst);
+        ::UnregisterClassW(L"KiwanoAppWnd", hinst);
 
-        KGE_ERROR(L"Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
-        throw std::runtime_error("Create window failed");
+        KGE_ERROR("Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
+        throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
 
-    width_ = width;
+    width_  = width;
     height_ = height;
 
     // disable imm
@@ -292,7 +259,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     }
 }
 
-WindowHandle WindowImpl::GetHandle() const
+HWND WindowImpl::GetHandle() const
 {
     return handle_;
 }
@@ -310,7 +277,10 @@ void WindowImpl::PumpEvents()
 void WindowImpl::SetTitle(String const& title)
 {
     if (handle_)
-        ::SetWindowTextW(handle_, title.c_str());
+    {
+        WideString wide_title = MultiByteToWide(title);
+        ::SetWindowTextW(handle_, wide_title.c_str());
+    }
 }
 
 void WindowImpl::SetIcon(uint32_t icon_resource)
@@ -585,13 +555,13 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
-            KGE_SYS_LOG(L"Window minimized");
+            KGE_SYS_LOG("Window minimized");
         }
         else
         {
-            // KGE_SYS_LOG(L"Window resized");
+            // KGE_SYS_LOG("Window resized");
 
-            window->width_ = ((uint32_t)(short)LOWORD(lparam));
+            window->width_  = ((uint32_t)(short)LOWORD(lparam));
             window->height_ = ((uint32_t)(short)HIWORD(lparam));
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
@@ -625,9 +595,9 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETTEXT:
     {
-        KGE_SYS_LOG(L"Window title changed");
+        KGE_SYS_LOG("Window title changed");
 
-        window->title_ = String::cstr(reinterpret_cast<LPCWSTR>(lparam));
+        window->title_ = WideToMultiByte(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
         evt->title                     = window->title_;
@@ -637,13 +607,13 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETICON:
     {
-        KGE_SYS_LOG(L"Window icon changed");
+        KGE_SYS_LOG("Window icon changed");
     }
     break;
 
     case WM_DISPLAYCHANGE:
     {
-        KGE_SYS_LOG(L"The display resolution has changed");
+        KGE_SYS_LOG("The display resolution has changed");
 
         ::InvalidateRect(hwnd, nullptr, FALSE);
     }
@@ -657,7 +627,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_CLOSE:
     {
-        KGE_SYS_LOG(L"Window is closing");
+        KGE_SYS_LOG("Window is closing");
 
         WindowClosedEventPtr evt = new WindowClosedEvent;
         window->PushEvent(evt);
@@ -667,7 +637,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_DESTROY:
     {
-        KGE_SYS_LOG(L"Window was destroyed");
+        KGE_SYS_LOG("Window was destroyed");
 
         ::PostQuitMessage(0);
         return 0;
@@ -676,18 +646,6 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     }
 
     return ::DefWindowProcW(hwnd, msg, wparam, lparam);
-}
-
-}  // namespace win32
-}  // namespace kiwano
-
-namespace kiwano
-{
-
-Window& Window::Instance()
-{
-    static win32::WindowImpl instance;
-    return instance;
 }
 
 }  // namespace kiwano

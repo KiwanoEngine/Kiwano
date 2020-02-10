@@ -9,9 +9,9 @@
 //#define KGE_ASSERT(EXPR)  __noop            // Disable asserts
 
 //---- Define debug-output handler. Defaults to calling kiwano::logs::Messageln()/Warningln()/Errorln()
-//#define KGE_SYS_LOG(FORMAT, ...)              wprintf(FORMAT L"\n", __VA_ARGS__)
-//#define KGE_WARN(FORMAT, ...)      wprintf(FORMAT L"\n", __VA_ARGS__)
-//#define KGE_ERROR(FORMAT, ...)        wprintf(FORMAT L"\n", __VA_ARGS__)
+//#define KGE_SYS_LOG(FORMAT, ...)              wprintf(FORMAT "\n", __VA_ARGS__)
+//#define KGE_WARN(FORMAT, ...)      wprintf(FORMAT "\n", __VA_ARGS__)
+//#define KGE_ERROR(FORMAT, ...)        wprintf(FORMAT "\n", __VA_ARGS__)
 
 //---- Define attributes of all API symbols declarations for DLL
 //#define KGE_USE_DLL

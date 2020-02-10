@@ -58,16 +58,16 @@ void Transition::Init(StagePtr prev, StagePtr next)
 
     out_stage_   = prev;
     in_stage_    = next;
-    window_size_ = Renderer::Instance().GetOutputSize();
+    window_size_ = Renderer::GetInstance().GetOutputSize();
 
     if (in_stage_)
     {
-        in_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+        in_layer_.SetClipRect(Rect{ Point(), window_size_ });
     }
 
     if (out_stage_)
     {
-        out_layer_.SetAreaRect(Rect{ Point(), window_size_ });
+        out_layer_.SetClipRect(Rect{ Point(), window_size_ });
     }
 }
 
@@ -151,14 +151,14 @@ void BoxTransition::Update(Duration dt)
 
     if (process_ < .5f)
     {
-        out_layer_.SetAreaRect(Rect(window_size_.x * process_, window_size_.y * process_,
+        out_layer_.SetClipRect(Rect(window_size_.x * process_, window_size_.y * process_,
                                     window_size_.x * (1 - process_), window_size_.y * (1 - process_)));
     }
     else
     {
         out_layer_.SetOpacity(0.f);
         in_layer_.SetOpacity(1.f);
-        in_layer_.SetAreaRect(Rect(window_size_.x * (1 - process_), window_size_.y * (1 - process_),
+        in_layer_.SetClipRect(Rect(window_size_.x * (1 - process_), window_size_.y * (1 - process_),
                                    window_size_.x * process_, window_size_.y * process_));
     }
 }

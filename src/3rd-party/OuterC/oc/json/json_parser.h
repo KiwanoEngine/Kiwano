@@ -93,11 +93,11 @@ struct json_lexer
 			break;
 
 		case 't':
-			return scan_literal(L"true", token_type::LITERAL_TRUE);
+			return scan_literal("true", token_type::LITERAL_TRUE);
 		case 'f':
-			return scan_literal(L"false", token_type::LITERAL_FALSE);
+			return scan_literal("false", token_type::LITERAL_FALSE);
 		case 'n':
-			return scan_literal(L"null", token_type::LITERAL_NULL);
+			return scan_literal("null", token_type::LITERAL_NULL);
 
 		case '\"':
 			return scan_string();

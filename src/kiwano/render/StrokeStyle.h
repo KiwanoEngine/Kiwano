@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-class RenderContext;
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(StrokeStyle);
 
@@ -35,72 +33,69 @@ KGE_DECLARE_SMART_PTR(StrokeStyle);
  */
 
 /// \~chinese
-/// @brief ÏßÌõ¶ËµãÑùÊ½
-/// @details ÏßÌõ¶ËµãÑùÊ½±íÊ¾Ïß¶Î¶Ëµã²¿·ÖµÄĞÎ×´
+/// @brief çº¿æ¡ç«¯ç‚¹æ ·å¼
+/// @details çº¿æ¡ç«¯ç‚¹æ ·å¼è¡¨ç¤ºçº¿æ®µç«¯ç‚¹éƒ¨åˆ†çš„å½¢çŠ¶
 enum class CapStyle
 {
-    Flat,      ///< ±â¶Ëµã
-    Square,    ///< ·½ĞÎ¶Ëµã£¬·½ĞÎÍ»³ö²¿·ÖµÈÓÚÏß¶Î¿í¶ÈµÄÒ»°ë
-    Round,     ///< Ô²ĞÎ¶Ëµã£¬Ô²Ö±¾¶µÈÓÚÏß¶Î¿í¶È
-    Triangle,  ///< Èı½ÇÑùÊ½£¬Èı½ÇĞ±±ß³¤¶ÈµÈÓÚÏß¶Î¿í¶È
+    Flat,      ///< æ‰ç«¯ç‚¹
+    Square,    ///< æ–¹å½¢ç«¯ç‚¹ï¼Œæ–¹å½¢çªå‡ºéƒ¨åˆ†ç­‰äºçº¿æ®µå®½åº¦çš„ä¸€åŠ
+    Round,     ///< åœ†å½¢ç«¯ç‚¹ï¼Œåœ†ç›´å¾„ç­‰äºçº¿æ®µå®½åº¦
+    Triangle,  ///< ä¸‰è§’æ ·å¼ï¼Œä¸‰è§’æ–œè¾¹é•¿åº¦ç­‰äºçº¿æ®µå®½åº¦
 };
 
 /// \~chinese
-/// @brief ÏßÌõ½»µãÑùÊ½
-/// @details ÏßÌõ½»µãÑùÊ½±íÊ¾Á½ÌõÏßÏà½»²¿·ÖµÄĞÎ×´
+/// @brief çº¿æ¡äº¤ç‚¹æ ·å¼
+/// @details çº¿æ¡äº¤ç‚¹æ ·å¼è¡¨ç¤ºä¸¤æ¡çº¿ç›¸äº¤éƒ¨åˆ†çš„å½¢çŠ¶
 enum class LineJoinStyle
 {
-    Miter,  ///< Ğ±ÇĞÑùÊ½
-    Bevel,  ///< Ğ±½ÇÑùÊ½
-    Round   ///< Ô²½ÇÑùÊ½
+    Miter,  ///< æ–œåˆ‡æ ·å¼
+    Bevel,  ///< æ–œè§’æ ·å¼
+    Round   ///< åœ†è§’æ ·å¼
 };
 
 /// \~chinese
-/// @brief ÏßÌõĞéÏßÑùÊ½
-/// @details ÏßÌõĞéÏßÑùÊ½±íÊ¾Ïß¶ÎµÄ¼äÏ¶
+/// @brief çº¿æ¡è™šçº¿æ ·å¼
+/// @details çº¿æ¡è™šçº¿æ ·å¼è¡¨ç¤ºçº¿æ®µçš„é—´éš™
 enum class DashStyle
 {
-    Solid,       ///< ÎŞ¼ä¶ÏµÄÊµÏß
-    Dash,        ///< Ğ±½ÇÑùÊ½
-    Dot,         ///< Ô²½ÇÑùÊ½
-    DashDot,     ///< Ô²½ÇÑùÊ½
-    DashDotDot,  ///< Ô²½ÇÑùÊ½
+    Solid,       ///< æ— é—´æ–­çš„å®çº¿
+    Dash,        ///< æ–œè§’æ ·å¼
+    Dot,         ///< åœ†è§’æ ·å¼
+    DashDot,     ///< åœ†è§’æ ·å¼
+    DashDotDot,  ///< åœ†è§’æ ·å¼
 };
 
 /// \~chinese
-/// @brief ÏßÌõÑùÊ½
+/// @brief çº¿æ¡æ ·å¼
 class StrokeStyle : public virtual ObjectBase
 {
-    friend class RenderContext;
-    friend class Renderer;
-
 public:
     /// \~chinese
-    /// @brief ´´½¨ÏßÌõÑùÊ½
-    /// @param cap ÏßÌõ¶ËµãÑùÊ½
-    /// @param line_join ÏßÌõ½»µãÑùÊ½
-    /// @param dash ÏßÌõĞéÏßÑùÊ½
-    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
+    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
+    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
+    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @param dash çº¿æ¡è™šçº¿æ ·å¼
+    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
     static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
                                  DashStyle dash = DashStyle::Solid, float dash_offset = 0.0f);
 
     /// \~chinese
-    /// @brief ´´½¨ÏßÌõÑùÊ½
-    /// @param cap ÏßÌõ¶ËµãÑùÊ½
-    /// @param line_join ÏßÌõ½»µãÑùÊ½
-    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
-    /// @param dash_size ÏßÌõĞéÏßÊı×é´óĞ¡
-    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
+    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
+    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
+    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
+    /// @param dash_size çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
+    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
     static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
                                  const float* dash_array = nullptr, size_t dash_size = 0, float dash_offset = 0.0f);
 
     /// \~chinese
-    /// @brief ´´½¨ÏßÌõÑùÊ½
-    /// @tparam _DashSize ÏßÌõĞéÏßÊı×é´óĞ¡
-    /// @param cap ÏßÌõ¶ËµãÑùÊ½
-    /// @param line_join ÏßÌõ½»µãÑùÊ½
-    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
-    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
+    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
+    /// @tparam _DashSize çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
+    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
+    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
+    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
     template <size_t _DashSize>
     static StrokeStylePtr Create(CapStyle cap, LineJoinStyle                     line_join = LineJoinStyle::Miter,
                                  float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
@@ -111,25 +106,28 @@ public:
     StrokeStyle();
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
-private:
+#if defined(KGE_WIN32)
+public:
     ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;
 
     void SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style);
 
 private:
     ComPtr<ID2D1StrokeStyle> style_;
+#endif
 };
 
 /** @} */
 
 inline bool StrokeStyle::IsValid() const
 {
-    return true;  // Always valid
+    return style_ != nullptr;
 }
 
+#if defined(KGE_WIN32)
 inline ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
 {
     return style_;
@@ -139,4 +137,6 @@ inline void StrokeStyle::SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style)
 {
     style_ = style;
 }
+#endif
+
 }  // namespace kiwano

@@ -28,76 +28,76 @@ KGE_DECLARE_SMART_PTR(Frame);
 
 /**
  * \~chinese
- * @brief Í¼ÏñÖ¡
+ * @brief å›¾åƒå¸§
  */
 class KGE_API Frame : public virtual ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief ´´½¨Í¼ÏñÖ¡
-    /// @param file_path Í¼ÏñÂ·¾¶
+    /// @brief åˆ›å»ºå›¾åƒå¸§
+    /// @param file_path å›¾åƒè·¯å¾„
     static FramePtr Create(String const& file_path);
 
     /// \~chinese
-    /// @brief ´´½¨Í¼ÏñÖ¡
-    /// @param res Í¼Ïñ×ÊÔ´
+    /// @brief åˆ›å»ºå›¾åƒå¸§
+    /// @param res å›¾åƒèµ„æº
     static FramePtr Create(Resource const& res);
 
     /// \~chinese
-    /// @brief ´´½¨Í¼ÏñÖ¡
-    /// @param texture ÎÆÀí
+    /// @brief åˆ›å»ºå›¾åƒå¸§
+    /// @param texture çº¹ç†
     static FramePtr Create(TexturePtr texture);
 
     /// \~chinese
-    /// @brief ¹¹½¨¿ÕÍ¼ÏñÖ¡
+    /// @brief æ„å»ºç©ºå›¾åƒå¸§
     Frame();
 
     /// \~chinese
-    /// @brief ¼ÓÔØÍ¼Ïñ
-    /// @param file_path Í¼ÏñÂ·¾¶
+    /// @brief åŠ è½½å›¾åƒ
+    /// @param file_path å›¾åƒè·¯å¾„
     bool Load(String const& file_path);
 
     /// \~chinese
-    /// @brief ¼ÓÔØÍ¼Ïñ
-    /// @param res Í¼Ïñ×ÊÔ´
+    /// @brief åŠ è½½å›¾åƒ
+    /// @param res å›¾åƒèµ„æº
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief ²Ã¼ôÍ¼ÏñÖ¡Îª¾ØĞÎ
-    /// @param crop_rect ²Ã¼ô¾ØĞÎ¶¨Òå
+    /// @brief è£å‰ªå›¾åƒå¸§ä¸ºçŸ©å½¢
+    /// @param crop_rect è£å‰ªçŸ©å½¢å®šä¹‰
     void SetCropRect(Rect const& crop_rect);
 
     /// \~chinese
-    /// @brief ÉèÖÃÎÆÀí
-    /// @param texture ÎÆÀí
+    /// @brief è®¾ç½®çº¹ç†
+    /// @param texture çº¹ç†
     void SetTexture(TexturePtr texture);
 
     /// \~chinese
-    /// @brief ÊÇ·ñÓĞĞ§
+    /// @brief æ˜¯å¦æœ‰æ•ˆ
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¿í¶È
+    /// @brief è·å–å®½åº¦
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡¸ß¶È
+    /// @brief è·å–é«˜åº¦
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡´óĞ¡
+    /// @brief è·å–å¤§å°
     Size GetSize() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡²Ã¼ôÎ»ÖÃ
+    /// @brief è·å–è£å‰ªä½ç½®
     Point GetCropPoint() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡²Ã¼ô¾ØĞÎ
+    /// @brief è·å–è£å‰ªçŸ©å½¢
     Rect const& GetCropRect() const;
 
     /// \~chinese
-    /// @brief »ñÈ¡ÎÆÀí
+    /// @brief è·å–çº¹ç†
     TexturePtr GetTexture() const;
 
 private:

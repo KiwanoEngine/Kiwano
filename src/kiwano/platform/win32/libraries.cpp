@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/win32/libraries.h>
 
@@ -27,6 +28,7 @@ namespace win32
 {
 namespace dlls
 {
+
 Shlwapi::Shlwapi()
     : shlwapi()
     , PathFileExistsW(nullptr)
@@ -39,10 +41,11 @@ Shlwapi::Shlwapi()
     }
     else
     {
-        KGE_ERROR(L"Load shlapi.dll failed");
-        throw std::runtime_error("Load shlapi.dll failed");
+        KGE_ERROR("Load shlapi.dll failed");
+        throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Load shlapi.dll failed");
     }
 }
+
 }  // namespace dlls
 }  // namespace win32
 }  // namespace kiwano
