@@ -59,16 +59,6 @@ bool ShapeActor::ContainsPoint(const Point& point) const
     return shape_->ContainsPoint(point, &GetTransformMatrix());
 }
 
-void ShapeActor::SetStrokeWidth(float width)
-{
-    stroke_width_ = std::max(width, 0.f);
-}
-
-void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)
-{
-    stroke_style_ = stroke_style;
-}
-
 void ShapeActor::SetShape(ShapePtr shape)
 {
     shape_ = shape;

@@ -133,18 +133,10 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
         }
 
         HRESULT hr = S_OK;
+        ID2D1StrokeStyle* stroke_style = style.outline_stroke ? style.outline_stroke->GetStrokeStyle().get() : nullptr;
 
-        if (style.outline_stroke)
-        {
-            hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().get(), offset.x, offset.y, fill_brush.get(),
-                                                outline_brush.get(), style.outline_width,
-                                                style.outline_stroke->GetStrokeStyle().get());
-        }
-        else
-        {
-            hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().get(), offset.x, offset.y, fill_brush.get(),
-                                                outline_brush.get(), style.outline_width, nullptr);
-        }
+        hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().get(), offset.x, offset.y, fill_brush.get(),
+                                            outline_brush.get(), style.outline_width, stroke_style);
 
         if (SUCCEEDED(hr))
         {
@@ -164,16 +156,9 @@ void RenderContextImpl::DrawShape(Shape const& shape, StrokeStylePtr stroke, flo
 
     if (shape.IsValid())
     {
-        if (stroke)
-        {
-            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
-                                         stroke->GetStrokeStyle().get());
-        }
-        else
-        {
-            render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
-                                         nullptr);
-        }
+        ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+        render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
+                                     stroke_style);
 
         IncreasePrimitivesCount();
     }
@@ -184,16 +169,9 @@ void RenderContextImpl::DrawLine(Point const& point1, Point const& point2, Strok
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (stroke)
-    {
-        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                                 current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                                 current_brush_->GetBrush().get(), stroke_width, nullptr);
-    }
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
+                             current_brush_->GetBrush().get(), stroke_width, stroke_style);
 
     IncreasePrimitivesCount();
 }
@@ -203,16 +181,9 @@ void RenderContextImpl::DrawRectangle(Rect const& rect, StrokeStylePtr stroke, f
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (stroke)
-    {
-        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
-                                      stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
-                                      nullptr);
-    }
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
+                                  stroke_style);
 
     IncreasePrimitivesCount();
 }
@@ -223,17 +194,10 @@ void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radiu
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (stroke)
-    {
-        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                             current_brush_->GetBrush().get(), stroke_width,
-                                             stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                             current_brush_->GetBrush().get(), stroke_width, nullptr);
-    }
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
+                                         current_brush_->GetBrush().get(), stroke_width, stroke_style);
+
     IncreasePrimitivesCount();
 }
 
@@ -242,16 +206,9 @@ void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius, Str
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    if (stroke)
-    {
-        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                    current_brush_->GetBrush().get(), stroke_width, stroke->GetStrokeStyle().get());
-    }
-    else
-    {
-        render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                    current_brush_->GetBrush().get(), stroke_width, nullptr);
-    }
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
+                                current_brush_->GetBrush().get(), stroke_width, stroke_style);
 
     IncreasePrimitivesCount();
 }

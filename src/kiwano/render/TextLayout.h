@@ -32,7 +32,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief 文本布局
-class KGE_API TextLayout
+class KGE_API TextLayout : public Noncopyable
 {
 public:
     /// \~chinese

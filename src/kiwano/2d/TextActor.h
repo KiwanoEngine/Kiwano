@@ -67,6 +67,10 @@ public:
     const TextLayout& GetLayout() const;
 
     /// \~chinese
+    /// @brief 获取文本布局
+    TextLayout& GetLayout();
+
+    /// \~chinese
     /// @brief 获取文本布局大小
     Size GetLayoutSize() const;
 
@@ -190,6 +194,11 @@ inline const TextStyle& TextActor::GetStyle() const
 }
 
 inline const TextLayout& TextActor::GetLayout() const
+{
+    return text_layout_;
+}
+
+inline TextLayout& TextActor::GetLayout()
 {
     return text_layout_;
 }

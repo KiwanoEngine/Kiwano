@@ -38,25 +38,10 @@ LayerActor::LayerActor()
 
 LayerActor::~LayerActor() {}
 
-void LayerActor::SetClipRect(Rect const& clip_rect)
-{
-    layer_.SetClipRect(clip_rect);
-}
-
 void LayerActor::SetOpacity(float opacity)
 {
     // Actor::SetOpacity(opacity);
     layer_.SetOpacity(opacity);
-}
-
-void LayerActor::SetMaskShape(ShapePtr mask)
-{
-    layer_.SetMaskShape(mask);
-}
-
-void LayerActor::SetMaskTransform(Matrix3x2 const& transform)
-{
-    layer_.SetMaskTransform(transform);
 }
 
 bool LayerActor::DispatchEvent(Event* evt)

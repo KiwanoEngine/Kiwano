@@ -34,7 +34,7 @@ KGE_DECLARE_SMART_PTR(LayerActor);
 
 /**
  * \~chinese
- * @brief 图层
+ * @brief 图层角色
  */
 class KGE_API LayerActor : public Actor
 {
@@ -52,38 +52,27 @@ public:
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
+    /// @brief 获取图层区域
+    Layer const& GetLayer() const;
+
+    /// \~chinese
+    /// @brief 获取图层区域
+    Layer& GetLayer();
+
+    /// \~chinese
+    /// @brief 设置图层
+    /// @param layer 图层
+    void SetLayer(Layer const& layer);
+
+    /// \~chinese
     /// @brief 设置消息吞没功能
     /// @param enabled 是否启用
     void SetSwallowEvents(bool enabled);
 
     /// \~chinese
-    /// @brief 设置裁剪区域
-    /// @param clip_rect 裁剪矩形
-    void SetClipRect(Rect const& clip_rect);
-
-    /// \~chinese
     /// @brief 设置图层透明度
     /// @param opacity 透明度
     void SetOpacity(float opacity) override;
-
-    /// \~chinese
-    /// @brief 设置几何蒙层
-    /// @param mask 蒙层的形状
-    void SetMaskShape(ShapePtr mask);
-
-    /// \~chinese
-    /// @brief 设置几何蒙层的二维变换
-    /// @param transform 应用于蒙层的二维变换
-    void SetMaskTransform(Matrix3x2 const& transform);
-
-    /// \~chinese
-    /// @brief 设置图层区域
-    /// @param area 图层区域属性
-    void SetLayer(Layer const& layer);
-
-    /// \~chinese
-    /// @brief 获取图层区域
-    Layer const& GetLayer() const;
 
     bool DispatchEvent(Event* evt) override;
 
@@ -118,4 +107,10 @@ inline Layer const& LayerActor::GetLayer() const
 {
     return layer_;
 }
+
+inline Layer& LayerActor::GetLayer()
+{
+    return layer_;
+}
+
 }  // namespace kiwano
