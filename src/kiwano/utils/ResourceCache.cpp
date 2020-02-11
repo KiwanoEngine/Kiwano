@@ -26,23 +26,27 @@
 
 namespace kiwano
 {
-namespace __resource_cache_01
+namespace resource_cache_01
 {
+
 bool LoadJsonData(ResourceCache* loader, Json const& json_data);
 bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem);
-}  // namespace __resource_cache_01
+
+}  // namespace resource_cache_01
 
 namespace
 {
+
 Map<String, Function<bool(ResourceCache*, Json const&)>> load_json_funcs = {
-    { "latest", __resource_cache_01::LoadJsonData },
-    { "0.1", __resource_cache_01::LoadJsonData },
+    { "latest", resource_cache_01::LoadJsonData },
+    { "0.1", resource_cache_01::LoadJsonData },
 };
 
 Map<String, Function<bool(ResourceCache*, const pugi::xml_node&)>> load_xml_funcs = {
-    { "latest", __resource_cache_01::LoadXmlData },
-    { "0.1", __resource_cache_01::LoadXmlData },
+    { "latest", resource_cache_01::LoadXmlData },
+    { "0.1", resource_cache_01::LoadXmlData },
 };
+
 }  // namespace
 
 ResourceCache::ResourceCache() {}
@@ -162,109 +166,6 @@ bool ResourceCache::LoadFromXml(const pugi::xml_document& doc)
     return false;
 }
 
-size_t ResourceCache::AddFrameSequence(String const& id, Vector<String> const& files)
-{
-    if (files.empty())
-        return 0;
-
-    Vector<FramePtr> frames;
-    frames.reserve(files.size());
-
-    for (const auto& file : files)
-    {
-        FramePtr ptr = new (std::nothrow) Frame;
-        if (ptr)
-        {
-            if (ptr->Load(file))
-            {
-                frames.push_back(ptr);
-            }
-        }
-    }
-    return AddFrameSequence(id, frames);
-}
-
-size_t ResourceCache::AddFrameSequence(String const& id, Vector<Resource> const& resources)
-{
-    if (resources.empty())
-        return 0;
-
-    Vector<FramePtr> frames;
-    frames.reserve(resources.size());
-
-    for (const auto& res : resources)
-    {
-        FramePtr ptr = new (std::nothrow) Frame;
-        if (ptr)
-        {
-            if (ptr->Load(res))
-            {
-                frames.push_back(ptr);
-            }
-        }
-    }
-    return AddFrameSequence(id, frames);
-}
-
-size_t ResourceCache::AddFrameSequence(String const& id, Vector<FramePtr> const& frames)
-{
-    if (frames.empty())
-        return 0;
-
-    FrameSequencePtr fs = FrameSequence::Create(frames);
-    if (fs)
-    {
-        AddObject(id, fs);
-        return fs->GetFramesCount();
-    }
-    return 0;
-}
-
-size_t ResourceCache::AddFrameSequence(String const& id, FramePtr frame, int cols, int rows, float padding_x,
-                                       float padding_y)
-{
-    if (cols <= 0 || rows <= 0)
-        return 0;
-
-    if (!frame)
-        return 0;
-
-    float raw_width  = frame->GetWidth();
-    float raw_height = frame->GetHeight();
-    float width      = (raw_width - (cols - 1) * padding_x) / cols;
-    float height     = (raw_height - (rows - 1) * padding_y) / rows;
-
-    Vector<FramePtr> frames;
-    frames.reserve(rows * cols);
-
-    float dty = 0;
-    for (int i = 0; i < rows; i++)
-    {
-        float dtx = 0;
-        for (int j = 0; j < cols; j++)
-        {
-            FramePtr ptr = new (std::nothrow) Frame;
-            if (ptr)
-            {
-                ptr->SetTexture(frame->GetTexture());
-                ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
-                frames.push_back(ptr);
-            }
-            dtx += (width + padding_x);
-        }
-        dty += (height + padding_y);
-    }
-
-    FrameSequencePtr fs = new (std::nothrow) FrameSequence;
-    if (fs)
-    {
-        fs->AddFrames(frames);
-        AddObject(id, fs);
-        return fs->GetFramesCount();
-    }
-    return 0;
-}
-
 bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)
 {
     if (obj)
@@ -297,7 +198,7 @@ ObjectBasePtr ResourceCache::Get(String const& id) const
 
 namespace kiwano
 {
-namespace __resource_cache_01
+namespace resource_cache_01
 {
 struct GlobalData
 {
@@ -332,8 +233,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
     return false;
 }
 
-bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id,
-                          const Vector<String>& files)
+bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id, const Vector<String>& files)
 {
     if (!gdata)
         return false;
@@ -361,7 +261,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
 }
 
 bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String& id, const String& file, int rows,
-                          int cols, float padding_x, float padding_y)
+                          int cols, int max_num, float padding_x, float padding_y)
 {
     if (!gdata)
         return false;
@@ -374,8 +274,12 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
             FramePtr frame = new (std::nothrow) Frame;
             if (frame && frame->Load(gdata->path + file))
             {
-                return !!loader->AddFrameSequence(id, frame, std::max(cols, 1), std::max(rows, 1), padding_x,
-                                                  padding_y);
+                FrameSequencePtr frame_seq = new (std::nothrow) FrameSequence;
+                if (frame_seq)
+                {
+                    frame_seq->AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
+                    return loader->AddObject(id, frame_seq);
+                }
             }
         }
         else
@@ -417,7 +321,7 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
         for (const auto& image : json_data["images"])
         {
             String id, type, file;
-            int    rows = 0, cols = 0;
+            int    rows = 0, cols = 0, max_num = -1;
 
             if (image.count("id"))
                 id = image["id"].get<String>();
@@ -429,6 +333,8 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
                 rows = image["rows"].get<int>();
             if (image.count("cols"))
                 cols = image["cols"].get<int>();
+            if (image.count("max_num"))
+                max_num = image["max_num"].get<int>();
 
             if (rows || cols)
             {
@@ -438,7 +344,7 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
                 if (image.count("padding-y"))
                     padding_y = image["padding-y"].get<float>();
 
-                if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
+                if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, max_num, padding_x, padding_y))
                     return false;
             }
 
@@ -492,7 +398,7 @@ bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
         for (auto image : images.children())
         {
             String id, type, file;
-            int    rows = 0, cols = 0;
+            int    rows = 0, cols = 0, max_num = -1;
 
             if (auto attr = image.attribute("id"))
                 id.assign(attr.value());
@@ -504,6 +410,8 @@ bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
                 rows = attr.as_int(0);
             if (auto attr = image.attribute("cols"))
                 cols = attr.as_int(0);
+            if (auto attr = image.attribute("max_num"))
+                max_num = attr.as_int(-1);
 
             if (rows || cols)
             {
@@ -513,7 +421,7 @@ bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
                 if (auto attr = image.attribute("padding-y"))
                     padding_y = attr.as_float(0.0f);
 
-                if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, padding_x, padding_y))
+                if (!LoadTexturesFromData(loader, &global_data, id, file, rows, cols, max_num, padding_x, padding_y))
                     return false;
             }
 
@@ -554,5 +462,5 @@ bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
     }
     return true;
 }
-}  // namespace __resource_cache_01
+}  // namespace resource_cache_01
 }  // namespace kiwano
