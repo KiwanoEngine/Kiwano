@@ -60,10 +60,6 @@ public:
     void SetPressedCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief 设置按钮被抬起时的回调函数
-    void SetReleasedCallback(const Callback& func);
-
-    /// \~chinese
     /// @brief 设置鼠标移入按钮时的回调函数
     void SetMouseOverCallback(const Callback& func);
 
@@ -93,12 +89,15 @@ protected:
     /// @brief 更新按钮状态
     void UpdateStatus(Event* evt);
 
+    /// \~chinese
+    /// @brief 绑定到角色
+    void BindActor(Actor* actor);
+
 private:
     bool     enabled_;
     Status   status_;
     Callback click_callback_;
     Callback pressed_callback_;
-    Callback released_callback_;
     Callback mouse_over_callback_;
     Callback mouse_out_callback_;
 };
@@ -149,4 +148,5 @@ public:
     /// @param mouse_out 按钮移出回调函数
     static TextButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over, Callback const& mouse_out);
 };
+
 }  // namespace kiwano
