@@ -8,7 +8,7 @@
 #include <kiwano/platform/win32/WindowImpl.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano-imgui/ImGuiModule.h>
-#include <kiwano-imgui/imgui_impl.h>
+#include <kiwano-imgui/imgui_impl/imgui_impl.h>
 
 namespace kiwano
 {

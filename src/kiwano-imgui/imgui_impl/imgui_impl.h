@@ -6,7 +6,7 @@
 
 #if !defined(KGE_USE_DIRECTX10)
 
-#include <kiwano-imgui/imgui_impl_dx11.h>
+#include <kiwano-imgui/imgui_impl/imgui_impl_dx11.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
 
 inline bool ImGui_Impl_Init()
@@ -43,7 +43,7 @@ inline bool ImGui_Impl_CreateDeviceObjects()
 
 #else
 
-#include <kiwano-imgui/imgui_impl_dx10.h>
+#include <kiwano-imgui/imgui_impl/imgui_impl_dx10.h>
 
 inline bool ImGui_Impl_Init()
 {

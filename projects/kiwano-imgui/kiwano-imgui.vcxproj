@@ -3,9 +3,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-imgui\ImGuiLayer.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\ImGuiModule.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx10.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\kiwano-imgui.h" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -21,8 +21,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiLayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiModule.cpp" />
-    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx10.cpp" />
-    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A7062ED8-8910-48A5-A3BC-C1612672571F}</ProjectGuid>
