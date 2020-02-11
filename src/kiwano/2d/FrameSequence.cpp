@@ -24,12 +24,29 @@
 namespace kiwano
 {
 
+FrameSequencePtr FrameSequence::Create()
+{
+    FrameSequencePtr ptr = new (std::nothrow) FrameSequence;
+    return ptr;
+}
+
 FrameSequencePtr FrameSequence::Create(Vector<FramePtr> const& frames)
 {
     FrameSequencePtr ptr = new (std::nothrow) FrameSequence;
     if (ptr)
     {
         ptr->AddFrames(frames);
+    }
+    return ptr;
+}
+
+FrameSequencePtr FrameSequence::Create(FramePtr frame, int cols, int rows, int max_num, float padding_x,
+                                       float padding_y)
+{
+    FrameSequencePtr ptr = new (std::nothrow) FrameSequence;
+    if (ptr)
+    {
+        ptr->AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
     }
     return ptr;
 }
@@ -58,6 +75,51 @@ void FrameSequence::AddFrames(Vector<FramePtr> const& frames)
         for (const auto& texture : frames)
             AddFrame(texture);
     }
+}
+
+void FrameSequence::AddFrames(FramePtr frame, int cols, int rows, int max_num, float padding_x, float padding_y)
+{
+    if (cols <= 0 || rows <= 0 || max_num == 0)
+        return;
+
+    if (!frame)
+        return;
+
+    Rect  src_rect   = frame->GetCropRect();
+    float raw_width  = src_rect.GetWidth();
+    float raw_height = src_rect.GetHeight();
+    float width      = (raw_width - (cols - 1) * padding_x) / cols;
+    float height     = (raw_height - (rows - 1) * padding_y) / rows;
+
+    Vector<FramePtr> frames;
+    frames.reserve((max_num > 0) ? max_num : (rows * cols));
+
+    int current_num = 0;
+
+    float dty = src_rect.GetTop();
+    for (int i = 0; i < rows; i++)
+    {
+        float dtx = src_rect.GetLeft();
+
+        for (int j = 0; j < cols; j++)
+        {
+            FramePtr ptr = new (std::nothrow) Frame;
+            if (ptr)
+            {
+                ptr->SetTexture(frame->GetTexture());
+                ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
+                frames.push_back(ptr);
+                ++current_num;
+            }
+            dtx += (width + padding_x);
+        }
+        dty += (height + padding_y);
+
+        if (max_num > 0 && current_num == max_num)
+            break;
+    }
+
+    AddFrames(frames);
 }
 
 FramePtr FrameSequence::GetFrame(size_t index) const

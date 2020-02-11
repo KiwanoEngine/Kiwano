@@ -36,8 +36,23 @@ class KGE_API FrameSequence : public virtual ObjectBase
 public:
     /// \~chinese
     /// @brief 创建序列帧
+    static FrameSequencePtr Create();
+
+    /// \~chinese
+    /// @brief 创建序列帧
     /// @param frames 图像帧集合
     static FrameSequencePtr Create(Vector<FramePtr> const& frames);
+
+    /// \~chinese
+    /// @brief 按行列分割图像并创建序列帧
+    /// @param frame 图像帧
+    /// @param cols 列数
+    /// @param rows 行数
+    /// @param max_num 最大帧数量，设-1为将分割后的图像全部作为序列帧
+    /// @param padding_x X方向间隔
+    /// @param padding_y Y方向间隔
+    static FrameSequencePtr Create(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0,
+                                   float padding_y = 0);
 
     /// \~chinese
     /// @brief 构建空序列帧
@@ -54,6 +69,16 @@ public:
     /// @brief 添加多个关键帧
     /// @param frames 图像帧集合
     void AddFrames(Vector<FramePtr> const& frames);
+
+    /// \~chinese
+    /// @brief 按行列分割图像并添加序列帧
+    /// @param frame 图像帧
+    /// @param cols 列数
+    /// @param rows 行数
+    /// @param max_num 最大帧数量，设-1为将分割后的图像全部作为序列帧
+    /// @param padding_x X方向间隔
+    /// @param padding_y Y方向间隔
+    void AddFrames(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0, float padding_y = 0);
 
     /// \~chinese
     /// @brief 获取关键帧

@@ -2,16 +2,31 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-imgui\kiwano-imgui.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx10.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\ImGuiLayer.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\ImGuiModule.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx10.cpp" />
-    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiLayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\ImGuiModule.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="imgui_impl">
+      <UniqueIdentifier>{a11036bf-f334-4e51-aef2-15dd46be924d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

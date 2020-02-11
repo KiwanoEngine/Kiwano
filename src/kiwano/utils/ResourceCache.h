@@ -79,40 +79,6 @@ public:
     bool AddObject(String const& id, ObjectBasePtr obj);
 
     /// \~chinese
-    /// @brief 从多个本地图片构建序列帧，并放入缓存
-    /// @param id 对象ID
-    /// @param files 本地图片路径集合
-    /// @return 序列帧的帧数量
-    size_t AddFrameSequence(String const& id, Vector<String> const& files);
-
-    /// \~chinese
-    /// @brief 从多个图片资源构建序列帧，并放入缓存
-    /// @param id 对象ID
-    /// @param resources 图片资源集合
-    /// @return 序列帧的帧数量
-    size_t AddFrameSequence(String const& id, Vector<Resource> const& resources);
-
-    /// \~chinese
-    /// @brief 从多个图像帧构建序列帧，并放入缓存
-    /// @param id 对象ID
-    /// @param frames 图像帧集合
-    /// @return 序列帧的帧数量
-    size_t AddFrameSequence(String const& id, Vector<FramePtr> const& frames);
-
-    /// \~chinese
-    /// @brief 将图像帧按行列分割构建序列帧，并放入缓存
-    /// @brief 按行列数裁剪图片
-    /// @param id 对象ID
-    /// @param frame 图像帧
-    /// @param cols 列
-    /// @param rows 行
-    /// @param padding_x X方向间隔
-    /// @param padding_y Y方向间隔
-    /// @return 序列帧的帧数量
-    size_t AddFrameSequence(String const& id, FramePtr frame, int cols, int rows = 1, float padding_x = 0,
-                            float padding_y = 0);
-
-    /// \~chinese
     /// @brief 删除指定资源
     /// @param id 对象ID
     void Remove(String const& id);
