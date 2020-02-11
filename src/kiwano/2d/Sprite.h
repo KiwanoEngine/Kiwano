@@ -53,6 +53,18 @@ public:
     /// @param frame 图像帧
     static SpritePtr Create(FramePtr frame);
 
+    /// \~chinese
+    /// @brief 创建精灵
+    /// @param file_path 本地图片路径
+    /// @param crop_rect 裁剪矩形
+    static SpritePtr Create(String const& file_path, const Rect& crop_rect);
+
+    /// \~chinese
+    /// @brief 创建精灵
+    /// @param res 图片资源
+    /// @param crop_rect 裁剪矩形
+    static SpritePtr Create(Resource const& res, const Rect& crop_rect);
+
     Sprite();
 
     virtual ~Sprite();
@@ -60,12 +72,14 @@ public:
     /// \~chinese
     /// @brief 加载本地图片
     /// @param file_path 本地图片路径
-    bool Load(String const& file_path);
+    /// @param[in] autoresize 是否自动调整自身大小为图像大小
+    bool Load(String const& file_path, bool autoresize = true);
 
     /// \~chinese
     /// @brief 加载图像资源
     /// @param res 图片资源
-    bool Load(Resource const& res);
+    /// @param[in] autoresize 是否自动调整自身大小为图像大小
+    bool Load(Resource const& res, bool autoresize = true);
 
     /// \~chinese
     /// @brief 使用矩形区域裁剪精灵
@@ -79,7 +93,8 @@ public:
     /// \~chinese
     /// @brief 设置图像帧
     /// @param[in] frame 图像帧
-    void SetFrame(FramePtr frame);
+    /// @param[in] autoresize 是否自动调整自身大小为图像大小
+    void SetFrame(FramePtr frame, bool autoresize = true);
 
     void OnRender(RenderContext& ctx) override;
 

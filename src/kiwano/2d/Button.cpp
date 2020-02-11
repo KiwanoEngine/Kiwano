@@ -55,11 +55,6 @@ void Button::SetPressedCallback(const Callback& func)
     pressed_callback_ = func;
 }
 
-void Button::SetReleasedCallback(const Callback& func)
-{
-    released_callback_ = func;
-}
-
 void Button::SetMouseOverCallback(const Callback& func)
 {
     mouse_over_callback_ = func;
@@ -87,12 +82,7 @@ void Button::SetStatus(Status status)
         {
             Window::GetInstance().SetCursor(CursorType::Hand);
 
-            if (old_status == Status::Pressed)
-            {
-                if (released_callback_)
-                    released_callback_(this);
-            }
-            else
+            if (old_status != Status::Pressed)
             {
                 if (mouse_over_callback_)
                     mouse_over_callback_(this);
@@ -141,16 +131,21 @@ void Button::UpdateStatus(Event* evt)
     }
 }
 
+void Button::BindActor(Actor* actor)
+{
+    actor->SetResponsible(true);
+
+    EventListener::Callback handler = Closure(this, &Button::UpdateStatus);
+    actor->AddListener<MouseHoverEvent>(handler);
+    actor->AddListener<MouseOutEvent>(handler);
+    actor->AddListener<MouseDownEvent>(handler);
+    actor->AddListener<MouseUpEvent>(handler);
+    actor->AddListener<MouseClickEvent>(handler);
+}
+
 SpriteButton::SpriteButton()
 {
-    SetResponsible(true);
-
-    EventListener::Callback handler = Closure(this, &SpriteButton::UpdateStatus);
-    AddListener<MouseHoverEvent>(handler);
-    AddListener<MouseOutEvent>(handler);
-    AddListener<MouseDownEvent>(handler);
-    AddListener<MouseUpEvent>(handler);
-    AddListener<MouseClickEvent>(handler);
+    BindActor(this);
 }
 
 SpriteButtonPtr SpriteButton::Create(Callback const& click)
@@ -179,14 +174,7 @@ SpriteButtonPtr SpriteButton::Create(Callback const& click, Callback const& pres
 
 TextButton::TextButton()
 {
-    SetResponsible(true);
-
-    EventListener::Callback handler = Closure(this, &TextButton::UpdateStatus);
-    AddListener<MouseHoverEvent>(handler);
-    AddListener<MouseOutEvent>(handler);
-    AddListener<MouseDownEvent>(handler);
-    AddListener<MouseUpEvent>(handler);
-    AddListener<MouseClickEvent>(handler);
+    BindActor(this);
 }
 
 TextButtonPtr TextButton::Create(Callback const& click)

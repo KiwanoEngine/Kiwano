@@ -56,27 +56,47 @@ SpritePtr Sprite::Create(FramePtr frame)
     return ptr;
 }
 
+SpritePtr Sprite::Create(String const& file_path, const Rect& crop_rect)
+{
+    SpritePtr ptr = Sprite::Create(file_path);
+    if (ptr)
+    {
+        ptr->SetCropRect(crop_rect);
+    }
+    return ptr;
+}
+
+SpritePtr Sprite::Create(Resource const& res, const Rect& crop_rect)
+{
+    SpritePtr ptr = Sprite::Create(res);
+    if (ptr)
+    {
+        ptr->SetCropRect(crop_rect);
+    }
+    return ptr;
+}
+
 Sprite::Sprite() {}
 
 Sprite::~Sprite() {}
 
-bool Sprite::Load(String const& file_path)
+bool Sprite::Load(String const& file_path, bool autoresize)
 {
-    FramePtr frame = new (std::nothrow) Frame;
-    if (frame->Load(file_path))
+    FramePtr frame = Frame::Create(file_path);
+    if (frame)
     {
-        SetFrame(frame);
+        SetFrame(frame, autoresize);
         return true;
     }
     return false;
 }
 
-bool Sprite::Load(Resource const& res)
+bool Sprite::Load(Resource const& res, bool autoresize)
 {
-    FramePtr frame = new (std::nothrow) Frame;
-    if (frame->Load(res))
+    FramePtr frame = Frame::Create(res);
+    if (frame)
     {
-        SetFrame(frame);
+        SetFrame(frame, autoresize);
         return true;
     }
     return false;
@@ -91,12 +111,12 @@ void Sprite::SetCropRect(const Rect& crop_rect)
     }
 }
 
-void Sprite::SetFrame(FramePtr frame)
+void Sprite::SetFrame(FramePtr frame, bool autoresize)
 {
     if (frame_ != frame)
     {
         frame_ = frame;
-        if (frame_)
+        if (frame_ && autoresize)
         {
             SetSize(Size{ frame_->GetWidth(), frame_->GetHeight() });
         }
