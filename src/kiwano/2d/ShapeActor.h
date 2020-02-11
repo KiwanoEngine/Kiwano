@@ -350,43 +350,62 @@ inline void ShapeActor::SetFillBrush(BrushPtr brush)
 {
     fill_brush_ = brush;
 }
+
 inline void ShapeActor::SetStrokeBrush(BrushPtr brush)
 {
     stroke_brush_ = brush;
 }
+
 inline BrushPtr ShapeActor::GetFillBrush() const
 {
     return fill_brush_;
 }
+
 inline BrushPtr ShapeActor::GetStrokeBrush() const
 {
     return stroke_brush_;
 }
+
 inline float ShapeActor::GetStrokeWidth() const
 {
     return stroke_width_;
 }
+
 inline StrokeStylePtr ShapeActor::GetStrokeStyle() const
 {
     return stroke_style_;
 }
+
 inline ShapePtr ShapeActor::GetShape() const
 {
     return shape_;
+}
+
+inline void ShapeActor::SetStrokeWidth(float width)
+{
+    stroke_width_ = std::max(width, 0.f);
+}
+
+inline void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)
+{
+    stroke_style_ = stroke_style;
 }
 
 inline Point const& LineActor::GetBeginPoint() const
 {
     return begin_;
 }
+
 inline Point const& LineActor::GetEndPoint() const
 {
     return end_;
 }
+
 inline void LineActor::SetBeginPoint(Point const& begin)
 {
     SetLine(begin, end_);
 }
+
 inline void LineActor::SetEndPoint(Point const& end)
 {
     SetLine(begin_, end);
@@ -401,6 +420,7 @@ inline Vec2 RoundedRectActor::GetRadius() const
 {
     return radius_;
 }
+
 inline Size RoundedRectActor::GetRectSize() const
 {
     return GetSize();
@@ -415,4 +435,5 @@ inline Vec2 EllipseActor::GetRadius() const
 {
     return radius_;
 }
+
 }  // namespace kiwano

@@ -89,7 +89,7 @@ public:
     /// @param shape 形状
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    virtual void DrawShape(Shape const& shape, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
+    virtual void DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width) = 0;
 
     /// \~chinese
     /// @brief 绘制线段
@@ -97,15 +97,14 @@ public:
     /// @param point2 线段终点
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    virtual void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke = nullptr,
-                          float stroke_width = 1.0f) = 0;
+    virtual void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width) = 0;
 
     /// \~chinese
     /// @brief 绘制矩形边框
     /// @param rect 矩形
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    virtual void DrawRectangle(Rect const& rect, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) = 0;
+    virtual void DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width) = 0;
 
     /// \~chinese
     /// @brief 绘制圆角矩形边框
@@ -113,8 +112,8 @@ public:
     /// @param radius 圆角半径
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                                      float stroke_width = 1.0f) = 0;
+    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke,
+                                      float stroke_width) = 0;
 
     /// \~chinese
     /// @brief 绘制椭圆边框
@@ -122,8 +121,8 @@ public:
     /// @param radius 椭圆半径
     /// @param stroke 线条样式
     /// @param stroke_width 线条宽度
-    virtual void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                             float stroke_width = 1.0f) = 0;
+    virtual void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke,
+                             float stroke_width) = 0;
 
     /// \~chinese
     /// @brief 填充形状

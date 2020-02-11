@@ -26,41 +26,15 @@ namespace kiwano
 
 StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset)
 {
-    switch (dash)
+    StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
+    if (ptr)
     {
-    case DashStyle::Solid:
-    {
-        return StrokeStyle::Create(cap, line_join, nullptr, 0, dash_offset);
+        ptr->SetCapStyle(cap);
+        ptr->SetLineJoinStyle(line_join);
+        ptr->SetDashStyle(dash);
+        ptr->SetDashOffset(dash_offset);
     }
-
-    case DashStyle::Dash:
-    {
-        float dash_array[] = { 2, 2 };
-        return StrokeStyle::Create(cap, line_join, dash_array, dash_offset);
-    }
-
-    case DashStyle::Dot:
-    {
-        float dash_array[] = { 0, 2 };
-        return StrokeStyle::Create(cap, line_join, dash_array, dash_offset);
-    }
-
-    case DashStyle::DashDot:
-    {
-        float dash_array[] = { 2, 2, 0, 2 };
-        return StrokeStyle::Create(cap, line_join, dash_array, dash_offset);
-    }
-
-    case DashStyle::DashDotDot:
-    {
-        float dash_array[] = { 2, 2, 0, 2, 0, 2 };
-        return StrokeStyle::Create(cap, line_join, dash_array, dash_offset);
-    }
-
-    default:
-        break;
-    }
-    return nullptr;
+    return ptr;
 }
 
 StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size,
@@ -69,11 +43,84 @@ StrokeStylePtr StrokeStyle::Create(CapStyle cap, LineJoinStyle line_join, const 
     StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
     if (ptr)
     {
-        Renderer::GetInstance().CreateStrokeStyle(*ptr, cap, line_join, dash_array, dash_size, dash_offset);
+        ptr->SetCapStyle(cap);
+        ptr->SetLineJoinStyle(line_join);
+        ptr->SetDashStyle(dash_array, dash_size);
+        ptr->SetDashOffset(dash_offset);
     }
     return ptr;
 }
 
-StrokeStyle::StrokeStyle() {}
+StrokeStyle::StrokeStyle()
+    : cap_(CapStyle::Flat)
+    , line_join_(LineJoinStyle::Miter)
+    , dash_offset_(0.0f)
+{
+}
+
+void StrokeStyle::SetDashStyle(DashStyle dash_style)
+{
+    switch (dash_style)
+    {
+    case DashStyle::Solid:
+    {
+        dash_array_.clear();
+        break;
+    }
+
+    case DashStyle::Dash:
+    {
+        dash_array_ = { 2, 2 };
+        break;
+    }
+
+    case DashStyle::Dot:
+    {
+        dash_array_ = { 0, 2 };
+        break;
+    }
+
+    case DashStyle::DashDot:
+    {
+        dash_array_ = { 2, 2, 0, 2 };
+        break;
+    }
+
+    case DashStyle::DashDotDot:
+    {
+        dash_array_ = { 2, 2, 0, 2, 0, 2 };
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
+void StrokeStyle::SetDashStyle(const Vector<float>& dash_array)
+{
+    dash_array_ = dash_array;
+    style_.reset();
+}
+
+void StrokeStyle::SetDashStyle(const float* dash_array, size_t dash_size)
+{
+    if (dash_size == 0)
+        dash_array_.clear();
+    else
+        dash_array_.assign(dash_array, dash_array + dash_size);
+    style_.reset();
+}
+
+ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
+{
+    StrokeStyle& self = const_cast<StrokeStyle&>(*this);
+    if (dash_array_.empty())
+        Renderer::GetInstance().CreateStrokeStyle(self, cap_, line_join_, nullptr, 0, dash_offset_);
+    else
+        Renderer::GetInstance().CreateStrokeStyle(self, cap_, line_join_, &dash_array_[0], dash_array_.size(),
+                                                  dash_offset_);
+    return style_;
+}
 
 }  // namespace kiwano

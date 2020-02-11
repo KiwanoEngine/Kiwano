@@ -39,22 +39,19 @@ public:
 
     void EndDraw() override;
 
-    void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr) override;
+    void DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect) override;
 
-    void DrawTextLayout(TextLayout const& layout, Point const& offset = Point()) override;
+    void DrawTextLayout(TextLayout const& layout, Point const& offset) override;
 
-    void DrawShape(Shape const& shape, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) override;
+    void DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width) override;
 
-    void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke = nullptr,
-                  float stroke_width = 1.0f) override;
+    void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width) override;
 
-    void DrawRectangle(Rect const& rect, StrokeStylePtr stroke = nullptr, float stroke_width = 1.0f) override;
+    void DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width) override;
 
-    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                              float stroke_width = 1.0f) override;
+    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width) override;
 
-    void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke = nullptr,
-                     float stroke_width = 1.0f) override;
+    void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width) override;
 
     void FillShape(Shape const& shape) override;
 

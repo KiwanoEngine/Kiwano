@@ -97,8 +97,8 @@ public:
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_offset 线条虚线偏移量
     template <size_t _DashSize>
-    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle                     line_join = LineJoinStyle::Miter,
-                                 float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
+    static inline StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
+                                        float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
     {
         return StrokeStyle::Create(cap, line_join, dash_array, _DashSize, dash_offset);
     }
@@ -108,6 +108,67 @@ public:
     /// \~chinese
     /// @brief 是否有效
     bool IsValid() const;
+
+    /// \~chinese
+    /// @brief 获取线条端点样式
+    CapStyle GetCapStyle() const;
+
+    /// \~chinese
+    /// @brief 获取线条交点样式
+    LineJoinStyle GetLineJoinStyle() const;
+
+    /// \~chinese
+    /// @brief 获取线条虚线的长度与间隙数组
+    const Vector<float>& GetDashArray() const;
+
+    /// \~chinese
+    /// @brief 获取虚线偏移量
+    float GetDashOffset() const;
+
+    /// \~chinese
+    /// @brief 设置线条端点样式
+    void SetCapStyle(CapStyle cap);
+
+    /// \~chinese
+    /// @brief 设置线条交点样式
+    void SetLineJoinStyle(LineJoinStyle line_join);
+
+    /// \~chinese
+    /// @brief 设置虚线样式
+    /// @param dash_style 线条虚线样式
+    void SetDashStyle(DashStyle dash_style);
+
+    /// \~chinese
+    /// @brief 设置虚线样式
+    /// @param dash_array 线条虚线的长度与间隙数组
+    void SetDashStyle(const Vector<float>& dash_array);
+
+    /// \~chinese
+    /// @brief 设置虚线样式
+    /// @param dash_array 线条虚线的长度与间隙数组
+    /// @param dash_size 线条虚线数组大小
+    void SetDashStyle(const float* dash_array, size_t dash_size);
+
+    /// \~chinese
+    /// @brief 设置虚线样式
+    /// @tparam _DashSize 线条虚线数组大小
+    /// @param dash_array 线条虚线的长度与间隙数组
+    template <size_t _DashSize>
+    inline void SetDashStyle(float (&dash_array)[_DashSize])
+    {
+        SetDashStyle(dash_array, _DashSize);
+    }
+
+    /// \~chinese
+    /// @brief 设置虚线偏移量
+    /// @param dash_offset 线条虚线偏移量
+    void SetDashOffset(float dash_offset);
+
+private:
+    CapStyle      cap_;
+    LineJoinStyle line_join_;
+    float         dash_offset_;
+    Vector<float> dash_array_;
 
 #if defined(KGE_WIN32)
 public:
@@ -122,15 +183,48 @@ private:
 
 /** @} */
 
-inline bool StrokeStyle::IsValid() const
+inline CapStyle StrokeStyle::GetCapStyle() const
 {
-    return style_ != nullptr;
+    return cap_;
+}
+
+inline LineJoinStyle StrokeStyle::GetLineJoinStyle() const
+{
+    return line_join_;
+}
+
+inline const Vector<float>& StrokeStyle::GetDashArray() const
+{
+    return dash_array_;
+}
+
+inline float StrokeStyle::GetDashOffset() const
+{
+    return dash_offset_;
+}
+
+inline void StrokeStyle::SetCapStyle(CapStyle cap)
+{
+    cap_ = cap;
+    style_.reset();
+}
+
+inline void StrokeStyle::SetLineJoinStyle(LineJoinStyle line_join)
+{
+    line_join_ = line_join;
+    style_.reset();
+}
+
+inline void StrokeStyle::SetDashOffset(float dash_offset)
+{
+    dash_offset_ = dash_offset;
+    style_.reset();
 }
 
 #if defined(KGE_WIN32)
-inline ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
+inline bool StrokeStyle::IsValid() const
 {
-    return style_;
+    return style_ != nullptr;
 }
 
 inline void StrokeStyle::SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style)

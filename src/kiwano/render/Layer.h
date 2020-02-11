@@ -31,7 +31,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief 图层区域
+ * @brief 图层
  */
 class KGE_API Layer
 {
