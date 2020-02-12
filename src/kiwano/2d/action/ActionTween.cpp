@@ -129,6 +129,17 @@ void ActionTween::Update(Actor* target, Duration dt)
     UpdateTween(target, percent);
 }
 
+ActionPtr ActionTween::InnerClone(ActionTweenPtr to) const
+{
+    if (to)
+    {
+        (void)Action::InnerClone(to);
+        to->SetDuration(this->GetDuration());
+        to->SetEaseFunc(this->GetEaseFunc());
+    }
+    return to;
+}
+
 //-------------------------------------------------------
 // Move Action
 //-------------------------------------------------------
@@ -167,12 +178,12 @@ void ActionMoveBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionMoveBy::Clone() const
 {
-    return ActionMoveBy::Create(GetDuration(), displacement_);
+    return InnerClone(ActionMoveBy::Create(GetDuration(), displacement_));
 }
 
 ActionPtr ActionMoveBy::Reverse() const
 {
-    return ActionMoveBy::Create(GetDuration(), -displacement_);
+    return InnerClone(ActionMoveBy::Create(GetDuration(), -displacement_));
 }
 
 ActionMoveToPtr ActionMoveTo::Create(Duration duration, Point const& distination)
@@ -190,7 +201,7 @@ ActionMoveTo::ActionMoveTo() {}
 
 ActionPtr ActionMoveTo::Clone() const
 {
-    return ActionMoveTo::Create(GetDuration(), distination_);
+    return InnerClone(ActionMoveTo::Create(GetDuration(), distination_));
 }
 
 void ActionMoveTo::Init(Actor* target)
@@ -226,12 +237,12 @@ ActionJumpBy::ActionJumpBy()
 
 ActionPtr ActionJumpBy::Clone() const
 {
-    return ActionJumpBy::Create(GetDuration(), displacement_, height_, jump_count_);
+    return InnerClone(ActionJumpBy::Create(GetDuration(), displacement_, height_, jump_count_));
 }
 
 ActionPtr ActionJumpBy::Reverse() const
 {
-    return ActionJumpBy::Create(GetDuration(), -displacement_, height_, jump_count_);
+    return InnerClone(ActionJumpBy::Create(GetDuration(), -displacement_, height_, jump_count_));
 }
 
 void ActionJumpBy::Init(Actor* target)
@@ -277,7 +288,7 @@ ActionJumpTo::ActionJumpTo() {}
 
 ActionPtr ActionJumpTo::Clone() const
 {
-    return ActionJumpTo::Create(GetDuration(), distination_, height_, jump_count_);
+    return InnerClone(ActionJumpTo::Create(GetDuration(), distination_, height_, jump_count_));
 }
 
 void ActionJumpTo::Init(Actor* target)
@@ -326,12 +337,12 @@ void ActionScaleBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionScaleBy::Clone() const
 {
-    return ActionScaleBy::Create(GetDuration(), delta_x_, delta_y_);
+    return InnerClone(ActionScaleBy::Create(GetDuration(), delta_x_, delta_y_));
 }
 
 ActionPtr ActionScaleBy::Reverse() const
 {
-    return ActionScaleBy::Create(GetDuration(), -delta_x_, -delta_y_);
+    return InnerClone(ActionScaleBy::Create(GetDuration(), -delta_x_, -delta_y_));
 }
 
 ActionScaleToPtr ActionScaleTo::Create(Duration duration, float scale_x, float scale_y)
@@ -354,7 +365,7 @@ ActionScaleTo::ActionScaleTo()
 
 ActionPtr ActionScaleTo::Clone() const
 {
-    return ActionScaleTo::Create(GetDuration(), end_scale_x_, end_scale_y_);
+    return InnerClone(ActionScaleTo::Create(GetDuration(), end_scale_x_, end_scale_y_));
 }
 
 void ActionScaleTo::Init(Actor* target)
@@ -402,7 +413,7 @@ void ActionFadeTo::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionFadeTo::Clone() const
 {
-    return ActionFadeTo::Create(GetDuration(), end_val_);
+    return InnerClone(ActionFadeTo::Create(GetDuration(), end_val_));
 }
 
 ActionFadeInPtr ActionFadeIn::Create(Duration duration)
@@ -467,12 +478,12 @@ void ActionRotateBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionRotateBy::Clone() const
 {
-    return ActionRotateBy::Create(GetDuration(), delta_val_);
+    return InnerClone(ActionRotateBy::Create(GetDuration(), delta_val_));
 }
 
 ActionPtr ActionRotateBy::Reverse() const
 {
-    return ActionRotateBy::Create(GetDuration(), -delta_val_);
+    return InnerClone(ActionRotateBy::Create(GetDuration(), -delta_val_));
 }
 
 ActionRotateToPtr ActionRotateTo::Create(Duration duration, float rotation)
@@ -493,7 +504,7 @@ ActionRotateTo::ActionRotateTo()
 
 ActionPtr ActionRotateTo::Clone() const
 {
-    return ActionRotateTo::Create(GetDuration(), end_val_);
+    return InnerClone(ActionRotateTo::Create(GetDuration(), end_val_));
 }
 
 void ActionRotateTo::Init(Actor* target)
@@ -521,7 +532,7 @@ ActionCustom::ActionCustom() {}
 
 ActionPtr ActionCustom::Clone() const
 {
-    return ActionCustom::Create(GetDuration(), tween_func_);
+    return InnerClone(ActionCustom::Create(GetDuration(), tween_func_));
 }
 
 void ActionCustom::Init(Actor* target)

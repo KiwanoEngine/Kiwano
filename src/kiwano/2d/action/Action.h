@@ -178,6 +178,9 @@ protected:
     /// @brief 是否可移除
     bool IsRemoveable() const;
 
+protected:
+    ActionPtr InnerClone(ActionPtr to) const;
+
 private:
     Status       status_;
     bool         running_;

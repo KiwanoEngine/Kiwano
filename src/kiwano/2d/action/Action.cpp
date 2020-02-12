@@ -105,4 +105,17 @@ void Action::Restart(Actor* target)
     Init(target);
 }
 
+ActionPtr Action::InnerClone(ActionPtr to) const
+{
+    if (to)
+    {
+        to->SetDelay(this->GetDelay());
+        to->SetDoneCallback(this->GetDoneCallback());
+        to->SetLoopDoneCallback(this->GetLoopDoneCallback());
+        to->SetLoops(this->GetLoops());
+        to->SetName(this->GetName());
+    }
+    return to;
+}
+
 }  // namespace kiwano

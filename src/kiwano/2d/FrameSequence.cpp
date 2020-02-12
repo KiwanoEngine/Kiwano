@@ -155,8 +155,7 @@ FrameSequencePtr FrameSequence::Reverse() const
     {
         for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)
         {
-            if (*iter)
-                frame_seq->AddFrame(*iter);
+            frame_seq->AddFrame(*iter);
         }
     }
     return frame_seq;

@@ -130,7 +130,7 @@ ActionPtr ActionGroup::Clone() const
             actions.push_back(action->Clone());
         }
     }
-    return ActionGroup::Create(actions, sync_);
+    return InnerClone(ActionGroup::Create(actions, sync_));
 }
 
 ActionPtr ActionGroup::Reverse() const
@@ -143,7 +143,7 @@ ActionPtr ActionGroup::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    return ActionGroup::Create(actions, sync_);
+    return InnerClone(ActionGroup::Create(actions, sync_));
 }
 
 }  // namespace kiwano

@@ -35,12 +35,12 @@ ActionDelayPtr ActionDelay::Create(Duration delay)
 
 ActionPtr ActionDelay::Clone() const
 {
-    return ActionDelay::Create(GetDelay());
+    return InnerClone(ActionDelay::Create(GetDelay()));
 }
 
 ActionPtr ActionDelay::Reverse() const
 {
-    return ActionDelay::Create(GetDelay());
+    return InnerClone(ActionDelay::Create(GetDelay()));
 }
 
 }  // namespace kiwano

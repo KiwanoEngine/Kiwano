@@ -119,6 +119,8 @@ protected:
 
     virtual void UpdateTween(Actor* target, float percent) = 0;
 
+    ActionPtr InnerClone(ActionTweenPtr to) const;
+
 private:
     Duration dur_;
     EaseFunc ease_func_;
