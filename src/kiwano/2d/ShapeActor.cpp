@@ -24,9 +24,36 @@
 
 namespace kiwano
 {
-ShapeActorPtr ShapeActor::Create()
+
+ShapeActorPtr ShapeActor::Create(ShapePtr shape)
 {
     ShapeActorPtr ptr = new (std::nothrow) ShapeActor;
+    if (ptr)
+    {
+        ptr->SetShape(shape);
+    }
+    return ptr;
+}
+
+ShapeActorPtr ShapeActor::Create(ShapePtr shape, const Color& fill_color, const Color& stroke_color)
+{
+    ShapeActorPtr ptr = ShapeActor::Create(shape);
+    if (ptr)
+    {
+        ptr->SetFillColor(fill_color);
+        ptr->SetStrokeColor(stroke_color);
+    }
+    return ptr;
+}
+
+ShapeActorPtr ShapeActor::Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush)
+{
+    ShapeActorPtr ptr = ShapeActor::Create(shape);
+    if (ptr)
+    {
+        ptr->SetFillBrush(fill_brush);
+        ptr->SetStrokeBrush(stroke_brush);
+    }
     return ptr;
 }
 

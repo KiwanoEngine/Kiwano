@@ -50,7 +50,22 @@ class KGE_API ShapeActor : public Actor
 public:
     /// \~chinese
     /// @brief 创建形状角色
-    static ShapeActorPtr Create();
+    /// @param shape 形状
+    static ShapeActorPtr Create(ShapePtr shape);
+
+    /// \~chinese
+    /// @brief 创建形状角色
+    /// @param shape 形状
+    /// @param fill_color 填充颜色
+    /// @param stroke_color 轮廓颜色
+    static ShapeActorPtr Create(ShapePtr shape, const Color& fill_color, const Color& stroke_color);
+
+    /// \~chinese
+    /// @brief 创建形状角色
+    /// @param shape 形状
+    /// @param fill_brush 填充画刷
+    /// @param stroke_brush 轮廓画刷
+    static ShapeActorPtr Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush);
 
     /// \~chinese
     /// @brief 构造形状角色
