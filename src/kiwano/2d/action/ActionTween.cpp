@@ -96,24 +96,9 @@ ActionTween::ActionTween()
 }
 
 ActionTween::ActionTween(Duration duration, EaseFunc func)
+    : dur_(duration)
+    , ease_func_(func)
 {
-    SetDuration(duration);
-    SetEaseFunc(func);
-}
-
-void ActionTween::SetEaseFunc(EaseFunc const& func)
-{
-    ease_func_ = func;
-}
-
-EaseFunc const& ActionTween::GetEaseFunc() const
-{
-    return ease_func_;
-}
-
-Duration ActionTween::GetDuration() const
-{
-    return dur_;
 }
 
 void ActionTween::Update(Actor* target, Duration dt)
@@ -144,20 +129,22 @@ void ActionTween::Update(Actor* target, Duration dt)
     UpdateTween(target, percent);
 }
 
-void ActionTween::SetDuration(Duration duration)
-{
-    dur_ = duration;
-}
-
 //-------------------------------------------------------
 // Move Action
 //-------------------------------------------------------
 
-ActionMoveBy::ActionMoveBy(Duration duration, Vec2 const& vector, EaseFunc func)
-    : ActionTween(duration, func)
+ActionMoveByPtr ActionMoveBy::Create(Duration duration, Vec2 const& displacement)
 {
-    delta_pos_ = vector;
+    ActionMoveByPtr ptr = new (std::nothrow) ActionMoveBy;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetDisplacement(displacement);
+    }
+    return ptr;
 }
+
+ActionMoveBy::ActionMoveBy() {}
 
 void ActionMoveBy::Init(Actor* target)
 {
@@ -172,7 +159,7 @@ void ActionMoveBy::UpdateTween(Actor* target, float percent)
     Point diff = target->GetPosition() - prev_pos_;
     start_pos_ = start_pos_ + diff;
 
-    Point new_pos = start_pos_ + (delta_pos_ * percent);
+    Point new_pos = start_pos_ + (displacement_ * percent);
     target->SetPosition(new_pos);
 
     prev_pos_ = new_pos;
@@ -180,51 +167,71 @@ void ActionMoveBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionMoveBy::Clone() const
 {
-    return new (std::nothrow) ActionMoveBy(GetDuration(), delta_pos_, GetEaseFunc());
+    return ActionMoveBy::Create(GetDuration(), displacement_);
 }
 
 ActionPtr ActionMoveBy::Reverse() const
 {
-    return new (std::nothrow) ActionMoveBy(GetDuration(), -delta_pos_, GetEaseFunc());
+    return ActionMoveBy::Create(GetDuration(), -displacement_);
 }
 
-ActionMoveTo::ActionMoveTo(Duration duration, Point const& pos, EaseFunc func)
-    : ActionMoveBy(duration, Point(), func)
+ActionMoveToPtr ActionMoveTo::Create(Duration duration, Point const& distination)
 {
-    end_pos_ = pos;
+    ActionMoveToPtr ptr = new (std::nothrow) ActionMoveTo;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetDistination(distination);
+    }
+    return ptr;
 }
+
+ActionMoveTo::ActionMoveTo() {}
 
 ActionPtr ActionMoveTo::Clone() const
 {
-    return new (std::nothrow) ActionMoveTo(GetDuration(), end_pos_, GetEaseFunc());
+    return ActionMoveTo::Create(GetDuration(), distination_);
 }
 
 void ActionMoveTo::Init(Actor* target)
 {
     ActionMoveBy::Init(target);
-    delta_pos_ = end_pos_ - start_pos_;
+    displacement_ = distination_ - start_pos_;
 }
 
 //-------------------------------------------------------
 // Jump Action
 //-------------------------------------------------------
 
-ActionJumpBy::ActionJumpBy(Duration duration, Vec2 const& vec, float height, int jumps, EaseFunc func)
-    : ActionTween(duration, func)
-    , delta_pos_(vec)
-    , height_(height)
-    , jumps_(jumps)
+ActionJumpByPtr ActionJumpBy::Create(Duration duration, Vec2 const& displacement, float height, int count,
+                                     EaseFunc ease)
+{
+    ActionJumpByPtr ptr = new (std::nothrow) ActionJumpBy;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetEaseFunc(ease);
+        ptr->SetJumpHeight(height);
+        ptr->SetJumpCount(count);
+        ptr->SetDisplacement(displacement);
+    }
+    return ptr;
+}
+
+ActionJumpBy::ActionJumpBy()
+    : height_(0.0f)
+    , jump_count_(0)
 {
 }
 
 ActionPtr ActionJumpBy::Clone() const
 {
-    return new (std::nothrow) ActionJumpBy(GetDuration(), delta_pos_, height_, jumps_, GetEaseFunc());
+    return ActionJumpBy::Create(GetDuration(), displacement_, height_, jump_count_);
 }
 
 ActionPtr ActionJumpBy::Reverse() const
 {
-    return new (std::nothrow) ActionJumpBy(GetDuration(), -delta_pos_, height_, jumps_, GetEaseFunc());
+    return ActionJumpBy::Create(GetDuration(), -displacement_, height_, jump_count_);
 }
 
 void ActionJumpBy::Init(Actor* target)
@@ -237,10 +244,10 @@ void ActionJumpBy::Init(Actor* target)
 
 void ActionJumpBy::UpdateTween(Actor* target, float percent)
 {
-    float frac = fmod(percent * jumps_, 1.f);
-    float x    = delta_pos_.x * percent;
+    float frac = fmod(percent * jump_count_, 1.f);
+    float x    = displacement_.x * percent;
     float y    = height_ * 4 * frac * (1 - frac);
-    y += delta_pos_.y * percent;
+    y += displacement_.y * percent;
 
     Point diff = target->GetPosition() - prev_pos_;
     start_pos_ = diff + start_pos_;
@@ -251,31 +258,53 @@ void ActionJumpBy::UpdateTween(Actor* target, float percent)
     prev_pos_ = new_pos;
 }
 
-ActionJumpTo::ActionJumpTo(Duration duration, Point const& pos, float height, int jumps, EaseFunc func)
-    : ActionJumpBy(duration, Point(), height, jumps, func)
-    , end_pos_(pos)
+ActionJumpToPtr ActionJumpTo::Create(Duration duration, Point const& distination, float height, int count,
+                                     EaseFunc ease)
 {
+    ActionJumpToPtr ptr = new (std::nothrow) ActionJumpTo;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetEaseFunc(ease);
+        ptr->SetJumpHeight(height);
+        ptr->SetJumpCount(count);
+        ptr->SetDistination(distination);
+    }
+    return ptr;
 }
+
+ActionJumpTo::ActionJumpTo() {}
 
 ActionPtr ActionJumpTo::Clone() const
 {
-    return new (std::nothrow) ActionJumpTo(GetDuration(), end_pos_, height_, jumps_, GetEaseFunc());
+    return ActionJumpTo::Create(GetDuration(), distination_, height_, jump_count_);
 }
 
 void ActionJumpTo::Init(Actor* target)
 {
     ActionJumpBy::Init(target);
-    delta_pos_ = end_pos_ - start_pos_;
+    displacement_ = distination_ - start_pos_;
 }
 
 //-------------------------------------------------------
 // Scale Action
 //-------------------------------------------------------
 
-ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func)
-    : ActionTween(duration, func)
-    , delta_x_(scale_x)
-    , delta_y_(scale_y)
+ActionScaleByPtr ActionScaleBy::Create(Duration duration, float scale_x, float scale_y)
+{
+    ActionScaleByPtr ptr = new (std::nothrow) ActionScaleBy;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetScaleX(scale_x);
+        ptr->SetScaleY(scale_y);
+    }
+    return ptr;
+}
+
+ActionScaleBy::ActionScaleBy()
+    : delta_x_(0.0f)
+    , delta_y_(0.0f)
     , start_scale_x_(0.f)
     , start_scale_y_(0.f)
 {
@@ -297,24 +326,35 @@ void ActionScaleBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionScaleBy::Clone() const
 {
-    return new (std::nothrow) ActionScaleBy(GetDuration(), delta_x_, delta_y_, GetEaseFunc());
+    return ActionScaleBy::Create(GetDuration(), delta_x_, delta_y_);
 }
 
 ActionPtr ActionScaleBy::Reverse() const
 {
-    return new (std::nothrow) ActionScaleBy(GetDuration(), -delta_x_, -delta_y_, GetEaseFunc());
+    return ActionScaleBy::Create(GetDuration(), -delta_x_, -delta_y_);
 }
 
-ActionScaleTo::ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func)
-    : ActionScaleBy(duration, 0, 0, func)
+ActionScaleToPtr ActionScaleTo::Create(Duration duration, float scale_x, float scale_y)
 {
-    end_scale_x_ = scale_x;
-    end_scale_y_ = scale_y;
+    ActionScaleToPtr ptr = new (std::nothrow) ActionScaleTo;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTargetScaleX(scale_x);
+        ptr->SetTargetScaleY(scale_y);
+    }
+    return ptr;
+}
+
+ActionScaleTo::ActionScaleTo()
+    : end_scale_x_(0.0f)
+    , end_scale_y_(0.0f)
+{
 }
 
 ActionPtr ActionScaleTo::Clone() const
 {
-    return new (std::nothrow) ActionScaleTo(GetDuration(), end_scale_x_, end_scale_y_, GetEaseFunc());
+    return ActionScaleTo::Create(GetDuration(), end_scale_x_, end_scale_y_);
 }
 
 void ActionScaleTo::Init(Actor* target)
@@ -328,11 +368,21 @@ void ActionScaleTo::Init(Actor* target)
 // Opacity Action
 //-------------------------------------------------------
 
-ActionFadeTo::ActionFadeTo(Duration duration, float opacity, EaseFunc func)
-    : ActionTween(duration, func)
-    , delta_val_(0.f)
+ActionFadeToPtr ActionFadeTo::Create(Duration duration, float opacity)
+{
+    ActionFadeToPtr ptr = new (std::nothrow) ActionFadeTo;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTargetOpacity(opacity);
+    }
+    return ptr;
+}
+
+ActionFadeTo::ActionFadeTo()
+    : delta_val_(0.0f)
     , start_val_(0.f)
-    , end_val_(opacity)
+    , end_val_(0.0f)
 {
 }
 
@@ -352,27 +402,49 @@ void ActionFadeTo::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionFadeTo::Clone() const
 {
-    return new (std::nothrow) ActionFadeTo(GetDuration(), end_val_, GetEaseFunc());
+    return ActionFadeTo::Create(GetDuration(), end_val_);
 }
 
-ActionFadeIn::ActionFadeIn(Duration duration, EaseFunc func)
-    : ActionFadeTo(duration, 1, func)
+ActionFadeInPtr ActionFadeIn::Create(Duration duration)
 {
+    ActionFadeInPtr ptr = new (std::nothrow) ActionFadeIn;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTargetOpacity(1.0f);
+    }
+    return ptr;
 }
 
-ActionFadeOut::ActionFadeOut(Duration duration, EaseFunc func)
-    : ActionFadeTo(duration, 0, func)
+ActionFadeOutPtr ActionFadeOut::Create(Duration duration)
 {
+    ActionFadeOutPtr ptr = new (std::nothrow) ActionFadeOut;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTargetOpacity(0.0f);
+    }
+    return ptr;
 }
 
 //-------------------------------------------------------
 // Rotate Action
 //-------------------------------------------------------
 
-ActionRotateBy::ActionRotateBy(Duration duration, float rotation, EaseFunc func)
-    : ActionTween(duration, func)
-    , start_val_()
-    , delta_val_(rotation)
+ActionRotateByPtr ActionRotateBy::Create(Duration duration, float rotation)
+{
+    ActionRotateByPtr ptr = new (std::nothrow) ActionRotateBy;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetRotation(rotation);
+    }
+    return ptr;
+}
+
+ActionRotateBy::ActionRotateBy()
+    : start_val_(0.0f)
+    , delta_val_(0.0f)
 {
 }
 
@@ -395,23 +467,33 @@ void ActionRotateBy::UpdateTween(Actor* target, float percent)
 
 ActionPtr ActionRotateBy::Clone() const
 {
-    return new (std::nothrow) ActionRotateBy(GetDuration(), delta_val_, GetEaseFunc());
+    return ActionRotateBy::Create(GetDuration(), delta_val_);
 }
 
 ActionPtr ActionRotateBy::Reverse() const
 {
-    return new (std::nothrow) ActionRotateBy(GetDuration(), -delta_val_, GetEaseFunc());
+    return ActionRotateBy::Create(GetDuration(), -delta_val_);
 }
 
-ActionRotateTo::ActionRotateTo(Duration duration, float rotation, EaseFunc func)
-    : ActionRotateBy(duration, 0, func)
+ActionRotateToPtr ActionRotateTo::Create(Duration duration, float rotation)
 {
-    end_val_ = rotation;
+    ActionRotateToPtr ptr = new (std::nothrow) ActionRotateTo;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTargetRotation(rotation);
+    }
+    return ptr;
+}
+
+ActionRotateTo::ActionRotateTo()
+    : end_val_(0.0f)
+{
 }
 
 ActionPtr ActionRotateTo::Clone() const
 {
-    return new (std::nothrow) ActionRotateTo(GetDuration(), end_val_, GetEaseFunc());
+    return ActionRotateTo::Create(GetDuration(), end_val_);
 }
 
 void ActionRotateTo::Init(Actor* target)
@@ -424,15 +506,22 @@ void ActionRotateTo::Init(Actor* target)
 // ActionCustom
 //-------------------------------------------------------
 
-ActionCustom::ActionCustom(Duration duration, TweenFunc tween_func, EaseFunc func)
-    : ActionTween(duration, func)
-    , tween_func_(tween_func)
+ActionCustomPtr ActionCustom::Create(Duration duration, TweenFunc tween_func)
 {
+    ActionCustomPtr ptr = new (std::nothrow) ActionCustom;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetTweenFunc(tween_func);
+    }
+    return ptr;
 }
+
+ActionCustom::ActionCustom() {}
 
 ActionPtr ActionCustom::Clone() const
 {
-    return new ActionCustom(GetDuration(), tween_func_);
+    return ActionCustom::Create(GetDuration(), tween_func_);
 }
 
 void ActionCustom::Init(Actor* target)

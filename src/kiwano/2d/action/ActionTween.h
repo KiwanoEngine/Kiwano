@@ -96,7 +96,7 @@ public:
     /// @brief 补间动画
     /// @param duration 动画时长
     /// @param func 动画速度缓动函数
-    ActionTween(Duration duration, EaseFunc func);
+    ActionTween(Duration duration, EaseFunc ease);
 
     /// \~chinese
     /// @brief 获取动画时长
@@ -130,11 +130,20 @@ class KGE_API ActionMoveBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造相对位移动画
+    /// @brief 创建相对位移动画
     /// @param duration 动画时长
-    /// @param vector 移动向量
-    /// @param func 动画速度缓动函数
-    ActionMoveBy(Duration duration, Vec2 const& vector, EaseFunc func = nullptr);
+    /// @param displacement 位移向量
+    static ActionMoveByPtr Create(Duration duration, Vec2 const& displacement);
+
+    ActionMoveBy();
+
+    /// \~chinese
+    /// @brief 获取位移向量
+    Vec2 GetDisplacement() const;
+
+    /// \~chinese
+    /// @brief 设置位移向量
+    void SetDisplacement(Vec2 const& displacement);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -152,7 +161,7 @@ protected:
 protected:
     Point start_pos_;
     Point prev_pos_;
-    Vec2  delta_pos_;
+    Vec2  displacement_;
 };
 
 /// \~chinese
@@ -161,11 +170,20 @@ class KGE_API ActionMoveTo : public ActionMoveBy
 {
 public:
     /// \~chinese
-    /// @brief 构造位移动画
+    /// @brief 创建位移动画
     /// @param duration 动画时长
-    /// @param pos 目的坐标
-    /// @param func 动画速度缓动函数
-    ActionMoveTo(Duration duration, Point const& pos, EaseFunc func = nullptr);
+    /// @param distination 目的坐标
+    static ActionMoveToPtr Create(Duration duration, Point const& distination);
+
+    ActionMoveTo();
+
+    /// \~chinese
+    /// @brief 获取目的坐标
+    Point GetDistination() const;
+
+    /// \~chinese
+    /// @brief 设置目的坐标
+    void SetDistination(Point const& distination);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -183,7 +201,7 @@ protected:
     void Init(Actor* target) override;
 
 private:
-    Point end_pos_;
+    Point distination_;
 };
 
 /// \~chinese
@@ -192,13 +210,39 @@ class KGE_API ActionJumpBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造相对跳跃动画
+    /// @brief 创建相对跳跃动画
     /// @param duration 动画时长
-    /// @param vec 跳跃位移向量
+    /// @param displacement 跳跃位移向量
     /// @param height 跳跃高度
-    /// @param jumps 跳跃次数
-    /// @param func 动画速度缓动函数
-    ActionJumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1, EaseFunc func = nullptr);
+    /// @param count 跳跃次数
+    static ActionJumpByPtr Create(Duration duration, Vec2 const& displacement, float height, int count = 1,
+                                  EaseFunc ease = nullptr);
+
+    ActionJumpBy();
+
+    /// \~chinese
+    /// @brief 获取跳跃位移
+    Vec2 GetDisplacement() const;
+
+    /// \~chinese
+    /// @brief 获取跳跃高度
+    float GetJumpHeight() const;
+
+    /// \~chinese
+    /// @brief 获取跳跃次数
+    int GetJumpCount() const;
+
+    /// \~chinese
+    /// @brief 设置跳跃位移
+    void SetDisplacement(Vec2 const& displacement);
+
+    /// \~chinese
+    /// @brief 设置跳跃高度
+    void SetJumpHeight(float height);
+
+    /// \~chinese
+    /// @brief 设置跳跃次数
+    void SetJumpCount(int count);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -214,10 +258,10 @@ protected:
     void UpdateTween(Actor* target, float percent) override;
 
 protected:
-    Point start_pos_;
-    Point delta_pos_;
     float height_;
-    int   jumps_;
+    int   jump_count_;
+    Point start_pos_;
+    Point displacement_;
     Point prev_pos_;
 };
 
@@ -227,13 +271,23 @@ class KGE_API ActionJumpTo : public ActionJumpBy
 {
 public:
     /// \~chinese
-    /// @brief 构造跳跃动画
+    /// @brief 创建跳跃动画
     /// @param duration 动画时长
-    /// @param pos 目的坐标
+    /// @param distination 目的坐标
     /// @param height 跳跃高度
-    /// @param jumps 跳跃次数
-    /// @param func 动画速度缓动函数
-    ActionJumpTo(Duration duration, Point const& pos, float height, int jumps = 1, EaseFunc func = nullptr);
+    /// @param count 跳跃次数
+    static ActionJumpToPtr Create(Duration duration, Point const& distination, float height, int count = 1,
+                                  EaseFunc ease = nullptr);
+
+    ActionJumpTo();
+
+    /// \~chinese
+    /// @brief 获取目的坐标
+    Point GetDistination() const;
+
+    /// \~chinese
+    /// @brief 设置目的坐标
+    void SetDistination(Point const& distination);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -251,7 +305,7 @@ protected:
     void Init(Actor* target) override;
 
 private:
-    Point end_pos_;
+    Point distination_;
 };
 
 /// \~chinese
@@ -260,12 +314,29 @@ class KGE_API ActionScaleBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造相对缩放动画
+    /// @brief 创建相对缩放动画
     /// @param duration 动画时长
     /// @param scale_x 横向缩放相对变化值
     /// @param scale_y 纵向缩放相对变化值
-    /// @param func 动画速度缓动函数
-    ActionScaleBy(Duration duration, float scale_x, float scale_y, EaseFunc func = nullptr);
+    static ActionScaleByPtr Create(Duration duration, float scale_x, float scale_y);
+
+    ActionScaleBy();
+
+    /// \~chinese
+    /// @brief 获取横向缩放相对变化值
+    float GetScaleX() const;
+
+    /// \~chinese
+    /// @brief 获取横向缩放相对变化值
+    float GetScaleY() const;
+
+    /// \~chinese
+    /// @brief 设置纵向缩放相对变化值
+    void SetScaleX(float scale_x);
+
+    /// \~chinese
+    /// @brief 设置纵向缩放相对变化值
+    void SetScaleY(float scale_y);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -293,12 +364,29 @@ class KGE_API ActionScaleTo : public ActionScaleBy
 {
 public:
     /// \~chinese
-    /// @brief 构造缩放动画
+    /// @brief 创建缩放动画
     /// @param duration 动画时长
     /// @param scale_x 横向缩放目标值
     /// @param scale_y 纵向缩放目标值
-    /// @param func 动画速度缓动函数
-    ActionScaleTo(Duration duration, float scale_x, float scale_y, EaseFunc func = nullptr);
+    static ActionScaleToPtr Create(Duration duration, float scale_x, float scale_y);
+
+    ActionScaleTo();
+
+    /// \~chinese
+    /// @brief 获取横向缩放目标值
+    float GetTargetScaleX() const;
+
+    /// \~chinese
+    /// @brief 获取横向缩放目标值
+    float GetTargetScaleY() const;
+
+    /// \~chinese
+    /// @brief 设置纵向缩放目标值
+    void SetTargetScaleX(float scale_x);
+
+    /// \~chinese
+    /// @brief 设置纵向缩放目标值
+    void SetTargetScaleY(float scale_y);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -326,11 +414,20 @@ class KGE_API ActionFadeTo : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造透明度渐变动画
+    /// @brief 创建透明度渐变动画
     /// @param duration 动画时长
     /// @param opacity 目标透明度
-    /// @param func 动画速度缓动函数
-    ActionFadeTo(Duration duration, float opacity, EaseFunc func = nullptr);
+    static ActionFadeToPtr Create(Duration duration, float opacity);
+
+    ActionFadeTo();
+
+    /// \~chinese
+    /// @brief 获取目标透明度
+    float GetTargetOpacity() const;
+
+    /// \~chinese
+    /// @brief 设置目标透明度
+    void SetTargetOpacity(float opacity);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -361,10 +458,9 @@ class KGE_API ActionFadeIn : public ActionFadeTo
 {
 public:
     /// \~chinese
-    /// @brief 构造淡入动画
+    /// @brief 创建淡入动画
     /// @param duration 动画时长
-    /// @param func 动画速度缓动函数
-    explicit ActionFadeIn(Duration duration, EaseFunc func = nullptr);
+    static ActionFadeInPtr Create(Duration duration);
 };
 
 /// \~chinese
@@ -373,10 +469,9 @@ class KGE_API ActionFadeOut : public ActionFadeTo
 {
 public:
     /// \~chinese
-    /// @brief 构造淡出动画
+    /// @brief 创建淡出动画
     /// @param duration 动画时长
-    /// @param func 动画速度缓动函数
-    explicit ActionFadeOut(Duration duration, EaseFunc func = nullptr);
+    static ActionFadeOutPtr Create(Duration duration);
 };
 
 /// \~chinese
@@ -385,11 +480,20 @@ class KGE_API ActionRotateBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造相对旋转动画
+    /// @brief 创建相对旋转动画
     /// @param duration 动画时长
     /// @param rotation 角度相对变化值
-    /// @param func 动画速度缓动函数
-    ActionRotateBy(Duration duration, float rotation, EaseFunc func = nullptr);
+    static ActionRotateByPtr Create(Duration duration, float rotation);
+
+    ActionRotateBy();
+
+    /// \~chinese
+    /// @brief 获取角度相对变化值
+    float GetRotation() const;
+
+    /// \~chinese
+    /// @brief 设置角度相对变化值
+    void SetRotation(float rotation);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -415,11 +519,20 @@ class KGE_API ActionRotateTo : public ActionRotateBy
 {
 public:
     /// \~chinese
-    /// @brief 构造旋转动画
+    /// @brief 创建旋转动画
     /// @param duration 动画时长
     /// @param rotation 目标角度
-    /// @param func 动画速度缓动函数
-    ActionRotateTo(Duration duration, float rotation, EaseFunc func = nullptr);
+    static ActionRotateToPtr Create(Duration duration, float rotation);
+
+    ActionRotateTo();
+
+    /// \~chinese
+    /// @brief 获取目标角度
+    float GetTargetRotation() const;
+
+    /// \~chinese
+    /// @brief 设置目标角度
+    void SetTargetRotation(float rotation);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -451,11 +564,20 @@ public:
     using TweenFunc = Function<void(Actor* /* target */, float /* percent */)>;
 
     /// \~chinese
-    /// @brief 构造自定义动画
+    /// @brief 创建自定义动画
     /// @param duration 动画时长
     /// @param tween_func 动画回调函数
-    /// @param func 动画速度缓动函数
-    ActionCustom(Duration duration, TweenFunc tween_func, EaseFunc func = nullptr);
+    static ActionCustomPtr Create(Duration duration, TweenFunc tween_func);
+
+    ActionCustom();
+
+    /// \~chinese
+    /// @brief 获取动画回调函数
+    TweenFunc GetTweenFunc() const;
+
+    /// \~chinese
+    /// @brief 设置动画回调函数
+    void SetTweenFunc(TweenFunc const& tween_func);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -479,5 +601,165 @@ private:
 };
 
 /** @} */
+
+inline EaseFunc const& ActionTween::GetEaseFunc() const
+{
+    return ease_func_;
+}
+
+inline Duration ActionTween::GetDuration() const
+{
+    return dur_;
+}
+
+inline void ActionTween::SetDuration(Duration duration)
+{
+    dur_ = duration;
+}
+
+inline void ActionTween::SetEaseFunc(EaseFunc const& func)
+{
+    ease_func_ = func;
+}
+
+inline Vec2 ActionMoveBy::GetDisplacement() const
+{
+    return displacement_;
+}
+
+inline void ActionMoveBy::SetDisplacement(Vec2 const& displacement)
+{
+    displacement_ = displacement;
+}
+
+inline Point ActionMoveTo::GetDistination() const
+{
+    return distination_;
+}
+
+inline void ActionMoveTo::SetDistination(Point const& distination)
+{
+    distination_ = distination;
+}
+
+inline Vec2 ActionJumpBy::GetDisplacement() const
+{
+    return displacement_;
+}
+
+inline float ActionJumpBy::GetJumpHeight() const
+{
+    return height_;
+}
+
+inline int ActionJumpBy::GetJumpCount() const
+{
+    return jump_count_;
+}
+
+inline void ActionJumpBy::SetDisplacement(Vec2 const& displacement)
+{
+    displacement_ = displacement;
+}
+
+inline void ActionJumpBy::SetJumpHeight(float height)
+{
+    height_ = height;
+}
+
+inline void ActionJumpBy::SetJumpCount(int count)
+{
+    jump_count_ = count;
+}
+
+inline Point ActionJumpTo::GetDistination() const
+{
+    return distination_;
+}
+
+inline void ActionJumpTo::SetDistination(Point const& distination)
+{
+    distination_ = distination;
+}
+
+inline float ActionScaleBy::GetScaleX() const
+{
+    return delta_x_;
+}
+
+inline float ActionScaleBy::GetScaleY() const
+{
+    return delta_y_;
+}
+
+inline void ActionScaleBy::SetScaleX(float scale_x)
+{
+    delta_x_ = scale_x;
+}
+
+inline void ActionScaleBy::SetScaleY(float scale_y)
+{
+    delta_y_ = scale_y;
+}
+
+inline float ActionScaleTo::GetTargetScaleX() const
+{
+    return end_scale_x_;
+}
+
+inline float ActionScaleTo::GetTargetScaleY() const
+{
+    return end_scale_y_;
+}
+
+inline void ActionScaleTo::SetTargetScaleX(float scale_x)
+{
+    end_scale_x_ = scale_x;
+}
+
+inline void ActionScaleTo::SetTargetScaleY(float scale_y)
+{
+    end_scale_y_ = scale_y;
+}
+
+inline float ActionFadeTo::GetTargetOpacity() const
+{
+    return end_val_;
+}
+
+inline void ActionFadeTo::SetTargetOpacity(float opacity)
+{
+    end_val_ = opacity;
+}
+
+inline float ActionRotateBy::GetRotation() const
+{
+    return delta_val_;
+}
+
+inline void ActionRotateBy::SetRotation(float rotation)
+{
+    delta_val_ = rotation;
+}
+
+inline float ActionRotateTo::GetTargetRotation() const
+{
+    return end_val_;
+}
+
+inline void ActionRotateTo::SetTargetRotation(float rotation)
+{
+    end_val_ = rotation;
+}
+
+inline ActionCustom::TweenFunc ActionCustom::GetTweenFunc() const
+{
+    return tween_func_;
+}
+
+inline void ActionCustom::SetTweenFunc(TweenFunc const& tween_func)
+{
+    tween_func_ = tween_func;
+}
 
 }  // namespace kiwano

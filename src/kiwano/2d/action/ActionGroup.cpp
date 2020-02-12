@@ -24,19 +24,25 @@
 
 namespace kiwano
 {
-//-------------------------------------------------------
-// ActionGroup
-//-------------------------------------------------------
+
+ActionGroupPtr ActionGroup::Create(Vector<ActionPtr> const& actions, bool sync)
+{
+    ActionGroupPtr ptr = new (std::nothrow) ActionGroup(sync);
+    if (ptr)
+    {
+        ptr->AddActions(actions);
+    }
+    return ptr;
+}
 
 ActionGroup::ActionGroup()
     : sync_(false)
 {
 }
 
-ActionGroup::ActionGroup(Vector<ActionPtr> const& actions, bool sync)
+ActionGroup::ActionGroup(bool sync)
     : sync_(sync)
 {
-    this->Add(actions);
 }
 
 ActionGroup::~ActionGroup() {}
@@ -100,7 +106,7 @@ void ActionGroup::Update(Actor* target, Duration dt)
     }
 }
 
-void ActionGroup::Add(ActionPtr action)
+void ActionGroup::AddAction(ActionPtr action)
 {
     if (action)
     {
@@ -108,10 +114,10 @@ void ActionGroup::Add(ActionPtr action)
     }
 }
 
-void ActionGroup::Add(Vector<ActionPtr> const& actions)
+void ActionGroup::AddActions(Vector<ActionPtr> const& actions)
 {
     for (const auto& action : actions)
-        Add(action);
+        AddAction(action);
 }
 
 ActionPtr ActionGroup::Clone() const
@@ -124,8 +130,7 @@ ActionPtr ActionGroup::Clone() const
             actions.push_back(action->Clone());
         }
     }
-    ActionPtr group = new (std::nothrow) ActionGroup(actions, sync_);
-    return group;
+    return ActionGroup::Create(actions, sync_);
 }
 
 ActionPtr ActionGroup::Reverse() const
@@ -138,8 +143,7 @@ ActionPtr ActionGroup::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    ActionPtr group = new (std::nothrow) ActionGroup(actions, sync_);
-    return group;
+    return ActionGroup::Create(actions, sync_);
 }
 
 }  // namespace kiwano

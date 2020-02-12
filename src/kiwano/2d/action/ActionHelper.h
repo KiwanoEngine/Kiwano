@@ -42,7 +42,7 @@ struct ActionHelper
     /// @brief 设置循环次数
     inline ActionHelper& SetLoops(int loops)
     {
-        core->SetLoops(loops);
+        ptr->SetLoops(loops);
         return (*this);
     }
 
@@ -50,7 +50,7 @@ struct ActionHelper
     /// @brief 设置动画延迟
     inline ActionHelper& SetDelay(Duration delay)
     {
-        core->SetDelay(delay);
+        ptr->SetDelay(delay);
         return (*this);
     }
 
@@ -58,7 +58,7 @@ struct ActionHelper
     /// @brief 设置动画结束回调函数
     inline ActionHelper& SetDoneCallback(DoneCallback const& cb)
     {
-        core->SetDoneCallback(cb);
+        ptr->SetDoneCallback(cb);
         return (*this);
     }
 
@@ -66,7 +66,7 @@ struct ActionHelper
     /// @brief 设置动画循环结束时的回调函数
     inline ActionHelper& SetLoopDoneCallback(DoneCallback const& cb)
     {
-        core->SetLoopDoneCallback(cb);
+        ptr->SetLoopDoneCallback(cb);
         return (*this);
     }
 
@@ -74,7 +74,7 @@ struct ActionHelper
     /// @brief 动画结束时移除目标角色
     inline ActionHelper& RemoveTargetWhenDone()
     {
-        core->RemoveTargetWhenDone();
+        ptr->RemoveTargetWhenDone();
         return (*this);
     }
 
@@ -82,7 +82,7 @@ struct ActionHelper
     /// @brief 设置名称
     inline ActionHelper& SetName(String const& name)
     {
-        core->SetName(name);
+        ptr->SetName(name);
         return (*this);
     }
 
@@ -90,21 +90,21 @@ struct ActionHelper
     /// @brief 获取指针
     inline ActionPtr Get() const
     {
-        return core;
+        return ptr;
     }
 
-    inline ActionHelper(ActionPtr core)
-        : core(core)
+    inline ActionHelper(ActionPtr ptr)
+        : ptr(ptr)
     {
     }
 
     inline operator ActionPtr() const
     {
-        return core;
+        return ptr;
     }
 
 private:
-    ActionPtr core;
+    ActionPtr ptr;
 };
 
 /// \~chinese
@@ -117,7 +117,7 @@ struct TweenHelper
     /// @brief 设置动画持续时长
     inline TweenHelper& SetDuration(Duration dur)
     {
-        core->SetDuration(dur);
+        ptr->SetDuration(dur);
         return (*this);
     }
 
@@ -125,7 +125,7 @@ struct TweenHelper
     /// @brief 设置循环次数
     inline TweenHelper& SetLoops(int loops)
     {
-        core->SetLoops(loops);
+        ptr->SetLoops(loops);
         return (*this);
     }
 
@@ -133,7 +133,7 @@ struct TweenHelper
     /// @brief 设置缓动函数
     inline TweenHelper& SetEaseFunc(EaseFunc ease)
     {
-        core->SetEaseFunc(ease);
+        ptr->SetEaseFunc(ease);
         return (*this);
     }
 
@@ -141,7 +141,7 @@ struct TweenHelper
     /// @brief 设置动画延迟
     inline TweenHelper& SetDelay(Duration delay)
     {
-        core->SetDelay(delay);
+        ptr->SetDelay(delay);
         return (*this);
     }
 
@@ -149,7 +149,7 @@ struct TweenHelper
     /// @brief 设置动画结束回调函数
     inline TweenHelper& SetDoneCallback(DoneCallback const& cb)
     {
-        core->SetDoneCallback(cb);
+        ptr->SetDoneCallback(cb);
         return (*this);
     }
 
@@ -157,7 +157,7 @@ struct TweenHelper
     /// @brief 设置动画循环结束时的回调函数
     inline TweenHelper& SetLoopDoneCallback(DoneCallback const& cb)
     {
-        core->SetLoopDoneCallback(cb);
+        ptr->SetLoopDoneCallback(cb);
         return (*this);
     }
 
@@ -165,7 +165,7 @@ struct TweenHelper
     /// @brief 动画结束时移除目标角色
     inline TweenHelper& RemoveTargetWhenDone()
     {
-        core->RemoveTargetWhenDone();
+        ptr->RemoveTargetWhenDone();
         return (*this);
     }
 
@@ -173,7 +173,7 @@ struct TweenHelper
     /// @brief 设置名称
     inline TweenHelper& SetName(String const& name)
     {
-        core->SetName(name);
+        ptr->SetName(name);
         return (*this);
     }
 
@@ -181,26 +181,26 @@ struct TweenHelper
     /// @brief 获取指针
     inline ActionTweenPtr Get() const
     {
-        return core;
+        return ptr;
     }
 
-    inline TweenHelper(ActionTweenPtr core)
-        : core(core)
+    inline TweenHelper(ActionTweenPtr ptr)
+        : ptr(ptr)
     {
     }
 
     inline operator ActionPtr() const
     {
-        return core;
+        return ptr;
     }
 
     inline operator ActionTweenPtr() const
     {
-        return core;
+        return ptr;
     }
 
 private:
-    ActionTweenPtr core;
+    ActionTweenPtr ptr;
 };
 
 /// \~chinese
@@ -214,7 +214,7 @@ public:
     /// @param vector 移动向量
     static inline TweenHelper MoveBy(Duration dur, Point const& vector)
     {
-        return TweenHelper(new kiwano::ActionMoveBy(dur, vector));
+        return TweenHelper(ActionMoveBy::Create(dur, vector));
     }
 
     /// \~chinese
@@ -223,7 +223,7 @@ public:
     /// @param pos 目的坐标
     static inline TweenHelper MoveTo(Duration dur, Point const& pos)
     {
-        return TweenHelper(new kiwano::ActionMoveTo(dur, pos));
+        return TweenHelper(ActionMoveTo::Create(dur, pos));
     }
 
     /// \~chinese
@@ -234,7 +234,7 @@ public:
     /// @param jumps 跳跃次数
     static inline TweenHelper JumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1)
     {
-        return TweenHelper(new kiwano::ActionJumpBy(duration, vec, height, jumps));
+        return TweenHelper(ActionJumpBy::Create(duration, vec, height, jumps));
     }
 
     /// \~chinese
@@ -245,7 +245,7 @@ public:
     /// @param jumps 跳跃次数
     static inline TweenHelper JumpTo(Duration duration, Point const& pos, float height, int jumps = 1)
     {
-        return TweenHelper(new kiwano::ActionJumpTo(duration, pos, height, jumps));
+        return TweenHelper(ActionJumpTo::Create(duration, pos, height, jumps));
     }
 
     /// \~chinese
@@ -255,7 +255,7 @@ public:
     /// @param scale_y 纵向缩放相对变化值
     static inline TweenHelper ScaleBy(Duration dur, float scale_x, float scale_y)
     {
-        return TweenHelper(new kiwano::ActionScaleBy(dur, scale_x, scale_y));
+        return TweenHelper(ActionScaleBy::Create(dur, scale_x, scale_y));
     }
 
     /// \~chinese
@@ -265,7 +265,7 @@ public:
     /// @param scale_y 纵向缩放目标值
     static inline TweenHelper ScaleTo(Duration dur, float scale_x, float scale_y)
     {
-        return TweenHelper(new kiwano::ActionScaleTo(dur, scale_x, scale_y));
+        return TweenHelper(ActionScaleTo::Create(dur, scale_x, scale_y));
     }
 
     /// \~chinese
@@ -274,7 +274,7 @@ public:
     /// @param opacity 目标透明度
     static inline TweenHelper FadeTo(Duration dur, float opacity)
     {
-        return TweenHelper(new kiwano::ActionFadeTo(dur, opacity));
+        return TweenHelper(ActionFadeTo::Create(dur, opacity));
     }
 
     /// \~chinese
@@ -282,7 +282,7 @@ public:
     /// @param duration 动画时长
     static inline TweenHelper FadeIn(Duration dur)
     {
-        return TweenHelper(new kiwano::ActionFadeIn(dur));
+        return TweenHelper(ActionFadeIn::Create(dur));
     }
 
     /// \~chinese
@@ -290,7 +290,7 @@ public:
     /// @param duration 动画时长
     static inline TweenHelper FadeOut(Duration dur)
     {
-        return TweenHelper(new kiwano::ActionFadeOut(dur));
+        return TweenHelper(ActionFadeOut::Create(dur));
     }
 
     /// \~chinese
@@ -299,7 +299,7 @@ public:
     /// @param rotation 角度相对变化值
     static inline TweenHelper RotateBy(Duration dur, float rotation)
     {
-        return TweenHelper(new kiwano::ActionRotateBy(dur, rotation));
+        return TweenHelper(ActionRotateBy::Create(dur, rotation));
     }
 
     /// \~chinese
@@ -308,7 +308,7 @@ public:
     /// @param rotation 目标角度
     static inline TweenHelper RotateTo(Duration dur, float rotation)
     {
-        return TweenHelper(new kiwano::ActionRotateTo(dur, rotation));
+        return TweenHelper(ActionRotateTo::Create(dur, rotation));
     }
 
     /// \~chinese
@@ -321,7 +321,7 @@ public:
     static inline TweenHelper Walk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
                                    float end = 1.f)
     {
-        return TweenHelper(new kiwano::ActionWalk(duration, path, rotating, start, end));
+        return TweenHelper(ActionWalk::Create(duration, path, rotating, start, end));
     }
 
     /// \~chinese
@@ -330,7 +330,7 @@ public:
     /// @param[in] frame_seq 序列帧
     static inline TweenHelper Animation(Duration dur, FrameSequencePtr frames)
     {
-        return TweenHelper(new kiwano::Animation(dur, frames));
+        return TweenHelper(Animation::Create(dur, frames));
     }
 
     /// \~chinese
@@ -339,7 +339,7 @@ public:
     /// @param tween_func 动画回调函数
     static inline TweenHelper Custom(Duration dur, ActionCustom::TweenFunc tween_func)
     {
-        return TweenHelper(new kiwano::ActionCustom(dur, tween_func));
+        return TweenHelper(ActionCustom::Create(dur, tween_func));
     }
 
     /// \~chinese
@@ -347,7 +347,7 @@ public:
     /// @param delay 延时时长
     static inline ActionHelper Delay(Duration delay)
     {
-        return ActionHelper(new kiwano::ActionDelay(delay));
+        return ActionHelper(ActionDelay::Create(delay));
     }
 
     /// \~chinese
@@ -356,7 +356,7 @@ public:
     /// @param sync 同步执行
     static inline ActionHelper Group(Vector<ActionPtr> const& actions, bool sync = false)
     {
-        return ActionHelper(new kiwano::ActionGroup(actions, sync));
+        return ActionHelper(ActionGroup::Create(actions, sync));
     }
 };
 

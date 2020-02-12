@@ -23,39 +23,37 @@
 
 namespace kiwano
 {
-ActionWalk::ActionWalk(Duration duration, bool rotating, float start, float end, EaseFunc func)
-    : ActionTween(duration, func)
-    , start_(start)
-    , end_(end)
-    , rotating_(rotating)
+
+ActionWalkPtr ActionWalk::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
+{
+    ActionWalkPtr ptr = new (std::nothrow) ActionWalk;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetPath(path);
+        ptr->SetRotating(rotating);
+        ptr->SetStartValue(start);
+        ptr->SetEndValue(end);
+    }
+    return ptr;
+}
+
+ActionWalk::ActionWalk()
+    : start_(0.0f)
+    , end_(1.0f)
+    , rotating_(false)
     , length_(0.f)
 {
 }
 
-ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float start, float end, EaseFunc func)
-    : ActionWalk(duration, rotating, start, end, func)
-{
-    path_ = path;
-}
-
 ActionPtr ActionWalk::Clone() const
 {
-    ActionWalkPtr clone = new ActionWalk(GetDuration(), rotating_, start_, end_, GetEaseFunc());
-    if (clone)
-    {
-        clone->SetPath(path_);
-    }
-    return clone;
+    return ActionWalk::Create(GetDuration(), path_, rotating_, start_, end_);
 }
 
 ActionPtr ActionWalk::Reverse() const
 {
-    ActionWalkPtr reverse = new ActionWalk(GetDuration(), rotating_, end_, start_, GetEaseFunc());
-    if (reverse)
-    {
-        reverse->SetPath(path_);
-    }
-    return reverse;
+    return ActionWalk::Create(GetDuration(), path_, rotating_, end_, start_);
 }
 
 void ActionWalk::Init(Actor* target)

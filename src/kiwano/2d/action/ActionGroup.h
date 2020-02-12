@@ -37,25 +37,27 @@ class KGE_API ActionGroup : public Action
 public:
     using ActionList = IntrusiveList<ActionPtr>;
 
-    ActionGroup();
-
     /// \~chinese
-    /// @brief 动画组合
+    /// @brief 创建动画组合
     /// @param actions 动画集合
     /// @param sync 同步执行
-    explicit ActionGroup(Vector<ActionPtr> const& actions, bool sync = false);
+    static ActionGroupPtr Create(Vector<ActionPtr> const& actions, bool sync = false);
+
+    ActionGroup();
+
+    ActionGroup(bool sync);
 
     virtual ~ActionGroup();
 
     /// \~chinese
     /// @brief 添加动画
     /// @param action 动画
-    void Add(ActionPtr action);
+    void AddAction(ActionPtr action);
 
     /// \~chinese
     /// @brief 添加多个动画
     /// @param actions 动画集合
-    void Add(Vector<ActionPtr> const& actions);
+    void AddActions(Vector<ActionPtr> const& actions);
 
     /// \~chinese
     /// @brief 获取所有动画

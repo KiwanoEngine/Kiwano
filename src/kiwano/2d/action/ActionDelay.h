@@ -23,6 +23,9 @@
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(ActionDelay);
+
 /**
  * \addtogroup Actions
  * @{
@@ -34,9 +37,9 @@ class KGE_API ActionDelay : public Action
 {
 public:
     /// \~chinese
-    /// @brief 构建延时动画
+    /// @brief 创建延时动画
     /// @param delay 延时时长
-    ActionDelay(Duration delay);
+    static ActionDelayPtr Create(Duration delay);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象

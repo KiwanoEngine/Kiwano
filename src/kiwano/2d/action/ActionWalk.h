@@ -38,24 +38,48 @@ class KGE_API ActionWalk : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief 构造路径行走动画
-    /// @param duration 持续时长
-    /// @param rotating 是否沿路径切线方向旋转
-    /// @param start 路径起点（百分比）
-    /// @param end 路径终点（百分比）
-    /// @param func 动画速度缓动函数
-    ActionWalk(Duration duration, bool rotating = false, float start = 0.f, float end = 1.f, EaseFunc func = nullptr);
-
-    /// \~chinese
-    /// @brief 构造路径行走动画
+    /// @brief 创建路径行走动画
     /// @param duration 持续时长
     /// @param path 路径形状
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    /// @param func 动画速度缓动函数
-    ActionWalk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f,
-               EaseFunc func = nullptr);
+    static ActionWalkPtr Create(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
+                                float end = 1.f);
+
+    ActionWalk();
+
+    /// \~chinese
+    /// @brief 获取路线
+    ShapePtr GetPath() const;
+
+    /// \~chinese
+    /// @brief 是否沿路径切线方向旋转
+    bool IsRotating() const;
+
+    /// \~chinese
+    /// @brief 获取路径起点（百分比）
+    float GetStartValue() const;
+
+    /// \~chinese
+    /// @brief 获取路径终点（百分比）
+    float GetEndValue() const;
+
+    /// \~chinese
+    /// @brief 设置路径形状
+    void SetPath(ShapePtr path);
+
+    /// \~chinese
+    /// @brief 设置沿路径切线方向旋转
+    void SetRotating(bool rotating);
+
+    /// \~chinese
+    /// @brief 设置路径起点（百分比）
+    void SetStartValue(float start);
+
+    /// \~chinese
+    /// @brief 设置路径终点（百分比）
+    void SetEndValue(float end);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -64,14 +88,6 @@ public:
     /// \~chinese
     /// @brief 获取该动画的倒转
     ActionPtr Reverse() const override;
-
-    /// \~chinese
-    /// @brief 获取路线
-    ShapePtr const& GetPath() const;
-
-    /// \~chinese
-    /// @brief 设置路径形状
-    void SetPath(ShapePtr path);
 
 protected:
     void Init(Actor* target) override;
@@ -89,13 +105,44 @@ private:
 
 /** @} */
 
-inline ShapePtr const& ActionWalk::GetPath() const
+inline ShapePtr ActionWalk::GetPath() const
 {
     return path_;
+}
+
+inline bool ActionWalk::IsRotating() const
+{
+    return rotating_;
+}
+
+inline float ActionWalk::GetStartValue() const
+{
+    return start_;
+}
+
+inline float ActionWalk::GetEndValue() const
+{
+    return end_;
 }
 
 inline void ActionWalk::SetPath(ShapePtr path)
 {
     path_ = path;
 }
+
+inline void ActionWalk::SetRotating(bool rotating)
+{
+    rotating_ = rotating;
+}
+
+inline void ActionWalk::SetStartValue(float start)
+{
+    start_ = start;
+}
+
+inline void ActionWalk::SetEndValue(float end)
+{
+    end_ = end;
+}
+
 }  // namespace kiwano

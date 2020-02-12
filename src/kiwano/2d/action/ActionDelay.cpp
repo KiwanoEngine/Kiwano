@@ -22,19 +22,25 @@
 
 namespace kiwano
 {
-ActionDelay::ActionDelay(Duration delay)
+
+ActionDelayPtr ActionDelay::Create(Duration delay)
 {
-    SetDelay(delay);
+    ActionDelayPtr ptr = new (std::nothrow) ActionDelay;
+    if (ptr)
+    {
+        ptr->SetDelay(delay);
+    }
+    return ptr;
 }
 
 ActionPtr ActionDelay::Clone() const
 {
-    return new ActionDelay(GetDelay());
+    return ActionDelay::Create(GetDelay());
 }
 
 ActionPtr ActionDelay::Reverse() const
 {
-    return new ActionDelay(GetDelay());
+    return ActionDelay::Create(GetDelay());
 }
 
 }  // namespace kiwano

@@ -36,14 +36,13 @@ KGE_DECLARE_SMART_PTR(Animation);
 class KGE_API Animation : public ActionTween
 {
 public:
-    Animation();
-
     /// \~chinese
-    /// @brief 构建帧动画
+    /// @brief 创建帧动画
     /// @param duration 动画时长
     /// @param[in] frame_seq 序列帧
-    /// @param func 动画速度缓动函数
-    Animation(Duration duration, FrameSequencePtr frame_seq, EaseFunc func = nullptr);
+    static AnimationPtr Create(Duration duration, FrameSequencePtr frame_seq);
+
+    Animation();
 
     virtual ~Animation();
 

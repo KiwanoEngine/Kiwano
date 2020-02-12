@@ -24,16 +24,21 @@
 
 namespace kiwano
 {
+
+AnimationPtr Animation::Create(Duration duration, FrameSequencePtr frame_seq)
+{
+    AnimationPtr ptr = new (std::nothrow) Animation;
+    if (ptr)
+    {
+        ptr->SetDuration(duration);
+        ptr->SetFrameSequence(frame_seq);
+    }
+    return ptr;
+}
+
 Animation::Animation()
     : frame_seq_(nullptr)
 {
-}
-
-Animation::Animation(Duration duration, FrameSequencePtr frame_seq, EaseFunc func)
-    : ActionTween(duration, func)
-    , frame_seq_(nullptr)
-{
-    this->SetFrameSequence(frame_seq);
 }
 
 Animation::~Animation() {}
@@ -84,7 +89,7 @@ ActionPtr Animation::Clone() const
 {
     if (frame_seq_)
     {
-        return new (std::nothrow) Animation(GetDuration(), frame_seq_, GetEaseFunc());
+        return Animation::Create(GetDuration(), frame_seq_);
     }
     return nullptr;
 }
@@ -96,7 +101,7 @@ ActionPtr Animation::Reverse() const
         FrameSequencePtr frames = frame_seq_->Reverse();
         if (frames)
         {
-            return new (std::nothrow) Animation(GetDuration(), frames, GetEaseFunc());
+            return Animation::Create(GetDuration(), frames);
         }
     }
     return nullptr;
