@@ -20,6 +20,7 @@
 
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Logger.h>
+#include <kiwano/core/Exception.h>
 
 namespace kiwano
 {
@@ -51,8 +52,7 @@ XAudio2::XAudio2()
     }
     else
     {
-        KGE_ERROR("Load xaudio2.dll failed");
-        throw std::runtime_error("Load xaudio2.dll failed");
+        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load xaudio2.dll failed");
     }
 }
 
@@ -79,8 +79,7 @@ MediaFoundation::MediaFoundation()
     }
     else
     {
-        KGE_ERROR("Load Mfplat.dll failed");
-        throw std::runtime_error("Load Mfplat.dll failed");
+        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load Mfplat.dll failed");
     }
 
     if (mfreadwrite.Load("Mfreadwrite.dll"))
@@ -92,8 +91,7 @@ MediaFoundation::MediaFoundation()
     }
     else
     {
-        KGE_ERROR("Load Mfreadwrite.dll failed");
-        throw std::runtime_error("Load Mfreadwrite.dll failed");
+        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load Mfreadwrite.dll failed");
     }
 }
 }  // namespace dlls

@@ -41,8 +41,7 @@ Shlwapi::Shlwapi()
     }
     else
     {
-        KGE_ERROR("Load shlapi.dll failed");
-        throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Load shlapi.dll failed");
+        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load shlapi.dll failed");
     }
 }
 

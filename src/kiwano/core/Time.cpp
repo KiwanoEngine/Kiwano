@@ -358,7 +358,7 @@ Duration Duration::Parse(const String& format)
 
     if (!std::regex_match(format.c_str(), duration_regex))
     {
-        throw Exception("Duration::Parse failed, invalid duration");
+        KGE_THROW("Duration::Parse failed, invalid duration");
     }
 
     if (format.empty() || format == "0")
@@ -391,7 +391,7 @@ Duration Duration::Parse(const String& format)
         pos = i;
 
         if (num_str.empty() || num_str == ".")
-            throw Exception("Duration::Parse failed, invalid duration");
+            KGE_THROW("Duration::Parse failed, invalid duration");
 
         // 单位
         for (; i < len; ++i)
@@ -408,7 +408,7 @@ Duration Duration::Parse(const String& format)
         pos = i;
 
         if (unit_map.find(unit_str) == unit_map.end())
-            throw Exception("Duration::Parse failed, invalid duration");
+            KGE_THROW("Duration::Parse failed, invalid duration");
 
         double   num  = std::stod(num_str.c_str());
         Duration unit = unit_map.at(unit_str);

@@ -86,7 +86,7 @@ void RenderContextImpl::BeginDraw()
 
 void RenderContextImpl::EndDraw()
 {
-    win32::ThrowIfFailed(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
+    ThrowIfFailed(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
 
     RenderContext::EndDraw();
 
@@ -271,7 +271,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
         texture.SetBitmap(saved_bitmap);
     }
 
-    win32::ThrowIfFailed(hr, "Create texture failed");
+    ThrowIfFailed(hr, "Create texture failed");
 }
 
 void RenderContextImpl::PushClipRect(Rect const& clip_rect)
@@ -302,7 +302,7 @@ void RenderContextImpl::PushLayer(Layer& layer)
         }
         else
         {
-            win32::ThrowIfFailed(hr, "Create ID2D1Layer failed");
+            ThrowIfFailed(hr, "Create ID2D1Layer failed");
         }
     }
 

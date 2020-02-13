@@ -236,9 +236,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     if (handle_ == nullptr)
     {
         ::UnregisterClassW(L"KiwanoAppWnd", hinst);
-
-        KGE_ERROR("Failed with HRESULT of %08X", HRESULT_FROM_WIN32(GetLastError()));
-        throw SystemException(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
+        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
 
     width_  = width;

@@ -21,7 +21,7 @@
 #include <kiwano-audio/AudioEngine.h>
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/platform/win32/helper.h>  // win32::ThrowIfFailed
+#include <kiwano/core/Exception.h>
 
 namespace kiwano
 {
@@ -51,7 +51,7 @@ void AudioEngine::SetupComponent()
         hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
     }
 
-    win32::ThrowIfFailed(hr, "Create audio resources failed");
+    ThrowIfFailed(hr, "Create audio resources failed");
 }
 
 void AudioEngine::DestroyComponent()
@@ -85,7 +85,8 @@ bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
     if (SUCCEEDED(hr))
     {
         IXAudio2SourceVoice* voice = nullptr;
-        hr                         = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
+
+        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
 
         if (SUCCEEDED(hr))
         {
@@ -100,8 +101,12 @@ bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
         }
     }
 
-    win32::WarnIfFailed(hr, "Create sound failed");
-    return SUCCEEDED(hr);
+    if (FAILED(hr))
+    {
+        KGE_ERROR("Create IXAudio2SourceVoice failed with HRESULT of %08X", hr);
+        return false;
+    }
+    return true;
 }
 
 void AudioEngine::Open()

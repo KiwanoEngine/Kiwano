@@ -183,7 +183,7 @@ void TextLayout::SetWrapWidth(float wrap_width)
                 }
             }
         }
-        win32::ThrowIfFailed(hr, "Apply word wrapping to text layout failed");
+        ThrowIfFailed(hr, "Apply word wrapping to text layout failed");
     }
 }
 
@@ -202,7 +202,7 @@ void TextLayout::SetLineSpacing(float line_spacing)
         {
             hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, line_spacing, line_spacing * 0.8f);
         }
-        win32::ThrowIfFailed(hr, "Apply line spacing to text layout failed");
+        ThrowIfFailed(hr, "Apply line spacing to text layout failed");
     }
 }
 
@@ -213,7 +213,7 @@ void TextLayout::SetAlignment(TextAlign align)
     if (text_layout_)
     {
         HRESULT hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(align));
-        win32::ThrowIfFailed(hr, "Apply alignment style to text layout failed");
+        ThrowIfFailed(hr, "Apply alignment style to text layout failed");
     }
 }
 
@@ -228,7 +228,7 @@ void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
     {
         hr = text_layout_->SetUnderline(enable, { start, length });
     }
-    win32::ThrowIfFailed(hr, "Apply underline style to text layout failed");
+    ThrowIfFailed(hr, "Apply underline style to text layout failed");
 }
 
 void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
@@ -242,7 +242,7 @@ void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
     {
         hr = text_layout_->SetStrikethrough(enable, { start, length });
     }
-    win32::ThrowIfFailed(hr, "Apply strikethrough style to text layout failed");
+    ThrowIfFailed(hr, "Apply strikethrough style to text layout failed");
 }
 
 }  // namespace kiwano

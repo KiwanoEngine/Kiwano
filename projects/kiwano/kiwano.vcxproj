@@ -61,7 +61,6 @@
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\platform\win32\helper.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
@@ -137,7 +136,6 @@
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp" />
-    <ClCompile Include="..\..\src\kiwano\platform\win32\StackWalker.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\win32\WindowImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Brush.cpp" />

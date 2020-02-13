@@ -50,7 +50,7 @@ void RendererImpl::SetupComponent()
 {
     KGE_SYS_LOG("Creating device resources");
 
-    win32::ThrowIfFailed(::CoInitialize(nullptr), "CoInitialize failed");
+    ThrowIfFailed(::CoInitialize(nullptr), "CoInitialize failed");
 
     HWND target_window = WindowImpl::GetInstance().GetHandle();
     output_size_   = Window::GetInstance().GetSize();
@@ -112,7 +112,7 @@ void RendererImpl::SetupComponent()
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create render resources failed");
+    ThrowIfFailed(hr, "Create render resources failed");
 }
 
 void RendererImpl::DestroyComponent()
@@ -165,7 +165,7 @@ void RendererImpl::Present()
         hr = HandleDeviceLost();
     }
 
-    win32::ThrowIfFailed(hr, "Unexpected DXGI exception");
+    ThrowIfFailed(hr, "Unexpected DXGI exception");
 }
 
 void RendererImpl::HandleEvent(Event* evt)
@@ -206,7 +206,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_WARN("Texture file '%s' not found!", file_path.c_str());
-        hr = E_FAIL;
+        hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
     }
 
     if (SUCCEEDED(hr))
@@ -244,7 +244,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (FAILED(hr))
     {
-        win32::ThrowIfFailed(hr, "Load texture failed");
+        ThrowIfFailed(hr, "Load texture failed");
     }
 }
 
@@ -311,7 +311,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         KGE_WARN("Gif texture file '%s' not found!", file_path.c_str());
-        hr = E_FAIL;
+        hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
     }
 
     if (SUCCEEDED(hr))
@@ -537,7 +537,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
         if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
             KGE_WARN("Font file '%s' not found!", file_path.c_str());
-            hr = E_FAIL;
+            hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
         }
     }
 
@@ -562,7 +562,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create font collection failed");
+    ThrowIfFailed(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
@@ -593,7 +593,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create font collection failed");
+    ThrowIfFailed(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateTextFormat(TextLayout& layout)
@@ -620,7 +620,7 @@ void RendererImpl::CreateTextFormat(TextLayout& layout)
         layout.SetTextFormat(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create text format failed");
+    ThrowIfFailed(hr, "Create text format failed");
 }
 
 void RendererImpl::CreateTextLayout(TextLayout& layout)
@@ -644,7 +644,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
         layout.SetTextLayout(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create text layout failed");
+    ThrowIfFailed(hr, "Create text layout failed");
 }
 
 void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos)
@@ -680,7 +680,7 @@ void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point c
         shape.SetGeometry(path_geo);
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
+    ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
@@ -702,7 +702,7 @@ void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1RectangleGeometry failed");
+    ThrowIfFailed(hr, "Create ID2D1RectangleGeometry failed");
 }
 
 void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius)
@@ -725,7 +725,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 c
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1RoundedRectangleGeometry failed");
+    ThrowIfFailed(hr, "Create ID2D1RoundedRectangleGeometry failed");
 }
 
 void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius)
@@ -748,7 +748,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 co
         shape.SetGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1EllipseGeometry failed");
+    ThrowIfFailed(hr, "Create ID2D1EllipseGeometry failed");
 }
 
 void RendererImpl::CreateShapeSink(ShapeSink& sink)
@@ -770,7 +770,7 @@ void RendererImpl::CreateShapeSink(ShapeSink& sink)
         sink.SetPathGeometry(output);
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
+    ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, Color const& color)
@@ -804,7 +804,7 @@ void RendererImpl::CreateBrush(Brush& brush, Color const& color)
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1SolidBrush failed");
+    ThrowIfFailed(hr, "Create ID2D1SolidBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
@@ -836,7 +836,7 @@ void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1LinearGradientBrush failed");
+    ThrowIfFailed(hr, "Create ID2D1LinearGradientBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
@@ -869,7 +869,7 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1RadialGradientBrush failed");
+    ThrowIfFailed(hr, "Create ID2D1RadialGradientBrush failed");
 }
 
 void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
@@ -896,7 +896,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, Li
         }
     }
 
-    win32::ThrowIfFailed(hr, "Create ID2D1StrokeStyle failed");
+    ThrowIfFailed(hr, "Create ID2D1StrokeStyle failed");
 }
 
 TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* desired_size)
@@ -965,7 +965,7 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
         render_ctx_->Resize(output_size_);
     }
 
-    win32::ThrowIfFailed(hr, "Resize render target failed");
+    ThrowIfFailed(hr, "Resize render target failed");
 }
 
 }  // namespace kiwano

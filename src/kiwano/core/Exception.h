@@ -20,72 +20,83 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/macros.h>
 #include <stdexcept>
+#include <system_error>
+
+#define KGE_THROW(MESSAGE)                 \
+    do                                     \
+    {                                      \
+        kiwano::StackTracer().Print();     \
+        throw std::runtime_error(MESSAGE); \
+    } while (0)
+
+#define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                        \
+    do                                                                                  \
+    {                                                                                   \
+        kiwano::StackTracer().Print();                                                  \
+        throw std::system_error(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
+    } while (0)
 
 namespace kiwano
 {
 
-/**
- * \~chinese
- * @brief 异常
- */
-class KGE_API Exception : public std::exception
+class StackTracer
 {
 public:
-    Exception();
+    StackTracer();
 
-    /// \~chinese
-    /// @brief 构造异常
-    /// @param message 描述异常的信息
-    explicit Exception(String const& message);
-
-    virtual ~Exception();
-
-    /// \~chinese
-    /// @brief 转为解释性字符串
-    const String& ToString() const;
-
-    /// \~chinese
-    /// @brief 转为解释性字符串
-    virtual const char* what() const override;
-
-protected:
-    String message_;
+    void Print() const;
 };
 
-/**
- * \~chinese
- * @brief 系统异常
- */
-class SystemException : public Exception
+#ifdef KGE_WIN32
+
+// Enables classifying error codes
+// @note We don't bother listing all possible values
+enum class error_enum
 {
-public:
-#if defined(KGE_WIN32)
-    /// \~chinese
-    /// @brief 错误代码类型
-    typedef HRESULT ErrorCodeType;
+};
+
+#else
+
+typedef std::errc error_enum;
+
 #endif
 
-    SystemException();
+}  // namespace kiwano
 
-    /// \~chinese
-    /// @brief 构造系统异常
-    /// @param code 错误代码
-    /// @param message 描述异常的信息
-    SystemException(ErrorCodeType code, String const& message);
+#ifdef KGE_WIN32
 
-    /// \~chinese
-    /// @brief 获取错误代码
-    ErrorCodeType GetErrorCode() const;
-
-private:
-    ErrorCodeType code_;
-};
-
-inline SystemException::ErrorCodeType SystemException::GetErrorCode() const
+namespace std
 {
-    return code_;
+template <>
+struct is_error_code_enum<kiwano::error_enum> : true_type
+{
+};
+}  // namespace std
+
+namespace kiwano
+{
+
+const std::error_category& com_category() noexcept;
+
+inline std::error_code make_error_code(kiwano::error_enum errc) noexcept
+{
+    return std::error_code(static_cast<int>(errc), kiwano::com_category());
+}
+
+inline std::error_condition make_error_condition(kiwano::error_enum errc) noexcept
+{
+    return std::error_condition(static_cast<int>(errc), kiwano::com_category());
+}
+
+inline void ThrowIfFailed(HRESULT hr, const String& message)
+{
+    if (FAILED(hr))
+    {
+        KGE_THROW_SYSTEM_ERROR(hr, message.c_str());
+    }
 }
 
 }  // namespace kiwano
+
+#endif  // KGE_WIN32

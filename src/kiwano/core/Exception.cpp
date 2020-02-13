@@ -19,42 +19,275 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Exception.h>
+#include <kiwano/core/Library.h>
+#include <kiwano/core/Logger.h>
+
+#if defined(KGE_WIN32)
+#include <comdef.h>
 
 namespace kiwano
 {
 
-Exception::Exception()
+class com_error_category : public std::error_category
 {
+public:
+    using error_category::error_category;
+
+    const char* name() const noexcept override
+    {
+        return "com";
+    }
+
+    // @note If _UNICODE is defined the error description gets
+    // converted to an ANSI string using the CP_ACP codepage.
+    std::string message(int hr) const override
+    {
+#ifdef _UNICODE
+        auto message = WideToMultiByte(_com_error{ hr }.ErrorMessage());
+        return message.c_str();
+#else
+        return _com_error{ hr }.ErrorMessage();
+#endif
+    }
+
+    // Make error_condition for error code (generic if possible)
+    // @return system's default error condition if error value can be mapped to a Windows error, error condition with
+    // com category otherwise
+    std::error_condition default_error_condition(int hr) const noexcept override
+    {
+        if (HRESULT_CODE(hr) || hr == 0)
+            // system error condition
+            return std::system_category().default_error_condition(HRESULT_CODE(hr));
+        else
+            // special error condition
+            return { hr, com_category() };
+    }
+};
+
+static kiwano::com_error_category com_ecat;
+
+const std::error_category& com_category() noexcept
+{
+    return com_ecat;
 }
 
-Exception::Exception(String const& message)
-    : message_(message)
+}  // namespace kiwano
+
+
+KGE_SUPPRESS_WARNING_PUSH
+KGE_SUPPRESS_WARNING(4091)
+#include <dbghelp.h>  // ignored on left of 'type' when no variable is declared
+KGE_SUPPRESS_WARNING_POP
+
+namespace kiwano
 {
+
+namespace
+{
+
+// SymInitialize()
+typedef BOOL(__stdcall* PFN_SymInitialize)(IN HANDLE hProcess, IN PSTR UserSearchPath, IN BOOL fInvadeProcess);
+
+// SymCleanup()
+typedef BOOL(__stdcall* PFN_SymCleanup)(IN HANDLE hProcess);
+
+// SymGetLineFromAddr64()
+typedef BOOL(__stdcall* PFN_SymGetLineFromAddr64)(IN HANDLE hProcess, IN DWORD64 dwAddr, OUT PDWORD pdwDisplacement,
+                                                  OUT PIMAGEHLP_LINE64 Line);
+
+// SymGetSymFromAddr64()
+typedef BOOL(__stdcall* PFN_SymGetSymFromAddr64)(IN HANDLE hProcess, IN DWORD64 dwAddr, OUT PDWORD64 pdwDisplacement,
+                                                 OUT PIMAGEHLP_SYMBOL64 Symbol);
+
+// StackWalk64()
+typedef BOOL(__stdcall* PFN_StackWalk64)(DWORD MachineType, HANDLE hProcess, HANDLE hThread, LPSTACKFRAME64 StackFrame,
+                                         PVOID ContextRecord, PREAD_PROCESS_MEMORY_ROUTINE64 ReadMemoryRoutine,
+                                         PFUNCTION_TABLE_ACCESS_ROUTINE64 FunctionTableAccessRoutine,
+                                         PGET_MODULE_BASE_ROUTINE64       GetModuleBaseRoutine,
+                                         PTRANSLATE_ADDRESS_ROUTINE64     TranslateAddress);
+
+// SymFunctionTableAccess64()
+typedef PVOID(__stdcall* PFN_SymFunctionTableAccess64)(HANDLE hProcess, DWORD64 AddrBase);
+
+// SymGetModuleBase64()
+typedef DWORD64(__stdcall* PFN_SymGetModuleBase64)(IN HANDLE hProcess, IN DWORD64 dwAddr);
+
+struct DbgHelp
+{
+    Library                      dbgLib;
+    PFN_SymInitialize            SymInitialize;
+    PFN_SymCleanup               SymCleanup;
+    PFN_SymGetLineFromAddr64     SymGetLineFromAddr64;
+    PFN_SymGetSymFromAddr64      SymGetSymFromAddr64;
+    PFN_StackWalk64              StackWalk64;
+    PFN_SymFunctionTableAccess64 SymFunctionTableAccess64;
+    PFN_SymGetModuleBase64       SymGetModuleBase64;
+
+    DbgHelp()
+        : SymInitialize(nullptr)
+        , SymCleanup(nullptr)
+        , SymGetLineFromAddr64(nullptr)
+        , SymGetSymFromAddr64(nullptr)
+        , StackWalk64(nullptr)
+        , SymFunctionTableAccess64(nullptr)
+        , SymGetModuleBase64(nullptr)
+    {
+    }
+
+    bool Load()
+    {
+        if (IsValid())
+            return true;
+
+        if (!dbgLib.Load("dbghelp.dll"))
+            return false;
+
+        SymInitialize            = dbgLib.GetProcess<PFN_SymInitialize>("SymInitialize");
+        SymCleanup               = dbgLib.GetProcess<PFN_SymCleanup>("SymCleanup");
+        SymGetLineFromAddr64     = dbgLib.GetProcess<PFN_SymGetLineFromAddr64>("SymGetLineFromAddr64");
+        SymGetSymFromAddr64      = dbgLib.GetProcess<PFN_SymGetSymFromAddr64>("SymGetSymFromAddr64");
+        StackWalk64              = dbgLib.GetProcess<PFN_StackWalk64>("StackWalk64");
+        SymFunctionTableAccess64 = dbgLib.GetProcess<PFN_SymFunctionTableAccess64>("SymFunctionTableAccess64");
+        SymGetModuleBase64       = dbgLib.GetProcess<PFN_SymGetModuleBase64>("SymGetModuleBase64");
+
+        if (!IsValid())
+        {
+            dbgLib.Free();
+            return false;
+        }
+        return true;
+    }
+
+    bool IsValid() const
+    {
+        return SymInitialize && SymCleanup && SymGetLineFromAddr64 && SymGetSymFromAddr64 && StackWalk64
+               && SymFunctionTableAccess64 && SymGetModuleBase64;
+    }
+};
+
+DbgHelp g_DbgHelp;
+
+}  // namespace
+
+void PrintErrorCode(LPCSTR lpszFunction)
+{
+    KGE_ERROR("%s failed with HRESULT of %08X", lpszFunction, HRESULT_FROM_WIN32(GetLastError()));
 }
 
-Exception::~Exception()
+void PrintCallStackOnContext(PCONTEXT pContext)
 {
+    if (!g_DbgHelp.Load())
+        return;
+
+    if (pContext == nullptr)
+        return;
+
+    DWORD        dwMachineType;
+    STACKFRAME64 sf;
+    HANDLE       hProcess = GetCurrentProcess();
+    HANDLE       hThread  = GetCurrentThread();
+
+    ZeroMemory(&sf, sizeof(sf));
+
+    sf.AddrPC.Mode     = AddrModeFlat;
+    sf.AddrFrame.Mode  = AddrModeFlat;
+    sf.AddrStack.Mode  = AddrModeFlat;
+    sf.AddrBStore.Mode = AddrModeFlat;
+
+#ifdef _M_IX86
+    dwMachineType       = IMAGE_FILE_MACHINE_I386;
+    sf.AddrPC.Offset    = pContext->Eip;
+    sf.AddrFrame.Offset = pContext->Ebp;
+    sf.AddrStack.Offset = pContext->Esp;
+#elif _M_X64
+    dwMachineType       = IMAGE_FILE_MACHINE_AMD64;
+    sf.AddrPC.Offset    = pContext->Rip;
+    sf.AddrFrame.Offset = pContext->Rsp;
+    sf.AddrStack.Offset = pContext->Rsp;
+#elif _M_IA64
+    dwMachineType        = IMAGE_FILE_MACHINE_IA64;
+    sf.AddrPC.Offset     = pContext->StIIP;
+    sf.AddrFrame.Offset  = pContext->IntSp;
+    sf.AddrBStore.Offset = pContext->RsBSP;
+    sf.AddrStack.Offset  = pContext->IntSp;
+#else
+#error "Platform not supported!"
+#endif
+
+    constexpr int STACKWALK_MAX_NAMELEN = 1024;
+    BYTE          symbolBuffer[sizeof(IMAGEHLP_SYMBOL64) + STACKWALK_MAX_NAMELEN];
+
+    KGE_ERROR("==========  Stack trace  ==========");
+
+    while (true)
+    {
+        if (!g_DbgHelp.StackWalk64(dwMachineType, hProcess, hThread, &sf, pContext, NULL,
+                                   g_DbgHelp.SymFunctionTableAccess64, g_DbgHelp.SymGetModuleBase64, NULL))
+        {
+            PrintErrorCode("StackWalk64");
+            break;
+        }
+
+        if (sf.AddrFrame.Offset == 0)
+        {
+            break;
+        }
+
+        ZeroMemory(symbolBuffer, sizeof(symbolBuffer));
+
+        IMAGEHLP_SYMBOL64* pSymbol = reinterpret_cast<IMAGEHLP_SYMBOL64*>(symbolBuffer);
+        pSymbol->SizeOfStruct      = sizeof(IMAGEHLP_SYMBOL64);
+        pSymbol->MaxNameLength     = STACKWALK_MAX_NAMELEN;
+
+        DWORD64 dwDisplacement;
+        if (!g_DbgHelp.SymGetSymFromAddr64(hProcess, sf.AddrPC.Offset, &dwDisplacement, pSymbol))
+        {
+            PrintErrorCode("SymGetSymFromAddr64");
+            break;
+        }
+
+        IMAGEHLP_LINE64 lineInfo;
+        ZeroMemory(&lineInfo, sizeof(IMAGEHLP_LINE64));
+        lineInfo.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+
+        DWORD dwLineDisplacement;
+        if (g_DbgHelp.SymGetLineFromAddr64(hProcess, sf.AddrPC.Offset, &dwLineDisplacement, &lineInfo))
+        {
+            KGE_ERROR("%s (%d): %s", lineInfo.FileName, lineInfo.LineNumber, pSymbol->Name);
+        }
+        else
+        {
+            KGE_ERROR("(filename not available): %s", pSymbol->Name);
+        }
+
+        if (sf.AddrReturn.Offset == 0)
+        {
+            SetLastError(ERROR_SUCCESS);
+            break;
+        }
+    }
 }
 
-const String& Exception::ToString() const
+StackTracer::StackTracer() {}
+
+void StackTracer::Print() const
 {
-    return message_;
+    CONTEXT ctx;
+    HANDLE  hProcess = GetCurrentProcess();
+
+    if (!g_DbgHelp.Load())
+        return;
+
+    if (!g_DbgHelp.SymInitialize(hProcess, NULL, TRUE))
+        return;
+
+    RtlCaptureContext(&ctx);
+
+    PrintCallStackOnContext(&ctx);
+
+    g_DbgHelp.SymCleanup(hProcess);
 }
 
-const char* Exception::what() const
-{
-    return message_.c_str();
-}
-
-SystemException::SystemException()
-    : code_(0)
-{
-}
-
-SystemException::SystemException(ErrorCodeType code, String const& message)
-    : Exception(message)
-    , code_(code)
-{
-}
+#endif
 
 }  // namespace kiwano
