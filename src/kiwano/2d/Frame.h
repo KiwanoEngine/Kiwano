@@ -97,6 +97,18 @@ public:
     Rect const& GetCropRect() const;
 
     /// \~chinese
+    /// @brief 获取图像原宽度
+    float GetSourceWidth() const;
+
+    /// \~chinese
+    /// @brief 获取图像原高度
+    float GetSourceHeight() const;
+
+    /// \~chinese
+    /// @brief 获取图像原大小
+    Size GetSourceSize() const;
+
+    /// \~chinese
     /// @brief 获取纹理
     TexturePtr GetTexture() const;
 
@@ -133,6 +145,33 @@ inline Point Frame::GetCropPoint() const
 inline Rect const& Frame::GetCropRect() const
 {
     return crop_rect_;
+}
+
+inline float Frame::GetSourceWidth() const
+{
+    if (texture_)
+    {
+        return texture_->GetWidth();
+    }
+    return 0.0f;
+}
+
+inline float Frame::GetSourceHeight() const
+{
+    if (texture_)
+    {
+        return texture_->GetHeight();
+    }
+    return 0.0f;
+}
+
+inline Size Frame::GetSourceSize() const
+{
+    if (texture_)
+    {
+        return texture_->GetSize();
+    }
+    return Size();
 }
 
 inline TexturePtr Frame::GetTexture() const

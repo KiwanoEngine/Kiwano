@@ -102,12 +102,47 @@ bool Sprite::Load(Resource const& res, bool autoresize)
     return false;
 }
 
+float Sprite::GetSourceWidth() const
+{
+    if (frame_)
+    {
+        return frame_->GetSourceWidth();
+    }
+    return 0.0f;
+}
+
+float Sprite::GetSourceHeight() const
+{
+    if (frame_)
+    {
+        return frame_->GetSourceHeight();
+    }
+    return 0.0f;
+}
+
+Size Sprite::GetSourceSize() const
+{
+    if (frame_)
+    {
+        return frame_->GetSourceSize();
+    }
+    return Size();
+}
+
+Rect Sprite::GetCropRect() const
+{
+    if (frame_)
+    {
+        return frame_->GetCropRect();
+    }
+    return Rect();
+}
+
 void Sprite::SetCropRect(const Rect& crop_rect)
 {
     if (frame_)
     {
         frame_->SetCropRect(crop_rect);
-        SetSize(Size{ frame_->GetWidth(), frame_->GetHeight() });
     }
 }
 
@@ -118,7 +153,7 @@ void Sprite::SetFrame(FramePtr frame, bool autoresize)
         frame_ = frame;
         if (frame_ && autoresize)
         {
-            SetSize(Size{ frame_->GetWidth(), frame_->GetHeight() });
+            SetSize(frame_->GetSize());
         }
     }
 }

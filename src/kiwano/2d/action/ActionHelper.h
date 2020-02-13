@@ -103,6 +103,11 @@ struct ActionHelper
         return ptr;
     }
 
+    inline ActionPtr operator->() const
+    {
+        return ptr;
+    }
+
 private:
     ActionPtr ptr;
 };
@@ -195,6 +200,11 @@ struct TweenHelper
     }
 
     inline operator ActionTweenPtr() const
+    {
+        return ptr;
+    }
+
+    inline ActionTweenPtr operator->() const
     {
         return ptr;
     }
