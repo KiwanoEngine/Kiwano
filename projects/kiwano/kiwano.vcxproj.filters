@@ -300,6 +300,9 @@
     <ClInclude Include="..\..\src\kiwano\render\Layer.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Runner.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">

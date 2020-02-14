@@ -70,6 +70,11 @@ bool Window::ShouldClose()
     return should_close_;
 }
 
+void Window::SetShouldClose(bool should)
+{
+    should_close_ = should;
+}
+
 void Window::PushEvent(EventPtr evt)
 {
     event_queue_.push(evt);

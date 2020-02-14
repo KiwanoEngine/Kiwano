@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Runner.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />

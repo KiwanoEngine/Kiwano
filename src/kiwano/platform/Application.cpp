@@ -18,40 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Director.h>
-#include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/Input.h>
+#include <kiwano/core/Director.h>
+#include <kiwano/core/Logger.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
-#include <mutex>
 
 namespace kiwano
 {
-namespace
-{
-
-using FunctionToPerform = Function<void()>;
-
-std::mutex               perform_mutex_;
-Queue<FunctionToPerform> functions_to_perform_;
-
-}  // namespace
 
 Application::Application()
-    : time_scale_(1.f)
+    : quiting_(false)
+    , time_scale_(1.f)
 {
     Use(&Renderer::GetInstance());
     Use(&Input::GetInstance());
     Use(&Director::GetInstance());
 }
 
-Application::~Application()
-{
-    Destroy();
-}
+Application::~Application() {}
 
-void Application::Run(bool debug)
+void Application::Run(Runner& runner, bool debug)
 {
     // Setup all components
     for (auto c : comps_)
@@ -66,26 +54,43 @@ void Application::Run(bool debug)
     }
 
     // Everything is ready
-    OnReady();
+    runner.OnReady();
 
+    // Initialize variables
+    quiting_          = false;
     last_update_time_ = Time::Now();
 
     Window& window = Window::GetInstance();
-    while (!window.ShouldClose())
+    while (!quiting_)
     {
-        while (EventPtr evt = window.PollEvent())
+        if (window.ShouldClose())
         {
-            DispatchEvent(evt.get());
+            if (runner.OnClosing())
+                break;
+            else
+                window.SetShouldClose(false);
         }
 
-        Update();
-        Render();
+        while (EventPtr evt = window.PollEvent())
+        {
+            this->DispatchEvent(evt.get());
+        }
+
+        this->Update();
+        this->Render();
     }
+
+    // Destroy all resources
+    runner.OnDestroy();
+    this->Destroy();
+
+    // Destroy window
+    window.Destroy();
 }
 
 void Application::Quit()
 {
-    Window::GetInstance().Destroy();
+    quiting_ = true;
 }
 
 void Application::Destroy()
@@ -99,10 +104,6 @@ void Application::Destroy()
     {
         (*iter)->DestroyComponent();
     }
-    render_comps_.clear();
-    update_comps_.clear();
-    event_comps_.clear();
-    comps_.clear();
 }
 
 void Application::Use(ComponentBase* component)

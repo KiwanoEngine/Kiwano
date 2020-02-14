@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <mutex>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Component.h>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/Runner.h>
+#include <kiwano/core/Singleton.h>
 #include <kiwano/core/event/Event.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Renderer.h>
 
@@ -35,8 +35,10 @@ namespace kiwano
  * \~chinese
  * @brief 应用程序，控制游戏的整个生命周期，包括初始化、启动、结束以及事件分发等
  */
-class KGE_API Application : protected Noncopyable
+class KGE_API Application : public Singleton<Application>
 {
+    friend Singleton<Application>;
+
 public:
     Application();
 
@@ -44,26 +46,12 @@ public:
 
     /**
      * \~chinese
-     * @brief 初始化完成处理
-     * @details 重载该函数以在应用程序初始化完成后自动执行
-     */
-    virtual void OnReady();
-
-    /**
-     * \~chinese
-     * @brief 应用程序销毁处理
-     * @details 重载该函数以处理应用程序销毁时的行为，如完成资源回收等
-     */
-    virtual void OnDestroy();
-
-    /**
-     * \~chinese
      * @brief 启动应用程序
-     * @details 初始化所有功能组件后执行 OnReady 函数
+     * @param[in] runner 程序运行器
      * @param debug 是否启用调试模式
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
-    void Run(bool debug = false);
+    void Run(Runner& runner, bool debug = false);
 
     /**
      * \~chinese
@@ -107,7 +95,7 @@ public:
      * @details 提供在其他线程调用 Kiwano 函数的能力
      * @param func 需要执行的函数
      */
-    static void PreformInMainThread(Function<void()> func);
+    void PreformInMainThread(Function<void()> func);
 
 private:
     /**
@@ -123,15 +111,15 @@ private:
     void Render();
 
 private:
+    bool                     quiting_;
     float                    time_scale_;
     Time                     last_update_time_;
     Vector<ComponentBase*>   comps_;
     Vector<RenderComponent*> render_comps_;
     Vector<UpdateComponent*> update_comps_;
     Vector<EventComponent*>  event_comps_;
+    std::mutex               perform_mutex_;
+    Queue<Function<void()>>  functions_to_perform_;
 };
 
-inline void Application::OnReady() {}
-
-inline void Application::OnDestroy() {}
 }  // namespace kiwano

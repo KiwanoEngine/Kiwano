@@ -62,7 +62,9 @@ private:
 
     void SetActive(bool actived);
 
-    static LRESULT CALLBACK WndProc(HWND, UINT32, WPARAM, LPARAM);
+    LRESULT MessageProc(HWND, UINT32, WPARAM, LPARAM);
+
+    static LRESULT CALLBACK StaticWndProc(HWND, UINT32, WPARAM, LPARAM);
 
 private:
     bool       resizable_;

@@ -77,7 +77,7 @@ void AsyncTask::TaskThread()
         func_mutex_.unlock();
     }
 
-    Application::PreformInMainThread(Closure(this, &AsyncTask::Complete));
+    Application::GetInstance().PreformInMainThread(Closure(this, &AsyncTask::Complete));
 }
 
 void AsyncTask::Complete()

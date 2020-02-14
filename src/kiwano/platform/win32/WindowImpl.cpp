@@ -166,7 +166,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     wcex.cbSize        = sizeof(WNDCLASSEX);
     wcex.lpszClassName = L"KiwanoAppWnd";
     wcex.style         = CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
-    wcex.lpfnWndProc   = WindowImpl::WndProc;
+    wcex.lpfnWndProc   = WindowImpl::StaticWndProc;
     wcex.hIcon         = nullptr;
     wcex.cbClsExtra    = 0;
     wcex.cbWndExtra    = sizeof(LONG_PTR);
@@ -437,25 +437,19 @@ void WindowImpl::SetActive(bool actived)
     }
 }
 
-LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
+LRESULT WindowImpl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 {
-    WindowImpl* window = reinterpret_cast<WindowImpl*>(static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA)));
-    if (window == nullptr)
-    {
-        return ::DefWindowProcW(hwnd, msg, wparam, lparam);
-    }
-
     switch (msg)
     {
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
     {
-        KeyCode key = window->key_map_[size_t(wparam)];
+        KeyCode key = this->key_map_[size_t(wparam)];
         if (key != KeyCode::Unknown)
         {
             KeyDownEventPtr evt = new KeyDownEvent;
             evt->code           = key;
-            window->PushEvent(evt);
+            this->PushEvent(evt);
         }
     }
     break;
@@ -463,12 +457,12 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_KEYUP:
     case WM_SYSKEYUP:
     {
-        KeyCode key = window->key_map_[size_t(wparam)];
+        KeyCode key = this->key_map_[size_t(wparam)];
         if (key != KeyCode::Unknown)
         {
             KeyUpEventPtr evt = new KeyUpEvent;
             evt->code         = key;
-            window->PushEvent(evt);
+            this->PushEvent(evt);
         }
     }
     break;
@@ -477,7 +471,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KeyCharEventPtr evt = new KeyCharEvent;
         evt->value          = char(wparam);
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -504,7 +498,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             evt->button = MouseButton::Middle;
         }
 
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -528,7 +522,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             evt->button = MouseButton::Middle;
         }
 
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -536,7 +530,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         MouseMoveEventPtr evt = new MouseMoveEvent;
         evt->pos              = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -545,7 +539,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         MouseWheelEventPtr evt = new MouseWheelEvent;
         evt->pos               = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
         evt->wheel             = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -559,13 +553,13 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         {
             // KGE_SYS_LOG("Window resized");
 
-            window->width_  = ((uint32_t)(short)LOWORD(lparam));
-            window->height_ = ((uint32_t)(short)HIWORD(lparam));
+            this->width_    = ((uint32_t)(short)LOWORD(lparam));
+            this->height_ = ((uint32_t)(short)HIWORD(lparam));
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
-            evt->width                = window->GetWidth();
-            evt->height               = window->GetHeight();
-            window->PushEvent(evt);
+            evt->width                = this->GetWidth();
+            evt->height               = this->GetHeight();
+            this->PushEvent(evt);
         }
     }
     break;
@@ -575,7 +569,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         WindowMovedEventPtr evt = new WindowMovedEvent;
         evt->x                  = GET_X_LPARAM(lparam);
         evt->y                  = GET_Y_LPARAM(lparam);
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -583,11 +577,11 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-        window->SetActive(active);
+        this->SetActive(active);
 
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
         evt->focus                     = active;
-        window->PushEvent(evt);
+        this->PushEvent(evt);
     }
     break;
 
@@ -595,11 +589,11 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("Window title changed");
 
-        window->title_ = WideToMultiByte(reinterpret_cast<LPCWSTR>(lparam));
+        this->title_ = WideToMultiByte(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
-        evt->title                     = window->title_;
-        window->PushEvent(evt);
+        evt->title                     = this->title_;
+        this->PushEvent(evt);
     }
     break;
 
@@ -619,7 +613,7 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETCURSOR:
     {
-        window->UpdateCursor();
+        this->UpdateCursor();
     }
     break;
 
@@ -628,8 +622,9 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         KGE_SYS_LOG("Window is closing");
 
         WindowClosedEventPtr evt = new WindowClosedEvent;
-        window->PushEvent(evt);
-        window->Destroy();
+        this->PushEvent(evt);
+        this->SetShouldClose(true);
+        return 0;
     }
     break;
 
@@ -643,6 +638,17 @@ LRESULT CALLBACK WindowImpl::WndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     break;
     }
 
+    return ::DefWindowProcW(hwnd, msg, wparam, lparam);
+}
+
+LRESULT CALLBACK WindowImpl::StaticWndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
+{
+    LONG_PTR ptr = static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+    if (ptr)
+    {
+        WindowImpl* window = reinterpret_cast<WindowImpl*>(ptr);
+        return window->MessageProc(hwnd, msg, wparam, lparam);
+    }
     return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 }
 

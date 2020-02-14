@@ -235,7 +235,7 @@ void HttpClient::NetworkThread()
         response_queue_.push(response);
         response_mutex_.unlock();
 
-        Application::PreformInMainThread(Closure(this, &HttpClient::DispatchResponseCallback));
+        Application::GetInstance().PreformInMainThread(Closure(this, &HttpClient::DispatchResponseCallback));
     }
 }
 

@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/event/Event.h>
-#include <kiwano/macros.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano
@@ -157,6 +156,12 @@ public:
      * @brief 窗口是否需要关闭
      */
     bool ShouldClose();
+
+    /**
+     * \~chinese
+     * @brief 设置是否需要关闭
+     */
+    void SetShouldClose(bool should);
 
     /**
      * \~chinese
