@@ -33,31 +33,7 @@ void TextLayout::Update()
     if (!IsDirty())
         return;
 
-    if (text_.empty())
-    {
-        text_format_.reset();
-        text_layout_.reset();
-        return;
-    }
-
-    if (!text_format_ || (dirty_flag_ & DirtyFlag::DirtyFormat))
-    {
-        Renderer::GetInstance().CreateTextFormat(*this);
-    }
-
-    if (dirty_flag_ & DirtyFlag::DirtyLayout)
-    {
-        Renderer::GetInstance().CreateTextLayout(*this);
-
-        if (text_layout_)
-        {
-            SetAlignment(style_.alignment);
-            SetWrapWidth(style_.wrap_width);
-            SetLineSpacing(style_.line_spacing);
-        }
-    }
-
-    dirty_flag_ = DirtyFlag::Updated;
+    Renderer::GetInstance().CreateTextLayout(*this);
 }
 
 void TextLayout::SetText(const String& text)
@@ -122,6 +98,7 @@ uint32_t TextLayout::GetLineCount() const
     // Force to update layout
     const_cast<TextLayout*>(this)->Update();
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
         DWRITE_TEXT_METRICS metrics;
@@ -130,6 +107,9 @@ uint32_t TextLayout::GetLineCount() const
             return metrics.lineCount;
         }
     }
+#else
+    // not supported
+#endif
     return 0;
 }
 
@@ -138,6 +118,7 @@ Size TextLayout::GetLayoutSize() const
     // Force to update layout
     const_cast<TextLayout*>(this)->Update();
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
         DWRITE_TEXT_METRICS metrics;
@@ -147,6 +128,9 @@ Size TextLayout::GetLayoutSize() const
                                              : Size(metrics.width, metrics.height);
         }
     }
+#else
+    // not supported
+#endif
     return Size();
 }
 
@@ -154,6 +138,7 @@ void TextLayout::SetWrapWidth(float wrap_width)
 {
     style_.wrap_width = wrap_width;
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
         HRESULT hr              = S_OK;
@@ -185,12 +170,16 @@ void TextLayout::SetWrapWidth(float wrap_width)
         }
         ThrowIfFailed(hr, "Apply word wrapping to text layout failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void TextLayout::SetLineSpacing(float line_spacing)
 {
     style_.line_spacing = line_spacing;
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
         HRESULT hr = S_OK;
@@ -204,17 +193,24 @@ void TextLayout::SetLineSpacing(float line_spacing)
         }
         ThrowIfFailed(hr, "Apply line spacing to text layout failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void TextLayout::SetAlignment(TextAlign align)
 {
     style_.alignment = align;
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
         HRESULT hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(align));
         ThrowIfFailed(hr, "Apply alignment style to text layout failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
@@ -222,6 +218,7 @@ void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
     // Force to update layout
     Update();
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     HRESULT hr = text_layout_ ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
@@ -229,6 +226,9 @@ void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
         hr = text_layout_->SetUnderline(enable, { start, length });
     }
     ThrowIfFailed(hr, "Apply underline style to text layout failed");
+#else
+    return;  // not supported
+#endif
 }
 
 void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
@@ -236,6 +236,7 @@ void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
     // Force to update layout
     Update();
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     HRESULT hr = text_layout_ ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
@@ -243,6 +244,9 @@ void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
         hr = text_layout_->SetStrikethrough(enable, { start, length });
     }
     ThrowIfFailed(hr, "Apply strikethrough style to text layout failed");
+#else
+    return;  // not supported
+#endif
 }
 
 }  // namespace kiwano

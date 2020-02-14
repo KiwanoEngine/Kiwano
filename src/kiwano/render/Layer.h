@@ -80,7 +80,7 @@ private:
     ShapePtr  mask_;
     Matrix3x2 mask_transform_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<ID2D1Layer> GetLayer() const;
 
@@ -95,7 +95,11 @@ private:
 
 inline bool Layer::IsValid() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     return layer_ != nullptr;
+#else
+    return false;  // not supported
+#endif
 }
 
 inline Rect const& Layer::GetClipRect() const
@@ -138,7 +142,7 @@ inline void Layer::SetMaskTransform(Matrix3x2 const& matrix)
     mask_transform_ = matrix;
 }
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<ID2D1Layer> Layer::GetLayer() const
 {
     return layer_;

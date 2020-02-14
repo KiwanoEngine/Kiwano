@@ -114,12 +114,6 @@ public:
     virtual void CreateFontCollection(Font& font, Resource const& res) = 0;
 
     /// \~chinese
-    /// @brief 创建文字格式内部资源
-    /// @param[out] layout 字体布局
-    /// @throw std::system_error 创建失败时抛出
-    virtual void CreateTextFormat(TextLayout& layout) = 0;
-
-    /// \~chinese
     /// @brief 创建文字布局内部资源
     /// @param[out] layout 字体布局
     /// @throw std::system_error 创建失败时抛出

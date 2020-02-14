@@ -112,6 +112,7 @@ void StrokeStyle::SetDashStyle(const float* dash_array, size_t dash_size)
     style_.reset();
 }
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
 {
     StrokeStyle& self = const_cast<StrokeStyle&>(*this);
@@ -122,5 +123,6 @@ ComPtr<ID2D1StrokeStyle> StrokeStyle::GetStrokeStyle() const
                                                   dash_offset_);
     return style_;
 }
+#endif
 
 }  // namespace kiwano

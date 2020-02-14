@@ -587,33 +587,6 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
     ThrowIfFailed(hr, "Create font collection failed");
 }
 
-void RendererImpl::CreateTextFormat(TextLayout& layout)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    ComPtr<IDWriteTextFormat> output;
-    if (SUCCEEDED(hr))
-    {
-        const TextStyle& style = layout.GetStyle();
-
-        hr = d2d_res_->CreateTextFormat(
-            output, MultiByteToWide(style.font_family).c_str(), style.font ? style.font->GetCollection() : nullptr,
-            DWRITE_FONT_WEIGHT(style.font_weight), style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
-            DWRITE_FONT_STRETCH_NORMAL, style.font_size);
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        layout.SetTextFormat(output);
-    }
-
-    ThrowIfFailed(hr, "Create text format failed");
-}
-
 void RendererImpl::CreateTextLayout(TextLayout& layout)
 {
     HRESULT hr = S_OK;
@@ -622,17 +595,54 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
         hr = E_UNEXPECTED;
     }
 
-    ComPtr<IDWriteTextLayout> output;
-    if (SUCCEEDED(hr))
+    if (layout.GetText().empty())
     {
-        WideString text = MultiByteToWide(layout.GetText());
-
-        hr = d2d_res_->CreateTextLayout(output, text.c_str(), text.length(), layout.GetTextFormat());
+        layout.SetTextFormat(nullptr);
+        layout.SetTextLayout(nullptr);
+        return;
     }
 
-    if (SUCCEEDED(hr))
+    if (!layout.GetTextFormat() || (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyFormat))
     {
-        layout.SetTextLayout(output);
+        ComPtr<IDWriteTextFormat> output;
+        if (SUCCEEDED(hr))
+        {
+            const TextStyle& style = layout.GetStyle();
+
+            hr = d2d_res_->CreateTextFormat(output, MultiByteToWide(style.font_family).c_str(),
+                                            style.font ? style.font->GetCollection() : nullptr,
+                                            DWRITE_FONT_WEIGHT(style.font_weight),
+                                            style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+                                            DWRITE_FONT_STRETCH_NORMAL, style.font_size);
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            layout.SetTextFormat(output);
+        }
+    }
+
+    if (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyLayout)
+    {
+        ComPtr<IDWriteTextLayout> output;
+        if (SUCCEEDED(hr))
+        {
+
+            WideString text = MultiByteToWide(layout.GetText());
+
+            hr = d2d_res_->CreateTextLayout(output, text.c_str(), text.length(), layout.GetTextFormat());
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            layout.SetTextLayout(output);
+
+            layout.SetAlignment(layout.GetStyle().alignment);
+            layout.SetWrapWidth(layout.GetStyle().wrap_width);
+            layout.SetLineSpacing(layout.GetStyle().line_spacing);
+
+            layout.SetDirtyFlag(TextLayout::DirtyFlag::Clean);
+        }
     }
 
     ThrowIfFailed(hr, "Create text layout failed");

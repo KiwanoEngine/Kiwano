@@ -27,13 +27,9 @@ namespace kiwano
 
 Shape::Shape() {}
 
-bool Shape::IsValid() const
-{
-    return geo_ != nullptr;
-}
-
 Rect Shape::GetBoundingBox() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
     if (geo_)
     {
@@ -41,10 +37,14 @@ Rect Shape::GetBoundingBox() const
         geo_->GetBounds(nullptr, DX::ConvertToRectF(&bounds));
     }
     return bounds;
+#else
+    return Rect();  // not supported
+#endif
 }
 
 Rect Shape::GetBoundingBox(Matrix3x2 const& transform) const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
     if (geo_)
     {
@@ -52,10 +52,14 @@ Rect Shape::GetBoundingBox(Matrix3x2 const& transform) const
         geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&bounds));
     }
     return bounds;
+#else
+    return Rect();  // not supported
+#endif
 }
 
 float Shape::GetLength() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     float length = 0.f;
     if (geo_)
     {
@@ -63,10 +67,14 @@ float Shape::GetLength() const
         geo_->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
     }
     return length;
+#else
+    return 0.0f;  // not supported
+#endif
 }
 
 bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (geo_)
     {
         HRESULT hr = geo_->ComputePointAtLength(length, D2D1::Matrix3x2F::Identity(), DX::ConvertToPoint2F(&point),
@@ -75,15 +83,23 @@ bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) cons
         return SUCCEEDED(hr);
     }
     return false;
+#else
+    return false;  // not supported
+#endif
 }
 
 void Shape::Clear()
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     geo_.reset();
+#else
+    return;  // not supported
+#endif
 }
 
 float Shape::ComputeArea() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (!geo_)
         return 0.f;
 
@@ -91,10 +107,14 @@ float Shape::ComputeArea() const
     // no matter it failed or not
     geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
     return area;
+#else
+    return 0.0f;  // not supported
+#endif
 }
 
 bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (!geo_)
         return false;
 
@@ -103,6 +123,9 @@ bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
     geo_->FillContainsPoint(DX::ConvertToPoint2F(point), DX::ConvertToMatrix3x2F(transform),
                             D2D1_DEFAULT_FLATTENING_TOLERANCE, &ret);
     return !!ret;
+#else
+    return false;  // not supported
+#endif
 }
 
 ShapePtr Shape::CreateLine(Point const& begin, Point const& end)

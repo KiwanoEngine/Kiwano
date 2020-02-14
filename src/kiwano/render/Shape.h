@@ -111,7 +111,7 @@ public:
     /// @brief 清除形状
     void Clear();
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<ID2D1Geometry> GetGeometry() const;
 
@@ -124,7 +124,16 @@ private:
 
 /** @} */
 
-#if defined(KGE_WIN32)
+inline bool Shape::IsValid() const
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    return geo_ != nullptr;
+#else
+    return false;  // not supported
+#endif
+}
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<ID2D1Geometry> Shape::GetGeometry() const
 {
     return geo_;

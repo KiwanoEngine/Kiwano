@@ -132,7 +132,7 @@ private:
 
     static InterpolationMode default_interpolation_mode_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     /// \~chinese
     /// @brief 获取源位图
@@ -143,10 +143,47 @@ public:
     void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
 
 private:
-    ComPtr<ID2D1Bitmap> bitmap_;
+    ComPtr<ID2D1Bitmap>   bitmap_;
+    Size                  size_;
+    math::Vec2T<uint32_t> size_in_pixels_;
 #endif
 };
 
 /** @} */
+
+inline bool Texture::IsValid() const
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    return bitmap_ != nullptr;
+#else
+    return false;  // not supported
+#endif
+}
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+inline ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
+{
+    return bitmap_;
+}
+
+inline void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
+{
+    if (bitmap_ != bitmap)
+    {
+        bitmap_ = bitmap;
+
+        if (bitmap_)
+        {
+            auto size = bitmap_->GetSize();
+            auto pixel_size = bitmap_->GetPixelSize();
+
+            size_.x           = size.width;
+            size_.y           = size.height;
+            size_in_pixels_.x = pixel_size.width;
+            size_in_pixels_.y = pixel_size.height;
+        }
+    }
+}
+#endif
 
 }  // namespace kiwano

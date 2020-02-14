@@ -165,7 +165,7 @@ private:
     String    text_;
     TextStyle style_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<IDWriteTextFormat> GetTextFormat() const;
 
@@ -185,7 +185,11 @@ private:
 
 inline bool TextLayout::IsValid() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     return text_layout_ != nullptr;
+#else
+    return false;  // not supported
+#endif
 }
 
 inline bool TextLayout::IsDirty() const
@@ -243,7 +247,7 @@ inline void TextLayout::SetOutlineStroke(StrokeStylePtr outline_stroke)
     style_.outline_stroke = outline_stroke;
 }
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
 {
     return text_format_;

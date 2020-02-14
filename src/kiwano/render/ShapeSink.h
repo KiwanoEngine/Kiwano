@@ -130,9 +130,9 @@ public:
     void Clear();
 
 private:
-    ShapePtr                  shape_;
+    ShapePtr shape_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<ID2D1PathGeometry> GetPathGeometry() const;
 
@@ -150,7 +150,7 @@ private:
 
 /** @} */
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<ID2D1PathGeometry> ShapeSink::GetPathGeometry() const
 {
     return path_geo_;

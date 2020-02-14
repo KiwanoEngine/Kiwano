@@ -62,7 +62,11 @@ public:
     /// @brief 加载字体资源
     bool Load(Resource const& resource);
 
-#if defined(KGE_WIN32)
+    /// \~chinese
+    /// @brief 是否有效
+    bool IsValid() const;
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<IDWriteFontCollection> GetCollection() const;
 
@@ -75,7 +79,16 @@ private:
 
 /** @} */
 
-#if defined(KGE_WIN32)
+inline bool Font::IsValid() const
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    return collection_ != nullptr;
+#else
+    return false;  // not supported
+#endif
+}
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<IDWriteFontCollection> Font::GetCollection() const
 {
     return collection_;

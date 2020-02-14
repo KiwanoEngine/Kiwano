@@ -90,11 +90,6 @@ Brush::Brush()
 {
 }
 
-bool Brush::IsValid() const
-{
-    return raw_ != nullptr;
-}
-
 void Brush::SetColor(Color const& color)
 {
     Renderer::GetInstance().CreateBrush(*this, color);

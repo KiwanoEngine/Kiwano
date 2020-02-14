@@ -233,7 +233,7 @@ inline bool Time::IsZero() const
 }
 }  // namespace kiwano
 
-#if defined(KGE_VS_VER) && KGE_VS_VER > KGE_VS_2013
+#if defined(KGE_HAS_LITERALS)
 
 namespace kiwano
 {

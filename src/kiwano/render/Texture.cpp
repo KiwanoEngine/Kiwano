@@ -67,65 +67,34 @@ bool Texture::Load(Resource const& res)
     return IsValid();
 }
 
-bool Texture::IsValid() const
-{
-    return bitmap_ != nullptr;
-}
-
 float Texture::GetWidth() const
 {
-    if (bitmap_)
-    {
-        return bitmap_->GetSize().width;
-    }
-    return 0;
+    return size_.x;
 }
 
 float Texture::GetHeight() const
 {
-    if (bitmap_)
-    {
-        return bitmap_->GetSize().height;
-    }
-    return 0;
+    return size_.y;
 }
 
 Size Texture::GetSize() const
 {
-    if (bitmap_)
-    {
-        auto bitmap_size = bitmap_->GetSize();
-        return Size{ bitmap_size.width, bitmap_size.height };
-    }
-    return Size{};
+    return size_;
 }
 
 uint32_t Texture::GetWidthInPixels() const
 {
-    if (bitmap_)
-    {
-        return bitmap_->GetPixelSize().width;
-    }
-    return 0;
+    return size_in_pixels_.x;
 }
 
 uint32_t Texture::GetHeightInPixels() const
 {
-    if (bitmap_)
-    {
-        return bitmap_->GetPixelSize().height;
-    }
-    return 0;
+    return size_in_pixels_.y;
 }
 
 math::Vec2T<uint32_t> Texture::GetSizeInPixels() const
 {
-    if (bitmap_)
-    {
-        auto bitmap_size = bitmap_->GetPixelSize();
-        return math::Vec2T<uint32_t>{ bitmap_size.width, bitmap_size.height };
-    }
-    return math::Vec2T<uint32_t>{};
+    return size_in_pixels_;
 }
 
 InterpolationMode Texture::GetBitmapInterpolationMode() const
@@ -135,16 +104,21 @@ InterpolationMode Texture::GetBitmapInterpolationMode() const
 
 void Texture::CopyFrom(TexturePtr copy_from)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
         HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
 
         ThrowIfFailed(hr, "Copy texture data failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
         HRESULT hr = bitmap_->CopyFromBitmap(
@@ -154,6 +128,9 @@ void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& 
 
         ThrowIfFailed(hr, "Copy texture data failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void Texture::SetInterpolationMode(InterpolationMode mode)
@@ -179,17 +156,5 @@ InterpolationMode Texture::GetDefaultInterpolationMode()
 {
     return default_interpolation_mode_;
 }
-
-#if defined(KGE_WIN32)
-ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
-{
-    return bitmap_;
-}
-
-void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
-{
-    bitmap_ = bitmap;
-}
-#endif
 
 }  // namespace kiwano

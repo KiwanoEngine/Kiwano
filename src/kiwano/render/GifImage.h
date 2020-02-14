@@ -108,7 +108,7 @@ private:
     uint32_t width_in_pixels_;
     uint32_t height_in_pixels_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<IWICBitmapDecoder> GetDecoder() const;
 
@@ -141,7 +141,16 @@ inline uint32_t GifImage::GetFramesCount() const
     return frames_count_;
 }
 
-#if defined(KGE_WIN32)
+inline bool GifImage::IsValid() const
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    return decoder_ != nullptr;
+#else
+    return false;  // not supported
+#endif
+}
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
 {
     return decoder_;

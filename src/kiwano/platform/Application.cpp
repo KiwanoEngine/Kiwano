@@ -40,7 +40,7 @@ Application::Application()
 
 Application::~Application() {}
 
-void Application::Run(Runner* runner, bool debug)
+void Application::Run(RunnerPtr runner, bool debug)
 {
     KGE_ASSERT(runner);
     runner_ = runner;

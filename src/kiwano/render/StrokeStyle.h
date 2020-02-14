@@ -170,7 +170,7 @@ private:
     float         dash_offset_;
     Vector<float> dash_array_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;
 
@@ -221,12 +221,16 @@ inline void StrokeStyle::SetDashOffset(float dash_offset)
     style_.reset();
 }
 
-#if defined(KGE_WIN32)
 inline bool StrokeStyle::IsValid() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     return style_ != nullptr;
+#else
+    return false;  // not supported
+#endif
 }
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline void StrokeStyle::SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style)
 {
     style_ = style;

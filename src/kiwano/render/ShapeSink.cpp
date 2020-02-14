@@ -33,6 +33,7 @@ ShapeSink::~ShapeSink()
 
 void ShapeSink::Open()
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (!IsOpened())
     {
         path_geo_.reset();
@@ -40,10 +41,14 @@ void ShapeSink::Open()
 
         ThrowIfFailed(path_geo_->Open(&sink_), "Open ID2D1GeometrySink failed");
     }
+#else
+    return;  // not supported
+#endif
 }
 
 void ShapeSink::Close()
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsOpened())
     {
         ThrowIfFailed(sink_->Close(), "Close ID2D1GeometrySink failed");
@@ -52,11 +57,18 @@ void ShapeSink::Close()
 
     shape_ = new Shape;
     shape_->SetGeometry(path_geo_);
+#else
+    return;  // not supported
+#endif
 }
 
 bool ShapeSink::IsOpened() const
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     return sink_ != nullptr;
+#else
+    return false;  // not supported
+#endif
 }
 
 ShapePtr ShapeSink::GetShape()
@@ -72,6 +84,7 @@ ShapeSink& ShapeSink::AddShape(ShapePtr input, const Matrix3x2* input_matrix)
         Open();
     }
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (input && input->IsValid())
     {
         ComPtr<ID2D1Geometry> geo = input->GetGeometry();
@@ -81,6 +94,9 @@ ShapeSink& ShapeSink::AddShape(ShapePtr input, const Matrix3x2* input_matrix)
         ThrowIfFailed(hr, "Get outline of ID2D1Geometry failed");
     }
     return (*this);
+#else
+    return (*this);  // not supported
+#endif
 }
 
 ShapeSink& ShapeSink::BeginPath(Point const& begin_pos)
@@ -90,52 +106,80 @@ ShapeSink& ShapeSink::BeginPath(Point const& begin_pos)
         Open();
     }
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     sink_->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& ShapeSink::EndPath(bool closed)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->EndFigure(closed ? D2D1_FIGURE_END_CLOSED : D2D1_FIGURE_END_OPEN);
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& ShapeSink::AddLine(Point const& point)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->AddLine(DX::ConvertToPoint2F(point));
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& ShapeSink::AddLines(Vector<Point> const& points)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(&points[0]), static_cast<uint32_t>(points.size()));
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& kiwano::ShapeSink::AddLines(const Point* points, size_t count)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->AddLines(reinterpret_cast<const D2D_POINT_2F*>(points), UINT32(count));
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& ShapeSink::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->AddBezier(
         D2D1::BezierSegment(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), DX::ConvertToPoint2F(point3)));
+#else
+    // not supported
+#endif
     return (*this);
 }
 
 ShapeSink& ShapeSink::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 {
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     KGE_ASSERT(sink_);
     sink_->AddArc(D2D1::ArcSegment(DX::ConvertToPoint2F(point), DX::ConvertToSizeF(radius), rotation,
                                    clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
                                    is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE));
+#else
+    // not supported
+#endif
     return (*this);
 }
 
@@ -146,6 +190,7 @@ ShapeSink& ShapeSink::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mo
         Open();
     }
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (shape_a && shape_b)
     {
         ComPtr<ID2D1Geometry> geo_a_raw = shape_a->geo_;
@@ -155,6 +200,9 @@ ShapeSink& ShapeSink::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mo
                                                     DX::ConvertToMatrix3x2F(matrix), sink_.get());
         ThrowIfFailed(hr, "Combine ID2D1Geometry failed");
     }
+#else
+    // not supported
+#endif
     return (*this);
 }
 
@@ -162,7 +210,11 @@ void ShapeSink::Clear()
 {
     Close();
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     path_geo_.reset();
+#else
+    // not supported
+#endif
 }
 
 }  // namespace kiwano

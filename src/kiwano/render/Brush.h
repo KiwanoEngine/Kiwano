@@ -139,7 +139,7 @@ public:
 private:
     Type type_;
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
     void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
 
@@ -157,7 +157,16 @@ inline Brush::Type Brush::GetType() const
     return type_;
 }
 
-#if defined(KGE_WIN32)
+inline bool Brush::IsValid() const
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    return raw_ != nullptr;
+#else
+    return false;  // not supported
+#endif
+}
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 inline void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
 {
     type_ = type;

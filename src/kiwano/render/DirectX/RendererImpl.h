@@ -58,8 +58,6 @@ public:
 
     void CreateFontCollection(Font& font, Resource const& res) override;
 
-    void CreateTextFormat(TextLayout& layout) override;
-
     void CreateTextLayout(TextLayout& layout) override;
 
     void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) override;

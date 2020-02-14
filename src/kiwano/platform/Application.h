@@ -54,15 +54,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 启动应用程序
-     * @param runner 程序运行器
-     * @param debug 是否启用调试模式
-     * @note 该函数是阻塞的，应用程序结束时函数返回
-     */
-    void Run(Runner* runner, bool debug = false);
-
-    /**
-     * \~chinese
      * @brief 终止应用程序
      */
     void Quit();
@@ -126,7 +117,7 @@ public:
 
     /**
      * \~chinese
-     * @brief 渲染
+     * @brief 创建渲染上下文并渲染画面
      */
     void Render();
 
@@ -138,11 +129,6 @@ private:
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
 };
-
-inline void Application::Run(RunnerPtr runner, bool debug)
-{
-    this->Run(runner.get(), debug);
-}
 
 inline RunnerPtr Application::GetRunner() const
 {

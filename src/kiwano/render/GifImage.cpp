@@ -82,11 +82,6 @@ bool GifImage::Load(Resource const& res)
     return false;
 }
 
-bool GifImage::IsValid() const
-{
-    return decoder_ != nullptr;
-}
-
 GifImage::Frame GifImage::GetFrame(uint32_t index)
 {
     Frame frame;
@@ -94,7 +89,7 @@ GifImage::Frame GifImage::GetFrame(uint32_t index)
     return frame;
 }
 
-#if defined(KGE_WIN32)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 bool GifImage::GetGlobalMetadata()
 {
     HRESULT hr = decoder_ ? S_OK : E_FAIL;
@@ -193,6 +188,14 @@ bool GifImage::GetGlobalMetadata()
     }
     return SUCCEEDED(hr);
 }
+
+#else
+
+bool GifImage::GetGlobalMetadata()
+{
+    return false;  // not supported
+}
+
 #endif
 
 }  // namespace kiwano
