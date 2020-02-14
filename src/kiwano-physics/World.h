@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(World);
 
 /**
  * \~chinese
- * \defgroup Physics 物理引擎
+ * \defgroup Physics 物理模块
  */
 
 /**

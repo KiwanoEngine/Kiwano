@@ -30,7 +30,7 @@ namespace network
 {
 /**
  * \~chinese
- * \defgroup Network 网络通信
+ * \defgroup Network 网络模块
  */
 
 /**

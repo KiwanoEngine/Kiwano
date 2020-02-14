@@ -22,7 +22,7 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
-#include <kiwano/platform/win32/WindowImpl.h>
+#include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeSink.h>
 #include <kiwano/render/DirectX/TextureRenderContextImpl.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
@@ -46,14 +46,14 @@ RendererImpl::RendererImpl()
     render_ctx_ = new RenderContextImpl;
 }
 
-void RendererImpl::SetupModule()
+void RendererImpl::MakeContextForWindow(WindowPtr window)
 {
     KGE_SYS_LOG("Creating device resources");
 
     ThrowIfFailed(::CoInitialize(nullptr), "CoInitialize failed");
 
-    HWND target_window = WindowImpl::GetInstance().GetHandle();
-    output_size_   = Window::GetInstance().GetSize();
+    HWND target_window = window->GetHandle();
+    output_size_       = window->GetSize();
 
     d2d_res_ = nullptr;
     d3d_res_ = nullptr;
@@ -115,7 +115,7 @@ void RendererImpl::SetupModule()
     ThrowIfFailed(hr, "Create render resources failed");
 }
 
-void RendererImpl::DestroyModule()
+void RendererImpl::Destroy()
 {
     KGE_SYS_LOG("Destroying device resources");
 
@@ -166,15 +166,6 @@ void RendererImpl::Present()
     }
 
     ThrowIfFailed(hr, "Unexpected DXGI exception");
-}
-
-void RendererImpl::HandleEvent(Event* evt)
-{
-    if (evt->IsType<WindowResizedEvent>())
-    {
-        auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
-        Resize(window_evt->width, window_evt->height);
-    }
 }
 
 HRESULT RendererImpl::HandleDeviceLost()

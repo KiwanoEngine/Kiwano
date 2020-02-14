@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
+#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -27,6 +29,26 @@ Renderer::Renderer()
     : vsync_(true)
     , clear_color_(Color::Black)
 {
+}
+
+void Renderer::SetupModule()
+{
+    WindowPtr window = Application::GetInstance().GetMainWindow();
+    MakeContextForWindow(window);
+}
+
+void Renderer::DestroyModule()
+{
+    Destroy();
+}
+
+void Renderer::HandleEvent(Event* evt)
+{
+    if (evt->IsType<WindowResizedEvent>())
+    {
+        auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
+        Resize(window_evt->width, window_evt->height);
+    }
 }
 
 }  // namespace kiwano

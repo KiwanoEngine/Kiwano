@@ -44,55 +44,55 @@ class KGE_API RendererImpl
 public:
     static RendererImpl& GetInstance();
 
-    void CreateTexture(Texture& texture, String const& file_path);
+    void CreateTexture(Texture& texture, String const& file_path) override;
 
-    void CreateTexture(Texture& texture, Resource const& resource);
+    void CreateTexture(Texture& texture, Resource const& resource) override;
 
-    void CreateGifImage(GifImage& gif, String const& file_path);
+    void CreateGifImage(GifImage& gif, String const& file_path) override;
 
-    void CreateGifImage(GifImage& gif, Resource const& resource);
+    void CreateGifImage(GifImage& gif, Resource const& resource) override;
 
-    void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index);
+    void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index) override;
 
-    void CreateFontCollection(Font& font, String const& file_path);
+    void CreateFontCollection(Font& font, String const& file_path) override;
 
-    void CreateFontCollection(Font& font, Resource const& res);
+    void CreateFontCollection(Font& font, Resource const& res) override;
 
-    void CreateTextFormat(TextLayout& layout);
+    void CreateTextFormat(TextLayout& layout) override;
 
-    void CreateTextLayout(TextLayout& layout);
+    void CreateTextLayout(TextLayout& layout) override;
 
-    void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos);
+    void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) override;
 
-    void CreateRectShape(Shape& shape, Rect const& rect);
+    void CreateRectShape(Shape& shape, Rect const& rect) override;
 
-    void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius);
+    void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius) override;
 
-    void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius);
+    void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) override;
 
-    void CreateShapeSink(ShapeSink& sink);
+    void CreateShapeSink(ShapeSink& sink) override;
 
-    void CreateBrush(Brush& brush, Color const& color);
+    void CreateBrush(Brush& brush, Color const& color) override;
 
-    void CreateBrush(Brush& brush, LinearGradientStyle const& style);
+    void CreateBrush(Brush& brush, LinearGradientStyle const& style) override;
 
-    void CreateBrush(Brush& brush, RadialGradientStyle const& style);
+    void CreateBrush(Brush& brush, RadialGradientStyle const& style) override;
 
     void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
-                           size_t dash_size, float dash_offset);
+                           size_t dash_size, float dash_offset) override;
 
-    TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr);
+    TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) override;
 
 public:
-    void BeginDraw();
+    void BeginDraw() override;
 
-    void EndDraw();
+    void EndDraw() override;
 
-    void Clear();
+    void Clear() override;
 
-    void Present();
+    void Present() override;
 
-    RenderContext& GetContext();
+    RenderContext& GetContext() override;
 
     /// \~chinese
     /// @brief 获取Direct2D设备资源
@@ -102,19 +102,18 @@ public:
     /// @brief 获取Direct3D设备资源
     ID3DDeviceResources* GetD3DDeviceResources();
 
-public:
-    void SetupModule() override;
+    /// \~chinese
+    /// @brief 重设渲染输出大小
+    void Resize(uint32_t width, uint32_t height) override;
 
-    void DestroyModule() override;
-
-    void HandleEvent(Event* evt) override;
-
-private:
+protected:
     RendererImpl();
 
-    HRESULT HandleDeviceLost();
+    void MakeContextForWindow(WindowPtr window) override;
 
-    void Resize(uint32_t width, uint32_t height);
+    void Destroy() override;
+
+    HRESULT HandleDeviceLost();
 
 private:
     RenderContextImplPtr                  render_ctx_;

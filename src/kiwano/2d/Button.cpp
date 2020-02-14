@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/Button.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/platform/Window.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -73,14 +73,14 @@ void Button::SetStatus(Status status)
 
         if (status == Status::Normal)
         {
-            Window::GetInstance().SetCursor(CursorType::Arrow);
+            Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Arrow);
 
             if (mouse_out_callback_)
                 mouse_out_callback_(this);
         }
         else if (status == Status::Hover)
         {
-            Window::GetInstance().SetCursor(CursorType::Hand);
+            Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Hand);
 
             if (old_status != Status::Pressed)
             {

@@ -18,37 +18,87 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/win32/WindowImpl.h>
+#include <kiwano/platform/Window.h>
 
 #if defined(KGE_WIN32)
 
-#include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
-#include <imm.h>       // ImmAssociateContext
+#include <kiwano/core/Keys.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/Application.h>
+#include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
+#include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
-
-#define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
-#define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
-#define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
 
 namespace kiwano
 {
 
-Window& Window::GetInstance()
+KGE_DECLARE_SMART_PTR(WindowWin32Impl);
+
+class KGE_API WindowWin32Impl : public Window
 {
-    return WindowImpl::GetInstance();
+public:
+    WindowWin32Impl();
+
+    virtual ~WindowWin32Impl();
+
+    void Init(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
+
+    void SetTitle(String const& title) override;
+
+    void SetIcon(uint32_t icon_resource) override;
+
+    void Resize(uint32_t width, uint32_t height) override;
+
+    void SetFullscreen(bool fullscreen) override;
+
+    void SetCursor(CursorType cursor) override;
+
+    void Destroy() override;
+
+    void PumpEvents() override;
+
+    DWORD GetStyle() const;
+
+    void UpdateCursor();
+
+    void SetActive(bool actived);
+
+    LRESULT MessageProc(HWND, UINT32, WPARAM, LPARAM);
+
+    static LRESULT CALLBACK StaticWndProc(HWND, UINT32, WPARAM, LPARAM);
+
+private:
+    bool       resizable_;
+    bool       is_fullscreen_;
+    wchar_t*   device_name_;
+    CursorType mouse_cursor_;
+
+    std::array<KeyCode, 256> key_map_;
+};
+
+WindowPtr Window::Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                         bool fullscreen)
+{
+    WindowWin32ImplPtr ptr = new (std::nothrow) WindowWin32Impl;
+    if (ptr)
+    {
+        ptr->Init(title, width, height, icon, resizable, fullscreen);
+    }
+    return ptr;
 }
 
-WindowImpl& WindowImpl::GetInstance()
+}  // namespace kiwano
+
+namespace kiwano
 {
-    static WindowImpl instance;
-    return instance;
-}
+
+#define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+#define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
+#define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
 
 namespace
 {
@@ -106,9 +156,8 @@ void RestoreResolution(WCHAR* device_name)
 }
 }  // namespace
 
-WindowImpl::WindowImpl()
-    : handle_(nullptr)
-    , device_name_(nullptr)
+WindowWin32Impl::WindowWin32Impl()
+    : device_name_(nullptr)
     , is_fullscreen_(false)
     , resizable_(false)
     , mouse_cursor_(CursorType::Arrow)
@@ -156,17 +205,17 @@ WindowImpl::WindowImpl()
         key_map_[VK_F1 + i] = KeyCode(size_t(KeyCode::F1) + i);
 }
 
-WindowImpl::~WindowImpl() {}
+WindowWin32Impl::~WindowWin32Impl() {}
 
-void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                        bool fullscreen)
+void WindowWin32Impl::Init(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                           bool fullscreen)
 {
     HINSTANCE  hinst   = GetModuleHandleW(nullptr);
     WNDCLASSEX wcex    = { 0 };
     wcex.cbSize        = sizeof(WNDCLASSEX);
     wcex.lpszClassName = L"KiwanoAppWnd";
     wcex.style         = CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
-    wcex.lpfnWndProc   = WindowImpl::StaticWndProc;
+    wcex.lpfnWndProc   = WindowWin32Impl::StaticWndProc;
     wcex.hIcon         = nullptr;
     wcex.cbClsExtra    = 0;
     wcex.cbWndExtra    = sizeof(LONG_PTR);
@@ -257,12 +306,7 @@ void WindowImpl::Create(String const& title, uint32_t width, uint32_t height, ui
     }
 }
 
-HWND WindowImpl::GetHandle() const
-{
-    return handle_;
-}
-
-void WindowImpl::PumpEvents()
+void WindowWin32Impl::PumpEvents()
 {
     MSG msg;
     while (::PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -272,7 +316,7 @@ void WindowImpl::PumpEvents()
     }
 }
 
-void WindowImpl::SetTitle(String const& title)
+void WindowWin32Impl::SetTitle(String const& title)
 {
     if (handle_)
     {
@@ -281,7 +325,7 @@ void WindowImpl::SetTitle(String const& title)
     }
 }
 
-void WindowImpl::SetIcon(uint32_t icon_resource)
+void WindowWin32Impl::SetIcon(uint32_t icon_resource)
 {
     if (handle_)
     {
@@ -294,7 +338,7 @@ void WindowImpl::SetIcon(uint32_t icon_resource)
     }
 }
 
-void WindowImpl::Resize(uint32_t width, uint32_t height)
+void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
 {
     if (handle_ && !is_fullscreen_)
     {
@@ -307,7 +351,7 @@ void WindowImpl::Resize(uint32_t width, uint32_t height)
     }
 }
 
-void WindowImpl::SetFullscreen(bool fullscreen)
+void WindowWin32Impl::SetFullscreen(bool fullscreen)
 {
     if (is_fullscreen_ != fullscreen)
     {
@@ -349,12 +393,12 @@ void WindowImpl::SetFullscreen(bool fullscreen)
     }
 }
 
-void WindowImpl::SetCursor(CursorType cursor)
+void WindowWin32Impl::SetCursor(CursorType cursor)
 {
     mouse_cursor_ = cursor;
 }
 
-void WindowImpl::Destroy()
+void WindowWin32Impl::Destroy()
 {
     if (is_fullscreen_)
         RestoreResolution(device_name_);
@@ -374,12 +418,12 @@ void WindowImpl::Destroy()
     Window::Destroy();
 }
 
-DWORD WindowImpl::GetStyle() const
+DWORD WindowWin32Impl::GetStyle() const
 {
     return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
 }
 
-void WindowImpl::UpdateCursor()
+void WindowWin32Impl::UpdateCursor()
 {
     LPTSTR win32_cursor = IDC_ARROW;
     switch (mouse_cursor_)
@@ -412,7 +456,7 @@ void WindowImpl::UpdateCursor()
     ::SetCursor(::LoadCursorW(nullptr, win32_cursor));
 }
 
-void WindowImpl::SetActive(bool actived)
+void WindowWin32Impl::SetActive(bool actived)
 {
     if (!handle_)
         return;
@@ -437,7 +481,7 @@ void WindowImpl::SetActive(bool actived)
     }
 }
 
-LRESULT WindowImpl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
+LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
@@ -553,7 +597,7 @@ LRESULT WindowImpl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lpa
         {
             // KGE_SYS_LOG("Window resized");
 
-            this->width_    = ((uint32_t)(short)LOWORD(lparam));
+            this->width_  = ((uint32_t)(short)LOWORD(lparam));
             this->height_ = ((uint32_t)(short)HIWORD(lparam));
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
@@ -641,12 +685,12 @@ LRESULT WindowImpl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lpa
     return ::DefWindowProcW(hwnd, msg, wparam, lparam);
 }
 
-LRESULT CALLBACK WindowImpl::StaticWndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK WindowWin32Impl::StaticWndProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
 {
     LONG_PTR ptr = static_cast<LONG_PTR>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA));
     if (ptr)
     {
-        WindowImpl* window = reinterpret_cast<WindowImpl*>(ptr);
+        WindowWin32Impl* window = reinterpret_cast<WindowWin32Impl*>(ptr);
         return window->MessageProc(hwnd, msg, wparam, lparam);
     }
     return ::DefWindowProcW(hwnd, msg, wparam, lparam);

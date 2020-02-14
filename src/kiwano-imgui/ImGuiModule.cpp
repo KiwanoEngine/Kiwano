@@ -5,7 +5,7 @@
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/platform/win32/WindowImpl.h>
+#include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano-imgui/ImGuiModule.h>
 #include <kiwano-imgui/imgui_impl/imgui_impl.h>
@@ -29,12 +29,14 @@ void ImGuiModule::SetupModule()
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
+    window_ = Application::GetInstance().GetMainWindow();
+
     // Setup Platform/Renderer bindings
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;  // We can honor GetMouseCursor() values (optional)
     io.BackendFlags |=
         ImGuiBackendFlags_HasSetMousePos;  // We can honor io.WantSetMousePos requests (optional, rarely used)
     io.BackendPlatformName = "imgui_impl_win32";
-    io.ImeWindowHandle     = WindowImpl::GetInstance().GetHandle();
+    io.ImeWindowHandle     = window_->GetHandle();
 
     // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array that we will update during
     // the application lifetime.
@@ -174,7 +176,7 @@ void ImGuiModule::UpdateMousePos()
     if (io.WantSetMousePos)
     {
         POINT pos = { (int)io.MousePos.x, (int)io.MousePos.y };
-        ::ClientToScreen(WindowImpl::GetInstance().GetHandle(), &pos);
+        ::ClientToScreen(window_->GetHandle(), &pos);
         ::SetCursorPos(pos.x, pos.y);
     }
 
@@ -216,7 +218,7 @@ void ImGuiModule::UpdateMouseCursor()
         break;
     }
 
-    Window::GetInstance().SetCursor(cursor);
+    window_->SetCursor(cursor);
 }
 
 }  // namespace imgui

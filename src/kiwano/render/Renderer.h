@@ -25,13 +25,14 @@
 #include <kiwano/render/TextStyle.hpp>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/render/TextureRenderContext.h>
+#include <kiwano/platform/Window.h>
 
 namespace kiwano
 {
 
 /**
  * \~chinese
- * \defgroup Render 渲染引擎
+ * \defgroup Render 渲染模块
  */
 
 /**
@@ -203,6 +204,14 @@ public:
 
 public:
     /// \~chinese
+    /// @brief 获取渲染上下文
+    virtual RenderContext& GetContext() = 0;
+
+    /// \~chinese
+    /// @brief 获取渲染输出大小
+    virtual Size GetOutputSize() const;
+
+    /// \~chinese
     /// @brief 开始渲染
     virtual void BeginDraw() = 0;
 
@@ -220,20 +229,27 @@ public:
     virtual void Present() = 0;
 
     /// \~chinese
-    /// @brief 获取渲染上下文
-    virtual RenderContext& GetContext() = 0;
+    /// @brief 重设渲染输出大小
+    virtual void Resize(uint32_t width, uint32_t height) = 0;
 
-    /// \~chinese
-    /// @brief 获取渲染输出大小
-    virtual Size GetOutputSize() const;
+public:
+    void SetupModule() override;
+
+    void DestroyModule() override;
+
+    void HandleEvent(Event* evt) override;
 
 protected:
     Renderer();
 
+    virtual void MakeContextForWindow(WindowPtr window) = 0;
+
+    virtual void Destroy() = 0;
+
 protected:
-    bool         vsync_;
-    Color        clear_color_;
-    Size         output_size_;
+    bool  vsync_;
+    Color clear_color_;
+    Size  output_size_;
 };
 
 /** @} */

@@ -285,9 +285,6 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h">
       <Filter>render\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\win32\WindowImpl.h">
-      <Filter>platform\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Exception.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -297,11 +294,11 @@
     <ClInclude Include="..\..\src\kiwano\render\Layer.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Runner.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Module.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\Runner.h">
+      <Filter>platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Module.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\platform\Runner.cpp">
+      <Filter>platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

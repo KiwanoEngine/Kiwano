@@ -23,11 +23,10 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/Runner.h>
 #include <kiwano/core/Singleton.h>
 #include <kiwano/core/event/Event.h>
+#include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Window.h>
-#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
@@ -47,11 +46,20 @@ public:
     /**
      * \~chinese
      * @brief 启动应用程序
-     * @param[in] runner 程序运行器
+     * @param runner 程序运行器
      * @param debug 是否启用调试模式
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
-    void Run(Runner& runner, bool debug = false);
+    void Run(RunnerPtr runner, bool debug = false);
+
+    /**
+     * \~chinese
+     * @brief 启动应用程序
+     * @param runner 程序运行器
+     * @param debug 是否启用调试模式
+     * @note 该函数是阻塞的，应用程序结束时函数返回
+     */
+    void Run(Runner* runner, bool debug = false);
 
     /**
      * \~chinese
@@ -64,6 +72,18 @@ public:
      * @brief 销毁游戏运行过程中产生的所有资源
      */
     void Destroy();
+
+    /**
+     * \~chinese
+     * @brief 获取程序运行器
+     */
+    RunnerPtr GetRunner() const;
+
+    /**
+     * \~chinese
+     * @brief 获取主窗口
+     */
+    WindowPtr GetMainWindow() const;
 
     /**
      * \~chinese
@@ -97,26 +117,42 @@ public:
      */
     void PreformInMainThread(Function<void()> func);
 
-private:
     /**
      * \~chinese
      * @brief 更新所有模块
+     * @param dt 时间间隔
      */
-    void Update();
+    void Update(Duration dt);
 
     /**
      * \~chinese
-     * @brief 渲染所有模块
+     * @brief 渲染
      */
     void Render();
 
 private:
     bool                    quiting_;
     float                   time_scale_;
-    Time                    last_update_time_;
-    List<Module*>    modules_;
+    RunnerPtr               runner_;
+    List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
 };
+
+inline void Application::Run(RunnerPtr runner, bool debug)
+{
+    this->Run(runner.get(), debug);
+}
+
+inline RunnerPtr Application::GetRunner() const
+{
+    return runner_;
+}
+
+inline WindowPtr Application::GetMainWindow() const
+{
+    KGE_ASSERT(runner_);
+    return runner_->GetMainWindow();
+}
 
 }  // namespace kiwano

@@ -105,10 +105,11 @@
 // platform
 //
 
+#include <kiwano/platform/Window.h>
+#include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/platform/Window.h>
 
 //
 // utils

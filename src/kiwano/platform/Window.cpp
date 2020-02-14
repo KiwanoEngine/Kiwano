@@ -24,13 +24,17 @@ namespace kiwano
 {
 
 Window::Window()
-    : should_close_(false)
+    : handle_(nullptr)
+    , should_close_(false)
     , width_(0)
     , height_(0)
 {
 }
 
-Window::~Window() {}
+Window::~Window()
+{
+    Destroy();
+}
 
 EventPtr Window::PollEvent()
 {
@@ -63,6 +67,11 @@ uint32_t Window::GetWidth() const
 uint32_t Window::GetHeight() const
 {
     return height_;
+}
+
+WindowHandle Window::GetHandle() const
+{
+    return handle_;
 }
 
 bool Window::ShouldClose()

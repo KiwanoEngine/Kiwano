@@ -20,25 +20,36 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/core/Timer.h>
+#include <kiwano/platform/Window.h>
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(Runner);
+
 /**
  * \~chinese
  * @brief 程序运行器
  */
-class KGE_API Runner
+class KGE_API Runner : public virtual ObjectBase
 {
 public:
-    typedef Function<void()> Callback;
+    /// \~chinese
+    /// @brief 创建程序运行器
+    /// @param main_window 主窗口
+    static RunnerPtr Create(WindowPtr main_window);
+
+    /// \~chinese
+    /// @brief 创建程序运行器
+    /// @param main_window 主窗口
+    /// @param on_ready 应用程序初始化完成后执行的回调函数
+    /// @param on_destroy 应用程序销毁时执行的回调函数
+    static RunnerPtr Create(WindowPtr main_window, Function<void()> on_ready, Function<void()> on_destroy = nullptr);
 
     Runner();
 
-    /// \~chinese
-    /// @brief 构造程序运行器
-    /// @param on_ready 应用程序初始化完成后执行的回调函数
-    /// @param on_destroy 应用程序销毁时执行的回调函数
-    Runner(const Callback& on_ready, const Callback& on_destroy = nullptr);
+    virtual ~Runner();
 
     /// \~chinese
     /// @brief 初始化完成处理
@@ -51,44 +62,65 @@ public:
     virtual void OnDestroy();
 
     /// \~chinese
-    /// @brief 窗口关闭处理
-    /// @details 重载该函数以处理用户关闭窗口时的行为，如保存用户数据等
-    /// @return 返回true允许用户关闭窗口，否则阻止窗口关闭
+    /// @brief 应用程序关闭处理
+    /// @details 重载该函数以处理用户关闭应用程序时的行为，如保存用户数据等
+    /// @return 返回true允许用户关闭程序，否则阻止程序关闭
     virtual bool OnClosing();
 
+    /// \~chinese
+    /// @brief 应用程序主循环
+    /// @details 重载该函数以
+    /// @return 返回false退出主循环，否则继续运行主循环
+    virtual bool MainLoop();
+
+    /// \~chinese
+    /// @brief 获取主窗口
+    WindowPtr GetMainWindow() const;
+
+    /// \~chinese
+    /// @brief 设置主窗口
+    void SetMainWindow(WindowPtr window);
+
+    /// \~chinese
+    /// @brief 获取上一次更新时间
+    Time GetLastUpdateTime() const;
+
+    /// \~chinese
+    /// @brief 设置上一次更新时间
+    void SetLastUpdateTime(Time time);
+
 private:
-    Callback on_ready_;
-    Callback on_destroy_;
+    WindowPtr main_window_;
+    Time      last_update_time_;
 };
 
+inline void Runner::OnReady() {}
 
-inline Runner::Runner() {}
-
-inline Runner::Runner(const Callback& on_ready, const Callback& on_destroy)
-    : on_ready_(on_ready)
-    , on_destroy_(on_destroy)
-{
-}
-
-inline void Runner::OnReady()
-{
-    if (on_ready_)
-    {
-        on_ready_();
-    }
-}
-
-inline void Runner::OnDestroy()
-{
-    if (on_destroy_)
-    {
-        on_destroy_();
-    }
-}
+inline void Runner::OnDestroy() {}
 
 inline bool Runner::OnClosing()
 {
     return true;
+}
+
+inline WindowPtr Runner::GetMainWindow() const
+{
+    return main_window_;
+}
+
+inline void Runner::SetMainWindow(WindowPtr window)
+{
+    main_window_ = window;
+}
+
+inline Time Runner::GetLastUpdateTime() const
+{
+    return last_update_time_;
+}
+
+inline void Runner::SetLastUpdateTime(Time time)
+{
+    last_update_time_ = time;
 }
 
 }  // namespace kiwano

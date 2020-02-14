@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
+#include <kiwano/platform/Window.h>
 
 namespace kiwano
 {
@@ -58,6 +59,9 @@ private:
     void UpdateMousePos();
 
     void UpdateMouseCursor();
+
+private:
+    WindowPtr window_;
 };
 
 }  // namespace imgui

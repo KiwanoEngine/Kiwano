@@ -22,6 +22,7 @@
 #include <kiwano/platform/Input.h>
 #include <kiwano/core/Director.h>
 #include <kiwano/core/Logger.h>
+#include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
 
@@ -39,8 +40,11 @@ Application::Application()
 
 Application::~Application() {}
 
-void Application::Run(Runner& runner, bool debug)
+void Application::Run(Runner* runner, bool debug)
 {
+    KGE_ASSERT(runner);
+    runner_ = runner;
+
     // Setup all modules
     for (auto c : modules_)
     {
@@ -54,38 +58,18 @@ void Application::Run(Runner& runner, bool debug)
     }
 
     // Everything is ready
-    runner.OnReady();
+    runner->OnReady();
+    runner->SetLastUpdateTime(Time::Now());
 
-    // Initialize variables
-    quiting_          = false;
-    last_update_time_ = Time::Now();
-
-    Window& window = Window::GetInstance();
+    quiting_ = false;
     while (!quiting_)
     {
-        if (window.ShouldClose())
-        {
-            if (runner.OnClosing())
-                break;
-            else
-                window.SetShouldClose(false);
-        }
-
-        while (EventPtr evt = window.PollEvent())
-        {
-            this->DispatchEvent(evt.get());
-        }
-
-        this->Update();
-        this->Render();
+        quiting_ = !runner->MainLoop();
     }
 
     // Destroy all resources
-    runner.OnDestroy();
+    runner->OnDestroy();
     this->Destroy();
-
-    // Destroy window
-    window.Destroy();
 }
 
 void Application::Quit()
@@ -123,7 +107,7 @@ void Application::SetTimeScale(float scale_factor)
     time_scale_ = scale_factor;
 }
 
-void Application::Update()
+void Application::Update(Duration dt)
 {
     // Before update
     for (auto comp : modules_)
@@ -155,18 +139,12 @@ void Application::Update()
     }
 
     // Updating
+    Duration scaled_dt = dt * time_scale_;
+    for (auto comp : modules_)
     {
-        const Time     now = Time::Now();
-        const Duration dt  = (now - last_update_time_) * time_scale_;
-
-        last_update_time_ = now;
-
-        for (auto comp : modules_)
+        if (auto update_comp = comp->Cast<UpdateModule>())
         {
-            if (auto update_comp = comp->Cast<UpdateModule>())
-            {
-                update_comp->OnUpdate(dt);
-            }
+            update_comp->OnUpdate(scaled_dt);
         }
     }
 

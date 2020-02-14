@@ -20,11 +20,14 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(Window);
 
 /**
  * \~chinese
@@ -43,19 +46,18 @@ enum class CursorType
 };
 
 
+#if defined(KGE_WIN32)
+typedef HWND WindowHandle;
+#endif
+
+
 /**
  * \~chinese
  * @brief 窗口类，控制窗口标题、大小、图标等
  */
-class KGE_API Window : protected Noncopyable
+class KGE_API Window : public ObjectBase
 {
 public:
-    /**
-     * \~chinese
-     * @brief 获取窗口实例
-     */
-    static Window& GetInstance();
-
     /**
      * \~chinese
      * @brief 初始化窗口
@@ -67,8 +69,8 @@ public:
      * @param fullscreen 全屏模式
      * @throw std::system_error 窗口创建失败时抛出
      */
-    virtual void Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0, bool resizable = false,
-                        bool fullscreen = false) = 0;
+    static WindowPtr Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0,
+                            bool resizable = false, bool fullscreen = false);
 
     /**
      * \~chinese
@@ -97,6 +99,12 @@ public:
      * @return 窗口高度
      */
     uint32_t GetHeight() const;
+
+    /**
+     * \~chinese
+     * @brief 获取窗口句柄
+     */
+    WindowHandle GetHandle() const;
 
     /**
      * \~chinese
@@ -146,10 +154,16 @@ public:
 
     /**
      * \~chinese
-     * @brief 将窗口事件放入队列
-     * @param evt 窗口事件
+     * @brief 将事件放入队列
+     * @param evt 事件
      */
     void PushEvent(EventPtr evt);
+
+    /**
+     * \~chinese
+     * @brief 抽取窗口事件
+     */
+    virtual void PumpEvents() = 0;
 
     /**
      * \~chinese
@@ -172,14 +186,13 @@ public:
 protected:
     Window();
 
-    ~Window();
-
-    virtual void PumpEvents() = 0;
+    virtual ~Window();
 
 protected:
     bool                 should_close_;
     uint32_t             width_;
     uint32_t             height_;
+    WindowHandle         handle_;
     String               title_;
     std::queue<EventPtr> event_queue_;
 };
