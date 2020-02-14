@@ -46,7 +46,7 @@ RendererImpl::RendererImpl()
     render_ctx_ = new RenderContextImpl;
 }
 
-void RendererImpl::SetupComponent()
+void RendererImpl::SetupModule()
 {
     KGE_SYS_LOG("Creating device resources");
 
@@ -115,7 +115,7 @@ void RendererImpl::SetupComponent()
     ThrowIfFailed(hr, "Create render resources failed");
 }
 
-void RendererImpl::DestroyComponent()
+void RendererImpl::DestroyModule()
 {
     KGE_SYS_LOG("Destroying device resources");
 

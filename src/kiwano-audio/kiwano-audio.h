@@ -20,6 +20,6 @@
 
 #pragma once
 
-#include <kiwano-audio/AudioEngine.h>
+#include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano-audio/SoundPlayer.h>

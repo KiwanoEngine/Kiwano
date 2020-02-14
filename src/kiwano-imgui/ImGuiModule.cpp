@@ -18,7 +18,7 @@ ImGuiModule::ImGuiModule()
 {
 }
 
-void ImGuiModule::SetupComponent()
+void ImGuiModule::SetupModule()
 {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -58,7 +58,7 @@ void ImGuiModule::SetupComponent()
     ImGui_Impl_Init();
 }
 
-void ImGuiModule::DestroyComponent()
+void ImGuiModule::DestroyModule()
 {
     ImGui_Impl_Shutdown();
     ImGui::DestroyContext();

@@ -39,7 +39,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h" />
     <ClInclude Include="..\..\src\kiwano\core\AsyncTask.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Component.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Module.h" />
     <ClInclude Include="..\..\src\kiwano\core\EventDispatcher.h" />
     <ClInclude Include="..\..\src\kiwano\core\EventListener.h" />
     <ClInclude Include="..\..\src\kiwano\core\Logger.h" />
@@ -116,7 +116,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Component.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventListener.cpp" />

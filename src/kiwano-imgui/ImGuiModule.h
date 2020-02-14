@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 
 namespace kiwano
 {
@@ -33,18 +33,18 @@ namespace imgui
  */
 class ImGuiModule
     : public Singleton<ImGuiModule>
-    , public RenderComponent
-    , public UpdateComponent
-    , public EventComponent
+    , public RenderModule
+    , public UpdateModule
+    , public EventModule
 {
     friend Singleton<ImGuiModule>;
 
 public:
     ImGuiModule();
 
-    void SetupComponent() override;
+    void SetupModule() override;
 
-    void DestroyComponent() override;
+    void DestroyModule() override;
 
     void BeforeRender() override;
 

@@ -22,7 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 
 namespace kiwano
 {
@@ -34,9 +34,9 @@ namespace kiwano
  */
 class KGE_API Director
     : public Singleton<Director>
-    , public UpdateComponent
-    , public RenderComponent
-    , public EventComponent
+    , public UpdateModule
+    , public RenderModule
+    , public EventModule
 {
     friend Singleton<Director>;
 
@@ -92,9 +92,9 @@ public:
     void ClearStages();
 
 public:
-    void SetupComponent() override {}
+    void SetupModule() override {}
 
-    void DestroyComponent() override {}
+    void DestroyModule() override {}
 
     void OnUpdate(Duration dt) override;
 

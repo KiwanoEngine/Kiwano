@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 #include <kiwano/core/Keys.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/macros.h>
@@ -34,8 +34,8 @@ namespace kiwano
  */
 class KGE_API Input
     : public Singleton<Input>
-    , public UpdateComponent
-    , public EventComponent
+    , public UpdateModule
+    , public EventModule
 {
     friend Singleton<Input>;
 
@@ -103,9 +103,9 @@ public:
     Point GetMousePos() const;
 
 public:
-    void SetupComponent() override {}
+    void SetupModule() override {}
 
-    void DestroyComponent() override {}
+    void DestroyModule() override {}
 
     void AfterUpdate() override;
 

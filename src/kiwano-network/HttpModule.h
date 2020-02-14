@@ -21,7 +21,7 @@
 #pragma once
 #include <condition_variable>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 #include <mutex>
 
 namespace kiwano
@@ -40,13 +40,13 @@ namespace network
 
 /**
  * \~chinese
- * @brief HTTP客户端
+ * @brief HTTP模块
  */
-class KGE_API HttpClient
-    : public Singleton<HttpClient>
-    , public ComponentBase
+class KGE_API HttpModule
+    : public Singleton<HttpModule>
+    , public Module
 {
-    friend Singleton<HttpClient>;
+    friend Singleton<HttpModule>;
 
 public:
     /// \~chinese
@@ -80,12 +80,12 @@ public:
     String const& GetSSLVerification() const;
 
 public:
-    virtual void SetupComponent() override;
+    virtual void SetupModule() override;
 
-    virtual void DestroyComponent() override;
+    virtual void DestroyModule() override;
 
 private:
-    HttpClient();
+    HttpModule();
 
     void NetworkThread();
 
@@ -110,32 +110,32 @@ private:
 
 /** @} */
 
-inline void HttpClient::SetTimeoutForConnect(Duration timeout)
+inline void HttpModule::SetTimeoutForConnect(Duration timeout)
 {
     timeout_for_connect_ = timeout;
 }
 
-inline Duration HttpClient::GetTimeoutForConnect() const
+inline Duration HttpModule::GetTimeoutForConnect() const
 {
     return timeout_for_connect_;
 }
 
-inline void HttpClient::SetTimeoutForRead(Duration timeout)
+inline void HttpModule::SetTimeoutForRead(Duration timeout)
 {
     timeout_for_read_ = timeout;
 }
 
-inline Duration HttpClient::GetTimeoutForRead() const
+inline Duration HttpModule::GetTimeoutForRead() const
 {
     return timeout_for_read_;
 }
 
-inline void HttpClient::SetSSLVerification(String const& root_certificate_path)
+inline void HttpModule::SetSSLVerification(String const& root_certificate_path)
 {
     ssl_verification_ = root_certificate_path;
 }
 
-inline String const& HttpClient::GetSSLVerification() const
+inline String const& HttpModule::GetSSLVerification() const
 {
     return ssl_verification_;
 }

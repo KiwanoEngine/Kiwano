@@ -22,7 +22,7 @@
 #include <kiwano-audio/Sound.h>
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 #include <xaudio2.h>
 
 namespace kiwano
@@ -32,7 +32,7 @@ namespace audio
 
 /**
  * \~chinese
- * \defgroup Audio 音频引擎
+ * \defgroup Audio 音频模块
  */
 
 /**
@@ -42,13 +42,13 @@ namespace audio
 
 /**
  * \~chinese
- * @brief 音频引擎
+ * @brief 音频模块
  */
-class KGE_API AudioEngine
-    : public Singleton<AudioEngine>
-    , public ComponentBase
+class KGE_API AudioModule
+    : public Singleton<AudioModule>
+    , public Module
 {
-    friend Singleton<AudioEngine>;
+    friend Singleton<AudioModule>;
 
 public:
     /// \~chinese
@@ -64,14 +64,14 @@ public:
     bool CreateSound(Sound& sound, const Transcoder::Buffer& buffer);
 
 public:
-    void SetupComponent() override;
+    void SetupModule() override;
 
-    void DestroyComponent() override;
+    void DestroyModule() override;
 
 private:
-    AudioEngine();
+    AudioModule();
 
-    ~AudioEngine();
+    ~AudioModule();
 
 private:
     IXAudio2*               x_audio2_;

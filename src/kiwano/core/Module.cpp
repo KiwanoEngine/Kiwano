@@ -18,39 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Component.h>
-
-#define KGE_DEFINE_COMPONENT_FLAG(OFFSET) (0x01 << (OFFSET % 32))
+#include <kiwano/core/Module.h>
 
 namespace kiwano
 {
-const int RenderComponent::flag = KGE_DEFINE_COMPONENT_FLAG(0);
-const int UpdateComponent::flag = KGE_DEFINE_COMPONENT_FLAG(1);
-const int EventComponent::flag  = KGE_DEFINE_COMPONENT_FLAG(2);
 
-ComponentBase::ComponentBase()
+Module::Module()
     : flag_(0)
 {
 }
 
-bool ComponentBase::Check(const int flag)
+RenderModule::RenderModule()
 {
-    return !!(flag_ & flag);
+    flag_ |= ModuleFlag<RenderModule>::value;
 }
 
-RenderComponent::RenderComponent()
+UpdateModule::UpdateModule()
 {
-    flag_ |= flag;
+    flag_ |= ModuleFlag<UpdateModule>::value;
 }
 
-UpdateComponent::UpdateComponent()
+EventModule::EventModule()
 {
-    flag_ |= flag;
-}
-
-EventComponent::EventComponent()
-{
-    flag_ |= flag;
+    flag_ |= ModuleFlag<EventModule>::value;
 }
 
 }  // namespace kiwano

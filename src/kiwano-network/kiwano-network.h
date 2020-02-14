@@ -22,4 +22,4 @@
 
 #include <kiwano-network/HttpRequest.h>
 #include <kiwano-network/HttpResponse.hpp>
-#include <kiwano-network/HttpClient.h>
+#include <kiwano-network/HttpModule.h>

@@ -23,7 +23,7 @@
 #include <kiwano/platform/Application.h>
 #include <kiwano-network/HttpRequest.h>
 #include <kiwano-network/HttpResponse.hpp>
-#include <kiwano-network/HttpClient.h>
+#include <kiwano-network/HttpModule.h>
 #include <3rd-party/curl/curl.h>  // CURL
 
 namespace
@@ -67,7 +67,7 @@ public:
         }
     }
 
-    bool Init(HttpClient* client, Vector<String> const& headers, String const& url, String* response_data,
+    bool Init(HttpModule* client, Vector<String> const& headers, String const& url, String* response_data,
               String* response_header, char* error_buffer)
     {
         if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
@@ -132,7 +132,7 @@ public:
     }
 
 public:
-    static inline bool GetRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+    static inline bool GetRequest(HttpModule* client, Vector<String> const& headers, String const& url,
                                   long* response_code, String* response_data, String* response_header,
                                   char* error_buffer)
     {
@@ -141,7 +141,7 @@ public:
                && curl.SetOption(CURLOPT_FOLLOWLOCATION, true) && curl.Perform(response_code);
     }
 
-    static inline bool PostRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+    static inline bool PostRequest(HttpModule* client, Vector<String> const& headers, String const& url,
                                    String const& request_data, long* response_code, String* response_data,
                                    String* response_header, char* error_buffer)
     {
@@ -151,7 +151,7 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool PutRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+    static inline bool PutRequest(HttpModule* client, Vector<String> const& headers, String const& url,
                                   String const& request_data, long* response_code, String* response_data,
                                   String* response_header, char* error_buffer)
     {
@@ -162,7 +162,7 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool DeleteRequest(HttpClient* client, Vector<String> const& headers, String const& url,
+    static inline bool DeleteRequest(HttpModule* client, Vector<String> const& headers, String const& url,
                                      long* response_code, String* response_data, String* response_header,
                                      char* error_buffer)
     {
@@ -182,26 +182,26 @@ namespace kiwano
 {
 namespace network
 {
-HttpClient::HttpClient()
+HttpModule::HttpModule()
     : timeout_for_connect_(30000 /* 30 seconds */)
     , timeout_for_read_(60000 /* 60 seconds */)
 {
 }
 
-void HttpClient::SetupComponent()
+void HttpModule::SetupModule()
 {
     ::curl_global_init(CURL_GLOBAL_ALL);
 
-    std::thread thread(Closure(this, &HttpClient::NetworkThread));
+    std::thread thread(Closure(this, &HttpModule::NetworkThread));
     thread.detach();
 }
 
-void HttpClient::DestroyComponent()
+void HttpModule::DestroyModule()
 {
     ::curl_global_cleanup();
 }
 
-void HttpClient::Send(HttpRequestPtr request)
+void HttpModule::Send(HttpRequestPtr request)
 {
     if (!request)
         return;
@@ -213,7 +213,7 @@ void HttpClient::Send(HttpRequestPtr request)
     sleep_condition_.notify_one();
 }
 
-void HttpClient::NetworkThread()
+void HttpModule::NetworkThread()
 {
     while (true)
     {
@@ -235,11 +235,11 @@ void HttpClient::NetworkThread()
         response_queue_.push(response);
         response_mutex_.unlock();
 
-        Application::GetInstance().PreformInMainThread(Closure(this, &HttpClient::DispatchResponseCallback));
+        Application::GetInstance().PreformInMainThread(Closure(this, &HttpModule::DispatchResponseCallback));
     }
 }
 
-void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
+void HttpModule::Perform(HttpRequestPtr request, HttpResponsePtr response)
 {
     bool   ok                 = false;
     long   response_code      = 0;
@@ -273,7 +273,7 @@ void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
         ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
         break;
     default:
-        KGE_ERROR("HttpClient: unknown request type, only GET, POST, PUT or DELETE is supported");
+        KGE_ERROR("HttpModule: unknown request type, only GET, POST, PUT or DELETE is supported");
         return;
     }
 
@@ -291,7 +291,7 @@ void HttpClient::Perform(HttpRequestPtr request, HttpResponsePtr response)
     }
 }
 
-void HttpClient::DispatchResponseCallback()
+void HttpModule::DispatchResponseCallback()
 {
     HttpResponsePtr response;
 

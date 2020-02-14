@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-audio/AudioEngine.h>
+#include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/core/Exception.h>
@@ -27,15 +27,15 @@ namespace kiwano
 {
 namespace audio
 {
-AudioEngine::AudioEngine()
+AudioModule::AudioModule()
     : x_audio2_(nullptr)
     , mastering_voice_(nullptr)
 {
 }
 
-AudioEngine::~AudioEngine() {}
+AudioModule::~AudioModule() {}
 
-void AudioEngine::SetupComponent()
+void AudioModule::SetupModule()
 {
     KGE_SYS_LOG("Creating audio resources");
 
@@ -54,7 +54,7 @@ void AudioEngine::SetupComponent()
     ThrowIfFailed(hr, "Create audio resources failed");
 }
 
-void AudioEngine::DestroyComponent()
+void AudioModule::DestroyModule()
 {
     KGE_SYS_LOG("Destroying audio resources");
 
@@ -73,9 +73,9 @@ void AudioEngine::DestroyComponent()
     dlls::MediaFoundation::Get().MFShutdown();
 }
 
-bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
+bool AudioModule::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
 {
-    KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
+    KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     HRESULT hr = S_OK;
 
@@ -109,17 +109,17 @@ bool AudioEngine::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
     return true;
 }
 
-void AudioEngine::Open()
+void AudioModule::Open()
 {
-    KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
+    KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     if (x_audio2_)
         x_audio2_->StartEngine();
 }
 
-void AudioEngine::Close()
+void AudioModule::Close()
 {
-    KGE_ASSERT(x_audio2_ && "AudioEngine hasn't been initialized!");
+    KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     if (x_audio2_)
         x_audio2_->StopEngine();

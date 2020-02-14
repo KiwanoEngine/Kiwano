@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-audio/AudioEngine.h>
+#include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/FileSystem.h>
@@ -83,7 +83,7 @@ bool Sound::Load(String const& file_path)
         return false;
     }
 
-    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioModule::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;
@@ -107,7 +107,7 @@ bool Sound::Load(Resource const& res)
         return false;
     }
 
-    if (!AudioEngine::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
+    if (!AudioModule::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
     {
         Close();
         return false;

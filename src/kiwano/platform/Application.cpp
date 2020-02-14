@@ -32,19 +32,19 @@ Application::Application()
     : quiting_(false)
     , time_scale_(1.f)
 {
-    Use(&Renderer::GetInstance());
-    Use(&Input::GetInstance());
-    Use(&Director::GetInstance());
+    Use(Renderer::GetInstance());
+    Use(Input::GetInstance());
+    Use(Director::GetInstance());
 }
 
 Application::~Application() {}
 
 void Application::Run(Runner& runner, bool debug)
 {
-    // Setup all components
-    for (auto c : comps_)
+    // Setup all modules
+    for (auto c : modules_)
     {
-        c->SetupComponent();
+        c->SetupModule();
     }
 
     if (debug)
@@ -100,35 +100,22 @@ void Application::Destroy()
     ResourceCache::GetInstance().Clear();
     TextureCache::GetInstance().Clear();
 
-    for (auto iter = comps_.rbegin(); iter != comps_.rend(); ++iter)
+    for (auto iter = modules_.rbegin(); iter != modules_.rend(); ++iter)
     {
-        (*iter)->DestroyComponent();
+        (*iter)->DestroyModule();
     }
 }
 
-void Application::Use(ComponentBase* component)
+void Application::Use(Module& module)
 {
-    if (component)
-    {
-
 #if defined(KGE_DEBUG)
-        if (std::find(comps_.begin(), comps_.end(), component) != comps_.end())
-        {
-            KGE_ASSERT(false && "Component already exists!");
-        }
+    if (std::find(modules_.begin(), modules_.end(), &module) != modules_.end())
+    {
+        KGE_ASSERT(false && "Module already exists!");
+    }
 #endif
 
-        comps_.push_back(component);
-
-        if (component->Check(RenderComponent::flag))
-            render_comps_.push_back(dynamic_cast<RenderComponent*>(component));
-
-        if (component->Check(UpdateComponent::flag))
-            update_comps_.push_back(dynamic_cast<UpdateComponent*>(component));
-
-        if (component->Check(EventComponent::flag))
-            event_comps_.push_back(dynamic_cast<EventComponent*>(component));
-    }
+    modules_.push_back(&module);
 }
 
 void Application::SetTimeScale(float scale_factor)
@@ -139,9 +126,12 @@ void Application::SetTimeScale(float scale_factor)
 void Application::Update()
 {
     // Before update
-    for (auto c : update_comps_)
+    for (auto comp : modules_)
     {
-        c->BeforeUpdate();
+        if (auto update_comp = comp->Cast<UpdateModule>())
+        {
+            update_comp->BeforeUpdate();
+        }
     }
 
     // perform functions
@@ -171,16 +161,22 @@ void Application::Update()
 
         last_update_time_ = now;
 
-        for (auto c : update_comps_)
+        for (auto comp : modules_)
         {
-            c->OnUpdate(dt);
+            if (auto update_comp = comp->Cast<UpdateModule>())
+            {
+                update_comp->OnUpdate(dt);
+            }
         }
     }
 
     // After update
-    for (auto rit = update_comps_.rbegin(); rit != update_comps_.rend(); ++rit)
+    for (auto rit = modules_.rbegin(); rit != modules_.rend(); ++rit)
     {
-        (*rit)->AfterUpdate();
+        if (auto update_comp = (*rit)->Cast<UpdateModule>())
+        {
+            update_comp->AfterUpdate();
+        }
     }
 }
 
@@ -190,23 +186,32 @@ void Application::Render()
     renderer.Clear();
 
     // Before render
-    for (auto c : render_comps_)
+    for (auto comp : modules_)
     {
-        c->BeforeRender();
+        if (auto render_comp = comp->Cast<RenderModule>())
+        {
+            render_comp->BeforeRender();
+        }
     }
 
     // Rendering
     renderer.BeginDraw();
-    for (auto c : render_comps_)
+    for (auto comp : modules_)
     {
-        c->OnRender(renderer.GetContext());
+        if (auto render_comp = comp->Cast<RenderModule>())
+        {
+            render_comp->OnRender(renderer.GetContext());
+        }
     }
     renderer.EndDraw();
 
     // After render
-    for (auto rit = render_comps_.rbegin(); rit != render_comps_.rend(); ++rit)
+    for (auto rit = modules_.rbegin(); rit != modules_.rend(); ++rit)
     {
-        (*rit)->AfterRender();
+        if (auto render_comp = (*rit)->Cast<RenderModule>())
+        {
+            render_comp->AfterRender();
+        }
     }
 
     renderer.Present();
@@ -214,9 +219,12 @@ void Application::Render()
 
 void Application::DispatchEvent(Event* evt)
 {
-    for (auto c : event_comps_)
+    for (auto comp : modules_)
     {
-        c->HandleEvent(evt);
+        if (auto event_comp = comp->Cast<EventModule>())
+        {
+            event_comp->HandleEvent(evt);
+        }
     }
 }
 

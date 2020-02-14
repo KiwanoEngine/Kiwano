@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.hpp>
@@ -43,7 +43,7 @@ namespace kiwano
  * \~chinese
  * @brief 渲染器
  */
-class KGE_API Renderer : public EventComponent
+class KGE_API Renderer : public EventModule
 {
 public:
     /// \~chinese

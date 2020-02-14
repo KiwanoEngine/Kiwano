@@ -21,7 +21,7 @@
 #pragma once
 #include <mutex>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Component.h>
+#include <kiwano/core/Module.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/Runner.h>
 #include <kiwano/core/Singleton.h>
@@ -67,10 +67,10 @@ public:
 
     /**
      * \~chinese
-     * @brief 添加功能组件
-     * @param[in] component 功能组件
+     * @brief 添加模块
+     * @param[in] module 模块
      */
-    void Use(ComponentBase* component);
+    void Use(Module& module);
 
     /**
      * \~chinese
@@ -84,7 +84,7 @@ public:
     /**
      * \~chinese
      * @brief 分发事件
-     * @details 将事件分发给所有事件功能组件
+     * @details 将事件分发给所有事件功能模块
      * @param evt 事件
      */
     void DispatchEvent(Event* evt);
@@ -100,26 +100,23 @@ public:
 private:
     /**
      * \~chinese
-     * @brief 更新所有组件
+     * @brief 更新所有模块
      */
     void Update();
 
     /**
      * \~chinese
-     * @brief 渲染所有组件
+     * @brief 渲染所有模块
      */
     void Render();
 
 private:
-    bool                     quiting_;
-    float                    time_scale_;
-    Time                     last_update_time_;
-    Vector<ComponentBase*>   comps_;
-    Vector<RenderComponent*> render_comps_;
-    Vector<UpdateComponent*> update_comps_;
-    Vector<EventComponent*>  event_comps_;
-    std::mutex               perform_mutex_;
-    Queue<Function<void()>>  functions_to_perform_;
+    bool                    quiting_;
+    float                   time_scale_;
+    Time                    last_update_time_;
+    List<Module*>    modules_;
+    std::mutex              perform_mutex_;
+    Queue<Function<void()>> functions_to_perform_;
 };
 
 }  // namespace kiwano

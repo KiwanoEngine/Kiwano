@@ -103,9 +103,9 @@ public:
     ID3DDeviceResources* GetD3DDeviceResources();
 
 public:
-    void SetupComponent() override;
+    void SetupModule() override;
 
-    void DestroyComponent() override;
+    void DestroyModule() override;
 
     void HandleEvent(Event* evt) override;
 

@@ -20,32 +20,40 @@
 
 #pragma once
 #include <kiwano/core/Time.h>
-#include <kiwano/macros.h>
 
 namespace kiwano
 {
 class RenderContext;
 class Event;
 
+template <typename _CompTy>
+struct ModuleFlag;
+
 /**
  * \~chinese
- * @brief 基础功能组件
+ * @brief 基础模块
  */
-class KGE_API ComponentBase
+class KGE_API Module
 {
 public:
     /// \~chinese
-    /// @brief 启动组件
-    virtual void SetupComponent() = 0;
+    /// @brief 启动模块
+    virtual void SetupModule() {}
 
     /// \~chinese
-    /// @brief 销毁组件
-    virtual void DestroyComponent() = 0;
+    /// @brief 销毁模块
+    virtual void DestroyModule() {}
 
-    bool Check(const int flag);
+    template <typename _CompTy>
+    _CompTy* Cast()
+    {
+        if (flag_ & ModuleFlag<_CompTy>::value)
+            return dynamic_cast<_CompTy*>(this);
+        return nullptr;
+    }
 
 protected:
-    ComponentBase();
+    Module();
 
 protected:
     int flag_;
@@ -53,9 +61,9 @@ protected:
 
 /**
  * \~chinese
- * @brief 渲染支持组件
+ * @brief 渲染模块
  */
-class KGE_API RenderComponent : public virtual ComponentBase
+class KGE_API RenderModule : public virtual Module
 {
 public:
     /// \~chinese
@@ -72,16 +80,14 @@ public:
     virtual void AfterRender() {}
 
 public:
-    static const int flag;
-
-    RenderComponent();
+    RenderModule();
 };
 
 /**
  * \~chinese
- * @brief 更新支持组件
+ * @brief 更新模块
  */
-class KGE_API UpdateComponent : public virtual ComponentBase
+class KGE_API UpdateModule : public virtual Module
 {
 public:
     /// \~chinese
@@ -98,16 +104,14 @@ public:
     virtual void AfterUpdate() {}
 
 public:
-    static const int flag;
-
-    UpdateComponent();
+    UpdateModule();
 };
 
 /**
  * \~chinese
- * @brief 事件支持组件
+ * @brief 事件模块
  */
-class KGE_API EventComponent : public virtual ComponentBase
+class KGE_API EventModule : public virtual Module
 {
 public:
     /// \~chinese
@@ -116,8 +120,29 @@ public:
     virtual void HandleEvent(Event* evt) {}
 
 public:
-    static const int flag;
-
-    EventComponent();
+    EventModule();
 };
+
+#define KGE_DEFINE_COMPONENT_FLAG(OFFSET) (0x01 << (OFFSET % 32))
+
+template <>
+struct ModuleFlag<RenderModule>
+{
+    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(0);
+};
+
+template <>
+struct ModuleFlag<UpdateModule>
+{
+    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(1);
+};
+
+template <>
+struct ModuleFlag<EventModule>
+{
+    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(2);
+};
+
+#undef KGE_DEFINE_COMPONENT_FLAG
+
 }  // namespace kiwano

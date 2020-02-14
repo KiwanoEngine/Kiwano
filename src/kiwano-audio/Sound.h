@@ -29,7 +29,7 @@ namespace kiwano
 {
 namespace audio
 {
-class AudioEngine;
+class AudioModule;
 
 KGE_DECLARE_SMART_PTR(Sound);
 
@@ -44,7 +44,7 @@ KGE_DECLARE_SMART_PTR(Sound);
  */
 class KGE_API Sound : public virtual ObjectBase
 {
-    friend class AudioEngine;
+    friend class AudioModule;
 
 public:
     /// \~chinese

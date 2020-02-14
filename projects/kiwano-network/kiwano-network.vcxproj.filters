@@ -2,12 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano-network\kiwano-network.h" />
-    <ClInclude Include="..\..\src\kiwano-network\HttpClient.h" />
     <ClInclude Include="..\..\src\kiwano-network\HttpRequest.h" />
     <ClInclude Include="..\..\src\kiwano-network\HttpResponse.hpp" />
+    <ClInclude Include="..\..\src\kiwano-network\HttpModule.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-network\HttpClient.cpp" />
     <ClCompile Include="..\..\src\kiwano-network\HttpRequest.cpp" />
+    <ClCompile Include="..\..\src\kiwano-network\HttpModule.cpp" />
   </ItemGroup>
 </Project>

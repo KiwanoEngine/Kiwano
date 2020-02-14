@@ -2312,7 +2312,7 @@ typedef enum {
 
 
 /*****************************************************************************
- * SetupComponent defines, protos etc for the sharing stuff.
+ * Setup defines, protos etc for the sharing stuff.
  */
 
 /* Different data locks for a single share */
