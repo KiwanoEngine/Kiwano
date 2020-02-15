@@ -20,8 +20,9 @@
 
 #include <kiwano/platform/Window.h>
 
-#if defined(KGE_WIN32)
+#if defined(KGE_PLATFORM_WINDOWS)
 
+#include <array>
 #include <kiwano/core/Keys.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/core/Logger.h>
@@ -277,7 +278,7 @@ void WindowWin32Impl::Init(String const& title, uint32_t width, uint32_t height,
         height = win_height;
     }
 
-    WideString wide_title = MultiByteToWide(title);
+    WideString wide_title = string::ToWide(title);
 
     handle_ = ::CreateWindowExW(is_fullscreen_ ? WS_EX_TOPMOST : 0, L"KiwanoAppWnd", wide_title.c_str(), GetStyle(),
                                 left, top, width, height, nullptr, nullptr, hinst, nullptr);
@@ -320,7 +321,7 @@ void WindowWin32Impl::SetTitle(String const& title)
 {
     if (handle_)
     {
-        WideString wide_title = MultiByteToWide(title);
+        WideString wide_title = string::ToWide(title);
         ::SetWindowTextW(handle_, wide_title.c_str());
     }
 }
@@ -633,7 +634,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("Window title changed");
 
-        this->title_ = WideToMultiByte(reinterpret_cast<LPCWSTR>(lparam));
+        this->title_ = string::ToNarrow(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
         evt->title                     = this->title_;

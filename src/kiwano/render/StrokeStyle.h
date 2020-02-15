@@ -206,19 +206,19 @@ inline float StrokeStyle::GetDashOffset() const
 inline void StrokeStyle::SetCapStyle(CapStyle cap)
 {
     cap_ = cap;
-    style_.reset();
+    style_.Reset();
 }
 
 inline void StrokeStyle::SetLineJoinStyle(LineJoinStyle line_join)
 {
     line_join_ = line_join;
-    style_.reset();
+    style_.Reset();
 }
 
 inline void StrokeStyle::SetDashOffset(float dash_offset)
 {
     dash_offset_ = dash_offset;
-    style_.reset();
+    style_.Reset();
 }
 
 inline bool StrokeStyle::IsValid() const

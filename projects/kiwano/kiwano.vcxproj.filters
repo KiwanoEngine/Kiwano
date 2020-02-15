@@ -300,6 +300,24 @@
     <ClInclude Include="..\..\src\kiwano\platform\Runner.h">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Function.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\String.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Any.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Json.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Xml.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -511,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Runner.cpp">
       <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\String.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

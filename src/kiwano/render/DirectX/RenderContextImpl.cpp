@@ -38,10 +38,10 @@ HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, C
         return E_INVALIDARG;
 
     render_target_ = ctx;
-    text_renderer_.reset();
-    current_brush_.reset();
+    text_renderer_.Reset();
+    current_brush_.Reset();
 
-    HRESULT hr = ITextRenderer::Create(&text_renderer_, render_target_.get());
+    HRESULT hr = ITextRenderer::Create(&text_renderer_, render_target_.Get());
 
     if (SUCCEEDED(hr))
     {
@@ -62,9 +62,9 @@ HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, C
 
 void RenderContextImpl::DiscardDeviceResources()
 {
-    text_renderer_.reset();
-    render_target_.reset();
-    current_brush_.reset();
+    text_renderer_.Reset();
+    render_target_.Reset();
+    current_brush_.Reset();
 }
 
 bool RenderContextImpl::IsValid() const
@@ -86,7 +86,7 @@ void RenderContextImpl::BeginDraw()
 
 void RenderContextImpl::EndDraw()
 {
-    ThrowIfFailed(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
+    KGE_THROW_IF_FAILED(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
 
     RenderContext::EndDraw();
 
@@ -103,7 +103,7 @@ void RenderContextImpl::DrawTexture(Texture const& texture, const Rect* src_rect
                         ? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
                         : D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
-        render_target_->DrawBitmap(texture.GetBitmap().get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
+        render_target_->DrawBitmap(texture.GetBitmap().Get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
                                    brush_opacity_, mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
 
         IncreasePrimitivesCount();
@@ -133,10 +133,10 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
         }
 
         HRESULT hr = S_OK;
-        ID2D1StrokeStyle* stroke_style = style.outline_stroke ? style.outline_stroke->GetStrokeStyle().get() : nullptr;
+        ID2D1StrokeStyle* stroke_style = style.outline_stroke ? style.outline_stroke->GetStrokeStyle().Get() : nullptr;
 
-        hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().get(), offset.x, offset.y, fill_brush.get(),
-                                            outline_brush.get(), style.outline_width, stroke_style);
+        hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().Get(), offset.x, offset.y, fill_brush.Get(),
+                                            outline_brush.Get(), style.outline_width, stroke_style);
 
         if (SUCCEEDED(hr))
         {
@@ -156,8 +156,8 @@ void RenderContextImpl::DrawShape(Shape const& shape, StrokeStylePtr stroke, flo
 
     if (shape.IsValid())
     {
-        ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
-        render_target_->DrawGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get(), stroke_width,
+        ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
+        render_target_->DrawGeometry(shape.GetGeometry().Get(), current_brush_->GetBrush().Get(), stroke_width,
                                      stroke_style);
 
         IncreasePrimitivesCount();
@@ -169,9 +169,9 @@ void RenderContextImpl::DrawLine(Point const& point1, Point const& point2, Strok
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
     render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                             current_brush_->GetBrush().get(), stroke_width, stroke_style);
+                             current_brush_->GetBrush().Get(), stroke_width, stroke_style);
 
     IncreasePrimitivesCount();
 }
@@ -181,8 +181,8 @@ void RenderContextImpl::DrawRectangle(Rect const& rect, StrokeStylePtr stroke, f
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
-    render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get(), stroke_width,
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
+    render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().Get(), stroke_width,
                                   stroke_style);
 
     IncreasePrimitivesCount();
@@ -194,9 +194,9 @@ void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radiu
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
     render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                         current_brush_->GetBrush().get(), stroke_width, stroke_style);
+                                         current_brush_->GetBrush().Get(), stroke_width, stroke_style);
 
     IncreasePrimitivesCount();
 }
@@ -206,9 +206,9 @@ void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius, Str
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().get() : nullptr;
+    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
     render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                current_brush_->GetBrush().get(), stroke_width, stroke_style);
+                                current_brush_->GetBrush().Get(), stroke_width, stroke_style);
 
     IncreasePrimitivesCount();
 }
@@ -220,7 +220,7 @@ void RenderContextImpl::FillShape(Shape const& shape)
 
     if (shape.IsValid())
     {
-        render_target_->FillGeometry(shape.GetGeometry().get(), current_brush_->GetBrush().get());
+        render_target_->FillGeometry(shape.GetGeometry().Get(), current_brush_->GetBrush().Get());
 
         IncreasePrimitivesCount();
     }
@@ -231,7 +231,7 @@ void RenderContextImpl::FillRectangle(Rect const& rect)
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    render_target_->FillRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().get());
+    render_target_->FillRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().Get());
 
     IncreasePrimitivesCount();
 }
@@ -242,7 +242,7 @@ void RenderContextImpl::FillRoundedRectangle(Rect const& rect, Vec2 const& radiu
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                         current_brush_->GetBrush().get());
+                                         current_brush_->GetBrush().Get());
 
     IncreasePrimitivesCount();
 }
@@ -253,7 +253,7 @@ void RenderContextImpl::FillEllipse(Point const& center, Vec2 const& radius)
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                current_brush_->GetBrush().get());
+                                current_brush_->GetBrush().Get());
 
     IncreasePrimitivesCount();
 }
@@ -271,7 +271,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
         texture.SetBitmap(saved_bitmap);
     }
 
-    ThrowIfFailed(hr, "Create texture failed");
+    KGE_THROW_IF_FAILED(hr, "Create texture failed");
 }
 
 void RenderContextImpl::PushClipRect(Rect const& clip_rect)
@@ -302,7 +302,7 @@ void RenderContextImpl::PushLayer(Layer& layer)
         }
         else
         {
-            ThrowIfFailed(hr, "Create ID2D1Layer failed");
+            KGE_THROW_IF_FAILED(hr, "Create ID2D1Layer failed");
         }
     }
 
@@ -313,11 +313,11 @@ void RenderContextImpl::PushLayer(Layer& layer)
             mask = layer.GetMaskShape()->GetGeometry();
 
         render_target_->PushLayer(
-            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.get(),
+            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.Get(),
                                   antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
                                   DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
                                   D2D1_LAYER_OPTIONS_NONE),
-            layer.GetLayer().get());
+            layer.GetLayer().Get());
     }
 }
 
@@ -430,7 +430,7 @@ void RenderContextImpl::SaveDrawingState()
 
     if (drawing_state_)
     {
-        render_target_->SaveDrawingState(drawing_state_.get());
+        render_target_->SaveDrawingState(drawing_state_.Get());
     }
 }
 
@@ -440,7 +440,7 @@ void RenderContextImpl::RestoreDrawingState()
 
     if (drawing_state_)
     {
-        render_target_->RestoreDrawingState(drawing_state_.get());
+        render_target_->RestoreDrawingState(drawing_state_.Get());
     }
 }
 

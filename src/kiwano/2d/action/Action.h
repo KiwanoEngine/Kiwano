@@ -23,6 +23,7 @@
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/IntrusiveList.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano
@@ -46,7 +47,7 @@ KGE_DECLARE_SMART_PTR(Action);
 /// @brief 动画
 class KGE_API Action
     : public virtual ObjectBase
-    , protected IntrusiveListItem<ActionPtr>
+    , protected IntrusiveListValue<ActionPtr>
 {
     friend class ActionManager;
     friend class ActionGroup;

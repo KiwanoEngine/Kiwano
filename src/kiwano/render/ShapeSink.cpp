@@ -36,10 +36,10 @@ void ShapeSink::Open()
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (!IsOpened())
     {
-        path_geo_.reset();
+        path_geo_.Reset();
         Renderer::GetInstance().CreateShapeSink(*this);
 
-        ThrowIfFailed(path_geo_->Open(&sink_), "Open ID2D1GeometrySink failed");
+        KGE_THROW_IF_FAILED(path_geo_->Open(&sink_), "Open ID2D1GeometrySink failed");
     }
 #else
     return;  // not supported
@@ -51,8 +51,8 @@ void ShapeSink::Close()
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsOpened())
     {
-        ThrowIfFailed(sink_->Close(), "Close ID2D1GeometrySink failed");
-        sink_.reset();
+        KGE_THROW_IF_FAILED(sink_->Close(), "Close ID2D1GeometrySink failed");
+        sink_.Reset();
     }
 
     shape_ = new Shape;
@@ -90,8 +90,8 @@ ShapeSink& ShapeSink::AddShape(ShapePtr input, const Matrix3x2* input_matrix)
         ComPtr<ID2D1Geometry> geo = input->GetGeometry();
 
         HRESULT hr =
-            geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.get());
-        ThrowIfFailed(hr, "Get outline of ID2D1Geometry failed");
+            geo->Outline(DX::ConvertToMatrix3x2F(input_matrix), D2D1_DEFAULT_FLATTENING_TOLERANCE, sink_.Get());
+        KGE_THROW_IF_FAILED(hr, "Get outline of ID2D1Geometry failed");
     }
     return (*this);
 #else
@@ -196,9 +196,9 @@ ShapeSink& ShapeSink::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mo
         ComPtr<ID2D1Geometry> geo_a_raw = shape_a->geo_;
         ComPtr<ID2D1Geometry> geo_b_raw = shape_b->geo_;
 
-        HRESULT hr = geo_a_raw->CombineWithGeometry(geo_b_raw.get(), D2D1_COMBINE_MODE(mode),
-                                                    DX::ConvertToMatrix3x2F(matrix), sink_.get());
-        ThrowIfFailed(hr, "Combine ID2D1Geometry failed");
+        HRESULT hr = geo_a_raw->CombineWithGeometry(geo_b_raw.Get(), D2D1_COMBINE_MODE(mode),
+                                                    DX::ConvertToMatrix3x2F(matrix), sink_.Get());
+        KGE_THROW_IF_FAILED(hr, "Combine ID2D1Geometry failed");
     }
 #else
     // not supported
@@ -211,7 +211,7 @@ void ShapeSink::Clear()
     Close();
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    path_geo_.reset();
+    path_geo_.Reset();
 #else
     // not supported
 #endif

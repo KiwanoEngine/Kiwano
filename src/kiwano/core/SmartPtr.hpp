@@ -19,24 +19,27 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <utility>
+#include <type_traits>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/RefCounter.h>
 
 namespace kiwano
 {
+
 /**
  * \~chinese
- * @brief 默认的智能指针代理
+ * @brief 默认的智能指针引用计数代理
  */
 struct DefaultSmartPtrRefProxy
 {
-    static inline void add_ref(RefCounter* ptr)
+    static inline void AddRef(RefCounter* ptr)
     {
         if (ptr)
             ptr->Retain();
     }
 
-    static inline void release(RefCounter* ptr)
+    static inline void Release(RefCounter* ptr)
     {
         if (ptr)
             ptr->Release();
@@ -45,10 +48,232 @@ struct DefaultSmartPtrRefProxy
 
 /**
  * \~chinese
- * @brief 智能指针
+ * @brief 侵入式智能指针
  */
-template <typename _Ty>
-using SmartPtr = IntrusivePtr<_Ty, DefaultSmartPtrRefProxy>;
+template <typename _Ty, typename _ProxyTy = DefaultSmartPtrRefProxy>
+class SmartPtr
+{
+public:
+    using value_type           = _Ty;
+    using pointer_type         = _Ty*;
+    using const_pointer_type   = const _Ty*;
+    using reference_type       = _Ty&;
+    using const_reference_type = const _Ty&;
+
+    SmartPtr() noexcept
+        : ptr_(nullptr)
+    {
+    }
+
+    SmartPtr(std::nullptr_t) noexcept
+        : ptr_(nullptr)
+    {
+    }
+
+    SmartPtr(pointer_type p)
+        : ptr_(p)
+    {
+        typename _ProxyTy::AddRef(ptr_);
+    }
+
+    SmartPtr(const SmartPtr& other)
+        : ptr_(other.ptr_)
+    {
+        typename _ProxyTy::AddRef(ptr_);
+    }
+
+    SmartPtr(SmartPtr&& other) noexcept
+        : ptr_(nullptr)
+    {
+        Swap(other);
+    }
+
+    ~SmartPtr()
+    {
+        Tidy();
+    }
+
+    template <typename _UTy, typename std::enable_if<std::is_base_of<_Ty, _UTy>::value, int>::type = 0>
+    SmartPtr(const SmartPtr<_UTy, _ProxyTy>& other)
+    {
+        ptr_ = const_cast<pointer_type>(dynamic_cast<const_pointer_type>(other.Get()));
+        typename _ProxyTy::AddRef(ptr_);
+    }
+
+    inline pointer_type Get() noexcept
+    {
+        return ptr_;
+    }
+
+    inline const_pointer_type Get() const noexcept
+    {
+        return ptr_;
+    }
+
+    inline void Reset(pointer_type ptr = nullptr)
+    {
+        if (ptr)
+            SmartPtr(ptr).Swap(*this);
+        else
+            Tidy();
+    }
+
+    inline void Swap(SmartPtr& other) noexcept
+    {
+        std::swap(ptr_, other.ptr_);
+    }
+
+    inline pointer_type operator->()
+    {
+        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
+        return ptr_;
+    }
+
+    inline const_pointer_type operator->() const
+    {
+        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
+        return ptr_;
+    }
+
+    inline reference_type operator*()
+    {
+        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
+        return *ptr_;
+    }
+
+    inline const_reference_type operator*() const
+    {
+        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
+        return *ptr_;
+    }
+
+    inline pointer_type* operator&()
+    {
+        KGE_ASSERT(ptr_ == nullptr && "Memory leak");
+        return &ptr_;
+    }
+
+    inline operator bool() const noexcept
+    {
+        return ptr_ != nullptr;
+    }
+
+    inline bool operator!() const noexcept
+    {
+        return ptr_ == 0;
+    }
+
+    inline SmartPtr& operator=(const SmartPtr& other)
+    {
+        if (other.ptr_ != ptr_)
+            SmartPtr(other).Swap(*this);
+        return (*this);
+    }
+
+    inline SmartPtr& operator=(SmartPtr&& other) noexcept
+    {
+        if (other.ptr_ != ptr_)
+            other.Swap(*this);
+        return (*this);
+    }
+
+    inline SmartPtr& operator=(pointer_type p)
+    {
+        if (p != ptr_)
+            SmartPtr(p).Swap(*this);
+        return (*this);
+    }
+
+    inline SmartPtr& operator=(std::nullptr_t)
+    {
+        Tidy();
+        return *this;
+    }
+
+private:
+    void Tidy()
+    {
+        typename _ProxyTy::Release(ptr_);
+        ptr_ = nullptr;
+    }
+
+private:
+    pointer_type ptr_;
+};
+
+template <class _Ty, class _UTy, class _ProxyTy>
+inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+{
+    return lhs.Get() == rhs.Get();
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, _Ty* rhs) noexcept
+{
+    return lhs.Get() == rhs;
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator==(_Ty* lhs, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+{
+    return lhs == rhs.Get();
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, std::nullptr_t) noexcept
+{
+    return !static_cast<bool>(lhs);
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator==(std::nullptr_t, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+{
+    return !static_cast<bool>(rhs);
+}
+
+template <class _Ty, class _UTy, class _ProxyTy>
+inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+{
+    return !(lhs == rhs);
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, _Ty* rhs) noexcept
+{
+    return lhs.Get() != rhs;
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator!=(_Ty* lhs, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+{
+    return lhs != rhs.Get();
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, std::nullptr_t) noexcept
+{
+    return static_cast<bool>(lhs);
+}
+
+template <class _Ty, class _ProxyTy>
+inline bool operator!=(std::nullptr_t, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+{
+    return static_cast<bool>(rhs);
+}
+
+template <class _Ty, class _UTy, class _ProxyTy>
+inline bool operator<(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+{
+    return lhs.Get() < rhs.Get();
+}
+
+// template class cannot specialize std::swap,
+// so implement a Swap Function in kiwano namespace
+template <class _Ty, class _ProxyTy>
+inline void swap(SmartPtr<_Ty, _ProxyTy>& lhs, SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
+{
+    lhs.Swap(rhs);
+}
 
 }  // namespace kiwano
 

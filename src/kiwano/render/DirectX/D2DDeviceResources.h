@@ -66,37 +66,37 @@ public:
     inline ID2D1Factory1* GetFactory()
     {
         KGE_ASSERT(factory_);
-        return factory_.get();
+        return factory_.Get();
     }
 
     inline IWICImagingFactory* GetWICImagingFactory()
     {
         KGE_ASSERT(imaging_factory_);
-        return imaging_factory_.get();
+        return imaging_factory_.Get();
     }
 
     inline IDWriteFactory* GetDWriteFactory()
     {
         KGE_ASSERT(dwrite_factory_);
-        return dwrite_factory_.get();
+        return dwrite_factory_.Get();
     }
 
     inline ID2D1Device* GetDevice()
     {
         KGE_ASSERT(device_);
-        return device_.get();
+        return device_.Get();
     }
 
     inline ID2D1DeviceContext* GetDeviceContext()
     {
         KGE_ASSERT(device_context_);
-        return device_context_.get();
+        return device_context_.Get();
     }
 
     inline ID2D1Bitmap1* GetTargetBitmap()
     {
         KGE_ASSERT(target_bitmap_);
-        return target_bitmap_.get();
+        return target_bitmap_.Get();
     }
 
 protected:

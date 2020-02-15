@@ -19,30 +19,34 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <type_traits>
-#include <kiwano/core/Common.h>
-#include <kiwano/core/SmartPtr.hpp>
-#include <Unknwnbase.h>
+#include <string>
 
 namespace kiwano
 {
-struct ComPtrProxy
+
+/// \~chinese
+/// @brief 字符串容器
+using String = std::string;
+
+/// \~chinese
+/// @brief 宽字符串容器
+using WideString = std::wstring;
+
+namespace string
 {
-    static inline void AddRef(IUnknown* ptr)
-    {
-        if (ptr)
-            ptr->AddRef();
-    }
 
-    static inline void Release(IUnknown* ptr)
-    {
-        if (ptr)
-            ptr->Release();
-    }
-};
+/// \~chinese
+/// @brief 格式化字符串
+String Format(const char* format, ...);
 
-// ComPtr<> is a smart pointer for COM
-template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = SmartPtr<_Ty, ComPtrProxy>;
+/// \~chinese
+/// @brief 宽字符串转窄字符串
+String ToNarrow(const WideString& str);
+
+/// \~chinese
+/// @brief 窄字符串转宽字符串
+WideString ToWide(const String& str);
+
+}
 
 }  // namespace kiwano

@@ -57,7 +57,8 @@ TextureCache::~TextureCache() {}
 
 TexturePtr TextureCache::AddOrGetTexture(String const& file_path)
 {
-    return CreateOrGetCache<Texture>(texture_cache_, file_path, file_path.hash());
+    size_t hash = std::hash<String>()(file_path);
+    return CreateOrGetCache<Texture>(texture_cache_, file_path, hash);
 }
 
 TexturePtr TextureCache::AddOrGetTexture(Resource const& res)
@@ -67,7 +68,8 @@ TexturePtr TextureCache::AddOrGetTexture(Resource const& res)
 
 GifImagePtr TextureCache::AddOrGetGifImage(String const& file_path)
 {
-    return CreateOrGetCache<GifImage>(gif_texture_cache_, file_path, file_path.hash());
+    size_t hash = std::hash<String>()(file_path);
+    return CreateOrGetCache<GifImage>(gif_texture_cache_, file_path, hash);
 }
 
 GifImagePtr TextureCache::AddOrGetGifImage(Resource const& res)
@@ -77,7 +79,8 @@ GifImagePtr TextureCache::AddOrGetGifImage(Resource const& res)
 
 void TextureCache::RemoveTexture(String const& file_path)
 {
-    RemoveCache(texture_cache_, file_path.hash());
+    size_t hash = std::hash<String>()(file_path);
+    RemoveCache(texture_cache_, hash);
 }
 
 void TextureCache::RemoveTexture(Resource const& res)
@@ -87,7 +90,8 @@ void TextureCache::RemoveTexture(Resource const& res)
 
 void TextureCache::RemoveGifImage(String const& file_path)
 {
-    RemoveCache(gif_texture_cache_, file_path.hash());
+    size_t hash = std::hash<String>()(file_path);
+    RemoveCache(gif_texture_cache_, hash);
 }
 
 void TextureCache::RemoveGifImage(Resource const& res)

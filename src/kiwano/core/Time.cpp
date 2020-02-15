@@ -157,21 +157,21 @@ String Duration::ToString() const
 
     if (hour)
     {
-        result.append(String::parse(hour)).append("h");
-        result.append(String::parse(min)).append("m");
+        result.append(std::to_string(hour)).append("h");
+        result.append(std::to_string(min)).append("m");
     }
     else if (min)
     {
-        result.append(String::parse(min)).append("m");
+        result.append(std::to_string(min)).append("m");
     }
 
     if (ms != 0)
     {
-        result.append(String::parse(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f)).append("s");
+        result.append(std::to_string(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f)).append("s");
     }
     else if (sec != 0)
     {
-        result.append(String::parse(sec)).append("s");
+        result.append(std::to_string(sec)).append("s");
     }
     return result;
 }

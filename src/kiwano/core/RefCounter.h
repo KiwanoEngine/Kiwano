@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <atomic>
 #include <kiwano/core/Common.h>
-#include <kiwano/macros.h>
 
 namespace kiwano
 {
@@ -41,7 +41,7 @@ public:
 
     /// \~chinese
     /// @brief 获取引用计数
-    long GetRefCount() const;
+    uint32_t GetRefCount() const;
 
 protected:
     RefCounter();
@@ -49,11 +49,12 @@ protected:
     virtual ~RefCounter();
 
 private:
-    long ref_count_;
+    std::atomic<uint32_t> ref_count_;
 };
 
-inline long RefCounter::GetRefCount() const
+inline uint32_t RefCounter::GetRefCount() const
 {
     return ref_count_;
 }
+
 }  // namespace kiwano

@@ -91,7 +91,7 @@ bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) cons
 void Shape::Clear()
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    geo_.reset();
+    geo_.Reset();
 #else
     return;  // not supported
 #endif

@@ -46,7 +46,7 @@ enum class CursorType
 };
 
 
-#if defined(KGE_WIN32)
+#if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
 #endif
 
@@ -67,7 +67,7 @@ public:
      * @param icon 图标资源ID
      * @param resizable 窗口大小可拉伸
      * @param fullscreen 全屏模式
-     * @throw std::system_error 窗口创建失败时抛出
+     * @throw kiwano::SystemError 窗口创建失败时抛出
      */
     static WindowPtr Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0,
                             bool resizable = false, bool fullscreen = false);

@@ -24,6 +24,7 @@
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/TimerManager.h>
+#include <kiwano/core/IntrusiveList.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano
@@ -55,7 +56,7 @@ class KGE_API Actor
     , public TimerManager
     , public ActionManager
     , public EventDispatcher
-    , protected IntrusiveListItem<ActorPtr>
+    , protected IntrusiveListValue<ActorPtr>
 {
     friend class Director;
     friend class Transition;
@@ -334,7 +335,7 @@ public:
 
     /// \~chinese
     /// @brief 获取名称相同的子角色
-    Actor* GetChild(String const& name) const;
+    ActorPtr GetChild(String const& name) const;
 
     /// \~chinese
     /// @brief 获取所有名称相同的子角色

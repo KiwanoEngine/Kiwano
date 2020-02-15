@@ -132,13 +132,13 @@ inline RenderContext& RendererImpl::GetContext()
 inline ID2DDeviceResources* RendererImpl::GetD2DDeviceResources()
 {
     KGE_ASSERT(d2d_res_);
-    return d2d_res_.get();
+    return d2d_res_.Get();
 }
 
 inline ID3DDeviceResources* RendererImpl::GetD3DDeviceResources()
 {
     KGE_ASSERT(d3d_res_);
-    return d3d_res_.get();
+    return d3d_res_.Get();
 }
 
 }  // namespace kiwano

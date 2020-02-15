@@ -43,9 +43,9 @@ SoundPlayer::~SoundPlayer()
 
 size_t SoundPlayer::Load(String const& file_path)
 {
-    int hash_code = static_cast<int>(file_path.hash());
-    if (sound_cache_.end() != sound_cache_.find(hash_code))
-        return hash_code;
+    size_t hash = std::hash<String>()(file_path);
+    if (sound_cache_.end() != sound_cache_.find(hash))
+        return hash;
 
     SoundPtr sound = new (std::nothrow) Sound;
 
@@ -54,8 +54,8 @@ size_t SoundPlayer::Load(String const& file_path)
         if (sound->Load(file_path))
         {
             sound->SetVolume(volume_);
-            sound_cache_.insert(std::make_pair(hash_code, sound));
-            return hash_code;
+            sound_cache_.insert(std::make_pair(hash, sound));
+            return hash;
         }
     }
     return 0;

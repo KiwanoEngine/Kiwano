@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/Json.h>
 
 namespace kiwano
 {

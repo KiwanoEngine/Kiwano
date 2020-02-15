@@ -84,7 +84,7 @@ bool Runner::MainLoop()
     // Poll events
     while (EventPtr evt = main_window_->PollEvent())
     {
-        app.DispatchEvent(evt.get());
+        app.DispatchEvent(evt.Get());
     }
 
     // Update & render

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <array>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
 #include <kiwano/core/Keys.h>

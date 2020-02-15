@@ -160,20 +160,20 @@ void D3D11DeviceResources::ClearRenderTarget(Color& clear_color)
 {
     KGE_ASSERT(device_context_ != nullptr && rt_view_ != nullptr && ds_view_ != nullptr);
 
-    auto rt_view = rt_view_.get();
-    device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.get());
+    auto rt_view = rt_view_.Get();
+    device_context_->OMSetRenderTargets(1, &rt_view, ds_view_.Get());
     device_context_->ClearRenderTargetView(rt_view, reinterpret_cast<float*>(&clear_color));
 }
 
 void D3D11DeviceResources::DiscardResources()
 {
-    device_.reset();
-    device_context_.reset();
-    rt_view_.reset();
-    ds_view_.reset();
-    dxgi_device_.reset();
-    dxgi_swap_chain_.reset();
-    dxgi_factory_.reset();
+    device_.Reset();
+    device_context_.Reset();
+    rt_view_.Reset();
+    ds_view_.Reset();
+    dxgi_device_.Reset();
+    dxgi_swap_chain_.Reset();
+    dxgi_factory_.Reset();
 
     hwnd_ = nullptr;
 }
@@ -293,7 +293,7 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
             swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
         }
 
-        hr = dxgi_factory_->CreateSwapChain(device_.get(), &swap_chain_desc, &dxgi_swap_chain_);
+        hr = dxgi_factory_->CreateSwapChain(device_.Get(), &swap_chain_desc, &dxgi_swap_chain_);
     }
     return hr;
 }
@@ -333,7 +333,7 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
         if (SUCCEEDED(hr))
         {
             rt_view_ = nullptr;
-            hr       = device_->CreateRenderTargetView(dxgi_back_buffer.get(), nullptr, &rt_view_);
+            hr       = device_->CreateRenderTargetView(dxgi_back_buffer.Get(), nullptr, &rt_view_);
         }
     }
 
@@ -353,14 +353,14 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
         {
             CD3D11_DEPTH_STENCIL_VIEW_DESC desc(D3D11_DSV_DIMENSION_TEXTURE2D);
 
-            ds_view_.reset();
-            hr = device_->CreateDepthStencilView(depth_stencil.get(), &desc, &ds_view_);
+            ds_view_.Reset();
+            hr = device_->CreateDepthStencilView(depth_stencil.Get(), &desc, &ds_view_);
         }
 
         if (SUCCEEDED(hr))
         {
-            ID3D11RenderTargetView* main_view = rt_view_.get();
-            device_context_->OMSetRenderTargets(1, &main_view, ds_view_.get());
+            ID3D11RenderTargetView* main_view = rt_view_.Get();
+            device_context_->OMSetRenderTargets(1, &main_view, ds_view_.Get());
         }
     }
 

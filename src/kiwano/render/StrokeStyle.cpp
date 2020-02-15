@@ -100,7 +100,7 @@ void StrokeStyle::SetDashStyle(DashStyle dash_style)
 void StrokeStyle::SetDashStyle(const Vector<float>& dash_array)
 {
     dash_array_ = dash_array;
-    style_.reset();
+    style_.Reset();
 }
 
 void StrokeStyle::SetDashStyle(const float* dash_array, size_t dash_size)
@@ -109,7 +109,7 @@ void StrokeStyle::SetDashStyle(const float* dash_array, size_t dash_size)
         dash_array_.clear();
     else
         dash_array_.assign(dash_array, dash_array + dash_size);
-    style_.reset();
+    style_.Reset();
 }
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX

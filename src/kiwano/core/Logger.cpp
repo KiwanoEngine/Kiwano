@@ -137,7 +137,7 @@ const WORD red_bg    = white | BACKGROUND_RED | BACKGROUND_INTENSITY;
 const WORD yellow_bg = BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 const WORD white_bg  = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 
-const WORD reset = white;
+const WORD Reset = white;
 }  // namespace console_colors
 
 #define DECLARE_HANDLE_COLOR(NAME, HANDLE_NAME, COLOR)                                   \
@@ -162,7 +162,7 @@ DECLARE_COLOR(green);
 DECLARE_COLOR(yellow);
 DECLARE_COLOR(blue);
 DECLARE_COLOR(white);
-DECLARE_COLOR(reset);
+DECLARE_COLOR(Reset);
 
 DECLARE_BG_COLOR(red);
 DECLARE_BG_COLOR(green);

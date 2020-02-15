@@ -343,12 +343,12 @@ private:
 
 inline BodyPtr Body::Create(World* world, ActorPtr actor, Type type)
 {
-    return Body::Create(world, actor.get(), type);
+    return Body::Create(world, actor.Get(), type);
 }
 
 inline bool Body::InitBody(World* world, ActorPtr actor)
 {
-    return InitBody(world, actor.get());
+    return InitBody(world, actor.Get());
 }
 
 inline FixtureList Body::GetFixtureList() const

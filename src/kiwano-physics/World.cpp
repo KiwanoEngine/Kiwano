@@ -68,7 +68,7 @@ public:
         contact.SetB2Contact(b2contact);
 
         ContactBeginEventPtr evt = new ContactBeginEvent(contact);
-        world_->DispatchEvent(evt.get());
+        world_->DispatchEvent(evt.Get());
     }
 
     void EndContact(b2Contact* b2contact) override
@@ -77,7 +77,7 @@ public:
         contact.SetB2Contact(b2contact);
 
         ContactEndEventPtr evt = new ContactEndEvent(contact);
-        world_->DispatchEvent(evt.get());
+        world_->DispatchEvent(evt.Get());
     }
 
     void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override

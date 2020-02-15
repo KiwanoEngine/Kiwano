@@ -25,18 +25,18 @@ namespace kiwano
 {
 void TimerManager::UpdateTimers(Duration dt)
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     TimerPtr next;
-    for (auto timer = timers_.first_item(); timer; timer = next)
+    for (auto timer = timers_.GetFirst(); timer; timer = next)
     {
-        next = timer->next_item();
+        next = timer->GetNext();
 
         timer->Update(dt);
 
         if (timer->IsRemoveable())
-            timers_.remove(timer);
+            timers_.Remove(timer);
     }
 }
 
@@ -58,15 +58,15 @@ Timer* TimerManager::AddTimer(TimerPtr timer)
     if (timer)
     {
         timer->Reset();
-        timers_.push_back(timer);
+        timers_.PushBack(timer);
     }
 
-    return timer.get();
+    return timer.Get();
 }
 
 void TimerManager::StopTimers(String const& name)
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     for (auto& timer : timers_)
@@ -80,7 +80,7 @@ void TimerManager::StopTimers(String const& name)
 
 void TimerManager::StartTimers(String const& name)
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     for (auto& timer : timers_)
@@ -94,7 +94,7 @@ void TimerManager::StartTimers(String const& name)
 
 void TimerManager::RemoveTimers(String const& name)
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     for (auto& timer : timers_)
@@ -108,7 +108,7 @@ void TimerManager::RemoveTimers(String const& name)
 
 void TimerManager::StopAllTimers()
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     for (auto& timer : timers_)
@@ -119,7 +119,7 @@ void TimerManager::StopAllTimers()
 
 void TimerManager::StartAllTimers()
 {
-    if (timers_.empty())
+    if (timers_.IsEmpty())
         return;
 
     for (auto& timer : timers_)
@@ -130,7 +130,7 @@ void TimerManager::StartAllTimers()
 
 void TimerManager::RemoveAllTimers()
 {
-    timers_.clear();
+    timers_.Clear();
 }
 
 const TimerManager::Timers& TimerManager::GetAllTimers() const

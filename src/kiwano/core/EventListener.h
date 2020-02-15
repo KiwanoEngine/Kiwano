@@ -22,6 +22,7 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/IntrusiveList.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
@@ -39,7 +40,7 @@ KGE_DECLARE_SMART_PTR(EventListener);
  */
 class KGE_API EventListener
     : public virtual ObjectBase
-    , protected IntrusiveListItem<EventListenerPtr>
+    , protected IntrusiveListValue<EventListenerPtr>
 {
     friend class EventDispatcher;
     friend IntrusiveList<EventListenerPtr>;

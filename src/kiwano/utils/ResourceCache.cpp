@@ -30,7 +30,7 @@ namespace resource_cache_01
 {
 
 bool LoadJsonData(ResourceCache* loader, Json const& json_data);
-bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem);
+bool LoadXmlData(ResourceCache* loader, const XmlNode& elem);
 
 }  // namespace resource_cache_01
 
@@ -42,7 +42,7 @@ Map<String, Function<bool(ResourceCache*, Json const&)>> load_json_funcs = {
     { "0.1", resource_cache_01::LoadJsonData },
 };
 
-Map<String, Function<bool(ResourceCache*, const pugi::xml_node&)>> load_xml_funcs = {
+Map<String, Function<bool(ResourceCache*, const XmlNode&)>> load_xml_funcs = {
     { "latest", resource_cache_01::LoadXmlData },
     { "0.1", resource_cache_01::LoadXmlData },
 };
@@ -127,9 +127,9 @@ bool ResourceCache::LoadFromXmlFile(String const& file_path)
 
     String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
-    pugi::xml_document     doc;
-    pugi::xml_parse_result result = doc.load_file(full_path.c_str(), pugi::parse_default, pugi::encoding_auto);
+    XmlDocument doc;
 
+    auto result = doc.load_file(full_path.c_str());
     if (result)
     {
         return LoadFromXml(doc);
@@ -141,9 +141,9 @@ bool ResourceCache::LoadFromXmlFile(String const& file_path)
     }
 }
 
-bool ResourceCache::LoadFromXml(const pugi::xml_document& doc)
+bool ResourceCache::LoadFromXml(const XmlDocument& doc)
 {
-    if (pugi::xml_node root = doc.child("resources"))
+    if (XmlNode root = doc.child("resources"))
     {
         String version;
         if (auto version_node = root.child("version"))
@@ -313,7 +313,7 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
     GlobalData global_data;
     if (json_data.count("path"))
     {
-        global_data.path = json_data["path"];
+        global_data.path = json_data["path"].get<String>();
     }
 
     if (json_data.count("images"))
@@ -385,7 +385,7 @@ bool LoadJsonData(ResourceCache* loader, Json const& json_data)
     return true;
 }
 
-bool LoadXmlData(ResourceCache* loader, const pugi::xml_node& elem)
+bool LoadXmlData(ResourceCache* loader, const XmlNode& elem)
 {
     GlobalData global_data;
     if (auto path = elem.child("path"))

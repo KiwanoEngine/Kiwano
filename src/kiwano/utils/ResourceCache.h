@@ -22,9 +22,10 @@
 #include <kiwano/2d/Frame.h>
 #include <kiwano/2d/FrameSequence.h>
 #include <kiwano/core/Resource.h>
+#include <kiwano/core/Json.h>
+#include <kiwano/core/Xml.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
-#include <3rd-party/pugixml/pugixml.hpp>
 
 namespace kiwano
 {
@@ -54,7 +55,7 @@ public:
     /// \~chinese
     /// @brief 从 XML 文档对象加载资源信息
     /// @param doc XML文档对象
-    bool LoadFromXml(pugi::xml_document const& doc);
+    bool LoadFromXml(XmlDocument const& doc);
 
     /// \~chinese
     /// @brief 获取资源
@@ -69,7 +70,7 @@ public:
     template <typename _Ty>
     SmartPtr<_Ty> Get(String const& id) const
     {
-        return dynamic_cast<_Ty*>(Get(id).get());
+        return dynamic_cast<_Ty*>(Get(id).Get());
     }
 
     /// \~chinese

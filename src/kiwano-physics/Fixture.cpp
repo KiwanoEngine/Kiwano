@@ -49,7 +49,7 @@ FixturePtr CreateFixture(Body* body, b2Shape* shape, const Fixture::Param& param
         b2Fixture* fixture = b2body->CreateFixture(&fd);
         if (fixture)
         {
-            fixture->SetUserData(ptr.get());
+            fixture->SetUserData(ptr.Get());
             ptr->SetB2Fixture(fixture);
             return ptr;
         }

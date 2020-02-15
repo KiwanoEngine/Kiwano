@@ -104,7 +104,7 @@ void Director::ShowDebugInfo(bool show)
     }
     else
     {
-        debug_actor_.reset();
+        debug_actor_.Reset();
     }
 }
 
@@ -113,10 +113,10 @@ void Director::ClearStages()
     while (!stages_.empty())
         stages_.pop();
 
-    current_stage_.reset();
-    next_stage_.reset();
-    transition_.reset();
-    debug_actor_.reset();
+    current_stage_.Reset();
+    next_stage_.Reset();
+    transition_.Reset();
+    debug_actor_.Reset();
 }
 
 void Director::OnUpdate(Duration dt)

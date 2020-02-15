@@ -12,6 +12,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\Button.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Any.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Director.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
@@ -20,10 +21,15 @@
     <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h" />
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Function.h" />
+    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Json.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
+    <ClInclude Include="..\..\src\kiwano\core\String.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Xml.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />
@@ -129,6 +135,7 @@
     <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\String.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp" />

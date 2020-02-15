@@ -51,7 +51,7 @@ void AudioModule::SetupModule()
         hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
     }
 
-    ThrowIfFailed(hr, "Create audio resources failed");
+    KGE_THROW_IF_FAILED(hr, "Create audio resources failed");
 }
 
 void AudioModule::DestroyModule()

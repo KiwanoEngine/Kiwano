@@ -35,32 +35,32 @@ public:
     inline ID3D10Device* GetDevice()
     {
         KGE_ASSERT(device_);
-        return device_.get();
+        return device_.Get();
     }
     inline ID3D10RenderTargetView* GetRenderTargetView()
     {
         KGE_ASSERT(rt_view_);
-        return rt_view_.get();
+        return rt_view_.Get();
     }
     inline ID3D10DepthStencilView* GetDepthStencilView()
     {
         KGE_ASSERT(ds_view_);
-        return ds_view_.get();
+        return ds_view_.Get();
     }
     inline IDXGIFactory* GetDXGIFactory()
     {
         KGE_ASSERT(dxgi_factory_);
-        return dxgi_factory_.get();
+        return dxgi_factory_.Get();
     }
     inline IDXGIDevice* GetDXGIDevice()
     {
         KGE_ASSERT(dxgi_device_);
-        return dxgi_device_.get();
+        return dxgi_device_.Get();
     }
     inline IDXGISwapChain* GetDXGISwapChain()
     {
         KGE_ASSERT(dxgi_swap_chain_);
-        return dxgi_swap_chain_.get();
+        return dxgi_swap_chain_.Get();
     }
 
 protected:

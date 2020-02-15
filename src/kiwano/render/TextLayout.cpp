@@ -136,81 +136,29 @@ Size TextLayout::GetLayoutSize() const
 
 void TextLayout::SetWrapWidth(float wrap_width)
 {
-    style_.wrap_width = wrap_width;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (text_layout_)
+    if (style_.wrap_width != wrap_width)
     {
-        HRESULT hr              = S_OK;
-        bool    enable_wrapping = (wrap_width > 0);
-
-        if (SUCCEEDED(hr))
-        {
-            hr = text_layout_->SetWordWrapping(enable_wrapping ? DWRITE_WORD_WRAPPING_WRAP
-                                                               : DWRITE_WORD_WRAPPING_NO_WRAP);
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            if (enable_wrapping)
-            {
-                hr = text_layout_->SetMaxWidth(wrap_width);
-            }
-            else
-            {
-                // Fix the layout width when the text does not wrap
-                DWRITE_TEXT_METRICS metrics;
-                hr = text_layout_->GetMetrics(&metrics);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = text_layout_->SetMaxWidth(metrics.width);
-                }
-            }
-        }
-        ThrowIfFailed(hr, "Apply word wrapping to text layout failed");
+        style_.wrap_width = wrap_width;
+        dirty_flag_ |= DirtyFlag::DirtyLayout;
     }
-#else
-    return;  // not supported
-#endif
 }
 
 void TextLayout::SetLineSpacing(float line_spacing)
 {
-    style_.line_spacing = line_spacing;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (text_layout_)
+    if (style_.line_spacing != line_spacing)
     {
-        HRESULT hr = S_OK;
-        if (line_spacing == 0.f)
-        {
-            hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-        }
-        else
-        {
-            hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, line_spacing, line_spacing * 0.8f);
-        }
-        ThrowIfFailed(hr, "Apply line spacing to text layout failed");
+        style_.line_spacing = line_spacing;
+        dirty_flag_ |= DirtyFlag::DirtyLayout;
     }
-#else
-    return;  // not supported
-#endif
 }
 
 void TextLayout::SetAlignment(TextAlign align)
 {
-    style_.alignment = align;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (text_layout_)
+    if (style_.alignment != align)
     {
-        HRESULT hr = text_layout_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(align));
-        ThrowIfFailed(hr, "Apply alignment style to text layout failed");
+        style_.alignment = align;
+        dirty_flag_ |= DirtyFlag::DirtyLayout;
     }
-#else
-    return;  // not supported
-#endif
 }
 
 void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
@@ -225,7 +173,7 @@ void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
     {
         hr = text_layout_->SetUnderline(enable, { start, length });
     }
-    ThrowIfFailed(hr, "Apply underline style to text layout failed");
+    KGE_THROW_IF_FAILED(hr, "Apply underline style to text layout failed");
 #else
     return;  // not supported
 #endif
@@ -243,7 +191,7 @@ void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
     {
         hr = text_layout_->SetStrikethrough(enable, { start, length });
     }
-    ThrowIfFailed(hr, "Apply strikethrough style to text layout failed");
+    KGE_THROW_IF_FAILED(hr, "Apply strikethrough style to text layout failed");
 #else
     return;  // not supported
 #endif

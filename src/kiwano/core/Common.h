@@ -29,9 +29,10 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <kiwano/macros.h>
+#include <kiwano/core/String.h>
+#include <kiwano/core/Function.h>
 #include <kiwano/core/Singleton.h>
-#include <3rd-party/OuterC/oc/oc.h>
-#include <3rd-party/nlohmann/json.hpp>
+#include <kiwano/core/Any.h>
 
 namespace kiwano
 {
@@ -43,14 +44,6 @@ using InputStream = std::istream;
 /// \~chinese
 /// @brief 输出流
 using OutputStream = std::ostream;
-
-/// \~chinese
-/// @brief 字符串容器
-using String = oc::string;
-
-/// \~chinese
-/// @brief 宽字符串容器
-using WideString = oc::wstring;
 
 /// \~chinese
 /// @brief 字符串流
@@ -106,83 +99,16 @@ template <typename _Kty, typename _Ty, typename... _Args>
 using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
-/// @brief 函数封装器
-template <typename _FuncTy>
-using Function = oc::function<_FuncTy>;
-
-/// \~chinese
-/// @brief 单值容器
-using Any = oc::any;
-
-/// \~chinese
-/// @brief 侵入式链表容器
-template <typename _Ty>
-using IntrusiveList = oc::intrusive_list<_Ty>;
-
-/// \~chinese
-/// @brief 侵入式链表元素
-template <typename _Ty>
-using IntrusiveListItem = oc::intrusive_list_item<_Ty>;
-
-/// \~chinese
-/// @brief 侵入式智能指针
-template <typename _Ty, typename _RefProxyTy>
-using IntrusivePtr = oc::intrusive_ptr<_Ty, _RefProxyTy>;
-
-/// \~chinese
-/// @brief JSON对象容器
-using Json = nlohmann::basic_json<Map, Vector, String>;
-
-/// \~chinese
 /// @brief 不可拷贝对象
-using Noncopyable = oc::noncopyable;
-
-/// \~chinese
-/// @brief 闭包函数
-template <typename _Ty, typename _Uty, typename _Ret, typename... _Args>
-inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...))
+class Noncopyable
 {
-    return oc::closure(ptr, func);
-}
+protected:
+    Noncopyable() = default;
 
-/// \~chinese
-/// @brief 闭包函数
-template <typename _Ty, typename _Uty, typename _Ret, typename... _Args>
-inline Function<_Ret(_Args...)> Closure(_Uty* ptr, _Ret (_Ty::*func)(_Args...) const)
-{
-    return oc::closure(ptr, func);
-}
+private:
+    Noncopyable(const Noncopyable&) = delete;
 
-#if defined(KGE_WIN32)
-
-inline String WideToMultiByte(const WideString& str)
-{
-    int chars_num = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
-    if (chars_num)
-    {
-        String result;
-        result.resize(chars_num);
-
-        ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &result[0], chars_num, NULL, NULL);
-        return result;
-    }
-    return String();
-}
-
-inline WideString MultiByteToWide(const String& str)
-{
-    int wchars_num = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
-    if (wchars_num)
-    {
-        WideString result;
-        result.resize(wchars_num);
-
-        ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &result[0], wchars_num);
-        return result;
-    }
-    return WideString();
-}
-
-#endif  // KGE_WIN32
+    Noncopyable& operator=(const Noncopyable&) = delete;
+};
 
 }  // namespace kiwano

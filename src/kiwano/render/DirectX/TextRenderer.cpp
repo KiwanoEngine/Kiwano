@@ -121,8 +121,8 @@ STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1RenderTarget* pRT)
 {
     HRESULT hr = E_FAIL;
 
-    pFactory_.reset();
-    pRT_.reset();
+    pFactory_.Reset();
+    pRT_.Reset();
 
     if (pRT)
     {
@@ -180,7 +180,7 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
             {
                 hr = glyphRun->fontFace->GetGlyphRunOutline(
                     glyphRun->fontEmSize, glyphRun->glyphIndices, glyphRun->glyphAdvances, glyphRun->glyphOffsets,
-                    glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.get());
+                    glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.Get());
             }
 
             if (SUCCEEDED(hr))
@@ -195,14 +195,14 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
 
                 if (SUCCEEDED(hr))
                 {
-                    hr = pFactory_->CreateTransformedGeometry(pPathGeometry.get(), &matrix, &pTransformedGeometry);
+                    hr = pFactory_->CreateTransformedGeometry(pPathGeometry.Get(), &matrix, &pTransformedGeometry);
                 }
 
                 if (SUCCEEDED(hr))
                 {
-                    pRT_->DrawGeometry(pTransformedGeometry.get(), pOutlineBrush_.get(),
+                    pRT_->DrawGeometry(pTransformedGeometry.Get(), pOutlineBrush_.Get(),
                                        fOutlineWidth_ * 2,  // twice width for widening
-                                       pCurrStrokeStyle_.get());
+                                       pCurrStrokeStyle_.Get());
 
                     ++cPrimitivesCount_;
                 }
@@ -212,7 +212,7 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
 
     if (SUCCEEDED(hr) && pFillBrush_)
     {
-        pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pFillBrush_.get());
+        pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pFillBrush_.Get());
 
         ++cPrimitivesCount_;
     }
@@ -238,20 +238,20 @@ STDMETHODIMP TextRenderer::DrawUnderline(__maybenull void* clientDrawingContext,
     ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
     if (SUCCEEDED(hr))
     {
-        hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.get(), &matrix, &pTransformedGeometry);
+        hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
     }
 
     if (SUCCEEDED(hr) && pOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.get(), pOutlineBrush_.get(), fOutlineWidth_ * 2,
-                           pCurrStrokeStyle_.get());
+        pRT_->DrawGeometry(pTransformedGeometry.Get(), pOutlineBrush_.Get(), fOutlineWidth_ * 2,
+                           pCurrStrokeStyle_.Get());
 
         ++cPrimitivesCount_;
     }
 
     if (SUCCEEDED(hr) && pFillBrush_)
     {
-        pRT_->FillGeometry(pTransformedGeometry.get(), pFillBrush_.get());
+        pRT_->FillGeometry(pTransformedGeometry.Get(), pFillBrush_.Get());
 
         ++cPrimitivesCount_;
     }
@@ -278,20 +278,20 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(__maybenull void* clientDrawingCont
     ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
     if (SUCCEEDED(hr))
     {
-        hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.get(), &matrix, &pTransformedGeometry);
+        hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
     }
 
     if (SUCCEEDED(hr) && pOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.get(), pOutlineBrush_.get(), fOutlineWidth_ * 2,
-                           pCurrStrokeStyle_.get());
+        pRT_->DrawGeometry(pTransformedGeometry.Get(), pOutlineBrush_.Get(), fOutlineWidth_ * 2,
+                           pCurrStrokeStyle_.Get());
 
         ++cPrimitivesCount_;
     }
 
     if (SUCCEEDED(hr) && pFillBrush_)
     {
-        pRT_->FillGeometry(pTransformedGeometry.get(), pFillBrush_.get());
+        pRT_->FillGeometry(pTransformedGeometry.Get(), pFillBrush_.Get());
 
         ++cPrimitivesCount_;
     }

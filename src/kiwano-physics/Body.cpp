@@ -84,7 +84,7 @@ Fixture* Body::AddCircleShape(float radius, float density, float friction, float
     Fixture::Param param(density, friction, restitution, is_sensor);
     FixturePtr     fixture = Fixture::CreateCircle(this, param, radius);
     AddFixture(fixture);
-    return fixture.get();
+    return fixture.Get();
 }
 
 Fixture* Body::AddRectShape(Vec2 const& size, float density, float friction, float restitution, bool is_sensor)
@@ -92,7 +92,7 @@ Fixture* Body::AddRectShape(Vec2 const& size, float density, float friction, flo
     Fixture::Param param(density, friction, restitution, is_sensor);
     FixturePtr     fixture = Fixture::CreateRect(this, param, size);
     AddFixture(fixture);
-    return fixture.get();
+    return fixture.Get();
 }
 
 Fixture* Body::AddPolygonShape(Vector<Point> const& vertexs, float density, float friction, float restitution,
@@ -101,7 +101,7 @@ Fixture* Body::AddPolygonShape(Vector<Point> const& vertexs, float density, floa
     Fixture::Param param(density, friction, restitution, is_sensor);
     FixturePtr     fixture = Fixture::CreatePolygon(this, param, vertexs);
     AddFixture(fixture);
-    return fixture.get();
+    return fixture.Get();
 }
 
 Fixture* Body::AddEdgeShape(Point const& p1, Point const& p2, float density, float friction, float restitution,
@@ -110,7 +110,7 @@ Fixture* Body::AddEdgeShape(Point const& p1, Point const& p2, float density, flo
     Fixture::Param param(density, friction, restitution, is_sensor);
     FixturePtr     fixture = Fixture::CreateEdge(this, param, p1, p2);
     AddFixture(fixture);
-    return fixture.get();
+    return fixture.Get();
 }
 
 Fixture* Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float density, float friction, float restitution,
@@ -119,7 +119,7 @@ Fixture* Body::AddChainShape(Vector<Point> const& vertexs, bool loop, float dens
     Fixture::Param param(density, friction, restitution, is_sensor);
     FixturePtr     fixture = Fixture::CreateChain(this, param, vertexs, loop);
     AddFixture(fixture);
-    return fixture.get();
+    return fixture.Get();
 }
 
 void Body::RemoveFixture(FixturePtr fixture)

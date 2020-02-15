@@ -18,8 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
 #include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/Logger.h>
+#include <kiwano/core/Json.h>
 #include <typeinfo>
 
 namespace kiwano
@@ -88,7 +89,7 @@ void ObjectBase::SetName(String const& name)
 
 String ObjectBase::DumpObject()
 {
-    return String::format("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*this).name(), GetObjectID(),
+    return string::Format("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*this).name(), GetObjectID(),
                           GetRefCount(), GetName().c_str());
 }
 

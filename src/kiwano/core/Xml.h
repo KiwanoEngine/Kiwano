@@ -19,30 +19,18 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/SmartPtr.hpp>
-#include <Unknwnbase.h>
+#include <3rd-party/pugixml/pugixml.hpp>
 
 namespace kiwano
 {
-struct ComPtrProxy
-{
-    static inline void AddRef(IUnknown* ptr)
-    {
-        if (ptr)
-            ptr->AddRef();
-    }
 
-    static inline void Release(IUnknown* ptr)
-    {
-        if (ptr)
-            ptr->Release();
-    }
-};
+/// \~chinese
+/// @brief XML文档
+using XmlDocument = pugi::xml_document;
 
-// ComPtr<> is a smart pointer for COM
-template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = SmartPtr<_Ty, ComPtrProxy>;
+/// \~chinese
+/// @brief XML文档
+using XmlNode = pugi::xml_node;
 
 }  // namespace kiwano

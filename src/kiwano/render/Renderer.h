@@ -67,28 +67,28 @@ public:
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] file_path 图片路径
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTexture(Texture& texture, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] resource 图片资源
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTexture(Texture& texture, Resource const& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImage(GifImage& gif, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] resource 图片资源
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImage(GifImage& gif, Resource const& resource) = 0;
 
     /// \~chinese
@@ -96,27 +96,27 @@ public:
     /// @param[out] frame GIF图像帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
     /// @param[in] file_paths 字体文件路径
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateFontCollection(Font& font, String const& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
     /// @param[in] res_arr 字体资源
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateFontCollection(Font& font, Resource const& res) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局内部资源
     /// @param[out] layout 字体布局
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTextLayout(TextLayout& layout) = 0;
 
     /// \~chinese
@@ -124,14 +124,14 @@ public:
     /// @param[out] shape 形状
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) = 0;
 
     /// \~chinese
     /// @brief 创建矩形形状内部资源
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateRectShape(Shape& shape, Rect const& rect) = 0;
 
     /// \~chinese
@@ -139,7 +139,7 @@ public:
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius) = 0;
 
     /// \~chinese
@@ -147,34 +147,34 @@ public:
     /// @param[out] shape 形状
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 创建几何图形生成器内部资源
     /// @param[out] sink 形状生成器
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateShapeSink(ShapeSink& sink) = 0;
 
     /// \~chinese
     /// @brief 创建纯色画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, Color const& color) = 0;
 
     /// \~chinese
     /// @brief 创建线性渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, LinearGradientStyle const& style) = 0;
 
     /// \~chinese
     /// @brief 创建径向渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, RadialGradientStyle const& style) = 0;
 
     /// \~chinese
@@ -185,7 +185,7 @@ public:
     /// @param[in] dash_array 虚线长度与间隙数组
     /// @param[in] dash_size 虚线数组大小
     /// @param[in] dash_offset 虚线偏移量
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
                                    const float* dash_array, size_t dash_size, float dash_offset) = 0;
 
@@ -193,7 +193,7 @@ public:
     /// @brief 创建纹理渲染上下文
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
-    /// @throw std::system_error 创建失败时抛出
+    /// @throw kiwano::SystemError 创建失败时抛出
     virtual TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) = 0;
 
 public:
@@ -219,7 +219,7 @@ public:
 
     /// \~chinese
     /// @brief 将绘制内容呈现至窗口
-    /// @throw std::system_error 呈现失败时抛出
+    /// @throw kiwano::SystemError 呈现失败时抛出
     virtual void Present() = 0;
 
     /// \~chinese

@@ -171,13 +171,13 @@ STDMETHODIMP D2DDeviceResources::QueryInterface(IID const& riid, void** object)
 
 void D2DDeviceResources::DiscardResources()
 {
-    factory_.reset();
-    device_.reset();
-    device_context_.reset();
-    target_bitmap_.reset();
+    factory_.Reset();
+    device_.Reset();
+    device_context_.Reset();
+    target_bitmap_.Reset();
 
-    imaging_factory_.reset();
-    dwrite_factory_.reset();
+    imaging_factory_.Reset();
+    dwrite_factory_.Reset();
 }
 
 HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
@@ -235,7 +235,7 @@ HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_
     // Create the Direct2D device object and a corresponding context.
     ComPtr<ID2D1Device> device;
 
-    HRESULT hr = factory_->CreateDevice(dxgi_device.get(), &device);
+    HRESULT hr = factory_->CreateDevice(dxgi_device.Get(), &device);
 
     if (SUCCEEDED(hr))
     {
@@ -269,7 +269,7 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
     {
         ComPtr<ID2D1Bitmap1> target;
         hr = device_context_->CreateBitmapFromDxgiSurface(
-            dxgi_back_buffer.get(),
+            dxgi_back_buffer.Get(),
             D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
                                     D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi_, dpi_),
             &target);
@@ -277,7 +277,7 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
         if (SUCCEEDED(hr))
         {
             target_bitmap_ = target;
-            device_context_->SetTarget(target_bitmap_.get());
+            device_context_->SetTarget(target_bitmap_.Get());
         }
     }
     return hr;
@@ -326,7 +326,7 @@ HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConvert
     if (SUCCEEDED(hr))
     {
         hr =
-            output->Initialize(source.get(), format, dither, palette.get(), alpha_threshold_percent, palette_translate);
+            output->Initialize(source.Get(), format, dither, palette.Get(), alpha_threshold_percent, palette_translate);
     }
 
     if (SUCCEEDED(hr))
@@ -345,7 +345,7 @@ HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>&
 
     ComPtr<ID2D1Bitmap> output;
 
-    HRESULT hr = device_context_->CreateBitmapFromWicBitmap(converter.get(), properties, &output);
+    HRESULT hr = device_context_->CreateBitmapFromWicBitmap(converter.Get(), properties, &output);
 
     if (SUCCEEDED(hr))
     {
@@ -393,7 +393,7 @@ HRESULT D2DDeviceResources::CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBit
         if (SUCCEEDED(hr))
         {
             ComPtr<IWICBitmapDecoder> decoder_output;
-            hr = imaging_factory_->CreateDecoderFromStream(stream.get(), nullptr, WICDecodeMetadataCacheOnLoad,
+            hr = imaging_factory_->CreateDecoderFromStream(stream.Get(), nullptr, WICDecodeMetadataCacheOnLoad,
                                                            &decoder_output);
 
             if (SUCCEEDED(hr))
@@ -413,7 +413,7 @@ HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& te
         return E_UNEXPECTED;
 
     ComPtr<IDWriteTextFormat> output;
-    HRESULT hr = dwrite_factory_->CreateTextFormat(family, collection.get(), weight, style, stretch, font_size,
+    HRESULT hr = dwrite_factory_->CreateTextFormat(family, collection.Get(), weight, style, stretch, font_size,
                                                    L"", &output);
 
     if (SUCCEEDED(hr))
@@ -431,7 +431,7 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
 
     ComPtr<IDWriteTextLayout> output;
 
-    HRESULT hr = dwrite_factory_->CreateTextLayout(text, length, text_format.get(), 0, 0, &output);
+    HRESULT hr = dwrite_factory_->CreateTextLayout(text, length, text_format.Get(), 0, 0, &output);
 
     if (SUCCEEDED(hr))
     {

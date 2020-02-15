@@ -49,22 +49,24 @@ ActionGroup::~ActionGroup() {}
 
 void ActionGroup::Init(Actor* target)
 {
-    if (actions_.empty())
+    if (actions_.IsEmpty())
     {
         Done();
         return;
     }
 
-    current_ = actions_.first_item();
-    current_->Restart(target);  // init first action
-
     if (sync_)
     {
         // init all actions
-        for (; current_; current_ = current_->next_item())
+        for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
         {
             current_->Restart(target);
         }
+    }
+    else
+    {
+        current_ = actions_.GetFirst();
+        current_->Restart(target);  // init first action
     }
 }
 
@@ -78,7 +80,7 @@ void ActionGroup::Update(Actor* target, Duration dt)
 
             if (current_->IsDone())
             {
-                current_ = current_->next_item();
+                current_ = current_->GetNext();
 
                 if (current_)
                     current_->Restart(target);  // init next action
@@ -90,7 +92,7 @@ void ActionGroup::Update(Actor* target, Duration dt)
     else
     {
         bool done = true;
-        for (current_ = actions_.first_item(); current_; current_ = current_->next_item())
+        for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
         {
             if (!current_->IsDone())
             {
@@ -110,7 +112,7 @@ void ActionGroup::AddAction(ActionPtr action)
 {
     if (action)
     {
-        actions_.push_back(action);
+        actions_.PushBack(action);
     }
 }
 
@@ -123,9 +125,9 @@ void ActionGroup::AddActions(Vector<ActionPtr> const& actions)
 ActionPtr ActionGroup::Clone() const
 {
     Vector<ActionPtr> actions;
-    if (!actions_.empty())
+    if (!actions_.IsEmpty())
     {
-        for (auto action = actions_.last_item(); action; action = action->prev_item())
+        for (auto action = actions_.GetLast(); action; action = action->GetPrev())
         {
             actions.push_back(action->Clone());
         }
@@ -136,9 +138,9 @@ ActionPtr ActionGroup::Clone() const
 ActionPtr ActionGroup::Reverse() const
 {
     Vector<ActionPtr> actions;
-    if (!actions_.empty())
+    if (!actions_.IsEmpty())
     {
-        for (auto action = actions_.last_item(); action; action = action->prev_item())
+        for (auto action = actions_.GetLast(); action; action = action->GetPrev())
         {
             actions.push_back(action->Reverse());
         }

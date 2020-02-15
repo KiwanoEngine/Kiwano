@@ -50,7 +50,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
 {
     KGE_SYS_LOG("Creating device resources");
 
-    ThrowIfFailed(::CoInitialize(nullptr), "CoInitialize failed");
+    KGE_THROW_IF_FAILED(::CoInitialize(nullptr), "CoInitialize failed");
 
     HWND target_window = window->GetHandle();
     output_size_       = window->GetSize();
@@ -83,7 +83,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
 
                 if (SUCCEEDED(hr))
                 {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.get());
+                    hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
                 }
             }
 
@@ -94,40 +94,40 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
 
                 if (SUCCEEDED(hr))
                 {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.get());
+                    hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
                 }
 
                 if (SUCCEEDED(hr))
                 {
                     hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_,
-                                                               res_font_file_loader_.get());
+                                                               res_font_file_loader_.Get());
 
                     if (SUCCEEDED(hr))
                     {
                         hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(
-                            res_font_collection_loader_.get());
+                            res_font_collection_loader_.Get());
                     }
                 }
             }
         }
     }
 
-    ThrowIfFailed(hr, "Create render resources failed");
+    KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
 
 void RendererImpl::Destroy()
 {
     KGE_SYS_LOG("Destroying device resources");
 
-    d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.get());
-    res_font_file_loader_.reset();
+    d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.Get());
+    res_font_file_loader_.Reset();
 
-    d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.get());
-    res_font_collection_loader_.reset();
+    d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
+    res_font_collection_loader_.Reset();
 
-    render_ctx_.reset();
-    d2d_res_.reset();
-    d3d_res_.reset();
+    render_ctx_.Reset();
+    d2d_res_.Reset();
+    d3d_res_.Reset();
 
     ::CoUninitialize();
 }
@@ -165,7 +165,7 @@ void RendererImpl::Present()
         hr = HandleDeviceLost();
     }
 
-    ThrowIfFailed(hr, "Unexpected DXGI exception");
+    KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
 }
 
 HRESULT RendererImpl::HandleDeviceLost()
@@ -202,7 +202,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (SUCCEEDED(hr))
     {
-        WideString full_path = MultiByteToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
+        WideString full_path = string::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
@@ -235,7 +235,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
     if (FAILED(hr))
     {
-        ThrowIfFailed(hr, "Load texture failed");
+        KGE_THROW_IF_FAILED(hr, "Load texture failed");
     }
 }
 
@@ -307,7 +307,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
 
     if (SUCCEEDED(hr))
     {
-        WideString full_path = MultiByteToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
+        WideString full_path = string::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
@@ -543,7 +543,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
         if (SUCCEEDED(hr))
         {
             ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(font_collection_loader_.get(), key, key_size,
+            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(font_collection_loader_.Get(), key, key_size,
                                                                           &font_collection);
 
             if (SUCCEEDED(hr))
@@ -553,7 +553,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
         }
     }
 
-    ThrowIfFailed(hr, "Create font collection failed");
+    KGE_THROW_IF_FAILED(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
@@ -574,7 +574,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
         if (SUCCEEDED(hr))
         {
             ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(res_font_collection_loader_.get(), key,
+            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(res_font_collection_loader_.Get(), key,
                                                                           key_size, &font_collection);
 
             if (SUCCEEDED(hr))
@@ -584,7 +584,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
         }
     }
 
-    ThrowIfFailed(hr, "Create font collection failed");
+    KGE_THROW_IF_FAILED(hr, "Create font collection failed");
 }
 
 void RendererImpl::CreateTextLayout(TextLayout& layout)
@@ -599,53 +599,108 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
     {
         layout.SetTextFormat(nullptr);
         layout.SetTextLayout(nullptr);
+        layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
         return;
     }
 
+    const TextStyle& style = layout.GetStyle();
+
     if (!layout.GetTextFormat() || (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyFormat))
     {
+        WideString             font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
+        DWRITE_FONT_WEIGHT     font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
+        DWRITE_FONT_STYLE      font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+        IDWriteFontCollection* collection  = style.font ? style.font->GetCollection().Get() : nullptr;
+
         ComPtr<IDWriteTextFormat> output;
         if (SUCCEEDED(hr))
         {
-            const TextStyle& style = layout.GetStyle();
-
-            hr = d2d_res_->CreateTextFormat(output, MultiByteToWide(style.font_family).c_str(),
-                                            style.font ? style.font->GetCollection() : nullptr,
-                                            DWRITE_FONT_WEIGHT(style.font_weight),
-                                            style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL,
+            hr = d2d_res_->CreateTextFormat(output, font_family.c_str(), collection, font_weight, font_style,
                                             DWRITE_FONT_STRETCH_NORMAL, style.font_size);
         }
 
         if (SUCCEEDED(hr))
         {
             layout.SetTextFormat(output);
+            layout.SetDirtyFlag(layout.GetDirtyFlag() | TextLayout::DirtyFlag::DirtyLayout);
         }
     }
 
     if (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyLayout)
     {
         ComPtr<IDWriteTextLayout> output;
+
         if (SUCCEEDED(hr))
         {
-
-            WideString text = MultiByteToWide(layout.GetText());
+            WideString text = string::ToWide(layout.GetText());
 
             hr = d2d_res_->CreateTextLayout(output, text.c_str(), text.length(), layout.GetTextFormat());
         }
 
         if (SUCCEEDED(hr))
         {
+            hr = output->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style.alignment));
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            float wrap_width      = style.wrap_width;
+            bool  enable_wrapping = (wrap_width > 0);
+
+            if (SUCCEEDED(hr))
+            {
+                if (enable_wrapping)
+                {
+                    hr = output->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+                }
+                else
+                {
+                    hr = output->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+                }
+            }
+
+            if (SUCCEEDED(hr))
+            {
+                if (enable_wrapping)
+                {
+                    hr = output->SetMaxWidth(wrap_width);
+                }
+                else
+                {
+                    // Fix the layout width when the text does not wrap
+                    DWRITE_TEXT_METRICS metrics;
+                    hr = output->GetMetrics(&metrics);
+
+                    if (SUCCEEDED(hr))
+                    {
+                        hr = output->SetMaxWidth(metrics.width);
+                    }
+                }
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            float spacing = style.line_spacing;
+            if (spacing == 0.f)
+            {
+                hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+            }
+            else
+            {
+                hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, spacing, spacing * 0.8f);
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
             layout.SetTextLayout(output);
-
-            layout.SetAlignment(layout.GetStyle().alignment);
-            layout.SetWrapWidth(layout.GetStyle().wrap_width);
-            layout.SetLineSpacing(layout.GetStyle().line_spacing);
-
-            layout.SetDirtyFlag(TextLayout::DirtyFlag::Clean);
         }
     }
 
-    ThrowIfFailed(hr, "Create text layout failed");
+    layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
+
+    KGE_THROW_IF_FAILED(hr, "Create text layout failed");
 }
 
 void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos)
@@ -681,7 +736,7 @@ void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point c
         shape.SetGeometry(path_geo);
     }
 
-    ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
@@ -703,7 +758,7 @@ void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
         shape.SetGeometry(output);
     }
 
-    ThrowIfFailed(hr, "Create ID2D1RectangleGeometry failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1RectangleGeometry failed");
 }
 
 void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius)
@@ -726,7 +781,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 c
         shape.SetGeometry(output);
     }
 
-    ThrowIfFailed(hr, "Create ID2D1RoundedRectangleGeometry failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1RoundedRectangleGeometry failed");
 }
 
 void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius)
@@ -749,7 +804,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 co
         shape.SetGeometry(output);
     }
 
-    ThrowIfFailed(hr, "Create ID2D1EllipseGeometry failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1EllipseGeometry failed");
 }
 
 void RendererImpl::CreateShapeSink(ShapeSink& sink)
@@ -771,7 +826,7 @@ void RendererImpl::CreateShapeSink(ShapeSink& sink)
         sink.SetPathGeometry(output);
     }
 
-    ThrowIfFailed(hr, "Create ID2D1PathGeometry failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, Color const& color)
@@ -805,7 +860,7 @@ void RendererImpl::CreateBrush(Brush& brush, Color const& color)
         }
     }
 
-    ThrowIfFailed(hr, "Create ID2D1SolidBrush failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1SolidBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
@@ -828,7 +883,7 @@ void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
             ComPtr<ID2D1LinearGradientBrush> output;
             hr = d2d_res_->GetDeviceContext()->CreateLinearGradientBrush(
                 D2D1::LinearGradientBrushProperties(DX::ConvertToPoint2F(style.begin), DX::ConvertToPoint2F(style.end)),
-                collection.get(), &output);
+                collection.Get(), &output);
 
             if (SUCCEEDED(hr))
             {
@@ -837,7 +892,7 @@ void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
         }
     }
 
-    ThrowIfFailed(hr, "Create ID2D1LinearGradientBrush failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1LinearGradientBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
@@ -861,7 +916,7 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
             hr = d2d_res_->GetDeviceContext()->CreateRadialGradientBrush(
                 D2D1::RadialGradientBrushProperties(DX::ConvertToPoint2F(style.center),
                                                     DX::ConvertToPoint2F(style.offset), style.radius.x, style.radius.y),
-                collection.get(), &output);
+                collection.Get(), &output);
 
             if (SUCCEEDED(hr))
             {
@@ -870,11 +925,11 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
         }
     }
 
-    ThrowIfFailed(hr, "Create ID2D1RadialGradientBrush failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
 }
 
 void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
-                                 const float* dash_array, size_t dash_size, float dash_offset)
+                                     const float* dash_array, size_t dash_size, float dash_offset)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -897,7 +952,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, Li
         }
     }
 
-    ThrowIfFailed(hr, "Create ID2D1StrokeStyle failed");
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1StrokeStyle failed");
 }
 
 TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* desired_size)
@@ -966,7 +1021,7 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
         render_ctx_->Resize(output_size_);
     }
 
-    ThrowIfFailed(hr, "Resize render target failed");
+    KGE_THROW_IF_FAILED(hr, "Resize render target failed");
 }
 
 }  // namespace kiwano

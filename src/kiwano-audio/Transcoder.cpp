@@ -76,11 +76,11 @@ HRESULT Transcoder::LoadMediaFile(String const& file_path)
 
     ComPtr<IMFSourceReader> reader;
 
-    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(MultiByteToWide(file_path).c_str(), nullptr, &reader);
+    hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(string::ToWide(file_path).c_str(), nullptr, &reader);
 
     if (SUCCEEDED(hr))
     {
-        hr = ReadSource(reader.get());
+        hr = ReadSource(reader.Get());
     }
 
     return hr;
@@ -111,17 +111,17 @@ HRESULT Transcoder::LoadMediaResource(Resource const& res)
 
     if (SUCCEEDED(hr))
     {
-        hr = dlls::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.get(), &byte_stream);
+        hr = dlls::MediaFoundation::Get().MFCreateMFByteStreamOnStream(stream.Get(), &byte_stream);
     }
 
     if (SUCCEEDED(hr))
     {
-        hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(byte_stream.get(), nullptr, &reader);
+        hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(byte_stream.Get(), nullptr, &reader);
     }
 
     if (SUCCEEDED(hr))
     {
-        hr = ReadSource(reader.get());
+        hr = ReadSource(reader.Get());
     }
 
     return hr;
@@ -150,7 +150,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
     // 设置 source reader 的媒体类型，它将使用合适的解码器去解码这个音频
     if (SUCCEEDED(hr))
     {
-        hr = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, partial_type.get());
+        hr = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, partial_type.Get());
     }
 
     // 从 IMFMediaType 中获取 WAVEFORMAT 结构
@@ -170,7 +170,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
     {
         uint32_t size = 0;
         hr            = dlls::MediaFoundation::Get().MFCreateWaveFormatExFromMFMediaType(
-            uncompressed_type.get(), &wave_format_, &size, (DWORD)MFWaveFormatExConvertFlag_Normal);
+            uncompressed_type.Get(), &wave_format_, &size, (DWORD)MFWaveFormatExConvertFlag_Normal);
     }
 
     // 估算音频流大小

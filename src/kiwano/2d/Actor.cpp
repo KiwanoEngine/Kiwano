@@ -83,12 +83,12 @@ void Actor::Update(Duration dt)
         OnUpdate(dt);
     }
 
-    if (!children_.empty())
+    if (!children_.IsEmpty())
     {
         ActorPtr next;
-        for (auto child = children_.first_item(); child; child = next)
+        for (auto child = children_.GetFirst(); child; child = next)
         {
-            next = child->next_item();
+            next = child->GetNext();
             child->Update(dt);
         }
     }
@@ -101,7 +101,7 @@ void Actor::Render(RenderContext& ctx)
 
     UpdateTransform();
 
-    if (children_.empty())
+    if (children_.IsEmpty())
     {
         if (CheckVisibility(ctx))
         {
@@ -112,14 +112,14 @@ void Actor::Render(RenderContext& ctx)
     else
     {
         // render children those are less than 0 in Z-Order
-        Actor* child = children_.first_item().get();
+        ActorPtr child = children_.GetFirst();
         while (child)
         {
             if (child->GetZOrder() >= 0)
                 break;
 
             child->Render(ctx);
-            child = child->next_item().get();
+            child = child->GetNext();
         }
 
         if (CheckVisibility(ctx))
@@ -131,7 +131,7 @@ void Actor::Render(RenderContext& ctx)
         while (child)
         {
             child->Render(ctx);
-            child = child->next_item().get();
+            child = child->GetNext();
         }
     }
 }
@@ -157,9 +157,9 @@ void Actor::RenderBorder(RenderContext& ctx)
         ctx.DrawRectangle(bounds, nullptr, 2.f);
     }
 
-    for (auto child = children_.first_item(); child; child = child->next_item())
+    for (auto& child : children_)
     {
-        child->RenderBorder(ctx);
+        child.RenderBorder(ctx);
     }
 }
 
@@ -187,7 +187,7 @@ bool Actor::DispatchEvent(Event* evt)
         return true;
 
     // Dispatch to children those are greater than 0 in Z-Order
-    Actor* child = children_.last_item().get();
+    ActorPtr child = children_.GetLast();
     while (child)
     {
         if (child->GetZOrder() < 0)
@@ -196,7 +196,7 @@ bool Actor::DispatchEvent(Event* evt)
         if (!child->DispatchEvent(evt))
             return false;
 
-        child = child->prev_item().get();
+        child = child->GetPrev();
     }
 
     if (!EventDispatcher::DispatchEvent(evt))
@@ -209,7 +209,7 @@ bool Actor::DispatchEvent(Event* evt)
         if (!child->DispatchEvent(evt))
             return false;
 
-        child = child->prev_item().get();
+        child = child->GetPrev();
     }
     return true;
 }
@@ -228,7 +228,7 @@ void Actor::HandleEvent(Event* evt)
 
                 MouseHoverEventPtr hover = new MouseHoverEvent;
                 hover->pos               = mouse_evt->pos;
-                EventDispatcher::DispatchEvent(hover.get());
+                EventDispatcher::DispatchEvent(hover.Get());
             }
             else if (hover_ && !contains)
             {
@@ -237,7 +237,7 @@ void Actor::HandleEvent(Event* evt)
 
                 MouseOutEventPtr out = new MouseOutEvent;
                 out->pos             = mouse_evt->pos;
-                EventDispatcher::DispatchEvent(out.get());
+                EventDispatcher::DispatchEvent(out.Get());
             }
         }
 
@@ -255,7 +255,7 @@ void Actor::HandleEvent(Event* evt)
             MouseClickEventPtr click = new MouseClickEvent;
             click->pos               = mouse_up_evt->pos;
             click->button            = mouse_up_evt->button;
-            EventDispatcher::DispatchEvent(click.get());
+            EventDispatcher::DispatchEvent(click.Get());
         }
     }
 }
@@ -304,8 +304,8 @@ void Actor::UpdateTransform() const
     }
 
     // update children's transform
-    for (auto child = children_.first_item().get(); child; child = child->next_item().get())
-        child->dirty_transform_ = true;
+    for (const auto& child : children_)
+        child.dirty_transform_ = true;
 }
 
 void Actor::UpdateOpacity()
@@ -319,9 +319,9 @@ void Actor::UpdateOpacity()
         displayed_opacity_ = opacity_;
     }
 
-    for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+    for (auto& child : children_)
     {
-        child->UpdateOpacity();
+        child.UpdateOpacity();
     }
 }
 
@@ -330,9 +330,9 @@ void Actor::SetStage(Stage* stage)
     if (stage_ != stage)
     {
         stage_ = stage;
-        for (Actor* child = children_.first_item().get(); child; child = child->next_item().get())
+        for (auto& child : children_)
         {
-            child->stage_ = stage;
+            child.stage_ = stage;
         }
     }
 }
@@ -343,28 +343,28 @@ void Actor::Reorder()
     {
         ActorPtr me = this;
 
-        parent_->children_.remove(me);
+        parent_->children_.Remove(me.Get());
 
-        Actor* sibling = parent_->children_.last_item().get();
+        ActorPtr sibling = parent_->children_.GetLast();
 
         if (sibling && sibling->GetZOrder() > z_order_)
         {
-            sibling = sibling->prev_item().get();
+            sibling = sibling->GetPrev();
             while (sibling)
             {
                 if (sibling->GetZOrder() <= z_order_)
                     break;
-                sibling = sibling->prev_item().get();
+                sibling = sibling->GetPrev();
             }
         }
 
         if (sibling)
         {
-            parent_->children_.insert_after(me, sibling);
+            parent_->children_.InsertAfter(me.Get(), sibling);
         }
         else
         {
-            parent_->children_.push_front(me);
+            parent_->children_.PushFront(me.Get());
         }
     }
 }
@@ -520,7 +520,7 @@ void Actor::AddChild(Actor* child, int zorder)
 
 #endif  // KGE_DEBUG
 
-        children_.push_back(child);
+        children_.PushBack(child);
         child->parent_ = this;
         child->SetStage(this->stage_);
 
@@ -533,7 +533,7 @@ void Actor::AddChild(Actor* child, int zorder)
 
 void Actor::AddChild(ActorPtr child, int zorder)
 {
-    AddChild(child.get());
+    AddChild(child.Get());
 }
 
 void Actor::AddChildren(Vector<ActorPtr> const& children)
@@ -559,25 +559,25 @@ Vector<ActorPtr> Actor::GetChildren(String const& name) const
     Vector<ActorPtr> children;
     size_t           hash_code = std::hash<String>{}(name);
 
-    for (auto child = children_.first_item().get(); child; child = child->next_item().get())
+    for (const auto& child : children_)
     {
-        if (child->hash_name_ == hash_code && child->IsName(name))
+        if (child.hash_name_ == hash_code && child.IsName(name))
         {
-            children.push_back(const_cast<Actor*>(child));
+            children.push_back(const_cast<Actor*>(&child));
         }
     }
     return children;
 }
 
-Actor* Actor::GetChild(String const& name) const
+ActorPtr Actor::GetChild(String const& name) const
 {
     size_t hash_code = std::hash<String>{}(name);
 
-    for (auto child = children_.first_item().get(); child; child = child->next_item().get())
+    for (const auto& child : children_)
     {
-        if (child->hash_name_ == hash_code && child->IsName(name))
+        if (child.hash_name_ == hash_code && child.IsName(name))
         {
-            return const_cast<Actor*>(child);
+            return const_cast<Actor*>(&child);
         }
     }
     return nullptr;
@@ -603,14 +603,14 @@ void Actor::RemoveFromParent()
 
 void Actor::RemoveChild(ActorPtr child)
 {
-    RemoveChild(child.get());
+    RemoveChild(child.Get());
 }
 
 void Actor::RemoveChild(Actor* child)
 {
     KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 
-    if (children_.empty())
+    if (children_.IsEmpty())
         return;
 
     if (child)
@@ -618,23 +618,23 @@ void Actor::RemoveChild(Actor* child)
         child->parent_ = nullptr;
         if (child->stage_)
             child->SetStage(nullptr);
-        children_.remove(ActorPtr(child));
+        children_.Remove(child);
     }
 }
 
 void Actor::RemoveChildren(String const& child_name)
 {
-    if (children_.empty())
+    if (children_.IsEmpty())
     {
         return;
     }
 
     size_t hash_code = std::hash<String>{}(child_name);
 
-    Actor* next;
-    for (Actor* child = children_.first_item().get(); child; child = next)
+    ActorPtr next;
+    for (ActorPtr child = children_.GetFirst(); child; child = next)
     {
-        next = child->next_item().get();
+        next = child->GetNext();
 
         if (child->hash_name_ == hash_code && child->IsName(child_name))
         {
@@ -645,7 +645,7 @@ void Actor::RemoveChildren(String const& child_name)
 
 void Actor::RemoveAllChildren()
 {
-    children_.clear();
+    children_.Clear();
 }
 
 void Actor::SetResponsible(bool enable)

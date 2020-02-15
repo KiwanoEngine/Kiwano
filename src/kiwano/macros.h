@@ -25,19 +25,16 @@
 #endif
 
 #ifdef _WIN32
-#       define KGE_WIN32
-#   ifdef _WIN64
-#       define KGE_WIN64
-#   endif
+#   define KGE_PLATFORM_WINDOWS
 #elif __ANDROID__
-#   define KGE_ANDROID
+#   define KGE_PLATFORM_ANDROID
 #elif __linux__
-#   define KGE_LINUX
+#   define KGE_PLATFORM_LINUX
 #elif __APPLE__
 #   if TARGET_OS_IPHONE
-#       define KGE_IPHONE
+#       define KGE_PLATFORM_IPHONE
 #   elif TARGET_OS_MAC
-#       define KGE_MACOS
+#       define KGE_PLATFORM_MACOS
 #   else
 #       error "Unsupported Apple platform"
 #   endif
@@ -65,7 +62,7 @@
 //
 /////////////////////////////////////////////////////////////
 
-#ifdef KGE_WIN32
+#ifdef KGE_PLATFORM_WINDOWS
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_NONE
 #   undef KGE_RENDER_ENGINE
@@ -163,4 +160,10 @@ KGE_SUPPRESS_WARNING(4251)
 #include <wincodec.h>
 #include <windows.h>
 
-#endif  // KGE_WIN32
+#else
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#   error "DirectX render engine is not supported on current platform"
+#endif
+
+#endif  // KGE_PLATFORM_WINDOWS

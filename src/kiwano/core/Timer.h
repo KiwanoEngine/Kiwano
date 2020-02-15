@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/IntrusiveList.h>
 
 namespace kiwano
 {
@@ -33,7 +34,7 @@ KGE_DECLARE_SMART_PTR(Timer);
 /// @details 定时器用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Timer
     : public virtual ObjectBase
-    , protected IntrusiveListItem<TimerPtr>
+    , protected IntrusiveListValue<TimerPtr>
 {
     friend class TimerManager;
     friend IntrusiveList<TimerPtr>;

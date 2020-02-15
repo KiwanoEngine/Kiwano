@@ -23,22 +23,34 @@
 #include <stdexcept>
 #include <system_error>
 
-#define KGE_THROW(MESSAGE)                 \
-    do                                     \
-    {                                      \
-        kiwano::StackTracer().Print();     \
-        throw std::runtime_error(MESSAGE); \
+#define KGE_THROW(MESSAGE)                   \
+    do                                       \
+    {                                        \
+        kiwano::StackTracer().Print();       \
+        throw kiwano::RuntimeError(MESSAGE); \
     } while (0)
 
-#define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                        \
-    do                                                                                  \
-    {                                                                                   \
-        kiwano::StackTracer().Print();                                                  \
-        throw std::system_error(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
+#define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
+    do                                                                                    \
+    {                                                                                     \
+        kiwano::StackTracer().Print();                                                    \
+        throw kiwano::SystemError(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
     } while (0)
 
 namespace kiwano
 {
+
+/// \~chinese
+/// @brief 异常
+typedef std::exception Exception;
+
+/// \~chinese
+/// @brief 运行时异常
+typedef std::runtime_error RuntimeError;
+
+/// \~chinese
+/// @brief 系统异常
+typedef std::system_error SystemError;
 
 class StackTracer
 {
@@ -48,7 +60,7 @@ public:
     void Print() const;
 };
 
-#ifdef KGE_WIN32
+#ifdef KGE_PLATFORM_WINDOWS
 
 // Enables classifying error codes
 // @note We don't bother listing all possible values
@@ -64,7 +76,7 @@ typedef std::errc error_enum;
 
 }  // namespace kiwano
 
-#ifdef KGE_WIN32
+#ifdef KGE_PLATFORM_WINDOWS
 
 namespace std
 {
@@ -89,14 +101,12 @@ inline std::error_condition make_error_condition(kiwano::error_enum errc) noexce
     return std::error_condition(static_cast<int>(errc), kiwano::com_category());
 }
 
-inline void ThrowIfFailed(HRESULT hr, const String& message)
-{
-    if (FAILED(hr))
-    {
-        KGE_THROW_SYSTEM_ERROR(hr, message.c_str());
+#define KGE_THROW_IF_FAILED(HR, MESSAGE)     \
+    if (FAILED(HR))                          \
+    {                                        \
+        KGE_THROW_SYSTEM_ERROR(HR, MESSAGE); \
     }
-}
 
 }  // namespace kiwano
 
-#endif  // KGE_WIN32
+#endif  // KGE_PLATFORM_WINDOWS

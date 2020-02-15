@@ -25,19 +25,19 @@ namespace kiwano
 {
 bool EventDispatcher::DispatchEvent(Event* evt)
 {
-    if (listeners_.empty())
+    if (listeners_.IsEmpty())
         return true;
 
     EventListenerPtr next;
-    for (auto listener = listeners_.first_item(); listener; listener = next)
+    for (auto listener = listeners_.GetFirst(); listener; listener = next)
     {
-        next = listener->next_item();
+        next = listener->GetNext();
 
         if (listener->IsRunning())
             listener->Receive(evt);
 
         if (listener->IsRemoveable())
-            listeners_.remove(listener);
+            listeners_.Remove(listener);
 
         if (listener->IsSwallowEnabled())
             return false;
@@ -47,7 +47,7 @@ bool EventDispatcher::DispatchEvent(Event* evt)
 
 EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 {
-    return AddListener(listener.get());
+    return AddListener(listener.Get());
 }
 
 EventListener* EventDispatcher::AddListener(EventListener* listener)
@@ -56,7 +56,7 @@ EventListener* EventDispatcher::AddListener(EventListener* listener)
 
     if (listener)
     {
-        listeners_.push_back(listener);
+        listeners_.PushBack(listener);
     }
     return listener;
 }

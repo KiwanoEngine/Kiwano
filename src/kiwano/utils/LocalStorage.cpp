@@ -77,7 +77,7 @@ int LocalStorage::GetInt(String const& key, int default_value) const
 float LocalStorage::GetFloat(String const& key, float default_value) const
 {
     char   temp[32]    = { 0 };
-    String default_str = String::parse(default_value);
+    String default_str = std::to_string(default_value);
     ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
     return std::stof(temp);
 }
@@ -85,7 +85,7 @@ float LocalStorage::GetFloat(String const& key, float default_value) const
 double LocalStorage::GetDouble(String const& key, double default_value) const
 {
     char   temp[32]    = { 0 };
-    String default_str = String::parse(default_value);
+    String default_str = std::to_string(default_value);
     ::GetPrivateProfileStringA(field_name_.c_str(), key.c_str(), default_str.c_str(), temp, 31, file_path_.c_str());
     return std::stod(temp);
 }

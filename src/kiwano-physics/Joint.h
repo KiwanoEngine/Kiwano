@@ -81,8 +81,8 @@ public:
         }
 
         ParamBase(BodyPtr body_a, BodyPtr body_b)
-            : body_a(body_a.get())
-            , body_b(body_b.get())
+            : body_a(body_a.Get())
+            , body_b(body_b.Get())
         {
         }
     };
@@ -146,7 +146,7 @@ public:
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor_a, Point const& anchor_b, float frequency_hz = 0.f,
               float damping_ratio = 0.f)
-            : Param(body_a.get(), body_b.get(), anchor_a, anchor_b, frequency_hz, damping_ratio)
+            : Param(body_a.Get(), body_b.Get(), anchor_a, anchor_b, frequency_hz, damping_ratio)
         {
         }
     };
@@ -211,7 +211,7 @@ public:
         }
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
-            : Param(body_a.get(), body_b.get(), anchor, max_force, max_torque)
+            : Param(body_a.Get(), body_b.Get(), anchor, max_force, max_torque)
         {
         }
     };
@@ -270,7 +270,7 @@ public:
         }
 
         Param(JointPtr joint_a, JointPtr joint_b, float ratio = 1.f)
-            : Param(joint_a.get(), joint_b.get(), ratio)
+            : Param(joint_a.Get(), joint_b.Get(), ratio)
         {
         }
     };
@@ -323,7 +323,7 @@ public:
 
         Param(BodyPtr body_a, BodyPtr body_b, float max_force = 0.f, float max_torque = 0.f,
               float correction_factor = 0.3f)
-            : Param(body_a.get(), body_b.get(), max_force, max_torque, correction_factor)
+            : Param(body_a.Get(), body_b.Get(), max_force, max_torque, correction_factor)
         {
         }
     };
@@ -396,7 +396,7 @@ public:
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, Vec2 const& axis, bool enable_limit = false,
               float lower_translation = 0.0f, float upper_translation = 0.0f, bool enable_motor = false,
               float max_motor_force = 0.0f, float motor_speed = 0.0f)
-            : Param(body_a.get(), body_b.get(), anchor, axis, enable_limit, lower_translation, upper_translation,
+            : Param(body_a.Get(), body_b.Get(), anchor, axis, enable_limit, lower_translation, upper_translation,
                     enable_motor, max_motor_force, motor_speed)
         {
         }
@@ -502,7 +502,7 @@ public:
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor_a, Point const& anchor_b,
               Point const& ground_anchor_a, Point const& ground_anchor_b, float ratio = 1.0f)
-            : Param(body_a.get(), body_b.get(), anchor_a, anchor_b, ground_anchor_a, ground_anchor_b, ratio)
+            : Param(body_a.Get(), body_b.Get(), anchor_a, anchor_b, ground_anchor_a, ground_anchor_b, ratio)
         {
         }
     };
@@ -585,7 +585,7 @@ public:
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, bool enable_limit = false, float lower_angle = 0.0f,
               float upper_angle = 0.0f, bool enable_motor = false, float max_motor_torque = 0.0f,
               float motor_speed = 0.0f)
-            : Param(body_a.get(), body_b.get(), anchor, enable_limit, lower_angle, upper_angle, enable_motor,
+            : Param(body_a.Get(), body_b.Get(), anchor, enable_limit, lower_angle, upper_angle, enable_motor,
                     max_motor_torque, motor_speed)
         {
         }
@@ -687,7 +687,7 @@ public:
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& local_anchor_a, Point const& local_anchor_b,
               float max_length = 0.f)
-            : Param(body_a.get(), body_b.get(), local_anchor_a, local_anchor_b, max_length)
+            : Param(body_a.Get(), body_b.Get(), local_anchor_a, local_anchor_b, max_length)
         {
         }
     };
@@ -738,7 +738,7 @@ public:
         }
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, float frequency_hz = 0.f, float damping_ratio = 0.f)
-            : Param(body_a.get(), body_b.get(), anchor, frequency_hz, damping_ratio)
+            : Param(body_a.Get(), body_b.Get(), anchor, frequency_hz, damping_ratio)
         {
         }
     };
@@ -813,7 +813,7 @@ public:
         Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, Vec2 const& axis, float frequency_hz = 2.0f,
               float damping_ratio = 0.7f, bool enable_motor = false, float max_motor_torque = 0.0f,
               float motor_speed = 0.0f)
-            : Param(body_a.get(), body_b.get(), anchor, axis, frequency_hz, damping_ratio, enable_motor,
+            : Param(body_a.Get(), body_b.Get(), anchor, axis, frequency_hz, damping_ratio, enable_motor,
                     max_motor_torque, motor_speed)
         {
         }
@@ -918,7 +918,7 @@ public:
 
         Param(BodyPtr body_a, BodyPtr body_b, Point const& target, float max_force, float frequency_hz = 5.0f,
               float damping_ratio = 0.7f)
-            : Param(body_a.get(), body_b.get(), target, max_force, frequency_hz, damping_ratio)
+            : Param(body_a.Get(), body_b.Get(), target, max_force, frequency_hz, damping_ratio)
         {
         }
     };

@@ -107,9 +107,9 @@ void Texture::CopyFrom(TexturePtr copy_from)
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
-        HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().get(), nullptr);
+        HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().Get(), nullptr);
 
-        ThrowIfFailed(hr, "Copy texture data failed");
+        KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
     }
 #else
     return;  // not supported
@@ -122,11 +122,11 @@ void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& 
     if (IsValid() && copy_from)
     {
         HRESULT hr = bitmap_->CopyFromBitmap(
-            &D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)), copy_from->GetBitmap().get(),
+            &D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)), copy_from->GetBitmap().Get(),
             &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()), uint32_t(src_rect.GetRight()),
                          uint32_t(src_rect.GetBottom())));
 
-        ThrowIfFailed(hr, "Copy texture data failed");
+        KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
     }
 #else
     return;  // not supported

@@ -22,7 +22,7 @@
 #include <kiwano/core/Library.h>
 #include <kiwano/core/Logger.h>
 
-#if defined(KGE_WIN32)
+#if defined(KGE_PLATFORM_WINDOWS)
 #include <comdef.h>
 
 namespace kiwano
@@ -42,12 +42,7 @@ public:
     // converted to an ANSI string using the CP_ACP codepage.
     std::string message(int hr) const override
     {
-#ifdef _UNICODE
-        auto message = WideToMultiByte(_com_error{ hr }.ErrorMessage());
-        return message.c_str();
-#else
-        return _com_error{ hr }.ErrorMessage();
-#endif
+        return string::ToNarrow(_com_error{ hr }.ErrorMessage());
     }
 
     // Make error_condition for error code (generic if possible)
@@ -60,7 +55,7 @@ public:
             return std::system_category().default_error_condition(HRESULT_CODE(hr));
         else
             // special error condition
-            return { hr, com_category() };
+            return make_error_condition(error_enum(hr));
     }
 };
 

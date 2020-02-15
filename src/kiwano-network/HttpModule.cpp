@@ -310,7 +310,7 @@ void HttpModule::DispatchResponseCallback()
 
         if (callback)
         {
-            callback(request.get(), response.get());
+            callback(request.Get(), response.Get());
         }
     }
 }

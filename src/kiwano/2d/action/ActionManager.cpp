@@ -26,25 +26,25 @@ namespace kiwano
 {
 void ActionManager::UpdateActions(Actor* target, Duration dt)
 {
-    if (actions_.empty() || !target)
+    if (actions_.IsEmpty() || !target)
         return;
 
     ActionPtr next;
-    for (auto action = actions_.first_item(); action; action = next)
+    for (auto action = actions_.GetFirst(); action; action = next)
     {
-        next = action->next_item();
+        next = action->GetNext();
 
         if (action->IsRunning())
             action->UpdateStep(target, dt);
 
         if (action->IsRemoveable())
-            actions_.remove(action);
+            actions_.Remove(action);
     }
 }
 
 Action* ActionManager::AddAction(ActionPtr action)
 {
-    return AddAction(action.get());
+    return AddAction(action.Get());
 }
 
 Action* ActionManager::AddAction(Action* action)
@@ -53,14 +53,14 @@ Action* ActionManager::AddAction(Action* action)
 
     if (action)
     {
-        actions_.push_back(action);
+        actions_.PushBack(action);
     }
     return action;
 }
 
 void ActionManager::ResumeAllActions()
 {
-    if (actions_.empty())
+    if (actions_.IsEmpty())
         return;
 
     for (auto& action : actions_)
@@ -71,7 +71,7 @@ void ActionManager::ResumeAllActions()
 
 void ActionManager::PauseAllActions()
 {
-    if (actions_.empty())
+    if (actions_.IsEmpty())
         return;
 
     for (auto& action : actions_)
@@ -82,7 +82,7 @@ void ActionManager::PauseAllActions()
 
 void ActionManager::StopAllActions()
 {
-    if (actions_.empty())
+    if (actions_.IsEmpty())
         return;
 
     for (auto& action : actions_)
@@ -93,7 +93,7 @@ void ActionManager::StopAllActions()
 
 ActionPtr ActionManager::GetAction(String const& name)
 {
-    if (actions_.empty())
+    if (actions_.IsEmpty())
         return nullptr;
 
     for (auto& action : actions_)
