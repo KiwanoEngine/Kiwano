@@ -80,6 +80,8 @@ public:
 
     void SetCurrentBrush(BrushPtr brush) override;
 
+    void SetCurrentStrokeStyle(StrokeStylePtr stroke_style) override;
+
     void SetTransform(const Matrix3x2& matrix) override;
 
     void SetAntialiasMode(bool enabled) override;

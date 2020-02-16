@@ -20,6 +20,7 @@
 
 #include <kiwano/render/DirectX/RenderContextImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
+#include <kiwano/render/Renderer.h>
 #include <kiwano/core/Logger.h>
 
 namespace kiwano
@@ -381,6 +382,16 @@ void RenderContextImpl::SetCurrentBrush(BrushPtr brush)
     if (current_brush_ && current_brush_->IsValid())
     {
         NativePtr::Get<ID2D1Brush>(current_brush_)->SetOpacity(brush_opacity_);
+    }
+}
+
+void RenderContextImpl::SetCurrentStrokeStyle(StrokeStylePtr stroke_style)
+{
+    RenderContext::SetCurrentStrokeStyle(stroke_style);
+
+    if (current_stroke_ && !current_stroke_->IsValid())
+    {
+        Renderer::GetInstance().CreateStrokeStyle(*current_stroke_);
     }
 }
 

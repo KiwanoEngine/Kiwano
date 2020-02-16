@@ -22,6 +22,10 @@
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Renderer.h>
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#include <kiwano/render/DirectX/NativePtr.h>
+#endif
+
 namespace kiwano
 {
 GradientStop::GradientStop()
@@ -86,7 +90,7 @@ BrushPtr Brush::Create(RadialGradientStyle const& style)
 }
 
 Brush::Brush()
-    : type_(Type::Unknown)
+    : type_(Type::None)
 {
 }
 
@@ -106,6 +110,32 @@ void Brush::SetStyle(RadialGradientStyle const& style)
 {
     Renderer::GetInstance().CreateBrush(*this, style);
     type_ = Brush::Type::RadialGradient;
+}
+
+void Brush::SetTexture(TexturePtr texture)
+{
+    Renderer::GetInstance().CreateBrush(*this, texture);
+    type_ = Brush::Type::Texture;
+}
+
+void Brush::SetTransform(const Transform& transform)
+{
+    SetTransform(transform.ToMatrix());
+}
+
+void Brush::SetTransform(const Matrix3x2& transform)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    auto native = NativePtr::Get<ID2D1Brush>(this);
+    KGE_ASSERT(native);
+
+    if (native)
+    {
+        native->SetTransform(DX::ConvertToMatrix3x2F(transform));
+    }
+#else
+    // not supported
+#endif
 }
 
 }  // namespace kiwano

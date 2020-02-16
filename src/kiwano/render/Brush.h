@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/render/NativeObject.h>
+#include <kiwano/render/Texture.h>
 
 namespace kiwano
 {
@@ -116,15 +117,28 @@ public:
     /// @brief 设置径向渐变样式
     void SetStyle(RadialGradientStyle const& style);
 
+    /// \~chinese
+    /// @brief 设置纹理
+    void SetTexture(TexturePtr texture);
+
+    /// \~chinese
+    /// @brief 设置二维变换
+    void SetTransform(const Transform& transform);
+
+    /// \~chinese
+    /// @brief 设置二维变换
+    void SetTransform(const Matrix3x2& transform);
+
 public:
     /// \~chinese
     /// @brief 画刷类型
     enum class Type
     {
-        Unknown,
+        None,
         SolidColor,      ///< 纯色填充画刷
         LinearGradient,  ///< 线性渐变画刷
-        RadialGradient   ///< 径向渐变画刷
+        RadialGradient,  ///< 径向渐变画刷
+        Texture          ///< 纹理画刷
     };
 
     /// \~chinese

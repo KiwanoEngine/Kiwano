@@ -180,6 +180,13 @@ public:
     virtual void CreateBrush(Brush& brush, RadialGradientStyle const& style) = 0;
 
     /// \~chinese
+    /// @brief 创建纹理画刷内部资源
+    /// @param[out] brush 画刷
+    /// @param[in] texture 纹理
+    /// @throw kiwano::SystemError 创建失败时抛出
+    virtual void CreateBrush(Brush& brush, TexturePtr texture) = 0;
+
+    /// \~chinese
     /// @brief 创建线条样式内部资源
     /// @param[out] stroke_style 线条样式
     /// @param[in] cap 线段端点样式

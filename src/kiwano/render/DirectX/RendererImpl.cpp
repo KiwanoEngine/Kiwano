@@ -871,6 +871,33 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
 }
 
+void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        auto bitmap = NativePtr::Get<ID2D1Bitmap>(texture);
+
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<ID2D1BitmapBrush> output;
+            hr = d2d_res_->GetDeviceContext()->CreateBitmapBrush(bitmap.Get(), &output);
+
+            if (SUCCEEDED(hr))
+            {
+                NativePtr::Set(brush, output);
+            }
+        }
+    }
+
+    KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
+}
+
 void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
 {
     HRESULT hr = S_OK;

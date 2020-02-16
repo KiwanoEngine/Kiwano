@@ -76,6 +76,8 @@ public:
 
     void CreateBrush(Brush& brush, RadialGradientStyle const& style) override;
 
+    void CreateBrush(Brush& brush, TexturePtr texture) override;
+
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
     TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) override;
