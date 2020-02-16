@@ -29,8 +29,9 @@ public:
     static KGE_API HRESULT Create(_Out_ ITextRenderer * *ppTextRenderer, _In_ ID2D1RenderTarget * pRT);
 
     STDMETHOD(DrawTextLayout)
-    (_In_ IDWriteTextLayout * pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pFillBrush,
-     _In_opt_ ID2D1Brush* pOutlineBrush, float fOutlineWidth, _In_opt_ ID2D1StrokeStyle* pStrokeStyle) PURE;
+    (_In_ IDWriteTextLayout * pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
+     _In_opt_ ID2D1Brush* pDefaultOutlineBrush, float fDefaultOutlineWidth,
+     _In_opt_ ID2D1StrokeStyle* pDefaultStrokeStyle) PURE;
 
     STDMETHOD_(uint32_t, GetLastPrimitivesCount)() PURE;
 };

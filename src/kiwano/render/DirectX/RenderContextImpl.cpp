@@ -116,27 +116,31 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
 
     if (layout.IsValid())
     {
-        ComPtr<ID2D1Brush> fill_brush;
-        ComPtr<ID2D1Brush> outline_brush;
-        const TextStyle&   style = layout.GetStyle();
+        ComPtr<ID2D1Brush>       fill_brush;
+        ComPtr<ID2D1Brush>       outline_brush;
+        ComPtr<ID2D1StrokeStyle> outline_stroke;
 
-        if (style.fill_brush)
+        if (layout.GetDefaultFillBrush())
         {
-            fill_brush = style.fill_brush->GetBrush();
+            fill_brush = layout.GetDefaultFillBrush()->GetBrush();
             fill_brush->SetOpacity(brush_opacity_);
         }
 
-        if (style.outline_brush)
+        if (layout.GetDefaultOutlineBrush())
         {
-            outline_brush = style.outline_brush->GetBrush();
+            outline_brush = layout.GetDefaultOutlineBrush()->GetBrush();
             outline_brush->SetOpacity(brush_opacity_);
         }
 
-        HRESULT hr = S_OK;
-        ID2D1StrokeStyle* stroke_style = style.outline_stroke ? style.outline_stroke->GetStrokeStyle().Get() : nullptr;
+        if (layout.GetDefaultOutlineStrokeStyle())
+        {
+            outline_stroke = layout.GetDefaultOutlineStrokeStyle()->GetStrokeStyle();
+        }
 
-        hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().Get(), offset.x, offset.y, fill_brush.Get(),
-                                            outline_brush.Get(), style.outline_width, stroke_style);
+        float outline_width = layout.GetDefaultOutlineWidth();
+
+        HRESULT hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().Get(), offset.x, offset.y, fill_brush.Get(),
+                                                    outline_brush.Get(), outline_width, outline_stroke.Get());
 
         if (SUCCEEDED(hr))
         {

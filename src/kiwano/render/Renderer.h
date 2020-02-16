@@ -116,8 +116,10 @@ public:
     /// \~chinese
     /// @brief 创建文字布局内部资源
     /// @param[out] layout 字体布局
+    /// @param text 文字内容
+    /// @param style 文本样式
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateTextLayout(TextLayout& layout) = 0;
+    virtual void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建线段形状内部资源

@@ -37,9 +37,10 @@ namespace kiwano
  */
 enum class TextAlign
 {
-    Left,   ///< 左对齐
-    Right,  ///< 右对齐
-    Center  ///< 居中对齐
+    Left,      ///< 左对齐
+    Right,     ///< 右对齐
+    Center,    ///< 居中对齐
+    Justified  ///< 两端对齐
 };
 
 /**
@@ -69,18 +70,20 @@ struct FontWeight
 class KGE_API TextStyle
 {
 public:
-    FontPtr        font;            ///< 字体
-    String         font_family;     ///< 字体族
-    float          font_size;       ///< 字号
-    uint32_t       font_weight;     ///< 粗细值
-    bool           italic;          ///< 是否斜体
-    TextAlign      alignment;       ///< 对齐方式
-    float          wrap_width;      ///< 自动换行宽度
-    float          line_spacing;    ///< 行间距
-    BrushPtr       fill_brush;      ///< 填充画刷
-    BrushPtr       outline_brush;   ///< 描边画刷
-    float          outline_width;   ///< 描边线宽
-    StrokeStylePtr outline_stroke;  ///< 描边线样式
+    FontPtr        font;                ///< 字体
+    String         font_family;         ///< 字体族
+    float          font_size;           ///< 字号
+    uint32_t       font_weight;         ///< 粗细值
+    bool           italic;              ///< 是否斜体
+    TextAlign      alignment;           ///< 对齐方式
+    BrushPtr       fill_brush;          ///< 填充画刷
+    BrushPtr       outline_brush;       ///< 描边画刷
+    float          outline_width;       ///< 描边线宽
+    StrokeStylePtr outline_stroke;      ///< 描边线宽
+    float          wrap_width;          ///< 自动换行宽度
+    float          line_spacing;        ///< 行间距
+    bool           show_underline;      ///< 显示下划线
+    bool           show_strikethrough;  ///< 显示删除线
 
 public:
     /**
@@ -113,10 +116,11 @@ inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t
     , font_weight(font_weight)
     , italic(false)
     , alignment(TextAlign::Left)
+    , outline_width(1.0f)
     , wrap_width(0)
     , line_spacing(0)
-    , outline_width(1.0f)
-    , outline_stroke()
+    , show_underline(false)
+    , show_strikethrough(false)
 {
 }
 

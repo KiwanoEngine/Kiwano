@@ -59,13 +59,11 @@ DebugActor::DebugActor()
     BrushPtr fill_brush = new Brush;
     fill_brush->SetColor(Color::White);
 
-    TextStyle style;
-    style.font_family  = "Arial";
-    style.font_size    = 16.f;
-    style.font_weight  = FontWeight::Normal;
-    style.line_spacing = 20.f;
-    style.fill_brush   = fill_brush;
-    debug_text_.SetStyle(style);
+    debug_text_style_.font_family  = "Arial";
+    debug_text_style_.font_size    = 16.f;
+    debug_text_style_.font_weight  = FontWeight::Normal;
+    debug_text_style_.line_spacing = 20.f;
+    debug_text_style_.fill_brush   = fill_brush;
 
     AddListener<MouseHoverEvent>([=](Event*) { SetOpacity(0.4f); });
     AddListener<MouseOutEvent>([=](Event*) { SetOpacity(1.f); });
@@ -124,8 +122,7 @@ void DebugActor::OnUpdate(Duration dt)
         ss << pmc.PrivateUsage / 1024 << "Kb";
     }
 
-    debug_text_.SetText(ss.str());
-    debug_text_.Update();
+    debug_text_.Reset(ss.str(), debug_text_style_);
 
     Size layout_size = debug_text_.GetLayoutSize();
     if (layout_size.x > GetWidth() - 20)

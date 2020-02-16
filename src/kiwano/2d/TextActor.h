@@ -64,11 +64,7 @@ public:
 
     /// \~chinese
     /// @brief 获取文本布局
-    const TextLayout& GetLayout() const;
-
-    /// \~chinese
-    /// @brief 获取文本布局
-    TextLayout& GetLayout();
+    TextLayoutPtr GetLayout() const;
 
     /// \~chinese
     /// @brief 获取文本布局大小
@@ -81,6 +77,10 @@ public:
     /// \~chinese
     /// @brief 获取描边画刷
     BrushPtr GetOutlineBrush() const;
+
+    /// \~chinese
+    /// @brief 获取描边线条样式
+    StrokeStylePtr GetOutlineStrokeStyle() const;
 
     /// \~chinese
     /// @brief 获取字体
@@ -143,12 +143,12 @@ public:
     void SetOutlineColor(Color const& outline_color);
 
     /// \~chinese
-    /// @brief 设置文字描边线宽
-    void SetOutlineWidth(float outline_width);
+    /// @brief 设置描边线条样式
+    void SetOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
-    /// @brief 设置文字描边线相交样式
-    void SetOutlineStroke(StrokeStylePtr outline_stroke);
+    /// @brief 设置文字描边线宽
+    void SetOutlineWidth(float outline_width);
 
     /// \~chinese
     /// @brief 设置是否显示下划线（默认值为 false）
@@ -157,6 +157,10 @@ public:
     /// \~chinese
     /// @brief 设置是否显示删除线（默认值为 false）
     void SetStrikethrough(bool enable);
+
+    /// \~chinese
+    /// @brief 设置文本布局
+    void SetTextLayout(TextLayoutPtr layout);
 
     /// \~chinese
     /// @brief 更新文字布局
@@ -171,130 +175,55 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool       show_underline_;
-    bool       show_strikethrough_;
-    TextLayout text_layout_;
+    String        text_;
+    TextStyle     style_;
+    TextLayoutPtr layout_;
 };
 
 /** @} */
 
 inline const String& TextActor::GetText() const
 {
-    return text_layout_.GetText();
+    return text_;
 }
 
 inline FontPtr TextActor::GetFont() const
 {
-    return text_layout_.GetStyle().font;
+    return style_.font;
 }
 
 inline const TextStyle& TextActor::GetStyle() const
 {
-    return text_layout_.GetStyle();
+    return style_;
 }
 
-inline const TextLayout& TextActor::GetLayout() const
+inline TextLayoutPtr TextActor::GetLayout() const
 {
-    return text_layout_;
-}
-
-inline TextLayout& TextActor::GetLayout()
-{
-    return text_layout_;
+    return layout_;
 }
 
 inline Size TextActor::GetLayoutSize() const
 {
-    return text_layout_.GetLayoutSize();
+    if (layout_)
+    {
+        return layout_->GetLayoutSize();
+    }
+    return Size();
 }
 
 inline BrushPtr TextActor::GetFillBrush() const
 {
-    return text_layout_.GetFillBrush();
+    return style_.fill_brush;
 }
 
 inline BrushPtr TextActor::GetOutlineBrush() const
 {
-    return text_layout_.GetOutlineBrush();
+    return style_.outline_brush;
 }
 
-inline void TextActor::SetText(String const& text)
+inline StrokeStylePtr TextActor::GetOutlineStrokeStyle() const
 {
-    text_layout_.SetText(text);
+    return style_.outline_stroke;
 }
 
-inline void TextActor::SetStyle(const TextStyle& style)
-{
-    text_layout_.SetStyle(style);
-}
-
-inline void TextActor::SetFont(FontPtr font)
-{
-    text_layout_.SetFont(font);
-}
-
-inline void TextActor::SetFontFamily(String const& family)
-{
-    text_layout_.SetFontFamily(family);
-}
-
-inline void TextActor::SetFontSize(float size)
-{
-    text_layout_.SetFontSize(size);
-}
-
-inline void TextActor::SetFontWeight(uint32_t weight)
-{
-    text_layout_.SetFontWeight(weight);
-}
-
-inline void TextActor::SetItalic(bool italic)
-{
-    text_layout_.SetItalic(italic);
-}
-
-inline void TextActor::SetWrapWidth(float wrap_width)
-{
-    text_layout_.SetWrapWidth(wrap_width);
-}
-
-inline void TextActor::SetLineSpacing(float line_spacing)
-{
-    text_layout_.SetLineSpacing(line_spacing);
-}
-
-inline void TextActor::SetAlignment(TextAlign align)
-{
-    text_layout_.SetAlignment(align);
-}
-
-inline void TextActor::SetUnderline(bool enable)
-{
-    show_underline_ = enable;
-}
-
-inline void TextActor::SetStrikethrough(bool enable)
-{
-    show_strikethrough_ = enable;
-}
-
-inline void TextActor::SetFillBrush(BrushPtr brush)
-{
-    text_layout_.SetFillBrush(brush);
-}
-
-inline void TextActor::SetOutlineBrush(BrushPtr brush)
-{
-    text_layout_.SetOutlineBrush(brush);
-}
-
-inline void TextActor::SetOutlineWidth(float outline_width)
-{
-    text_layout_.SetOutlineWidth(outline_width);
-}
-
-inline void TextActor::SetOutlineStroke(StrokeStylePtr outline_stroke)
-{
-    text_layout_.SetOutlineStroke(outline_stroke);
-}
 }  // namespace kiwano

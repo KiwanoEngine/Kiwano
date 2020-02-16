@@ -126,14 +126,15 @@ public:
     /// \~chinese
     /// @brief 绘制文字布局
     /// @param text 文字
+    /// @param style 文字样式
     /// @param point 绘制文字的位置
-    void DrawTextLayout(String const& text, Point const& point);
+    void DrawTextLayout(String const& text, TextStyle const& style, Point const& point);
 
     /// \~chinese
     /// @brief 绘制文字布局
     /// @param layout 文字布局
     /// @param point 绘制布局的位置
-    void DrawTextLayout(TextLayout const& layout, Point const& point);
+    void DrawTextLayout(TextLayoutPtr layout, Point const& point);
 
     /// \~chinese
     /// @brief 开始绘制路径
@@ -219,11 +220,6 @@ public:
     void SetStrokeStyle(StrokeStylePtr stroke_style);
 
     /// \~chinese
-    /// @brief 设置文字画刷样式
-    /// @param text_style 文字画刷样式
-    void SetTextStyle(TextStyle const& text_style);
-
-    /// \~chinese
     /// @brief 设置画刷
     /// @param[in] brush 画刷
     void SetBrush(BrushPtr brush);
@@ -285,7 +281,6 @@ private:
 
 private:
     float          stroke_width_;
-    TextStyle      text_style_;
     StrokeStylePtr stroke_style_;
     ShapeSink      shape_sink_;
     BrushPtr       fill_brush_;
@@ -311,11 +306,6 @@ inline void Canvas::SetStrokeWidth(float width)
 inline void Canvas::SetStrokeStyle(StrokeStylePtr stroke_style)
 {
     stroke_style_ = stroke_style;
-}
-
-inline void Canvas::SetTextStyle(TextStyle const& text_style)
-{
-    text_style_ = text_style;
 }
 
 inline void Canvas::SetStrokeColor(Color const& color)

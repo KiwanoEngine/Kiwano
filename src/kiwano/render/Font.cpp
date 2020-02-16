@@ -54,7 +54,7 @@ bool Font::Load(String const& file)
     {
         Renderer::GetInstance().CreateFontCollection(*this, file);
     }
-    catch (std::runtime_error&)
+    catch (RuntimeError&)
     {
         return false;
     }
@@ -67,7 +67,7 @@ bool Font::Load(Resource const& resource)
     {
         Renderer::GetInstance().CreateFontCollection(*this, resource);
     }
-    catch (std::runtime_error&)
+    catch (RuntimeError&)
     {
         return false;
     }

@@ -20,10 +20,13 @@
 
 #pragma once
 #include <kiwano/math/Math.h>
+#include <kiwano/core/ObjectBase.h>
 #include <kiwano/render/TextStyle.hpp>
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(TextLayout);
 
 /**
  * \addtogroup Render
@@ -32,9 +35,19 @@ namespace kiwano
 
 /// \~chinese
 /// @brief 文本布局
-class KGE_API TextLayout : public Noncopyable
+class KGE_API TextLayout : public virtual ObjectBase
 {
 public:
+    /// \~chinese
+    /// @brief 创建文本布局
+    static TextLayoutPtr Create();
+
+    /// \~chinese
+    /// @brief 创建文本布局
+    /// @param content 文字内容
+    /// @param style 文本样式
+    static TextLayoutPtr Create(const String& content, const TextStyle& style);
+
     /// \~chinese
     /// @brief 构造空的文本布局
     TextLayout();
@@ -48,17 +61,14 @@ public:
     bool IsDirty() const;
 
     /// \~chinese
-    /// @brief 更新文本布局
-    /// @note 文本布局是懒更新的，在修改文本布局的属性后需要手动更新
-    void Update();
+    /// @brief 清空文本布局
+    void Clear();
 
     /// \~chinese
-    /// @brief 获取文本
-    const String& GetText() const;
-
-    /// \~chinese
-    /// @brief 获取文本样式
-    const TextStyle& GetStyle() const;
+    /// @brief 重设文本布局
+    /// @param content 文字内容
+    /// @param style 文本样式
+    void Reset(const String& content, const TextStyle& style);
 
     /// \~chinese
     /// @brief 获取文本行数
@@ -69,44 +79,99 @@ public:
     Size GetLayoutSize() const;
 
     /// \~chinese
-    /// @brief 获取填充画刷
-    BrushPtr GetFillBrush() const;
+    /// @brief 获取默认填充画刷
+    BrushPtr GetDefaultFillBrush() const;
 
     /// \~chinese
-    /// @brief 获取描边画刷
-    BrushPtr GetOutlineBrush() const;
+    /// @brief 获取默认描边画刷
+    BrushPtr GetDefaultOutlineBrush() const;
 
     /// \~chinese
-    /// @brief 设置文本
-    void SetText(const String& text);
+    /// @brief 获取默认描边宽度
+    float GetDefaultOutlineWidth() const;
 
     /// \~chinese
-    /// @brief 设置文本样式
-    void SetStyle(const TextStyle& style);
+    /// @brief 获取默认描边线条样式
+    StrokeStylePtr GetDefaultOutlineStrokeStyle() const;
+
+    /// \~chinese
+    /// @brief 文字范围
+    struct TextRange
+    {
+        uint32_t start;   ///< 起始位置
+        uint32_t length;  ///< 长度
+    };
 
     /// \~chinese
     /// @brief 设置字体
-    void SetFont(FontPtr font);
+    /// @param font 字体
+    /// @param range 文字范围
+    void SetFont(FontPtr font, TextRange range);
 
     /// \~chinese
     /// @brief 设置字体族
-    void SetFontFamily(String const& family);
+    /// @param family 字体族
+    /// @param range 文字范围
+    void SetFontFamily(String const& family, TextRange range);
 
     /// \~chinese
     /// @brief 设置字号（默认值为 18）
-    void SetFontSize(float size);
+    /// @param size 字号
+    /// @param range 文字范围
+    void SetFontSize(float size, TextRange range);
 
     /// \~chinese
     /// @brief 设置字体粗细值（默认值为 FontWeight::Normal）
-    void SetFontWeight(uint32_t weight);
-
-    /// \~chinese
-    /// @brief 设置文字填充画刷
-    void SetFillBrush(BrushPtr brush);
+    /// @param weight 粗细值
+    /// @param range 文字范围
+    void SetFontWeight(uint32_t weight, TextRange range);
 
     /// \~chinese
     /// @brief 设置文字斜体（默认值为 false）
-    void SetItalic(bool italic);
+    /// @param italic 是否是斜体
+    /// @param range 文字范围
+    void SetItalic(bool italic, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置下划线
+    /// @param enable 是否显示下划线
+    /// @param range 文字范围
+    void SetUnderline(bool enable, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置删除线
+    /// @param enable 是否显示删除线
+    /// @param range 文字范围
+    void SetStrikethrough(bool enable, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置文字填充画刷，描边画刷和描边线宽
+    /// @param brush 画刷
+    /// @param range 文字范围
+    void SetFillBrush(BrushPtr brush, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置文字描边画刷
+    /// @param brush 画刷
+    /// @param range 文字范围
+    void SetOutlineBrush(BrushPtr brush, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置文字描边线宽
+    /// @param width 描边线宽
+    /// @param range 文字范围
+    void SetOutlineWidth(float width, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置描边线条样式
+    /// @param stroke 线条样式
+    /// @param range 文字范围
+    void SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range);
+
+    /// \~chinese
+    /// @brief 设置对齐方式
+    /// @param align 对齐方式
+    void SetAlignment(TextAlign align);
 
     /// \~chinese
     /// @brief 设置文本自动换行的宽度
@@ -117,66 +182,52 @@ public:
     void SetLineSpacing(float line_spacing);
 
     /// \~chinese
-    /// @brief 设置对齐方式
-    void SetAlignment(TextAlign align);
+    /// @brief 设置默认文字填充画刷
+    /// @param brush 画刷
+    void SetDefaultFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief 设置文字描边画刷
-    void SetOutlineBrush(BrushPtr brush);
+    /// @brief 设置默认文字描边画刷
+    /// @param brush 画刷
+    void SetDefaultOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief 设置文字描边线宽
-    void SetOutlineWidth(float outline_width);
+    /// @brief 设置默认文字描边线宽
+    /// @param width 描边线宽
+    void SetDefaultOutlineWidth(float width);
 
     /// \~chinese
-    /// @brief 设置文字描边线相交样式
-    void SetOutlineStroke(StrokeStylePtr outline_stroke);
-
-    /// \~chinese
-    /// @brief 设置下划线
-    /// @param enable 是否显示下划线
-    /// @param start 起始位置
-    /// @param length 长度
-    void SetUnderline(bool enable, uint32_t start, uint32_t length);
-
-    /// \~chinese
-    /// @brief 设置删除线
-    /// @param enable 是否显示删除线
-    /// @param start 起始位置
-    /// @param length 长度
-    void SetStrikethrough(bool enable, uint32_t start, uint32_t length);
+    /// @brief 设置默认描边线条样式
+    /// @param stroke 线条样式
+    void SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
     /// @brief 脏数据标志
-    enum DirtyFlag : uint8_t
+    enum class DirtyFlag : uint8_t
     {
-        Clean       = 0,       ///< 干净数据
-        DirtyFormat = 1,       ///< 文字格式待更新
-        DirtyLayout = 1 << 1,  ///< 文字布局待更新
-        Updated     = 1 << 2,  ///< 数据已更新
+        Clean   = 0,       ///< 干净布局
+        Dirty   = 1 << 0,  ///< 脏布局
+        Updated = 1 << 1,  ///< 已更新
     };
 
-    uint8_t GetDirtyFlag() const;
+    DirtyFlag GetDirtyFlag() const;
 
-    void SetDirtyFlag(uint8_t flag);
+    void SetDirtyFlag(DirtyFlag flag);
 
 private:
-    uint8_t   dirty_flag_;
-    String    text_;
-    TextStyle style_;
+    DirtyFlag      dirty_flag_;
+    BrushPtr       default_fill_brush_;
+    BrushPtr       default_outline_brush_;
+    float          default_outline_width_;
+    StrokeStylePtr default_outline_stroke_;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 public:
-    ComPtr<IDWriteTextFormat> GetTextFormat() const;
-
-    void SetTextFormat(ComPtr<IDWriteTextFormat> format);
-
     ComPtr<IDWriteTextLayout> GetTextLayout() const;
 
     void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
 
 private:
-    ComPtr<IDWriteTextFormat> text_format_;
     ComPtr<IDWriteTextLayout> text_layout_;
 #endif
 };
@@ -197,70 +248,70 @@ inline bool TextLayout::IsDirty() const
     return dirty_flag_ != DirtyFlag::Clean;
 }
 
-inline const String& TextLayout::GetText() const
+inline void TextLayout::Clear()
 {
-    return text_;
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    text_layout_ = nullptr;
+    dirty_flag_  = DirtyFlag::Updated;
+#else
+    return;  // not supported
+#endif
 }
 
-inline const TextStyle& TextLayout::GetStyle() const
-{
-    return style_;
-}
-
-inline uint8_t TextLayout::GetDirtyFlag() const
+inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const
 {
     return dirty_flag_;
 }
 
-inline void TextLayout::SetDirtyFlag(uint8_t flag)
+inline void TextLayout::SetDirtyFlag(TextLayout::DirtyFlag flag)
 {
     dirty_flag_ = flag;
 }
 
-inline BrushPtr TextLayout::GetFillBrush() const
+inline BrushPtr TextLayout::GetDefaultFillBrush() const
 {
-    return style_.fill_brush;
+    return default_fill_brush_;
 }
 
-inline BrushPtr TextLayout::GetOutlineBrush() const
+inline BrushPtr TextLayout::GetDefaultOutlineBrush() const
 {
-    return style_.outline_brush;
+    return default_outline_brush_;
 }
 
-inline void TextLayout::SetFillBrush(BrushPtr brush)
+inline float TextLayout::GetDefaultOutlineWidth() const
 {
-    style_.fill_brush = brush;
+    return default_outline_width_;
 }
 
-inline void TextLayout::SetOutlineBrush(BrushPtr brush)
+inline StrokeStylePtr TextLayout::GetDefaultOutlineStrokeStyle() const
 {
-    style_.outline_brush = brush;
+    return default_outline_stroke_;
 }
 
-inline void TextLayout::SetOutlineWidth(float outline_width)
+inline void TextLayout::SetDefaultFillBrush(BrushPtr brush)
 {
-    style_.outline_width = outline_width;
+    default_fill_brush_ = brush;
 }
 
-inline void TextLayout::SetOutlineStroke(StrokeStylePtr outline_stroke)
+inline void TextLayout::SetDefaultOutlineBrush(BrushPtr brush)
 {
-    style_.outline_stroke = outline_stroke;
+    default_outline_brush_ = brush;
+}
+
+inline void TextLayout::SetDefaultOutlineWidth(float width)
+{
+    default_outline_width_ = width;
+}
+
+inline void TextLayout::SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke)
+{
+    default_outline_stroke_ = stroke;
 }
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<IDWriteTextFormat> TextLayout::GetTextFormat() const
-{
-    return text_format_;
-}
-
 inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
 {
     return text_layout_;
-}
-
-inline void TextLayout::SetTextFormat(ComPtr<IDWriteTextFormat> format)
-{
-    text_format_ = format;
 }
 
 inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)

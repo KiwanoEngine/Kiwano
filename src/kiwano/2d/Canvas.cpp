@@ -223,21 +223,22 @@ void Canvas::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* d
     }
 }
 
-void Canvas::DrawTextLayout(String const& text, Point const& point)
+void Canvas::DrawTextLayout(String const& text, TextStyle const& style, Point const& point)
 {
     if (text.empty())
         return;
 
-    TextLayout layout;
-    layout.SetStyle(text_style_);
-    layout.SetText(text);
-    DrawTextLayout(layout, point);
+    DrawTextLayout(TextLayout::Create(text, style), point);
 }
 
-void Canvas::DrawTextLayout(TextLayout const& layout, Point const& point)
+void Canvas::DrawTextLayout(TextLayoutPtr layout, Point const& point)
 {
     KGE_ASSERT(ctx_);
-    ctx_->DrawTextLayout(layout, point);
+    if (layout)
+    {
+        ctx_->DrawTextLayout(*layout, point);
+        cache_expired_ = true;
+    }
 }
 
 void Canvas::BeginPath(Point const& begin_pos)

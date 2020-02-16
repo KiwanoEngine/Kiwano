@@ -23,81 +23,52 @@
 
 namespace kiwano
 {
+TextLayoutPtr TextLayout::Create()
+{
+    TextLayoutPtr ptr = new (std::nothrow) TextLayout;
+    return ptr;
+}
+
+TextLayoutPtr TextLayout::Create(const String& content, const TextStyle& style)
+{
+    TextLayoutPtr ptr = new (std::nothrow) TextLayout;
+    if (ptr)
+    {
+        ptr->Reset(content, style);
+    }
+    return ptr;
+}
+
 TextLayout::TextLayout()
     : dirty_flag_(DirtyFlag::Clean)
+    , default_outline_width_(0.0f)
 {
 }
 
-void TextLayout::Update()
+void TextLayout::Reset(const String& text, const TextStyle& style)
 {
-    if (!IsDirty())
-        return;
-
-    Renderer::GetInstance().CreateTextLayout(*this);
-}
-
-void TextLayout::SetText(const String& text)
-{
-    text_ = text;
-    dirty_flag_ |= DirtyFlag::DirtyLayout;
-}
-
-void TextLayout::SetStyle(const TextStyle& style)
-{
-    style_ = style;
-    dirty_flag_ |= DirtyFlag::DirtyLayout;
-}
-
-void TextLayout::SetFont(FontPtr font)
-{
-    if (style_.font != font)
+    if (!text.empty())
     {
-        style_.font = font;
-        dirty_flag_ |= DirtyFlag::DirtyFormat;
+        Renderer::GetInstance().CreateTextLayout(*this, text, style);
+
+        SetAlignment(style.alignment);
+        SetWrapWidth(style.wrap_width);
+        SetLineSpacing(style.line_spacing);
+        SetUnderline(style.show_underline, { 0, text.length() });
+        SetStrikethrough(style.show_strikethrough, { 0, text.length() });
+        SetDefaultFillBrush(style.fill_brush);
+        SetDefaultOutlineBrush(style.outline_brush);
+        SetDefaultOutlineWidth(style.outline_width);
+        SetDefaultOutlineStrokeStyle(style.outline_stroke);
     }
-}
-
-void TextLayout::SetFontFamily(String const& family)
-{
-    if (style_.font_family != family)
+    else
     {
-        style_.font_family = family;
-        dirty_flag_ |= DirtyFlag::DirtyFormat;
-    }
-}
-
-void TextLayout::SetFontSize(float size)
-{
-    if (style_.font_size != size)
-    {
-        style_.font_size = size;
-        dirty_flag_ |= DirtyFlag::DirtyFormat;
-    }
-}
-
-void TextLayout::SetFontWeight(uint32_t weight)
-{
-    if (style_.font_weight != weight)
-    {
-        style_.font_weight = weight;
-        dirty_flag_ |= DirtyFlag::DirtyFormat;
-    }
-}
-
-void TextLayout::SetItalic(bool italic)
-{
-    if (style_.italic != italic)
-    {
-        style_.italic = italic;
-        dirty_flag_ |= DirtyFlag::DirtyFormat;
+        Clear();
     }
 }
 
 uint32_t TextLayout::GetLineCount() const
 {
-    // Force to update layout
-    const_cast<TextLayout*>(this)->Update();
-
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
@@ -115,9 +86,6 @@ uint32_t TextLayout::GetLineCount() const
 
 Size TextLayout::GetLayoutSize() const
 {
-    // Force to update layout
-    const_cast<TextLayout*>(this)->Update();
-
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (text_layout_)
     {
@@ -134,64 +102,265 @@ Size TextLayout::GetLayoutSize() const
     return Size();
 }
 
-void TextLayout::SetWrapWidth(float wrap_width)
+void TextLayout::SetFont(FontPtr font, TextRange range)
 {
-    if (style_.wrap_width != wrap_width)
-    {
-        style_.wrap_width = wrap_width;
-        dirty_flag_ |= DirtyFlag::DirtyLayout;
-    }
-}
-
-void TextLayout::SetLineSpacing(float line_spacing)
-{
-    if (style_.line_spacing != line_spacing)
-    {
-        style_.line_spacing = line_spacing;
-        dirty_flag_ |= DirtyFlag::DirtyLayout;
-    }
-}
-
-void TextLayout::SetAlignment(TextAlign align)
-{
-    if (style_.alignment != align)
-    {
-        style_.alignment = align;
-        dirty_flag_ |= DirtyFlag::DirtyLayout;
-    }
-}
-
-void TextLayout::SetUnderline(bool enable, uint32_t start, uint32_t length)
-{
-    // Force to update layout
-    Update();
-
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    HRESULT hr = text_layout_ ? S_OK : E_FAIL;
-
-    if (SUCCEEDED(hr))
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
     {
-        hr = text_layout_->SetUnderline(enable, { start, length });
+        IDWriteFontCollection* collection = font ? font->GetCollection().Get() : nullptr;
+
+        HRESULT hr = text_layout_->SetFontCollection(collection, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontCollection failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
     }
-    KGE_THROW_IF_FAILED(hr, "Apply underline style to text layout failed");
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetFontFamily(String const& family, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        WideString font_family = family.empty() ? L"" : string::ToWide(family);
+
+        HRESULT hr = text_layout_->SetFontFamilyName(font_family.c_str(), { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontFamilyName failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetFontSize(float size, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        HRESULT hr = text_layout_->SetFontSize(size, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontSize failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetFontWeight(uint32_t weight, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        DWRITE_FONT_WEIGHT font_weight = DWRITE_FONT_WEIGHT(weight);
+
+        HRESULT hr = text_layout_->SetFontWeight(font_weight, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontWeight failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetItalic(bool italic, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        DWRITE_FONT_STYLE font_style = italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+
+        HRESULT hr = text_layout_->SetFontStyle(font_style, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStyle failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetUnderline(bool enable, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        HRESULT hr = text_layout_->SetUnderline(enable, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetUnderline failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
 #else
     return;  // not supported
 #endif
 }
 
-void TextLayout::SetStrikethrough(bool enable, uint32_t start, uint32_t length)
+void TextLayout::SetStrikethrough(bool enable, TextRange range)
 {
-    // Force to update layout
-    Update();
-
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    HRESULT hr = text_layout_ ? S_OK : E_FAIL;
-
-    if (SUCCEEDED(hr))
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
     {
-        hr = text_layout_->SetStrikethrough(enable, { start, length });
+        HRESULT hr = text_layout_->SetStrikethrough(enable, { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetStrikethrough failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
     }
-    KGE_THROW_IF_FAILED(hr, "Apply strikethrough style to text layout failed");
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetFillBrush(BrushPtr brush, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        HRESULT hr = text_layout_->SetDrawingEffect(brush->GetBrush().Get(), { range.start, range.length });
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetDrawingEffect failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetOutlineBrush(BrushPtr brush, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    // TODO
+    KGE_NOT_USED(range);
+    SetDefaultOutlineBrush(brush);
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetOutlineWidth(float width, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    // TODO
+    KGE_NOT_USED(range);
+    SetDefaultOutlineWidth(width);
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    // TODO
+    KGE_NOT_USED(range);
+    SetDefaultOutlineStrokeStyle(stroke);
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetAlignment(TextAlign align)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT();
+        switch (align)
+        {
+        case TextAlign::Left:
+            alignment = DWRITE_TEXT_ALIGNMENT_LEADING;
+            break;
+        case TextAlign::Right:
+            alignment = DWRITE_TEXT_ALIGNMENT_TRAILING;
+            break;
+        case TextAlign::Center:
+            alignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+            break;
+        case TextAlign::Justified:
+            alignment = DWRITE_TEXT_ALIGNMENT_JUSTIFIED;
+            break;
+        }
+
+        HRESULT hr = text_layout_->SetTextAlignment(alignment);
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetTextAlignment failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    // not supported
+#endif
+}
+
+void TextLayout::SetWrapWidth(float wrap_width)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        DWRITE_WORD_WRAPPING wrapping = (wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP;
+
+        HRESULT hr = text_layout_->SetWordWrapping(wrapping);
+        if (SUCCEEDED(hr))
+        {
+            if (wrap_width > 0)
+            {
+                hr = text_layout_->SetMaxWidth(wrap_width);
+            }
+            else
+            {
+                // Fix the layout width when the text does not wrap
+                DWRITE_TEXT_METRICS metrics;
+                hr = text_layout_->GetMetrics(&metrics);
+
+                if (SUCCEEDED(hr))
+                {
+                    hr = text_layout_->SetMaxWidth(metrics.width);
+                }
+            }
+        }
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetWordWrapping failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
+#else
+    return;  // not supported
+#endif
+}
+
+void TextLayout::SetLineSpacing(float line_spacing)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    KGE_ASSERT(text_layout_);
+    if (text_layout_)
+    {
+        HRESULT hr = S_OK;
+
+        float spacing = line_spacing;
+        if (spacing == 0.f)
+        {
+            hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
+        }
+        else
+        {
+            hr = text_layout_->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, spacing, spacing * 0.8f);
+        }
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetLineSpacing failed");
+
+        dirty_flag_ = DirtyFlag::Updated;
+    }
 #else
     return;  // not supported
 #endif

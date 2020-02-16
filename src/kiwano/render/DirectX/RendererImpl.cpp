@@ -587,7 +587,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
     KGE_THROW_IF_FAILED(hr, "Create font collection failed");
 }
 
-void RendererImpl::CreateTextLayout(TextLayout& layout)
+void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -595,110 +595,38 @@ void RendererImpl::CreateTextLayout(TextLayout& layout)
         hr = E_UNEXPECTED;
     }
 
-    if (layout.GetText().empty())
+    if (content.empty())
     {
-        layout.SetTextFormat(nullptr);
         layout.SetTextLayout(nullptr);
         layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
         return;
     }
 
-    const TextStyle& style = layout.GetStyle();
-
-    if (!layout.GetTextFormat() || (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyFormat))
+    if (SUCCEEDED(hr))
     {
-        WideString             font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
-        DWRITE_FONT_WEIGHT     font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
-        DWRITE_FONT_STYLE      font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
-        IDWriteFontCollection* collection  = style.font ? style.font->GetCollection().Get() : nullptr;
+        ComPtr<IDWriteTextFormat> format;
+        WideString                font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
+        DWRITE_FONT_WEIGHT        font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
+        DWRITE_FONT_STYLE         font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+        IDWriteFontCollection*    collection  = style.font ? style.font->GetCollection().Get() : nullptr;
 
-        ComPtr<IDWriteTextFormat> output;
-        if (SUCCEEDED(hr))
-        {
-            hr = d2d_res_->CreateTextFormat(output, font_family.c_str(), collection, font_weight, font_style,
-                                            DWRITE_FONT_STRETCH_NORMAL, style.font_size);
-        }
+        hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style,
+                                        DWRITE_FONT_STRETCH_NORMAL, style.font_size);
 
         if (SUCCEEDED(hr))
         {
-            layout.SetTextFormat(output);
-            layout.SetDirtyFlag(layout.GetDirtyFlag() | TextLayout::DirtyFlag::DirtyLayout);
-        }
-    }
+            ComPtr<IDWriteTextLayout> output;
+            WideString                wide = string::ToWide(content);
 
-    if (layout.GetDirtyFlag() & TextLayout::DirtyFlag::DirtyLayout)
-    {
-        ComPtr<IDWriteTextLayout> output;
-
-        if (SUCCEEDED(hr))
-        {
-            WideString text = string::ToWide(layout.GetText());
-
-            hr = d2d_res_->CreateTextLayout(output, text.c_str(), text.length(), layout.GetTextFormat());
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            hr = output->SetTextAlignment(DWRITE_TEXT_ALIGNMENT(style.alignment));
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            float wrap_width      = style.wrap_width;
-            bool  enable_wrapping = (wrap_width > 0);
+            hr = d2d_res_->CreateTextLayout(output, wide.c_str(), wide.length(), format);
 
             if (SUCCEEDED(hr))
             {
-                if (enable_wrapping)
-                {
-                    hr = output->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
-                }
-                else
-                {
-                    hr = output->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-                }
+                layout.SetTextLayout(output);
+                layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
             }
-
-            if (SUCCEEDED(hr))
-            {
-                if (enable_wrapping)
-                {
-                    hr = output->SetMaxWidth(wrap_width);
-                }
-                else
-                {
-                    // Fix the layout width when the text does not wrap
-                    DWRITE_TEXT_METRICS metrics;
-                    hr = output->GetMetrics(&metrics);
-
-                    if (SUCCEEDED(hr))
-                    {
-                        hr = output->SetMaxWidth(metrics.width);
-                    }
-                }
-            }
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            float spacing = style.line_spacing;
-            if (spacing == 0.f)
-            {
-                hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_DEFAULT, 0, 0);
-            }
-            else
-            {
-                hr = output->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, spacing, spacing * 0.8f);
-            }
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            layout.SetTextLayout(output);
         }
     }
-
-    layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
 
     KGE_THROW_IF_FAILED(hr, "Create text layout failed");
 }
