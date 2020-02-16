@@ -154,9 +154,9 @@ public:
 
     /// \~chinese
     /// @brief 创建几何图形生成器内部资源
-    /// @param[out] sink 形状生成器
+    /// @param[out] maker 形状生成器
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateShapeSink(ShapeSink& sink) = 0;
+    virtual void CreateShapeSink(ShapeMaker& maker) = 0;
 
     /// \~chinese
     /// @brief 创建纯色画刷内部资源
@@ -188,8 +188,7 @@ public:
     /// @param[in] dash_size 虚线数组大小
     /// @param[in] dash_offset 虚线偏移量
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
-                                   const float* dash_array, size_t dash_size, float dash_offset) = 0;
+    virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
 
     /// \~chinese
     /// @brief 创建纹理渲染上下文

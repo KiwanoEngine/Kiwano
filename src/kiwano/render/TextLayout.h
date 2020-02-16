@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/math/Math.h>
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/render/NativeObject.h>
 #include <kiwano/render/TextStyle.hpp>
 
 namespace kiwano
@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(TextLayout);
 
 /// \~chinese
 /// @brief 文本布局
-class KGE_API TextLayout : public virtual ObjectBase
+class KGE_API TextLayout : public NativeObject
 {
 public:
     /// \~chinese
@@ -51,10 +51,6 @@ public:
     /// \~chinese
     /// @brief 构造空的文本布局
     TextLayout();
-
-    /// \~chinese
-    /// @brief 文本布局是否有效
-    bool IsValid() const;
 
     /// \~chinese
     /// @brief 文本布局是否陈旧
@@ -85,10 +81,6 @@ public:
     /// \~chinese
     /// @brief 获取默认描边画刷
     BrushPtr GetDefaultOutlineBrush() const;
-
-    /// \~chinese
-    /// @brief 获取默认描边宽度
-    float GetDefaultOutlineWidth() const;
 
     /// \~chinese
     /// @brief 获取默认描边线条样式
@@ -157,12 +149,6 @@ public:
     void SetOutlineBrush(BrushPtr brush, TextRange range);
 
     /// \~chinese
-    /// @brief 设置文字描边线宽
-    /// @param width 描边线宽
-    /// @param range 文字范围
-    void SetOutlineWidth(float width, TextRange range);
-
-    /// \~chinese
     /// @brief 设置描边线条样式
     /// @param stroke 线条样式
     /// @param range 文字范围
@@ -192,11 +178,6 @@ public:
     void SetDefaultOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief 设置默认文字描边线宽
-    /// @param width 描边线宽
-    void SetDefaultOutlineWidth(float width);
-
-    /// \~chinese
     /// @brief 设置默认描边线条样式
     /// @param stroke 线条样式
     void SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke);
@@ -218,30 +199,10 @@ private:
     DirtyFlag      dirty_flag_;
     BrushPtr       default_fill_brush_;
     BrushPtr       default_outline_brush_;
-    float          default_outline_width_;
     StrokeStylePtr default_outline_stroke_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    ComPtr<IDWriteTextLayout> GetTextLayout() const;
-
-    void SetTextLayout(ComPtr<IDWriteTextLayout> layout);
-
-private:
-    ComPtr<IDWriteTextLayout> text_layout_;
-#endif
 };
 
 /** @} */
-
-inline bool TextLayout::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return text_layout_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
 
 inline bool TextLayout::IsDirty() const
 {
@@ -250,12 +211,7 @@ inline bool TextLayout::IsDirty() const
 
 inline void TextLayout::Clear()
 {
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    text_layout_ = nullptr;
-    dirty_flag_  = DirtyFlag::Updated;
-#else
-    return;  // not supported
-#endif
+    ResetNativePointer();
 }
 
 inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const
@@ -278,11 +234,6 @@ inline BrushPtr TextLayout::GetDefaultOutlineBrush() const
     return default_outline_brush_;
 }
 
-inline float TextLayout::GetDefaultOutlineWidth() const
-{
-    return default_outline_width_;
-}
-
 inline StrokeStylePtr TextLayout::GetDefaultOutlineStrokeStyle() const
 {
     return default_outline_stroke_;
@@ -298,26 +249,9 @@ inline void TextLayout::SetDefaultOutlineBrush(BrushPtr brush)
     default_outline_brush_ = brush;
 }
 
-inline void TextLayout::SetDefaultOutlineWidth(float width)
-{
-    default_outline_width_ = width;
-}
-
 inline void TextLayout::SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke)
 {
     default_outline_stroke_ = stroke;
 }
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<IDWriteTextLayout> TextLayout::GetTextLayout() const
-{
-    return text_layout_;
-}
-
-inline void TextLayout::SetTextLayout(ComPtr<IDWriteTextLayout> layout)
-{
-    text_layout_ = layout;
-}
-#endif
 
 }  // namespace kiwano

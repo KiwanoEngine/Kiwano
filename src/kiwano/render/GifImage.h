@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(GifImage);
  * \~chinese
  * @brief GIF图像
  */
-class KGE_API GifImage : public virtual ObjectBase
+class KGE_API GifImage : public NativeObject
 {
 public:
     /// \~chinese
@@ -57,16 +57,16 @@ public:
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
-    /// \~chinese
     /// @brief 获取像素宽度
     uint32_t GetWidthInPixels() const;
 
     /// \~chinese
     /// @brief 获取像素高度
     uint32_t GetHeightInPixels() const;
+
+    /// \~chinese
+    /// @brief 获取像素大小
+    PixelSize GetSizeInPixels() const;
 
     /// \~chinese
     /// @brief 获取帧数量
@@ -105,18 +105,7 @@ private:
 
 private:
     uint32_t frames_count_;
-    uint32_t width_in_pixels_;
-    uint32_t height_in_pixels_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    ComPtr<IWICBitmapDecoder> GetDecoder() const;
-
-    void SetDecoder(ComPtr<IWICBitmapDecoder> decoder);
-
-private:
-    ComPtr<IWICBitmapDecoder> decoder_;
-#endif
+    PixelSize size_in_pixels_;
 };
 
 /** @} */
@@ -128,38 +117,22 @@ inline GifImage::Frame::Frame()
 
 inline uint32_t GifImage::GetWidthInPixels() const
 {
-    return width_in_pixels_;
+    return size_in_pixels_.x;
 }
 
 inline uint32_t GifImage::GetHeightInPixels() const
 {
-    return height_in_pixels_;
+    return size_in_pixels_.y;
+}
+
+inline PixelSize GifImage::GetSizeInPixels() const
+{
+    return size_in_pixels_;
 }
 
 inline uint32_t GifImage::GetFramesCount() const
 {
     return frames_count_;
 }
-
-inline bool GifImage::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return decoder_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<IWICBitmapDecoder> GifImage::GetDecoder() const
-{
-    return decoder_;
-}
-
-inline void GifImage::SetDecoder(ComPtr<IWICBitmapDecoder> decoder)
-{
-    decoder_ = decoder;
-}
-#endif
 
 }  // namespace kiwano

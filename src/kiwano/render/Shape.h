@@ -19,12 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/NativeObject.h>
 
 namespace kiwano
 {
-class ShapeSink;
+class ShapeMaker;
 
 KGE_DECLARE_SMART_PTR(Shape);
 
@@ -37,9 +36,9 @@ KGE_DECLARE_SMART_PTR(Shape);
  * \~chinese
  * @brief 形状
  */
-class KGE_API Shape : public virtual ObjectBase
+class KGE_API Shape : public NativeObject
 {
-    friend class ShapeSink;
+    friend class ShapeMaker;
 
 public:
     /// \~chinese
@@ -74,10 +73,6 @@ public:
     Shape();
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
-    /// \~chinese
     /// @brief 获取外切包围盒
     Rect GetBoundingBox() const;
 
@@ -110,39 +105,8 @@ public:
     /// \~chinese
     /// @brief 清除形状
     void Clear();
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    ComPtr<ID2D1Geometry> GetGeometry() const;
-
-    void SetGeometry(ComPtr<ID2D1Geometry> shape);
-
-private:
-    ComPtr<ID2D1Geometry> geo_;
-#endif
 };
 
 /** @} */
-
-inline bool Shape::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return geo_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<ID2D1Geometry> Shape::GetGeometry() const
-{
-    return geo_;
-}
-
-inline void Shape::SetGeometry(ComPtr<ID2D1Geometry> shape)
-{
-    geo_ = shape;
-}
-#endif
 
 }  // namespace kiwano

@@ -48,8 +48,6 @@ CanvasPtr Canvas::Create(Size const& size)
 
 Canvas::Canvas()
     : cache_expired_(false)
-    , stroke_width_(1.0f)
-    , stroke_style_()
 {
 }
 
@@ -95,10 +93,13 @@ void Canvas::SetBrushTransform(Matrix3x2 const& transform)
     ctx_->SetTransform(transform);
 }
 
-void Canvas::PushLayer(Layer& layer)
+void Canvas::PushLayer(LayerPtr layer)
 {
     KGE_ASSERT(ctx_);
-    ctx_->PushLayer(layer);
+    if (layer)
+    {
+        ctx_->PushLayer(*layer);
+    }
 }
 
 void Canvas::PopLayer()
@@ -125,7 +126,8 @@ void Canvas::DrawShape(ShapePtr shape)
     if (shape)
     {
         ctx_->SetCurrentBrush(stroke_brush_);
-        ctx_->DrawShape(*shape, stroke_style_, stroke_width_);
+        ctx_->SetCurrentStrokeStyle(stroke_style_);
+        ctx_->DrawShape(*shape);
         cache_expired_ = true;
     }
 }
@@ -134,7 +136,8 @@ void Canvas::DrawLine(Point const& begin, Point const& end)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawLine(begin, end, stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawLine(begin, end);
     cache_expired_ = true;
 }
 
@@ -142,7 +145,8 @@ void Canvas::DrawCircle(Point const& center, float radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawEllipse(center, Vec2(radius, radius), stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawEllipse(center, Vec2(radius, radius));
     cache_expired_ = true;
 }
 
@@ -150,7 +154,8 @@ void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawEllipse(center, radius, stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawEllipse(center, radius);
     cache_expired_ = true;
 }
 
@@ -158,7 +163,8 @@ void Canvas::DrawRect(Rect const& rect)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawRectangle(rect, stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawRectangle(rect);
     cache_expired_ = true;
 }
 
@@ -166,7 +172,8 @@ void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawRoundedRectangle(rect, radius, stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawRoundedRectangle(rect, radius);
     cache_expired_ = true;
 }
 
@@ -243,39 +250,40 @@ void Canvas::DrawTextLayout(TextLayoutPtr layout, Point const& point)
 
 void Canvas::BeginPath(Point const& begin_pos)
 {
-    shape_sink_.BeginPath(begin_pos);
+    shape_maker_.BeginPath(begin_pos);
 }
 
 void Canvas::EndPath(bool closed)
 {
-    shape_sink_.EndPath(closed);
+    shape_maker_.EndPath(closed);
 }
 
 void Canvas::AddLine(Point const& point)
 {
-    shape_sink_.AddLine(point);
+    shape_maker_.AddLine(point);
 }
 
 void Canvas::AddLines(Vector<Point> const& points)
 {
-    shape_sink_.AddLines(points);
+    shape_maker_.AddLines(points);
 }
 
 void Canvas::AddBezier(Point const& point1, Point const& point2, Point const& point3)
 {
-    shape_sink_.AddBezier(point1, point2, point3);
+    shape_maker_.AddBezier(point1, point2, point3);
 }
 
 void Canvas::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
 {
-    shape_sink_.AddArc(point, radius, rotation, clockwise, is_small);
+    shape_maker_.AddArc(point, radius, rotation, clockwise, is_small);
 }
 
 void Canvas::StrokePath()
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->DrawShape(*shape_sink_.GetShape(), stroke_style_, stroke_width_);
+    ctx_->SetCurrentStrokeStyle(stroke_style_);
+    ctx_->DrawShape(*shape_maker_.GetShape());
     cache_expired_ = true;
 }
 
@@ -283,7 +291,7 @@ void Canvas::FillPath()
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillShape(*shape_sink_.GetShape());
+    ctx_->FillShape(*shape_maker_.GetShape());
     cache_expired_ = true;
 }
 

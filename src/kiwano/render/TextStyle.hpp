@@ -78,8 +78,7 @@ public:
     TextAlign      alignment;           ///< 对齐方式
     BrushPtr       fill_brush;          ///< 填充画刷
     BrushPtr       outline_brush;       ///< 描边画刷
-    float          outline_width;       ///< 描边线宽
-    StrokeStylePtr outline_stroke;      ///< 描边线宽
+    StrokeStylePtr outline_stroke;      ///< 描边样式
     float          wrap_width;          ///< 自动换行宽度
     float          line_spacing;        ///< 行间距
     bool           show_underline;      ///< 显示下划线
@@ -116,7 +115,6 @@ inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t
     , font_weight(font_weight)
     , italic(false)
     , alignment(TextAlign::Left)
-    , outline_width(1.0f)
     , wrap_width(0)
     , line_spacing(0)
     , show_underline(false)

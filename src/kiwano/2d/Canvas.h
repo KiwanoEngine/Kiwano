@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/ShapeSink.h>
+#include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/TextureRenderContext.h>
 
 namespace kiwano
@@ -210,11 +210,6 @@ public:
     void SetStrokeBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief 设置轮廓宽度
-    /// @param width 轮廓宽度
-    void SetStrokeWidth(float width);
-
-    /// \~chinese
     /// @brief 设置轮廓样式
     /// @param stroke_style 轮廓样式
     void SetStrokeStyle(StrokeStylePtr stroke_style);
@@ -237,7 +232,7 @@ public:
     /// \~chinese
     /// @brief 添加一个图层
     /// @param layer 图层
-    void PushLayer(Layer& layer);
+    void PushLayer(LayerPtr layer);
 
     /// \~chinese
     /// @brief 删除最近添加的图层
@@ -251,10 +246,6 @@ public:
     /// \~chinese
     /// @brief 删除最近添加的裁剪区域
     void PopClipRect();
-
-    /// \~chinese
-    /// @brief 获取轮廓宽度
-    float GetStrokeWidth() const;
 
     /// \~chinese
     /// @brief 获取填充画刷
@@ -280,9 +271,8 @@ private:
     void UpdateCache() const;
 
 private:
-    float          stroke_width_;
     StrokeStylePtr stroke_style_;
-    ShapeSink      shape_sink_;
+    ShapeMaker     shape_maker_;
     BrushPtr       fill_brush_;
     BrushPtr       stroke_brush_;
 
@@ -292,16 +282,6 @@ private:
 };
 
 /** @} */
-
-inline float Canvas::GetStrokeWidth() const
-{
-    return stroke_width_;
-}
-
-inline void Canvas::SetStrokeWidth(float width)
-{
-    stroke_width_ = std::max(width, 0.f);
-}
 
 inline void Canvas::SetStrokeStyle(StrokeStylePtr stroke_style)
 {

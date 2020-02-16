@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/NativeObject.h>
 
 namespace kiwano
 {
@@ -67,47 +66,59 @@ enum class DashStyle
 
 /// \~chinese
 /// @brief 线条样式
-class StrokeStyle : public virtual ObjectBase
+class StrokeStyle : public NativeObject
 {
 public:
     /// \~chinese
     /// @brief 创建线条样式
+    /// @param width 线条宽度
+    /// @param cap 线条端点样式
+    /// @param line_join 线条交点样式
+    static StrokeStylePtr Create(float width, CapStyle cap = CapStyle::Flat,
+                                 LineJoinStyle line_join = LineJoinStyle::Miter);
+
+    /// \~chinese
+    /// @brief 创建线条样式
+    /// @param width 线条宽度
     /// @param cap 线条端点样式
     /// @param line_join 线条交点样式
     /// @param dash 线条虚线样式
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
-                                 DashStyle dash = DashStyle::Solid, float dash_offset = 0.0f);
+    static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash,
+                                 float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
+    /// @param width 线条宽度
     /// @param cap 线条端点样式
     /// @param line_join 线条交点样式
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_size 线条虚线数组大小
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
-                                 const float* dash_array = nullptr, size_t dash_size = 0, float dash_offset = 0.0f);
+    static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
+                                 size_t dash_size, float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
     /// @tparam _DashSize 线条虚线数组大小
+    /// @param width 线条宽度
     /// @param cap 线条端点样式
     /// @param line_join 线条交点样式
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_offset 线条虚线偏移量
     template <size_t _DashSize>
-    static inline StrokeStylePtr Create(CapStyle cap, LineJoinStyle line_join = LineJoinStyle::Miter,
-                                        float (&dash_array)[_DashSize] = nullptr, float dash_offset = 0.0f)
+    static inline StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join,
+                                        float (&dash_array)[_DashSize], float dash_offset = 0.0f)
     {
-        return StrokeStyle::Create(cap, line_join, dash_array, _DashSize, dash_offset);
+        return StrokeStyle::Create(width, cap, line_join, dash_array, _DashSize, dash_offset);
     }
 
     StrokeStyle();
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
+    /// @brief 获取线条宽度
+    /// @param width 线条宽度
+    float GetStrokeWidth() const;
 
     /// \~chinese
     /// @brief 获取线条端点样式
@@ -124,6 +135,11 @@ public:
     /// \~chinese
     /// @brief 获取虚线偏移量
     float GetDashOffset() const;
+
+    /// \~chinese
+    /// @brief 设置线条宽度
+    /// @param width 线条宽度
+    void SetStrokeWidth(float width);
 
     /// \~chinese
     /// @brief 设置线条端点样式
@@ -167,21 +183,17 @@ public:
 private:
     CapStyle      cap_;
     LineJoinStyle line_join_;
+    float         stroke_width_;
     float         dash_offset_;
     Vector<float> dash_array_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    ComPtr<ID2D1StrokeStyle> GetStrokeStyle() const;
-
-    void SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style);
-
-private:
-    ComPtr<ID2D1StrokeStyle> style_;
-#endif
 };
 
 /** @} */
+
+inline float StrokeStyle::GetStrokeWidth() const
+{
+    return stroke_width_;
+}
 
 inline CapStyle StrokeStyle::GetCapStyle() const
 {
@@ -203,38 +215,24 @@ inline float StrokeStyle::GetDashOffset() const
     return dash_offset_;
 }
 
+inline void StrokeStyle::SetStrokeWidth(float width)
+{
+    stroke_width_ = width;
+}
+
 inline void StrokeStyle::SetCapStyle(CapStyle cap)
 {
     cap_ = cap;
-    style_.Reset();
 }
 
 inline void StrokeStyle::SetLineJoinStyle(LineJoinStyle line_join)
 {
     line_join_ = line_join;
-    style_.Reset();
 }
 
 inline void StrokeStyle::SetDashOffset(float dash_offset)
 {
     dash_offset_ = dash_offset;
-    style_.Reset();
 }
-
-inline bool StrokeStyle::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return style_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline void StrokeStyle::SetStrokeStyle(ComPtr<ID2D1StrokeStyle> style)
-{
-    style_ = style;
-}
-#endif
 
 }  // namespace kiwano

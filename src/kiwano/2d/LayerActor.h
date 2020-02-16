@@ -52,17 +52,13 @@ public:
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
-    /// @brief 获取图层区域
-    Layer const& GetLayer() const;
-
-    /// \~chinese
-    /// @brief 获取图层区域
-    Layer& GetLayer();
+    /// @brief 获取图层
+    LayerPtr GetLayer() const;
 
     /// \~chinese
     /// @brief 设置图层
     /// @param layer 图层
-    void SetLayer(Layer const& layer);
+    void SetLayer(LayerPtr layer);
 
     /// \~chinese
     /// @brief 设置消息吞没功能
@@ -82,8 +78,8 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool  swallow_;
-    Layer layer_;
+    bool     swallow_;
+    LayerPtr layer_;
 };
 
 /** @} */
@@ -98,17 +94,12 @@ inline void LayerActor::SetSwallowEvents(bool enabled)
     swallow_ = enabled;
 }
 
-inline void LayerActor::SetLayer(Layer const& layer)
+inline void LayerActor::SetLayer(LayerPtr layer)
 {
     layer_ = layer;
 }
 
-inline Layer const& LayerActor::GetLayer() const
-{
-    return layer_;
-}
-
-inline Layer& LayerActor::GetLayer()
+inline LayerPtr LayerActor::GetLayer() const
 {
     return layer_;
 }

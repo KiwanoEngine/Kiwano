@@ -147,10 +147,6 @@ public:
     void SetOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
-    /// @brief 设置文字描边线宽
-    void SetOutlineWidth(float outline_width);
-
-    /// \~chinese
     /// @brief 设置是否显示下划线（默认值为 false）
     void SetUnderline(bool enable);
 

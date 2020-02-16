@@ -23,9 +23,10 @@
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
-#include <kiwano/render/ShapeSink.h>
+#include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/DirectX/TextureRenderContextImpl.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
+#include <kiwano/render/DirectX/NativePtr.h>
 
 namespace kiwano
 {
@@ -226,7 +227,10 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
 
                     if (SUCCEEDED(hr))
                     {
-                        texture.SetBitmap(bitmap);
+                        NativePtr::Set(texture, bitmap);
+
+                        texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+                        texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
                     }
                 }
             }
@@ -277,7 +281,10 @@ void RendererImpl::CreateTexture(Texture& texture, Resource const& resource)
 
                         if (SUCCEEDED(hr))
                         {
-                            texture.SetBitmap(bitmap);
+                            NativePtr::Set(texture, bitmap);
+
+                            texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+                            texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
                         }
                     }
                 }
@@ -314,7 +321,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
 
         if (SUCCEEDED(hr))
         {
-            gif.SetDecoder(decoder);
+            NativePtr::Set(gif, decoder);
         }
     }
 
@@ -345,7 +352,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, Resource const& resource)
 
             if (SUCCEEDED(hr))
             {
-                gif.SetDecoder(decoder);
+                NativePtr::Set(gif, decoder);
             }
         }
     }
@@ -364,7 +371,9 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& g
         hr = E_UNEXPECTED;
     }
 
-    if (gif.GetDecoder() == nullptr)
+    auto decoder = NativePtr::Get<IWICBitmapDecoder>(gif);
+
+    if (!decoder)
     {
         hr = E_INVALIDARG;
     }
@@ -373,7 +382,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& g
     {
         ComPtr<IWICBitmapFrameDecode> wic_frame;
 
-        HRESULT hr = gif.GetDecoder()->GetFrame(UINT(frame_index), &wic_frame);
+        hr = decoder->GetFrame(UINT(frame_index), &wic_frame);
 
         if (SUCCEEDED(hr))
         {
@@ -383,13 +392,16 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& g
 
             if (SUCCEEDED(hr))
             {
-                ComPtr<ID2D1Bitmap> raw_bitmap;
-                hr = d2d_res_->CreateBitmapFromConverter(raw_bitmap, nullptr, converter);
+                ComPtr<ID2D1Bitmap> bitmap;
+                hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
 
                 if (SUCCEEDED(hr))
                 {
                     frame.texture = new Texture;
-                    frame.texture->SetBitmap(raw_bitmap);
+                    NativePtr::Set(frame.texture, bitmap);
+
+                    frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+                    frame.texture->SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
                 }
             }
         }
@@ -548,7 +560,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
 
             if (SUCCEEDED(hr))
             {
-                font.SetCollection(font_collection);
+                NativePtr::Set(font, font_collection);
             }
         }
     }
@@ -579,7 +591,7 @@ void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
 
             if (SUCCEEDED(hr))
             {
-                font.SetCollection(font_collection);
+                NativePtr::Set(font, font_collection);
             }
         }
     }
@@ -597,32 +609,32 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
     if (content.empty())
     {
-        layout.SetTextLayout(nullptr);
+        layout.Clear();
         layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
         return;
     }
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<IDWriteTextFormat> format;
-        WideString                font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
-        DWRITE_FONT_WEIGHT        font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
-        DWRITE_FONT_STYLE         font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
-        IDWriteFontCollection*    collection  = style.font ? style.font->GetCollection().Get() : nullptr;
+        WideString         font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
+        DWRITE_FONT_WEIGHT font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
+        DWRITE_FONT_STYLE  font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+        auto               collection  = NativePtr::Get<IDWriteFontCollection>(style.font);
 
+        ComPtr<IDWriteTextFormat> format;
         hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style,
                                         DWRITE_FONT_STRETCH_NORMAL, style.font_size);
 
         if (SUCCEEDED(hr))
         {
-            ComPtr<IDWriteTextLayout> output;
-            WideString                wide = string::ToWide(content);
+            WideString wide = string::ToWide(content);
 
+            ComPtr<IDWriteTextLayout> output;
             hr = d2d_res_->CreateTextLayout(output, wide.c_str(), wide.length(), format);
 
             if (SUCCEEDED(hr))
             {
-                layout.SetTextLayout(output);
+                NativePtr::Set(layout, output);
                 layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
             }
         }
@@ -639,29 +651,29 @@ void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point c
         hr = E_UNEXPECTED;
     }
 
-    ComPtr<ID2D1PathGeometry> path_geo;
-    ComPtr<ID2D1GeometrySink> path_sink;
     if (SUCCEEDED(hr))
     {
+        ComPtr<ID2D1PathGeometry> path_geo;
         hr = d2d_res_->GetFactory()->CreatePathGeometry(&path_geo);
-    }
 
-    if (SUCCEEDED(hr))
-    {
-        hr = path_geo->Open(&path_sink);
-    }
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<ID2D1GeometrySink> path_sink;
+            hr = path_geo->Open(&path_sink);
 
-    if (SUCCEEDED(hr))
-    {
-        path_sink->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
-        path_sink->AddLine(DX::ConvertToPoint2F(end_pos));
-        path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
-        hr = path_sink->Close();
-    }
+            if (SUCCEEDED(hr))
+            {
+                path_sink->BeginFigure(DX::ConvertToPoint2F(begin_pos), D2D1_FIGURE_BEGIN_FILLED);
+                path_sink->AddLine(DX::ConvertToPoint2F(end_pos));
+                path_sink->EndFigure(D2D1_FIGURE_END_OPEN);
+                hr = path_sink->Close();
+            }
 
-    if (SUCCEEDED(hr))
-    {
-        shape.SetGeometry(path_geo);
+            if (SUCCEEDED(hr))
+            {
+                NativePtr::Set(shape, path_geo);
+            }
+        }
     }
 
     KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
@@ -683,7 +695,7 @@ void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
 
     if (SUCCEEDED(hr))
     {
-        shape.SetGeometry(output);
+        NativePtr::Set(shape, output);
     }
 
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RectangleGeometry failed");
@@ -706,7 +718,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 c
 
     if (SUCCEEDED(hr))
     {
-        shape.SetGeometry(output);
+        NativePtr::Set(shape, output);
     }
 
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RoundedRectangleGeometry failed");
@@ -729,13 +741,13 @@ void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 co
 
     if (SUCCEEDED(hr))
     {
-        shape.SetGeometry(output);
+        NativePtr::Set(shape, output);
     }
 
     KGE_THROW_IF_FAILED(hr, "Create ID2D1EllipseGeometry failed");
 }
 
-void RendererImpl::CreateShapeSink(ShapeSink& sink)
+void RendererImpl::CreateShapeSink(ShapeMaker& maker)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -743,17 +755,20 @@ void RendererImpl::CreateShapeSink(ShapeSink& sink)
         hr = E_UNEXPECTED;
     }
 
-    ComPtr<ID2D1PathGeometry> output;
     if (SUCCEEDED(hr))
     {
-        hr = d2d_res_->GetFactory()->CreatePathGeometry(&output);
-    }
+        ComPtr<ID2D1PathGeometry> geometry;
 
-    if (SUCCEEDED(hr))
-    {
-        sink.SetPathGeometry(output);
-    }
+        hr = d2d_res_->GetFactory()->CreatePathGeometry(&geometry);
 
+        if (SUCCEEDED(hr))
+        {
+            ShapePtr shape = new Shape;
+            NativePtr::Set(shape, geometry);
+
+            maker.SetShape(shape);
+        }
+    }
     KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
 }
 
@@ -769,9 +784,9 @@ void RendererImpl::CreateBrush(Brush& brush, Color const& color)
     {
         ComPtr<ID2D1SolidColorBrush> solid_brush;
 
-        if (brush.GetType() == Brush::Type::SolidColor && brush.GetBrush())
+        if (brush.GetType() == Brush::Type::SolidColor && brush.IsValid())
         {
-            hr = brush.GetBrush()->QueryInterface(&solid_brush);
+            hr = NativePtr::Get<ID2D1Brush>(brush)->QueryInterface(&solid_brush);
             if (SUCCEEDED(hr))
             {
                 solid_brush->SetColor(DX::ConvertToColorF(color));
@@ -783,7 +798,7 @@ void RendererImpl::CreateBrush(Brush& brush, Color const& color)
 
             if (SUCCEEDED(hr))
             {
-                brush.SetBrush(solid_brush, Brush::Type::SolidColor);
+                NativePtr::Set(brush, solid_brush);
             }
         }
     }
@@ -815,7 +830,7 @@ void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
 
             if (SUCCEEDED(hr))
             {
-                brush.SetBrush(output, Brush::Type::LinearGradient);
+                NativePtr::Set(brush, output);
             }
         }
     }
@@ -848,7 +863,7 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
 
             if (SUCCEEDED(hr))
             {
-                brush.SetBrush(output, Brush::Type::RadialGradient);
+                NativePtr::Set(brush, output);
             }
         }
     }
@@ -856,8 +871,7 @@ void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
 }
 
-void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join,
-                                     const float* dash_array, size_t dash_size, float dash_offset)
+void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -867,16 +881,29 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, Li
 
     if (SUCCEEDED(hr))
     {
-        D2D1_STROKE_STYLE_PROPERTIES style =
-            D2D1::StrokeStyleProperties(D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap), D2D1_CAP_STYLE(cap),
-                                        D2D1_LINE_JOIN(line_join), 10.0f, D2D1_DASH_STYLE_CUSTOM, dash_offset);
+        D2D1_CAP_STYLE  cap         = D2D1_CAP_STYLE(stroke_style.GetCapStyle());
+        D2D1_LINE_JOIN  line_join   = D2D1_LINE_JOIN(stroke_style.GetLineJoinStyle());
+        D2D1_DASH_STYLE dash_style  = D2D1_DASH_STYLE_SOLID;
+        const float*    dash_array  = nullptr;
+        uint32_t        dash_count  = 0;
+        float           dash_offset = stroke_style.GetDashOffset();
+        const auto&     dashes      = stroke_style.GetDashArray();
+
+        if (!dashes.empty())
+        {
+            dash_array = &dashes[0];
+            dash_count = uint32_t(dashes.size());
+            dash_style = D2D1_DASH_STYLE_CUSTOM;
+        }
+
+        auto params = D2D1::StrokeStyleProperties(cap, cap, cap, line_join, 10.0f, dash_style, dash_offset);
 
         ComPtr<ID2D1StrokeStyle> output;
-        hr = d2d_res_->GetFactory()->CreateStrokeStyle(style, dash_array, dash_size, &output);
+        hr = d2d_res_->GetFactory()->CreateStrokeStyle(params, dash_array, dash_count, &output);
 
         if (SUCCEEDED(hr))
         {
-            stroke_style.SetStrokeStyle(output);
+            NativePtr::Set(stroke_style, output);
         }
     }
 

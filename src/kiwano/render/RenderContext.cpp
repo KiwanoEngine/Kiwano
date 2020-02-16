@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
@@ -103,6 +104,19 @@ void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
 void RenderContext::SetCurrentBrush(BrushPtr brush)
 {
     current_brush_ = brush;
+}
+
+void RenderContext::SetCurrentStrokeStyle(StrokeStylePtr stroke)
+{
+    if (current_stroke_ != stroke)
+    {
+        current_stroke_ = stroke;
+
+        if (current_stroke_ && !current_stroke_->IsValid())
+        {
+            Renderer::GetInstance().CreateStrokeStyle(*current_stroke_);
+        }
+    }
 }
 
 }  // namespace kiwano

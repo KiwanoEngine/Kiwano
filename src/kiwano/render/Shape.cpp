@@ -19,22 +19,32 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Shape.h>
-#include <kiwano/render/ShapeSink.h>
+#include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/Renderer.h>
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#include <kiwano/render/DirectX/NativePtr.h>
+#endif
 
 namespace kiwano
 {
 
 Shape::Shape() {}
 
+void Shape::Clear()
+{
+    ResetNativePointer();
+}
+
 Rect Shape::GetBoundingBox() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
-    if (geo_)
+    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (geometry)
     {
         // no matter it failed or not
-        geo_->GetBounds(nullptr, DX::ConvertToRectF(&bounds));
+        geometry->GetBounds(nullptr, DX::ConvertToRectF(&bounds));
     }
     return bounds;
 #else
@@ -46,10 +56,11 @@ Rect Shape::GetBoundingBox(Matrix3x2 const& transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
-    if (geo_)
+    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (geometry)
     {
         // no matter it failed or not
-        geo_->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&bounds));
+        geometry->GetBounds(DX::ConvertToMatrix3x2F(transform), DX::ConvertToRectF(&bounds));
     }
     return bounds;
 #else
@@ -61,10 +72,11 @@ float Shape::GetLength() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     float length = 0.f;
-    if (geo_)
+    auto  geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (geometry)
     {
         // no matter it failed or not
-        geo_->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
+        geometry->ComputeLength(D2D1::Matrix3x2F::Identity(), &length);
     }
     return length;
 #else
@@ -75,9 +87,10 @@ float Shape::GetLength() const
 bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (geo_)
+    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (geometry)
     {
-        HRESULT hr = geo_->ComputePointAtLength(length, D2D1::Matrix3x2F::Identity(), DX::ConvertToPoint2F(&point),
+        HRESULT hr = geometry->ComputePointAtLength(length, D2D1::Matrix3x2F::Identity(), DX::ConvertToPoint2F(&point),
                                                 DX::ConvertToPoint2F(&tangent));
 
         return SUCCEEDED(hr);
@@ -88,25 +101,17 @@ bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) cons
 #endif
 }
 
-void Shape::Clear()
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    geo_.Reset();
-#else
-    return;  // not supported
-#endif
-}
-
 float Shape::ComputeArea() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (!geo_)
-        return 0.f;
-
-    float area = 0.f;
-    // no matter it failed or not
-    geo_->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
-    return area;
+    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (geometry)
+    {
+        float area = 0.f;
+        // no matter it failed or not
+        geometry->ComputeArea(D2D1::Matrix3x2F::Identity(), &area);
+    }
+    return 0.f;
 #else
     return 0.0f;  // not supported
 #endif
@@ -115,12 +120,13 @@ float Shape::ComputeArea() const
 bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    if (!geo_)
+    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    if (!geometry)
         return false;
 
     BOOL ret = 0;
     // no matter it failed or not
-    geo_->FillContainsPoint(DX::ConvertToPoint2F(point), DX::ConvertToMatrix3x2F(transform),
+    geometry->FillContainsPoint(DX::ConvertToPoint2F(point), DX::ConvertToMatrix3x2F(transform),
                             D2D1_DEFAULT_FLATTENING_TOLERANCE, &ret);
     return !!ret;
 #else

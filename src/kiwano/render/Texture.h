@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/NativeObject.h>
 
 namespace kiwano
 {
@@ -44,11 +43,15 @@ enum class InterpolationMode
     Nearest  ///< 最邻近插值，取最邻近的像素点的颜色值
 };
 
+/// \~chinese
+/// @brief 像素大小
+typedef math::Vec2T<uint32_t> PixelSize;
+
 /**
  * \~chinese
  * @brief 纹理
  */
-class KGE_API Texture : public virtual ObjectBase
+class KGE_API Texture : public NativeObject
 {
 public:
     /// \~chinese
@@ -72,10 +75,6 @@ public:
     bool Load(Resource const& res);
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
-    /// \~chinese
     /// @brief 获取纹理宽度
     float GetWidth() const;
 
@@ -97,11 +96,22 @@ public:
 
     /// \~chinese
     /// @brief 获取像素大小
-    math::Vec2T<uint32_t> GetSizeInPixels() const;
+    PixelSize GetSizeInPixels() const;
 
     /// \~chinese
     /// @brief 获取像素插值方式
     InterpolationMode GetBitmapInterpolationMode() const;
+    /// \~chinese
+    /// @brief 设置大小
+    void SetSize(const Size& size);
+
+    /// \~chinese
+    /// @brief 设置像素大小
+    void SetSizeInPixels(const PixelSize& size);
+
+    /// \~chinese
+    /// @brief 设置像素插值方式
+    void SetInterpolationMode(InterpolationMode mode);
 
     /// \~chinese
     /// @brief 拷贝纹理
@@ -116,10 +126,6 @@ public:
     void CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point);
 
     /// \~chinese
-    /// @brief 设置像素插值方式
-    void SetInterpolationMode(InterpolationMode mode);
-
-    /// \~chinese
     /// @brief 设置默认的像素插值方式
     static void SetDefaultInterpolationMode(InterpolationMode mode);
 
@@ -128,62 +134,58 @@ public:
     static InterpolationMode GetDefaultInterpolationMode();
 
 private:
-    InterpolationMode   interpolation_mode_;
+    Size              size_;
+    PixelSize         size_in_pixels_;
+    InterpolationMode interpolation_mode_;
 
     static InterpolationMode default_interpolation_mode_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    /// \~chinese
-    /// @brief 获取源位图
-    ComPtr<ID2D1Bitmap> GetBitmap() const;
-
-    /// \~chinese
-    /// @brief 设置源位图
-    void SetBitmap(ComPtr<ID2D1Bitmap> bitmap);
-
-private:
-    ComPtr<ID2D1Bitmap>   bitmap_;
-    Size                  size_;
-    math::Vec2T<uint32_t> size_in_pixels_;
-#endif
 };
 
 /** @} */
 
-inline bool Texture::IsValid() const
+inline float Texture::GetWidth() const
 {
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return bitmap_ != nullptr;
-#else
-    return false;  // not supported
-#endif
+    return size_.x;
 }
 
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<ID2D1Bitmap> Texture::GetBitmap() const
+inline float Texture::GetHeight() const
 {
-    return bitmap_;
+    return size_.y;
 }
 
-inline void Texture::SetBitmap(ComPtr<ID2D1Bitmap> bitmap)
+inline Size Texture::GetSize() const
 {
-    if (bitmap_ != bitmap)
-    {
-        bitmap_ = bitmap;
-
-        if (bitmap_)
-        {
-            auto size = bitmap_->GetSize();
-            auto pixel_size = bitmap_->GetPixelSize();
-
-            size_.x           = size.width;
-            size_.y           = size.height;
-            size_in_pixels_.x = pixel_size.width;
-            size_in_pixels_.y = pixel_size.height;
-        }
-    }
+    return size_;
 }
-#endif
+
+inline uint32_t Texture::GetWidthInPixels() const
+{
+    return size_in_pixels_.x;
+}
+
+inline uint32_t Texture::GetHeightInPixels() const
+{
+    return size_in_pixels_.y;
+}
+
+inline PixelSize Texture::GetSizeInPixels() const
+{
+    return size_in_pixels_;
+}
+
+inline InterpolationMode Texture::GetBitmapInterpolationMode() const
+{
+    return interpolation_mode_;
+}
+
+inline void Texture::SetSize(const Size& size)
+{
+    size_ = size;
+}
+
+inline void Texture::SetSizeInPixels(const PixelSize& size)
+{
+    size_in_pixels_ = size;
+}
 
 }  // namespace kiwano

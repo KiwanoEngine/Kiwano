@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/render/Shape.h>
-#include <kiwano/render/ShapeSink.h>
+#include <kiwano/render/ShapeMaker.h>
 
 namespace kiwano
 {

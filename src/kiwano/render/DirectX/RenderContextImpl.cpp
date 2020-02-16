@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
 #include <kiwano/render/DirectX/RenderContextImpl.h>
+#include <kiwano/render/DirectX/NativePtr.h>
+#include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
 
-RenderContextImpl::RenderContextImpl()
-{}
+RenderContextImpl::RenderContextImpl() {}
 
 RenderContextImpl::~RenderContextImpl()
 {
@@ -99,12 +99,19 @@ void RenderContextImpl::DrawTexture(Texture const& texture, const Rect* src_rect
 
     if (texture.IsValid())
     {
-        auto mode = (texture.GetBitmapInterpolationMode() == InterpolationMode::Linear)
-                        ? D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
-                        : D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+        D2D1_BITMAP_INTERPOLATION_MODE mode;
+        if (texture.GetBitmapInterpolationMode() == InterpolationMode::Linear)
+        {
+            mode = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR;
+        }
+        else
+        {
+            mode = D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+        }
 
-        render_target_->DrawBitmap(texture.GetBitmap().Get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr,
-                                   brush_opacity_, mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
+        auto bitmap = NativePtr::Get<ID2D1Bitmap>(texture);
+        render_target_->DrawBitmap(bitmap.Get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr, brush_opacity_,
+                                   mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
 
         IncreasePrimitivesCount();
     }
@@ -116,30 +123,28 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
 
     if (layout.IsValid())
     {
-        ComPtr<ID2D1Brush>       fill_brush;
-        ComPtr<ID2D1Brush>       outline_brush;
-        ComPtr<ID2D1StrokeStyle> outline_stroke;
+        auto  native         = NativePtr::Get<IDWriteTextLayout>(layout);
+        auto  fill_brush     = NativePtr::Get<ID2D1Brush>(layout.GetDefaultFillBrush());
+        auto  outline_brush  = NativePtr::Get<ID2D1Brush>(layout.GetDefaultOutlineBrush());
+        auto  outline_stroke = NativePtr::Get<ID2D1StrokeStyle>(layout.GetDefaultOutlineStrokeStyle());
+        float outline_width  = 1.0f;
 
-        if (layout.GetDefaultFillBrush())
+        if (fill_brush)
         {
-            fill_brush = layout.GetDefaultFillBrush()->GetBrush();
             fill_brush->SetOpacity(brush_opacity_);
         }
 
-        if (layout.GetDefaultOutlineBrush())
+        if (outline_brush)
         {
-            outline_brush = layout.GetDefaultOutlineBrush()->GetBrush();
             outline_brush->SetOpacity(brush_opacity_);
         }
 
         if (layout.GetDefaultOutlineStrokeStyle())
         {
-            outline_stroke = layout.GetDefaultOutlineStrokeStyle()->GetStrokeStyle();
+            outline_width = layout.GetDefaultOutlineStrokeStyle()->GetStrokeWidth();
         }
 
-        float outline_width = layout.GetDefaultOutlineWidth();
-
-        HRESULT hr = text_renderer_->DrawTextLayout(layout.GetTextLayout().Get(), offset.x, offset.y, fill_brush.Get(),
+        HRESULT hr = text_renderer_->DrawTextLayout(native.Get(), offset.x, offset.y, fill_brush.Get(),
                                                     outline_brush.Get(), outline_width, outline_stroke.Get());
 
         if (SUCCEEDED(hr))
@@ -153,66 +158,79 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
     }
 }
 
-void RenderContextImpl::DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width)
+void RenderContextImpl::DrawShape(Shape const& shape)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
     if (shape.IsValid())
     {
-        ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
-        render_target_->DrawGeometry(shape.GetGeometry().Get(), current_brush_->GetBrush().Get(), stroke_width,
-                                     stroke_style);
+        auto  geometry     = NativePtr::Get<ID2D1Geometry>(shape);
+        auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
+        auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
+        float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+
+        render_target_->DrawGeometry(geometry.Get(), brush.Get(), stroke_width, stroke_style.Get());
 
         IncreasePrimitivesCount();
     }
 }
 
-void RenderContextImpl::DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width)
+void RenderContextImpl::DrawLine(Point const& point1, Point const& point2)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
-    render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2),
-                             current_brush_->GetBrush().Get(), stroke_width, stroke_style);
+    auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
+    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+
+    render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), brush.Get(), stroke_width,
+                             stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width)
+void RenderContextImpl::DrawRectangle(Rect const& rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
-    render_target_->DrawRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().Get(), stroke_width,
-                                  stroke_style);
+    auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
+    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+
+    render_target_->DrawRectangle(DX::ConvertToRectF(rect), brush.Get(), stroke_width, stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke,
-                                         float stroke_width)
+void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
-    render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                         current_brush_->GetBrush().Get(), stroke_width, stroke_style);
+    auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
+    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+
+    render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get(),
+                                         stroke_width, stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width)
+void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    ID2D1StrokeStyle* stroke_style = stroke ? stroke->GetStrokeStyle().Get() : nullptr;
-    render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                current_brush_->GetBrush().Get(), stroke_width, stroke_style);
+    auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
+    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+
+    render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get(),
+                                stroke_width, stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
@@ -224,7 +242,9 @@ void RenderContextImpl::FillShape(Shape const& shape)
 
     if (shape.IsValid())
     {
-        render_target_->FillGeometry(shape.GetGeometry().Get(), current_brush_->GetBrush().Get());
+        auto brush    = NativePtr::Get<ID2D1Brush>(current_brush_);
+        auto geometry = NativePtr::Get<ID2D1Geometry>(shape);
+        render_target_->FillGeometry(geometry.Get(), brush.Get());
 
         IncreasePrimitivesCount();
     }
@@ -235,7 +255,8 @@ void RenderContextImpl::FillRectangle(Rect const& rect)
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    render_target_->FillRectangle(DX::ConvertToRectF(rect), current_brush_->GetBrush().Get());
+    auto brush = NativePtr::Get<ID2D1Brush>(current_brush_);
+    render_target_->FillRectangle(DX::ConvertToRectF(rect), brush.Get());
 
     IncreasePrimitivesCount();
 }
@@ -245,8 +266,8 @@ void RenderContextImpl::FillRoundedRectangle(Rect const& rect, Vec2 const& radiu
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y),
-                                         current_brush_->GetBrush().Get());
+    auto brush = NativePtr::Get<ID2D1Brush>(current_brush_);
+    render_target_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get());
 
     IncreasePrimitivesCount();
 }
@@ -256,8 +277,8 @@ void RenderContextImpl::FillEllipse(Point const& center, Vec2 const& radius)
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y),
-                                current_brush_->GetBrush().Get());
+    auto brush = NativePtr::Get<ID2D1Brush>(current_brush_);
+    render_target_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get());
 
     IncreasePrimitivesCount();
 }
@@ -272,7 +293,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
 
     if (SUCCEEDED(hr))
     {
-        texture.SetBitmap(saved_bitmap);
+        NativePtr::Set(texture, saved_bitmap);
     }
 
     KGE_THROW_IF_FAILED(hr, "Create texture failed");
@@ -281,8 +302,17 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
 void RenderContextImpl::PushClipRect(Rect const& clip_rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    render_target_->PushAxisAlignedClip(DX::ConvertToRectF(clip_rect),
-                                        antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED);
+
+    D2D1_ANTIALIAS_MODE mode;
+    if (antialias_)
+    {
+        mode = D2D1_ANTIALIAS_MODE_PER_PRIMITIVE;
+    }
+    else
+    {
+        mode = D2D1_ANTIALIAS_MODE_ALIASED;
+    }
+    render_target_->PushAxisAlignedClip(DX::ConvertToRectF(clip_rect), mode);
 }
 
 void RenderContextImpl::PopClipRect()
@@ -294,35 +324,27 @@ void RenderContextImpl::PopClipRect()
 void RenderContextImpl::PushLayer(Layer& layer)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
-    if (!layer.IsValid())
-    {
-        ComPtr<ID2D1Layer> output;
 
-        HRESULT hr = render_target_->CreateLayer(&output);
+    auto native = NativePtr::Get<ID2D1Layer>(layer);
+    auto mask   = NativePtr::Get<ID2D1Geometry>(layer.GetMaskShape());
+
+    if (!native)
+    {
+        HRESULT hr = render_target_->CreateLayer(&native);
 
         if (SUCCEEDED(hr))
         {
-            layer.SetLayer(output);
+            NativePtr::Set(layer, native);
         }
-        else
-        {
-            KGE_THROW_IF_FAILED(hr, "Create ID2D1Layer failed");
-        }
+        KGE_THROW_IF_FAILED(hr, "Create ID2D1Layer failed");
     }
 
-    if (layer.IsValid())
-    {
-        ComPtr<ID2D1Geometry> mask;
-        if (layer.GetMaskShape())
-            mask = layer.GetMaskShape()->GetGeometry();
+    auto params = D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.Get(),
+                                        antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
+                                        DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
+                                        D2D1_LAYER_OPTIONS_NONE);
 
-        render_target_->PushLayer(
-            D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.Get(),
-                                  antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
-                                  DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
-                                  D2D1_LAYER_OPTIONS_NONE),
-            layer.GetLayer().Get());
-    }
+    render_target_->PushLayer(params, native.Get());
 }
 
 void RenderContextImpl::PopLayer()
@@ -358,7 +380,7 @@ void RenderContextImpl::SetCurrentBrush(BrushPtr brush)
 
     if (current_brush_ && current_brush_->IsValid())
     {
-        current_brush_->GetBrush()->SetOpacity(brush_opacity_);
+        NativePtr::Get<ID2D1Brush>(current_brush_)->SetOpacity(brush_opacity_);
     }
 }
 

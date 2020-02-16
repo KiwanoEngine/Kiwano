@@ -24,6 +24,8 @@
 namespace kiwano
 {
 
+KGE_DECLARE_SMART_PTR(Layer);
+
 /**
  * \addtogroup Render
  * @{
@@ -33,14 +35,10 @@ namespace kiwano
  * \~chinese
  * @brief 图层
  */
-class KGE_API Layer
+class KGE_API Layer : public NativeObject
 {
 public:
     Layer();
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
 
     /// \~chinese
     /// @brief 获取图层裁剪区域
@@ -79,28 +77,9 @@ private:
     float     opacity_;
     ShapePtr  mask_;
     Matrix3x2 mask_transform_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    ComPtr<ID2D1Layer> GetLayer() const;
-
-    void SetLayer(ComPtr<ID2D1Layer> layer);
-
-private:
-    ComPtr<ID2D1Layer> layer_;
-#endif
 };
 
 /** @} */
-
-inline bool Layer::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return layer_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
 
 inline Rect const& Layer::GetClipRect() const
 {
@@ -141,17 +120,5 @@ inline void Layer::SetMaskTransform(Matrix3x2 const& matrix)
 {
     mask_transform_ = matrix;
 }
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline ComPtr<ID2D1Layer> Layer::GetLayer() const
-{
-    return layer_;
-}
-
-inline void Layer::SetLayer(ComPtr<ID2D1Layer> layer)
-{
-    layer_ = layer;
-}
-#endif
 
 }  // namespace kiwano

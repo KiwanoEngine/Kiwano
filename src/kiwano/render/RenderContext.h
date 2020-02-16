@@ -26,7 +26,6 @@
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/render/DirectX/TextRenderer.h>
 
 namespace kiwano
 {
@@ -87,42 +86,30 @@ public:
     /// \~chinese
     /// @brief 绘制形状轮廓
     /// @param shape 形状
-    /// @param stroke 线条样式
-    /// @param stroke_width 线条宽度
-    virtual void DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width) = 0;
+    virtual void DrawShape(Shape const& shape) = 0;
 
     /// \~chinese
     /// @brief 绘制线段
     /// @param point1 线段起点
     /// @param point2 线段终点
-    /// @param stroke 线条样式
-    /// @param stroke_width 线条宽度
-    virtual void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width) = 0;
+    virtual void DrawLine(Point const& point1, Point const& point2) = 0;
 
     /// \~chinese
     /// @brief 绘制矩形边框
     /// @param rect 矩形
-    /// @param stroke 线条样式
-    /// @param stroke_width 线条宽度
-    virtual void DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width) = 0;
+    virtual void DrawRectangle(Rect const& rect) = 0;
 
     /// \~chinese
     /// @brief 绘制圆角矩形边框
     /// @param rect 矩形
     /// @param radius 圆角半径
-    /// @param stroke 线条样式
-    /// @param stroke_width 线条宽度
-    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke,
-                                      float stroke_width) = 0;
+    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 绘制椭圆边框
     /// @param center 圆心
     /// @param radius 椭圆半径
-    /// @param stroke 线条样式
-    /// @param stroke_width 线条宽度
-    virtual void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke,
-                             float stroke_width) = 0;
+    virtual void DrawEllipse(Point const& center, Vec2 const& radius) = 0;
 
     /// \~chinese
     /// @brief 填充形状
@@ -200,8 +187,12 @@ public:
     virtual void SetBrushOpacity(float opacity);
 
     /// \~chinese
-    /// @brief 设置当前画刷
+    /// @brief 设置当前使用的画刷
     virtual void SetCurrentBrush(BrushPtr brush);
+
+    /// \~chinese
+    /// @brief 设置当前使用的线条样式
+    virtual void SetCurrentStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
     /// @brief 设置抗锯齿模式
@@ -265,6 +256,7 @@ protected:
     float             brush_opacity_;
     TextAntialiasMode text_antialias_;
     BrushPtr          current_brush_;
+    StrokeStylePtr    current_stroke_;
     Rect              visible_size_;
     Matrix3x2         global_transform_;
     mutable Status    status_;

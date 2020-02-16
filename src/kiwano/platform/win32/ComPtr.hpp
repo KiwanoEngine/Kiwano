@@ -28,7 +28,7 @@ namespace kiwano
 {
 struct ComPtrProxy
 {
-    static inline void AddRef(IUnknown* ptr)
+    static inline void Retain(IUnknown* ptr)
     {
         if (ptr)
             ptr->AddRef();

@@ -22,7 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Shape.h>
-#include <kiwano/render/ShapeSink.h>
+#include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/StrokeStyle.h>
 
 namespace kiwano
@@ -82,10 +82,6 @@ public:
     BrushPtr GetStrokeBrush() const;
 
     /// \~chinese
-    /// @brief 获取线条宽度
-    float GetStrokeWidth() const;
-
-    /// \~chinese
     /// @brief 获取线条样式
     StrokeStylePtr GetStrokeStyle() const;
 
@@ -126,10 +122,6 @@ public:
     void SetStrokeBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief 设置线条宽度，默认为 1.0
-    void SetStrokeWidth(float width);
-
-    /// \~chinese
     /// @brief 设置线条样式
     void SetStrokeStyle(StrokeStylePtr stroke_style);
 
@@ -145,7 +137,6 @@ protected:
 private:
     BrushPtr       fill_brush_;
     BrushPtr       stroke_brush_;
-    float          stroke_width_;
     StrokeStylePtr stroke_style_;
     Rect           bounds_;
     ShapePtr       shape_;
@@ -381,11 +372,6 @@ inline BrushPtr ShapeActor::GetStrokeBrush() const
     return stroke_brush_;
 }
 
-inline float ShapeActor::GetStrokeWidth() const
-{
-    return stroke_width_;
-}
-
 inline StrokeStylePtr ShapeActor::GetStrokeStyle() const
 {
     return stroke_style_;
@@ -394,11 +380,6 @@ inline StrokeStylePtr ShapeActor::GetStrokeStyle() const
 inline ShapePtr ShapeActor::GetShape() const
 {
     return shape_;
-}
-
-inline void ShapeActor::SetStrokeWidth(float width)
-{
-    stroke_width_ = std::max(width, 0.f);
 }
 
 inline void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)

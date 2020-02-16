@@ -58,8 +58,6 @@ ShapeActorPtr ShapeActor::Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr s
 }
 
 ShapeActor::ShapeActor()
-    : stroke_width_(1.f)
-    , stroke_style_()
 {
 }
 
@@ -108,7 +106,8 @@ void ShapeActor::OnRender(RenderContext& ctx)
         if (stroke_brush_)
         {
             ctx.SetCurrentBrush(stroke_brush_);
-            ctx.DrawShape(*shape_, stroke_style_, stroke_width_ * 2 /* twice width for widening */);
+            ctx.SetCurrentStrokeStyle(stroke_style_);
+            ctx.DrawShape(*shape_);
         }
 
         if (fill_brush_)
@@ -296,7 +295,12 @@ void PolygonActor::SetVertices(Vector<Point> const& points)
 {
     if (points.size() > 1)
     {
-        SetShape(ShapeSink().BeginPath(points[0]).AddLines(&points[1], points.size() - 1).EndPath(true).GetShape());
+        ShapeMakerPtr maker = ShapeMaker::Create();
+        maker->BeginPath(points[0]);
+        maker->AddLines(&points[1], points.size() - 1);
+        maker->EndPath(true);
+
+        SetShape(maker->GetShape());
     }
 }
 

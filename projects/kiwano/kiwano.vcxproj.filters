@@ -252,9 +252,6 @@
     <ClInclude Include="..\..\src\kiwano\render\Shape.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\math\Transform.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -317,6 +314,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\NativeObject.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\NativePtr.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -500,9 +506,6 @@
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -532,6 +535,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\String.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

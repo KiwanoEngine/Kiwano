@@ -401,7 +401,7 @@ bool LoadXmlData(ResourceCache* loader, const XmlNode& elem)
             int    rows = 0, cols = 0, max_num = -1;
 
             if (auto attr = image.attribute("id"))
-                id.assign(attr.value());
+                id = attr.value();
             if (auto attr = image.attribute("type"))
                 type = attr.value();
             if (auto attr = image.attribute("file"))
@@ -452,7 +452,7 @@ bool LoadXmlData(ResourceCache* loader, const XmlNode& elem)
         {
             String id, file;
             if (auto attr = font.attribute("id"))
-                id.assign(attr.value());
+                id = attr.value();
             if (auto attr = font.attribute("file"))
                 file = attr.value();
 

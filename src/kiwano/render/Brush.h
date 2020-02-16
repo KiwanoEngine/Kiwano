@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/NativeObject.h>
 
 namespace kiwano
 {
@@ -85,7 +84,7 @@ struct RadialGradientStyle
  * \~chinese
  * @brief 画刷
  */
-class KGE_API Brush : public virtual ObjectBase
+class KGE_API Brush : public NativeObject
 {
 public:
     /// \~chinese
@@ -104,10 +103,6 @@ public:
     static BrushPtr Create(RadialGradientStyle const& style);
 
     Brush();
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
 
     /// \~chinese
     /// @brief 设置纯色画刷颜色
@@ -138,16 +133,6 @@ public:
 
 private:
     Type type_;
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-public:
-    void SetBrush(ComPtr<ID2D1Brush> brush, Type type);
-
-    ComPtr<ID2D1Brush> GetBrush() const;
-
-private:
-    ComPtr<ID2D1Brush> raw_;
-#endif
 };
 
 /** @} */
@@ -156,27 +141,5 @@ inline Brush::Type Brush::GetType() const
 {
     return type_;
 }
-
-inline bool Brush::IsValid() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    return raw_ != nullptr;
-#else
-    return false;  // not supported
-#endif
-}
-
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-inline void Brush::SetBrush(ComPtr<ID2D1Brush> brush, Type type)
-{
-    type_ = type;
-    raw_  = brush;
-}
-
-inline ComPtr<ID2D1Brush> Brush::GetBrush() const
-{
-    return raw_;
-}
-#endif
 
 }  // namespace kiwano

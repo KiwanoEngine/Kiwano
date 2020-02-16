@@ -19,14 +19,16 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/NativeObject.h>
-#include <kiwano/core/Resource.h>
+#include <kiwano/core/ObjectBase.h>
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#endif
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Font);
 
-class Renderer;
+KGE_DECLARE_SMART_PTR(NativeObject);
 
 /**
  * \addtogroup Render
@@ -35,32 +37,56 @@ class Renderer;
 
 /**
  * \~chinese
- * @brief 字体
+ * @brief 含有本机指针的对象
  */
-class Font : public NativeObject
+class KGE_API NativeObject : public virtual ObjectBase
 {
-    friend class Renderer;
-
 public:
-    /// \~chinese
-    /// @brief 创建字体
-    static FontPtr Create(String const& file);
+    virtual bool IsValid() const;
 
-    /// \~chinese
-    /// @brief 创建字体
-    static FontPtr Create(Resource const& resource);
+    Any GetNativePointer() const;
 
-    Font();
+    template <typename _NativeTy>
+    _NativeTy GetNativePointer() const;
 
-    /// \~chinese
-    /// @brief 加载字体文件
-    bool Load(String const& file);
+    void SetNativePointer(const Any& native_pointer);
 
-    /// \~chinese
-    /// @brief 加载字体资源
-    bool Load(Resource const& resource);
+    void ResetNativePointer();
+
+private:
+    Any native_pointer_;
 };
 
 /** @} */
+
+inline bool NativeObject::IsValid() const
+{
+    return native_pointer_.HasValue();
+}
+
+inline Any NativeObject::GetNativePointer() const
+{
+    return native_pointer_;
+}
+
+template <typename _NativeTy>
+inline _NativeTy NativeObject::GetNativePointer() const
+{
+    if (native_pointer_.HasValue())
+    {
+        return native_pointer_.Cast<_NativeTy>();
+    }
+    return _NativeTy();
+}
+
+inline void NativeObject::SetNativePointer(const Any& native_pointer)
+{
+    native_pointer_ = native_pointer;
+}
+
+inline void NativeObject::ResetNativePointer()
+{
+    native_pointer_.Clear();
+}
 
 }  // namespace kiwano

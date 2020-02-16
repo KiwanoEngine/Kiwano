@@ -68,7 +68,7 @@ public:
 
     void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) override;
 
-    void CreateShapeSink(ShapeSink& sink) override;
+    void CreateShapeSink(ShapeMaker& maker) override;
 
     void CreateBrush(Brush& brush, Color const& color) override;
 
@@ -76,8 +76,7 @@ public:
 
     void CreateBrush(Brush& brush, RadialGradientStyle const& style) override;
 
-    void CreateStrokeStyle(StrokeStyle& stroke_style, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
-                           size_t dash_size, float dash_offset) override;
+    void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
     TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) override;
 

@@ -154,7 +154,7 @@ void Actor::RenderBorder(RenderContext& ctx)
         ctx.FillRectangle(bounds);
 
         ctx.SetCurrentBrush(GetStage()->GetBorderStrokeBrush());
-        ctx.DrawRectangle(bounds, nullptr, 2.f);
+        ctx.DrawRectangle(bounds);
     }
 
     for (auto& child : children_)

@@ -21,6 +21,7 @@
 #include <kiwano/core/Logger.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/DirectX/TextureRenderContextImpl.h>
+#include <kiwano/render/DirectX/NativePtr.h>
 
 namespace kiwano
 {
@@ -37,7 +38,10 @@ bool TextureRenderContextImpl::GetOutput(Texture& texture)
 
         if (SUCCEEDED(hr))
         {
-            texture.SetBitmap(bitmap);
+            NativePtr::Set(texture, bitmap);
+
+            texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+            texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
         }
     }
     return SUCCEEDED(hr);

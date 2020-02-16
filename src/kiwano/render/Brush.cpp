@@ -93,16 +93,19 @@ Brush::Brush()
 void Brush::SetColor(Color const& color)
 {
     Renderer::GetInstance().CreateBrush(*this, color);
+    type_ = Brush::Type::SolidColor;
 }
 
 void Brush::SetStyle(LinearGradientStyle const& style)
 {
     Renderer::GetInstance().CreateBrush(*this, style);
+    type_ = Brush::Type::LinearGradient;
 }
 
 void Brush::SetStyle(RadialGradientStyle const& style)
 {
     Renderer::GetInstance().CreateBrush(*this, style);
+    type_ = Brush::Type::RadialGradient;
 }
 
 }  // namespace kiwano

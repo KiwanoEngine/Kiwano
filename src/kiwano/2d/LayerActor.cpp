@@ -40,8 +40,14 @@ LayerActor::~LayerActor() {}
 
 void LayerActor::SetOpacity(float opacity)
 {
-    // Actor::SetOpacity(opacity);
-    layer_.SetOpacity(opacity);
+    if (layer_)
+    {
+        layer_->SetOpacity(opacity);
+    }
+    else
+    {
+        Actor::SetOpacity(opacity);
+    }
 }
 
 bool LayerActor::DispatchEvent(Event* evt)
@@ -58,11 +64,16 @@ bool LayerActor::DispatchEvent(Event* evt)
 
 void LayerActor::Render(RenderContext& ctx)
 {
-    ctx.PushLayer(layer_);
-
-    Actor::Render(ctx);
-
-    ctx.PopLayer();
+    if (layer_)
+    {
+        ctx.PushLayer(*layer_);
+        Actor::Render(ctx);
+        ctx.PopLayer();
+    }
+    else
+    {
+        Actor::Render(ctx);
+    }
 }
 
 bool LayerActor::CheckVisibility(RenderContext& ctx) const

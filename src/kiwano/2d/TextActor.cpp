@@ -285,15 +285,6 @@ void TextActor::SetOutlineBrush(BrushPtr brush)
     }
 }
 
-void TextActor::SetOutlineWidth(float outline_width)
-{
-    if (style_.outline_width != outline_width)
-    {
-        style_.outline_width = outline_width;
-        layout_->SetDefaultOutlineWidth(outline_width);
-    }
-}
-
 void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
 {
     if (style_.outline_stroke != stroke)

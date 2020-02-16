@@ -21,6 +21,10 @@
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/Texture.h>
 
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#include <kiwano/render/DirectX/NativePtr.h>
+#endif
+
 namespace kiwano
 {
 
@@ -67,47 +71,15 @@ bool Texture::Load(Resource const& res)
     return IsValid();
 }
 
-float Texture::GetWidth() const
-{
-    return size_.x;
-}
-
-float Texture::GetHeight() const
-{
-    return size_.y;
-}
-
-Size Texture::GetSize() const
-{
-    return size_;
-}
-
-uint32_t Texture::GetWidthInPixels() const
-{
-    return size_in_pixels_.x;
-}
-
-uint32_t Texture::GetHeightInPixels() const
-{
-    return size_in_pixels_.y;
-}
-
-math::Vec2T<uint32_t> Texture::GetSizeInPixels() const
-{
-    return size_in_pixels_;
-}
-
-InterpolationMode Texture::GetBitmapInterpolationMode() const
-{
-    return interpolation_mode_;
-}
-
 void Texture::CopyFrom(TexturePtr copy_from)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
-        HRESULT hr = bitmap_->CopyFromBitmap(nullptr, copy_from->GetBitmap().Get(), nullptr);
+        auto native         = NativePtr::Get<ID2D1Bitmap>(this);
+        auto native_to_copy = NativePtr::Get<ID2D1Bitmap>(copy_from);
+
+        HRESULT hr = native->CopyFromBitmap(nullptr, native_to_copy.Get(), nullptr);
 
         KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
     }
@@ -121,10 +93,13 @@ void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
-        HRESULT hr = bitmap_->CopyFromBitmap(
-            &D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)), copy_from->GetBitmap().Get(),
-            &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()), uint32_t(src_rect.GetRight()),
-                         uint32_t(src_rect.GetBottom())));
+        auto native         = NativePtr::Get<ID2D1Bitmap>(this);
+        auto native_to_copy = NativePtr::Get<ID2D1Bitmap>(copy_from);
+
+        HRESULT hr =
+            native->CopyFromBitmap(&D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)), native_to_copy.Get(),
+                                   &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()),
+                                                uint32_t(src_rect.GetRight()), uint32_t(src_rect.GetBottom())));
 
         KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
     }

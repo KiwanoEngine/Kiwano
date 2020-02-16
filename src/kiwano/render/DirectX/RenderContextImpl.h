@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/render/DirectX/TextRenderer.h>
 
 namespace kiwano
 {
@@ -43,15 +44,15 @@ public:
 
     void DrawTextLayout(TextLayout const& layout, Point const& offset) override;
 
-    void DrawShape(Shape const& shape, StrokeStylePtr stroke, float stroke_width) override;
+    void DrawShape(Shape const& shape) override;
 
-    void DrawLine(Point const& point1, Point const& point2, StrokeStylePtr stroke, float stroke_width) override;
+    void DrawLine(Point const& point1, Point const& point2) override;
 
-    void DrawRectangle(Rect const& rect, StrokeStylePtr stroke, float stroke_width) override;
+    void DrawRectangle(Rect const& rect) override;
 
-    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width) override;
+    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius) override;
 
-    void DrawEllipse(Point const& center, Vec2 const& radius, StrokeStylePtr stroke, float stroke_width) override;
+    void DrawEllipse(Point const& center, Vec2 const& radius) override;
 
     void FillShape(Shape const& shape) override;
 

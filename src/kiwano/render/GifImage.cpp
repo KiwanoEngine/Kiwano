@@ -49,8 +49,6 @@ GifImagePtr GifImage::Create(Resource const& res)
 
 GifImage::GifImage()
     : frames_count_(0)
-    , width_in_pixels_(0)
-    , height_in_pixels_(0)
 {
 }
 
@@ -63,7 +61,8 @@ bool GifImage::Load(String const& file_path)
         if (GetGlobalMetadata())
             return true;
 
-        SetDecoder(nullptr);
+        // Clear data
+        ResetNativePointer();
     }
     return false;
 }
@@ -77,7 +76,8 @@ bool GifImage::Load(Resource const& res)
         if (GetGlobalMetadata())
             return true;
 
-        SetDecoder(nullptr);
+        // Clear data
+        ResetNativePointer();
     }
     return false;
 }
@@ -89,20 +89,29 @@ GifImage::Frame GifImage::GetFrame(uint32_t index)
     return frame;
 }
 
+}  // namespace kiwano
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+#include <kiwano/render/DirectX/NativePtr.h>
+
+namespace kiwano
+{
+
 bool GifImage::GetGlobalMetadata()
 {
-    HRESULT hr = decoder_ ? S_OK : E_FAIL;
+    ComPtr<IWICBitmapDecoder> decoder = NativePtr::Get<IWICBitmapDecoder>(this);
+
+    HRESULT hr = decoder ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
     {
-        hr = decoder_->GetFrameCount(&frames_count_);
+        hr = decoder->GetFrameCount(&frames_count_);
     }
 
     if (SUCCEEDED(hr))
     {
         ComPtr<IWICMetadataQueryReader> metadata_reader;
-        hr = decoder_->GetMetadataQueryReader(&metadata_reader);
+        hr = decoder->GetMetadataQueryReader(&metadata_reader);
 
         if (SUCCEEDED(hr))
         {
@@ -164,20 +173,17 @@ bool GifImage::GetGlobalMetadata()
                             // 根据像素长宽比计算像素中的图像宽度和高度，只缩小图像
                             if (pixel_asp_ratio > 1.f)
                             {
-                                width_in_pixels_  = width;
-                                height_in_pixels_ = static_cast<uint32_t>(height / pixel_asp_ratio);
+                                size_in_pixels_ = { width, static_cast<uint32_t>(height / pixel_asp_ratio) };
                             }
                             else
                             {
-                                width_in_pixels_  = static_cast<uint32_t>(width * pixel_asp_ratio);
-                                height_in_pixels_ = height;
+                                size_in_pixels_ = { static_cast<uint32_t>(width * pixel_asp_ratio), height };
                             }
                         }
                         else
                         {
                             // 值为 0, 所以像素比为 1
-                            width_in_pixels_  = width;
-                            height_in_pixels_ = height;
+                            size_in_pixels_ = { width, height };
                         }
                     }
                     ::PropVariantClear(&prop_val);

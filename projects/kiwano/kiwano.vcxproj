@@ -78,13 +78,15 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\NativePtr.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
+    <ClInclude Include="..\..\src\kiwano\render\NativeObject.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
-    <ClInclude Include="..\..\src\kiwano\render\ShapeSink.h" />
+    <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h" />
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h" />
     <ClInclude Include="..\..\src\kiwano\render\Layer.h" />
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h" />
@@ -158,7 +160,7 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\ShapeSink.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Layer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp" />
