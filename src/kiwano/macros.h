@@ -55,6 +55,14 @@
 #define KGE_GET_MAJOR_VERSION(VERSION) ((VERSION & 0x00F0) >> 4)
 #define KGE_GET_MINOR_VERSION(VERSION) (VERSION & 0x000F)
 
+#if defined(DEBUG) || defined(_DEBUG)
+#   define KGE_DEBUG
+#endif
+
+#ifndef KGE_ASSERT
+#   define KGE_ASSERT(COND) assert(COND)
+#endif
+
 #define KGE_NOT_USED(VAR) ((void)VAR)
 
 #define KGE_RENDER_ENGINE_NONE 0
@@ -74,41 +82,6 @@
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_NONE
 #   undef KGE_RENDER_ENGINE
 #   define KGE_RENDER_ENGINE KGE_RENDER_ENGINE_DIRECTX
-#endif
-
-#ifdef _MSC_VER
-#   ifndef KGE_VS_VER
-#       define KGE_VS_VER _MSC_VER
-#       define KGE_VS_2013 1800
-#       define KGE_VS_2015 1900
-#       define KGE_VS_2017 1900
-#       define KGE_VS_2019 1920
-#   endif
-
-#   if KGE_VS_VER < KGE_VS_2015
-#       error Kiwano only supports Visual Studio 2015 and above
-#   endif
-
-#   if defined(KGE_VS_VER) && KGE_VS_VER > KGE_VS_2013
-#       define KGE_HAS_LITERALS
-#   endif
-
-#endif
-
-#if defined(DEBUG) || defined(_DEBUG)
-#   define KGE_DEBUG
-#endif
-
-#ifndef KGE_ASSERT
-#   ifdef KGE_DEBUG
-#       define KGE_ASSERT(EXPR)                                                                                   \
-        do                                                                                                        \
-        {                                                                                                         \
-            (void)((!!(EXPR)) || (_wassert(_CRT_WIDE(#EXPR), _CRT_WIDE(__FUNCTION__), (unsigned)(__LINE__)), 0)); \
-        } while (0)
-#   else
-#       define KGE_ASSERT __noop
-#   endif
 #endif
 
 #define KGE_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
@@ -137,6 +110,23 @@
 KGE_SUPPRESS_WARNING(4251)
 #endif
 
+#ifdef _MSC_VER
+#   ifndef KGE_VS_VER
+#       define KGE_VS_VER _MSC_VER
+#       define KGE_VS_2013 1800
+#       define KGE_VS_2015 1900
+#       define KGE_VS_2017 1900
+#       define KGE_VS_2019 1920
+#   endif
+
+#   if KGE_VS_VER < KGE_VS_2015
+#       error Kiwano only supports Visual Studio 2015 and above
+#   endif
+
+#   if defined(KGE_VS_VER) && KGE_VS_VER > KGE_VS_2013
+#       define KGE_HAS_LITERALS
+#   endif
+#endif
 
 #ifndef WINVER
 #   define WINVER 0x0700  // Allow use of features specific to Windows 7 or later

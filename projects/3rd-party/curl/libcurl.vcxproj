@@ -73,6 +73,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,6 +92,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
