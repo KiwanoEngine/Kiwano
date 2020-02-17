@@ -250,7 +250,7 @@ public:
     {
         using iterator_category = std::bidirectional_iterator_tag;
         using pointer           = _PTy;
-        using reference         = IntrusiveList::reference;
+        using reference         = typename IntrusiveList::reference;
         using difference_type   = ptrdiff_t;
 
         inline Iterator(pointer ptr = nullptr, bool is_end = false)
@@ -328,8 +328,9 @@ public:
         }
 
     private:
-        bool                   is_end_;
-        IntrusiveList::pointer base_;
+        bool is_end_;
+
+        typename IntrusiveList::pointer base_;
     };
 
 public:
