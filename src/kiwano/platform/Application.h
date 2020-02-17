@@ -60,12 +60,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 销毁游戏运行过程中产生的所有资源
-     */
-    void Destroy();
-
-    /**
-     * \~chinese
      * @brief 获取程序运行器
      */
     RunnerPtr GetRunner() const;
@@ -75,6 +69,12 @@ public:
      * @brief 获取主窗口
      */
     WindowPtr GetMainWindow() const;
+
+    /**
+     * \~chinese
+     * @brief 获取版本号
+     */
+    int GetVersion() const;
 
     /**
      * \~chinese
@@ -120,6 +120,12 @@ public:
      * @brief 创建渲染上下文并渲染画面
      */
     void Render();
+
+    /**
+     * \~chinese
+     * @brief 销毁游戏运行过程中产生的所有资源
+     */
+    void Destroy();
 
 private:
     bool                    quiting_;

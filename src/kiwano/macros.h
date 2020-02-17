@@ -48,6 +48,13 @@
 // Compile-time Config Header File
 #include <kiwano/config.h>
 
+#define KGE_MAJOR_VERSION 1
+#define KGE_MINOR_VERSION 0
+#define KGE_VERSION ((KGE_MAJOR_VERSION << 4) + KGE_MINOR_VERSION)
+
+#define KGE_GET_MAJOR_VERSION(VERSION) ((VERSION & 0x00F0) >> 4)
+#define KGE_GET_MINOR_VERSION(VERSION) (VERSION & 0x000F)
+
 #define KGE_NOT_USED(VAR) ((void)VAR)
 
 #define KGE_RENDER_ENGINE_NONE 0

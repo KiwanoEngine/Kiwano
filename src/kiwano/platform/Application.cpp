@@ -40,6 +40,11 @@ Application::Application()
 
 Application::~Application() {}
 
+int Application::GetVersion() const
+{
+    return KGE_VERSION;
+}
+
 void Application::Run(RunnerPtr runner, bool debug)
 {
     KGE_ASSERT(runner);
