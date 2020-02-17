@@ -62,9 +62,22 @@ public:
 
     /// \~chinese
     /// @brief 重设文本布局
+    /// @param style 文本样式
+    void Reset(const TextStyle& style);
+
+    /// \~chinese
+    /// @brief 重设文本布局
     /// @param content 文字内容
     /// @param style 文本样式
     void Reset(const String& content, const TextStyle& style);
+
+    /// \~chinese
+    /// @brief 获取文字内容
+    String GetContent() const;
+
+    /// \~chinese
+    /// @brief 获取文字内容的长度
+    uint32_t GetContentLength() const;
 
     /// \~chinese
     /// @brief 获取文本布局大小
@@ -223,6 +236,21 @@ inline bool TextLayout::IsDirty() const
 inline void TextLayout::Clear()
 {
     ResetNativePointer();
+}
+
+inline void TextLayout::Reset(const TextStyle& style)
+{
+    this->Reset(content_, style);
+}
+
+inline String TextLayout::GetContent() const
+{
+    return content_;
+}
+
+inline uint32_t TextLayout::GetContentLength() const
+{
+    return uint32_t(content_.size());
 }
 
 inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const

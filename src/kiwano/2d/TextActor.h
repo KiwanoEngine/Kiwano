@@ -176,7 +176,6 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    String        text_;
     TextStyle     style_;
     TextLayoutPtr layout_;
 };
@@ -185,7 +184,8 @@ private:
 
 inline const String& TextActor::GetText() const
 {
-    return text_;
+    KGE_ASSERT(layout_);
+    return layout_->GetContent();
 }
 
 inline FontPtr TextActor::GetFont() const

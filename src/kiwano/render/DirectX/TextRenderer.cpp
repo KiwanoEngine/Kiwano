@@ -203,8 +203,7 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
 
                 if (SUCCEEDED(hr))
                 {
-                    pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(),
-                                       fDefaultOutlineWidth_ * 2,  // twice width for widening
+                    pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
                                        pDefaultStrokeStyle_.Get());
 
                     ++cPrimitivesCount_;
@@ -276,7 +275,7 @@ STDMETHODIMP TextRenderer::DrawUnderline(__maybenull void* clientDrawingContext,
 
     if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_ * 2,
+        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
                            pDefaultStrokeStyle_.Get());
 
         ++cPrimitivesCount_;
@@ -332,7 +331,7 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(__maybenull void* clientDrawingCont
 
     if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_ * 2,
+        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
                            pDefaultStrokeStyle_.Get());
 
         ++cPrimitivesCount_;

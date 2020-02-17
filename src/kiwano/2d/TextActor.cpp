@@ -106,21 +106,13 @@ void TextActor::SetTextLayout(TextLayoutPtr layout)
 
 void TextActor::SetText(String const& text)
 {
-    if (text_ != text)
-    {
-        text_ = text;
-        layout_->Reset(text_, style_);
-    }
+    layout_->Reset(text, style_);
 }
 
 void TextActor::SetStyle(const TextStyle& style)
 {
     style_ = style;
-
-    if (!text_.empty())
-    {
-        layout_->Reset(text_, style);
-    }
+    layout_->Reset(style);
 }
 
 void TextActor::SetFont(FontPtr font)
@@ -128,10 +120,7 @@ void TextActor::SetFont(FontPtr font)
     if (style_.font != font)
     {
         style_.font = font;
-        if (!text_.empty())
-        {
-            layout_->SetFont(font, { 0, text_.length() });
-        }
+        layout_->SetFont(font, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -140,10 +129,7 @@ void TextActor::SetFontFamily(String const& family)
     if (style_.font_family != family)
     {
         style_.font_family = family;
-        if (!text_.empty())
-        {
-            layout_->SetFontFamily(family, { 0, text_.length() });
-        }
+        layout_->SetFontFamily(family, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -152,10 +138,7 @@ void TextActor::SetFontSize(float size)
     if (style_.font_size != size)
     {
         style_.font_size = size;
-        if (!text_.empty())
-        {
-            layout_->SetFontSize(size, { 0, text_.length() });
-        }
+        layout_->SetFontSize(size, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -164,10 +147,7 @@ void TextActor::SetFontWeight(uint32_t weight)
     if (style_.font_weight != weight)
     {
         style_.font_weight = weight;
-        if (!text_.empty())
-        {
-            layout_->SetFontWeight(weight, { 0, text_.length() });
-        }
+        layout_->SetFontWeight(weight, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -176,10 +156,7 @@ void TextActor::SetItalic(bool italic)
     if (style_.italic != italic)
     {
         style_.italic = italic;
-        if (!text_.empty())
-        {
-            layout_->SetItalic(italic, { 0, text_.length() });
-        }
+        layout_->SetItalic(italic, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -188,10 +165,7 @@ void TextActor::SetUnderline(bool enable)
     if (style_.show_underline != enable)
     {
         style_.show_underline = enable;
-        if (!text_.empty())
-        {
-            layout_->SetUnderline(enable, { 0, text_.length() });
-        }
+        layout_->SetUnderline(enable, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -200,10 +174,7 @@ void TextActor::SetStrikethrough(bool enable)
     if (style_.show_strikethrough != enable)
     {
         style_.show_strikethrough = enable;
-        if (!text_.empty())
-        {
-            layout_->SetStrikethrough(enable, { 0, text_.length() });
-        }
+        layout_->SetStrikethrough(enable, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -212,10 +183,7 @@ void TextActor::SetWrapWidth(float wrap_width)
     if (style_.wrap_width != wrap_width)
     {
         style_.wrap_width = wrap_width;
-        if (!text_.empty())
-        {
-            layout_->SetWrapWidth(wrap_width);
-        }
+        layout_->SetWrapWidth(wrap_width);
     }
 }
 
@@ -224,10 +192,7 @@ void TextActor::SetLineSpacing(float line_spacing)
     if (style_.line_spacing != line_spacing)
     {
         style_.line_spacing = line_spacing;
-        if (!text_.empty())
-        {
-            layout_->SetLineSpacing(line_spacing);
-        }
+        layout_->SetLineSpacing(line_spacing);
     }
 }
 
@@ -236,10 +201,7 @@ void TextActor::SetAlignment(TextAlign align)
     if (style_.alignment != align)
     {
         style_.alignment = align;
-        if (!text_.empty())
-        {
-            layout_->SetAlignment(align);
-        }
+        layout_->SetAlignment(align);
     }
 }
 
@@ -295,14 +257,7 @@ void TextActor::ForceUpdateLayout()
     KGE_ASSERT(layout_);
 
     layout_->UpdateWhenDirty();
-    if (text_.empty())
-    {
-        SetSize(Size());
-    }
-    else
-    {
-        SetSize(layout_->GetSize());
-    }
+    SetSize(layout_->GetSize());
 }
 
 }  // namespace kiwano

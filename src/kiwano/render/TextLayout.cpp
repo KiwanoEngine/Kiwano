@@ -27,6 +27,7 @@
 
 namespace kiwano
 {
+
 TextLayoutPtr TextLayout::Create()
 {
     TextLayoutPtr ptr = new (std::nothrow) TextLayout;
@@ -51,9 +52,10 @@ TextLayout::TextLayout()
 
 void TextLayout::Reset(const String& content, const TextStyle& style)
 {
-    if (!content.empty())
+    content_ = content;
+    if (!content_.empty())
     {
-        Renderer::GetInstance().CreateTextLayout(*this, content, style);
+        Renderer::GetInstance().CreateTextLayout(*this, content_, style);
 
         SetAlignment(style.alignment);
         SetWrapWidth(style.wrap_width);
@@ -64,17 +66,16 @@ void TextLayout::Reset(const String& content, const TextStyle& style)
         SetDefaultOutlineStrokeStyle(style.outline_stroke);
 
         if (style.show_underline)
-            SetUnderline(style.show_underline, { 0, content.length() });
+            SetUnderline(style.show_underline, { 0, content_.length() });
 
         if (style.show_strikethrough)
-            SetStrikethrough(style.show_strikethrough, { 0, content.length() });
+            SetStrikethrough(style.show_strikethrough, { 0, content_.length() });
     }
     else
     {
         Clear();
     }
 
-    content_ = content;
     SetDirtyFlag(DirtyFlag::Dirty);
 }
 
@@ -93,6 +94,8 @@ uint32_t TextLayout::GetLineCount() const
 void TextLayout::SetFont(FontPtr font, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -115,6 +118,8 @@ void TextLayout::SetFont(FontPtr font, TextRange range)
 void TextLayout::SetFontFamily(String const& family, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -137,6 +142,8 @@ void TextLayout::SetFontFamily(String const& family, TextRange range)
 void TextLayout::SetFontSize(float size, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -157,6 +164,8 @@ void TextLayout::SetFontSize(float size, TextRange range)
 void TextLayout::SetFontWeight(uint32_t weight, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -179,6 +188,8 @@ void TextLayout::SetFontWeight(uint32_t weight, TextRange range)
 void TextLayout::SetItalic(bool italic, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -201,6 +212,8 @@ void TextLayout::SetItalic(bool italic, TextRange range)
 void TextLayout::SetUnderline(bool enable, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -221,6 +234,8 @@ void TextLayout::SetUnderline(bool enable, TextRange range)
 void TextLayout::SetStrikethrough(bool enable, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -241,6 +256,8 @@ void TextLayout::SetStrikethrough(bool enable, TextRange range)
 void TextLayout::SetFillBrush(BrushPtr brush, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
@@ -262,6 +279,8 @@ void TextLayout::SetFillBrush(BrushPtr brush, TextRange range)
 void TextLayout::SetOutlineBrush(BrushPtr brush, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     // TODO
@@ -275,6 +294,8 @@ void TextLayout::SetOutlineBrush(BrushPtr brush, TextRange range)
 void TextLayout::SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
+    if (range.length == 0)
+        return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     // TODO
@@ -385,8 +406,12 @@ bool TextLayout::UpdateWhenDirty()
     {
         SetDirtyFlag(DirtyFlag::Clean);
 
+        line_count_ = 0;
+        size_       = Size();
+
         auto native = NativePtr::Get<IDWriteTextLayout>(this);
-        KGE_ASSERT(native);
+        if (content_.empty() || !native)
+            return true;
 
         HRESULT hr = S_OK;
 
