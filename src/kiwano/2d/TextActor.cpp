@@ -61,34 +61,10 @@ void TextActor::OnRender(RenderContext& ctx)
     }
 }
 
-void TextActor::OnUpdate(Duration dt)
+Size TextActor::GetSize() const
 {
-    UpdateLayout();
-}
-
-void TextActor::UpdateLayout()
-{
-    if (!layout_)
-        return;
-
-    if (layout_->GetDirtyFlag() == TextLayout::DirtyFlag::Updated)
-    {
-        layout_->SetDirtyFlag(TextLayout::DirtyFlag::Clean);
-
-        if (text_.empty())
-        {
-            SetSize(Size());
-        }
-        else
-        {
-            SetSize(layout_->GetLayoutSize());
-        }
-    }
-}
-
-bool TextActor::CheckVisibility(RenderContext& ctx) const
-{
-    return layout_ && layout_->IsValid() && Actor::CheckVisibility(ctx);
+    const_cast<TextActor*>(this)->UpdateDirtyLayout();
+    return Actor::GetSize();
 }
 
 void TextActor::SetFillColor(Color const& color)
@@ -124,7 +100,7 @@ void TextActor::SetTextLayout(TextLayoutPtr layout)
     if (layout_ != layout)
     {
         layout_ = layout;
-        UpdateLayout();
+        ForceUpdateLayout();
     }
 }
 
@@ -291,6 +267,41 @@ void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
     {
         style_.outline_stroke = stroke;
         layout_->SetDefaultOutlineStrokeStyle(stroke);
+    }
+}
+
+void TextActor::Update(Duration dt)
+{
+    this->UpdateDirtyLayout();
+    Actor::Update(dt);
+}
+
+bool TextActor::CheckVisibility(RenderContext& ctx) const
+{
+    return layout_ && layout_->IsValid() && Actor::CheckVisibility(ctx);
+}
+
+void TextActor::UpdateDirtyLayout()
+{
+    KGE_ASSERT(layout_);
+    if (layout_->UpdateWhenDirty())
+    {
+        ForceUpdateLayout();
+    }
+}
+
+void TextActor::ForceUpdateLayout()
+{
+    KGE_ASSERT(layout_);
+
+    layout_->UpdateWhenDirty();
+    if (text_.empty())
+    {
+        SetSize(Size());
+    }
+    else
+    {
+        SetSize(layout_->GetSize());
     }
 }
 

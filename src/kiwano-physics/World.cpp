@@ -242,9 +242,22 @@ ContactList World::GetContactList()
 
 void World::Update(Duration dt)
 {
-    world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
 
     b2Body* b2body = world_.GetBodyList();
+    while (b2body)
+    {
+        Body* body = static_cast<Body*>(b2body->GetUserData());
+        if (body && body->GetType() != Body::Type::Static)
+        {
+            body->UpdateFromActor();
+        }
+
+        b2body = b2body->GetNext();
+    }
+
+    world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
+
+    b2body = world_.GetBodyList();
     while (b2body)
     {
         Body* body = static_cast<Body*>(b2body->GetUserData());

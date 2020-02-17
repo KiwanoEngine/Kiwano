@@ -260,13 +260,13 @@ void Actor::HandleEvent(Event* evt)
     }
 }
 
-Matrix3x2 const& Actor::GetTransformMatrix() const
+const Matrix3x2& Actor::GetTransformMatrix() const
 {
     UpdateTransform();
     return transform_matrix_;
 }
 
-Matrix3x2 const& Actor::GetTransformInverseMatrix() const
+const Matrix3x2& Actor::GetTransformInverseMatrix() const
 {
     UpdateTransform();
     if (dirty_transform_inverse_)

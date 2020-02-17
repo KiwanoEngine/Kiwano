@@ -610,7 +610,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
     if (content.empty())
     {
         layout.Clear();
-        layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
+        layout.SetDirtyFlag(TextLayout::DirtyFlag::Dirty);
         return;
     }
 
@@ -635,7 +635,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
             if (SUCCEEDED(hr))
             {
                 NativePtr::Set(layout, output);
-                layout.SetDirtyFlag(TextLayout::DirtyFlag::Updated);
+                layout.SetDirtyFlag(TextLayout::DirtyFlag::Dirty);
             }
         }
     }

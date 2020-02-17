@@ -124,7 +124,7 @@ void DebugActor::OnUpdate(Duration dt)
 
     debug_text_.Reset(ss.str(), debug_text_style_);
 
-    Size layout_size = debug_text_.GetLayoutSize();
+    Size layout_size = debug_text_.GetSize();
     if (layout_size.x > GetWidth() - 20)
     {
         SetWidth(20 + layout_size.x);

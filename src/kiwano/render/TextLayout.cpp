@@ -45,14 +45,15 @@ TextLayoutPtr TextLayout::Create(const String& content, const TextStyle& style)
 
 TextLayout::TextLayout()
     : dirty_flag_(DirtyFlag::Clean)
+    , line_count_(0)
 {
 }
 
-void TextLayout::Reset(const String& text, const TextStyle& style)
+void TextLayout::Reset(const String& content, const TextStyle& style)
 {
-    if (!text.empty())
+    if (!content.empty())
     {
-        Renderer::GetInstance().CreateTextLayout(*this, text, style);
+        Renderer::GetInstance().CreateTextLayout(*this, content, style);
 
         SetAlignment(style.alignment);
         SetWrapWidth(style.wrap_width);
@@ -63,80 +64,58 @@ void TextLayout::Reset(const String& text, const TextStyle& style)
         SetDefaultOutlineStrokeStyle(style.outline_stroke);
 
         if (style.show_underline)
-            SetUnderline(style.show_underline, { 0, text.length() });
+            SetUnderline(style.show_underline, { 0, content.length() });
 
         if (style.show_strikethrough)
-            SetStrikethrough(style.show_strikethrough, { 0, text.length() });
+            SetStrikethrough(style.show_strikethrough, { 0, content.length() });
     }
     else
     {
         Clear();
     }
+
+    content_ = content;
+    SetDirtyFlag(DirtyFlag::Dirty);
+}
+
+Size TextLayout::GetSize() const
+{
+    const_cast<TextLayout*>(this)->UpdateWhenDirty();
+    return size_;
 }
 
 uint32_t TextLayout::GetLineCount() const
 {
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
-    KGE_ASSERT(native);
-
-    if (native)
-    {
-        DWRITE_TEXT_METRICS metrics;
-        if (SUCCEEDED(native->GetMetrics(&metrics)))
-        {
-            return metrics.lineCount;
-        }
-    }
-#else
-    // not supported
-#endif
-    return 0;
-}
-
-Size TextLayout::GetLayoutSize() const
-{
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
-    KGE_ASSERT(native);
-
-    if (native)
-    {
-        DWRITE_TEXT_METRICS metrics;
-        if (SUCCEEDED(native->GetMetrics(&metrics)))
-        {
-            return (metrics.layoutWidth > 0) ? Size(metrics.layoutWidth, metrics.height)
-                                             : Size(metrics.width, metrics.height);
-        }
-    }
-#else
-    // not supported
-#endif
-    return Size();
+    const_cast<TextLayout*>(this)->UpdateWhenDirty();
+    return line_count_;
 }
 
 void TextLayout::SetFont(FontPtr font, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
     {
-        ComPtr<IDWriteFontCollection> collection = NativePtr::Get<IDWriteFontCollection>(font);
+        auto collection = NativePtr::Get<IDWriteFontCollection>(font);
 
         HRESULT hr = native->SetFontCollection(collection.Get(), { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontCollection failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetFontFamily(String const& family, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -147,16 +126,18 @@ void TextLayout::SetFontFamily(String const& family, TextRange range)
 
         HRESULT hr = native->SetFontFamilyName(font_family.c_str(), { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontFamilyName failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetFontSize(float size, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -165,16 +146,18 @@ void TextLayout::SetFontSize(float size, TextRange range)
     {
         HRESULT hr = native->SetFontSize(size, { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontSize failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetFontWeight(uint32_t weight, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -185,16 +168,18 @@ void TextLayout::SetFontWeight(uint32_t weight, TextRange range)
 
         HRESULT hr = native->SetFontWeight(font_weight, { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontWeight failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetItalic(bool italic, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -205,16 +190,18 @@ void TextLayout::SetItalic(bool italic, TextRange range)
 
         HRESULT hr = native->SetFontStyle(font_style, { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStyle failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetUnderline(bool enable, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -223,16 +210,18 @@ void TextLayout::SetUnderline(bool enable, TextRange range)
     {
         HRESULT hr = native->SetUnderline(enable, { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetUnderline failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
-    return;  // not supported
+    // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetStrikethrough(bool enable, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -241,16 +230,18 @@ void TextLayout::SetStrikethrough(bool enable, TextRange range)
     {
         HRESULT hr = native->SetStrikethrough(enable, { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetStrikethrough failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
-    return;  // not supported
+    // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetFillBrush(BrushPtr brush, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = NativePtr::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
@@ -260,16 +251,18 @@ void TextLayout::SetFillBrush(BrushPtr brush, TextRange range)
         HRESULT hr =
             native->SetDrawingEffect(NativePtr::Get<ID2D1Brush>(brush).Get(), { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetDrawingEffect failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
-    return;  // not supported
+    // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetOutlineBrush(BrushPtr brush, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     // TODO
     KGE_NOT_USED(range);
@@ -281,6 +274,8 @@ void TextLayout::SetOutlineBrush(BrushPtr brush, TextRange range)
 
 void TextLayout::SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range)
 {
+    KGE_ASSERT(content_.size() >= (range.start + range.length));
+
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     // TODO
     KGE_NOT_USED(range);
@@ -317,12 +312,12 @@ void TextLayout::SetAlignment(TextAlign align)
 
         HRESULT hr = native->SetTextAlignment(alignment);
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetTextAlignment failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
     // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetWrapWidth(float wrap_width)
@@ -333,34 +328,26 @@ void TextLayout::SetWrapWidth(float wrap_width)
 
     if (native)
     {
-        DWRITE_WORD_WRAPPING wrapping = (wrap_width > 0) ? DWRITE_WORD_WRAPPING_WRAP : DWRITE_WORD_WRAPPING_NO_WRAP;
-
-        HRESULT hr = native->SetWordWrapping(wrapping);
-        if (SUCCEEDED(hr))
+        HRESULT hr = S_OK;
+        if (wrap_width > 0)
         {
-            if (wrap_width > 0)
+            hr = native->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
+            if (SUCCEEDED(hr))
             {
                 hr = native->SetMaxWidth(wrap_width);
             }
-            else
-            {
-                // Fix the layout width when the text does not wrap
-                DWRITE_TEXT_METRICS metrics;
-                hr = native->GetMetrics(&metrics);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = native->SetMaxWidth(metrics.width);
-                }
-            }
+        }
+        else
+        {
+            hr = native->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
         }
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetWordWrapping failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
-    return;  // not supported
+    // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
 }
 
 void TextLayout::SetLineSpacing(float line_spacing)
@@ -383,12 +370,62 @@ void TextLayout::SetLineSpacing(float line_spacing)
             hr = native->SetLineSpacing(DWRITE_LINE_SPACING_METHOD_UNIFORM, spacing, spacing * 0.8f);
         }
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetLineSpacing failed");
-
-        dirty_flag_ = DirtyFlag::Updated;
     }
 #else
-    return;  // not supported
+    // not supported
 #endif
+
+    SetDirtyFlag(DirtyFlag::Dirty);
+}
+
+bool TextLayout::UpdateWhenDirty()
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    if (dirty_flag_ == DirtyFlag::Dirty)
+    {
+        SetDirtyFlag(DirtyFlag::Clean);
+
+        auto native = NativePtr::Get<IDWriteTextLayout>(this);
+        KGE_ASSERT(native);
+
+        HRESULT hr = S_OK;
+
+        DWRITE_TEXT_METRICS metrics;
+        hr = native->GetMetrics(&metrics);
+        if (SUCCEEDED(hr))
+        {
+            if (native->GetWordWrapping() == DWRITE_WORD_WRAPPING_NO_WRAP)
+            {
+                // Fix the layout width when the text does not wrap
+                hr = native->SetMaxWidth(metrics.widthIncludingTrailingWhitespace);
+                if (SUCCEEDED(hr))
+                {
+                    hr = native->GetMetrics(&metrics);
+                }
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            line_count_ = metrics.lineCount;
+
+            if (metrics.layoutWidth > 0)
+            {
+                size_ = Size(metrics.layoutWidth, metrics.height);
+            }
+            else
+            {
+                size_ = Size(metrics.widthIncludingTrailingWhitespace, metrics.height);
+            }
+        }
+
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::GetMetrics failed");
+        return true;
+    }
+#else
+    // not supported
+#endif
+    return false;
 }
 
 }  // namespace kiwano

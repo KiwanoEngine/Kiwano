@@ -80,7 +80,7 @@ FixturePtr Fixture::CreateRect(Body* body, Param const& param, Size const& size,
     b2Vec2 b2offset = world->Stage2World(offset);
 
     b2PolygonShape shape;
-    shape.SetAsBox(b2size.x / 2, b2size.y / 2, b2offset, rotation);
+    shape.SetAsBox(b2size.x / 2, b2size.y / 2, b2offset, math::Degree2Radian(rotation));
 
     return CreateFixture(body, &shape, param);
 }

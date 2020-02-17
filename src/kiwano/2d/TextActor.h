@@ -67,8 +67,8 @@ public:
     TextLayoutPtr GetLayout() const;
 
     /// \~chinese
-    /// @brief 获取文本布局大小
-    Size GetLayoutSize() const;
+    /// @brief 获取大小
+    Size GetSize() const override;
 
     /// \~chinese
     /// @brief 获取填充画刷
@@ -159,15 +159,20 @@ public:
     void SetTextLayout(TextLayoutPtr layout);
 
     /// \~chinese
-    /// @brief 更新文字布局
+    /// @brief 更新脏文字布局
+    /// @details 仅当文字布局脏时更新
+    void UpdateDirtyLayout();
+
+    /// \~chinese
+    /// @brief 强制更新文字布局
     /// @details 文字布局是懒更新的，手动更新文字布局以更新节点状态
-    void UpdateLayout();
+    void ForceUpdateLayout();
 
     void OnRender(RenderContext& ctx) override;
 
-    void OnUpdate(Duration dt) override;
-
 protected:
+    void Update(Duration dt) override;
+
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
@@ -196,15 +201,6 @@ inline const TextStyle& TextActor::GetStyle() const
 inline TextLayoutPtr TextActor::GetLayout() const
 {
     return layout_;
-}
-
-inline Size TextActor::GetLayoutSize() const
-{
-    if (layout_)
-    {
-        return layout_->GetLayoutSize();
-    }
-    return Size();
 }
 
 inline BrushPtr TextActor::GetFillBrush() const

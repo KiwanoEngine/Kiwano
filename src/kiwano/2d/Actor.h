@@ -114,7 +114,7 @@ public:
 
     /// \~chinese
     /// @brief 获取坐标
-    Point const& GetPosition() const;
+    virtual Point GetPosition() const;
 
     /// \~chinese
     /// @brief 获取 x 坐标
@@ -125,16 +125,16 @@ public:
     float GetPositionY() const;
 
     /// \~chinese
+    /// @brief 获取大小
+    virtual Size GetSize() const;
+
+    /// \~chinese
     /// @brief 获取宽度
     float GetWidth() const;
 
     /// \~chinese
     /// @brief 获取高度
     float GetHeight() const;
-
-    /// \~chinese
-    /// @brief 获取大小
-    Size const& GetSize() const;
 
     /// \~chinese
     /// @brief 获取缩放后的宽度
@@ -150,7 +150,7 @@ public:
 
     /// \~chinese
     /// @brief 获取锚点
-    Point const& GetAnchor() const;
+    virtual Point GetAnchor() const;
 
     /// \~chinese
     /// @brief 获取 x 方向锚点
@@ -162,7 +162,7 @@ public:
 
     /// \~chinese
     /// @brief 获取透明度
-    float GetOpacity() const;
+    virtual float GetOpacity() const;
 
     /// \~chinese
     /// @brief 获取显示透明度
@@ -170,11 +170,11 @@ public:
 
     /// \~chinese
     /// @brief 获取旋转角度
-    float GetRotation() const;
+    virtual float GetRotation() const;
 
     /// \~chinese
     /// @brief 获取缩放比例
-    Point const& GetScale() const;
+    virtual Point GetScale() const;
 
     /// \~chinese
     /// @brief 获取横向缩放比例
@@ -186,7 +186,7 @@ public:
 
     /// \~chinese
     /// @brief 获取错切角度
-    Point const& GetSkew() const;
+    virtual Point GetSkew() const;
 
     /// \~chinese
     /// @brief 获取横向错切角度
@@ -218,11 +218,11 @@ public:
 
     /// \~chinese
     /// @brief 获取二维变换矩阵
-    Matrix3x2 const& GetTransformMatrix() const;
+    const Matrix3x2& GetTransformMatrix() const;
 
     /// \~chinese
     /// @brief 获取二维变换的逆矩阵
-    Matrix3x2 const& GetTransformInverseMatrix() const;
+    const Matrix3x2& GetTransformInverseMatrix() const;
 
     /// \~chinese
     /// @brief 设置角色是否可见
@@ -285,20 +285,20 @@ public:
     void SetAnchor(float anchorx, float anchory);
 
     /// \~chinese
-    /// @brief 修改宽度
-    virtual void SetWidth(float width);
-
-    /// \~chinese
-    /// @brief 修改高度
-    virtual void SetHeight(float height);
-
-    /// \~chinese
     /// @brief 修改大小
     virtual void SetSize(Size const& size);
 
     /// \~chinese
     /// @brief 修改大小
     void SetSize(float width, float height);
+
+    /// \~chinese
+    /// @brief 修改宽度
+    void SetWidth(float width);
+
+    /// \~chinese
+    /// @brief 修改高度
+    void SetHeight(float height);
 
     /// \~chinese
     /// @brief 设置透明度，默认为 1.0, 范围 [0, 1]
@@ -514,7 +514,7 @@ inline int Actor::GetZOrder() const
     return z_order_;
 }
 
-inline Point const& Actor::GetPosition() const
+inline Point Actor::GetPosition() const
 {
     return transform_.position;
 }
@@ -529,7 +529,7 @@ inline float Actor::GetPositionY() const
     return GetPosition().y;
 }
 
-inline Point const& Actor::GetScale() const
+inline Point Actor::GetScale() const
 {
     return transform_.scale;
 }
@@ -544,7 +544,7 @@ inline float Actor::GetScaleY() const
     return GetScale().y;
 }
 
-inline Point const& Actor::GetSkew() const
+inline Point Actor::GetSkew() const
 {
     return transform_.skew;
 }
@@ -574,7 +574,7 @@ inline float Actor::GetHeight() const
     return GetSize().y;
 }
 
-inline Size const& Actor::GetSize() const
+inline Size Actor::GetSize() const
 {
     return size_;
 }
@@ -594,7 +594,7 @@ inline Size Actor::GetScaledSize() const
     return Size{ GetScaledWidth(), GetScaledHeight() };
 }
 
-inline Point const& Actor::GetAnchor() const
+inline Point Actor::GetAnchor() const
 {
     return anchor_;
 }
@@ -693,4 +693,5 @@ inline void Actor::SetSkew(float skewx, float skewy)
 {
     SetSkew(Vec2{ skewx, skewy });
 }
+
 }  // namespace kiwano

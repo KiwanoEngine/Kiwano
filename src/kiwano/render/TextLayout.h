@@ -67,12 +67,12 @@ public:
     void Reset(const String& content, const TextStyle& style);
 
     /// \~chinese
-    /// @brief 获取文本行数
-    uint32_t GetLineCount() const;
+    /// @brief 获取文本布局大小
+    Size GetSize() const;
 
     /// \~chinese
-    /// @brief 获取文本布局大小
-    Size GetLayoutSize() const;
+    /// @brief 获取文本行数
+    uint32_t GetLineCount() const;
 
     /// \~chinese
     /// @brief 获取默认填充画刷
@@ -183,23 +183,34 @@ public:
     void SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
-    /// @brief 脏数据标志
+    /// @brief 脏布局标志
     enum class DirtyFlag : uint8_t
     {
-        Clean   = 0,       ///< 干净布局
-        Dirty   = 1 << 0,  ///< 脏布局
-        Updated = 1 << 1,  ///< 已更新
+        Clean = 0,      ///< 干净布局
+        Dirty = 1 << 0  ///< 脏布局
     };
 
+    /// \~chinese
+    /// @brief 获取脏布局标志
     DirtyFlag GetDirtyFlag() const;
 
+    /// \~chinese
+    /// @brief 设置脏布局标志
     void SetDirtyFlag(DirtyFlag flag);
+
+    /// \~chinese
+    /// @brief 更新脏布局
+    /// @return 是否需要更新
+    bool UpdateWhenDirty();
 
 private:
     DirtyFlag      dirty_flag_;
+    uint32_t       line_count_;
+    Size           size_;
     BrushPtr       default_fill_brush_;
     BrushPtr       default_outline_brush_;
     StrokeStylePtr default_outline_stroke_;
+    String         content_;
 };
 
 /** @} */
