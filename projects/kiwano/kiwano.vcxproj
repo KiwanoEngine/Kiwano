@@ -10,6 +10,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Button.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\Component.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Button.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\Component.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Frame.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp" />

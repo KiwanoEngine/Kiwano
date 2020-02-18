@@ -30,6 +30,10 @@ class TimerManager;
 KGE_DECLARE_SMART_PTR(Timer);
 
 /// \~chinese
+/// @brief 定时器列表
+typedef IntrusiveList<TimerPtr> TimerList;
+
+/// \~chinese
 /// @brief 定时器
 /// @details 定时器用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Timer

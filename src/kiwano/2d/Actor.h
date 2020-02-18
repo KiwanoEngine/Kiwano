@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/ActionManager.h>
-#include <kiwano/core/EventDispatcher.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/TimerManager.h>
-#include <kiwano/core/IntrusiveList.h>
+#include <kiwano/core/EventDispatcher.h>
 #include <kiwano/math/Math.h>
+#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/2d/Component.h>
 
 namespace kiwano
 {
@@ -34,6 +34,11 @@ class Director;
 class RenderContext;
 
 KGE_DECLARE_SMART_PTR(Actor);
+
+
+/// \~chinese
+/// @brief 角色列表
+typedef IntrusiveList<ActorPtr> ActorList;
 
 /**
  * \~chinese
@@ -64,12 +69,8 @@ class KGE_API Actor
 
 public:
     /// \~chinese
-    /// @brief 子成员列表
-    using Children = IntrusiveList<ActorPtr>;
-
-    /// \~chinese
     /// @brief 角色更新回调函数
-    using UpdateCallback = Function<void(Duration)>;
+    typedef Function<void(Duration)> UpdateCallback;
 
     /// \~chinese
     /// @brief 创建角色
@@ -343,11 +344,11 @@ public:
 
     /// \~chinese
     /// @brief 获取全部子角色
-    Children& GetAllChildren();
+    ActorList& GetAllChildren();
 
     /// \~chinese
     /// @brief 获取全部子角色
-    Children const& GetAllChildren() const;
+    ActorList const& GetAllChildren() const;
 
     /// \~chinese
     /// @brief 移除子角色
@@ -368,6 +369,33 @@ public:
     /// \~chinese
     /// @brief 从父角色移除
     void RemoveFromParent();
+
+    /// \~chinese
+    /// @brief 添加组件
+    /// @param component 组件
+    Component* AddComponent(ComponentPtr component);
+
+    /// \~chinese
+    /// @brief 添加组件
+    /// @param component 组件
+    Component* AddComponent(Component* component);
+
+    /// \~chinese
+    /// @brief 获取所有组件
+    ComponentList& GetAllComponents();
+
+    /// \~chinese
+    /// @brief 获取所有组件
+    const ComponentList& GetAllComponents() const;
+
+    /// \~chinese
+    /// @brief 移除组件
+    /// @param name 组件名称
+    void RemoveComponents(String const& name);
+
+    /// \~chinese
+    /// @brief 移除所有组件
+    void RemoveAllComponents();
 
     /// \~chinese
     /// @brief 暂停角色更新
@@ -446,7 +474,7 @@ protected:
 
     /// \~chinese
     /// @brief 处理事件
-    void HandleEvent(Event* evt);
+    bool HandleEvent(Event* evt);
 
 private:
     bool           visible_;
@@ -464,7 +492,8 @@ private:
     size_t         hash_name_;
     Point          anchor_;
     Size           size_;
-    Children       children_;
+    ActorList      children_;
+    ComponentList  components_;
     UpdateCallback cb_update_;
     Transform      transform_;
 
@@ -666,32 +695,57 @@ inline void Actor::ShowBorder(bool show)
 
 inline void Actor::SetPosition(float x, float y)
 {
-    SetPosition(Point{ x, y });
+    this->SetPosition(Point(x, y));
+}
+
+inline void Actor::SetPositionX(float x)
+{
+    this->SetPosition(Point(x, transform_.position.y));
+}
+
+inline void Actor::SetPositionY(float y)
+{
+    this->SetPosition(Point(transform_.position.x, y));
+}
+
+inline void Actor::Move(Vec2 const& v)
+{
+    this->SetPosition(transform_.position.x + v.x, transform_.position.y + v.y);
 }
 
 inline void Actor::Move(float vx, float vy)
 {
-    Move(Vec2{ vx, vy });
+    this->Move(Vec2(vx, vy));
 }
 
 inline void Actor::SetScale(float scalex, float scaley)
 {
-    SetScale(Vec2{ scalex, scaley });
+    this->SetScale(Vec2(scalex, scaley));
 }
 
 inline void Actor::SetAnchor(float anchorx, float anchory)
 {
-    SetAnchor(Vec2{ anchorx, anchory });
+    this->SetAnchor(Vec2(anchorx, anchory));
 }
 
 inline void Actor::SetSize(float width, float height)
 {
-    SetSize(Size{ width, height });
+    this->SetSize(Size(width, height));
+}
+
+inline void Actor::SetWidth(float width)
+{
+    this->SetSize(Size(width, size_.y));
+}
+
+inline void Actor::SetHeight(float height)
+{
+    this->SetSize(Size(size_.x, height));
 }
 
 inline void Actor::SetSkew(float skewx, float skewy)
 {
-    SetSkew(Vec2{ skewx, skewy });
+    this->SetSkew(Vec2(skewx, skewy));
 }
 
 }  // namespace kiwano

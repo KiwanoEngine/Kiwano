@@ -34,6 +34,10 @@ class EventDispatcher;
 
 KGE_DECLARE_SMART_PTR(EventListener);
 
+/// \~chinese
+/// @brief 监听器列表
+typedef IntrusiveList<EventListenerPtr> ListenerList;
+
 /**
  * \~chinese
  * @brief 事件监听器

@@ -31,10 +31,6 @@ class KGE_API TimerManager
 {
 public:
     /// \~chinese
-    /// @brief 定时器列表
-    using Timers = IntrusiveList<TimerPtr>;
-
-    /// \~chinese
     /// @brief 添加定时器
     /// @param cb 回调函数
     /// @param interval 时间间隔
@@ -79,7 +75,7 @@ public:
 
     /// \~chinese
     /// @brief 获取所有定时器
-    const Timers& GetAllTimers() const;
+    const TimerList& GetAllTimers() const;
 
 protected:
     /// \~chinese
@@ -87,6 +83,6 @@ protected:
     void UpdateTimers(Duration dt);
 
 private:
-    Timers timers_;
+    TimerList timers_;
 };
 }  // namespace kiwano

@@ -103,7 +103,7 @@ ActionPtr ActionManager::GetAction(String const& name)
     return nullptr;
 }
 
-const ActionManager::Actions& ActionManager::GetAllActions() const
+const ActionList& ActionManager::GetAllActions() const
 {
     return actions_;
 }

@@ -67,43 +67,6 @@ Size TextActor::GetSize() const
     return Actor::GetSize();
 }
 
-void TextActor::SetFillColor(Color const& color)
-{
-    BrushPtr brush = layout_->GetDefaultFillBrush();
-    if (brush)
-    {
-        brush->SetColor(color);
-    }
-    else
-    {
-        layout_->SetDefaultFillBrush(Brush::Create(color));
-    }
-}
-
-void TextActor::SetOutlineColor(Color const& outline_color)
-{
-    BrushPtr brush = layout_->GetDefaultOutlineBrush();
-    if (brush)
-    {
-        brush->SetColor(outline_color);
-    }
-    else
-    {
-        layout_->SetDefaultOutlineBrush(Brush::Create(outline_color));
-    }
-}
-
-void TextActor::SetTextLayout(TextLayoutPtr layout)
-{
-    KGE_ASSERT(layout && "TextLayout must not be nullptr");
-
-    if (layout_ != layout)
-    {
-        layout_ = layout;
-        ForceUpdateLayout();
-    }
-}
-
 void TextActor::SetText(String const& text)
 {
     layout_->Reset(text, style_);
@@ -229,6 +192,41 @@ void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
     {
         style_.outline_stroke = stroke;
         layout_->SetDefaultOutlineStrokeStyle(stroke);
+    }
+}
+
+void TextActor::SetFillColor(Color const& color)
+{
+    if (style_.fill_brush)
+    {
+        style_.fill_brush->SetColor(color);
+    }
+    else
+    {
+        SetFillBrush(Brush::Create(color));
+    }
+}
+
+void TextActor::SetOutlineColor(Color const& outline_color)
+{
+    if (style_.outline_brush)
+    {
+        style_.outline_brush->SetColor(outline_color);
+    }
+    else
+    {
+        SetFillBrush(Brush::Create(outline_color));
+    }
+}
+
+void TextActor::SetTextLayout(TextLayoutPtr layout)
+{
+    KGE_ASSERT(layout && "TextLayout must not be nullptr");
+
+    if (layout_ != layout)
+    {
+        layout_ = layout;
+        ForceUpdateLayout();
     }
 }
 

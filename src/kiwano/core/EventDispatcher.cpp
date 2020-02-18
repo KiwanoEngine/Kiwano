@@ -73,33 +73,33 @@ EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callb
     return AddListener(listener);
 }
 
-void EventDispatcher::StartListeners(String const& listener_name)
+void EventDispatcher::StartListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(listener_name))
+        if (listener.IsName(name))
         {
             listener.Start();
         }
     }
 }
 
-void EventDispatcher::StopListeners(String const& listener_name)
+void EventDispatcher::StopListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(listener_name))
+        if (listener.IsName(name))
         {
             listener.Stop();
         }
     }
 }
 
-void EventDispatcher::RemoveListeners(String const& listener_name)
+void EventDispatcher::RemoveListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(listener_name))
+        if (listener.IsName(name))
         {
             listener.Remove();
         }
@@ -163,7 +163,7 @@ void EventDispatcher::RemoveAllListeners()
     }
 }
 
-const EventDispatcher::Listeners& EventDispatcher::GetAllListeners() const
+const ListenerList& EventDispatcher::GetAllListeners() const
 {
     return listeners_;
 }

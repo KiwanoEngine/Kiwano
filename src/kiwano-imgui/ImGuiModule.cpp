@@ -189,8 +189,14 @@ void ImGuiModule::UpdateMouseCursor()
     if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange)
         return;
 
+    static ImGuiMouseCursor last_cursor = ImGuiMouseCursor_None;
+    if (ImGui::GetMouseCursor() == last_cursor)
+        return;
+
+    last_cursor = ImGui::GetMouseCursor();
+
     CursorType cursor = CursorType::Arrow;
-    switch (ImGui::GetMouseCursor())
+    switch (last_cursor)
     {
     case ImGuiMouseCursor_Arrow:
         cursor = CursorType::Arrow;

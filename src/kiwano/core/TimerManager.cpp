@@ -133,7 +133,7 @@ void TimerManager::RemoveAllTimers()
     timers_.Clear();
 }
 
-const TimerManager::Timers& TimerManager::GetAllTimers() const
+const TimerList& TimerManager::GetAllTimers() const
 {
     return timers_;
 }

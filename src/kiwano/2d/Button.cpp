@@ -24,13 +24,37 @@
 
 namespace kiwano
 {
+
+ButtonPtr Button::Create(ActorPtr actor, Callback const& click)
+{
+    return Button::Create(actor, click, nullptr, nullptr, nullptr);
+}
+
+ButtonPtr Button::Create(ActorPtr actor, Callback const& click, Callback const& pressed, Callback const& mouse_over,
+                         Callback const& mouse_out)
+{
+    ButtonPtr ptr = new (std::nothrow) Button;
+    if (ptr)
+    {
+        ptr->BindActor(actor);
+        ptr->SetClickCallback(click);
+        ptr->SetPressedCallback(pressed);
+        ptr->SetMouseOverCallback(mouse_over);
+        ptr->SetMouseOutCallback(mouse_out);
+    }
+    return ptr;
+}
+
 Button::Button()
     : enabled_(true)
     , status_(Status::Normal)
 {
 }
 
-Button::~Button() {}
+Button::~Button()
+{
+    Unbind();
+}
 
 bool Button::IsEnable() const
 {
@@ -65,6 +89,11 @@ void Button::SetMouseOutCallback(const Callback& func)
     mouse_out_callback_ = func;
 }
 
+Button::Status Button::GetStatus() const
+{
+    return status_;
+}
+
 void Button::SetStatus(Status status)
 {
     if (status_ != status)
@@ -76,7 +105,7 @@ void Button::SetStatus(Status status)
             Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Arrow);
 
             if (mouse_out_callback_)
-                mouse_out_callback_(this);
+                mouse_out_callback_(this, actor_);
         }
         else if (status == Status::Hover)
         {
@@ -85,25 +114,20 @@ void Button::SetStatus(Status status)
             if (old_status != Status::Pressed)
             {
                 if (mouse_over_callback_)
-                    mouse_over_callback_(this);
+                    mouse_over_callback_(this, actor_);
             }
         }
         else if (status == Status::Pressed)
         {
             if (pressed_callback_)
-                pressed_callback_(this);
+                pressed_callback_(this, actor_);
         }
 
         status_ = status;
     }
 }
 
-Button::Status Button::GetStatus() const
-{
-    return status_;
-}
-
-void Button::UpdateStatus(Event* evt)
+void Button::HandleEvent(Event* evt)
 {
     if (!enabled_)
         return;
@@ -127,78 +151,17 @@ void Button::UpdateStatus(Event* evt)
     else if (evt->IsType<MouseClickEvent>())
     {
         if (click_callback_)
-            click_callback_(this);
+            click_callback_(this, actor_);
     }
 }
 
 void Button::BindActor(Actor* actor)
 {
-    actor->SetResponsible(true);
-
-    EventListener::Callback handler = Closure(this, &Button::UpdateStatus);
-    actor->AddListener<MouseHoverEvent>(handler);
-    actor->AddListener<MouseOutEvent>(handler);
-    actor->AddListener<MouseDownEvent>(handler);
-    actor->AddListener<MouseUpEvent>(handler);
-    actor->AddListener<MouseClickEvent>(handler);
-}
-
-SpriteButton::SpriteButton()
-{
-    BindActor(this);
-}
-
-SpriteButtonPtr SpriteButton::Create(Callback const& click)
-{
-    SpriteButtonPtr ptr = new (std::nothrow) SpriteButton;
-    if (ptr)
+    Component::BindActor(actor);
+    if (actor)
     {
-        ptr->SetClickCallback(click);
+        actor->SetResponsible(true);
     }
-    return ptr;
-}
-
-SpriteButtonPtr SpriteButton::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
-                                     Callback const& mouse_out)
-{
-    SpriteButtonPtr ptr = new (std::nothrow) SpriteButton;
-    if (ptr)
-    {
-        ptr->SetClickCallback(click);
-        ptr->SetPressedCallback(pressed);
-        ptr->SetMouseOverCallback(mouse_over);
-        ptr->SetMouseOutCallback(mouse_out);
-    }
-    return ptr;
-}
-
-TextButton::TextButton()
-{
-    BindActor(this);
-}
-
-TextButtonPtr TextButton::Create(Callback const& click)
-{
-    TextButtonPtr ptr = new (std::nothrow) TextButton;
-    if (ptr)
-    {
-        ptr->SetClickCallback(click);
-    }
-    return ptr;
-}
-
-TextButtonPtr TextButton::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
-                                     Callback const& mouse_out)
-{
-    TextButtonPtr ptr = new (std::nothrow) TextButton;
-    if (ptr)
-    {
-        ptr->SetClickCallback(click);
-        ptr->SetPressedCallback(pressed);
-        ptr->SetMouseOverCallback(mouse_over);
-        ptr->SetMouseOutCallback(mouse_out);
-    }
-    return ptr;
 }
 
 }  // namespace kiwano

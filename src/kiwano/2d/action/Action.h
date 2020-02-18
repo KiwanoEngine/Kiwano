@@ -33,6 +33,10 @@ class ActionManager;
 
 KGE_DECLARE_SMART_PTR(Action);
 
+/// \~chinese
+/// @brief 动画列表
+typedef IntrusiveList<ActionPtr> ActionList;
+
 /**
  * \~chinese
  * \defgroup Actions 动画

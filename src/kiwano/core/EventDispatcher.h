@@ -31,10 +31,6 @@ class KGE_API EventDispatcher
 {
 public:
     /// \~chinese
-    /// @brief 监听器列表
-    using Listeners = IntrusiveList<EventListenerPtr>;
-
-    /// \~chinese
     /// @brief 添加监听器
     EventListener* AddListener(EventListenerPtr listener);
 
@@ -120,7 +116,7 @@ public:
 
     /// \~chinese
     /// @brief 获取所有监听器
-    const Listeners& GetAllListeners() const;
+    const ListenerList& GetAllListeners() const;
 
     /// \~chinese
     /// @brief 分发事件
@@ -129,6 +125,6 @@ public:
     bool DispatchEvent(Event* evt);
 
 private:
-    Listeners listeners_;
+    ListenerList listeners_;
 };
 }  // namespace kiwano

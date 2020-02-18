@@ -324,6 +324,9 @@
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Component.h">
+      <Filter>2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -538,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Component.cpp">
+      <Filter>2d</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

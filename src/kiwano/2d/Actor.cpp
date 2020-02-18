@@ -199,10 +199,8 @@ bool Actor::DispatchEvent(Event* evt)
         child = child->GetPrev();
     }
 
-    if (!EventDispatcher::DispatchEvent(evt))
+    if (!HandleEvent(evt))
         return false;
-
-    HandleEvent(evt);
 
     while (child)
     {
@@ -214,8 +212,22 @@ bool Actor::DispatchEvent(Event* evt)
     return true;
 }
 
-void Actor::HandleEvent(Event* evt)
+bool Actor::HandleEvent(Event* evt)
 {
+    if (!components_.IsEmpty())
+    {
+        ComponentPtr next;
+        for (auto component = components_.GetFirst(); component; component = next)
+        {
+            next = component->GetNext();
+
+            component->HandleEvent(evt);
+        }
+    }
+
+    if (!EventDispatcher::DispatchEvent(evt))
+        return false;
+
     if (responsible_)
     {
         if (evt->IsType<MouseMoveEvent>())
@@ -228,7 +240,7 @@ void Actor::HandleEvent(Event* evt)
 
                 MouseHoverEventPtr hover = new MouseHoverEvent;
                 hover->pos               = mouse_evt->pos;
-                EventDispatcher::DispatchEvent(hover.Get());
+                HandleEvent(hover.Get());
             }
             else if (hover_ && !contains)
             {
@@ -237,7 +249,7 @@ void Actor::HandleEvent(Event* evt)
 
                 MouseOutEventPtr out = new MouseOutEvent;
                 out->pos             = mouse_evt->pos;
-                EventDispatcher::DispatchEvent(out.Get());
+                HandleEvent(out.Get());
             }
         }
 
@@ -255,9 +267,10 @@ void Actor::HandleEvent(Event* evt)
             MouseClickEventPtr click = new MouseClickEvent;
             click->pos               = mouse_up_evt->pos;
             click->button            = mouse_up_evt->button;
-            EventDispatcher::DispatchEvent(click.Get());
+            HandleEvent(click.Get());
         }
     }
+    return true;
 }
 
 const Matrix3x2& Actor::GetTransformMatrix() const
@@ -405,16 +418,6 @@ void Actor::SetAnchor(Vec2 const& anchor)
     dirty_transform_ = true;
 }
 
-void Actor::SetWidth(float width)
-{
-    SetSize(Size{ width, size_.y });
-}
-
-void Actor::SetHeight(float height)
-{
-    SetSize(Size{ size_.x, height });
-}
-
 void Actor::SetSize(Size const& size)
 {
     if (size_ == size)
@@ -452,21 +455,6 @@ void Actor::SetPosition(const Point& pos)
 
     transform_.position = pos;
     dirty_transform_    = true;
-}
-
-void Actor::SetPositionX(float x)
-{
-    SetPosition(Point{ x, transform_.position.y });
-}
-
-void Actor::SetPositionY(float y)
-{
-    SetPosition(Point{ transform_.position.x, y });
-}
-
-void Actor::Move(Vec2 const& v)
-{
-    this->SetPosition(Point{ transform_.position.x + v.x, transform_.position.y + v.y });
 }
 
 void Actor::SetScale(Vec2 const& scale)
@@ -583,12 +571,12 @@ ActorPtr Actor::GetChild(String const& name) const
     return nullptr;
 }
 
-Actor::Children& Actor::GetAllChildren()
+ActorList& Actor::GetAllChildren()
 {
     return children_;
 }
 
-Actor::Children const& Actor::GetAllChildren() const
+ActorList const& Actor::GetAllChildren() const
 {
     return children_;
 }
@@ -599,6 +587,54 @@ void Actor::RemoveFromParent()
     {
         parent_->RemoveChild(this);
     }
+}
+
+Component* Actor::AddComponent(ComponentPtr component)
+{
+    return this->AddComponent(component.Get());
+}
+
+Component* Actor::AddComponent(Component* component)
+{
+    KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
+
+    if (component)
+    {
+        components_.PushBack(component);
+    }
+    return component;
+}
+
+ComponentList& Actor::GetAllComponents()
+{
+    return components_;
+}
+
+const ComponentList& Actor::GetAllComponents() const
+{
+    return components_;
+}
+
+void Actor::RemoveComponents(String const& name)
+{
+    if (!components_.IsEmpty())
+    {
+        ComponentPtr next;
+        for (auto component = components_.GetFirst(); component; component = next)
+        {
+            next = component->GetNext();
+
+            if (component->IsName(name))
+            {
+                components_.Remove(component);
+            }
+        }
+    }
+}
+
+void Actor::RemoveAllComponents()
+{
+    components_.Clear();
 }
 
 void Actor::RemoveChild(ActorPtr child)

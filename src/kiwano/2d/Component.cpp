@@ -18,60 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/Component.h>
 
 namespace kiwano
 {
-/**
- * \addtogroup Actions
- * @{
- */
 
-/**
- * \~chinese
- * @brief 动画管理器
- */
-class KGE_API ActionManager
+Component::Component()
+    : actor_(nullptr)
 {
-public:
-    /// \~chinese
-    /// @brief 添加动画
-    Action* AddAction(ActionPtr action);
+}
 
-    /// \~chinese
-    /// @brief 添加动画
-    Action* AddAction(Action* action);
+Component::~Component()
+{
+    Unbind();
+}
 
-    /// \~chinese
-    /// @brief 继续所有暂停动画
-    void ResumeAllActions();
+void Component::BindActor(Actor* actor)
+{
+    if (actor_)
+    {
+        Unbind();
+    }
+    actor_ = actor;
+}
 
-    /// \~chinese
-    /// @brief 暂停所有动画
-    void PauseAllActions();
+void Component::Unbind()
+{
+    actor_ = nullptr;
+}
 
-    /// \~chinese
-    /// @brief 停止所有动画
-    void StopAllActions();
-
-    /// \~chinese
-    /// @brief 获取指定名称的动画
-    /// @param name 动画名称
-    ActionPtr GetAction(String const& name);
-
-    /// \~chinese
-    /// @brief 获取所有动画
-    const ActionList& GetAllActions() const;
-
-protected:
-    /// \~chinese
-    /// @brief 更新动画
-    void UpdateActions(Actor* target, Duration dt);
-
-private:
-    ActionList actions_;
-};
-
-/** @} */
 }  // namespace kiwano

@@ -19,59 +19,66 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/IntrusiveList.h>
 
 namespace kiwano
 {
-/**
- * \addtogroup Actions
- * @{
- */
+
+class Actor;
+class Event;
+
+KGE_DECLARE_SMART_PTR(Component);
+
+/// \~chinese
+/// @brief 组件列表
+typedef IntrusiveList<ComponentPtr> ComponentList;
 
 /**
  * \~chinese
- * @brief 动画管理器
+ * @brief 组件
  */
-class KGE_API ActionManager
+class KGE_API Component
+    : public virtual ObjectBase
+    , protected IntrusiveListValue<ComponentPtr>
 {
+    friend class Actor;
+    friend IntrusiveList<ComponentPtr>;
+
 public:
     /// \~chinese
-    /// @brief 添加动画
-    Action* AddAction(ActionPtr action);
+    /// @brief 绑定到角色
+    virtual void BindActor(Actor* actor);
 
     /// \~chinese
-    /// @brief 添加动画
-    Action* AddAction(Action* action);
+    /// @brief 取消绑定到角色
+    virtual void Unbind();
 
     /// \~chinese
-    /// @brief 继续所有暂停动画
-    void ResumeAllActions();
-
-    /// \~chinese
-    /// @brief 暂停所有动画
-    void PauseAllActions();
-
-    /// \~chinese
-    /// @brief 停止所有动画
-    void StopAllActions();
-
-    /// \~chinese
-    /// @brief 获取指定名称的动画
-    /// @param name 动画名称
-    ActionPtr GetAction(String const& name);
-
-    /// \~chinese
-    /// @brief 获取所有动画
-    const ActionList& GetAllActions() const;
+    /// @brief 获取绑定的角色
+    Actor* GetBoundActor() const;
 
 protected:
-    /// \~chinese
-    /// @brief 更新动画
-    void UpdateActions(Actor* target, Duration dt);
+    Component();
 
-private:
-    ActionList actions_;
+    virtual ~Component();
+
+    /// \~chinese
+    /// @brief 处理角色事件
+    virtual void HandleEvent(Event* evt);
+
+protected:
+    Actor* actor_;
 };
 
-/** @} */
+inline Actor* Component::GetBoundActor() const
+{
+    return actor_;
+}
+
+inline void Component::HandleEvent(Event* event)
+{
+    KGE_NOT_USED(event);
+}
+
 }  // namespace kiwano
