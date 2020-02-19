@@ -44,7 +44,7 @@ class KGE_API Event : public RefCounter
 public:
     /// \~chinese
     /// @brief 构造事件
-    Event(EventType const& type);
+    Event(const EventType& type);
 
     virtual ~Event();
 

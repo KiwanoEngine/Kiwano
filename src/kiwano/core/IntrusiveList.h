@@ -307,12 +307,12 @@ public:
             return old;
         }
 
-        inline bool operator==(Iterator const& other) const
+        inline bool operator==(const Iterator& other) const
         {
             return base_ == other.base_ && is_end_ == other.is_end_;
         }
 
-        inline bool operator!=(Iterator const& other) const
+        inline bool operator!=(const Iterator& other) const
         {
             return !(*this == other);
         }

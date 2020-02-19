@@ -51,12 +51,12 @@ public:
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param file_path GIF图片路径
-    static GifSpritePtr Create(String const& file_path);
+    static GifSpritePtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param res GIF图片资源
-    static GifSpritePtr Create(Resource const& res);
+    static GifSpritePtr Create(const Resource& res);
 
     /// \~chinese
     /// @brief 创建GIF精灵
@@ -68,12 +68,12 @@ public:
     /// \~chinese
     /// @brief 加载GIF图片
     /// @param file_path GIF图片路径
-    bool Load(String const& file_path);
+    bool Load(const String& file_path);
 
     /// \~chinese
     /// @brief 加载GIF图片
     /// @param res GIF图片资源
-    bool Load(Resource const& res);
+    bool Load(const Resource& res);
 
     /// \~chinese
     /// @brief 加载GIF图片
@@ -86,11 +86,11 @@ public:
 
     /// \~chinese
     /// @brief 设置 GIF 动画每次循环结束回调函数
-    void SetLoopDoneCallback(LoopDoneCallback const& cb);
+    void SetLoopDoneCallback(const LoopDoneCallback& cb);
 
     /// \~chinese
     /// @brief 设置 GIF 动画结束回调函数
-    void SetDoneCallback(DoneCallback const& cb);
+    void SetDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
     /// @brief 设置 GIF 图像
@@ -171,12 +171,12 @@ inline void GifSprite::SetLoopCount(int loops)
     total_loop_count_ = loops;
 }
 
-inline void GifSprite::SetLoopDoneCallback(LoopDoneCallback const& cb)
+inline void GifSprite::SetLoopDoneCallback(const LoopDoneCallback& cb)
 {
     loop_cb_ = cb;
 }
 
-inline void GifSprite::SetDoneCallback(DoneCallback const& cb)
+inline void GifSprite::SetDoneCallback(const DoneCallback& cb)
 {
     done_cb_ = cb;
 }

@@ -54,7 +54,7 @@ public:
     /// \~chinese
     /// @brief 获取指定名称的动画
     /// @param name 动画名称
-    ActionPtr GetAction(String const& name);
+    ActionPtr GetAction(const String& name);
 
     /// \~chinese
     /// @brief 获取所有动画

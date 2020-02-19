@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-FontPtr Font::Create(String const& file)
+FontPtr Font::Create(const String& file)
 {
     FontPtr ptr = new (std::nothrow) Font;
     if (ptr)
@@ -35,7 +35,7 @@ FontPtr Font::Create(String const& file)
     return ptr;
 }
 
-FontPtr Font::Create(Resource const& resource)
+FontPtr Font::Create(const Resource& resource)
 {
     FontPtr ptr = new (std::nothrow) Font;
     if (ptr)
@@ -48,7 +48,7 @@ FontPtr Font::Create(Resource const& resource)
 
 Font::Font() {}
 
-bool Font::Load(String const& file)
+bool Font::Load(const String& file)
 {
     try
     {
@@ -61,7 +61,7 @@ bool Font::Load(String const& file)
     return true;
 }
 
-bool Font::Load(Resource const& resource)
+bool Font::Load(const Resource& resource)
 {
     try
     {

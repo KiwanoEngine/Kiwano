@@ -31,7 +31,7 @@ public:
     static HRESULT Create(_Out_ IFontCollectionLoader * *ppCollectionLoader);
 
     STDMETHOD(AddFilePaths)
-    (Vector<String> const& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
+    (const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("0A1A3F2A-85F2-41BB-80FD-EC01271740C4") IFontFileEnumerator
@@ -40,7 +40,7 @@ interface DWRITE_DECLARE_INTERFACE("0A1A3F2A-85F2-41BB-80FD-EC01271740C4") IFont
 public:
     static HRESULT Create(_Out_ IFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory);
 
-    STDMETHOD(SetFilePaths)(Vector<String> const& filePaths) PURE;
+    STDMETHOD(SetFilePaths)(const Vector<String>& filePaths) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("F2C411F0-2FB0-4D0E-8C73-D2B8F30137A4") IResourceFontCollectionLoader
@@ -51,7 +51,7 @@ public:
                           IDWriteFontFileLoader * pFileLoader);
 
     STDMETHOD(AddResources)
-    (Vector<Resource> const& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
+    (const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("08D21408-6FC1-4E36-A4EB-4DA16BE3399E") IResourceFontFileLoader
@@ -68,7 +68,7 @@ public:
     static HRESULT Create(_Out_ IResourceFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory,
                           IDWriteFontFileLoader * pFileLoader);
 
-    STDMETHOD(SetResources)(Vector<Resource> const& resources) PURE;
+    STDMETHOD(SetResources)(const Vector<Resource>& resources) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("A6267450-27F3-4948-995F-FF8345A72F88") IResourceFontFileStream

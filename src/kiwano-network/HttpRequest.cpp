@@ -26,7 +26,7 @@ namespace kiwano
 namespace network
 {
 
-HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, ResponseCallback const& callback)
+HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const ResponseCallback& callback)
 {
     HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
     if (ptr)
@@ -38,7 +38,7 @@ HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, ResponseCal
     return ptr;
 }
 
-HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, String const& data, ResponseCallback const& callback)
+HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback)
 {
     HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
     if (ptr)
@@ -51,7 +51,7 @@ HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, String cons
     return ptr;
 }
 
-HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, Json const& json, ResponseCallback const& callback)
+HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback)
 {
     HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
     if (ptr)
@@ -64,7 +64,7 @@ HttpRequestPtr HttpRequest::Create(String const& url, HttpType type, Json const&
     return ptr;
 }
 
-void HttpRequest::SetJsonData(Json const& json)
+void HttpRequest::SetJsonData(const Json& json)
 {
     SetHeader("Content-Type", "application/json;charset=UTF-8");
     data_ = json.dump();

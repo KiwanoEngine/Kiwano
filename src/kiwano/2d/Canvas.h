@@ -44,7 +44,7 @@ public:
     /// \~chinese
     /// @brief 创建画布
     /// @param size 画布大小
-    static CanvasPtr Create(Size const& size);
+    static CanvasPtr Create(const Size& size);
 
     /// \~chinese
     /// @brief 开始绘图
@@ -63,30 +63,30 @@ public:
     /// @brief 画线段
     /// @param begin 线段起点
     /// @param end 线段终点
-    void DrawLine(Point const& begin, Point const& end);
+    void DrawLine(const Point& begin, const Point& end);
 
     /// \~chinese
     /// @brief 画圆形边框
     /// @param center 圆形原点
     /// @param radius 圆形半径
-    void DrawCircle(Point const& center, float radius);
+    void DrawCircle(const Point& center, float radius);
 
     /// \~chinese
     /// @brief 画椭圆形边框
     /// @param center 椭圆原点
     /// @param radius 椭圆半径
-    void DrawEllipse(Point const& center, Vec2 const& radius);
+    void DrawEllipse(const Point& center, const Vec2& radius);
 
     /// \~chinese
     /// @brief 画矩形边框
     /// @param rect 矩形
-    void DrawRect(Rect const& rect);
+    void DrawRect(const Rect& rect);
 
     /// \~chinese
     /// @brief 画圆角矩形边框
     /// @param rect 矩形
     /// @param radius 矩形圆角半径
-    void DrawRoundedRect(Rect const& rect, Vec2 const& radius);
+    void DrawRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
     /// @brief 填充形状
@@ -97,24 +97,24 @@ public:
     /// @brief 填充圆形
     /// @param center 圆形原点
     /// @param radius 圆形半径
-    void FillCircle(Point const& center, float radius);
+    void FillCircle(const Point& center, float radius);
 
     /// \~chinese
     /// @brief 填充椭圆形
     /// @param center 椭圆原点
     /// @param radius 椭圆半径
-    void FillEllipse(Point const& center, Vec2 const& radius);
+    void FillEllipse(const Point& center, const Vec2& radius);
 
     /// \~chinese
     /// @brief 填充矩形
     /// @param rect 矩形
-    void FillRect(Rect const& rect);
+    void FillRect(const Rect& rect);
 
     /// \~chinese
     /// @brief 填充圆角矩形
     /// @param rect 矩形
     /// @param radius 矩形圆角半径
-    void FillRoundedRect(Rect const& rect, Vec2 const& radius);
+    void FillRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
     /// @brief 绘制纹理
@@ -128,18 +128,18 @@ public:
     /// @param text 文字
     /// @param style 文字样式
     /// @param point 绘制文字的位置
-    void DrawTextLayout(String const& text, TextStyle const& style, Point const& point);
+    void DrawTextLayout(const String& text, const TextStyle& style, const Point& point);
 
     /// \~chinese
     /// @brief 绘制文字布局
     /// @param layout 文字布局
     /// @param point 绘制布局的位置
-    void DrawTextLayout(TextLayoutPtr layout, Point const& point);
+    void DrawTextLayout(TextLayoutPtr layout, const Point& point);
 
     /// \~chinese
     /// @brief 开始绘制路径
     /// @param begin_pos 路径起始点
-    void BeginPath(Point const& begin_pos);
+    void BeginPath(const Point& begin_pos);
 
     /// \~chinese
     /// @brief 结束路径
@@ -149,19 +149,19 @@ public:
     /// \~chinese
     /// @brief 添加一条线段
     /// @param point 端点
-    void AddLine(Point const& point);
+    void AddLine(const Point& point);
 
     /// \~chinese
     /// @brief 添加多条线段
     /// @param points 端点集合
-    void AddLines(Vector<Point> const& points);
+    void AddLines(const Vector<Point>& points);
 
     /// \~chinese
     /// @brief 添加一条三次方贝塞尔曲线
     /// @param point1 贝塞尔曲线的第一个控制点
     /// @param point2 贝塞尔曲线的第二个控制点
     /// @param point3 贝塞尔曲线的终点
-    void AddBezier(Point const& point1, Point const& point2, Point const& point3);
+    void AddBezier(const Point& point1, const Point& point2, const Point& point3);
 
     /// \~chinese
     /// @brief 添加弧线
@@ -170,7 +170,7 @@ public:
     /// @param rotation 椭圆旋转角度
     /// @param clockwise 顺时针 or 逆时针
     /// @param is_small 是否取小于 180° 的弧
-    void AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true, bool is_small = true);
+    void AddArc(const Point& point, const Size& radius, float rotation, bool clockwise = true, bool is_small = true);
 
     /// \~chinese
     /// @brief 以描边的方式绘制路径
@@ -187,12 +187,12 @@ public:
     /// \~chinese
     /// @brief 清空画布
     /// @param clear_color 清空颜色
-    void Clear(Color const& clear_color);
+    void Clear(const Color& clear_color);
 
     /// \~chinese
     /// @brief 设置填充颜色
     /// @param color 填充颜色
-    void SetFillColor(Color const& color);
+    void SetFillColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置填充画刷
@@ -202,7 +202,7 @@ public:
     /// \~chinese
     /// @brief 设置轮廓颜色
     /// @param color 轮廓颜色
-    void SetStrokeColor(Color const& color);
+    void SetStrokeColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置轮廓画刷
@@ -222,12 +222,12 @@ public:
     /// \~chinese
     /// @brief 设置画刷二维变换
     /// @param transform 二维变换
-    void SetBrushTransform(Transform const& transform);
+    void SetBrushTransform(const Transform& transform);
 
     /// \~chinese
     /// @brief 设置画刷二维变换矩阵
     /// @param transform 二维变换矩阵
-    void SetBrushTransform(Matrix3x2 const& transform);
+    void SetBrushTransform(const Matrix3x2& transform);
 
     /// \~chinese
     /// @brief 添加一个图层
@@ -241,7 +241,7 @@ public:
     /// \~chinese
     /// @brief 添加一个裁剪区域
     /// @param clip_rect 裁剪矩形
-    void PushClipRect(Rect const& clip_rect);
+    void PushClipRect(const Rect& clip_rect);
 
     /// \~chinese
     /// @brief 删除最近添加的裁剪区域
@@ -288,7 +288,7 @@ inline void Canvas::SetStrokeStyle(StrokeStylePtr stroke_style)
     stroke_style_ = stroke_style;
 }
 
-inline void Canvas::SetStrokeColor(Color const& color)
+inline void Canvas::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
@@ -297,7 +297,7 @@ inline void Canvas::SetStrokeColor(Color const& color)
     stroke_brush_->SetColor(color);
 }
 
-inline void Canvas::SetFillColor(Color const& color)
+inline void Canvas::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {

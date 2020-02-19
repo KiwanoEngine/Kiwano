@@ -73,11 +73,11 @@ public:
 
     /// \~chinese
     /// @brief 设置SSL证书地址
-    void SetSSLVerification(String const& root_certificate_path);
+    void SetSSLVerification(const String& root_certificate_path);
 
     /// \~chinese
     /// @brief 获取SSL证书地址
-    String const& GetSSLVerification() const;
+    const String& GetSSLVerification() const;
 
 public:
     virtual void SetupModule() override;
@@ -130,12 +130,12 @@ inline Duration HttpModule::GetTimeoutForRead() const
     return timeout_for_read_;
 }
 
-inline void HttpModule::SetSSLVerification(String const& root_certificate_path)
+inline void HttpModule::SetSSLVerification(const String& root_certificate_path)
 {
     ssl_verification_ = root_certificate_path;
 }
 
-inline String const& HttpModule::GetSSLVerification() const
+inline const String& HttpModule::GetSSLVerification() const
 {
     return ssl_verification_;
 }

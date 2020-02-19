@@ -202,67 +202,67 @@ private:
 };
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+inline bool operator==(const SmartPtr<_Ty, _ProxyTy>& lhs, const SmartPtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return lhs.Get() == rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, _Ty* rhs) noexcept
+inline bool operator==(const SmartPtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
 {
     return lhs.Get() == rhs;
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(_Ty* lhs, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+inline bool operator==(_Ty* lhs, const SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return lhs == rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(SmartPtr<_Ty, _ProxyTy> const& lhs, std::nullptr_t) noexcept
+inline bool operator==(const SmartPtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
 {
     return !static_cast<bool>(lhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(std::nullptr_t, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+inline bool operator==(std::nullptr_t, const SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return !static_cast<bool>(rhs);
 }
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+inline bool operator!=(const SmartPtr<_Ty, _ProxyTy>& lhs, const SmartPtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, _Ty* rhs) noexcept
+inline bool operator!=(const SmartPtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
 {
     return lhs.Get() != rhs;
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(_Ty* lhs, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+inline bool operator!=(_Ty* lhs, const SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return lhs != rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(SmartPtr<_Ty, _ProxyTy> const& lhs, std::nullptr_t) noexcept
+inline bool operator!=(const SmartPtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
 {
     return static_cast<bool>(lhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(std::nullptr_t, SmartPtr<_Ty, _ProxyTy> const& rhs) noexcept
+inline bool operator!=(std::nullptr_t, const SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return static_cast<bool>(rhs);
 }
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator<(SmartPtr<_Ty, _ProxyTy> const& lhs, SmartPtr<_UTy, _ProxyTy> const& rhs) noexcept
+inline bool operator<(const SmartPtr<_Ty, _ProxyTy>& lhs, const SmartPtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return lhs.Get() < rhs.Get();
 }

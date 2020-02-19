@@ -147,7 +147,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor_a, Point const& anchor_b)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor_a, const Point& anchor_b)
             : ParamBase(body_a, body_b)
             , anchor_a(anchor_a)
             , anchor_b(anchor_b)
@@ -160,7 +160,7 @@ public:
     /// \~chinese
     /// @brief 创建固定距离关节
     /// @param param 关节参数
-    static DistanceJointPtr Create(Param const& param);
+    static DistanceJointPtr Create(const Param& param);
 
     DistanceJoint();
 
@@ -213,7 +213,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, float max_force = 0.f, float max_torque = 0.f)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , max_force(max_force)
@@ -225,7 +225,7 @@ public:
     /// \~chinese
     /// @brief 创建摩擦关节
     /// @param param 关节参数
-    static FrictionJointPtr Create(Param const& param);
+    static FrictionJointPtr Create(const Param& param);
 
     FrictionJoint();
 
@@ -284,7 +284,7 @@ public:
     /// \~chinese
     /// @brief 创建齿轮关节
     /// @param param 关节参数
-    static GearJointPtr Create(Param const& param);
+    static GearJointPtr Create(const Param& param);
 
     GearJoint();
 
@@ -335,7 +335,7 @@ public:
     /// \~chinese
     /// @brief 创建马达关节
     /// @param param 关节参数
-    static MotorJointPtr Create(Param const& param);
+    static MotorJointPtr Create(const Param& param);
 
     MotorJoint();
 
@@ -387,7 +387,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, Vec2 const& axis)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, const Vec2& axis)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , axis(axis)
@@ -404,7 +404,7 @@ public:
     /// \~chinese
     /// @brief 创建平移关节
     /// @param param 关节参数
-    static PrismaticJointPtr Create(Param const& param);
+    static PrismaticJointPtr Create(const Param& param);
 
     PrismaticJoint();
 
@@ -493,8 +493,8 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor_a, Point const& anchor_b,
-              Point const& ground_anchor_a, Point const& ground_anchor_b, float ratio = 1.0f)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor_a, const Point& anchor_b,
+              const Point& ground_anchor_a, const Point& ground_anchor_b, float ratio = 1.0f)
             : ParamBase(body_a, body_b)
             , anchor_a(anchor_a)
             , anchor_b(anchor_b)
@@ -508,7 +508,7 @@ public:
     /// \~chinese
     /// @brief 创建滑轮关节
     /// @param param 关节参数
-    static PulleyJointPtr Create(Param const& param);
+    static PulleyJointPtr Create(const Param& param);
 
     PulleyJoint();
 
@@ -571,7 +571,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , enable_limit(false)
@@ -587,7 +587,7 @@ public:
     /// \~chinese
     /// @brief 创建旋转关节
     /// @param param 关节参数
-    static RevoluteJointPtr Create(Param const& param);
+    static RevoluteJointPtr Create(const Param& param);
 
     RevoluteJoint();
 
@@ -674,7 +674,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& local_anchor_a, Point const& local_anchor_b)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& local_anchor_a, const Point& local_anchor_b)
             : ParamBase(body_a, body_b)
             , local_anchor_a(local_anchor_a)
             , local_anchor_b(local_anchor_b)
@@ -686,7 +686,7 @@ public:
     /// \~chinese
     /// @brief 创建绳关节
     /// @param param 关节参数
-    static RopeJointPtr Create(Param const& param);
+    static RopeJointPtr Create(const Param& param);
 
     RopeJoint();
 
@@ -725,7 +725,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , frequency_hz(0.0f)
@@ -737,7 +737,7 @@ public:
     /// \~chinese
     /// @brief 创建焊接关节
     /// @param param 关节参数
-    static WeldJointPtr Create(Param const& param);
+    static WeldJointPtr Create(const Param& param);
 
     WeldJoint();
 
@@ -792,7 +792,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, Vec2 const& axis)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, const Vec2& axis)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , axis(axis)
@@ -808,7 +808,7 @@ public:
     /// \~chinese
     /// @brief 创建轮关节
     /// @param param 关节参数
-    static WheelJointPtr Create(Param const& param);
+    static WheelJointPtr Create(const Param& param);
 
     WheelJoint();
 
@@ -897,7 +897,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& target)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& target)
             : ParamBase(body_a, body_b)
             , target(target)
             , max_force(0.0f)
@@ -910,7 +910,7 @@ public:
     /// \~chinese
     /// @brief 创建鼠标关节
     /// @param param 关节参数
-    static MouseJointPtr Create(Param const& param);
+    static MouseJointPtr Create(const Param& param);
 
     MouseJoint();
 

@@ -69,7 +69,7 @@ public:
      * @param fullscreen 全屏模式
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
-    static WindowPtr Create(String const& title, uint32_t width, uint32_t height, uint32_t icon = 0,
+    static WindowPtr Create(const String& title, uint32_t width, uint32_t height, uint32_t icon = 0,
                             bool resizable = false, bool fullscreen = false);
 
     /**
@@ -111,7 +111,7 @@ public:
      * @brief 设置标题
      * @param title 标题
      */
-    virtual void SetTitle(String const& title) = 0;
+    virtual void SetTitle(const String& title) = 0;
 
     /**
      * \~chinese

@@ -45,7 +45,7 @@ public:
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    EventListener* AddListener(String const& name, EventType type, EventListener::Callback callback);
+    EventListener* AddListener(const String& name, EventType type, EventListener::Callback callback);
 
     /// \~chinese
     /// @brief 添加监听器
@@ -63,7 +63,7 @@ public:
     /// @param name 监听器名称
     /// @param callback 回调函数
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>>
-    EventListener* AddListener(String const& name, EventListener::Callback callback)
+    EventListener* AddListener(const String& name, EventListener::Callback callback)
     {
         return AddListener(name, KGE_EVENT(_EventTy), callback);
     }
@@ -71,17 +71,17 @@ public:
     /// \~chinese
     /// @brief 启动监听器
     /// @param name 监听器名称
-    void StartListeners(String const& name);
+    void StartListeners(const String& name);
 
     /// \~chinese
     /// @brief 停止监听器
     /// @param name 监听器名称
-    void StopListeners(String const& name);
+    void StopListeners(const String& name);
 
     /// \~chinese
     /// @brief 移除监听器
     /// @param name 监听器名称
-    void RemoveListeners(String const& name);
+    void RemoveListeners(const String& name);
 
     /// \~chinese
     /// @brief 启动监听器

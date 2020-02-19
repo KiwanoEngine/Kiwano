@@ -43,7 +43,7 @@ public:
     /// \~chinese
     /// @brief 创建纹理渲染上下文
     /// @param size 期望的输出大小
-    static TextureRenderContextPtr Create(Size const& desired_size);
+    static TextureRenderContextPtr Create(const Size& desired_size);
 
     /// \~chinese
     /// @brief 获取渲染输出

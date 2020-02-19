@@ -25,7 +25,7 @@ namespace kiwano
 {
 namespace
 {
-inline String ConvertPathFormat(String const& path)
+inline String ConvertPathFormat(const String& path)
 {
     // C:\a\b\c.txt => C:/a/b/c.txt
 
@@ -41,7 +41,7 @@ inline String ConvertPathFormat(String const& path)
     return result;
 }
 
-inline bool IsFileExists(String const& path)
+inline bool IsFileExists(const String& path)
 {
     DWORD dwAttrib = ::GetFileAttributesA(path.c_str());
 
@@ -53,7 +53,7 @@ FileSystem::FileSystem() {}
 
 FileSystem::~FileSystem() {}
 
-void FileSystem::AddSearchPath(String const& path)
+void FileSystem::AddSearchPath(const String& path)
 {
     String search_path = ConvertPathFormat(path);
     if (!search_path.empty() && search_path[search_path.length() - 1] != '/')
@@ -64,7 +64,7 @@ void FileSystem::AddSearchPath(String const& path)
     search_paths_.push_back(search_path);
 }
 
-void FileSystem::SetSearchPaths(Vector<String> const& paths)
+void FileSystem::SetSearchPaths(const Vector<String>& paths)
 {
     search_paths_ = paths;
 
@@ -78,7 +78,7 @@ void FileSystem::SetSearchPaths(Vector<String> const& paths)
     }
 }
 
-String FileSystem::GetFullPathForFile(String const& file) const
+String FileSystem::GetFullPathForFile(const String& file) const
 {
     if (file.empty())
     {
@@ -130,19 +130,19 @@ String FileSystem::GetFullPathForFile(String const& file) const
     return "";
 }
 
-void FileSystem::AddFileLookupRule(String const& key, String const& file_path)
+void FileSystem::AddFileLookupRule(const String& key, const String& file_path)
 {
     file_lookup_dict_.emplace(key, ConvertPathFormat(file_path));
 }
 
-void FileSystem::SetFileLookupDictionary(UnorderedMap<String, String> const& dict)
+void FileSystem::SetFileLookupDictionary(const UnorderedMap<String, String>& dict)
 {
     file_lookup_cache_.clear();
 
     file_lookup_dict_ = dict;
 }
 
-bool FileSystem::IsFileExists(String const& file_path) const
+bool FileSystem::IsFileExists(const String& file_path) const
 {
     if (IsAbsolutePath(file_path))
     {
@@ -155,20 +155,20 @@ bool FileSystem::IsFileExists(String const& file_path) const
     }
 }
 
-bool FileSystem::IsAbsolutePath(String const& path) const
+bool FileSystem::IsAbsolutePath(const String& path) const
 {
     // like "C:\some.file"
     return path.length() > 2 && ((std::isalpha(path[0]) && path[1] == ':') || (path[0] == '/' && path[1] == '/'));
 }
 
-bool FileSystem::RemoveFile(String const& file_path) const
+bool FileSystem::RemoveFile(const String& file_path) const
 {
     if (::DeleteFileA(file_path.c_str()))
         return true;
     return false;
 }
 
-bool FileSystem::ExtractResourceToFile(Resource const& res, String const& dest_file_name) const
+bool FileSystem::ExtractResourceToFile(const Resource& res, const String& dest_file_name) const
 {
     HANDLE file_handle =
         ::CreateFileA(dest_file_name.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);

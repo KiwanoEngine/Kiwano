@@ -27,7 +27,7 @@ namespace kiwano
 namespace physics
 {
 
-FixturePtr Fixture::CreateCircle(Param const& param, float radius, Point const& offset)
+FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& offset)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
@@ -42,7 +42,7 @@ FixturePtr Fixture::CreateCircle(Param const& param, float radius, Point const& 
     return ptr;
 }
 
-FixturePtr Fixture::CreateRect(Param const& param, Size const& size, Point const& offset, float rotation)
+FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point& offset, float rotation)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
@@ -59,7 +59,7 @@ FixturePtr Fixture::CreateRect(Param const& param, Size const& size, Point const
     return ptr;
 }
 
-FixturePtr Fixture::CreatePolygon(Param const& param, Vector<Point> const& vertexs)
+FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& vertexs)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
@@ -80,7 +80,7 @@ FixturePtr Fixture::CreatePolygon(Param const& param, Vector<Point> const& verte
     return ptr;
 }
 
-FixturePtr Fixture::CreateEdge(Param const& param, Point const& p1, Point const& p2)
+FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point& p2)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
@@ -97,7 +97,7 @@ FixturePtr Fixture::CreateEdge(Param const& param, Point const& p1, Point const&
     return ptr;
 }
 
-FixturePtr Fixture::CreateChain(Param const& param, Vector<Point> const& vertexs, bool loop)
+FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertexs, bool loop)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)

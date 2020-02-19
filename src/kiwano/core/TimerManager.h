@@ -35,7 +35,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer* AddTimer(Timer::Callback const& cb, Duration interval, int times = -1);
+    Timer* AddTimer(const Timer::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 添加定时器
@@ -43,7 +43,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer* AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times = -1);
+    Timer* AddTimer(const String& name, const Timer::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 添加定时器
@@ -51,15 +51,15 @@ public:
 
     /// \~chinese
     /// @brief 启动定时器
-    void StartTimers(String const& timer_name);
+    void StartTimers(const String& timer_name);
 
     /// \~chinese
     /// @brief 停止定时器
-    void StopTimers(String const& timer_name);
+    void StopTimers(const String& timer_name);
 
     /// \~chinese
     /// @brief 移除定时器
-    void RemoveTimers(String const& timer_name);
+    void RemoveTimers(const String& timer_name);
 
     /// \~chinese
     /// @brief 启动所有定时器

@@ -46,7 +46,7 @@ class KGE_API MouseEvent : public Event
 public:
     Point pos;  ///< 鼠标位置
 
-    MouseEvent(EventType const& type);
+    MouseEvent(const EventType& type);
 };
 
 /// \~chinese

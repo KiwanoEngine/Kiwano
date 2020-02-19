@@ -29,7 +29,7 @@ namespace kiwano
 namespace resource_cache_01
 {
 
-bool LoadJsonData(ResourceCache* loader, Json const& json_data);
+bool LoadJsonData(ResourceCache* loader, const Json& json_data);
 bool LoadXmlData(ResourceCache* loader, const XmlNode& elem);
 
 }  // namespace resource_cache_01
@@ -37,7 +37,7 @@ bool LoadXmlData(ResourceCache* loader, const XmlNode& elem);
 namespace
 {
 
-Map<String, Function<bool(ResourceCache*, Json const&)>> load_json_funcs = {
+Map<String, Function<bool(ResourceCache*, const Json&)>> load_json_funcs = {
     { "latest", resource_cache_01::LoadJsonData },
     { "0.1", resource_cache_01::LoadJsonData },
 };
@@ -56,7 +56,7 @@ ResourceCache::~ResourceCache()
     Clear();
 }
 
-bool ResourceCache::LoadFromJsonFile(String const& file_path)
+bool ResourceCache::LoadFromJsonFile(const String& file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
@@ -89,7 +89,7 @@ bool ResourceCache::LoadFromJsonFile(String const& file_path)
     return LoadFromJson(json_data);
 }
 
-bool ResourceCache::LoadFromJson(Json const& json_data)
+bool ResourceCache::LoadFromJson(const Json& json_data)
 {
     try
     {
@@ -117,7 +117,7 @@ bool ResourceCache::LoadFromJson(Json const& json_data)
     return false;
 }
 
-bool ResourceCache::LoadFromXmlFile(String const& file_path)
+bool ResourceCache::LoadFromXmlFile(const String& file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
@@ -166,7 +166,7 @@ bool ResourceCache::LoadFromXml(const XmlDocument& doc)
     return false;
 }
 
-bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)
+bool ResourceCache::AddObject(const String& id, ObjectBasePtr obj)
 {
     if (obj)
     {
@@ -176,7 +176,7 @@ bool ResourceCache::AddObject(String const& id, ObjectBasePtr obj)
     return false;
 }
 
-void ResourceCache::Remove(String const& id)
+void ResourceCache::Remove(const String& id)
 {
     object_cache_.erase(id);
 }
@@ -186,7 +186,7 @@ void ResourceCache::Clear()
     object_cache_.clear();
 }
 
-ObjectBasePtr ResourceCache::Get(String const& id) const
+ObjectBasePtr ResourceCache::Get(const String& id) const
 {
     auto iter = object_cache_.find(id);
     if (iter == object_cache_.end())
@@ -308,7 +308,7 @@ bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String& i
     return false;
 }
 
-bool LoadJsonData(ResourceCache* loader, Json const& json_data)
+bool LoadJsonData(ResourceCache* loader, const Json& json_data)
 {
     GlobalData global_data;
     if (json_data.count("path"))

@@ -30,7 +30,7 @@ namespace kiwano
 
 InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
 
-TexturePtr Texture::Create(String const& file_path)
+TexturePtr Texture::Create(const String& file_path)
 {
     TexturePtr ptr = new (std::nothrow) Texture;
     if (ptr)
@@ -41,7 +41,7 @@ TexturePtr Texture::Create(String const& file_path)
     return ptr;
 }
 
-TexturePtr Texture::Create(Resource const& res)
+TexturePtr Texture::Create(const Resource& res)
 {
     TexturePtr ptr = new (std::nothrow) Texture;
     if (ptr)
@@ -59,13 +59,13 @@ Texture::Texture()
 
 Texture::~Texture() {}
 
-bool Texture::Load(String const& file_path)
+bool Texture::Load(const String& file_path)
 {
     Renderer::GetInstance().CreateTexture(*this, file_path);
     return IsValid();
 }
 
-bool Texture::Load(Resource const& res)
+bool Texture::Load(const Resource& res)
 {
     Renderer::GetInstance().CreateTexture(*this, res);
     return IsValid();
@@ -88,7 +88,7 @@ void Texture::CopyFrom(TexturePtr copy_from)
 #endif
 }
 
-void Texture::CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point)
+void Texture::CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& dest_point)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)

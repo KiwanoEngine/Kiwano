@@ -56,7 +56,7 @@ EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
     return listener.Get();
 }
 
-EventListener* EventDispatcher::AddListener(String const& name, EventType type, EventListener::Callback callback)
+EventListener* EventDispatcher::AddListener(const String& name, EventType type, EventListener::Callback callback)
 {
     EventListenerPtr listener = EventListener::Create(name, type, callback);
     return AddListener(listener);
@@ -68,7 +68,7 @@ EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callb
     return AddListener(listener);
 }
 
-void EventDispatcher::StartListeners(String const& name)
+void EventDispatcher::StartListeners(const String& name)
 {
     for (auto& listener : listeners_)
     {
@@ -79,7 +79,7 @@ void EventDispatcher::StartListeners(String const& name)
     }
 }
 
-void EventDispatcher::StopListeners(String const& name)
+void EventDispatcher::StopListeners(const String& name)
 {
     for (auto& listener : listeners_)
     {
@@ -90,7 +90,7 @@ void EventDispatcher::StopListeners(String const& name)
     }
 }
 
-void EventDispatcher::RemoveListeners(String const& name)
+void EventDispatcher::RemoveListeners(const String& name)
 {
     for (auto& listener : listeners_)
     {

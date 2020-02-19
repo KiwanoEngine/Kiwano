@@ -70,7 +70,7 @@ void Transcoder::ClearBuffer()
     wave_size_ = 0;
 }
 
-HRESULT Transcoder::LoadMediaFile(String const& file_path)
+HRESULT Transcoder::LoadMediaFile(const String& file_path)
 {
     HRESULT hr = S_OK;
 
@@ -86,7 +86,7 @@ HRESULT Transcoder::LoadMediaFile(String const& file_path)
     return hr;
 }
 
-HRESULT Transcoder::LoadMediaResource(Resource const& res)
+HRESULT Transcoder::LoadMediaResource(const Resource& res)
 {
     HRESULT hr = S_OK;
 

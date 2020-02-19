@@ -43,7 +43,7 @@ public:
 
     /// \~chinese
     /// @brief 设置对象名
-    void SetName(String const& name);
+    void SetName(const String& name);
 
     /// \~chinese
     /// @brief 获取对象名
@@ -52,7 +52,7 @@ public:
     /// \~chinese
     /// @brief 判断对象的名称是否相同
     /// @param name 需要判断的名称
-    bool IsName(String const& name) const;
+    bool IsName(const String& name) const;
 
     /// \~chinese
     /// @brief 获取用户数据
@@ -60,7 +60,7 @@ public:
 
     /// \~chinese
     /// @brief 设置用户数据
-    void SetUserData(Any const& data);
+    void SetUserData(const Any& data);
 
     /// \~chinese
     /// @brief 获取对象ID
@@ -111,7 +111,7 @@ inline String ObjectBase::GetName() const
     return String();
 }
 
-inline bool ObjectBase::IsName(String const& name) const
+inline bool ObjectBase::IsName(const String& name) const
 {
     return name_ ? (*name_ == name) : name.empty();
 }

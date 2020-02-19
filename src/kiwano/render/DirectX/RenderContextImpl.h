@@ -40,31 +40,31 @@ public:
 
     void EndDraw() override;
 
-    void DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect) override;
+    void DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect) override;
 
-    void DrawTextLayout(TextLayout const& layout, Point const& offset) override;
+    void DrawTextLayout(const TextLayout& layout, const Point& offset) override;
 
-    void DrawShape(Shape const& shape) override;
+    void DrawShape(const Shape& shape) override;
 
-    void DrawLine(Point const& point1, Point const& point2) override;
+    void DrawLine(const Point& point1, const Point& point2) override;
 
-    void DrawRectangle(Rect const& rect) override;
+    void DrawRectangle(const Rect& rect) override;
 
-    void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius) override;
+    void DrawRoundedRectangle(const Rect& rect, const Vec2& radius) override;
 
-    void DrawEllipse(Point const& center, Vec2 const& radius) override;
+    void DrawEllipse(const Point& center, const Vec2& radius) override;
 
-    void FillShape(Shape const& shape) override;
+    void FillShape(const Shape& shape) override;
 
-    void FillRectangle(Rect const& rect) override;
+    void FillRectangle(const Rect& rect) override;
 
-    void FillRoundedRectangle(Rect const& rect, Vec2 const& radius) override;
+    void FillRoundedRectangle(const Rect& rect, const Vec2& radius) override;
 
-    void FillEllipse(Point const& center, Vec2 const& radius) override;
+    void FillEllipse(const Point& center, const Vec2& radius) override;
 
     void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) override;
 
-    void PushClipRect(Rect const& clip_rect) override;
+    void PushClipRect(const Rect& clip_rect) override;
 
     void PopClipRect() override;
 
@@ -74,7 +74,7 @@ public:
 
     void Clear() override;
 
-    void Clear(Color const& clear_color) override;
+    void Clear(const Color& clear_color) override;
 
     Size GetSize() const override;
 
@@ -88,9 +88,9 @@ public:
 
     void SetTextAntialiasMode(TextAntialiasMode mode) override;
 
-    bool CheckVisibility(Rect const& bounds, Matrix3x2 const& transform) override;
+    bool CheckVisibility(const Rect& bounds, const Matrix3x2& transform) override;
 
-    void Resize(Size const& size) override;
+    void Resize(const Size& size) override;
 
 protected:
     RenderContextImpl();

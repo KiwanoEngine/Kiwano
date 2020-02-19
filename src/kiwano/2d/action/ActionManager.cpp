@@ -86,7 +86,7 @@ void ActionManager::StopAllActions()
     }
 }
 
-ActionPtr ActionManager::GetAction(String const& name)
+ActionPtr ActionManager::GetAction(const String& name)
 {
     if (actions_.IsEmpty())
         return nullptr;

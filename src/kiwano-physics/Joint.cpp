@@ -109,7 +109,7 @@ void Joint::Destroy()
 // DistanceJoint
 //
 
-DistanceJointPtr DistanceJoint::Create(Param const& param)
+DistanceJointPtr DistanceJoint::Create(const Param& param)
 {
     DistanceJointPtr ptr = new (std::nothrow) DistanceJoint;
     if (ptr)
@@ -155,7 +155,7 @@ float DistanceJoint::GetLength() const
 // FrictionJoint
 //
 
-FrictionJointPtr FrictionJoint::Create(Param const& param)
+FrictionJointPtr FrictionJoint::Create(const Param& param)
 {
     FrictionJointPtr ptr = new (std::nothrow) FrictionJoint;
     if (ptr)
@@ -212,7 +212,7 @@ float FrictionJoint::GetMaxTorque() const
 // GearJoint
 //
 
-GearJointPtr GearJoint::Create(Param const& param)
+GearJointPtr GearJoint::Create(const Param& param)
 {
     GearJointPtr ptr = new (std::nothrow) GearJoint;
     if (ptr)
@@ -257,7 +257,7 @@ float GearJoint::GetRatio() const
 // MotorJoint
 //
 
-MotorJointPtr MotorJoint::Create(Param const& param)
+MotorJointPtr MotorJoint::Create(const Param& param)
 {
     MotorJointPtr ptr = new (std::nothrow) MotorJoint;
     if (ptr)
@@ -315,7 +315,7 @@ float MotorJoint::GetMaxTorque() const
 // PrismaticJoint
 //
 
-PrismaticJointPtr PrismaticJoint::Create(Param const& param)
+PrismaticJointPtr PrismaticJoint::Create(const Param& param)
 {
     PrismaticJointPtr ptr = new (std::nothrow) PrismaticJoint;
     if (ptr)
@@ -383,7 +383,7 @@ void PrismaticJoint::SetLimits(float lower, float upper)
 // PulleyJoint
 //
 
-PulleyJointPtr PulleyJoint::Create(Param const& param)
+PulleyJointPtr PulleyJoint::Create(const Param& param)
 {
     PulleyJointPtr ptr = new (std::nothrow) PulleyJoint;
     if (ptr)
@@ -458,7 +458,7 @@ float PulleyJoint::GetCurrentLengthB() const
 // RevoluteJoint
 //
 
-RevoluteJointPtr RevoluteJoint::Create(Param const& param)
+RevoluteJointPtr RevoluteJoint::Create(const Param& param)
 {
     RevoluteJointPtr ptr = new (std::nothrow) RevoluteJoint;
     if (ptr)
@@ -537,7 +537,7 @@ float RevoluteJoint::GetMaxMotorTorque() const
 // RopeJoint
 //
 
-RopeJointPtr RopeJoint::Create(Param const& param)
+RopeJointPtr RopeJoint::Create(const Param& param)
 {
     RopeJointPtr ptr = new (std::nothrow) RopeJoint;
     if (ptr)
@@ -584,7 +584,7 @@ float RopeJoint::GetMaxLength() const
 // WeldJoint
 //
 
-WeldJointPtr WeldJoint::Create(Param const& param)
+WeldJointPtr WeldJoint::Create(const Param& param)
 {
     WeldJointPtr ptr = new (std::nothrow) WeldJoint;
     if (ptr)
@@ -617,7 +617,7 @@ bool WeldJoint::Init(PhysicWorld* world)
 // WheelJoint
 //
 
-WheelJointPtr WheelJoint::Create(Param const& param)
+WheelJointPtr WheelJoint::Create(const Param& param)
 {
     WheelJointPtr ptr = new (std::nothrow) WheelJoint;
     if (ptr)
@@ -678,7 +678,7 @@ float WheelJoint::GetMaxMotorTorque() const
 // MouseJoint
 //
 
-MouseJointPtr MouseJoint::Create(Param const& param)
+MouseJointPtr MouseJoint::Create(const Param& param)
 {
     MouseJointPtr ptr = new (std::nothrow) MouseJoint;
     if (ptr)

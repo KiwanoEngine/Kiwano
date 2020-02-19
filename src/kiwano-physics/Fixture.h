@@ -64,7 +64,7 @@ public:
     /// @param param 夹具参数
     /// @param radius 圆形半径
     /// @param offset 偏移量
-    static FixturePtr CreateCircle(Param const& param, float radius, Point const& offset = Point());
+    static FixturePtr CreateCircle(const Param& param, float radius, const Point& offset = Point());
 
     /// \~chinese
     /// @brief 创建矩形夹具
@@ -72,28 +72,28 @@ public:
     /// @param size 矩形大小
     /// @param offset 偏移量
     /// @param rotation 旋转角度
-    static FixturePtr CreateRect(Param const& param, Size const& size, Point const& offset = Point(),
+    static FixturePtr CreateRect(const Param& param, const Size& size, const Point& offset = Point(),
                                  float rotation = 0.f);
 
     /// \~chinese
     /// @brief 创建多边形夹具
     /// @param param 夹具参数
     /// @param vertexs 多边形顶点
-    static FixturePtr CreatePolygon(Param const& param, Vector<Point> const& vertexs);
+    static FixturePtr CreatePolygon(const Param& param, const Vector<Point>& vertexs);
 
     /// \~chinese
     /// @brief 创建边夹具
     /// @param param 夹具参数
     /// @param p1 边的起点
     /// @param p2 边的终点
-    static FixturePtr CreateEdge(Param const& param, Point const& p1, Point const& p2);
+    static FixturePtr CreateEdge(const Param& param, const Point& p1, const Point& p2);
 
     /// \~chinese
     /// @brief 创建链条夹具
     /// @param param 夹具参数
     /// @param vertexs 链条顶点
     /// @param loop 是否连接链条的起点和终点
-    static FixturePtr CreateChain(Param const& param, Vector<Point> const& vertexs, bool loop = false);
+    static FixturePtr CreateChain(const Param& param, const Vector<Point>& vertexs, bool loop = false);
 
     Fixture();
 

@@ -39,7 +39,7 @@ TextureRenderContextPtr TextureRenderContext::Create()
     return ptr;
 }
 
-TextureRenderContextPtr TextureRenderContext::Create(Size const& desired_size)
+TextureRenderContextPtr TextureRenderContext::Create(const Size& desired_size)
 {
     TextureRenderContextPtr ptr;
     try

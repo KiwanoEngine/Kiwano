@@ -31,7 +31,7 @@ ImGuiLayerPtr ImGuiLayer::Create()
     return ptr;
 }
 
-ImGuiLayerPtr ImGuiLayer::Create(String const& name, ImGuiPipeline const& item)
+ImGuiLayerPtr ImGuiLayer::Create(const String& name, const ImGuiPipeline& item)
 {
     ImGuiLayerPtr ptr = new (std::nothrow) ImGuiLayer;
     if (ptr)
@@ -61,12 +61,12 @@ bool ImGuiLayer::CheckVisibility(RenderContext& ctx) const
     return true;
 }
 
-void ImGuiLayer::AddItem(String const& name, ImGuiPipeline const& item)
+void ImGuiLayer::AddItem(const String& name, const ImGuiPipeline& item)
 {
     pipelines_.insert(std::make_pair(name, item));
 }
 
-void ImGuiLayer::RemoveItem(String const& name)
+void ImGuiLayer::RemoveItem(const String& name)
 {
     auto iter = pipelines_.find(name);
     if (iter != pipelines_.end())

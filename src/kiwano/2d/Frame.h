@@ -36,12 +36,12 @@ public:
     /// \~chinese
     /// @brief 创建图像帧
     /// @param file_path 图像路径
-    static FramePtr Create(String const& file_path);
+    static FramePtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 创建图像帧
     /// @param res 图像资源
-    static FramePtr Create(Resource const& res);
+    static FramePtr Create(const Resource& res);
 
     /// \~chinese
     /// @brief 创建图像帧
@@ -55,17 +55,17 @@ public:
     /// \~chinese
     /// @brief 加载图像
     /// @param file_path 图像路径
-    bool Load(String const& file_path);
+    bool Load(const String& file_path);
 
     /// \~chinese
     /// @brief 加载图像
     /// @param res 图像资源
-    bool Load(Resource const& res);
+    bool Load(const Resource& res);
 
     /// \~chinese
     /// @brief 裁剪图像帧为矩形
     /// @param crop_rect 裁剪矩形定义
-    void SetCropRect(Rect const& crop_rect);
+    void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 设置纹理
@@ -94,7 +94,7 @@ public:
 
     /// \~chinese
     /// @brief 获取裁剪矩形
-    Rect const& GetCropRect() const;
+    const Rect& GetCropRect() const;
 
     /// \~chinese
     /// @brief 获取图像原宽度
@@ -142,7 +142,7 @@ inline Point Frame::GetCropPoint() const
     return crop_rect_.GetLeftTop();
 }
 
-inline Rect const& Frame::GetCropRect() const
+inline const Rect& Frame::GetCropRect() const
 {
     return crop_rect_;
 }

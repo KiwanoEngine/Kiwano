@@ -37,7 +37,7 @@ public:
     }
 
     STDMETHOD(AddFilePaths)
-    (Vector<String> const& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
+    (const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
 
     // IUnknown methods
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
@@ -80,7 +80,7 @@ HRESULT IFontCollectionLoader::Create(_Out_ IFontCollectionLoader** ppCollection
     return hr;
 }
 
-STDMETHODIMP FontCollectionLoader::AddFilePaths(Vector<String> const& filePaths, _Out_ LPVOID* pCollectionKey,
+STDMETHODIMP FontCollectionLoader::AddFilePaths(const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey,
                                                 _Out_ uint32_t* pCollectionKeySize)
 {
     if (!pCollectionKey || !pCollectionKeySize)
@@ -178,7 +178,7 @@ public:
 
     STDMETHOD(Initialize)(IDWriteFactory* pFactory);
 
-    STDMETHOD(SetFilePaths)(Vector<String> const& filePaths);
+    STDMETHOD(SetFilePaths)(const Vector<String>& filePaths);
 
     ~FontFileEnumerator()
     {
@@ -250,7 +250,7 @@ STDMETHODIMP FontFileEnumerator::Initialize(IDWriteFactory* pFactory)
     return E_INVALIDARG;
 }
 
-STDMETHODIMP FontFileEnumerator::SetFilePaths(Vector<String> const& filePaths)
+STDMETHODIMP FontFileEnumerator::SetFilePaths(const Vector<String>& filePaths)
 {
     try
     {
@@ -343,7 +343,7 @@ public:
     }
 
     STDMETHOD(AddResources)
-    (Vector<Resource> const& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
+    (const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
 
     // IUnknown methods
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
@@ -388,7 +388,7 @@ HRESULT IResourceFontCollectionLoader::Create(_Out_ IResourceFontCollectionLoade
     return hr;
 }
 
-STDMETHODIMP ResourceFontCollectionLoader::AddResources(Vector<Resource> const& resources, _Out_ LPVOID* pCollectionKey,
+STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey,
                                                         _Out_ uint32_t* pCollectionKeySize)
 {
     if (!pCollectionKey || !pCollectionKeySize)
@@ -593,7 +593,7 @@ public:
 
     STDMETHOD(Initialize)(IDWriteFactory* pFactory, IDWriteFontFileLoader* pLoader);
 
-    STDMETHOD(SetResources)(Vector<Resource> const& resources);
+    STDMETHOD(SetResources)(const Vector<Resource>& resources);
 
     ~ResourceFontFileEnumerator()
     {
@@ -669,7 +669,7 @@ STDMETHODIMP ResourceFontFileEnumerator::Initialize(IDWriteFactory* pFactory, ID
     return E_INVALIDARG;
 }
 
-STDMETHODIMP ResourceFontFileEnumerator::SetResources(Vector<Resource> const& resources)
+STDMETHODIMP ResourceFontFileEnumerator::SetResources(const Vector<Resource>& resources)
 {
     try
     {

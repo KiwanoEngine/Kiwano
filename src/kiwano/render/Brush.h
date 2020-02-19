@@ -63,7 +63,7 @@ struct LinearGradientStyle
     Vector<GradientStop> stops;        ///< 渐变转换点集合
     GradientExtendMode   extend_mode;  ///< 渐变扩充模式
 
-    LinearGradientStyle(Point const& begin, Point const& end, Vector<GradientStop> const& stops,
+    LinearGradientStyle(const Point& begin, const Point& end, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 };
 
@@ -77,7 +77,7 @@ struct RadialGradientStyle
     Vector<GradientStop> stops;        ///< 渐变转换点集合
     GradientExtendMode   extend_mode;  ///< 渐变扩充模式
 
-    RadialGradientStyle(Point const& center, Vec2 const& offset, Vec2 const& radius, Vector<GradientStop> const& stops,
+    RadialGradientStyle(const Point& center, const Vec2& offset, const Vec2& radius, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 };
 
@@ -91,31 +91,31 @@ public:
     /// \~chinese
     /// @brief 创建纯色画刷
     /// @param color 画刷颜色
-    static BrushPtr Create(Color const& color);
+    static BrushPtr Create(const Color& color);
 
     /// \~chinese
     /// @brief 创建线性渐变样式
     /// @param style 线性渐变样式
-    static BrushPtr Create(LinearGradientStyle const& style);
+    static BrushPtr Create(const LinearGradientStyle& style);
 
     /// \~chinese
     /// @brief 创建径向渐变样式
     /// @param style 径向渐变样式
-    static BrushPtr Create(RadialGradientStyle const& style);
+    static BrushPtr Create(const RadialGradientStyle& style);
 
     Brush();
 
     /// \~chinese
     /// @brief 设置纯色画刷颜色
-    void SetColor(Color const& color);
+    void SetColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置线性渐变样式
-    void SetStyle(LinearGradientStyle const& style);
+    void SetStyle(const LinearGradientStyle& style);
 
     /// \~chinese
     /// @brief 设置径向渐变样式
-    void SetStyle(RadialGradientStyle const& style);
+    void SetStyle(const RadialGradientStyle& style);
 
     /// \~chinese
     /// @brief 设置纹理

@@ -75,7 +75,7 @@ struct Matrix3x2T
             m[i] = p[i];
     }
 
-    Matrix3x2T(Matrix3x2T const& other)
+    Matrix3x2T(const Matrix3x2T& other)
         : _11(other._11)
         , _12(other._12)
         , _21(other._21)
@@ -89,7 +89,7 @@ KGE_SUPPRESS_WARNING_PUSH
 KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variables"
 
     template <typename _MTy>
-    Matrix3x2T(_MTy const& other)
+    Matrix3x2T(const _MTy& other)
     {
         for (int i = 0; i < 6; i++)
             m[i] = other[i];
@@ -107,7 +107,7 @@ KGE_SUPPRESS_WARNING_POP
         return m[index];
     }
 
-    inline Matrix3x2T& operator=(Matrix3x2T const& other)
+    inline Matrix3x2T& operator=(const Matrix3x2T& other)
     {
         for (int i = 0; i < 6; i++)
             m[i] = other[i];
@@ -115,14 +115,14 @@ KGE_SUPPRESS_WARNING_POP
     }
 
     template <typename _Lty, typename _Rty>
-    inline Matrix3x2T& operator=(MatrixMultiply<ValueType, _Lty, _Rty> const& other)
+    inline Matrix3x2T& operator=(MatrixMultiply<ValueType, _Lty, const _Rty>& other)
     {
         Matrix3x2T result(other);
         (*this) = result;
         return (*this);
     }
 
-    inline Matrix3x2T& operator*=(Matrix3x2T const& other)
+    inline Matrix3x2T& operator*=(const Matrix3x2T& other)
     {
         return operator=((*this) * other);
     }
@@ -240,10 +240,10 @@ KGE_SUPPRESS_WARNING_POP
 template <typename _Ty, typename _Lty, typename _Rty>
 struct MatrixMultiply
 {
-    _Lty const& lhs;
-    _Rty const& rhs;
+    const _Lty& lhs;
+    const _Rty& rhs;
 
-    MatrixMultiply(_Lty const& lhs, _Rty const& rhs)
+    MatrixMultiply(const _Lty& lhs, const _Rty& rhs)
         : lhs(lhs)
         , rhs(rhs)
     {
@@ -272,15 +272,15 @@ struct MatrixMultiply
 };
 
 template <typename _Ty>
-inline MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>> operator*(Matrix3x2T<_Ty> const& lhs,
-                                                                       Matrix3x2T<_Ty> const& rhs)
+inline MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>> operator*(const Matrix3x2T<_Ty>& lhs,
+                                                                       const Matrix3x2T<_Ty>& rhs)
 {
     return MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>>(lhs, rhs);
 }
 
 template <typename _Ty, typename _Lty, typename _Rty>
 inline MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>
-operator*(MatrixMultiply<_Ty, _Lty, _Rty> const& lhs, Matrix3x2T<_Ty> const& rhs)
+operator*(MatrixMultiply<_Ty, _Lty, const _Rty>& lhs, const Matrix3x2T<_Ty>& rhs)
 {
     return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>(lhs, rhs);
 }

@@ -104,7 +104,7 @@ public:
     /// \~chinese
     /// @brief 设置填充颜色
     /// @param color 填充颜色
-    void SetFillColor(Color const& color);
+    void SetFillColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置填充画刷
@@ -114,7 +114,7 @@ public:
     /// \~chinese
     /// @brief 设置轮廓颜色
     /// @param color 轮廓颜色
-    void SetStrokeColor(Color const& color);
+    void SetStrokeColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置轮廓画刷
@@ -151,7 +151,7 @@ public:
     /// @brief 创建线段角色
     /// @param begin 线段起点
     /// @param end 线段终点
-    static LineActorPtr Create(Point const& begin, Point const& end);
+    static LineActorPtr Create(const Point& begin, const Point& end);
 
     LineActor();
 
@@ -159,27 +159,27 @@ public:
 
     /// \~chinese
     /// @brief 获取线段起点
-    Point const& GetBeginPoint() const;
+    const Point& GetBeginPoint() const;
 
     /// \~chinese
     /// @brief 获取线段终点
-    Point const& GetEndPoint() const;
+    const Point& GetEndPoint() const;
 
     /// \~chinese
     /// @brief 设置线段起点
     /// @param begin 线段起点
-    void SetBeginPoint(Point const& begin);
+    void SetBeginPoint(const Point& begin);
 
     /// \~chinese
     /// @brief 设置线段终点
     /// @param end 线段终点
-    void SetEndPoint(Point const& end);
+    void SetEndPoint(const Point& end);
 
     /// \~chinese
     /// @brief 设置线段起点和终点
     /// @param begin 线段起点
     /// @param end 线段终点
-    void SetLine(Point const& begin, Point const& end);
+    void SetLine(const Point& begin, const Point& end);
 
 private:
     Point begin_;
@@ -194,7 +194,7 @@ public:
     /// \~chinese
     /// @brief 创建矩形角色
     /// @param size 矩形大小
-    static RectActorPtr Create(Size const& size);
+    static RectActorPtr Create(const Size& size);
 
     RectActor();
 
@@ -202,12 +202,12 @@ public:
 
     /// \~chinese
     /// @brief 获取矩形大小
-    Size const& GetRectSize() const;
+    const Size& GetRectSize() const;
 
     /// \~chinese
     /// @brief 设置矩形大小
     /// @param size 矩形大小
-    void SetRectSize(Size const& size);
+    void SetRectSize(const Size& size);
 
 private:
     Size rect_size_;
@@ -222,7 +222,7 @@ public:
     /// @brief 创建圆角矩形角色
     /// @param size 圆角矩形大小
     /// @param radius 圆角半径
-    static RoundedRectActorPtr Create(Size const& size, Vec2 const& radius);
+    static RoundedRectActorPtr Create(const Size& size, const Vec2& radius);
 
     RoundedRectActor();
 
@@ -239,18 +239,18 @@ public:
     /// \~chinese
     /// @brief 设置圆角半径
     /// @param radius 圆角半径
-    void SetRadius(Vec2 const& radius);
+    void SetRadius(const Vec2& radius);
 
     /// \~chinese
     /// @brief 设置圆角矩形大小
     /// @param size 圆角矩形大小
-    void SetRectSize(Size const& size);
+    void SetRectSize(const Size& size);
 
     /// \~chinese
     /// @brief 设置圆角矩形
     /// @param size 圆角矩形大小
     /// @param radius 圆角半径
-    void SetRoundedRect(Size const& size, Vec2 const& radius);
+    void SetRoundedRect(const Size& size, const Vec2& radius);
 
 private:
     Size rect_size_;
@@ -292,7 +292,7 @@ public:
     /// \~chinese
     /// @brief 创建椭圆角色
     /// @param radius 椭圆半径
-    static EllipseActorPtr Create(Vec2 const& radius);
+    static EllipseActorPtr Create(const Vec2& radius);
 
     EllipseActor();
 
@@ -305,7 +305,7 @@ public:
     /// \~chinese
     /// @brief 设置椭圆半径
     /// @param radius 椭圆半径
-    void SetRadius(Vec2 const& radius);
+    void SetRadius(const Vec2& radius);
 
 private:
     Vec2 radius_;
@@ -319,7 +319,7 @@ public:
     /// \~chinese
     /// @brief 创建多边形角色
     /// @param points 多边形端点集合
-    static PolygonActorPtr Create(Vector<Point> const& points);
+    static PolygonActorPtr Create(const Vector<Point>& points);
 
     PolygonActor();
 
@@ -328,13 +328,13 @@ public:
     /// \~chinese
     /// @brief 设置多边形端点
     /// @param points 多边形端点集合
-    void SetVertices(Vector<Point> const& points);
+    void SetVertices(const Vector<Point>& points);
 };
 
 
 /** @} */
 
-inline void ShapeActor::SetStrokeColor(Color const& color)
+inline void ShapeActor::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
@@ -343,7 +343,7 @@ inline void ShapeActor::SetStrokeColor(Color const& color)
     stroke_brush_->SetColor(color);
 }
 
-inline void ShapeActor::SetFillColor(Color const& color)
+inline void ShapeActor::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
@@ -387,27 +387,27 @@ inline void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)
     stroke_style_ = stroke_style;
 }
 
-inline Point const& LineActor::GetBeginPoint() const
+inline const Point& LineActor::GetBeginPoint() const
 {
     return begin_;
 }
 
-inline Point const& LineActor::GetEndPoint() const
+inline const Point& LineActor::GetEndPoint() const
 {
     return end_;
 }
 
-inline void LineActor::SetBeginPoint(Point const& begin)
+inline void LineActor::SetBeginPoint(const Point& begin)
 {
     SetLine(begin, end_);
 }
 
-inline void LineActor::SetEndPoint(Point const& end)
+inline void LineActor::SetEndPoint(const Point& end)
 {
     SetLine(begin_, end);
 }
 
-inline Size const& RectActor::GetRectSize() const
+inline const Size& RectActor::GetRectSize() const
 {
     return rect_size_;
 }

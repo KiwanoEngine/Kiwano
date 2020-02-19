@@ -82,7 +82,7 @@ public:
 
     unsigned long STDMETHODCALLTYPE Release();
 
-    HRESULT STDMETHODCALLTYPE QueryInterface(IID const& riid, void** ppvObject);
+    HRESULT STDMETHODCALLTYPE QueryInterface(const IID& riid, void** ppvObject);
 
 public:
     D3D10DeviceResources();
@@ -414,7 +414,7 @@ STDMETHODIMP_(unsigned long) D3D10DeviceResources::Release()
     return newCount;
 }
 
-STDMETHODIMP D3D10DeviceResources::QueryInterface(IID const& riid, void** object)
+STDMETHODIMP D3D10DeviceResources::QueryInterface(const IID& riid, void** object)
 {
     if (__uuidof(ID3D10DeviceResources) == riid)
     {

@@ -45,30 +45,30 @@ public:
     /// @brief 创建线段形状
     /// @param begin 线段起点
     /// @param end 线段终点
-    static ShapePtr CreateLine(Point const& begin, Point const& end);
+    static ShapePtr CreateLine(const Point& begin, const Point& end);
 
     /// \~chinese
     /// @brief 创建矩形
     /// @param rect 矩形
-    static ShapePtr CreateRect(Rect const& rect);
+    static ShapePtr CreateRect(const Rect& rect);
 
     /// \~chinese
     /// @brief 创建圆角矩形
     /// @param rect 矩形
     /// @param radius 矩形圆角半径
-    static ShapePtr CreateRoundedRect(Rect const& rect, Vec2 const& radius);
+    static ShapePtr CreateRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
     /// @brief 创建圆形
     /// @param center 圆形原点
     /// @param radius 圆形半径
-    static ShapePtr CreateCircle(Point const& center, float radius);
+    static ShapePtr CreateCircle(const Point& center, float radius);
 
     /// \~chinese
     /// @brief 创建椭圆形
     /// @param center 椭圆原点
     /// @param radius 椭圆半径
-    static ShapePtr CreateEllipse(Point const& center, Vec2 const& radius);
+    static ShapePtr CreateEllipse(const Point& center, const Vec2& radius);
 
     Shape();
 
@@ -79,13 +79,13 @@ public:
     /// \~chinese
     /// @brief 获取外切包围盒
     /// @param transform 二维变换
-    Rect GetBoundingBox(Matrix3x2 const& transform) const;
+    Rect GetBoundingBox(const Matrix3x2& transform) const;
 
     /// \~chinese
     /// @brief 判断图形是否包含点
     /// @param point 点
     /// @param transform 应用到点上的二维变换
-    bool ContainsPoint(Point const& point, const Matrix3x2* transform = nullptr) const;
+    bool ContainsPoint(const Point& point, const Matrix3x2* transform = nullptr) const;
 
     /// \~chinese
     /// @brief 获取图形展开成一条直线的长度

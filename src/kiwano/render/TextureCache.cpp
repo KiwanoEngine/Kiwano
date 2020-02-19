@@ -25,7 +25,7 @@
 namespace kiwano
 {
 template <typename _Ty, typename _PathTy, typename _CacheTy>
-SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, _PathTy const& path, size_t hash)
+SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash)
 {
     auto iter = cache.find(hash);
     if (iter != cache.end())
@@ -55,46 +55,46 @@ TextureCache::TextureCache() {}
 
 TextureCache::~TextureCache() {}
 
-TexturePtr TextureCache::AddOrGetTexture(String const& file_path)
+TexturePtr TextureCache::AddOrGetTexture(const String& file_path)
 {
     size_t hash = std::hash<String>()(file_path);
     return CreateOrGetCache<Texture>(texture_cache_, file_path, hash);
 }
 
-TexturePtr TextureCache::AddOrGetTexture(Resource const& res)
+TexturePtr TextureCache::AddOrGetTexture(const Resource& res)
 {
     return CreateOrGetCache<Texture>(texture_cache_, res, res.GetId());
 }
 
-GifImagePtr TextureCache::AddOrGetGifImage(String const& file_path)
+GifImagePtr TextureCache::AddOrGetGifImage(const String& file_path)
 {
     size_t hash = std::hash<String>()(file_path);
     return CreateOrGetCache<GifImage>(gif_texture_cache_, file_path, hash);
 }
 
-GifImagePtr TextureCache::AddOrGetGifImage(Resource const& res)
+GifImagePtr TextureCache::AddOrGetGifImage(const Resource& res)
 {
     return CreateOrGetCache<GifImage>(gif_texture_cache_, res, res.GetId());
 }
 
-void TextureCache::RemoveTexture(String const& file_path)
+void TextureCache::RemoveTexture(const String& file_path)
 {
     size_t hash = std::hash<String>()(file_path);
     RemoveCache(texture_cache_, hash);
 }
 
-void TextureCache::RemoveTexture(Resource const& res)
+void TextureCache::RemoveTexture(const Resource& res)
 {
     RemoveCache(texture_cache_, res.GetId());
 }
 
-void TextureCache::RemoveGifImage(String const& file_path)
+void TextureCache::RemoveGifImage(const String& file_path)
 {
     size_t hash = std::hash<String>()(file_path);
     RemoveCache(gif_texture_cache_, hash);
 }
 
-void TextureCache::RemoveGifImage(Resource const& res)
+void TextureCache::RemoveGifImage(const Resource& res)
 {
     RemoveCache(gif_texture_cache_, res.GetId());
 }

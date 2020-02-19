@@ -127,7 +127,7 @@ bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 // LineActor
 //-------------------------------------------------------
 
-LineActorPtr LineActor::Create(Point const& begin, Point const& end)
+LineActorPtr LineActor::Create(const Point& begin, const Point& end)
 {
     LineActorPtr ptr = new (std::nothrow) LineActor;
     if (ptr)
@@ -141,7 +141,7 @@ LineActor::LineActor() {}
 
 LineActor::~LineActor() {}
 
-void LineActor::SetLine(Point const& begin, Point const& end)
+void LineActor::SetLine(const Point& begin, const Point& end)
 {
     if (begin_ != begin || end_ != end)
     {
@@ -155,7 +155,7 @@ void LineActor::SetLine(Point const& begin, Point const& end)
 // RectActor
 //-------------------------------------------------------
 
-RectActorPtr RectActor::Create(Size const& size)
+RectActorPtr RectActor::Create(const Size& size)
 {
     RectActorPtr ptr = new (std::nothrow) RectActor;
     if (ptr)
@@ -169,7 +169,7 @@ RectActor::RectActor() {}
 
 RectActor::~RectActor() {}
 
-void RectActor::SetRectSize(Size const& size)
+void RectActor::SetRectSize(const Size& size)
 {
     if (size != rect_size_)
     {
@@ -182,7 +182,7 @@ void RectActor::SetRectSize(Size const& size)
 // RoundedRectActor
 //-------------------------------------------------------
 
-RoundedRectActorPtr RoundedRectActor::Create(Size const& size, Vec2 const& radius)
+RoundedRectActorPtr RoundedRectActor::Create(const Size& size, const Vec2& radius)
 {
     RoundedRectActorPtr ptr = new (std::nothrow) RoundedRectActor;
     if (ptr)
@@ -196,17 +196,17 @@ RoundedRectActor::RoundedRectActor() {}
 
 RoundedRectActor::~RoundedRectActor() {}
 
-void RoundedRectActor::SetRadius(Vec2 const& radius)
+void RoundedRectActor::SetRadius(const Vec2& radius)
 {
     SetRoundedRect(GetSize(), radius);
 }
 
-void RoundedRectActor::SetRectSize(Size const& size)
+void RoundedRectActor::SetRectSize(const Size& size)
 {
     SetRoundedRect(size, radius_);
 }
 
-void RoundedRectActor::SetRoundedRect(Size const& size, Vec2 const& radius)
+void RoundedRectActor::SetRoundedRect(const Size& size, const Vec2& radius)
 {
     if (rect_size_ != size || radius_ != radius)
     {
@@ -250,7 +250,7 @@ void CircleActor::SetRadius(float radius)
 // EllipseActor
 //-------------------------------------------------------
 
-EllipseActorPtr EllipseActor::Create(Vec2 const& radius)
+EllipseActorPtr EllipseActor::Create(const Vec2& radius)
 {
     EllipseActorPtr ptr = new (std::nothrow) EllipseActor;
     if (ptr)
@@ -264,7 +264,7 @@ EllipseActor::EllipseActor() {}
 
 EllipseActor::~EllipseActor() {}
 
-void EllipseActor::SetRadius(Vec2 const& radius)
+void EllipseActor::SetRadius(const Vec2& radius)
 {
     if (radius_ != radius)
     {
@@ -277,7 +277,7 @@ void EllipseActor::SetRadius(Vec2 const& radius)
 // PolygonActor
 //-------------------------------------------------------
 
-PolygonActorPtr PolygonActor::Create(Vector<Point> const& points)
+PolygonActorPtr PolygonActor::Create(const Vector<Point>& points)
 {
     PolygonActorPtr ptr = new (std::nothrow) PolygonActor;
     if (ptr)
@@ -291,7 +291,7 @@ PolygonActor::PolygonActor() {}
 
 PolygonActor::~PolygonActor() {}
 
-void PolygonActor::SetVertices(Vector<Point> const& points)
+void PolygonActor::SetVertices(const Vector<Point>& points)
 {
     if (points.size() > 1)
     {

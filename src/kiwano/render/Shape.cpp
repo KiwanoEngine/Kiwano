@@ -52,7 +52,7 @@ Rect Shape::GetBoundingBox() const
 #endif
 }
 
-Rect Shape::GetBoundingBox(Matrix3x2 const& transform) const
+Rect Shape::GetBoundingBox(const Matrix3x2& transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
@@ -117,7 +117,7 @@ float Shape::ComputeArea() const
 #endif
 }
 
-bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
+bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto geometry = NativePtr::Get<ID2D1Geometry>(this);
@@ -134,35 +134,35 @@ bool Shape::ContainsPoint(Point const& point, const Matrix3x2* transform) const
 #endif
 }
 
-ShapePtr Shape::CreateLine(Point const& begin, Point const& end)
+ShapePtr Shape::CreateLine(const Point& begin, const Point& end)
 {
     ShapePtr output = new Shape;
     Renderer::GetInstance().CreateLineShape(*output, begin, end);
     return output;
 }
 
-ShapePtr Shape::CreateRect(Rect const& rect)
+ShapePtr Shape::CreateRect(const Rect& rect)
 {
     ShapePtr output = new Shape;
     Renderer::GetInstance().CreateRectShape(*output, rect);
     return output;
 }
 
-ShapePtr Shape::CreateRoundedRect(Rect const& rect, Vec2 const& radius)
+ShapePtr Shape::CreateRoundedRect(const Rect& rect, const Vec2& radius)
 {
     ShapePtr output = new Shape;
     Renderer::GetInstance().CreateRoundedRectShape(*output, rect, radius);
     return output;
 }
 
-ShapePtr Shape::CreateCircle(Point const& center, float radius)
+ShapePtr Shape::CreateCircle(const Point& center, float radius)
 {
     ShapePtr output = new Shape;
     Renderer::GetInstance().CreateEllipseShape(*output, center, Vec2{ radius, radius });
     return output;
 }
 
-ShapePtr Shape::CreateEllipse(Point const& center, Vec2 const& radius)
+ShapePtr Shape::CreateEllipse(const Point& center, const Vec2& radius)
 {
     ShapePtr output = new Shape;
     Renderer::GetInstance().CreateEllipseShape(*output, center, radius);

@@ -115,7 +115,7 @@ void TextLayout::SetFont(FontPtr font, TextRange range)
     SetDirtyFlag(DirtyFlag::Dirty);
 }
 
-void TextLayout::SetFontFamily(String const& family, TextRange range)
+void TextLayout::SetFontFamily(const String& family, TextRange range)
 {
     KGE_ASSERT(content_.size() >= (range.start + range.length));
     if (range.length == 0)

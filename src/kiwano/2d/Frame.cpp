@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-FramePtr Frame::Create(String const& file_path)
+FramePtr Frame::Create(const String& file_path)
 {
     FramePtr ptr = new (std::nothrow) Frame;
     if (ptr)
@@ -35,7 +35,7 @@ FramePtr Frame::Create(String const& file_path)
     return ptr;
 }
 
-FramePtr Frame::Create(Resource const& res)
+FramePtr Frame::Create(const Resource& res)
 {
     FramePtr ptr = new (std::nothrow) Frame;
     if (ptr)
@@ -58,7 +58,7 @@ FramePtr Frame::Create(TexturePtr texture)
 
 Frame::Frame() {}
 
-bool Frame::Load(String const& file_path)
+bool Frame::Load(const String& file_path)
 {
     TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(file_path);
     if (texture->IsValid())
@@ -69,7 +69,7 @@ bool Frame::Load(String const& file_path)
     return false;
 }
 
-bool Frame::Load(Resource const& res)
+bool Frame::Load(const Resource& res)
 {
     TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(res);
     if (texture->IsValid())
@@ -80,7 +80,7 @@ bool Frame::Load(Resource const& res)
     return false;
 }
 
-void Frame::SetCropRect(Rect const& crop_rect)
+void Frame::SetCropRect(const Rect& crop_rect)
 {
     if (texture_->IsValid())
     {

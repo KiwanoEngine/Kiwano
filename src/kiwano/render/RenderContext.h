@@ -74,64 +74,64 @@ public:
     /// @param texture 纹理
     /// @param src_rect 源纹理裁剪矩形
     /// @param dest_rect 绘制的目标区域
-    virtual void DrawTexture(Texture const& texture, const Rect* src_rect = nullptr,
+    virtual void DrawTexture(const Texture& texture, const Rect* src_rect = nullptr,
                              const Rect* dest_rect = nullptr) = 0;
 
     /// \~chinese
     /// @brief 绘制文本布局
     /// @param layout 文本布局
     /// @param offset 偏移量
-    virtual void DrawTextLayout(TextLayout const& layout, Point const& offset = Point()) = 0;
+    virtual void DrawTextLayout(const TextLayout& layout, const Point& offset = Point()) = 0;
 
     /// \~chinese
     /// @brief 绘制形状轮廓
     /// @param shape 形状
-    virtual void DrawShape(Shape const& shape) = 0;
+    virtual void DrawShape(const Shape& shape) = 0;
 
     /// \~chinese
     /// @brief 绘制线段
     /// @param point1 线段起点
     /// @param point2 线段终点
-    virtual void DrawLine(Point const& point1, Point const& point2) = 0;
+    virtual void DrawLine(const Point& point1, const Point& point2) = 0;
 
     /// \~chinese
     /// @brief 绘制矩形边框
     /// @param rect 矩形
-    virtual void DrawRectangle(Rect const& rect) = 0;
+    virtual void DrawRectangle(const Rect& rect) = 0;
 
     /// \~chinese
     /// @brief 绘制圆角矩形边框
     /// @param rect 矩形
     /// @param radius 圆角半径
-    virtual void DrawRoundedRectangle(Rect const& rect, Vec2 const& radius) = 0;
+    virtual void DrawRoundedRectangle(const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 绘制椭圆边框
     /// @param center 圆心
     /// @param radius 椭圆半径
-    virtual void DrawEllipse(Point const& center, Vec2 const& radius) = 0;
+    virtual void DrawEllipse(const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 填充形状
     /// @param shape 形状
-    virtual void FillShape(Shape const& shape) = 0;
+    virtual void FillShape(const Shape& shape) = 0;
 
     /// \~chinese
     /// @brief 填充矩形
     /// @param rect 矩形
-    virtual void FillRectangle(Rect const& rect) = 0;
+    virtual void FillRectangle(const Rect& rect) = 0;
 
     /// \~chinese
     /// @brief 填充圆角矩形
     /// @param rect 矩形
     /// @param radius 圆角半径
-    virtual void FillRoundedRectangle(Rect const& rect, Vec2 const& radius) = 0;
+    virtual void FillRoundedRectangle(const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 填充椭圆
     /// @param center 圆心
     /// @param radius 椭圆半径
-    virtual void FillEllipse(Point const& center, Vec2 const& radius) = 0;
+    virtual void FillEllipse(const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 创建纹理
@@ -142,7 +142,7 @@ public:
     /// \~chinese
     /// @brief 设置绘制的裁剪区域
     /// @param clip_rect 裁剪矩形
-    virtual void PushClipRect(Rect const& clip_rect) = 0;
+    virtual void PushClipRect(const Rect& clip_rect) = 0;
 
     /// \~chinese
     /// @brief 取消上一次设置的绘制裁剪区域
@@ -164,7 +164,7 @@ public:
     /// \~chinese
     /// @brief 使用纯色清空渲染内容
     /// @param clear_color 清屏颜色
-    virtual void Clear(Color const& clear_color) = 0;
+    virtual void Clear(const Color& clear_color) = 0;
 
     /// \~chinese
     /// @brief 获取渲染区域大小
@@ -204,11 +204,11 @@ public:
 
     /// \~chinese
     /// @brief 检查边界是否在视区内
-    virtual bool CheckVisibility(Rect const& bounds, Matrix3x2 const& transform) = 0;
+    virtual bool CheckVisibility(const Rect& bounds, const Matrix3x2& transform) = 0;
 
     /// \~chinese
     /// @brief 重设渲染上下文大小
-    virtual void Resize(Size const& size) = 0;
+    virtual void Resize(const Size& size) = 0;
 
     /// \~chinese
     /// @brief 设置上下文的二维变换
@@ -240,7 +240,7 @@ public:
 
     /// \~chinese
     /// @brief 获取渲染上下文状态
-    Status const& GetStatus() const;
+    const Status& GetStatus() const;
 
 protected:
     RenderContext();
@@ -269,7 +269,7 @@ inline RenderContext::Status::Status()
 {
 }
 
-inline RenderContext::Status const& RenderContext::GetStatus() const
+inline const RenderContext::Status& RenderContext::GetStatus() const
 {
     return status_;
 }

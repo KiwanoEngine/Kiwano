@@ -45,33 +45,33 @@ public:
     /// @param key 键
     /// @param default_data 数据不存在时返回的默认值
     /// @return 键对应的值数据
-    Any Get(String const& key, Any const& default_data = Any()) const;
+    Any Get(const String& key, const Any& default_data = Any()) const;
 
     /// \~chinese
     /// @brief 存数据
     /// @param key 键
     /// @param data 值
-    void Set(String const& key, Any const& data);
+    void Set(const String& key, const Any& data);
 
     /// \~chinese
     /// @brief 存数据
     /// @param pair 键值对
-    void Set(DataPair const& pair);
+    void Set(const DataPair& pair);
 
     /// \~chinese
     /// @brief 存数据
     /// @param list 键值对列表
-    void Set(std::initializer_list<DataPair> const& list);
+    void Set(const std::initializer_list<DataPair>& list);
 
     /// \~chinese
     /// @brief 存数据
     /// @param map 数据字典
-    void Set(DataMap const& map);
+    void Set(const DataMap& map);
 
     /// \~chinese
     /// @brief 判断是否包含键对应的数据
     /// @param key 键
-    bool Contains(String const& key) const;
+    bool Contains(const String& key) const;
 
     /// \~chinese
     /// @brief 获取数据字典

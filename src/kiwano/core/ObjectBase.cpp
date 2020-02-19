@@ -61,12 +61,12 @@ const Any& ObjectBase::GetUserData() const
     return user_data_;
 }
 
-void ObjectBase::SetUserData(Any const& data)
+void ObjectBase::SetUserData(const Any& data)
 {
     user_data_ = data;
 }
 
-void ObjectBase::SetName(String const& name)
+void ObjectBase::SetName(const String& name)
 {
     if (IsName(name))
         return;

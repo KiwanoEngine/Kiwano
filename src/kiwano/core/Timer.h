@@ -55,7 +55,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TimerPtr Create(Callback const& cb, Duration interval, int times = -1);
+    static TimerPtr Create(const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 创建定时器
@@ -63,7 +63,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TimerPtr Create(String const& name, Callback const& cb, Duration interval, int times = -1);
+    static TimerPtr Create(const String& name, const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 构造空定时器

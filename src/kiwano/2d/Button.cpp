@@ -25,13 +25,13 @@
 namespace kiwano
 {
 
-ButtonPtr Button::Create(Callback const& click)
+ButtonPtr Button::Create(const Callback& click)
 {
     return Button::Create(click, nullptr, nullptr, nullptr);
 }
 
-ButtonPtr Button::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
-                         Callback const& mouse_out)
+ButtonPtr Button::Create(const Callback& click, const Callback& pressed, const Callback& mouse_over,
+                         const Callback& mouse_out)
 {
     ButtonPtr ptr = new (std::nothrow) Button;
     if (ptr)

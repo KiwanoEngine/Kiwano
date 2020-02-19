@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
-CanvasPtr Canvas::Create(Size const& size)
+CanvasPtr Canvas::Create(const Size& size)
 {
     CanvasPtr ptr = new (std::nothrow) Canvas;
     if (ptr)
@@ -81,13 +81,13 @@ void Canvas::SetBrush(BrushPtr brush)
     ctx_->SetCurrentBrush(brush);
 }
 
-void Canvas::SetBrushTransform(Transform const& transform)
+void Canvas::SetBrushTransform(const Transform& transform)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetTransform(transform.ToMatrix());
 }
 
-void Canvas::SetBrushTransform(Matrix3x2 const& transform)
+void Canvas::SetBrushTransform(const Matrix3x2& transform)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetTransform(transform);
@@ -108,7 +108,7 @@ void Canvas::PopLayer()
     ctx_->PopLayer();
 }
 
-void Canvas::PushClipRect(Rect const& clip_rect)
+void Canvas::PushClipRect(const Rect& clip_rect)
 {
     KGE_ASSERT(ctx_);
     ctx_->PushClipRect(clip_rect);
@@ -132,7 +132,7 @@ void Canvas::DrawShape(ShapePtr shape)
     }
 }
 
-void Canvas::DrawLine(Point const& begin, Point const& end)
+void Canvas::DrawLine(const Point& begin, const Point& end)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
@@ -141,7 +141,7 @@ void Canvas::DrawLine(Point const& begin, Point const& end)
     cache_expired_ = true;
 }
 
-void Canvas::DrawCircle(Point const& center, float radius)
+void Canvas::DrawCircle(const Point& center, float radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
@@ -150,7 +150,7 @@ void Canvas::DrawCircle(Point const& center, float radius)
     cache_expired_ = true;
 }
 
-void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
+void Canvas::DrawEllipse(const Point& center, const Vec2& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
@@ -159,7 +159,7 @@ void Canvas::DrawEllipse(Point const& center, Vec2 const& radius)
     cache_expired_ = true;
 }
 
-void Canvas::DrawRect(Rect const& rect)
+void Canvas::DrawRect(const Rect& rect)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
@@ -168,7 +168,7 @@ void Canvas::DrawRect(Rect const& rect)
     cache_expired_ = true;
 }
 
-void Canvas::DrawRoundedRect(Rect const& rect, Vec2 const& radius)
+void Canvas::DrawRoundedRect(const Rect& rect, const Vec2& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(stroke_brush_);
@@ -188,7 +188,7 @@ void Canvas::FillShape(ShapePtr shape)
     }
 }
 
-void Canvas::FillCircle(Point const& center, float radius)
+void Canvas::FillCircle(const Point& center, float radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(fill_brush_);
@@ -196,7 +196,7 @@ void Canvas::FillCircle(Point const& center, float radius)
     cache_expired_ = true;
 }
 
-void Canvas::FillEllipse(Point const& center, Vec2 const& radius)
+void Canvas::FillEllipse(const Point& center, const Vec2& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(fill_brush_);
@@ -204,7 +204,7 @@ void Canvas::FillEllipse(Point const& center, Vec2 const& radius)
     cache_expired_ = true;
 }
 
-void Canvas::FillRect(Rect const& rect)
+void Canvas::FillRect(const Rect& rect)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(fill_brush_);
@@ -212,7 +212,7 @@ void Canvas::FillRect(Rect const& rect)
     cache_expired_ = true;
 }
 
-void Canvas::FillRoundedRect(Rect const& rect, Vec2 const& radius)
+void Canvas::FillRoundedRect(const Rect& rect, const Vec2& radius)
 {
     KGE_ASSERT(ctx_);
     ctx_->SetCurrentBrush(fill_brush_);
@@ -230,7 +230,7 @@ void Canvas::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* d
     }
 }
 
-void Canvas::DrawTextLayout(String const& text, TextStyle const& style, Point const& point)
+void Canvas::DrawTextLayout(const String& text, const TextStyle& style, const Point& point)
 {
     if (text.empty())
         return;
@@ -238,7 +238,7 @@ void Canvas::DrawTextLayout(String const& text, TextStyle const& style, Point co
     DrawTextLayout(TextLayout::Create(text, style), point);
 }
 
-void Canvas::DrawTextLayout(TextLayoutPtr layout, Point const& point)
+void Canvas::DrawTextLayout(TextLayoutPtr layout, const Point& point)
 {
     KGE_ASSERT(ctx_);
     if (layout)
@@ -248,7 +248,7 @@ void Canvas::DrawTextLayout(TextLayoutPtr layout, Point const& point)
     }
 }
 
-void Canvas::BeginPath(Point const& begin_pos)
+void Canvas::BeginPath(const Point& begin_pos)
 {
     shape_maker_.BeginPath(begin_pos);
 }
@@ -258,22 +258,22 @@ void Canvas::EndPath(bool closed)
     shape_maker_.EndPath(closed);
 }
 
-void Canvas::AddLine(Point const& point)
+void Canvas::AddLine(const Point& point)
 {
     shape_maker_.AddLine(point);
 }
 
-void Canvas::AddLines(Vector<Point> const& points)
+void Canvas::AddLines(const Vector<Point>& points)
 {
     shape_maker_.AddLines(points);
 }
 
-void Canvas::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+void Canvas::AddBezier(const Point& point1, const Point& point2, const Point& point3)
 {
     shape_maker_.AddBezier(point1, point2, point3);
 }
 
-void Canvas::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+void Canvas::AddArc(const Point& point, const Size& radius, float rotation, bool clockwise, bool is_small)
 {
     shape_maker_.AddArc(point, radius, rotation, clockwise, is_small);
 }
@@ -302,7 +302,7 @@ void Canvas::Clear()
     cache_expired_ = true;
 }
 
-void Canvas::Clear(Color const& clear_color)
+void Canvas::Clear(const Color& clear_color)
 {
     KGE_ASSERT(ctx_);
     ctx_->Clear(clear_color);

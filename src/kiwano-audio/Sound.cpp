@@ -27,7 +27,7 @@ namespace kiwano
 {
 namespace audio
 {
-SoundPtr Sound::Create(String const& file_path)
+SoundPtr Sound::Create(const String& file_path)
 {
     SoundPtr ptr = new (std::nothrow) Sound;
     if (ptr)
@@ -38,7 +38,7 @@ SoundPtr Sound::Create(String const& file_path)
     return ptr;
 }
 
-SoundPtr Sound::Create(Resource const& res)
+SoundPtr Sound::Create(const Resource& res)
 {
     SoundPtr ptr = new (std::nothrow) Sound;
     if (ptr)
@@ -61,7 +61,7 @@ Sound::~Sound()
     Close();
 }
 
-bool Sound::Load(String const& file_path)
+bool Sound::Load(const String& file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
@@ -93,7 +93,7 @@ bool Sound::Load(String const& file_path)
     return true;
 }
 
-bool Sound::Load(Resource const& res)
+bool Sound::Load(const Resource& res)
 {
     if (opened_)
     {

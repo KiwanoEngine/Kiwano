@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
-GifSpritePtr GifSprite::Create(String const& file_path)
+GifSpritePtr GifSprite::Create(const String& file_path)
 {
     GifSpritePtr ptr = new (std::nothrow) GifSprite;
     if (ptr)
@@ -36,7 +36,7 @@ GifSpritePtr GifSprite::Create(String const& file_path)
     return ptr;
 }
 
-GifSpritePtr GifSprite::Create(Resource const& res)
+GifSpritePtr GifSprite::Create(const Resource& res)
 {
     GifSpritePtr ptr = new (std::nothrow) GifSprite;
     if (ptr)
@@ -65,13 +65,13 @@ GifSprite::GifSprite()
 {
 }
 
-bool GifSprite::Load(String const& file_path)
+bool GifSprite::Load(const String& file_path)
 {
     GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(file_path);
     return Load(image);
 }
 
-bool GifSprite::Load(Resource const& res)
+bool GifSprite::Load(const Resource& res)
 {
     GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(res);
     return Load(image);

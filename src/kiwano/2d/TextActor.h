@@ -88,7 +88,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文本
-    void SetText(String const& text);
+    void SetText(const String& text);
 
     /// \~chinese
     /// @brief 设置文本样式
@@ -100,7 +100,7 @@ public:
 
     /// \~chinese
     /// @brief 设置字体族
-    void SetFontFamily(String const& family);
+    void SetFontFamily(const String& family);
 
     /// \~chinese
     /// @brief 设置字号（默认值为 18）
@@ -116,7 +116,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文字填充颜色（默认值为 Color::White）
-    void SetFillColor(Color const& color);
+    void SetFillColor(const Color& color);
 
     /// \~chinese
     /// @brief 设置文字斜体（默认值为 false）
@@ -140,7 +140,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文字描边颜色
-    void SetOutlineColor(Color const& outline_color);
+    void SetOutlineColor(const Color& outline_color);
 
     /// \~chinese
     /// @brief 设置描边线条样式

@@ -87,27 +87,27 @@ public:
     /// @brief 添加矩形夹具
     /// @param size 矩形大小
     /// @param density 物体密度
-    Fixture* AddRectShape(Vec2 const& size, float density, float friction = 0.2f);
+    Fixture* AddRectShape(const Vec2& size, float density, float friction = 0.2f);
 
     /// \~chinese
     /// @brief 添加多边形夹具
     /// @param vertexs 多边形端点
     /// @param density 物体密度
-    Fixture* AddPolygonShape(Vector<Point> const& vertexs, float density, float friction = 0.2f);
+    Fixture* AddPolygonShape(const Vector<Point>& vertexs, float density, float friction = 0.2f);
 
     /// \~chinese
     /// @brief 添加线段形夹具
     /// @param p1 线段起点
     /// @param p2 线段终点
     /// @param density 物体密度
-    Fixture* AddEdgeShape(Point const& p1, Point const& p2, float density, float friction = 0.2f);
+    Fixture* AddEdgeShape(const Point& p1, const Point& p2, float density, float friction = 0.2f);
 
     /// \~chinese
     /// @brief 添加链条形夹具
     /// @param vertexs 链条端点
     /// @param loop 是否闭合
     /// @param density 物体密度
-    Fixture* AddChainShape(Vector<Point> const& vertexs, bool loop, float density, float friction = 0.2f);
+    Fixture* AddChainShape(const Vector<Point>& vertexs, bool loop, float density, float friction = 0.2f);
 
     /// \~chinese
     /// @brief 移除夹具
@@ -163,11 +163,11 @@ public:
 
     /// \~chinese
     /// @brief 设置物体位置
-    void SetPosition(Point const& pos);
+    void SetPosition(const Point& pos);
 
     /// \~chinese
     /// @brief 位置和旋转变换
-    void SetTransform(Point const& pos, float angle);
+    void SetTransform(const Point& pos, float angle);
 
     /// \~chinese
     /// @brief 获取质量 [kg]
@@ -189,7 +189,7 @@ public:
     /// @param mass 物体质量 [kg]
     /// @param center 质心位置
     /// @param inertia 惯性
-    void SetMassData(float mass, Point const& center, float inertia);
+    void SetMassData(float mass, const Point& center, float inertia);
 
     /// \~chinese
     /// @brief 重置质量数据
@@ -197,11 +197,11 @@ public:
 
     /// \~chinese
     /// @brief 获取世界坐标系上的点在物体上的位置
-    Point GetLocalPoint(Point const& world) const;
+    Point GetLocalPoint(const Point& world) const;
 
     /// \~chinese
     /// @brief 获取物体上的点在世界坐标系的位置
-    Point GetWorldPoint(Point const& local) const;
+    Point GetWorldPoint(const Point& local) const;
 
     /// \~chinese
     /// @brief 获取物体质心相对于物体的位置
@@ -232,13 +232,13 @@ public:
     /// @param force 力的大小和方向
     /// @param point 施力点
     /// @param wake 是否唤醒物体
-    void ApplyForce(Vec2 const& force, Point const& point, bool wake = true);
+    void ApplyForce(const Vec2& force, const Point& point, bool wake = true);
 
     /// \~chinese
     /// @brief 给物体中心施力
     /// @param force 力的大小和方向
     /// @param wake 是否唤醒物体
-    void ApplyForceToCenter(Vec2 const& force, bool wake = true);
+    void ApplyForceToCenter(const Vec2& force, bool wake = true);
 
     /// \~chinese
     /// @brief 施加扭矩
@@ -383,7 +383,7 @@ inline void PhysicBody::SetRotation(float angle)
     SetTransform(GetPosition(), angle);
 }
 
-inline void PhysicBody::SetPosition(Point const& pos)
+inline void PhysicBody::SetPosition(const Point& pos)
 {
     SetTransform(pos, GetRotation());
 }

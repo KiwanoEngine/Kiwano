@@ -93,11 +93,11 @@ public:
 
     /// \~chinese
     /// @brief 设置动画结束时的回调函数
-    void SetDoneCallback(DoneCallback const& cb);
+    void SetDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    void SetLoopDoneCallback(DoneCallback const& cb);
+    void SetLoopDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
     /// @brief 获取动画的拷贝
@@ -230,12 +230,12 @@ inline void Action::RemoveTargetWhenDone()
     detach_target_ = true;
 }
 
-inline void Action::SetDoneCallback(DoneCallback const& cb)
+inline void Action::SetDoneCallback(const DoneCallback& cb)
 {
     cb_done_ = cb;
 }
 
-inline void Action::SetLoopDoneCallback(DoneCallback const& cb)
+inline void Action::SetLoopDoneCallback(const DoneCallback& cb)
 {
     cb_loop_done_ = cb;
 }

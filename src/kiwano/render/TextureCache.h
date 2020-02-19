@@ -40,35 +40,35 @@ class KGE_API TextureCache : public Singleton<TextureCache>
 public:
     /// \~chinese
     /// @brief 添加或获取纹理
-    TexturePtr AddOrGetTexture(String const& file_path);
+    TexturePtr AddOrGetTexture(const String& file_path);
 
     /// \~chinese
     /// @brief 添加或获取纹理
-    TexturePtr AddOrGetTexture(Resource const& res);
+    TexturePtr AddOrGetTexture(const Resource& res);
 
     /// \~chinese
     /// @brief 添加或获取GIF图像
-    GifImagePtr AddOrGetGifImage(String const& file_path);
+    GifImagePtr AddOrGetGifImage(const String& file_path);
 
     /// \~chinese
     /// @brief 添加或获取GIF图像
-    GifImagePtr AddOrGetGifImage(Resource const& res);
+    GifImagePtr AddOrGetGifImage(const Resource& res);
 
     /// \~chinese
     /// @brief 移除纹理缓存
-    void RemoveTexture(String const& file_path);
+    void RemoveTexture(const String& file_path);
 
     /// \~chinese
     /// @brief 移除纹理缓存
-    void RemoveTexture(Resource const& res);
+    void RemoveTexture(const Resource& res);
 
     /// \~chinese
     /// @brief 移除GIF图像缓存
-    void RemoveGifImage(String const& file_path);
+    void RemoveGifImage(const String& file_path);
 
     /// \~chinese
     /// @brief 移除GIF图像缓存
-    void RemoveGifImage(Resource const& res);
+    void RemoveGifImage(const Resource& res);
 
     /// \~chinese
     /// @brief 清空缓存

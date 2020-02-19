@@ -57,7 +57,7 @@ public:
 
     /// \~chinese
     /// @brief 设置清屏颜色
-    virtual void SetClearColor(Color const& clear_color);
+    virtual void SetClearColor(const Color& clear_color);
 
     /// \~chinese
     /// @brief 开启或关闭垂直同步
@@ -68,28 +68,28 @@ public:
     /// @param[out] texture 纹理
     /// @param[in] file_path 图片路径
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateTexture(Texture& texture, String const& file_path) = 0;
+    virtual void CreateTexture(Texture& texture, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] resource 图片资源
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateTexture(Texture& texture, Resource const& resource) = 0;
+    virtual void CreateTexture(Texture& texture, const Resource& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateGifImage(GifImage& gif, String const& file_path) = 0;
+    virtual void CreateGifImage(GifImage& gif, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] resource 图片资源
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateGifImage(GifImage& gif, Resource const& resource) = 0;
+    virtual void CreateGifImage(GifImage& gif, const Resource& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像帧内部资源
@@ -97,21 +97,21 @@ public:
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index) = 0;
+    virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
     /// @param[in] file_paths 字体文件路径
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateFontCollection(Font& font, String const& file_path) = 0;
+    virtual void CreateFontCollection(Font& font, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
     /// @param[in] res_arr 字体资源
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateFontCollection(Font& font, Resource const& res) = 0;
+    virtual void CreateFontCollection(Font& font, const Resource& res) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局内部资源
@@ -127,14 +127,14 @@ public:
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) = 0;
+    virtual void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) = 0;
 
     /// \~chinese
     /// @brief 创建矩形形状内部资源
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateRectShape(Shape& shape, Rect const& rect) = 0;
+    virtual void CreateRectShape(Shape& shape, const Rect& rect) = 0;
 
     /// \~chinese
     /// @brief 创建圆角矩形形状内部资源
@@ -142,7 +142,7 @@ public:
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius) = 0;
+    virtual void CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 创建椭圆形状内部资源
@@ -150,7 +150,7 @@ public:
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) = 0;
+    virtual void CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 创建几何图形生成器内部资源
@@ -163,21 +163,21 @@ public:
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateBrush(Brush& brush, Color const& color) = 0;
+    virtual void CreateBrush(Brush& brush, const Color& color) = 0;
 
     /// \~chinese
     /// @brief 创建线性渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateBrush(Brush& brush, LinearGradientStyle const& style) = 0;
+    virtual void CreateBrush(Brush& brush, const LinearGradientStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建径向渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateBrush(Brush& brush, RadialGradientStyle const& style) = 0;
+    virtual void CreateBrush(Brush& brush, const RadialGradientStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建纹理画刷内部资源

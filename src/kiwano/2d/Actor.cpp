@@ -434,7 +434,7 @@ void Actor::SetCascadeOpacityEnabled(bool enabled)
     UpdateOpacity();
 }
 
-void Actor::SetAnchor(Vec2 const& anchor)
+void Actor::SetAnchor(const Vec2& anchor)
 {
     if (anchor_ == anchor)
         return;
@@ -443,7 +443,7 @@ void Actor::SetAnchor(Vec2 const& anchor)
     dirty_transform_ = true;
 }
 
-void Actor::SetSize(Size const& size)
+void Actor::SetSize(const Size& size)
 {
     if (size_ == size)
         return;
@@ -452,7 +452,7 @@ void Actor::SetSize(Size const& size)
     dirty_transform_ = true;
 }
 
-void Actor::SetTransform(Transform const& transform)
+void Actor::SetTransform(const Transform& transform)
 {
     transform_         = transform;
     dirty_transform_   = true;
@@ -464,7 +464,7 @@ void Actor::SetVisible(bool val)
     visible_ = val;
 }
 
-void Actor::SetName(String const& name)
+void Actor::SetName(const String& name)
 {
     if (!IsName(name))
     {
@@ -482,7 +482,7 @@ void Actor::SetPosition(const Point& pos)
     dirty_transform_    = true;
 }
 
-void Actor::SetScale(Vec2 const& scale)
+void Actor::SetScale(const Vec2& scale)
 {
     if (transform_.scale == scale)
         return;
@@ -492,7 +492,7 @@ void Actor::SetScale(Vec2 const& scale)
     is_fast_transform_ = false;
 }
 
-void Actor::SetSkew(Vec2 const& skew)
+void Actor::SetSkew(const Vec2& skew)
 {
     if (transform_.skew == skew)
         return;
@@ -544,7 +544,7 @@ void Actor::AddChild(ActorPtr child, int zorder)
     }
 }
 
-void Actor::AddChildren(Vector<ActorPtr> const& children)
+void Actor::AddChildren(const Vector<ActorPtr>& children)
 {
     for (const auto& actor : children)
     {
@@ -562,7 +562,7 @@ Rect Actor::GetBoundingBox() const
     return GetTransformMatrix().Transform(GetBounds());
 }
 
-Vector<ActorPtr> Actor::GetChildren(String const& name) const
+Vector<ActorPtr> Actor::GetChildren(const String& name) const
 {
     Vector<ActorPtr> children;
     size_t           hash_code = std::hash<String>{}(name);
@@ -577,7 +577,7 @@ Vector<ActorPtr> Actor::GetChildren(String const& name) const
     return children;
 }
 
-ActorPtr Actor::GetChild(String const& name) const
+ActorPtr Actor::GetChild(const String& name) const
 {
     size_t hash_code = std::hash<String>{}(name);
 
@@ -596,7 +596,7 @@ ActorList& Actor::GetAllChildren()
     return children_;
 }
 
-ActorList const& Actor::GetAllChildren() const
+const ActorList& Actor::GetAllChildren() const
 {
     return children_;
 }
@@ -641,7 +641,7 @@ void Actor::RemoveComponent(ComponentPtr component)
     }
 }
 
-void Actor::RemoveComponents(String const& name)
+void Actor::RemoveComponents(const String& name)
 {
     if (!components_.IsEmpty())
     {
@@ -691,7 +691,7 @@ void Actor::RemoveChild(ActorPtr child)
     }
 }
 
-void Actor::RemoveChildren(String const& child_name)
+void Actor::RemoveChildren(const String& child_name)
 {
     if (children_.IsEmpty())
     {

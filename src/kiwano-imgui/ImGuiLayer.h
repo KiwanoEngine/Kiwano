@@ -46,7 +46,7 @@ public:
     /// @brief 创建ImGui图层
     /// @param name 元素名称
     /// @param item 管道
-    static ImGuiLayerPtr Create(String const& name, ImGuiPipeline const& item);
+    static ImGuiLayerPtr Create(const String& name, const ImGuiPipeline& item);
 
     ImGuiLayer();
 
@@ -56,12 +56,12 @@ public:
     /// @brief 添加 ImGui 元素
     /// @param name 元素名称
     /// @param item 管道
-    void AddItem(String const& name, ImGuiPipeline const& item);
+    void AddItem(const String& name, const ImGuiPipeline& item);
 
     /// \~chinese
     /// @brief 移除 ImGui 元素
     /// @param name 元素名称
-    void RemoveItem(String const& name);
+    void RemoveItem(const String& name);
 
     // 移除所有元素
     /// \~chinese

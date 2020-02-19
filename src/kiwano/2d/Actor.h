@@ -231,11 +231,11 @@ public:
 
     /// \~chinese
     /// @brief 设置名称
-    void SetName(String const& name);
+    void SetName(const String& name);
 
     /// \~chinese
     /// @brief 设置坐标
-    virtual void SetPosition(Point const& point);
+    virtual void SetPosition(const Point& point);
 
     /// \~chinese
     /// @brief 设置坐标
@@ -251,7 +251,7 @@ public:
 
     /// \~chinese
     /// @brief 移动坐标
-    void Move(Vec2 const& v);
+    void Move(const Vec2& v);
 
     /// \~chinese
     /// @brief 移动坐标
@@ -259,7 +259,7 @@ public:
 
     /// \~chinese
     /// @brief 设置缩放比例，默认为 (1.0, 1.0)
-    virtual void SetScale(Vec2 const& scale);
+    virtual void SetScale(const Vec2& scale);
 
     /// \~chinese
     /// @brief 设置缩放比例，默认为 (1.0, 1.0)
@@ -267,7 +267,7 @@ public:
 
     /// \~chinese
     /// @brief 设置错切角度，默认为 (0, 0)
-    virtual void SetSkew(Vec2 const& skew);
+    virtual void SetSkew(const Vec2& skew);
 
     /// \~chinese
     /// @brief 设置错切角度，默认为 (0, 0)
@@ -279,7 +279,7 @@ public:
 
     /// \~chinese
     /// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
-    virtual void SetAnchor(Vec2 const& anchor);
+    virtual void SetAnchor(const Vec2& anchor);
 
     /// \~chinese
     /// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
@@ -287,7 +287,7 @@ public:
 
     /// \~chinese
     /// @brief 修改大小
-    virtual void SetSize(Size const& size);
+    virtual void SetSize(const Size& size);
 
     /// \~chinese
     /// @brief 修改大小
@@ -311,7 +311,7 @@ public:
 
     /// \~chinese
     /// @brief 设置二维仿射变换
-    void SetTransform(Transform const& transform);
+    void SetTransform(const Transform& transform);
 
     /// \~chinese
     /// @brief 设置 Z 轴顺序，默认为 0
@@ -328,15 +328,15 @@ public:
 
     /// \~chinese
     /// @brief 添加多个子角色
-    void AddChildren(Vector<ActorPtr> const& children);
+    void AddChildren(const Vector<ActorPtr>& children);
 
     /// \~chinese
     /// @brief 获取名称相同的子角色
-    ActorPtr GetChild(String const& name) const;
+    ActorPtr GetChild(const String& name) const;
 
     /// \~chinese
     /// @brief 获取所有名称相同的子角色
-    Vector<ActorPtr> GetChildren(String const& name) const;
+    Vector<ActorPtr> GetChildren(const String& name) const;
 
     /// \~chinese
     /// @brief 获取全部子角色
@@ -344,7 +344,7 @@ public:
 
     /// \~chinese
     /// @brief 获取全部子角色
-    ActorList const& GetAllChildren() const;
+    const ActorList& GetAllChildren() const;
 
     /// \~chinese
     /// @brief 移除子角色
@@ -352,7 +352,7 @@ public:
 
     /// \~chinese
     /// @brief 移除所有名称相同的子角色
-    void RemoveChildren(String const& child_name);
+    void RemoveChildren(const String& child_name);
 
     /// \~chinese
     /// @brief 移除所有角色
@@ -382,7 +382,7 @@ public:
     /// \~chinese
     /// @brief 移除组件
     /// @param name 组件名称
-    void RemoveComponents(String const& name);
+    void RemoveComponents(const String& name);
 
     /// \~chinese
     /// @brief 移除所有组件
@@ -402,7 +402,7 @@ public:
 
     /// \~chinese
     /// @brief 设置更新时的回调函数
-    void SetCallbackOnUpdate(UpdateCallback const& cb);
+    void SetCallbackOnUpdate(const UpdateCallback& cb);
 
     /// \~chinese
     /// @brief 获取更新时的回调函数
@@ -673,7 +673,7 @@ inline bool Actor::IsUpdatePausing() const
     return update_pausing_;
 }
 
-inline void Actor::SetCallbackOnUpdate(UpdateCallback const& cb)
+inline void Actor::SetCallbackOnUpdate(const UpdateCallback& cb)
 {
     cb_update_ = cb;
 }
@@ -703,7 +703,7 @@ inline void Actor::SetPositionY(float y)
     this->SetPosition(Point(transform_.position.x, y));
 }
 
-inline void Actor::Move(Vec2 const& v)
+inline void Actor::Move(const Vec2& v)
 {
     this->SetPosition(transform_.position.x + v.x, transform_.position.y + v.y);
 }

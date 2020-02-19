@@ -44,119 +44,119 @@ public:
     /// @brief 构建本地存储对象
     /// @param file_path 文件储存路径
     /// @param field 字段名
-    LocalStorage(String const& file_path = "data.ini", String const& field = "defalut");
+    LocalStorage(const String& file_path = "data.ini", const String& field = "defalut");
 
     /// \~chinese
     /// @brief 获取文件储存路径
-    String const& GetFilePath() const;
+    const String& GetFilePath() const;
 
     /// \~chinese
     /// @brief 设置文件储存路径
-    void SetFilePath(String const& file_path);
+    void SetFilePath(const String& file_path);
 
     /// \~chinese
     /// @brief 获取字段名
-    String const& GetFieldName() const;
+    const String& GetFieldName() const;
 
     /// \~chinese
     /// @brief 设置字段名
-    void SetFieldName(String const& field);
+    void SetFieldName(const String& field);
 
     /// \~chinese
     /// @brief 判断键对应的数据是否存在
-    bool Exists(String const& key) const;
+    bool Exists(const String& key) const;
 
     /// \~chinese
     /// @brief 保存 int 类型的值
     /// @param key 键
     /// @param val 值
     /// @return 操作是否成功
-    bool SaveInt(String const& key, int val) const;
+    bool SaveInt(const String& key, int val) const;
 
     /// \~chinese
     /// @brief 保存 float 类型的值
     /// @param key 键
     /// @param val 值
     /// @return 操作是否成功
-    bool SaveFloat(String const& key, float val) const;
+    bool SaveFloat(const String& key, float val) const;
 
     /// \~chinese
     /// @brief 保存 double 类型的值
     /// @param key 键
     /// @param val 值
     /// @return 操作是否成功
-    bool SaveDouble(String const& key, double val) const;
+    bool SaveDouble(const String& key, double val) const;
 
     /// \~chinese
     /// @brief 保存 bool 类型的值
     /// @param key 键
     /// @param val 值
     /// @return 操作是否成功
-    bool SaveBool(String const& key, bool val) const;
+    bool SaveBool(const String& key, bool val) const;
 
     /// \~chinese
     /// @brief 保存 String 类型的值
     /// @param key 键
     /// @param val 值
     /// @return 操作是否成功
-    bool SaveString(String const& key, String const& val) const;
+    bool SaveString(const String& key, const String& val) const;
 
     /// \~chinese
     /// @brief 获取 int 类型的值
     /// @param key 键
     /// @param default_value 值不存在时返回的默认值
     /// @return 值
-    int GetInt(String const& key, int default_value = 0) const;
+    int GetInt(const String& key, int default_value = 0) const;
 
     /// \~chinese
     /// @brief 获取 float 类型的值
     /// @param key 键
     /// @param default_value 值不存在时返回的默认值
     /// @return 值
-    float GetFloat(String const& key, float default_value = 0.0f) const;
+    float GetFloat(const String& key, float default_value = 0.0f) const;
 
     /// \~chinese
     /// @brief 获取 double 类型的值
     /// @param key 键
     /// @param default_value 值不存在时返回的默认值
     /// @return 值
-    double GetDouble(String const& key, double default_value = 0.0) const;
+    double GetDouble(const String& key, double default_value = 0.0) const;
 
     /// \~chinese
     /// @brief 获取 bool 类型的值
     /// @param key 键
     /// @param default_value 值不存在时返回的默认值
     /// @return 值
-    bool GetBool(String const& key, bool default_value = false) const;
+    bool GetBool(const String& key, bool default_value = false) const;
 
     /// \~chinese
     /// @brief 获取 字符串 类型的值
     /// @param key 键
     /// @param default_value 值不存在时返回的默认值
     /// @return 值
-    String GetString(String const& key, String const& default_value = String()) const;
+    String GetString(const String& key, const String& default_value = String()) const;
 
 private:
     String file_path_;
     String field_name_;
 };
 
-inline String const& LocalStorage::GetFilePath() const
+inline const String& LocalStorage::GetFilePath() const
 {
     return file_path_;
 }
 
-inline String const& LocalStorage::GetFieldName() const
+inline const String& LocalStorage::GetFieldName() const
 {
     return field_name_;
 }
 
-inline void LocalStorage::SetFilePath(String const& file_path)
+inline void LocalStorage::SetFilePath(const String& file_path)
 {
     file_path_ = file_path;
 }
 
-inline void LocalStorage::SetFieldName(String const& field_name)
+inline void LocalStorage::SetFieldName(const String& field_name)
 {
     field_name_ = field_name;
 }

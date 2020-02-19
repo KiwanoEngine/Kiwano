@@ -63,7 +63,7 @@ public:
     /// @param url 请求地址
     /// @param type 请求类型
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(String const& url, HttpType type, ResponseCallback const& callback);
+    static HttpRequestPtr Create(const String& url, HttpType type, const ResponseCallback& callback);
 
     /// \~chinese
     /// @brief 创建HTTP请求
@@ -71,7 +71,7 @@ public:
     /// @param type 请求类型
     /// @param data 请求数据
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(String const& url, HttpType type, String const& data, ResponseCallback const& callback);
+    static HttpRequestPtr Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback);
 
     /// \~chinese
     /// @brief 创建HTTP请求
@@ -79,7 +79,7 @@ public:
     /// @param type 请求类型
     /// @param json 请求的JSON数据
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(String const& url, HttpType type, Json const& json, ResponseCallback const& callback);
+    static HttpRequestPtr Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback);
 
     HttpRequest();
 
@@ -87,7 +87,7 @@ public:
 
     /// \~chinese
     /// @brief 设置请求地址
-    void SetUrl(String const& url);
+    void SetUrl(const String& url);
 
     /// \~chinese
     /// @brief 设置请求类型
@@ -95,27 +95,27 @@ public:
 
     /// \~chinese
     /// @brief 设置请求数据
-    void SetData(String const& data);
+    void SetData(const String& data);
 
     /// \~chinese
     /// @brief 设置请求的JSON数据
-    void SetJsonData(Json const& json);
+    void SetJsonData(const Json& json);
 
     /// \~chinese
     /// @brief 设置HTTP头
-    void SetHeaders(Map<String, String> const& headers);
+    void SetHeaders(const Map<String, String>& headers);
 
     /// \~chinese
     /// @brief 设置HTTP头
-    void SetHeader(String const& field, String const& content);
+    void SetHeader(const String& field, const String& content);
 
     /// \~chinese
     /// @brief 设置响应回调函数
-    void SetResponseCallback(ResponseCallback const& callback);
+    void SetResponseCallback(const ResponseCallback& callback);
 
     /// \~chinese
     /// @brief 获取请求地址
-    String const& GetUrl() const;
+    const String& GetUrl() const;
 
     /// \~chinese
     /// @brief 获取请求类型
@@ -123,7 +123,7 @@ public:
 
     /// \~chinese
     /// @brief 获取请求数据
-    String const& GetData() const;
+    const String& GetData() const;
 
     /// \~chinese
     /// @brief 获取HTTP头
@@ -131,11 +131,11 @@ public:
 
     /// \~chinese
     /// @brief 获取HTTP头
-    String const& GetHeader(String const& header) const;
+    const String& GetHeader(const String& header) const;
 
     /// \~chinese
     /// @brief 获取响应回调函数
-    ResponseCallback const& GetResponseCallback() const;
+    const ResponseCallback& GetResponseCallback() const;
 
 private:
     HttpType                type_;
@@ -157,12 +157,12 @@ inline HttpRequest::HttpRequest(HttpType type)
 {
 }
 
-inline void HttpRequest::SetUrl(String const& url)
+inline void HttpRequest::SetUrl(const String& url)
 {
     url_ = url;
 }
 
-inline String const& HttpRequest::GetUrl() const
+inline const String& HttpRequest::GetUrl() const
 {
     return url_;
 }
@@ -177,22 +177,22 @@ inline HttpType HttpRequest::GetType() const
     return type_;
 }
 
-inline void HttpRequest::SetData(String const& data)
+inline void HttpRequest::SetData(const String& data)
 {
     data_ = data;
 }
 
-inline String const& HttpRequest::GetData() const
+inline const String& HttpRequest::GetData() const
 {
     return data_;
 }
 
-inline void HttpRequest::SetHeaders(Map<String, String> const& headers)
+inline void HttpRequest::SetHeaders(const Map<String, String>& headers)
 {
     headers_ = headers;
 }
 
-inline void HttpRequest::SetHeader(String const& field, String const& content)
+inline void HttpRequest::SetHeader(const String& field, const String& content)
 {
     headers_[field] = content;
 }
@@ -202,17 +202,17 @@ inline Map<String, String>& HttpRequest::GetHeaders()
     return headers_;
 }
 
-inline String const& HttpRequest::GetHeader(String const& header) const
+inline const String& HttpRequest::GetHeader(const String& header) const
 {
     return headers_.at(header);
 }
 
-inline void HttpRequest::SetResponseCallback(ResponseCallback const& callback)
+inline void HttpRequest::SetResponseCallback(const ResponseCallback& callback)
 {
     response_cb_ = callback;
 }
 
-inline HttpRequest::ResponseCallback const& HttpRequest::GetResponseCallback() const
+inline const HttpRequest::ResponseCallback& HttpRequest::GetResponseCallback() const
 {
     return response_cb_;
 }

@@ -40,12 +40,12 @@ void TimerManager::UpdateTimers(Duration dt)
     }
 }
 
-Timer* TimerManager::AddTimer(Timer::Callback const& cb, Duration interval, int times)
+Timer* TimerManager::AddTimer(const Timer::Callback& cb, Duration interval, int times)
 {
     return AddTimer(String(), cb, interval, times);
 }
 
-Timer* TimerManager::AddTimer(String const& name, Timer::Callback const& cb, Duration interval, int times)
+Timer* TimerManager::AddTimer(const String& name, const Timer::Callback& cb, Duration interval, int times)
 {
     TimerPtr timer = Timer::Create(name, cb, interval, times);
     return AddTimer(timer);
@@ -64,7 +64,7 @@ Timer* TimerManager::AddTimer(TimerPtr timer)
     return timer.Get();
 }
 
-void TimerManager::StopTimers(String const& name)
+void TimerManager::StopTimers(const String& name)
 {
     if (timers_.IsEmpty())
         return;
@@ -78,7 +78,7 @@ void TimerManager::StopTimers(String const& name)
     }
 }
 
-void TimerManager::StartTimers(String const& name)
+void TimerManager::StartTimers(const String& name)
 {
     if (timers_.IsEmpty())
         return;
@@ -92,7 +92,7 @@ void TimerManager::StartTimers(String const& name)
     }
 }
 
-void TimerManager::RemoveTimers(String const& name)
+void TimerManager::RemoveTimers(const String& name)
 {
     if (timers_.IsEmpty())
         return;

@@ -2,7 +2,7 @@
 
 namespace kiwano
 {
-Event::Event(EventType const& type)
+Event::Event(const EventType& type)
     : type_(type)
 {
 }

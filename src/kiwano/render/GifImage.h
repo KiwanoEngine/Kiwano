@@ -40,21 +40,21 @@ class KGE_API GifImage : public NativeObject
 public:
     /// \~chinese
     /// @brief 创建GIF图片
-    static GifImagePtr Create(String const& file_path);
+    static GifImagePtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 创建GIF图片
-    static GifImagePtr Create(Resource const& res);
+    static GifImagePtr Create(const Resource& res);
 
     GifImage();
 
     /// \~chinese
     /// @brief 加载本地GIF图片
-    bool Load(String const& file_path);
+    bool Load(const String& file_path);
 
     /// \~chinese
     /// @brief 加载GIF资源
-    bool Load(Resource const& res);
+    bool Load(const Resource& res);
 
     /// \~chinese
     /// @brief 获取像素宽度

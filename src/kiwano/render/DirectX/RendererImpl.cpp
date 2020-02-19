@@ -187,7 +187,7 @@ HRESULT RendererImpl::HandleDeviceLost()
     return hr;
 }
 
-void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
+void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -243,7 +243,7 @@ void RendererImpl::CreateTexture(Texture& texture, String const& file_path)
     }
 }
 
-void RendererImpl::CreateTexture(Texture& texture, Resource const& resource)
+void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -298,7 +298,7 @@ void RendererImpl::CreateTexture(Texture& texture, Resource const& resource)
     }
 }
 
-void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
+void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -331,7 +331,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, String const& file_path)
     }
 }
 
-void RendererImpl::CreateGifImage(GifImage& gif, Resource const& resource)
+void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -363,7 +363,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, Resource const& resource)
     }
 }
 
-void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index)
+void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -527,7 +527,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, GifImage const& g
     }
 }
 
-void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
+void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -568,7 +568,7 @@ void RendererImpl::CreateFontCollection(Font& font, String const& file_path)
     KGE_THROW_IF_FAILED(hr, "Create font collection failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, Resource const& res)
+void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -643,7 +643,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
     KGE_THROW_IF_FAILED(hr, "Create text layout failed");
 }
 
-void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos)
+void RendererImpl::CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -679,7 +679,7 @@ void RendererImpl::CreateLineShape(Shape& shape, Point const& begin_pos, Point c
     KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
 }
 
-void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
+void RendererImpl::CreateRectShape(Shape& shape, const Rect& rect)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -701,7 +701,7 @@ void RendererImpl::CreateRectShape(Shape& shape, Rect const& rect)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RectangleGeometry failed");
 }
 
-void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius)
+void RendererImpl::CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -724,7 +724,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 c
     KGE_THROW_IF_FAILED(hr, "Create ID2D1RoundedRectangleGeometry failed");
 }
 
-void RendererImpl::CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius)
+void RendererImpl::CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -772,7 +772,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
 }
 
-void RendererImpl::CreateBrush(Brush& brush, Color const& color)
+void RendererImpl::CreateBrush(Brush& brush, const Color& color)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -806,7 +806,7 @@ void RendererImpl::CreateBrush(Brush& brush, Color const& color)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1SolidBrush failed");
 }
 
-void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
+void RendererImpl::CreateBrush(Brush& brush, const LinearGradientStyle& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -838,7 +838,7 @@ void RendererImpl::CreateBrush(Brush& brush, LinearGradientStyle const& style)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1LinearGradientBrush failed");
 }
 
-void RendererImpl::CreateBrush(Brush& brush, RadialGradientStyle const& style)
+void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)

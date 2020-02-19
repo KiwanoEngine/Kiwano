@@ -52,13 +52,13 @@ public:
     /// @brief 加载本地音频文件
     /// @param file_path 本地音频文件路径
     /// @return 音频标识符
-    size_t Load(String const& file_path);
+    size_t Load(const String& file_path);
 
     /// \~chinese
     /// @brief 加载音频资源
     /// @param res 音频资源
     /// @return 音频标识符
-    size_t Load(Resource const& res);
+    size_t Load(const Resource& res);
 
     /// \~chinese
     /// @brief 播放音频

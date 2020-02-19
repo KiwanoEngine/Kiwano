@@ -129,28 +129,28 @@ Fixture* PhysicBody::AddCircleShape(float radius, float density, float friction)
     return fixture.Get();
 }
 
-Fixture* PhysicBody::AddRectShape(Vec2 const& size, float density, float friction)
+Fixture* PhysicBody::AddRectShape(const Vec2& size, float density, float friction)
 {
     FixturePtr fixture = Fixture::CreateRect(Fixture::Param(density, friction), size);
     AddFixture(fixture);
     return fixture.Get();
 }
 
-Fixture* PhysicBody::AddPolygonShape(Vector<Point> const& vertexs, float density, float friction)
+Fixture* PhysicBody::AddPolygonShape(const Vector<Point>& vertexs, float density, float friction)
 {
     FixturePtr fixture = Fixture::CreatePolygon(Fixture::Param(density, friction), vertexs);
     AddFixture(fixture);
     return fixture.Get();
 }
 
-Fixture* PhysicBody::AddEdgeShape(Point const& p1, Point const& p2, float density, float friction)
+Fixture* PhysicBody::AddEdgeShape(const Point& p1, const Point& p2, float density, float friction)
 {
     FixturePtr fixture = Fixture::CreateEdge(Fixture::Param(density, friction), p1, p2);
     AddFixture(fixture);
     return fixture.Get();
 }
 
-Fixture* PhysicBody::AddChainShape(Vector<Point> const& vertexs, bool loop, float density, float friction)
+Fixture* PhysicBody::AddChainShape(const Vector<Point>& vertexs, bool loop, float density, float friction)
 {
     FixturePtr fixture = Fixture::CreateChain(Fixture::Param(density, friction), vertexs, loop);
     AddFixture(fixture);
@@ -245,7 +245,7 @@ void PhysicBody::GetMassData(float* mass, Point* center, float* inertia) const
         *inertia = data.I;
 }
 
-void PhysicBody::SetMassData(float mass, Point const& center, float inertia)
+void PhysicBody::SetMassData(float mass, const Point& center, float inertia)
 {
     KGE_ASSERT(body_);
 
@@ -268,19 +268,19 @@ Point PhysicBody::GetPosition() const
     return global::ToPixels(body_->GetPosition());
 }
 
-void PhysicBody::SetTransform(Point const& pos, float angle)
+void PhysicBody::SetTransform(const Point& pos, float angle)
 {
     KGE_ASSERT(body_);
     body_->SetTransform(global::ToMeters(pos), math::Degree2Radian(angle));
 }
 
-Point PhysicBody::GetLocalPoint(Point const& world) const
+Point PhysicBody::GetLocalPoint(const Point& world) const
 {
     KGE_ASSERT(body_);
     return global::ToPixels(body_->GetLocalPoint(global::ToMeters(world)));
 }
 
-Point PhysicBody::GetWorldPoint(Point const& local) const
+Point PhysicBody::GetWorldPoint(const Point& local) const
 {
     KGE_ASSERT(body_);
     return global::ToPixels(body_->GetWorldPoint(global::ToMeters(local)));
@@ -298,13 +298,13 @@ Point PhysicBody::GetWorldCenter() const
     return global::ToPixels(body_->GetWorldCenter());
 }
 
-void PhysicBody::ApplyForce(Vec2 const& force, Point const& point, bool wake)
+void PhysicBody::ApplyForce(const Vec2& force, const Point& point, bool wake)
 {
     KGE_ASSERT(body_);
     body_->ApplyForce(b2Vec2(force.x, force.y), global::ToMeters(point), wake);
 }
 
-void PhysicBody::ApplyForceToCenter(Vec2 const& force, bool wake)
+void PhysicBody::ApplyForceToCenter(const Vec2& force, bool wake)
 {
     KGE_ASSERT(body_);
     body_->ApplyForceToCenter(b2Vec2(force.x, force.y), wake);

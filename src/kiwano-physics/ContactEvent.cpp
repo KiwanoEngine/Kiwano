@@ -29,7 +29,7 @@ ContactBeginEvent::ContactBeginEvent()
 {
 }
 
-ContactBeginEvent::ContactBeginEvent(Contact const& contact)
+ContactBeginEvent::ContactBeginEvent(const Contact& contact)
     : ContactBeginEvent()
 {
     this->contact = contact;
@@ -40,7 +40,7 @@ ContactEndEvent::ContactEndEvent()
 {
 }
 
-ContactEndEvent::ContactEndEvent(Contact const& contact)
+ContactEndEvent::ContactEndEvent(const Contact& contact)
     : ContactEndEvent()
 {
     this->contact = contact;

@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-SpritePtr Sprite::Create(String const& file_path)
+SpritePtr Sprite::Create(const String& file_path)
 {
     SpritePtr ptr = new (std::nothrow) Sprite;
     if (ptr)
@@ -35,7 +35,7 @@ SpritePtr Sprite::Create(String const& file_path)
     return ptr;
 }
 
-SpritePtr Sprite::Create(Resource const& res)
+SpritePtr Sprite::Create(const Resource& res)
 {
     SpritePtr ptr = new (std::nothrow) Sprite;
     if (ptr)
@@ -56,7 +56,7 @@ SpritePtr Sprite::Create(FramePtr frame)
     return ptr;
 }
 
-SpritePtr Sprite::Create(String const& file_path, const Rect& crop_rect)
+SpritePtr Sprite::Create(const String& file_path, const Rect& crop_rect)
 {
     SpritePtr ptr = Sprite::Create(file_path);
     if (ptr)
@@ -66,7 +66,7 @@ SpritePtr Sprite::Create(String const& file_path, const Rect& crop_rect)
     return ptr;
 }
 
-SpritePtr Sprite::Create(Resource const& res, const Rect& crop_rect)
+SpritePtr Sprite::Create(const Resource& res, const Rect& crop_rect)
 {
     SpritePtr ptr = Sprite::Create(res);
     if (ptr)
@@ -80,7 +80,7 @@ Sprite::Sprite() {}
 
 Sprite::~Sprite() {}
 
-bool Sprite::Load(String const& file_path, bool autoresize)
+bool Sprite::Load(const String& file_path, bool autoresize)
 {
     FramePtr frame = Frame::Create(file_path);
     if (frame)
@@ -91,7 +91,7 @@ bool Sprite::Load(String const& file_path, bool autoresize)
     return false;
 }
 
-bool Sprite::Load(Resource const& res, bool autoresize)
+bool Sprite::Load(const Resource& res, bool autoresize)
 {
     FramePtr frame = Frame::Create(res);
     if (frame)

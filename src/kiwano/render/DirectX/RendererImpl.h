@@ -44,37 +44,37 @@ class KGE_API RendererImpl
 public:
     static RendererImpl& GetInstance();
 
-    void CreateTexture(Texture& texture, String const& file_path) override;
+    void CreateTexture(Texture& texture, const String& file_path) override;
 
-    void CreateTexture(Texture& texture, Resource const& resource) override;
+    void CreateTexture(Texture& texture, const Resource& resource) override;
 
-    void CreateGifImage(GifImage& gif, String const& file_path) override;
+    void CreateGifImage(GifImage& gif, const String& file_path) override;
 
-    void CreateGifImage(GifImage& gif, Resource const& resource) override;
+    void CreateGifImage(GifImage& gif, const Resource& resource) override;
 
-    void CreateGifImageFrame(GifImage::Frame& frame, GifImage const& gif, size_t frame_index) override;
+    void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) override;
 
-    void CreateFontCollection(Font& font, String const& file_path) override;
+    void CreateFontCollection(Font& font, const String& file_path) override;
 
-    void CreateFontCollection(Font& font, Resource const& res) override;
+    void CreateFontCollection(Font& font, const Resource& res) override;
 
     void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) override;
 
-    void CreateLineShape(Shape& shape, Point const& begin_pos, Point const& end_pos) override;
+    void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) override;
 
-    void CreateRectShape(Shape& shape, Rect const& rect) override;
+    void CreateRectShape(Shape& shape, const Rect& rect) override;
 
-    void CreateRoundedRectShape(Shape& shape, Rect const& rect, Vec2 const& radius) override;
+    void CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius) override;
 
-    void CreateEllipseShape(Shape& shape, Point const& center, Vec2 const& radius) override;
+    void CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius) override;
 
     void CreateShapeSink(ShapeMaker& maker) override;
 
-    void CreateBrush(Brush& brush, Color const& color) override;
+    void CreateBrush(Brush& brush, const Color& color) override;
 
-    void CreateBrush(Brush& brush, LinearGradientStyle const& style) override;
+    void CreateBrush(Brush& brush, const LinearGradientStyle& style) override;
 
-    void CreateBrush(Brush& brush, RadialGradientStyle const& style) override;
+    void CreateBrush(Brush& brush, const RadialGradientStyle& style) override;
 
     void CreateBrush(Brush& brush, TexturePtr texture) override;
 

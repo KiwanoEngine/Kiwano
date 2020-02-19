@@ -42,7 +42,7 @@ public:
 
     /// \~chinese
     /// @brief 获取图层裁剪区域
-    Rect const& GetClipRect() const;
+    const Rect& GetClipRect() const;
 
     /// \~chinese
     /// @brief 获取图层透明度
@@ -54,11 +54,11 @@ public:
 
     /// \~chinese
     /// @brief 获取几何蒙层变换
-    Matrix3x2 const& GetMaskTransform() const;
+    const Matrix3x2& GetMaskTransform() const;
 
     /// \~chinese
     /// @brief 设置图层裁剪区域
-    void SetClipRect(Rect const& rect);
+    void SetClipRect(const Rect& rect);
 
     /// \~chinese
     /// @brief 设置图层透明度
@@ -70,7 +70,7 @@ public:
 
     /// \~chinese
     /// @brief 设置几何蒙层变换
-    void SetMaskTransform(Matrix3x2 const& matrix);
+    void SetMaskTransform(const Matrix3x2& matrix);
 
 private:
     Rect      clip_rect_;
@@ -81,7 +81,7 @@ private:
 
 /** @} */
 
-inline Rect const& Layer::GetClipRect() const
+inline const Rect& Layer::GetClipRect() const
 {
     return clip_rect_;
 }
@@ -96,12 +96,12 @@ inline ShapePtr Layer::GetMaskShape() const
     return mask_;
 }
 
-inline Matrix3x2 const& Layer::GetMaskTransform() const
+inline const Matrix3x2& Layer::GetMaskTransform() const
 {
     return mask_transform_;
 }
 
-inline void Layer::SetClipRect(Rect const& rect)
+inline void Layer::SetClipRect(const Rect& rect)
 {
     clip_rect_ = rect;
 }
@@ -116,7 +116,7 @@ inline void Layer::SetMaskShape(ShapePtr mask)
     mask_ = mask;
 }
 
-inline void Layer::SetMaskTransform(Matrix3x2 const& matrix)
+inline void Layer::SetMaskTransform(const Matrix3x2& matrix)
 {
     mask_transform_ = matrix;
 }

@@ -28,7 +28,7 @@ Library::Library()
 {
 }
 
-Library::Library(String const& lib)
+Library::Library(const String& lib)
     : instance_(nullptr)
 {
     Load(lib);
@@ -39,7 +39,7 @@ Library::~Library()
     Free();
 }
 
-bool Library::Load(String const& lib)
+bool Library::Load(const String& lib)
 {
     instance_ = ::LoadLibraryA(lib.c_str());
     return IsValid();
@@ -59,7 +59,7 @@ void Library::Free()
     }
 }
 
-FARPROC Library::GetProcess(String const& proc_name)
+FARPROC Library::GetProcess(const String& proc_name)
 {
     KGE_ASSERT(instance_ != nullptr);
 

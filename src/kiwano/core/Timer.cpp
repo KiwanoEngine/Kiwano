@@ -23,7 +23,7 @@
 namespace kiwano
 {
 
-TimerPtr Timer::Create(Callback const& cb, Duration interval, int times)
+TimerPtr Timer::Create(const Callback& cb, Duration interval, int times)
 {
     TimerPtr ptr = new (std::nothrow) Timer;
     if (ptr)
@@ -35,7 +35,7 @@ TimerPtr Timer::Create(Callback const& cb, Duration interval, int times)
     return ptr;
 }
 
-TimerPtr Timer::Create(String const& name, Callback const& cb, Duration interval, int times)
+TimerPtr Timer::Create(const String& name, const Callback& cb, Duration interval, int times)
 {
     TimerPtr ptr = new (std::nothrow) Timer;
     if (ptr)

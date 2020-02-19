@@ -2,7 +2,7 @@
 
 namespace kiwano
 {
-MouseEvent::MouseEvent(EventType const& type)
+MouseEvent::MouseEvent(const EventType& type)
     : Event(type)
     , pos()
 {

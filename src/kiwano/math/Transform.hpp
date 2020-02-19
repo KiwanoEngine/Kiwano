@@ -72,7 +72,7 @@ Matrix3x2T<_Ty> TransformT<_Ty>::ToMatrix() const
 }
 
 template <typename _Ty>
-bool TransformT<_Ty>::operator==(TransformT const& rhs) const
+bool TransformT<_Ty>::operator==(const TransformT& rhs) const
 {
     return position == rhs.position && rotation == rhs.rotation && scale == rhs.scale && skew == rhs.skew;
 }

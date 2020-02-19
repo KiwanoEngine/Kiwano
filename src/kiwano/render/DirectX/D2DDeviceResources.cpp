@@ -74,7 +74,7 @@ public:
 
     unsigned long STDMETHODCALLTYPE Release();
 
-    HRESULT STDMETHODCALLTYPE QueryInterface(IID const& riid, void** ppvObject);
+    HRESULT STDMETHODCALLTYPE QueryInterface(const IID& riid, void** ppvObject);
 
 private:
     unsigned long ref_count_;
@@ -148,7 +148,7 @@ STDMETHODIMP_(unsigned long) D2DDeviceResources::Release()
     return newCount;
 }
 
-STDMETHODIMP D2DDeviceResources::QueryInterface(IID const& riid, void** object)
+STDMETHODIMP D2DDeviceResources::QueryInterface(const IID& riid, void** object)
 {
     if (__uuidof(ID2DDeviceResources) == riid)
     {

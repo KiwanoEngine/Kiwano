@@ -41,7 +41,7 @@ public:
     /// @brief 创建动画组合
     /// @param actions 动画集合
     /// @param sync 同步执行
-    static ActionGroupPtr Create(Vector<ActionPtr> const& actions, bool sync = false);
+    static ActionGroupPtr Create(const Vector<ActionPtr>& actions, bool sync = false);
 
     ActionGroup();
 
@@ -57,11 +57,11 @@ public:
     /// \~chinese
     /// @brief 添加多个动画
     /// @param actions 动画集合
-    void AddActions(Vector<ActionPtr> const& actions);
+    void AddActions(const Vector<ActionPtr>& actions);
 
     /// \~chinese
     /// @brief 获取所有动画
-    ActionList const& GetActions() const;
+    const ActionList& GetActions() const;
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -84,7 +84,7 @@ private:
 
 /** @} */
 
-inline ActionGroup::ActionList const& ActionGroup::GetActions() const
+inline const ActionGroup::ActionList& ActionGroup::GetActions() const
 {
     return actions_;
 }

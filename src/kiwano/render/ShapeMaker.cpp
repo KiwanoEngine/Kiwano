@@ -57,7 +57,7 @@ bool ShapeMaker::IsStreamOpened() const
     return IsValid();
 }
 
-void ShapeMaker::BeginPath(Point const& begin_pos)
+void ShapeMaker::BeginPath(const Point& begin_pos)
 {
     if (!IsStreamOpened())
     {
@@ -86,7 +86,7 @@ void ShapeMaker::EndPath(bool closed)
     this->CloseStream();
 }
 
-void ShapeMaker::AddLine(Point const& point)
+void ShapeMaker::AddLine(const Point& point)
 {
     KGE_ASSERT(IsStreamOpened());
 
@@ -98,7 +98,7 @@ void ShapeMaker::AddLine(Point const& point)
 #endif
 }
 
-void ShapeMaker::AddLines(Vector<Point> const& points)
+void ShapeMaker::AddLines(const Vector<Point>& points)
 {
     KGE_ASSERT(IsStreamOpened());
 
@@ -122,7 +122,7 @@ void kiwano::ShapeMaker::AddLines(const Point* points, size_t count)
 #endif
 }
 
-void ShapeMaker::AddBezier(Point const& point1, Point const& point2, Point const& point3)
+void ShapeMaker::AddBezier(const Point& point1, const Point& point2, const Point& point3)
 {
     KGE_ASSERT(IsStreamOpened());
 
@@ -135,7 +135,7 @@ void ShapeMaker::AddBezier(Point const& point1, Point const& point2, Point const
 #endif
 }
 
-void ShapeMaker::AddArc(Point const& point, Size const& radius, float rotation, bool clockwise, bool is_small)
+void ShapeMaker::AddArc(const Point& point, const Size& radius, float rotation, bool clockwise, bool is_small)
 {
     KGE_ASSERT(IsStreamOpened());
 

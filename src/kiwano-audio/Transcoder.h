@@ -70,11 +70,11 @@ public:
 private:
     /// \~chinese
     /// @brief 解码本地音频文件
-    HRESULT LoadMediaFile(String const& file_path);
+    HRESULT LoadMediaFile(const String& file_path);
 
     /// \~chinese
     /// @brief 解码音频资源
-    HRESULT LoadMediaResource(Resource const& res);
+    HRESULT LoadMediaResource(const Resource& res);
 
     /// \~chinese
     /// @brief 读取音频源数据

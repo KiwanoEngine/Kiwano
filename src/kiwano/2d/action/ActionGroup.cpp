@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
-ActionGroupPtr ActionGroup::Create(Vector<ActionPtr> const& actions, bool sync)
+ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool sync)
 {
     ActionGroupPtr ptr = new (std::nothrow) ActionGroup(sync);
     if (ptr)
@@ -116,7 +116,7 @@ void ActionGroup::AddAction(ActionPtr action)
     }
 }
 
-void ActionGroup::AddActions(Vector<ActionPtr> const& actions)
+void ActionGroup::AddActions(const Vector<ActionPtr>& actions)
 {
     for (const auto& action : actions)
         AddAction(action);

@@ -117,7 +117,7 @@ public:
     /// @brief 设置字体族
     /// @param family 字体族
     /// @param range 文字范围
-    void SetFontFamily(String const& family, TextRange range);
+    void SetFontFamily(const String& family, TextRange range);
 
     /// \~chinese
     /// @brief 设置字号（默认值为 18）

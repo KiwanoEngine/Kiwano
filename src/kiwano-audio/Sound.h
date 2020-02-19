@@ -50,12 +50,12 @@ public:
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 本地音频文件路径
-    static SoundPtr Create(String const& file_path);
+    static SoundPtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 音频资源
-    static SoundPtr Create(Resource const& res);
+    static SoundPtr Create(const Resource& res);
 
     Sound();
 
@@ -64,12 +64,12 @@ public:
     /// \~chinese
     /// @brief 打开本地音频文件
     /// @param res 本地音频文件路径
-    bool Load(String const& file_path);
+    bool Load(const String& file_path);
 
     /// \~chinese
     /// @brief 打开音频资源
     /// @param res 音频资源
-    bool Load(Resource const& res);
+    bool Load(const Resource& res);
 
     /// \~chinese
     /// @brief 是否有效

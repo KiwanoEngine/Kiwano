@@ -40,7 +40,7 @@ GradientStop::GradientStop(float offset, Color color)
 {
 }
 
-LinearGradientStyle::LinearGradientStyle(Point const& begin, Point const& end, Vector<GradientStop> const& stops,
+LinearGradientStyle::LinearGradientStyle(const Point& begin, const Point& end, const Vector<GradientStop>& stops,
                                          GradientExtendMode extend_mode)
     : begin(begin)
     , end(end)
@@ -49,8 +49,8 @@ LinearGradientStyle::LinearGradientStyle(Point const& begin, Point const& end, V
 {
 }
 
-RadialGradientStyle::RadialGradientStyle(Point const& center, Vec2 const& offset, Vec2 const& radius,
-                                         Vector<GradientStop> const& stops, GradientExtendMode extend_mode)
+RadialGradientStyle::RadialGradientStyle(const Point& center, const Vec2& offset, const Vec2& radius,
+                                         const Vector<GradientStop>& stops, GradientExtendMode extend_mode)
     : center(center)
     , offset(offset)
     , radius(radius)
@@ -59,7 +59,7 @@ RadialGradientStyle::RadialGradientStyle(Point const& center, Vec2 const& offset
 {
 }
 
-BrushPtr Brush::Create(Color const& color)
+BrushPtr Brush::Create(const Color& color)
 {
     BrushPtr ptr = new (std::nothrow) Brush;
     if (ptr)
@@ -69,7 +69,7 @@ BrushPtr Brush::Create(Color const& color)
     return ptr;
 }
 
-BrushPtr Brush::Create(LinearGradientStyle const& style)
+BrushPtr Brush::Create(const LinearGradientStyle& style)
 {
     BrushPtr ptr = new (std::nothrow) Brush;
     if (ptr)
@@ -79,7 +79,7 @@ BrushPtr Brush::Create(LinearGradientStyle const& style)
     return ptr;
 }
 
-BrushPtr Brush::Create(RadialGradientStyle const& style)
+BrushPtr Brush::Create(const RadialGradientStyle& style)
 {
     BrushPtr ptr = new (std::nothrow) Brush;
     if (ptr)
@@ -94,19 +94,19 @@ Brush::Brush()
 {
 }
 
-void Brush::SetColor(Color const& color)
+void Brush::SetColor(const Color& color)
 {
     Renderer::GetInstance().CreateBrush(*this, color);
     type_ = Brush::Type::SolidColor;
 }
 
-void Brush::SetStyle(LinearGradientStyle const& style)
+void Brush::SetStyle(const LinearGradientStyle& style)
 {
     Renderer::GetInstance().CreateBrush(*this, style);
     type_ = Brush::Type::LinearGradient;
 }
 
-void Brush::SetStyle(RadialGradientStyle const& style)
+void Brush::SetStyle(const RadialGradientStyle& style)
 {
     Renderer::GetInstance().CreateBrush(*this, style);
     type_ = Brush::Type::RadialGradient;

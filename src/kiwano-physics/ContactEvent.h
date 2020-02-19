@@ -43,7 +43,7 @@ public:
 
     ContactBeginEvent();
 
-    ContactBeginEvent(Contact const& contact);
+    ContactBeginEvent(const Contact& contact);
 };
 
 /// \~chinese
@@ -55,7 +55,7 @@ public:
 
     ContactEndEvent();
 
-    ContactEndEvent(Contact const& contact);
+    ContactEndEvent(const Contact& contact);
 };
 
 /** @} */

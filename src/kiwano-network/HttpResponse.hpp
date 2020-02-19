@@ -59,11 +59,11 @@ public:
 
     /// \~chinese
     /// @brief 获取响应数据
-    String const& GetData() const;
+    const String& GetData() const;
 
     /// \~chinese
     /// @brief 获取错误信息
-    String const& GetError() const;
+    const String& GetError() const;
 
     /// \~chinese
     /// @brief 设置响应状态
@@ -75,15 +75,15 @@ public:
 
     /// \~chinese
     /// @brief 设置响应头
-    void SetHeader(String const& response_header);
+    void SetHeader(const String& response_header);
 
     /// \~chinese
     /// @brief 设置响应数据
-    void SetData(String const& response_data);
+    void SetData(const String& response_data);
 
     /// \~chinese
     /// @brief 设置错误信息
-    void SetError(String const& error_buffer);
+    void SetError(const String& error_buffer);
 
 private:
     bool           succeed_;
@@ -129,7 +129,7 @@ inline long HttpResponse::GetResponseCode() const
     return response_code_;
 }
 
-inline void HttpResponse::SetHeader(String const& response_header)
+inline void HttpResponse::SetHeader(const String& response_header)
 {
     response_header_ = response_header;
 }
@@ -139,22 +139,22 @@ inline String HttpResponse::GetHeader() const
     return response_header_;
 }
 
-inline void HttpResponse::SetData(String const& response_data)
+inline void HttpResponse::SetData(const String& response_data)
 {
     response_data_ = response_data;
 }
 
-inline String const& HttpResponse::GetData() const
+inline const String& HttpResponse::GetData() const
 {
     return response_data_;
 }
 
-inline void HttpResponse::SetError(String const& error_buffer)
+inline void HttpResponse::SetError(const String& error_buffer)
 {
     error_buffer_ = error_buffer;
 }
 
-inline String const& HttpResponse::GetError() const
+inline const String& HttpResponse::GetError() const
 {
     return error_buffer_;
 }

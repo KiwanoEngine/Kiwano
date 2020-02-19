@@ -67,7 +67,7 @@ public:
         }
     }
 
-    bool Init(HttpModule* client, Vector<String> const& headers, String const& url, String* response_data,
+    bool Init(HttpModule* client, const Vector<String>& headers, const String& url, String* response_data,
               String* response_header, char* error_buffer)
     {
         if (!SetOption(CURLOPT_ERRORBUFFER, error_buffer))
@@ -132,7 +132,7 @@ public:
     }
 
 public:
-    static inline bool GetRequest(HttpModule* client, Vector<String> const& headers, String const& url,
+    static inline bool GetRequest(HttpModule* client, const Vector<String>& headers, const String& url,
                                   long* response_code, String* response_data, String* response_header,
                                   char* error_buffer)
     {
@@ -141,8 +141,8 @@ public:
                && curl.SetOption(CURLOPT_FOLLOWLOCATION, true) && curl.Perform(response_code);
     }
 
-    static inline bool PostRequest(HttpModule* client, Vector<String> const& headers, String const& url,
-                                   String const& request_data, long* response_code, String* response_data,
+    static inline bool PostRequest(HttpModule* client, const Vector<String>& headers, const String& url,
+                                   const String& request_data, long* response_code, String* response_data,
                                    String* response_header, char* error_buffer)
     {
         Curl curl;
@@ -151,8 +151,8 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool PutRequest(HttpModule* client, Vector<String> const& headers, String const& url,
-                                  String const& request_data, long* response_code, String* response_data,
+    static inline bool PutRequest(HttpModule* client, const Vector<String>& headers, const String& url,
+                                  const String& request_data, long* response_code, String* response_data,
                                   String* response_header, char* error_buffer)
     {
         Curl curl;
@@ -162,7 +162,7 @@ public:
                && curl.SetOption(CURLOPT_POSTFIELDSIZE, request_data.size()) && curl.Perform(response_code);
     }
 
-    static inline bool DeleteRequest(HttpModule* client, Vector<String> const& headers, String const& url,
+    static inline bool DeleteRequest(HttpModule* client, const Vector<String>& headers, const String& url,
                                      long* response_code, String* response_data, String* response_header,
                                      char* error_buffer)
     {

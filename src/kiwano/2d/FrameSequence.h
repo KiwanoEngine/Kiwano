@@ -41,7 +41,7 @@ public:
     /// \~chinese
     /// @brief 创建序列帧
     /// @param frames 图像帧集合
-    static FrameSequencePtr Create(Vector<FramePtr> const& frames);
+    static FrameSequencePtr Create(const Vector<FramePtr>& frames);
 
     /// \~chinese
     /// @brief 按行列分割图像并创建序列帧
@@ -68,7 +68,7 @@ public:
     /// \~chinese
     /// @brief 添加多个关键帧
     /// @param frames 图像帧集合
-    void AddFrames(Vector<FramePtr> const& frames);
+    void AddFrames(const Vector<FramePtr>& frames);
 
     /// \~chinese
     /// @brief 按行列分割图像并添加序列帧
@@ -87,7 +87,7 @@ public:
 
     /// \~chinese
     /// @brief 获取所有关键帧
-    Vector<FramePtr> const& GetFrames() const;
+    const Vector<FramePtr>& GetFrames() const;
 
     /// \~chinese
     /// @brief 获取关键帧数量

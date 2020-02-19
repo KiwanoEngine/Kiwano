@@ -58,21 +58,21 @@ public:
     /// @brief 创建监听器
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(EventType type, Callback const& callback);
+    static EventListenerPtr Create(EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(String const& name, EventType type, Callback const& callback);
+    static EventListenerPtr Create(const String& name, EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @tparam _EventTy 事件类型
     /// @param callback 回调函数
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
-    static inline EventListenerPtr Create(Callback const& callback)
+    static inline EventListenerPtr Create(const Callback& callback)
     {
         return EventListener::Create(KGE_EVENT(_EventTy), callback);
     }
@@ -83,7 +83,7 @@ public:
     /// @param name 监听器名称
     /// @param callback 回调函数
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
-    static inline EventListenerPtr Create(String const& name, Callback const& callback)
+    static inline EventListenerPtr Create(const String& name, const Callback& callback)
     {
         return EventListener::Create(name, KGE_EVENT(_EventTy), callback);
     }
@@ -127,7 +127,7 @@ public:
 
     /// \~chinese
     /// @brief 设置回调函数
-    void SetCallback(Callback const& cb);
+    void SetCallback(const Callback& cb);
 
     /// \~chinese
     /// @brief 获取监听的事件类型
@@ -135,7 +135,7 @@ public:
 
     /// \~chinese
     /// @brief 设置监听的事件类型
-    void SetEventType(EventType const& type);
+    void SetEventType(const EventType& type);
 
     /// \~chinese
     /// @brief 设置监听的事件类型
@@ -198,7 +198,7 @@ inline const EventListener::Callback& EventListener::GetCallback() const
     return callback_;
 }
 
-inline void EventListener::SetCallback(Callback const& cb)
+inline void EventListener::SetCallback(const Callback& cb)
 {
     callback_ = cb;
 }
@@ -208,7 +208,7 @@ inline EventType EventListener::GetEventType() const
     return type_;
 }
 
-inline void EventListener::SetEventType(EventType const& type)
+inline void EventListener::SetEventType(const EventType& type)
 {
     type_ = type;
 }

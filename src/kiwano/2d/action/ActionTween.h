@@ -108,11 +108,11 @@ public:
 
     /// \~chinese
     /// @brief 获取动画速度缓动函数
-    EaseFunc const& GetEaseFunc() const;
+    const EaseFunc& GetEaseFunc() const;
 
     /// \~chinese
     /// @brief 设置动画速度缓动函数
-    void SetEaseFunc(EaseFunc const& func);
+    void SetEaseFunc(const EaseFunc& func);
 
 protected:
     void Update(Actor* target, Duration dt) override;
@@ -135,7 +135,7 @@ public:
     /// @brief 创建相对位移动画
     /// @param duration 动画时长
     /// @param displacement 位移向量
-    static ActionMoveByPtr Create(Duration duration, Vec2 const& displacement);
+    static ActionMoveByPtr Create(Duration duration, const Vec2& displacement);
 
     ActionMoveBy();
 
@@ -145,7 +145,7 @@ public:
 
     /// \~chinese
     /// @brief 设置位移向量
-    void SetDisplacement(Vec2 const& displacement);
+    void SetDisplacement(const Vec2& displacement);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -175,7 +175,7 @@ public:
     /// @brief 创建位移动画
     /// @param duration 动画时长
     /// @param distination 目的坐标
-    static ActionMoveToPtr Create(Duration duration, Point const& distination);
+    static ActionMoveToPtr Create(Duration duration, const Point& distination);
 
     ActionMoveTo();
 
@@ -185,7 +185,7 @@ public:
 
     /// \~chinese
     /// @brief 设置目的坐标
-    void SetDistination(Point const& distination);
+    void SetDistination(const Point& distination);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -217,7 +217,7 @@ public:
     /// @param displacement 跳跃位移向量
     /// @param height 跳跃高度
     /// @param count 跳跃次数
-    static ActionJumpByPtr Create(Duration duration, Vec2 const& displacement, float height, int count = 1,
+    static ActionJumpByPtr Create(Duration duration, const Vec2& displacement, float height, int count = 1,
                                   EaseFunc ease = nullptr);
 
     ActionJumpBy();
@@ -236,7 +236,7 @@ public:
 
     /// \~chinese
     /// @brief 设置跳跃位移
-    void SetDisplacement(Vec2 const& displacement);
+    void SetDisplacement(const Vec2& displacement);
 
     /// \~chinese
     /// @brief 设置跳跃高度
@@ -278,7 +278,7 @@ public:
     /// @param distination 目的坐标
     /// @param height 跳跃高度
     /// @param count 跳跃次数
-    static ActionJumpToPtr Create(Duration duration, Point const& distination, float height, int count = 1,
+    static ActionJumpToPtr Create(Duration duration, const Point& distination, float height, int count = 1,
                                   EaseFunc ease = nullptr);
 
     ActionJumpTo();
@@ -289,7 +289,7 @@ public:
 
     /// \~chinese
     /// @brief 设置目的坐标
-    void SetDistination(Point const& distination);
+    void SetDistination(const Point& distination);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -579,7 +579,7 @@ public:
 
     /// \~chinese
     /// @brief 设置动画回调函数
-    void SetTweenFunc(TweenFunc const& tween_func);
+    void SetTweenFunc(const TweenFunc& tween_func);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -604,7 +604,7 @@ private:
 
 /** @} */
 
-inline EaseFunc const& ActionTween::GetEaseFunc() const
+inline const EaseFunc& ActionTween::GetEaseFunc() const
 {
     return ease_func_;
 }
@@ -619,7 +619,7 @@ inline void ActionTween::SetDuration(Duration duration)
     dur_ = duration;
 }
 
-inline void ActionTween::SetEaseFunc(EaseFunc const& func)
+inline void ActionTween::SetEaseFunc(const EaseFunc& func)
 {
     ease_func_ = func;
 }
@@ -629,7 +629,7 @@ inline Vec2 ActionMoveBy::GetDisplacement() const
     return displacement_;
 }
 
-inline void ActionMoveBy::SetDisplacement(Vec2 const& displacement)
+inline void ActionMoveBy::SetDisplacement(const Vec2& displacement)
 {
     displacement_ = displacement;
 }
@@ -639,7 +639,7 @@ inline Point ActionMoveTo::GetDistination() const
     return distination_;
 }
 
-inline void ActionMoveTo::SetDistination(Point const& distination)
+inline void ActionMoveTo::SetDistination(const Point& distination)
 {
     distination_ = distination;
 }
@@ -659,7 +659,7 @@ inline int ActionJumpBy::GetJumpCount() const
     return jump_count_;
 }
 
-inline void ActionJumpBy::SetDisplacement(Vec2 const& displacement)
+inline void ActionJumpBy::SetDisplacement(const Vec2& displacement)
 {
     displacement_ = displacement;
 }
@@ -679,7 +679,7 @@ inline Point ActionJumpTo::GetDistination() const
     return distination_;
 }
 
-inline void ActionJumpTo::SetDistination(Point const& distination)
+inline void ActionJumpTo::SetDistination(const Point& distination)
 {
     distination_ = distination;
 }
@@ -759,7 +759,7 @@ inline ActionCustom::TweenFunc ActionCustom::GetTweenFunc() const
     return tween_func_;
 }
 
-inline void ActionCustom::SetTweenFunc(TweenFunc const& tween_func)
+inline void ActionCustom::SetTweenFunc(const TweenFunc& tween_func)
 {
     tween_func_ = tween_func;
 }

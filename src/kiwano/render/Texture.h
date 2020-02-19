@@ -56,11 +56,11 @@ class KGE_API Texture : public NativeObject
 public:
     /// \~chinese
     /// @brief 从本地文件创建纹理
-    static TexturePtr Create(String const& file_path);
+    static TexturePtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 从资源创建纹理
-    static TexturePtr Create(Resource const& res);
+    static TexturePtr Create(const Resource& res);
 
     Texture();
 
@@ -68,11 +68,11 @@ public:
 
     /// \~chinese
     /// @brief 加载本地文件
-    bool Load(String const& file_path);
+    bool Load(const String& file_path);
 
     /// \~chinese
     /// @brief 加载资源
-    bool Load(Resource const& res);
+    bool Load(const Resource& res);
 
     /// \~chinese
     /// @brief 获取纹理宽度
@@ -123,7 +123,7 @@ public:
     /// @param copy_from 源纹理
     /// @param src_rect 源纹理裁剪矩形
     /// @param dest_point 拷贝至目标位置
-    void CopyFrom(TexturePtr copy_from, Rect const& src_rect, Point const& dest_point);
+    void CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& dest_point);
 
     /// \~chinese
     /// @brief 设置默认的像素插值方式

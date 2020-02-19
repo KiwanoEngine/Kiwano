@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-EventListenerPtr EventListener::Create(EventType type, Callback const& callback)
+EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
 {
     EventListenerPtr ptr = new (std::nothrow) EventListener;
     if (ptr)
@@ -35,7 +35,7 @@ EventListenerPtr EventListener::Create(EventType type, Callback const& callback)
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(String const& name, EventType type, Callback const& callback)
+EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
 {
     EventListenerPtr ptr = new (std::nothrow) EventListener;
     if (ptr)

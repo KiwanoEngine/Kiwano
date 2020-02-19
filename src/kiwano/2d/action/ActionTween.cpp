@@ -144,7 +144,7 @@ ActionPtr ActionTween::InnerClone(ActionTweenPtr to) const
 // Move Action
 //-------------------------------------------------------
 
-ActionMoveByPtr ActionMoveBy::Create(Duration duration, Vec2 const& displacement)
+ActionMoveByPtr ActionMoveBy::Create(Duration duration, const Vec2& displacement)
 {
     ActionMoveByPtr ptr = new (std::nothrow) ActionMoveBy;
     if (ptr)
@@ -186,7 +186,7 @@ ActionPtr ActionMoveBy::Reverse() const
     return InnerClone(ActionMoveBy::Create(GetDuration(), -displacement_));
 }
 
-ActionMoveToPtr ActionMoveTo::Create(Duration duration, Point const& distination)
+ActionMoveToPtr ActionMoveTo::Create(Duration duration, const Point& distination)
 {
     ActionMoveToPtr ptr = new (std::nothrow) ActionMoveTo;
     if (ptr)
@@ -214,7 +214,7 @@ void ActionMoveTo::Init(Actor* target)
 // Jump Action
 //-------------------------------------------------------
 
-ActionJumpByPtr ActionJumpBy::Create(Duration duration, Vec2 const& displacement, float height, int count,
+ActionJumpByPtr ActionJumpBy::Create(Duration duration, const Vec2& displacement, float height, int count,
                                      EaseFunc ease)
 {
     ActionJumpByPtr ptr = new (std::nothrow) ActionJumpBy;
@@ -269,7 +269,7 @@ void ActionJumpBy::UpdateTween(Actor* target, float percent)
     prev_pos_ = new_pos;
 }
 
-ActionJumpToPtr ActionJumpTo::Create(Duration duration, Point const& distination, float height, int count,
+ActionJumpToPtr ActionJumpTo::Create(Duration duration, const Point& distination, float height, int count,
                                      EaseFunc ease)
 {
     ActionJumpToPtr ptr = new (std::nothrow) ActionJumpTo;

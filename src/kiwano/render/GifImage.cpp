@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
-GifImagePtr GifImage::Create(String const& file_path)
+GifImagePtr GifImage::Create(const String& file_path)
 {
     GifImagePtr ptr = new (std::nothrow) GifImage;
     if (ptr)
@@ -36,7 +36,7 @@ GifImagePtr GifImage::Create(String const& file_path)
     return ptr;
 }
 
-GifImagePtr GifImage::Create(Resource const& res)
+GifImagePtr GifImage::Create(const Resource& res)
 {
     GifImagePtr ptr = new (std::nothrow) GifImage;
     if (ptr)
@@ -52,7 +52,7 @@ GifImage::GifImage()
 {
 }
 
-bool GifImage::Load(String const& file_path)
+bool GifImage::Load(const String& file_path)
 {
     Renderer::GetInstance().CreateGifImage(*this, file_path);
 
@@ -67,7 +67,7 @@ bool GifImage::Load(String const& file_path)
     return false;
 }
 
-bool GifImage::Load(Resource const& res)
+bool GifImage::Load(const Resource& res)
 {
     Renderer::GetInstance().CreateGifImage(*this, res);
 

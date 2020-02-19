@@ -30,7 +30,7 @@ FrameSequencePtr FrameSequence::Create()
     return ptr;
 }
 
-FrameSequencePtr FrameSequence::Create(Vector<FramePtr> const& frames)
+FrameSequencePtr FrameSequence::Create(const Vector<FramePtr>& frames)
 {
     FrameSequencePtr ptr = new (std::nothrow) FrameSequence;
     if (ptr)
@@ -65,7 +65,7 @@ void FrameSequence::AddFrame(FramePtr frame)
     }
 }
 
-void FrameSequence::AddFrames(Vector<FramePtr> const& frames)
+void FrameSequence::AddFrames(const Vector<FramePtr>& frames)
 {
     if (frames_.empty())
         frames_ = frames;
@@ -128,7 +128,7 @@ FramePtr FrameSequence::GetFrame(size_t index) const
     return frames_[index];
 }
 
-Vector<FramePtr> const& FrameSequence::GetFrames() const
+const Vector<FramePtr>& FrameSequence::GetFrames() const
 {
     return frames_;
 }

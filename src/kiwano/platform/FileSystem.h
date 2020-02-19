@@ -37,14 +37,14 @@ public:
      * @brief 添加文件搜索路径
      * @param path 文件搜索路径
      */
-    void AddSearchPath(String const& path);
+    void AddSearchPath(const String& path);
 
     /**
      * \~chinese
      * @brief 设置文件搜索路径
      * @param paths 搜索路径数组
      */
-    void SetSearchPaths(Vector<String> const& paths);
+    void SetSearchPaths(const Vector<String>& paths);
 
     /**
      * \~chinese
@@ -52,7 +52,7 @@ public:
      * @param file 文件路径
      * @return 完整的文件路径
      */
-    String GetFullPathForFile(String const& file) const;
+    String GetFullPathForFile(const String& file) const;
 
     /**
      * \~chinese
@@ -60,14 +60,14 @@ public:
      * @param key 文件关键词
      * @param file_path 文件路径
      */
-    void AddFileLookupRule(String const& key, String const& file_path);
+    void AddFileLookupRule(const String& key, const String& file_path);
 
     /**
      * \~chinese
      * @brief 设置文件路径查找字典
      * @param dict 文件路径查找字典
      */
-    void SetFileLookupDictionary(UnorderedMap<String, String> const& dict);
+    void SetFileLookupDictionary(const UnorderedMap<String, String>& dict);
 
     /**
      * \~chinese
@@ -75,7 +75,7 @@ public:
      * @param file_path 文件路径
      * @return 若文件存在，返回 true
      */
-    bool IsFileExists(String const& file_path) const;
+    bool IsFileExists(const String& file_path) const;
 
     /**
      * \~chinese
@@ -83,7 +83,7 @@ public:
      * @param path 文件路径
      * @return 若是绝对路径，返回 true
      */
-    bool IsAbsolutePath(String const& path) const;
+    bool IsAbsolutePath(const String& path) const;
 
     /**
      * \~chinese
@@ -91,7 +91,7 @@ public:
      * @param file_path 文件路径
      * @return 删除是否成功
      */
-    bool RemoveFile(String const& file_path) const;
+    bool RemoveFile(const String& file_path) const;
 
     /**
      * \~chinese
@@ -100,7 +100,7 @@ public:
      * @param dest_file_name 目标文件名
      * @return 操作是否成功
      */
-    bool ExtractResourceToFile(Resource const& res, String const& dest_file_name) const;
+    bool ExtractResourceToFile(const Resource& res, const String& dest_file_name) const;
 
 private:
     FileSystem();

@@ -41,7 +41,7 @@ SoundPlayer::~SoundPlayer()
     ClearCache();
 }
 
-size_t SoundPlayer::Load(String const& file_path)
+size_t SoundPlayer::Load(const String& file_path)
 {
     size_t hash = std::hash<String>()(file_path);
     if (sound_cache_.end() != sound_cache_.find(hash))
@@ -61,7 +61,7 @@ size_t SoundPlayer::Load(String const& file_path)
     return 0;
 }
 
-size_t SoundPlayer::Load(Resource const& res)
+size_t SoundPlayer::Load(const Resource& res)
 {
     size_t hash_code = static_cast<size_t>(res.GetId());
     if (sound_cache_.end() != sound_cache_.find(hash_code))

@@ -56,7 +56,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置动画结束回调函数
-    inline ActionHelper& SetDoneCallback(DoneCallback const& cb)
+    inline ActionHelper& SetDoneCallback(const DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
         return (*this);
@@ -64,7 +64,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    inline ActionHelper& SetLoopDoneCallback(DoneCallback const& cb)
+    inline ActionHelper& SetLoopDoneCallback(const DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
         return (*this);
@@ -80,7 +80,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置名称
-    inline ActionHelper& SetName(String const& name)
+    inline ActionHelper& SetName(const String& name)
     {
         ptr->SetName(name);
         return (*this);
@@ -152,7 +152,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置动画结束回调函数
-    inline TweenHelper& SetDoneCallback(DoneCallback const& cb)
+    inline TweenHelper& SetDoneCallback(const DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
         return (*this);
@@ -160,7 +160,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    inline TweenHelper& SetLoopDoneCallback(DoneCallback const& cb)
+    inline TweenHelper& SetLoopDoneCallback(const DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
         return (*this);
@@ -176,7 +176,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置名称
-    inline TweenHelper& SetName(String const& name)
+    inline TweenHelper& SetName(const String& name)
     {
         ptr->SetName(name);
         return (*this);
@@ -222,7 +222,7 @@ public:
     /// @brief 构造相对位移动画
     /// @param duration 动画时长
     /// @param vector 移动向量
-    static inline TweenHelper MoveBy(Duration dur, Point const& vector)
+    static inline TweenHelper MoveBy(Duration dur, const Point& vector)
     {
         return TweenHelper(ActionMoveBy::Create(dur, vector));
     }
@@ -231,7 +231,7 @@ public:
     /// @brief 构造位移动画
     /// @param duration 动画时长
     /// @param pos 目的坐标
-    static inline TweenHelper MoveTo(Duration dur, Point const& pos)
+    static inline TweenHelper MoveTo(Duration dur, const Point& pos)
     {
         return TweenHelper(ActionMoveTo::Create(dur, pos));
     }
@@ -242,7 +242,7 @@ public:
     /// @param vec 跳跃位移向量
     /// @param height 跳跃高度
     /// @param jumps 跳跃次数
-    static inline TweenHelper JumpBy(Duration duration, Vec2 const& vec, float height, int jumps = 1)
+    static inline TweenHelper JumpBy(Duration duration, const Vec2& vec, float height, int jumps = 1)
     {
         return TweenHelper(ActionJumpBy::Create(duration, vec, height, jumps));
     }
@@ -253,7 +253,7 @@ public:
     /// @param pos 目的坐标
     /// @param height 跳跃高度
     /// @param jumps 跳跃次数
-    static inline TweenHelper JumpTo(Duration duration, Point const& pos, float height, int jumps = 1)
+    static inline TweenHelper JumpTo(Duration duration, const Point& pos, float height, int jumps = 1)
     {
         return TweenHelper(ActionJumpTo::Create(duration, pos, height, jumps));
     }
@@ -364,7 +364,7 @@ public:
     /// @brief 动画组合
     /// @param actions 动画集合
     /// @param sync 同步执行
-    static inline ActionHelper Group(Vector<ActionPtr> const& actions, bool sync = false)
+    static inline ActionHelper Group(const Vector<ActionPtr>& actions, bool sync = false)
     {
         return ActionHelper(ActionGroup::Create(actions, sync));
     }

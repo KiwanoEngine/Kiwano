@@ -61,7 +61,7 @@ Size TextActor::GetSize() const
     return Actor::GetSize();
 }
 
-void TextActor::SetText(String const& text)
+void TextActor::SetText(const String& text)
 {
     if (!layout_)
     {
@@ -87,7 +87,7 @@ void TextActor::SetFont(FontPtr font)
     }
 }
 
-void TextActor::SetFontFamily(String const& family)
+void TextActor::SetFontFamily(const String& family)
 {
     if (style_.font_family != family)
     {
@@ -207,7 +207,7 @@ void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
     }
 }
 
-void TextActor::SetFillColor(Color const& color)
+void TextActor::SetFillColor(const Color& color)
 {
     if (style_.fill_brush)
     {
@@ -219,7 +219,7 @@ void TextActor::SetFillColor(Color const& color)
     }
 }
 
-void TextActor::SetOutlineColor(Color const& outline_color)
+void TextActor::SetOutlineColor(const Color& outline_color)
 {
     if (style_.outline_brush)
     {

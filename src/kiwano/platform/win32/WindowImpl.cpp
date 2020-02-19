@@ -46,9 +46,9 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
+    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
 
-    void SetTitle(String const& title) override;
+    void SetTitle(const String& title) override;
 
     void SetIcon(uint32_t icon_resource) override;
 
@@ -81,7 +81,7 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
                          bool fullscreen)
 {
     WindowWin32ImplPtr ptr = new (std::nothrow) WindowWin32Impl;
@@ -208,7 +208,7 @@ WindowWin32Impl::WindowWin32Impl()
 
 WindowWin32Impl::~WindowWin32Impl() {}
 
-void WindowWin32Impl::Init(String const& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
                            bool fullscreen)
 {
     HINSTANCE  hinst   = GetModuleHandleW(nullptr);
@@ -317,7 +317,7 @@ void WindowWin32Impl::PumpEvents()
     }
 }
 
-void WindowWin32Impl::SetTitle(String const& title)
+void WindowWin32Impl::SetTitle(const String& title)
 {
     if (handle_)
     {

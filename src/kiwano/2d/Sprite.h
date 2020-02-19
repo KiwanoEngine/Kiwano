@@ -41,12 +41,12 @@ public:
     /// \~chinese
     /// @brief 创建精灵
     /// @param file_path 本地图片路径
-    static SpritePtr Create(String const& file_path);
+    static SpritePtr Create(const String& file_path);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param res 图片资源
-    static SpritePtr Create(Resource const& res);
+    static SpritePtr Create(const Resource& res);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -57,13 +57,13 @@ public:
     /// @brief 创建精灵
     /// @param file_path 本地图片路径
     /// @param crop_rect 裁剪矩形
-    static SpritePtr Create(String const& file_path, const Rect& crop_rect);
+    static SpritePtr Create(const String& file_path, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param res 图片资源
     /// @param crop_rect 裁剪矩形
-    static SpritePtr Create(Resource const& res, const Rect& crop_rect);
+    static SpritePtr Create(const Resource& res, const Rect& crop_rect);
 
     Sprite();
 
@@ -73,13 +73,13 @@ public:
     /// @brief 加载本地图片
     /// @param file_path 本地图片路径
     /// @param autoresize 是否自动调整自身大小为图像大小
-    bool Load(String const& file_path, bool autoresize = true);
+    bool Load(const String& file_path, bool autoresize = true);
 
     /// \~chinese
     /// @brief 加载图像资源
     /// @param res 图片资源
     /// @param autoresize 是否自动调整自身大小为图像大小
-    bool Load(Resource const& res, bool autoresize = true);
+    bool Load(const Resource& res, bool autoresize = true);
 
     /// \~chinese
     /// @brief 获取图像原宽度

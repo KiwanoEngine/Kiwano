@@ -94,7 +94,7 @@ void RenderContextImpl::EndDraw()
     RestoreDrawingState();
 }
 
-void RenderContextImpl::DrawTexture(Texture const& texture, const Rect* src_rect, const Rect* dest_rect)
+void RenderContextImpl::DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
@@ -118,7 +118,7 @@ void RenderContextImpl::DrawTexture(Texture const& texture, const Rect* src_rect
     }
 }
 
-void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& offset)
+void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& offset)
 {
     KGE_ASSERT(text_renderer_ && "Text renderer has not been initialized!");
 
@@ -159,7 +159,7 @@ void RenderContextImpl::DrawTextLayout(TextLayout const& layout, Point const& of
     }
 }
 
-void RenderContextImpl::DrawShape(Shape const& shape)
+void RenderContextImpl::DrawShape(const Shape& shape)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -177,7 +177,7 @@ void RenderContextImpl::DrawShape(Shape const& shape)
     }
 }
 
-void RenderContextImpl::DrawLine(Point const& point1, Point const& point2)
+void RenderContextImpl::DrawLine(const Point& point1, const Point& point2)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -192,7 +192,7 @@ void RenderContextImpl::DrawLine(Point const& point1, Point const& point2)
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawRectangle(Rect const& rect)
+void RenderContextImpl::DrawRectangle(const Rect& rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -206,7 +206,7 @@ void RenderContextImpl::DrawRectangle(Rect const& rect)
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radius)
+void RenderContextImpl::DrawRoundedRectangle(const Rect& rect, const Vec2& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -221,7 +221,7 @@ void RenderContextImpl::DrawRoundedRectangle(Rect const& rect, Vec2 const& radiu
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius)
+void RenderContextImpl::DrawEllipse(const Point& center, const Vec2& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -236,7 +236,7 @@ void RenderContextImpl::DrawEllipse(Point const& center, Vec2 const& radius)
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::FillShape(Shape const& shape)
+void RenderContextImpl::FillShape(const Shape& shape)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -251,7 +251,7 @@ void RenderContextImpl::FillShape(Shape const& shape)
     }
 }
 
-void RenderContextImpl::FillRectangle(Rect const& rect)
+void RenderContextImpl::FillRectangle(const Rect& rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -262,7 +262,7 @@ void RenderContextImpl::FillRectangle(Rect const& rect)
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::FillRoundedRectangle(Rect const& rect, Vec2 const& radius)
+void RenderContextImpl::FillRoundedRectangle(const Rect& rect, const Vec2& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -273,7 +273,7 @@ void RenderContextImpl::FillRoundedRectangle(Rect const& rect, Vec2 const& radiu
     IncreasePrimitivesCount();
 }
 
-void RenderContextImpl::FillEllipse(Point const& center, Vec2 const& radius)
+void RenderContextImpl::FillEllipse(const Point& center, const Vec2& radius)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
@@ -300,7 +300,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, math::Vec2T<uint32_t> si
     KGE_THROW_IF_FAILED(hr, "Create texture failed");
 }
 
-void RenderContextImpl::PushClipRect(Rect const& clip_rect)
+void RenderContextImpl::PushClipRect(const Rect& clip_rect)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
@@ -360,7 +360,7 @@ void RenderContextImpl::Clear()
     render_target_->Clear();
 }
 
-void RenderContextImpl::Clear(Color const& clear_color)
+void RenderContextImpl::Clear(const Color& clear_color)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
     render_target_->Clear(DX::ConvertToColorF(clear_color));
@@ -445,7 +445,7 @@ void RenderContextImpl::SetTextAntialiasMode(TextAntialiasMode mode)
     render_target_->SetTextAntialiasMode(antialias_mode);
 }
 
-bool RenderContextImpl::CheckVisibility(Rect const& bounds, Matrix3x2 const& transform)
+bool RenderContextImpl::CheckVisibility(const Rect& bounds, const Matrix3x2& transform)
 {
     KGE_ASSERT(render_target_ && "Render target has not been initialized!");
 
@@ -456,7 +456,7 @@ bool RenderContextImpl::CheckVisibility(Rect const& bounds, Matrix3x2 const& tra
     return visible_size_.Intersects(Matrix3x2(transform * global_transform_).Transform(bounds));
 }
 
-void RenderContextImpl::Resize(Size const& size)
+void RenderContextImpl::Resize(const Size& size)
 {
     visible_size_ = Rect(Point(), size);
 }

@@ -65,7 +65,7 @@ public:
     /// \~chinese
     /// @brief 开始添加路径并打开输入流
     /// @param begin_pos 路径起始点
-    void BeginPath(Point const& begin_pos = Point());
+    void BeginPath(const Point& begin_pos = Point());
 
     /// \~chinese
     /// @brief 结束路径并关闭输入流
@@ -75,12 +75,12 @@ public:
     /// \~chinese
     /// @brief 添加一条线段
     /// @param point 端点
-    void AddLine(Point const& point);
+    void AddLine(const Point& point);
 
     /// \~chinese
     /// @brief 添加多条线段
     /// @param points 端点集合
-    void AddLines(Vector<Point> const& points);
+    void AddLines(const Vector<Point>& points);
 
     /// \~chinese
     /// @brief 添加多条线段
@@ -93,7 +93,7 @@ public:
     /// @param point1 贝塞尔曲线的第一个控制点
     /// @param point2 贝塞尔曲线的第二个控制点
     /// @param point3 贝塞尔曲线的终点
-    void AddBezier(Point const& point1, Point const& point2, Point const& point3);
+    void AddBezier(const Point& point1, const Point& point2, const Point& point3);
 
     /// \~chinese
     /// @brief 添加弧线
@@ -102,7 +102,7 @@ public:
     /// @param rotation 椭圆旋转角度
     /// @param clockwise 顺时针 or 逆时针
     /// @param is_small 是否取小于 180° 的弧
-    void AddArc(Point const& point, Size const& radius, float rotation, bool clockwise = true, bool is_small = true);
+    void AddArc(const Point& point, const Size& radius, float rotation, bool clockwise = true, bool is_small = true);
 
     /// \~chinese
     /// @brief 合并形状

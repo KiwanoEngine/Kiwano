@@ -44,21 +44,21 @@ class Font : public NativeObject
 public:
     /// \~chinese
     /// @brief 创建字体
-    static FontPtr Create(String const& file);
+    static FontPtr Create(const String& file);
 
     /// \~chinese
     /// @brief 创建字体
-    static FontPtr Create(Resource const& resource);
+    static FontPtr Create(const Resource& resource);
 
     Font();
 
     /// \~chinese
     /// @brief 加载字体文件
-    bool Load(String const& file);
+    bool Load(const String& file);
 
     /// \~chinese
     /// @brief 加载字体资源
-    bool Load(Resource const& resource);
+    bool Load(const Resource& resource);
 };
 
 /** @} */
