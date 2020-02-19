@@ -47,18 +47,13 @@ bool EventDispatcher::DispatchEvent(Event* evt)
 
 EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 {
-    return AddListener(listener.Get());
-}
-
-EventListener* EventDispatcher::AddListener(EventListener* listener)
-{
     KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 
     if (listener)
     {
         listeners_.PushBack(listener);
     }
-    return listener;
+    return listener.Get();
 }
 
 EventListener* EventDispatcher::AddListener(String const& name, EventType type, EventListener::Callback callback)
@@ -77,9 +72,9 @@ void EventDispatcher::StartListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(name))
+        if (listener->IsName(name))
         {
-            listener.Start();
+            listener->Start();
         }
     }
 }
@@ -88,9 +83,9 @@ void EventDispatcher::StopListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(name))
+        if (listener->IsName(name))
         {
-            listener.Stop();
+            listener->Stop();
         }
     }
 }
@@ -99,9 +94,9 @@ void EventDispatcher::RemoveListeners(String const& name)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.IsName(name))
+        if (listener->IsName(name))
         {
-            listener.Remove();
+            listener->Remove();
         }
     }
 }
@@ -110,9 +105,9 @@ void EventDispatcher::StartListeners(const EventType& type)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.GetEventType() == type)
+        if (listener->GetEventType() == type)
         {
-            listener.Start();
+            listener->Start();
         }
     }
 }
@@ -121,9 +116,9 @@ void EventDispatcher::StopListeners(const EventType& type)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.GetEventType() == type)
+        if (listener->GetEventType() == type)
         {
-            listener.Stop();
+            listener->Stop();
         }
     }
 }
@@ -132,9 +127,9 @@ void EventDispatcher::RemoveListeners(const EventType& type)
 {
     for (auto& listener : listeners_)
     {
-        if (listener.GetEventType() == type)
+        if (listener->GetEventType() == type)
         {
-            listener.Remove();
+            listener->Remove();
         }
     }
 }
@@ -143,7 +138,7 @@ void EventDispatcher::StartAllListeners()
 {
     for (auto& listener : listeners_)
     {
-        listener.Start();
+        listener->Start();
     }
 }
 
@@ -151,7 +146,7 @@ void EventDispatcher::StopAllListeners()
 {
     for (auto& listener : listeners_)
     {
-        listener.Stop();
+        listener->Stop();
     }
 }
 
@@ -159,7 +154,7 @@ void EventDispatcher::RemoveAllListeners()
 {
     for (auto& listener : listeners_)
     {
-        listener.Remove();
+        listener->Remove();
     }
 }
 

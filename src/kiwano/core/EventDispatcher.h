@@ -36,10 +36,6 @@ public:
 
     /// \~chinese
     /// @brief 添加监听器
-    EventListener* AddListener(EventListener* listener);
-
-    /// \~chinese
-    /// @brief 添加监听器
     /// @param type 监听的事件类型
     /// @param callback 回调函数
     EventListener* AddListener(EventType type, EventListener::Callback callback);

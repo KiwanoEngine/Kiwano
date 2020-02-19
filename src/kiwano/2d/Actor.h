@@ -327,10 +327,6 @@ public:
     void AddChild(ActorPtr child, int zorder = 0);
 
     /// \~chinese
-    /// @brief 添加子角色
-    void AddChild(Actor* child, int zorder = 0);
-
-    /// \~chinese
     /// @brief 添加多个子角色
     void AddChildren(Vector<ActorPtr> const& children);
 
@@ -355,10 +351,6 @@ public:
     void RemoveChild(ActorPtr child);
 
     /// \~chinese
-    /// @brief 移除子角色
-    void RemoveChild(Actor* child);
-
-    /// \~chinese
     /// @brief 移除所有名称相同的子角色
     void RemoveChildren(String const& child_name);
 
@@ -376,17 +368,16 @@ public:
     Component* AddComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief 添加组件
-    /// @param component 组件
-    Component* AddComponent(Component* component);
-
-    /// \~chinese
     /// @brief 获取所有组件
     ComponentList& GetAllComponents();
 
     /// \~chinese
     /// @brief 获取所有组件
     const ComponentList& GetAllComponents() const;
+
+    /// \~chinese
+    /// @brief 移除组件
+    void RemoveComponent(ComponentPtr component);
 
     /// \~chinese
     /// @brief 移除组件
@@ -475,6 +466,10 @@ protected:
     /// \~chinese
     /// @brief 处理事件
     bool HandleEvent(Event* evt);
+
+    /// \~chinese
+    /// @brief 更新组件
+    void UpdateComponents(Duration dt);
 
 private:
     bool           visible_;

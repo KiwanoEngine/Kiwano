@@ -28,13 +28,43 @@ namespace kiwano
 {
 namespace physics
 {
-inline b2Vec2 Stage2World(const Vec2& pos)
+
+KGE_DECLARE_SMART_PTR(PhysicWorld);
+KGE_DECLARE_SMART_PTR(PhysicBody);
+
+namespace global
 {
-    return b2Vec2(pos.x, pos.y);
-}
-inline Vec2 World2Stage(const b2Vec2& pos)
-{
-    return Vec2(pos.x, pos.y);
-}
+
+/// \~chinese
+/// @brief 获取全局缩放比例
+/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+float GetScale();
+
+/// \~chinese
+/// @brief 设置全局缩放比例
+/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+void SetScale(float scale);
+
+/// \~chinese
+/// @brief 游戏世界单位转换为物理世界单位
+/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+float ToPixels(float value);
+
+/// \~chinese
+/// @brief 游戏世界单位转换为物理世界单位
+/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+Vec2 ToPixels(const b2Vec2& pos);
+
+/// \~chinese
+/// @brief 物理世界单位转换为游戏世界单位
+/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+float ToMeters(float value);
+
+/// \~chinese
+/// @brief 物理世界单位转换为游戏世界单位
+/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+b2Vec2 ToMeters(const Vec2& pos);
+
+}  // namespace global
 }  // namespace physics
 }  // namespace kiwano

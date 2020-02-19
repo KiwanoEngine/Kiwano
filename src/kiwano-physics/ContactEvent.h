@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano-physics/Body.h>
+#include <kiwano-physics/PhysicBody.h>
 #include <kiwano-physics/Contact.h>
 
 namespace kiwano

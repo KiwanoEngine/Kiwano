@@ -20,13 +20,11 @@
 
 #pragma once
 #include <kiwano-physics/Fixture.h>
-#include <kiwano-physics/helper.h>
 
 namespace kiwano
 {
 namespace physics
 {
-class Body;
 
 /**
  * \addtogroup Physics
@@ -39,10 +37,6 @@ class KGE_API Contact
 {
 public:
     Contact();
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
 
     /// \~chinese
     /// @brief 是否是接触
@@ -66,11 +60,11 @@ public:
 
     /// \~chinese
     /// @brief 获取物体A
-    Body* GetBodyA() const;
+    PhysicBody* GetBodyA() const;
 
     /// \~chinese
     /// @brief 获取物体B
-    Body* GetBodyB() const;
+    PhysicBody* GetBodyB() const;
 
     /// \~chinese
     /// @brief 设置摩擦力
@@ -104,8 +98,12 @@ public:
     /// @brief 获取切线速度
     float GetTangentSpeed() const;
 
+    /// \~chinese
+    /// @brief 获取b2Contact
     b2Contact* GetB2Contact() const;
 
+    /// \~chinese
+    /// @brief 设置b2Contact
     void SetB2Contact(b2Contact* contact);
 
     bool operator==(const Contact& rhs) const;
@@ -120,29 +118,33 @@ private:
 class ContactList
 {
     template <typename _Ty>
-    class IteratorImpl : public std::iterator<std::forward_iterator_tag, _Ty>
+    class IteratorImpl
     {
-        using herit = std::iterator<std::forward_iterator_tag, _Ty>;
-
     public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = _Ty;
+        using pointer           = _Ty*;
+        using reference         = _Ty&;
+        using difference_type   = ptrdiff_t;
+
         IteratorImpl(const _Ty& elem)
             : elem_(elem)
         {
         }
 
-        inline typename herit::reference operator*() const
+        inline reference operator*() const
         {
-            return const_cast<typename herit::reference>(elem_);
+            return const_cast<reference>(elem_);
         }
 
-        inline typename herit::pointer operator->() const
+        inline pointer operator->() const
         {
-            return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+            return std::pointer_traits<pointer>::pointer_to(**this);
         }
 
         inline IteratorImpl& operator++()
         {
-            elem_ = elem_.GetB2Contact()->GetNext();
+            elem_.SetB2Contact(elem_.GetB2Contact()->GetNext());
             return *this;
         }
 
@@ -225,67 +227,75 @@ private:
 
 /** @} */
 
-inline bool Contact::IsValid() const
-{
-    return contact_ != nullptr;
-}
 inline bool Contact::IsTouching() const
 {
     KGE_ASSERT(contact_);
     return contact_->IsTouching();
 }
+
 inline void Contact::SetEnabled(bool flag)
 {
     KGE_ASSERT(contact_);
     contact_->SetEnabled(flag);
 }
+
 inline bool Contact::IsEnabled() const
 {
     KGE_ASSERT(contact_);
     return contact_->IsEnabled();
 }
+
 inline void Contact::SetFriction(float friction)
 {
     KGE_ASSERT(contact_);
     contact_->SetFriction(friction);
 }
+
 inline float Contact::GetFriction() const
 {
     KGE_ASSERT(contact_);
     return contact_->GetFriction();
 }
+
 inline void Contact::ResetFriction()
 {
     KGE_ASSERT(contact_);
     contact_->ResetFriction();
 }
+
 inline void Contact::SetRestitution(float restitution)
 {
     KGE_ASSERT(contact_);
     contact_->SetRestitution(restitution);
 }
+
 inline float Contact::GetRestitution() const
 {
     KGE_ASSERT(contact_);
     return contact_->GetRestitution();
 }
+
 inline void Contact::ResetRestitution()
 {
     KGE_ASSERT(contact_);
     contact_->ResetRestitution();
 }
+
 inline b2Contact* Contact::GetB2Contact() const
 {
     return contact_;
 }
+
 inline void Contact::SetB2Contact(b2Contact* contact)
 {
     contact_ = contact;
 }
+
 inline bool Contact::operator==(const Contact& rhs) const
 {
     return contact_ == rhs.contact_;
 }
+
 inline bool Contact::operator!=(const Contact& rhs) const
 {
     return contact_ != rhs.contact_;

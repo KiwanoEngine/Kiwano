@@ -30,10 +30,13 @@ ContactEdge::ContactEdge()
 {
 }
 
-ContactEdge::ContactEdge(b2ContactEdge* edge)
-    : ContactEdge()
+Contact ContactEdge::GetContact() const
 {
-    SetB2ContactEdge(edge);
+    KGE_ASSERT(edge_);
+
+    Contact contact;
+    contact.SetB2Contact(edge_->contact);
+    return contact;
 }
 
 }  // namespace physics

@@ -26,6 +26,8 @@
 namespace kiwano
 {
 
+class Application;
+
 KGE_DECLARE_SMART_PTR(Runner);
 
 /**
@@ -34,6 +36,8 @@ KGE_DECLARE_SMART_PTR(Runner);
  */
 class KGE_API Runner : public virtual ObjectBase
 {
+    friend class Application;
+
 public:
     /// \~chinese
     /// @brief 创建程序运行器
@@ -85,9 +89,10 @@ public:
     /// @brief 获取上一次更新时间
     Time GetLastUpdateTime() const;
 
-    /// \~chinese
-    /// @brief 设置上一次更新时间
-    void SetLastUpdateTime(Time time);
+private:
+    void Ready();
+
+    void Destroy();
 
 private:
     WindowPtr main_window_;
@@ -116,11 +121,6 @@ inline void Runner::SetMainWindow(WindowPtr window)
 inline Time Runner::GetLastUpdateTime() const
 {
     return last_update_time_;
-}
-
-inline void Runner::SetLastUpdateTime(Time time)
-{
-    last_update_time_ = time;
 }
 
 }  // namespace kiwano

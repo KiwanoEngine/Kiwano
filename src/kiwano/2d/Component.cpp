@@ -19,32 +19,36 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Component.h>
+#include <kiwano/2d/Actor.h>
 
 namespace kiwano
 {
 
 Component::Component()
-    : actor_(nullptr)
+    : enabled_(true)
+    , actor_(nullptr)
 {
 }
 
-Component::~Component()
-{
-    Unbind();
-}
+Component::~Component() {}
 
-void Component::BindActor(Actor* actor)
+void Component::InitComponent(Actor* actor)
 {
-    if (actor_)
-    {
-        Unbind();
-    }
     actor_ = actor;
 }
 
-void Component::Unbind()
+void Component::DestroyComponent()
 {
     actor_ = nullptr;
+}
+
+void Component::RemoveFromActor()
+{
+    if (actor_)
+    {
+        actor_->RemoveComponent(this);
+        actor_ = nullptr;
+    }
 }
 
 }  // namespace kiwano

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2018-2019 Kiwano - Nomango
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,55 +19,51 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano-physics/Global.h>
 
 namespace kiwano
 {
-/**
- * \addtogroup Actions
- * @{
- */
-
-/**
- * \~chinese
- * @brief 动画管理器
- */
-class KGE_API ActionManager
+namespace physics
 {
-public:
-    /// \~chinese
-    /// @brief 添加动画
-    Action* AddAction(ActionPtr action);
+namespace global
+{
 
-    /// \~chinese
-    /// @brief 继续所有暂停动画
-    void ResumeAllActions();
+namespace
+{
+float global_scale = 100.f;  // 100 pixels per meters
+}
 
-    /// \~chinese
-    /// @brief 暂停所有动画
-    void PauseAllActions();
+float GetScale()
+{
+    return global_scale;
+}
 
-    /// \~chinese
-    /// @brief 停止所有动画
-    void StopAllActions();
+void SetScale(float scale)
+{
+    global_scale = scale;
+}
 
-    /// \~chinese
-    /// @brief 获取指定名称的动画
-    /// @param name 动画名称
-    ActionPtr GetAction(String const& name);
+float ToPixels(float value)
+{
+    return value * global_scale;
+}
 
-    /// \~chinese
-    /// @brief 获取所有动画
-    const ActionList& GetAllActions() const;
+Vec2 ToPixels(const b2Vec2& pos)
+{
+    return Point(ToPixels(pos.x), ToPixels(pos.y));
+}
 
-protected:
-    /// \~chinese
-    /// @brief 更新动画
-    void UpdateActions(Actor* target, Duration dt);
+float ToMeters(float value)
+{
+    return value / global_scale;
+}
 
-private:
-    ActionList actions_;
-};
+b2Vec2 ToMeters(const Vec2& pos)
+{
+    return b2Vec2(ToMeters(pos.x), ToMeters(pos.y));
+}
 
-/** @} */
+}  // namespace global
+
+}  // namespace physics
 }  // namespace kiwano

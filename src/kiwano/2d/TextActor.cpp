@@ -27,12 +27,7 @@ namespace kiwano
 
 TextActorPtr TextActor::Create(const String& text)
 {
-    TextActorPtr ptr = new (std::nothrow) TextActor;
-    if (ptr)
-    {
-        ptr->SetText(text);
-    }
-    return ptr;
+    return TextActor::Create(text, TextStyle());
 }
 
 TextActorPtr TextActor::Create(const String& text, const TextStyle& style)
@@ -48,7 +43,6 @@ TextActorPtr TextActor::Create(const String& text, const TextStyle& style)
 
 TextActor::TextActor()
 {
-    layout_ = TextLayout::Create();
 }
 
 TextActor::~TextActor() {}
@@ -69,13 +63,18 @@ Size TextActor::GetSize() const
 
 void TextActor::SetText(String const& text)
 {
+    if (!layout_)
+    {
+        layout_ = TextLayout::Create();
+    }
     layout_->Reset(text, style_);
 }
 
 void TextActor::SetStyle(const TextStyle& style)
 {
     style_ = style;
-    layout_->Reset(style);
+    if (layout_)
+        layout_->Reset(style);
 }
 
 void TextActor::SetFont(FontPtr font)
@@ -83,7 +82,8 @@ void TextActor::SetFont(FontPtr font)
     if (style_.font != font)
     {
         style_.font = font;
-        layout_->SetFont(font, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetFont(font, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -92,7 +92,8 @@ void TextActor::SetFontFamily(String const& family)
     if (style_.font_family != family)
     {
         style_.font_family = family;
-        layout_->SetFontFamily(family, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetFontFamily(family, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -101,7 +102,8 @@ void TextActor::SetFontSize(float size)
     if (style_.font_size != size)
     {
         style_.font_size = size;
-        layout_->SetFontSize(size, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetFontSize(size, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -110,7 +112,8 @@ void TextActor::SetFontWeight(uint32_t weight)
     if (style_.font_weight != weight)
     {
         style_.font_weight = weight;
-        layout_->SetFontWeight(weight, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetFontWeight(weight, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -119,7 +122,8 @@ void TextActor::SetItalic(bool italic)
     if (style_.italic != italic)
     {
         style_.italic = italic;
-        layout_->SetItalic(italic, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetItalic(italic, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -128,7 +132,8 @@ void TextActor::SetUnderline(bool enable)
     if (style_.show_underline != enable)
     {
         style_.show_underline = enable;
-        layout_->SetUnderline(enable, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetUnderline(enable, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -137,7 +142,8 @@ void TextActor::SetStrikethrough(bool enable)
     if (style_.show_strikethrough != enable)
     {
         style_.show_strikethrough = enable;
-        layout_->SetStrikethrough(enable, { 0, layout_->GetContentLength() });
+        if (layout_)
+            layout_->SetStrikethrough(enable, { 0, layout_->GetContentLength() });
     }
 }
 
@@ -146,7 +152,8 @@ void TextActor::SetWrapWidth(float wrap_width)
     if (style_.wrap_width != wrap_width)
     {
         style_.wrap_width = wrap_width;
-        layout_->SetWrapWidth(wrap_width);
+        if (layout_)
+            layout_->SetWrapWidth(wrap_width);
     }
 }
 
@@ -155,7 +162,8 @@ void TextActor::SetLineSpacing(float line_spacing)
     if (style_.line_spacing != line_spacing)
     {
         style_.line_spacing = line_spacing;
-        layout_->SetLineSpacing(line_spacing);
+        if (layout_)
+            layout_->SetLineSpacing(line_spacing);
     }
 }
 
@@ -164,7 +172,8 @@ void TextActor::SetAlignment(TextAlign align)
     if (style_.alignment != align)
     {
         style_.alignment = align;
-        layout_->SetAlignment(align);
+        if (layout_)
+            layout_->SetAlignment(align);
     }
 }
 
@@ -173,7 +182,8 @@ void TextActor::SetFillBrush(BrushPtr brush)
     if (style_.fill_brush != brush)
     {
         style_.fill_brush = brush;
-        layout_->SetDefaultFillBrush(brush);
+        if (layout_)
+            layout_->SetDefaultFillBrush(brush);
     }
 }
 
@@ -182,7 +192,8 @@ void TextActor::SetOutlineBrush(BrushPtr brush)
     if (style_.outline_brush != brush)
     {
         style_.outline_brush = brush;
-        layout_->SetDefaultOutlineBrush(brush);
+        if (layout_)
+            layout_->SetDefaultOutlineBrush(brush);
     }
 }
 
@@ -191,7 +202,8 @@ void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
     if (style_.outline_stroke != stroke)
     {
         style_.outline_stroke = stroke;
-        layout_->SetDefaultOutlineStrokeStyle(stroke);
+        if (layout_)
+            layout_->SetDefaultOutlineStrokeStyle(stroke);
     }
 }
 
@@ -221,8 +233,6 @@ void TextActor::SetOutlineColor(Color const& outline_color)
 
 void TextActor::SetTextLayout(TextLayoutPtr layout)
 {
-    KGE_ASSERT(layout && "TextLayout must not be nullptr");
-
     if (layout_ != layout)
     {
         layout_ = layout;
@@ -243,8 +253,7 @@ bool TextActor::CheckVisibility(RenderContext& ctx) const
 
 void TextActor::UpdateDirtyLayout()
 {
-    KGE_ASSERT(layout_);
-    if (layout_->UpdateWhenDirty())
+    if (layout_ && layout_->UpdateWhenDirty())
     {
         ForceUpdateLayout();
     }
@@ -252,10 +261,15 @@ void TextActor::UpdateDirtyLayout()
 
 void TextActor::ForceUpdateLayout()
 {
-    KGE_ASSERT(layout_);
-
-    layout_->UpdateWhenDirty();
-    SetSize(layout_->GetSize());
+    if (layout_)
+    {
+        layout_->UpdateWhenDirty();
+        SetSize(layout_->GetSize());
+    }
+    else
+    {
+        SetSize(Size());
+    }
 }
 
 }  // namespace kiwano

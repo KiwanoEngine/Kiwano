@@ -44,18 +44,13 @@ void ActionManager::UpdateActions(Actor* target, Duration dt)
 
 Action* ActionManager::AddAction(ActionPtr action)
 {
-    return AddAction(action.Get());
-}
-
-Action* ActionManager::AddAction(Action* action)
-{
     KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 
     if (action)
     {
         actions_.PushBack(action);
     }
-    return action;
+    return action.Get();
 }
 
 void ActionManager::ResumeAllActions()
@@ -65,7 +60,7 @@ void ActionManager::ResumeAllActions()
 
     for (auto& action : actions_)
     {
-        action.Resume();
+        action->Resume();
     }
 }
 
@@ -76,7 +71,7 @@ void ActionManager::PauseAllActions()
 
     for (auto& action : actions_)
     {
-        action.Pause();
+        action->Pause();
     }
 }
 
@@ -87,7 +82,7 @@ void ActionManager::StopAllActions()
 
     for (auto& action : actions_)
     {
-        action.Stop();
+        action->Stop();
     }
 }
 
@@ -97,9 +92,8 @@ ActionPtr ActionManager::GetAction(String const& name)
         return nullptr;
 
     for (auto& action : actions_)
-        if (action.IsName(name))
-            return &action;
-
+        if (action->IsName(name))
+            return action;
     return nullptr;
 }
 

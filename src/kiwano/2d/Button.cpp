@@ -25,18 +25,17 @@
 namespace kiwano
 {
 
-ButtonPtr Button::Create(ActorPtr actor, Callback const& click)
+ButtonPtr Button::Create(Callback const& click)
 {
-    return Button::Create(actor, click, nullptr, nullptr, nullptr);
+    return Button::Create(click, nullptr, nullptr, nullptr);
 }
 
-ButtonPtr Button::Create(ActorPtr actor, Callback const& click, Callback const& pressed, Callback const& mouse_over,
+ButtonPtr Button::Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
                          Callback const& mouse_out)
 {
     ButtonPtr ptr = new (std::nothrow) Button;
     if (ptr)
     {
-        ptr->BindActor(actor);
         ptr->SetClickCallback(click);
         ptr->SetPressedCallback(pressed);
         ptr->SetMouseOverCallback(mouse_over);
@@ -46,52 +45,12 @@ ButtonPtr Button::Create(ActorPtr actor, Callback const& click, Callback const& 
 }
 
 Button::Button()
-    : enabled_(true)
-    , status_(Status::Normal)
+    : status_(Status::Normal)
 {
 }
 
 Button::~Button()
 {
-    Unbind();
-}
-
-bool Button::IsEnable() const
-{
-    return enabled_;
-}
-
-void Button::SetEnabled(bool enabled)
-{
-    if (enabled_ != enabled)
-    {
-        enabled_ = enabled;
-    }
-}
-
-void Button::SetClickCallback(const Callback& func)
-{
-    click_callback_ = func;
-}
-
-void Button::SetPressedCallback(const Callback& func)
-{
-    pressed_callback_ = func;
-}
-
-void Button::SetMouseOverCallback(const Callback& func)
-{
-    mouse_over_callback_ = func;
-}
-
-void Button::SetMouseOutCallback(const Callback& func)
-{
-    mouse_out_callback_ = func;
-}
-
-Button::Status Button::GetStatus() const
-{
-    return status_;
 }
 
 void Button::SetStatus(Status status)
@@ -105,7 +64,7 @@ void Button::SetStatus(Status status)
             Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Arrow);
 
             if (mouse_out_callback_)
-                mouse_out_callback_(this, actor_);
+                mouse_out_callback_(this, GetBoundActor());
         }
         else if (status == Status::Hover)
         {
@@ -114,24 +73,35 @@ void Button::SetStatus(Status status)
             if (old_status != Status::Pressed)
             {
                 if (mouse_over_callback_)
-                    mouse_over_callback_(this, actor_);
+                    mouse_over_callback_(this, GetBoundActor());
             }
         }
         else if (status == Status::Pressed)
         {
             if (pressed_callback_)
-                pressed_callback_(this, actor_);
+                pressed_callback_(this, GetBoundActor());
         }
 
         status_ = status;
     }
 }
 
+void Button::InitComponent(Actor* actor)
+{
+    Component::InitComponent(actor);
+    if (actor)
+    {
+        actor->SetResponsible(true);
+    }
+}
+
+void Button::DestroyComponent()
+{
+    Component::DestroyComponent();
+}
+
 void Button::HandleEvent(Event* evt)
 {
-    if (!enabled_)
-        return;
-
     if (evt->IsType<MouseHoverEvent>())
     {
         SetStatus(Status::Hover);
@@ -151,16 +121,7 @@ void Button::HandleEvent(Event* evt)
     else if (evt->IsType<MouseClickEvent>())
     {
         if (click_callback_)
-            click_callback_(this, actor_);
-    }
-}
-
-void Button::BindActor(Actor* actor)
-{
-    Component::BindActor(actor);
-    if (actor)
-    {
-        actor->SetResponsible(true);
+            click_callback_(this, GetBoundActor());
     }
 }
 

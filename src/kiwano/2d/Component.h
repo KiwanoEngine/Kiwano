@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/Time.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/IntrusiveList.h>
 
@@ -47,16 +48,20 @@ class KGE_API Component
 
 public:
     /// \~chinese
-    /// @brief 绑定到角色
-    virtual void BindActor(Actor* actor);
+    /// @brief 是否启用组件
+    bool IsEnable() const;
 
     /// \~chinese
-    /// @brief 取消绑定到角色
-    virtual void Unbind();
+    /// @brief 设置组件启用或禁用
+    void SetEnabled(bool enabled);
 
     /// \~chinese
     /// @brief 获取绑定的角色
     Actor* GetBoundActor() const;
+
+    /// \~chinese
+    /// @brief 从角色中移除
+    void RemoveFromActor();
 
 protected:
     Component();
@@ -64,16 +69,44 @@ protected:
     virtual ~Component();
 
     /// \~chinese
+    /// @brief 初始化组件
+    virtual void InitComponent(Actor* actor);
+
+    /// \~chinese
+    /// @brief 销毁组件
+    virtual void DestroyComponent();
+
+    /// \~chinese
+    /// @brief 更新组件
+    virtual void OnUpdate(Duration dt);
+
+    /// \~chinese
     /// @brief 处理角色事件
     virtual void HandleEvent(Event* evt);
 
-protected:
+private:
+    bool   enabled_;
     Actor* actor_;
 };
+
+inline bool Component::IsEnable() const
+{
+    return enabled_;
+}
+
+inline void Component::SetEnabled(bool enabled)
+{
+    enabled_ = enabled;
+}
 
 inline Actor* Component::GetBoundActor() const
 {
     return actor_;
+}
+
+inline void Component::OnUpdate(Duration dt)
+{
+    KGE_NOT_USED(dt);
 }
 
 inline void Component::HandleEvent(Event* event)

@@ -39,31 +39,21 @@ public:
 
     /// \~chinese
     /// @brief 创建按钮
-    /// @param actor 绑定的角色
     /// @param click 按钮点击回调函数
-    static ButtonPtr Create(ActorPtr actor, Callback const& click);
+    static ButtonPtr Create(Callback const& click);
 
     /// \~chinese
     /// @brief 创建按钮
-    /// @param actor 绑定的角色
     /// @param click 按钮点击回调函数
     /// @param pressed 按钮按下回调函数
     /// @param mouse_over 按钮移入回调函数
     /// @param mouse_out 按钮移出回调函数
-    static ButtonPtr Create(ActorPtr actor, Callback const& click, Callback const& pressed, Callback const& mouse_over,
+    static ButtonPtr Create(Callback const& click, Callback const& pressed, Callback const& mouse_over,
                             Callback const& mouse_out);
 
     Button();
 
     virtual ~Button();
-
-    /// \~chinese
-    /// @brief 获取按钮状态是启用还是禁用
-    bool IsEnable() const;
-
-    /// \~chinese
-    /// @brief 设置按钮启用或禁用
-    void SetEnabled(bool enabled);
 
     /// \~chinese
     /// @brief 设置按钮点击后的回调函数
@@ -80,14 +70,6 @@ public:
     /// \~chinese
     /// @brief 设置鼠标移出按钮时的回调函数
     void SetMouseOutCallback(const Callback& func);
-
-    /// \~chinese
-    /// @brief 绑定到角色
-    void BindActor(ActorPtr actor);
-
-    /// \~chinese
-    /// @brief 绑定到角色
-    void BindActor(Actor* actor) override;
 
 protected:
     /// \~chinese
@@ -108,11 +90,18 @@ protected:
     void SetStatus(Status status);
 
     /// \~chinese
+    /// @brief 初始化组件
+    void InitComponent(Actor* actor) override;
+
+    /// \~chinese
+    /// @brief 销毁组件
+    void DestroyComponent() override;
+
+    /// \~chinese
     /// @brief 处理角色事件
     void HandleEvent(Event* evt) override;
 
 private:
-    bool     enabled_;
     Status   status_;
     Callback click_callback_;
     Callback pressed_callback_;
@@ -120,9 +109,29 @@ private:
     Callback mouse_out_callback_;
 };
 
-inline void Button::BindActor(ActorPtr actor)
+inline void Button::SetClickCallback(const Callback& func)
 {
-    this->BindActor(actor.Get());
+    click_callback_ = func;
+}
+
+inline void Button::SetPressedCallback(const Callback& func)
+{
+    pressed_callback_ = func;
+}
+
+inline void Button::SetMouseOverCallback(const Callback& func)
+{
+    mouse_over_callback_ = func;
+}
+
+inline void Button::SetMouseOutCallback(const Callback& func)
+{
+    mouse_out_callback_ = func;
+}
+
+inline Button::Status Button::GetStatus() const
+{
+    return status_;
 }
 
 }  // namespace kiwano

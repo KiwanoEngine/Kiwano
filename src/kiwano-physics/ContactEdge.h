@@ -37,22 +37,20 @@ class KGE_API ContactEdge
 public:
     ContactEdge();
 
-    ContactEdge(b2ContactEdge* edge);
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
     /// \~chinese
     /// @brief 获取接触物体
-    Body* GetOtherBody() const;
+    PhysicBody* GetOtherBody() const;
 
     /// \~chinese
     /// @brief 获取接触
     Contact GetContact() const;
 
+    /// \~chinese
+    /// @brief 获取b2ContactEdge
     b2ContactEdge* GetB2ContactEdge() const;
 
+    /// \~chinese
+    /// @brief 设置b2ContactEdge
     void SetB2ContactEdge(b2ContactEdge* edge);
 
     bool operator==(const ContactEdge& rhs) const;
@@ -67,36 +65,40 @@ private:
 class ContactEdgeList
 {
     template <typename _Ty>
-    class IteratorImpl : public std::iterator<std::forward_iterator_tag, _Ty>
+    class IteratorImpl
     {
-        using herit = std::iterator<std::forward_iterator_tag, _Ty>;
-
     public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = _Ty;
+        using pointer           = _Ty*;
+        using reference         = _Ty&;
+        using difference_type   = ptrdiff_t;
+
         inline IteratorImpl(const _Ty& elem)
             : elem_(elem)
         {
         }
 
-        inline typename herit::reference operator*() const
+        inline reference operator*() const
         {
-            return const_cast<typename herit::reference>(elem_);
+            return const_cast<reference>(elem_);
         }
 
-        inline typename herit::pointer operator->() const
+        inline pointer operator->() const
         {
-            return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+            return std::pointer_traits<pointer>::pointer_to(**this);
         }
 
         inline IteratorImpl& operator++()
         {
-            elem_ = elem_.GetB2ContactEdge()->next;
+            elem_.SetB2ContactEdge(elem_.GetB2ContactEdge()->next);
             return *this;
         }
 
         inline IteratorImpl operator++(int)
         {
             IteratorImpl old = *this;
-                         operator++();
+            operator++();
             return old;
         }
 
@@ -153,7 +155,7 @@ public:
 
     inline iterator end()
     {
-        return iterator(nullptr);
+        return iterator(ContactEdge());
     }
 
     inline const_iterator end() const
@@ -163,7 +165,7 @@ public:
 
     inline const_iterator cend() const
     {
-        return const_iterator(nullptr);
+        return const_iterator(ContactEdge());
     }
 
 private:
@@ -172,24 +174,10 @@ private:
 
 /** @} */
 
-inline bool ContactEdge::IsValid() const
-{
-    return edge_ != nullptr;
-}
-
-inline Body* ContactEdge::GetOtherBody() const
+inline PhysicBody* ContactEdge::GetOtherBody() const
 {
     KGE_ASSERT(edge_);
-    return static_cast<Body*>(edge_->other->GetUserData());
-}
-
-inline Contact ContactEdge::GetContact() const
-{
-    KGE_ASSERT(edge_);
-
-    Contact contact;
-    contact.SetB2Contact(edge_->contact);
-    return contact;
+    return static_cast<PhysicBody*>(edge_->other->GetUserData());
 }
 
 inline b2ContactEdge* ContactEdge::GetB2ContactEdge() const

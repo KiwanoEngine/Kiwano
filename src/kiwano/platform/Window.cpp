@@ -33,7 +33,6 @@ Window::Window()
 
 Window::~Window()
 {
-    Destroy();
 }
 
 EventPtr Window::PollEvent()

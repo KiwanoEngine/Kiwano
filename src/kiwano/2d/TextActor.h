@@ -56,11 +56,11 @@ public:
 
     /// \~chinese
     /// @brief 获取文本
-    const String& GetText() const;
+    String GetText() const;
 
     /// \~chinese
     /// @brief 获取文本样式
-    const TextStyle& GetStyle() const;
+    TextStyle GetStyle() const;
 
     /// \~chinese
     /// @brief 获取文本布局
@@ -182,10 +182,13 @@ private:
 
 /** @} */
 
-inline const String& TextActor::GetText() const
+inline String TextActor::GetText() const
 {
-    KGE_ASSERT(layout_);
-    return layout_->GetContent();
+    if (layout_)
+    {
+        return layout_->GetContent();
+    }
+    return String();
 }
 
 inline FontPtr TextActor::GetFont() const
@@ -193,7 +196,7 @@ inline FontPtr TextActor::GetFont() const
     return style_.font;
 }
 
-inline const TextStyle& TextActor::GetStyle() const
+inline TextStyle TextActor::GetStyle() const
 {
     return style_;
 }

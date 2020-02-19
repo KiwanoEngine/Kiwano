@@ -33,8 +33,8 @@ template <typename _PtrTy>
 class IntrusiveList
 {
 public:
-    using value_type = typename std::pointer_traits<_PtrTy>::element_type;
-    using pointer    = typename std::pointer_traits<_PtrTy>::pointer;
+    using value_type = typename std::pointer_traits<_PtrTy>::pointer;
+    using pointer    = value_type*;
     using reference  = value_type&;
 
     IntrusiveList()
@@ -50,28 +50,28 @@ public:
 
     /// \~chinese
     /// @brief 获取首元素
-    const pointer GetFirst() const
+    const value_type& GetFirst() const
     {
         return first_;
     }
 
     /// \~chinese
     /// @brief 获取首元素
-    pointer GetFirst()
+    value_type& GetFirst()
     {
         return first_;
     }
 
     /// \~chinese
     /// @brief 获取尾元素
-    const pointer GetLast() const
+    const value_type& GetLast() const
     {
         return last_;
     }
 
     /// \~chinese
     /// @brief 获取尾元素
-    pointer GetLast()
+    value_type& GetLast()
     {
         return last_;
     }
@@ -85,7 +85,7 @@ public:
 
     /// \~chinese
     /// @brief 在链表尾部添加对象
-    void PushBack(pointer child)
+    void PushBack(reference child)
     {
         if (child->prev_)
             child->prev_->next_ = child->next_;
@@ -109,7 +109,7 @@ public:
 
     /// \~chinese
     /// @brief 在链表头部添加对象
-    void PushFront(pointer child)
+    void PushFront(reference child)
     {
         if (child->prev_)
             child->prev_->next_ = child->next_;
@@ -133,7 +133,7 @@ public:
 
     /// \~chinese
     /// @brief 在链表的对象前插入新对象
-    void InsertBefore(pointer child, pointer before)
+    void InsertBefore(reference child, reference before)
     {
         if (child->prev_)
             child->prev_->next_ = child->next_;
@@ -152,7 +152,7 @@ public:
 
     /// \~chinese
     /// @brief 在链表的对象后插入新对象
-    void InsertAfter(pointer child, pointer after)
+    void InsertAfter(reference child, reference after)
     {
         if (child->prev_)
             child->prev_->next_ = child->next_;
@@ -171,7 +171,7 @@ public:
 
     /// \~chinese
     /// @brief 移除对象
-    void Remove(pointer child)
+    void Remove(reference child)
     {
         if (child->next_)
         {
@@ -199,10 +199,10 @@ public:
     /// @brief 清空所有对象
     void Clear()
     {
-        pointer p = first_;
+        value_type p = first_;
         while (p)
         {
-            pointer tmp = p;
+            value_type tmp = p;
             p = p->next_;
             if (tmp)
             {
@@ -222,8 +222,9 @@ public:
             return true;
 
         int pos = 0;
-        pointer p = first_;
-        pointer tmp = p;
+
+        value_type p   = first_;
+        value_type tmp = p;
         do
         {
             tmp = p;
@@ -245,42 +246,36 @@ public:
     }
 
 public:
-    template <typename _PTy>
+    template <typename _PtrTy>
     struct Iterator
     {
         using iterator_category = std::bidirectional_iterator_tag;
-        using pointer           = _PTy;
-        using reference         = typename IntrusiveList::reference;
+        using value_type        = _PtrTy;
+        using pointer           = _PtrTy*;
+        using reference         = _PtrTy&;
         using difference_type   = ptrdiff_t;
 
-        inline Iterator(pointer ptr = nullptr, bool is_end = false)
+        inline Iterator(value_type ptr = nullptr, bool is_end = false)
             : base_(ptr)
             , is_end_(is_end)
         {
         }
 
-        inline pointer Get() const
-        {
-            KGE_ASSERT(!is_end_);
-            return const_cast<pointer&>(base_);
-        }
-
         inline reference operator*() const
         {
             KGE_ASSERT(base_ && !is_end_);
-            return const_cast<reference>(*base_);
+            return const_cast<reference>(base_);
         }
 
         inline pointer operator->() const
         {
-            KGE_ASSERT(base_ && !is_end_);
-            return const_cast<pointer&>(base_);
+            return std::pointer_traits<pointer>::pointer_to(**this);
         }
 
         inline Iterator& operator++()
         {
             KGE_ASSERT(base_ && !is_end_);
-            pointer next = base_->GetNext();
+            value_type next = base_->GetNext();
             if (next)
                 base_ = next;
             else
@@ -330,12 +325,12 @@ public:
     private:
         bool is_end_;
 
-        typename IntrusiveList::pointer base_;
+        typename std::remove_const<value_type>::type base_;
     };
 
 public:
-    using iterator               = Iterator<pointer>;
-    using const_iterator         = Iterator<const pointer>;
+    using iterator               = Iterator<value_type>;
+    using const_iterator         = Iterator<const value_type>;
     using reverse_iterator       = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -399,28 +394,28 @@ public:
         return rend();
     }
 
-    inline pointer front()
+    inline value_type& front()
     {
         if (IsEmpty())
             throw std::out_of_range("front() called on empty list");
         return first_;
     }
 
-    inline const pointer front() const
+    inline const value_type& front() const
     {
         if (IsEmpty())
             throw std::out_of_range("front() called on empty list");
         return first_;
     }
 
-    inline pointer back()
+    inline value_type& back()
     {
         if (IsEmpty())
             throw std::out_of_range("back() called on empty list");
         return last_;
     }
 
-    inline const pointer back() const
+    inline const value_type& back() const
     {
         if (IsEmpty())
             throw std::out_of_range("back() called on empty list");
@@ -428,8 +423,8 @@ public:
     }
 
 private:
-    pointer first_;
-    pointer last_;
+    value_type first_;
+    value_type last_;
 };
 
 
@@ -439,7 +434,9 @@ template <typename _PtrTy>
 class IntrusiveListValue
 {
 public:
-    using pointer = typename std::pointer_traits<_PtrTy>::pointer;
+    using value_type = typename std::pointer_traits<_PtrTy>::pointer;
+    using reference  = value_type&;
+    using pointer    = value_type*;
 
     IntrusiveListValue()
         : prev_(nullptr)
@@ -447,7 +444,7 @@ public:
     {
     }
 
-    IntrusiveListValue(pointer rhs)
+    IntrusiveListValue(value_type rhs)
         : prev_(nullptr)
         , next_(nullptr)
     {
@@ -460,35 +457,35 @@ public:
 
     /// \~chinese
     /// @brief 获取前一元素
-    const pointer GetPrev() const
+    const value_type& GetPrev() const
     {
         return prev_;
     }
 
     /// \~chinese
     /// @brief 获取前一元素
-    pointer GetPrev()
+    value_type& GetPrev()
     {
         return prev_;
     }
 
     /// \~chinese
     /// @brief 获取下一元素
-    const pointer GetNext() const
+    const value_type& GetNext() const
     {
         return next_;
     }
 
     /// \~chinese
     /// @brief 获取下一元素
-    pointer GetNext()
+    value_type& GetNext()
     {
         return next_;
     }
 
 private:
-    pointer prev_;
-    pointer next_;
+    value_type prev_;
+    value_type next_;
 
     friend class IntrusiveList<_PtrTy>;
 };

@@ -58,7 +58,7 @@ RunnerPtr Runner::Create(WindowPtr main_window, Function<void()> on_ready, Funct
     SmartPtr<CallbackRunner> ptr = new (std::nothrow) CallbackRunner;
     if (ptr)
     {
-        ptr->on_ready = on_ready;
+        ptr->on_ready   = on_ready;
         ptr->on_destroy = on_destroy;
         ptr->SetMainWindow(main_window);
     }
@@ -95,6 +95,23 @@ bool Runner::MainLoop()
     app.Update(dt);
     app.Render();
     return true;
+}
+
+void Runner::Ready()
+{
+    OnReady();
+    last_update_time_ = Time::Now();
+}
+
+void Runner::Destroy()
+{
+    OnDestroy();
+
+    if (main_window_)
+    {
+        main_window_->Destroy();
+        main_window_.Reset();
+    }
 }
 
 }  // namespace kiwano

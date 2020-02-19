@@ -68,11 +68,16 @@ Actor::Actor()
 {
 }
 
-Actor::~Actor() {}
+Actor::~Actor()
+{
+    RemoveAllComponents();
+    RemoveAllChildren();
+}
 
 void Actor::Update(Duration dt)
 {
     UpdateActions(this, dt);
+    UpdateComponents(dt);
     UpdateTimers(dt);
 
     if (!update_pausing_)
@@ -159,7 +164,7 @@ void Actor::RenderBorder(RenderContext& ctx)
 
     for (auto& child : children_)
     {
-        child.RenderBorder(ctx);
+        child->RenderBorder(ctx);
     }
 }
 
@@ -221,7 +226,10 @@ bool Actor::HandleEvent(Event* evt)
         {
             next = component->GetNext();
 
-            component->HandleEvent(evt);
+            if (component->IsEnable())
+            {
+                component->HandleEvent(evt);
+            }
         }
     }
 
@@ -273,6 +281,23 @@ bool Actor::HandleEvent(Event* evt)
     return true;
 }
 
+void Actor::UpdateComponents(Duration dt)
+{
+    if (!components_.IsEmpty())
+    {
+        ComponentPtr next;
+        for (auto component = components_.GetFirst(); component; component = next)
+        {
+            next = component->GetNext();
+
+            if (component->IsEnable())
+            {
+                component->OnUpdate(dt);
+            }
+        }
+    }
+}
+
 const Matrix3x2& Actor::GetTransformMatrix() const
 {
     UpdateTransform();
@@ -318,7 +343,7 @@ void Actor::UpdateTransform() const
 
     // update children's transform
     for (const auto& child : children_)
-        child.dirty_transform_ = true;
+        child->dirty_transform_ = true;
 }
 
 void Actor::UpdateOpacity()
@@ -334,7 +359,7 @@ void Actor::UpdateOpacity()
 
     for (auto& child : children_)
     {
-        child.UpdateOpacity();
+        child->UpdateOpacity();
     }
 }
 
@@ -345,7 +370,7 @@ void Actor::SetStage(Stage* stage)
         stage_ = stage;
         for (auto& child : children_)
         {
-            child.stage_ = stage;
+            child->stage_ = stage;
         }
     }
 }
@@ -356,7 +381,7 @@ void Actor::Reorder()
     {
         ActorPtr me = this;
 
-        parent_->children_.Remove(me.Get());
+        parent_->children_.Remove(me);
 
         ActorPtr sibling = parent_->children_.GetLast();
 
@@ -373,11 +398,11 @@ void Actor::Reorder()
 
         if (sibling)
         {
-            parent_->children_.InsertAfter(me.Get(), sibling);
+            parent_->children_.InsertAfter(me, sibling);
         }
         else
         {
-            parent_->children_.PushFront(me.Get());
+            parent_->children_.PushFront(me);
         }
     }
 }
@@ -487,7 +512,7 @@ void Actor::SetRotation(float angle)
     is_fast_transform_  = false;
 }
 
-void Actor::AddChild(Actor* child, int zorder)
+void Actor::AddChild(ActorPtr child, int zorder)
 {
     KGE_ASSERT(child && "Actor::AddChild failed, NULL pointer exception");
 
@@ -519,11 +544,6 @@ void Actor::AddChild(Actor* child, int zorder)
     }
 }
 
-void Actor::AddChild(ActorPtr child, int zorder)
-{
-    AddChild(child.Get());
-}
-
 void Actor::AddChildren(Vector<ActorPtr> const& children)
 {
     for (const auto& actor : children)
@@ -549,9 +569,9 @@ Vector<ActorPtr> Actor::GetChildren(String const& name) const
 
     for (const auto& child : children_)
     {
-        if (child.hash_name_ == hash_code && child.IsName(name))
+        if (child->hash_name_ == hash_code && child->IsName(name))
         {
-            children.push_back(const_cast<Actor*>(&child));
+            children.push_back(child);
         }
     }
     return children;
@@ -563,9 +583,9 @@ ActorPtr Actor::GetChild(String const& name) const
 
     for (const auto& child : children_)
     {
-        if (child.hash_name_ == hash_code && child.IsName(name))
+        if (child->hash_name_ == hash_code && child->IsName(name))
         {
-            return const_cast<Actor*>(&child);
+            return child;
         }
     }
     return nullptr;
@@ -591,18 +611,14 @@ void Actor::RemoveFromParent()
 
 Component* Actor::AddComponent(ComponentPtr component)
 {
-    return this->AddComponent(component.Get());
-}
-
-Component* Actor::AddComponent(Component* component)
-{
     KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
 
     if (component)
     {
+        component->InitComponent(this);
         components_.PushBack(component);
     }
-    return component;
+    return component.Get();
 }
 
 ComponentList& Actor::GetAllComponents()
@@ -613,6 +629,16 @@ ComponentList& Actor::GetAllComponents()
 const ComponentList& Actor::GetAllComponents() const
 {
     return components_;
+}
+
+void Actor::RemoveComponent(ComponentPtr component)
+{
+    auto iter = std::find(components_.begin(), components_.end(), component);
+    if (iter != components_.end())
+    {
+        component->DestroyComponent();
+        components_.Remove(component);
+    }
 }
 
 void Actor::RemoveComponents(String const& name)
@@ -626,6 +652,7 @@ void Actor::RemoveComponents(String const& name)
 
             if (component->IsName(name))
             {
+                component->DestroyComponent();
                 components_.Remove(component);
             }
         }
@@ -634,15 +661,21 @@ void Actor::RemoveComponents(String const& name)
 
 void Actor::RemoveAllComponents()
 {
+    // Destroy all components
+    if (!components_.IsEmpty())
+    {
+        ComponentPtr next;
+        for (auto component = components_.GetFirst(); component; component = next)
+        {
+            next = component->GetNext();
+
+            component->DestroyComponent();
+        }
+    }
     components_.Clear();
 }
 
 void Actor::RemoveChild(ActorPtr child)
-{
-    RemoveChild(child.Get());
-}
-
-void Actor::RemoveChild(Actor* child)
 {
     KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
 

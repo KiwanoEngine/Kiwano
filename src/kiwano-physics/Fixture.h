@@ -19,13 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano-physics/helper.h>
+#include <memory>
+#include <kiwano-physics/Global.h>
 
 namespace kiwano
 {
 namespace physics
 {
-class Body;
 
 KGE_DECLARE_SMART_PTR(Fixture);
 
@@ -61,56 +61,55 @@ public:
 
     /// \~chinese
     /// @brief 创建圆形夹具
-    /// @param body 添加夹具的物体
     /// @param param 夹具参数
     /// @param radius 圆形半径
     /// @param offset 偏移量
-    static FixturePtr CreateCircle(Body* body, Param const& param, float radius, Point const& offset = Point());
+    static FixturePtr CreateCircle(Param const& param, float radius, Point const& offset = Point());
 
     /// \~chinese
     /// @brief 创建矩形夹具
-    /// @param body 添加夹具的物体
     /// @param param 夹具参数
     /// @param size 矩形大小
     /// @param offset 偏移量
     /// @param rotation 旋转角度
-    static FixturePtr CreateRect(Body* body, Param const& param, Size const& size, Point const& offset = Point(),
+    static FixturePtr CreateRect(Param const& param, Size const& size, Point const& offset = Point(),
                                  float rotation = 0.f);
 
     /// \~chinese
     /// @brief 创建多边形夹具
-    /// @param body 添加夹具的物体
     /// @param param 夹具参数
     /// @param vertexs 多边形顶点
-    static FixturePtr CreatePolygon(Body* body, Param const& param, Vector<Point> const& vertexs);
+    static FixturePtr CreatePolygon(Param const& param, Vector<Point> const& vertexs);
 
     /// \~chinese
     /// @brief 创建边夹具
-    /// @param body 添加夹具的物体
     /// @param param 夹具参数
     /// @param p1 边的起点
     /// @param p2 边的终点
-    static FixturePtr CreateEdge(Body* body, Param const& param, Point const& p1, Point const& p2);
+    static FixturePtr CreateEdge(Param const& param, Point const& p1, Point const& p2);
 
     /// \~chinese
     /// @brief 创建链条夹具
-    /// @param body 添加夹具的物体
     /// @param param 夹具参数
     /// @param vertexs 链条顶点
     /// @param loop 是否连接链条的起点和终点
-    static FixturePtr CreateChain(Body* body, Param const& param, Vector<Point> const& vertexs, bool loop = false);
+    static FixturePtr CreateChain(Param const& param, Vector<Point> const& vertexs, bool loop = false);
 
     Fixture();
 
     virtual ~Fixture();
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
+    /// @brief 初始化夹具
+    bool Init(PhysicBodyPtr body);
+
+    /// \~chinese
+    /// @brief 初始化夹具
+    bool Init(PhysicBody* body);
 
     /// \~chinese
     /// @brief 获取夹具所在的物体
-    Body* GetBody() const;
+    PhysicBody* GetBody() const;
 
     /// \~chinese
     /// @brief 是否是接触传感器
@@ -153,15 +152,25 @@ public:
     /// @brief 点测试
     bool TestPoint(const Point& p) const;
 
+    /// \~chinese
+    /// @brief 销毁夹具
+    void Destroy();
+
+    /// \~chinese
+    /// @brief 获取b2Fixture
     b2Fixture* GetB2Fixture() const;
 
+    /// \~chinese
+    /// @brief 设置b2Fixture
     void SetB2Fixture(b2Fixture* fixture);
 
     bool operator==(const Fixture& rhs) const;
     bool operator!=(const Fixture& rhs) const;
 
 private:
-    b2Fixture* fixture_;
+    b2Fixture*               fixture_;
+    std::unique_ptr<b2Shape> shape_;
+    Fixture::Param           param_;
 };
 
 /// \~chinese
@@ -169,13 +178,14 @@ private:
 class FixtureList
 {
     template <typename _Ty>
-    class IteratorImpl : public std::iterator<std::forward_iterator_tag, _Ty>
+    class IteratorImpl
     {
-        using herit = std::iterator<std::forward_iterator_tag, _Ty>;
-
     public:
-        using reference = typename herit::reference;
-        using pointer   = typename herit::pointer;
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = _Ty;
+        using pointer           = _Ty*;
+        using reference         = _Ty&;
+        using difference_type   = ptrdiff_t;
 
         IteratorImpl(pointer elem)
             : elem_(elem)
@@ -184,12 +194,12 @@ class FixtureList
 
         inline reference operator*() const
         {
-            return const_cast<typename herit::reference>(*elem_);
+            return const_cast<reference>(*elem_);
         }
 
         inline pointer operator->() const
         {
-            return std::pointer_traits<typename herit::pointer>::pointer_to(**this);
+            return std::pointer_traits<pointer>::pointer_to(**this);
         }
 
         inline IteratorImpl& operator++()
@@ -203,7 +213,6 @@ class FixtureList
         inline IteratorImpl operator++(int)
         {
             IteratorImpl old = *this;
-
             operator++();
             return old;
         }
@@ -224,6 +233,8 @@ class FixtureList
 
 public:
     using value_type     = Fixture;
+    using reference      = value_type&;
+    using pointer        = value_type*;
     using iterator       = IteratorImpl<value_type>;
     using const_iterator = IteratorImpl<const value_type>;
 
@@ -232,7 +243,7 @@ public:
     {
     }
 
-    inline FixtureList(value_type* first)
+    inline FixtureList(pointer first)
         : first_(first)
     {
     }
@@ -278,62 +289,77 @@ public:
     }
 
 private:
-    value_type* first_;
+    pointer first_;
 };
 
 /** @} */
 
 inline bool Fixture::IsSensor() const
 {
-    KGE_ASSERT(fixture_);
-    return fixture_->IsSensor();
+    return param_.is_sensor;
 }
 
 inline void Fixture::SetSensor(bool sensor)
 {
-    KGE_ASSERT(fixture_);
-    fixture_->SetSensor(sensor);
+    if (param_.is_sensor != sensor)
+    {
+        param_.is_sensor = sensor;
+        if (fixture_)
+        {
+            fixture_->SetSensor(sensor);
+        }
+    }
 }
 
 inline float Fixture::GetDensity() const
 {
-    KGE_ASSERT(fixture_);
-    return fixture_->GetDensity();
+    return param_.density;
 }
 
 inline void Fixture::SetDensity(float density)
 {
-    KGE_ASSERT(fixture_);
-    fixture_->SetDensity(density);
+    if (param_.density != density)
+    {
+        param_.density = density;
+        if (fixture_)
+        {
+            fixture_->SetDensity(density);
+        }
+    }
 }
 
 inline float Fixture::GetFriction() const
 {
-    KGE_ASSERT(fixture_);
-    return fixture_->GetFriction();
+    return param_.friction;
 }
 
 inline void Fixture::SetFriction(float friction)
 {
-    KGE_ASSERT(fixture_);
-    fixture_->SetFriction(friction);
+    if (param_.friction != friction)
+    {
+        param_.friction = friction;
+        if (fixture_)
+        {
+            fixture_->SetFriction(friction);
+        }
+    }
 }
 
 inline float Fixture::GetRestitution() const
 {
-    KGE_ASSERT(fixture_);
-    return fixture_->GetRestitution();
+    return param_.restitution;
 }
 
 inline void Fixture::SetRestitution(float restitution)
 {
-    KGE_ASSERT(fixture_);
-    fixture_->SetRestitution(restitution);
-}
-
-inline bool Fixture::IsValid() const
-{
-    return fixture_ != nullptr;
+    if (param_.restitution != restitution)
+    {
+        param_.restitution = restitution;
+        if (fixture_)
+        {
+            fixture_->SetRestitution(restitution);
+        }
+    }
 }
 
 inline b2Fixture* Fixture::GetB2Fixture() const
@@ -344,6 +370,10 @@ inline b2Fixture* Fixture::GetB2Fixture() const
 inline void Fixture::SetB2Fixture(b2Fixture* fixture)
 {
     fixture_ = fixture;
+    if (fixture)
+    {
+        fixture->SetUserData(this);
+    }
 }
 
 inline bool Fixture::operator==(const Fixture& rhs) const

@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano-physics/Body.h>
-#include <kiwano-physics/helper.h>
+#include <kiwano-physics/PhysicBody.h>
 
 namespace kiwano
 {
@@ -71,16 +70,16 @@ public:
     /// @brief 关节基础参数
     struct ParamBase
     {
-        Body* body_a;  ///< 关节连接的物体A
-        Body* body_b;  ///< 关节连接的物体B
+        PhysicBody* body_a;  ///< 关节连接的物体A
+        PhysicBody* body_b;  ///< 关节连接的物体B
 
-        ParamBase(Body* body_a, Body* body_b)
+        ParamBase(PhysicBody* body_a, PhysicBody* body_b)
             : body_a(body_a)
             , body_b(body_b)
         {
         }
 
-        ParamBase(BodyPtr body_a, BodyPtr body_b)
+        ParamBase(PhysicBodyPtr body_a, PhysicBodyPtr body_b)
             : body_a(body_a.Get())
             , body_b(body_b.Get())
         {
@@ -93,31 +92,40 @@ public:
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, b2JointDef* joint_def);
+    virtual bool Init(PhysicWorld* world);
+
+    /// \~chinese
+    /// @brief 初始化关节
+    bool Init(PhysicWorld* world, b2JointDef* joint_def);
 
     /// \~chinese
     /// @brief 获取关节连接的物体A
-    BodyPtr GetBodyA() const;
+    PhysicBodyPtr GetBodyA() const;
 
     /// \~chinese
     /// @brief 获取关节连接的物体B
-    BodyPtr GetBodyB() const;
+    PhysicBodyPtr GetBodyB() const;
 
     /// \~chinese
     /// @brief 获取物理世界
-    World* GetWorld() const;
+    PhysicWorld* GetWorld() const;
 
     /// \~chinese
     /// @brief 销毁关节
     void Destroy();
 
+    /// \~chinese
+    /// @brief 获取b2Joint
     b2Joint* GetB2Joint() const;
-    void     SetB2Joint(b2Joint* joint);
+
+    /// \~chinese
+    /// @brief 设置b2Joint
+    void SetB2Joint(b2Joint* joint);
 
 private:
-    b2Joint* joint_;
-    World*   world_;
-    Type     type_;
+    b2Joint*     joint_;
+    PhysicWorld* world_;
+    Type         type_;
 };
 
 /// \~chinese
@@ -134,34 +142,31 @@ public:
         float frequency_hz;   ///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
         float damping_ratio;  ///< 阻尼率，值越大关节运动阻尼越大
 
-        Param(Body* body_a, Body* body_b, Point const& anchor_a, Point const& anchor_b, float frequency_hz = 0.f,
-              float damping_ratio = 0.f)
-            : ParamBase(body_a, body_b)
-            , anchor_a(anchor_a)
-            , anchor_b(anchor_b)
-            , frequency_hz(frequency_hz)
-            , damping_ratio(damping_ratio)
+        Param()
+            : Param(nullptr, nullptr, Point(), Point())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor_a, Point const& anchor_b, float frequency_hz = 0.f,
-              float damping_ratio = 0.f)
-            : Param(body_a.Get(), body_b.Get(), anchor_a, anchor_b, frequency_hz, damping_ratio)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor_a, Point const& anchor_b)
+            : ParamBase(body_a, body_b)
+            , anchor_a(anchor_a)
+            , anchor_b(anchor_b)
+            , frequency_hz(0.0f)
+            , damping_ratio(0.0f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建固定距离关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static DistanceJointPtr Create(World* world, Param const& param);
+    static DistanceJointPtr Create(Param const& param);
 
     DistanceJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设置关节长度
@@ -188,6 +193,7 @@ public:
     float GetDampingRatio() const;
 
 private:
+    Param            param_;
     b2DistanceJoint* raw_joint_;
 };
 
@@ -202,31 +208,30 @@ public:
         float max_force;   ///< 最大摩擦力
         float max_torque;  ///< 最大扭力
 
-        Param(Body* body_a, Body* body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
+        Param()
+            : Param(nullptr, nullptr, Point())
+        {
+        }
+
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , max_force(max_force)
             , max_torque(max_torque)
         {
         }
-
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, float max_force = 0.f, float max_torque = 0.f)
-            : Param(body_a.Get(), body_b.Get(), anchor, max_force, max_torque)
-        {
-        }
     };
 
     /// \~chinese
     /// @brief 创建摩擦关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static FrictionJointPtr Create(World* world, Param const& param);
+    static FrictionJointPtr Create(Param const& param);
 
     FrictionJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设置最大摩擦力
@@ -245,6 +250,7 @@ public:
     float GetMaxTorque() const;
 
 private:
+    Param            param_;
     b2FrictionJoint* raw_joint_;
 };
 
@@ -261,31 +267,30 @@ public:
         Joint* joint_b;  ///< 关节B（旋转关节/平移关节）
         float  ratio;    ///< 齿轮传动比
 
-        Param(Joint* joint_a, Joint* joint_b, float ratio = 1.f)
-            : ParamBase(nullptr, nullptr)
-            , joint_a(joint_a)
-            , joint_b(joint_b)
-            , ratio(ratio)
+        Param()
+            : Param(nullptr, nullptr)
         {
         }
 
         Param(JointPtr joint_a, JointPtr joint_b, float ratio = 1.f)
-            : Param(joint_a.Get(), joint_b.Get(), ratio)
+            : ParamBase(nullptr, nullptr)
+            , joint_a(joint_a.Get())
+            , joint_b(joint_b.Get())
+            , ratio(ratio)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建齿轮关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static GearJointPtr Create(World* world, Param const& param);
+    static GearJointPtr Create(Param const& param);
 
     GearJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设定齿轮传动比
@@ -296,6 +301,7 @@ public:
     float GetRatio() const;
 
 private:
+    Param        param_;
     b2GearJoint* raw_joint_;
 };
 
@@ -312,33 +318,30 @@ public:
         float max_torque;         ///< 最大转矩
         float correction_factor;  ///< 位置矫正因子（范围 0-1）
 
-        Param(Body* body_a, Body* body_b, float max_force = 1.f, float max_torque = 100.f,
-              float correction_factor = 0.3f)
-            : ParamBase(body_a, body_b)
-            , max_force(max_force)
-            , max_torque(max_torque)
-            , correction_factor(correction_factor)
+        Param()
+            : Param(nullptr, nullptr)
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, float max_force = 0.f, float max_torque = 0.f,
-              float correction_factor = 0.3f)
-            : Param(body_a.Get(), body_b.Get(), max_force, max_torque, correction_factor)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, float max_force = 0.f, float max_torque = 0.f)
+            : ParamBase(body_a, body_b)
+            , max_force(max_force)
+            , max_torque(max_torque)
+            , correction_factor(0.3f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建马达关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static MotorJointPtr Create(World* world, Param const& param);
+    static MotorJointPtr Create(Param const& param);
 
     MotorJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设置最大摩擦力
@@ -357,6 +360,7 @@ public:
     float GetMaxTorque() const;
 
 private:
+    Param         param_;
     b2MotorJoint* raw_joint_;
 };
 
@@ -369,50 +373,44 @@ public:
     /// @brief 平移关节参数
     struct Param : public Joint::ParamBase
     {
-        Point anchor;             ///< 关节位置
-        Vec2  axis;               ///< 物体A滑动的方向
-        bool  enable_limit;       ///< 是否启用限制
+        Point anchor;        ///< 关节位置
+        Vec2  axis;          ///< 物体A滑动的方向
+        bool  enable_limit;  ///< 是否启用限制
         float lower_translation;  ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
         float upper_translation;  ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
-        bool  enable_motor;       ///< 是否启用马达
-        float max_motor_force;    ///< 最大马达力 [N]
-        float motor_speed;        ///< 马达转速 [degree/s]
+        bool  enable_motor;     ///< 是否启用马达
+        float max_motor_force;  ///< 最大马达力 [N]
+        float motor_speed;      ///< 马达转速 [degree/s]
 
-        Param(Body* body_a, Body* body_b, Point const& anchor, Vec2 const& axis, bool enable_limit = false,
-              float lower_translation = 0.0f, float upper_translation = 0.0f, bool enable_motor = false,
-              float max_motor_force = 0.0f, float motor_speed = 0.0f)
-            : ParamBase(body_a, body_b)
-            , anchor(anchor)
-            , axis(axis)
-            , enable_limit(enable_limit)
-            , lower_translation(lower_translation)
-            , upper_translation(upper_translation)
-            , enable_motor(enable_motor)
-            , max_motor_force(max_motor_force)
-            , motor_speed(motor_speed)
+        Param()
+            : Param(nullptr, nullptr, Point(), Vec2())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, Vec2 const& axis, bool enable_limit = false,
-              float lower_translation = 0.0f, float upper_translation = 0.0f, bool enable_motor = false,
-              float max_motor_force = 0.0f, float motor_speed = 0.0f)
-            : Param(body_a.Get(), body_b.Get(), anchor, axis, enable_limit, lower_translation, upper_translation,
-                    enable_motor, max_motor_force, motor_speed)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, Vec2 const& axis)
+            : ParamBase(body_a, body_b)
+            , anchor(anchor)
+            , axis(axis)
+            , enable_limit(false)
+            , lower_translation(0.0f)
+            , upper_translation(0.0f)
+            , enable_motor(false)
+            , max_motor_force(0.0f)
+            , motor_speed(0.0f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建平移关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static PrismaticJointPtr Create(World* world, Param const& param);
+    static PrismaticJointPtr Create(Param const& param);
 
     PrismaticJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 获取参考角
@@ -471,6 +469,7 @@ public:
     float GetMaxMotorForce() const;
 
 private:
+    Param             param_;
     b2PrismaticJoint* raw_joint_;
 };
 
@@ -489,8 +488,13 @@ public:
         Point ground_anchor_b;  ///< 物体B对应的滑轮的位置
         float ratio;            ///< 滑轮比，关节传动时，滑轮上升和下降的两头的位移比例
 
-        Param(Body* body_a, Body* body_b, Point const& anchor_a, Point const& anchor_b, Point const& ground_anchor_a,
-              Point const& ground_anchor_b, float ratio = 1.0f)
+        Param()
+            : Param(nullptr, nullptr, Point(), Point(), Point(), Point())
+        {
+        }
+
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor_a, Point const& anchor_b,
+              Point const& ground_anchor_a, Point const& ground_anchor_b, float ratio = 1.0f)
             : ParamBase(body_a, body_b)
             , anchor_a(anchor_a)
             , anchor_b(anchor_b)
@@ -499,25 +503,18 @@ public:
             , ratio(ratio)
         {
         }
-
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor_a, Point const& anchor_b,
-              Point const& ground_anchor_a, Point const& ground_anchor_b, float ratio = 1.0f)
-            : Param(body_a.Get(), body_b.Get(), anchor_a, anchor_b, ground_anchor_a, ground_anchor_b, ratio)
-        {
-        }
     };
 
     /// \~chinese
     /// @brief 创建滑轮关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static PulleyJointPtr Create(World* world, Param const& param);
+    static PulleyJointPtr Create(Param const& param);
 
     PulleyJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 物体A对应的滑轮的位置
@@ -548,6 +545,7 @@ public:
     float GetCurrentLengthB() const;
 
 private:
+    Param          param_;
     b2PulleyJoint* raw_joint_;
 };
 
@@ -560,48 +558,42 @@ public:
     /// @brief 旋转关节参数
     struct Param : public Joint::ParamBase
     {
-        Point anchor;            ///< 关节位置
-        bool  enable_limit;      ///< 是否启用限制
-        float lower_angle;       ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
-        float upper_angle;       ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
+        Point anchor;        ///< 关节位置
+        bool  enable_limit;  ///< 是否启用限制
+        float lower_angle;  ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
+        float upper_angle;  ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
         bool  enable_motor;      ///< 是否启用马达
         float max_motor_torque;  ///< 最大马达力 [N]
         float motor_speed;       ///< 马达转速 [degree/s]
 
-        Param(Body* body_a, Body* body_b, Point const& anchor, bool enable_limit = false, float lower_angle = 0.0f,
-              float upper_angle = 0.0f, bool enable_motor = false, float max_motor_torque = 0.0f,
-              float motor_speed = 0.0f)
-            : ParamBase(body_a, body_b)
-            , anchor(anchor)
-            , enable_limit(enable_limit)
-            , lower_angle(lower_angle)
-            , upper_angle(upper_angle)
-            , enable_motor(enable_motor)
-            , max_motor_torque(max_motor_torque)
-            , motor_speed(motor_speed)
+        Param()
+            : Param(nullptr, nullptr, Point())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, bool enable_limit = false, float lower_angle = 0.0f,
-              float upper_angle = 0.0f, bool enable_motor = false, float max_motor_torque = 0.0f,
-              float motor_speed = 0.0f)
-            : Param(body_a.Get(), body_b.Get(), anchor, enable_limit, lower_angle, upper_angle, enable_motor,
-                    max_motor_torque, motor_speed)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor)
+            : ParamBase(body_a, body_b)
+            , anchor(anchor)
+            , enable_limit(false)
+            , lower_angle(0.0f)
+            , upper_angle(0.0f)
+            , enable_motor(false)
+            , max_motor_torque(0.0f)
+            , motor_speed(0.0f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建旋转关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static RevoluteJointPtr Create(World* world, Param const& param);
+    static RevoluteJointPtr Create(Param const& param);
 
     RevoluteJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 获取参考角
@@ -660,6 +652,7 @@ public:
     float GetMaxMotorTorque() const;
 
 private:
+    Param            param_;
     b2RevoluteJoint* raw_joint_;
 };
 
@@ -676,33 +669,30 @@ public:
         Point local_anchor_b;  ///< 关节在物体B上的连接点
         float max_length;      ///< 绳索最大长度
 
-        Param(Body* body_a, Body* body_b, Point const& local_anchor_a, Point const& local_anchor_b,
-              float max_length = 0.f)
-            : ParamBase(body_a, body_b)
-            , local_anchor_a(local_anchor_a)
-            , local_anchor_b(local_anchor_b)
-            , max_length(max_length)
+        Param()
+            : Param(nullptr, nullptr, Point(), Point())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& local_anchor_a, Point const& local_anchor_b,
-              float max_length = 0.f)
-            : Param(body_a.Get(), body_b.Get(), local_anchor_a, local_anchor_b, max_length)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& local_anchor_a, Point const& local_anchor_b)
+            : ParamBase(body_a, body_b)
+            , local_anchor_a(local_anchor_a)
+            , local_anchor_b(local_anchor_b)
+            , max_length(0.0f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建绳关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static RopeJointPtr Create(World* world, Param const& param);
+    static RopeJointPtr Create(Param const& param);
 
     RopeJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设置关节最大长度
@@ -713,6 +703,7 @@ public:
     float GetMaxLength() const;
 
 private:
+    Param        param_;
     b2RopeJoint* raw_joint_;
 };
 
@@ -729,31 +720,30 @@ public:
         float frequency_hz;   ///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
         float damping_ratio;  ///< 阻尼率，值越大关节运动阻尼越大
 
-        Param(Body* body_a, Body* body_b, Point const& anchor, float frequency_hz = 0.f, float damping_ratio = 0.f)
-            : ParamBase(body_a, body_b)
-            , anchor(anchor)
-            , frequency_hz(frequency_hz)
-            , damping_ratio(damping_ratio)
+        Param()
+            : Param(nullptr, nullptr, Point())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, float frequency_hz = 0.f, float damping_ratio = 0.f)
-            : Param(body_a.Get(), body_b.Get(), anchor, frequency_hz, damping_ratio)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor)
+            : ParamBase(body_a, body_b)
+            , anchor(anchor)
+            , frequency_hz(0.0f)
+            , damping_ratio(0.0f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建焊接关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static WeldJointPtr Create(World* world, Param const& param);
+    static WeldJointPtr Create(Param const& param);
 
     WeldJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 获取物体B相对于物体A的角度
@@ -776,6 +766,7 @@ public:
     float GetDampingRatio() const;
 
 private:
+    Param        param_;
     b2WeldJoint* raw_joint_;
 };
 
@@ -796,40 +787,34 @@ public:
         float frequency_hz;      ///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
         float damping_ratio;     ///< 弹簧阻尼率，值越大关节运动阻尼越大
 
-        Param(Body* body_a, Body* body_b, Point const& anchor, Vec2 const& axis, float frequency_hz = 2.0f,
-              float damping_ratio = 0.7f, bool enable_motor = false, float max_motor_torque = 0.0f,
-              float motor_speed = 0.0f)
-            : ParamBase(body_a, body_b)
-            , anchor(anchor)
-            , axis(axis)
-            , enable_motor(enable_motor)
-            , max_motor_torque(max_motor_torque)
-            , motor_speed(motor_speed)
-            , frequency_hz(frequency_hz)
-            , damping_ratio(damping_ratio)
+        Param()
+            : Param(nullptr, nullptr, Point(), Vec2())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& anchor, Vec2 const& axis, float frequency_hz = 2.0f,
-              float damping_ratio = 0.7f, bool enable_motor = false, float max_motor_torque = 0.0f,
-              float motor_speed = 0.0f)
-            : Param(body_a.Get(), body_b.Get(), anchor, axis, frequency_hz, damping_ratio, enable_motor,
-                    max_motor_torque, motor_speed)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& anchor, Vec2 const& axis)
+            : ParamBase(body_a, body_b)
+            , anchor(anchor)
+            , axis(axis)
+            , enable_motor(false)
+            , max_motor_torque(0.0f)
+            , motor_speed(0.0f)
+            , frequency_hz(2.0f)
+            , damping_ratio(0.7f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建轮关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static WheelJointPtr Create(World* world, Param const& param);
+    static WheelJointPtr Create(Param const& param);
 
     WheelJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 获取关节当前的平移距离
@@ -888,6 +873,7 @@ public:
     float GetSpringDampingRatio() const;
 
 private:
+    Param         param_;
     b2WheelJoint* raw_joint_;
 };
 
@@ -906,34 +892,31 @@ public:
         float frequency_hz;   ///< 响应速度，数值越高关节响应的速度越快，看上去越坚固
         float damping_ratio;  ///< 阻尼率，值越大关节运动阻尼越大
 
-        Param(Body* body_a, Body* body_b, Point const& target, float max_force, float frequency_hz = 5.0f,
-              float damping_ratio = 0.7f)
-            : ParamBase(body_a, body_b)
-            , target(target)
-            , max_force(max_force)
-            , frequency_hz(frequency_hz)
-            , damping_ratio(damping_ratio)
+        Param()
+            : Param(nullptr, nullptr, Point())
         {
         }
 
-        Param(BodyPtr body_a, BodyPtr body_b, Point const& target, float max_force, float frequency_hz = 5.0f,
-              float damping_ratio = 0.7f)
-            : Param(body_a.Get(), body_b.Get(), target, max_force, frequency_hz, damping_ratio)
+        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, Point const& target)
+            : ParamBase(body_a, body_b)
+            , target(target)
+            , max_force(0.0f)
+            , frequency_hz(5.0f)
+            , damping_ratio(0.7f)
         {
         }
     };
 
     /// \~chinese
     /// @brief 创建鼠标关节
-    /// @param world 物理世界
     /// @param param 关节参数
-    static MouseJointPtr Create(World* world, Param const& param);
+    static MouseJointPtr Create(Param const& param);
 
     MouseJoint();
 
     /// \~chinese
     /// @brief 初始化关节
-    bool InitJoint(World* world, Param const& param);
+    bool Init(PhysicWorld* world) override;
 
     /// \~chinese
     /// @brief 设定最大摩擦力 [N]
@@ -960,6 +943,7 @@ public:
     float GetDampingRatio() const;
 
 private:
+    Param         param_;
     b2MouseJoint* raw_joint_;
 };
 
@@ -969,7 +953,7 @@ inline b2Joint* Joint::GetB2Joint() const
 {
     return joint_;
 }
-inline World* Joint::GetWorld() const
+inline PhysicWorld* Joint::GetWorld() const
 {
     return world_;
 }

@@ -63,17 +63,17 @@ void Application::Run(RunnerPtr runner, bool debug)
     }
 
     // Everything is ready
-    runner->OnReady();
-    runner->SetLastUpdateTime(Time::Now());
+    runner->Ready();
 
     quiting_ = false;
     while (!quiting_)
     {
-        quiting_ = !runner->MainLoop();
+        if (!runner->MainLoop())
+            quiting_ = true;
     }
 
     // Destroy all resources
-    runner->OnDestroy();
+    runner->Destroy();
     this->Destroy();
 }
 

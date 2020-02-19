@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-physics/Body.h>
+#include <kiwano-physics/PhysicBody.h>
 #include <kiwano-physics/Contact.h>
-#include <kiwano-physics/World.h>
+#include <kiwano-physics/PhysicWorld.h>
 
 namespace kiwano
 {
@@ -48,12 +48,12 @@ Fixture* Contact::GetFixtureB() const
     return fixture;
 }
 
-Body* Contact::GetBodyA() const
+PhysicBody* Contact::GetBodyA() const
 {
     return GetFixtureA()->GetBody();
 }
 
-Body* Contact::GetBodyB() const
+PhysicBody* Contact::GetBodyB() const
 {
     return GetFixtureB()->GetBody();
 }
@@ -61,27 +61,13 @@ Body* Contact::GetBodyB() const
 void Contact::SetTangentSpeed(float speed)
 {
     KGE_ASSERT(contact_);
-
-    Body* body = GetFixtureA()->GetBody();
-    KGE_ASSERT(body);
-
-    World* world = body->GetWorld();
-    KGE_ASSERT(world);
-
-    contact_->SetTangentSpeed(world->Stage2World(speed));
+    contact_->SetTangentSpeed(global::ToMeters(speed));
 }
 
 float Contact::GetTangentSpeed() const
 {
     KGE_ASSERT(contact_);
-
-    const Body* body = GetFixtureA()->GetBody();
-    KGE_ASSERT(body);
-
-    const World* world = body->GetWorld();
-    KGE_ASSERT(world);
-
-    return world->World2Stage(contact_->GetTangentSpeed());
+    return global::ToPixels(contact_->GetTangentSpeed());
 }
 
 }  // namespace physics
