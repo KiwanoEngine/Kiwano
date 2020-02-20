@@ -37,7 +37,7 @@ KGE_DECLARE_SMART_PTR(LocalStorage);
 ///     data.SaveInt("best-score", 20);        // 保存最高分 20
 ///     int best = data.GetInt("best-score");  // 读取之前储存的最高分
 ///   @endcode
-class KGE_API LocalStorage : public virtual ObjectBase
+class KGE_API LocalStorage : public ObjectBase
 {
 public:
     /// \~chinese

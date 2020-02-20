@@ -37,7 +37,7 @@ typedef IntrusiveList<TimerPtr> TimerList;
 /// @brief 定时器
 /// @details 定时器用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Timer
-    : public virtual ObjectBase
+    : public ObjectBase
     , protected IntrusiveListValue<TimerPtr>
 {
     friend class TimerManager;

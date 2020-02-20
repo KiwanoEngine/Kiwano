@@ -33,12 +33,12 @@ RenderContextImpl::~RenderContextImpl()
     DiscardDeviceResources();
 }
 
-HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> ctx)
+HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> render_target)
 {
-    if (!factory || !ctx)
+    if (!factory || !render_target)
         return E_INVALIDARG;
 
-    render_target_ = ctx;
+    render_target_ = render_target;
     text_renderer_.Reset();
     current_brush_.Reset();
 
@@ -49,7 +49,7 @@ HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, C
         SetAntialiasMode(antialias_);
         SetTextAntialiasMode(text_antialias_);
 
-        Resize(reinterpret_cast<const Size&>(ctx->GetSize()));
+        Resize(reinterpret_cast<const Size&>(render_target->GetSize()));
     }
 
     // DrawingStateBlock
@@ -58,6 +58,10 @@ HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, C
         hr = factory->CreateDrawingStateBlock(&drawing_state_);
     }
 
+    if (SUCCEEDED(hr))
+    {
+        NativePtr::Set(this, render_target);
+    }
     return hr;
 }
 
@@ -66,11 +70,8 @@ void RenderContextImpl::DiscardDeviceResources()
     text_renderer_.Reset();
     render_target_.Reset();
     current_brush_.Reset();
-}
 
-bool RenderContextImpl::IsValid() const
-{
-    return render_target_ != nullptr;
+    ResetNativePointer();
 }
 
 void RenderContextImpl::BeginDraw()

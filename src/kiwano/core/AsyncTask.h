@@ -38,7 +38,7 @@ typedef Function<void()> AsyncTaskCallback;
 ///     task->Then(DoSomething);
 ///     task->Start();
 ///   @endcode
-class AsyncTask : public virtual ObjectBase
+class KGE_API AsyncTask : public ObjectBase
 {
 public:
     /// \~chinese

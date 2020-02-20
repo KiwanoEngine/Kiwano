@@ -80,18 +80,12 @@ public:
 
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
-    TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) override;
+    RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) override;
 
 public:
-    void BeginDraw() override;
-
-    void EndDraw() override;
-
     void Clear() override;
 
     void Present() override;
-
-    RenderContext& GetContext() override;
 
     /// \~chinese
     /// @brief 获取Direct2D设备资源
@@ -112,10 +106,7 @@ protected:
 
     void Destroy() override;
 
-    HRESULT HandleDeviceLost();
-
 private:
-    RenderContextImplPtr                  render_ctx_;
     ComPtr<ID2DDeviceResources>           d2d_res_;
     ComPtr<ID3DDeviceResources>           d3d_res_;
     ComPtr<IFontCollectionLoader>         font_collection_loader_;
@@ -124,11 +115,6 @@ private:
 };
 
 /** @} */
-
-inline RenderContext& RendererImpl::GetContext()
-{
-    return *render_ctx_;
-}
 
 inline ID2DDeviceResources* RendererImpl::GetD2DDeviceResources()
 {

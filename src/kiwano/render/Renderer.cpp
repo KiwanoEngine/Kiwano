@@ -51,4 +51,18 @@ void Renderer::HandleEvent(Event* evt)
     }
 }
 
+void Renderer::BeginDraw()
+{
+    KGE_ASSERT(render_ctx_);
+
+    render_ctx_->BeginDraw();
+}
+
+void Renderer::EndDraw()
+{
+    KGE_ASSERT(render_ctx_);
+
+    render_ctx_->EndDraw();
+}
+
 }  // namespace kiwano

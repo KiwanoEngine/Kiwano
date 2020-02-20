@@ -45,7 +45,7 @@ KGE_DECLARE_SMART_PTR(WheelJoint);
 
 /// \~chinese
 /// @brief 关节
-class KGE_API Joint : public virtual ObjectBase
+class KGE_API Joint : public ObjectBase
 {
 public:
     /// \~chinese

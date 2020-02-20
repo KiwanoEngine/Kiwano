@@ -19,9 +19,20 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
+
+RenderContextPtr RenderContext::Create(Texture& texture)
+{
+    return Renderer::GetInstance().CreateTextureRenderContext(texture, nullptr);
+}
+
+RenderContextPtr RenderContext::Create(Texture& texture, const Size& size)
+{
+    return Renderer::GetInstance().CreateTextureRenderContext(texture, &size);
+}
 
 RenderContext::RenderContext()
     : collecting_status_(false)

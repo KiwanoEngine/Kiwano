@@ -20,7 +20,6 @@
 
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
@@ -32,11 +31,9 @@ CanvasPtr Canvas::Create(const Size& size)
     {
         try
         {
-            ptr->ctx_          = TextureRenderContext::Create();
             ptr->stroke_brush_ = Brush::Create(Color::White);
             ptr->fill_brush_   = Brush::Create(Color::White);
-
-            ptr->SetSize(ptr->ctx_->GetSize());
+            ptr->ResizeAndClear(size);
         }
         catch (std::exception)
         {
@@ -47,28 +44,24 @@ CanvasPtr Canvas::Create(const Size& size)
 }
 
 Canvas::Canvas()
-    : cache_expired_(false)
 {
 }
 
 void Canvas::BeginDraw()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->BeginDraw();
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->BeginDraw();
 }
 
 void Canvas::EndDraw()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->EndDraw();
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->EndDraw();
 }
 
 void Canvas::OnRender(RenderContext& ctx)
 {
-    UpdateCache();
-
-    if (texture_cached_ && texture_cached_->IsValid())
+    if (texture_cached_)
     {
         PrepareToRender(ctx);
         ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
@@ -77,156 +70,153 @@ void Canvas::OnRender(RenderContext& ctx)
 
 void Canvas::SetBrush(BrushPtr brush)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(brush);
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(brush);
 }
 
 void Canvas::SetBrushTransform(const Transform& transform)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetTransform(transform.ToMatrix());
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetTransform(transform.ToMatrix());
 }
 
 void Canvas::SetBrushTransform(const Matrix3x2& transform)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetTransform(transform);
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetTransform(transform);
 }
 
 void Canvas::PushLayer(LayerPtr layer)
 {
-    KGE_ASSERT(ctx_);
+    KGE_ASSERT(render_ctx_);
     if (layer)
     {
-        ctx_->PushLayer(*layer);
+        render_ctx_->PushLayer(*layer);
     }
 }
 
 void Canvas::PopLayer()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->PopLayer();
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->PopLayer();
 }
 
 void Canvas::PushClipRect(const Rect& clip_rect)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->PushClipRect(clip_rect);
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->PushClipRect(clip_rect);
 }
 
 void Canvas::PopClipRect()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->PopClipRect();
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->PopClipRect();
 }
 
 void Canvas::DrawShape(ShapePtr shape)
 {
-    KGE_ASSERT(ctx_);
+    KGE_ASSERT(render_ctx_);
     if (shape)
     {
-        ctx_->SetCurrentBrush(stroke_brush_);
-        ctx_->SetCurrentStrokeStyle(stroke_style_);
-        ctx_->DrawShape(*shape);
-        cache_expired_ = true;
+        render_ctx_->SetCurrentBrush(stroke_brush_);
+        render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+        render_ctx_->DrawShape(*shape);
     }
 }
 
 void Canvas::DrawLine(const Point& begin, const Point& end)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawLine(begin, end);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawLine(begin, end);
 }
 
 void Canvas::DrawCircle(const Point& center, float radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawEllipse(center, Vec2(radius, radius));
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawEllipse(center, Vec2(radius, radius));
 }
 
 void Canvas::DrawEllipse(const Point& center, const Vec2& radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawEllipse(center, radius);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawEllipse(center, radius);
 }
 
 void Canvas::DrawRect(const Rect& rect)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawRectangle(rect);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawRectangle(rect);
 }
 
 void Canvas::DrawRoundedRect(const Rect& rect, const Vec2& radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawRoundedRectangle(rect, radius);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawRoundedRectangle(rect, radius);
 }
 
 void Canvas::FillShape(ShapePtr shape)
 {
-    KGE_ASSERT(ctx_);
+    KGE_ASSERT(render_ctx_);
     if (shape)
     {
-        ctx_->SetCurrentBrush(fill_brush_);
-        ctx_->FillShape(*shape);
-        cache_expired_ = true;
+        render_ctx_->SetCurrentBrush(fill_brush_);
+        render_ctx_->FillShape(*shape);
     }
 }
 
 void Canvas::FillCircle(const Point& center, float radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillEllipse(center, Vec2(radius, radius));
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(fill_brush_);
+    render_ctx_->FillEllipse(center, Vec2(radius, radius));
 }
 
 void Canvas::FillEllipse(const Point& center, const Vec2& radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillEllipse(center, radius);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(fill_brush_);
+    render_ctx_->FillEllipse(center, radius);
 }
 
 void Canvas::FillRect(const Rect& rect)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillRectangle(rect);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(fill_brush_);
+    render_ctx_->FillRectangle(rect);
 }
 
 void Canvas::FillRoundedRect(const Rect& rect, const Vec2& radius)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillRoundedRectangle(rect, radius);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(fill_brush_);
+    render_ctx_->FillRoundedRectangle(rect, radius);
 }
 
-void Canvas::DrawTexture(TexturePtr texture, const Rect* src_rect, const Rect* dest_rect)
+void Canvas::DrawFrame(FramePtr frame, const Point& pos)
 {
-    KGE_ASSERT(ctx_);
-    if (texture)
+    KGE_ASSERT(render_ctx_);
+    if (frame && frame->IsValid())
     {
-        ctx_->DrawTexture(*texture, src_rect, dest_rect);
-        cache_expired_ = true;
+        render_ctx_->DrawTexture(*frame->GetTexture(), &frame->GetCropRect(), &Rect(pos, frame->GetSize()));
+    }
+}
+
+void Canvas::DrawFrame(FramePtr frame, const Point& pos, const Size& size)
+{
+    KGE_ASSERT(render_ctx_);
+    if (frame && frame->IsValid())
+    {
+        render_ctx_->DrawTexture(*frame->GetTexture(), &frame->GetCropRect(), &Rect(pos, size));
     }
 }
 
@@ -240,11 +230,10 @@ void Canvas::DrawTextLayout(const String& text, const TextStyle& style, const Po
 
 void Canvas::DrawTextLayout(TextLayoutPtr layout, const Point& point)
 {
-    KGE_ASSERT(ctx_);
+    KGE_ASSERT(render_ctx_);
     if (layout)
     {
-        ctx_->DrawTextLayout(*layout, point);
-        cache_expired_ = true;
+        render_ctx_->DrawTextLayout(*layout, point);
     }
 }
 
@@ -280,60 +269,42 @@ void Canvas::AddArc(const Point& point, const Size& radius, float rotation, bool
 
 void Canvas::StrokePath()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(stroke_brush_);
-    ctx_->SetCurrentStrokeStyle(stroke_style_);
-    ctx_->DrawShape(*shape_maker_.GetShape());
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(stroke_brush_);
+    render_ctx_->SetCurrentStrokeStyle(stroke_style_);
+    render_ctx_->DrawShape(*shape_maker_.GetShape());
 }
 
 void Canvas::FillPath()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->SetCurrentBrush(fill_brush_);
-    ctx_->FillShape(*shape_maker_.GetShape());
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->SetCurrentBrush(fill_brush_);
+    render_ctx_->FillShape(*shape_maker_.GetShape());
 }
 
 void Canvas::Clear()
 {
-    KGE_ASSERT(ctx_);
-    ctx_->Clear();
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->Clear();
 }
 
 void Canvas::Clear(const Color& clear_color)
 {
-    KGE_ASSERT(ctx_);
-    ctx_->Clear(clear_color);
-    cache_expired_ = true;
+    KGE_ASSERT(render_ctx_);
+    render_ctx_->Clear(clear_color);
 }
 
 void Canvas::ResizeAndClear(Size size)
 {
-    ctx_ = TextureRenderContext::Create(size);
+    texture_cached_ = new Texture;
+    render_ctx_     = RenderContext::Create(*texture_cached_, size);
+
+    SetSize(render_ctx_->GetSize());
 }
 
 TexturePtr Canvas::ExportToTexture() const
 {
-    UpdateCache();
     return texture_cached_;
-}
-
-void Canvas::UpdateCache() const
-{
-    if (cache_expired_ && ctx_)
-    {
-        if (!texture_cached_)
-        {
-            texture_cached_ = new Texture;
-        }
-
-        if (ctx_->GetOutput(*texture_cached_))
-        {
-            cache_expired_ = false;
-        }
-    }
 }
 
 }  // namespace kiwano

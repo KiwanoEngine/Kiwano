@@ -24,7 +24,6 @@
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.hpp>
 #include <kiwano/render/RenderContext.h>
-#include <kiwano/render/TextureRenderContext.h>
 #include <kiwano/platform/Window.h>
 
 namespace kiwano
@@ -198,28 +197,29 @@ public:
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
 
     /// \~chinese
-    /// @brief 创建纹理渲染上下文
+    /// @brief 创建纹理渲染上下文，将上下文的渲染输出到纹理中
+    /// @param[in,out] texture 渲染输出的纹理
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
     /// @throw kiwano::SystemError 创建失败时抛出
-    virtual TextureRenderContextPtr CreateTextureRenderContext(const Size* desired_size = nullptr) = 0;
+    virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
 
 public:
     /// \~chinese
     /// @brief 获取渲染上下文
-    virtual RenderContext& GetContext() = 0;
+    RenderContext& GetContext();
 
     /// \~chinese
     /// @brief 获取渲染输出大小
-    virtual Size GetOutputSize() const;
+    Size GetOutputSize() const;
 
     /// \~chinese
     /// @brief 开始渲染
-    virtual void BeginDraw() = 0;
+    virtual void BeginDraw();
 
     /// \~chinese
     /// @brief 结束渲染
-    virtual void EndDraw() = 0;
+    virtual void EndDraw();
 
     /// \~chinese
     /// @brief 清除绘制内容
@@ -249,12 +249,18 @@ protected:
     virtual void Destroy() = 0;
 
 protected:
-    bool  vsync_;
-    Color clear_color_;
-    Size  output_size_;
+    bool             vsync_;
+    Color            clear_color_;
+    Size             output_size_;
+    RenderContextPtr render_ctx_;
 };
 
 /** @} */
+
+inline RenderContext& Renderer::GetContext()
+{
+    return *render_ctx_;
+}
 
 inline Size Renderer::GetOutputSize() const
 {

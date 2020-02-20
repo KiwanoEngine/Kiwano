@@ -20,8 +20,9 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
+#include <kiwano/2d/Frame.h>
 #include <kiwano/render/ShapeMaker.h>
-#include <kiwano/render/TextureRenderContext.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -117,11 +118,17 @@ public:
     void FillRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
-    /// @brief 绘制纹理
-    /// @param texture 纹理
-    /// @param src_rect 纹理裁剪区域
-    /// @param dest_rect 绘制目标区域
-    void DrawTexture(TexturePtr texture, const Rect* src_rect = nullptr, const Rect* dest_rect = nullptr);
+    /// @brief 绘制图像帧
+    /// @param frame 图像帧
+    /// @param pos 绘制图像的位置
+    void DrawFrame(FramePtr frame, const Point& pos);
+
+    /// \~chinese
+    /// @brief 绘制图像帧
+    /// @param frame 图像帧
+    /// @param pos 绘制图像的位置
+    /// @param size 渲染的图像大小
+    void DrawFrame(FramePtr frame, const Point& pos, const Size& size);
 
     /// \~chinese
     /// @brief 绘制文字布局
@@ -268,17 +275,13 @@ public:
 private:
     Canvas();
 
-    void UpdateCache() const;
-
 private:
-    StrokeStylePtr stroke_style_;
-    ShapeMaker     shape_maker_;
-    BrushPtr       fill_brush_;
-    BrushPtr       stroke_brush_;
-
-    mutable bool                    cache_expired_;
-    mutable TexturePtr              texture_cached_;
-    mutable TextureRenderContextPtr ctx_;
+    StrokeStylePtr   stroke_style_;
+    ShapeMaker       shape_maker_;
+    BrushPtr         fill_brush_;
+    BrushPtr         stroke_brush_;
+    TexturePtr       texture_cached_;
+    RenderContextPtr render_ctx_;
 };
 
 /** @} */

@@ -39,7 +39,7 @@ KGE_DECLARE_SMART_PTR(NativeObject);
  * \~chinese
  * @brief 含有本机指针的对象
  */
-class KGE_API NativeObject : public virtual ObjectBase
+class KGE_API NativeObject : public ObjectBase
 {
 public:
     virtual bool IsValid() const;

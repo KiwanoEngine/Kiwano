@@ -270,13 +270,7 @@
     <ClInclude Include="..\..\src\kiwano\math\Scalar.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h">
-      <Filter>render\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h">
       <Filter>render\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h">
@@ -509,13 +503,7 @@
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp">
-      <Filter>render\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp">
       <Filter>render\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp">

@@ -57,7 +57,7 @@ typedef IntrusiveList<ActorPtr> ActorList;
  * 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、定时器、事件监听等功能的载体
  */
 class KGE_API Actor
-    : public virtual ObjectBase
+    : public ObjectBase
     , public TimerManager
     , public ActionManager
     , public EventDispatcher

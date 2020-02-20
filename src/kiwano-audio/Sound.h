@@ -42,7 +42,7 @@ KGE_DECLARE_SMART_PTR(Sound);
  * \~chinese
  * @brief 音频对象
  */
-class KGE_API Sound : public virtual ObjectBase
+class KGE_API Sound : public ObjectBase
 {
     friend class AudioModule;
 

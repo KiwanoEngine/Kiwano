@@ -160,7 +160,10 @@ void Sprite::SetFrame(FramePtr frame, bool autoresize)
 
 void Sprite::OnRender(RenderContext& ctx)
 {
-    ctx.DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
+    if (frame_ && frame_->IsValid())
+    {
+        ctx.DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
+    }
 }
 
 bool Sprite::CheckVisibility(RenderContext& ctx) const

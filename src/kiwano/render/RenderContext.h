@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Shape.h>
@@ -29,7 +28,6 @@
 
 namespace kiwano
 {
-class Renderer;
 
 KGE_DECLARE_SMART_PTR(RenderContext);
 
@@ -50,16 +48,20 @@ enum class TextAntialiasMode
 
 /// \~chinese
 /// @brief 渲染上下文
-/// @details
-/// 渲染上下文将完成基础图元的绘制，并将绘制结果输出到特定的目标中（如窗口或纹理）
-class KGE_API RenderContext : public virtual ObjectBase
+/// @details 渲染上下文将完成基础图元的绘制，并将绘制结果输出到特定的平面中
+class KGE_API RenderContext : public NativeObject
 {
-    friend class Renderer;
-
 public:
     /// \~chinese
-    /// @brief 是否有效
-    virtual bool IsValid() const = 0;
+    /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
+    /// @param texture 保存绘制结果的纹理
+    static RenderContextPtr Create(Texture& texture);
+
+    /// \~chinese
+    /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
+    /// @param texture 保存绘制结果的纹理
+    /// @param size 渲染输出大小
+    static RenderContextPtr Create(Texture& texture, const Size& size);
 
     /// \~chinese
     /// @brief 开始渲染

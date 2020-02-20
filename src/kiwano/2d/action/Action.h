@@ -50,7 +50,7 @@ typedef IntrusiveList<ActionPtr> ActionList;
 /// \~chinese
 /// @brief 动画
 class KGE_API Action
-    : public virtual ObjectBase
+    : public ObjectBase
     , protected IntrusiveListValue<ActionPtr>
 {
     friend class ActionManager;

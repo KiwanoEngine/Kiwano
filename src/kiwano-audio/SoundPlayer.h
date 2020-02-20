@@ -37,7 +37,7 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
  * \~chinese
  * @brief 音频播放器
  */
-class KGE_API SoundPlayer : public virtual ObjectBase
+class KGE_API SoundPlayer : public ObjectBase
 {
 public:
     /// \~chinese

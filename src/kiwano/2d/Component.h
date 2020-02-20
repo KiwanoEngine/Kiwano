@@ -40,7 +40,7 @@ typedef IntrusiveList<ComponentPtr> ComponentList;
  * @brief 组件
  */
 class KGE_API Component
-    : public virtual ObjectBase
+    : public ObjectBase
     , protected IntrusiveListValue<ComponentPtr>
 {
     friend class Actor;

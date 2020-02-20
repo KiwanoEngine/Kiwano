@@ -24,7 +24,6 @@
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
-#include <kiwano/render/DirectX/TextureRenderContextImpl.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 
@@ -44,7 +43,6 @@ RendererImpl& RendererImpl::GetInstance()
 
 RendererImpl::RendererImpl()
 {
-    render_ctx_ = new RenderContextImpl;
 }
 
 void RendererImpl::MakeContextForWindow(WindowPtr window)
@@ -74,7 +72,13 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
             // Other device resources
             if (SUCCEEDED(hr))
             {
-                hr = render_ctx_->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+                RenderContextImplPtr ctx = new RenderContextImpl;
+
+                hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+                if (SUCCEEDED(hr))
+                {
+                    render_ctx_ = ctx;
+                }
             }
 
             // FontFileLoader and FontCollectionLoader
@@ -133,20 +137,6 @@ void RendererImpl::Destroy()
     ::CoUninitialize();
 }
 
-void RendererImpl::BeginDraw()
-{
-    KGE_ASSERT(render_ctx_);
-
-    render_ctx_->BeginDraw();
-}
-
-void RendererImpl::EndDraw()
-{
-    KGE_ASSERT(render_ctx_);
-
-    render_ctx_->EndDraw();
-}
-
 void RendererImpl::Clear()
 {
     KGE_ASSERT(d3d_res_);
@@ -159,32 +149,7 @@ void RendererImpl::Present()
     KGE_ASSERT(d3d_res_);
 
     HRESULT hr = d3d_res_->Present(vsync_);
-
-    if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-    {
-        // 如果 Direct3D 设备在执行过程中消失，将丢弃当前的设备相关资源
-        hr = HandleDeviceLost();
-    }
-
     KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
-}
-
-HRESULT RendererImpl::HandleDeviceLost()
-{
-    KGE_ASSERT(d3d_res_ && d2d_res_ && render_ctx_);
-
-    HRESULT hr = d3d_res_->HandleDeviceLost();
-
-    if (SUCCEEDED(hr))
-    {
-        hr = d2d_res_->HandleDeviceLost(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        hr = render_ctx_->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
-    }
-    return hr;
 }
 
 void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
@@ -937,9 +902,9 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
     KGE_THROW_IF_FAILED(hr, "Create ID2D1StrokeStyle failed");
 }
 
-TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* desired_size)
+RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, const Size* desired_size)
 {
-    TextureRenderContextImplPtr ptr = new TextureRenderContextImpl;
+    RenderContextImplPtr ptr = new RenderContextImpl;
 
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -968,13 +933,17 @@ TextureRenderContextPtr RendererImpl::CreateTextureRenderContext(const Size* des
 
         if (SUCCEEDED(hr))
         {
-            ptr->bitmap_rt_ = bitmap_rt;
+            ComPtr<ID2D1Bitmap> output;
+            hr = bitmap_rt->GetBitmap(&output);
+            if (SUCCEEDED(hr))
+            {
+                NativePtr::Set(texture, output);
+            }
         }
     }
 
     if (SUCCEEDED(hr))
         return ptr;
-
     return nullptr;
 }
 

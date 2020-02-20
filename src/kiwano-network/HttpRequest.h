@@ -51,7 +51,7 @@ enum class HttpType
  * \~chinese
  * @brief HTTP请求
  */
-class KGE_API HttpRequest : public virtual ObjectBase
+class KGE_API HttpRequest : public ObjectBase
 {
 public:
     /// \~chinese

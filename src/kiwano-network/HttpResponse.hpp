@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(HttpResponse);
  * \~chinese
  * @brief HTTP响应
  */
-class KGE_API HttpResponse : public virtual ObjectBase
+class KGE_API HttpResponse : public ObjectBase
 {
 public:
     HttpResponse(HttpRequestPtr request);

@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(Fixture);
 
 /// \~chinese
 /// @brief 物理夹具
-class Fixture : public virtual ObjectBase
+class KGE_API Fixture : public ObjectBase
 {
 public:
     /// \~chinese

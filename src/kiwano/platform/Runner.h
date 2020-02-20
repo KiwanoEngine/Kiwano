@@ -34,7 +34,7 @@ KGE_DECLARE_SMART_PTR(Runner);
  * \~chinese
  * @brief 程序运行器
  */
-class KGE_API Runner : public virtual ObjectBase
+class KGE_API Runner : public ObjectBase
 {
     friend class Application;
 

@@ -38,7 +38,7 @@ KGE_DECLARE_SMART_PTR(RotationTransition);
  * \~chinese
  * @brief 舞台过渡动画
  */
-class KGE_API Transition : public virtual ObjectBase
+class KGE_API Transition : public ObjectBase
 {
     friend class Director;
 

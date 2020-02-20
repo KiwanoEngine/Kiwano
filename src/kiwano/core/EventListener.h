@@ -43,7 +43,7 @@ typedef IntrusiveList<EventListenerPtr> ListenerList;
  * @brief 事件监听器
  */
 class KGE_API EventListener
-    : public virtual ObjectBase
+    : public ObjectBase
     , protected IntrusiveListValue<EventListenerPtr>
 {
     friend class EventDispatcher;

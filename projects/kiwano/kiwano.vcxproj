@@ -83,7 +83,6 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
-    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
     <ClInclude Include="..\..\src\kiwano\render\NativeObject.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
@@ -97,7 +96,6 @@
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.hpp" />
     <ClInclude Include="..\..\src\kiwano\render\Texture.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextureCache.h" />
-    <ClInclude Include="..\..\src\kiwano\render\TextureRenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h" />
@@ -159,7 +157,6 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextureRenderContextImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />
@@ -171,7 +168,6 @@
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\TextureRenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp" />

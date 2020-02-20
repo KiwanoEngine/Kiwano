@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(Frame);
  * \~chinese
  * @brief 图像帧
  */
-class KGE_API Frame : public virtual ObjectBase
+class KGE_API Frame : public ObjectBase
 {
 public:
     /// \~chinese

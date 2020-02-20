@@ -25,16 +25,16 @@
 namespace kiwano
 {
 
-class RendererImpl;
-
 KGE_DECLARE_SMART_PTR(RenderContextImpl);
 
-class KGE_API RenderContextImpl : public virtual RenderContext
+class KGE_API RenderContextImpl : public RenderContext
 {
-    friend class RendererImpl;
-
 public:
-    bool IsValid() const override;
+    RenderContextImpl();
+
+    virtual ~RenderContextImpl();
+
+    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> render_target);
 
     void BeginDraw() override;
 
@@ -92,20 +92,14 @@ public:
 
     void Resize(const Size& size) override;
 
-protected:
-    RenderContextImpl();
-
-    virtual ~RenderContextImpl();
-
-    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> ctx);
-
+private:
     void DiscardDeviceResources();
 
     void SaveDrawingState();
 
     void RestoreDrawingState();
 
-protected:
+private:
     ComPtr<ITextRenderer>          text_renderer_;
     ComPtr<ID2D1RenderTarget>      render_target_;
     ComPtr<ID2D1DrawingStateBlock> drawing_state_;

@@ -22,7 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/TextureRenderContext.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -150,18 +150,18 @@ private:
     void ClearCurrentFrameArea();
 
 private:
-    bool                    animating_;
-    int                     total_loop_count_;
-    int                     loop_count_;
-    size_t                  next_index_;
-    Duration                frame_elapsed_;
-    LoopDoneCallback        loop_cb_;
-    DoneCallback            done_cb_;
-    GifImagePtr             gif_;
-    GifImage::Frame         frame_;
-    TexturePtr              saved_frame_;
-    TexturePtr              frame_to_render_;
-    TextureRenderContextPtr frame_rt_;
+    bool             animating_;
+    int              total_loop_count_;
+    int              loop_count_;
+    size_t           next_index_;
+    Duration         frame_elapsed_;
+    LoopDoneCallback loop_cb_;
+    DoneCallback     done_cb_;
+    GifImagePtr      gif_;
+    GifImage::Frame  frame_;
+    TexturePtr       saved_frame_;
+    TexturePtr       frame_to_render_;
+    RenderContextPtr frame_rt_;
 };
 
 /** @} */
