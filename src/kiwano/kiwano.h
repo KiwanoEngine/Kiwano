@@ -43,7 +43,6 @@
 // core
 //
 
-#include <kiwano/core/AsyncTask.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Director.h>
 #include <kiwano/core/EventDispatcher.h>

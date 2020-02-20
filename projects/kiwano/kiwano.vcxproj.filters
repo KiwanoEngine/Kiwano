@@ -75,9 +75,6 @@
     <ClInclude Include="..\..\src\kiwano\core\TimerManager.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\AsyncTask.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -348,9 +345,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\AsyncTask.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
