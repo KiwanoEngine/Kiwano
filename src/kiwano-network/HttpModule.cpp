@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <chrono>
 #include <thread>
 #include <kiwano/core/Logger.h>
 #include <kiwano/platform/Application.h>
@@ -185,6 +186,7 @@ namespace network
 HttpModule::HttpModule()
     : timeout_for_connect_(30000 /* 30 seconds */)
     , timeout_for_read_(60000 /* 60 seconds */)
+    , quit_flag_(false)
 {
 }
 
@@ -198,6 +200,25 @@ void HttpModule::SetupModule()
 
 void HttpModule::DestroyModule()
 {
+    // Set quit flag
+    quit_flag_ = true;
+
+    // Send a fake request
+    {
+        std::unique_lock<std::mutex> lock(request_mutex_);
+        request_queue_.push(nullptr);
+    }
+
+    // Notify work thread
+    sleep_cond_.notify_one();
+
+    // Wait for work thread destroyed
+    {
+        std::unique_lock<std::mutex> lock(quit_mutex_);
+        quit_cond_.wait_for(lock, std::chrono::seconds(1));
+    }
+
+    // Clear curl resources
     ::curl_global_cleanup();
 }
 
@@ -206,11 +227,11 @@ void HttpModule::Send(HttpRequestPtr request)
     if (!request)
         return;
 
-    request_mutex_.lock();
-    request_queue_.push(request);
-    request_mutex_.unlock();
-
-    sleep_condition_.notify_one();
+    {
+        std::unique_lock<std::mutex> lock(request_mutex_);
+        request_queue_.push(request);
+    }
+    sleep_cond_.notify_one();
 }
 
 void HttpModule::NetworkThread()
@@ -219,13 +240,17 @@ void HttpModule::NetworkThread()
     {
         HttpRequestPtr request;
         {
-            std::lock_guard<std::mutex> lock(request_mutex_);
-            while (request_queue_.empty())
-            {
-                sleep_condition_.wait(request_mutex_);
-            }
+            std::unique_lock<std::mutex> lock(request_mutex_);
+            sleep_cond_.wait(lock, [&]() { return !request_queue_.empty(); });
+
             request = request_queue_.front();
             request_queue_.pop();
+        }
+
+        if (quit_flag_)
+        {
+            quit_cond_.notify_one();
+            return;
         }
 
         HttpResponsePtr response = new (std::nothrow) HttpResponse(request);

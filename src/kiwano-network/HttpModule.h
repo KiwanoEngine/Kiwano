@@ -19,10 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <atomic>
+#include <mutex>
 #include <condition_variable>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
-#include <mutex>
 
 namespace kiwano
 {
@@ -105,7 +106,11 @@ private:
     std::mutex             response_mutex_;
     Queue<HttpResponsePtr> response_queue_;
 
-    std::condition_variable_any sleep_condition_;
+    std::condition_variable sleep_cond_;
+
+    std::atomic<bool>       quit_flag_;
+    std::mutex              quit_mutex_;
+    std::condition_variable quit_cond_;
 };
 
 /** @} */
