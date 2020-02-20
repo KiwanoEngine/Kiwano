@@ -318,6 +318,9 @@
     <ClInclude Include="..\..\src\kiwano\2d\Component.h">
       <Filter>2d</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Allocator.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -526,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Component.cpp">
       <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

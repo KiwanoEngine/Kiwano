@@ -25,7 +25,7 @@ namespace kiwano
 
 ActionDelayPtr ActionDelay::Create(Duration delay)
 {
-    ActionDelayPtr ptr = new (std::nothrow) ActionDelay;
+    ActionDelayPtr ptr = memory::New<ActionDelay>();
     if (ptr)
     {
         ptr->SetDelay(delay);

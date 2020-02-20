@@ -33,6 +33,7 @@
 #include <kiwano/core/Function.h>
 #include <kiwano/core/Singleton.h>
 #include <kiwano/core/Any.h>
+#include <kiwano/core/Allocator.h>
 
 namespace kiwano
 {

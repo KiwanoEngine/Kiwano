@@ -33,7 +33,7 @@ SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash
         return iter->second;
     }
 
-    SmartPtr<_Ty> texture = new _Ty;
+    SmartPtr<_Ty> texture = memory::New<_Ty>();
     if (texture->Load(path))
     {
         cache.insert(std::make_pair(hash, texture));

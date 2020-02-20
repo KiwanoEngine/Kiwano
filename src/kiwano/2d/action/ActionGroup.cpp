@@ -27,9 +27,10 @@ namespace kiwano
 
 ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool sync)
 {
-    ActionGroupPtr ptr = new (std::nothrow) ActionGroup(sync);
+    ActionGroupPtr ptr = memory::New<ActionGroup>();
     if (ptr)
     {
+        ptr->sync_ = sync;
         ptr->AddActions(actions);
     }
     return ptr;

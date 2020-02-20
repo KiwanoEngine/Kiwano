@@ -100,7 +100,7 @@ void Director::ShowDebugInfo(bool show)
     if (show)
     {
         if (!debug_actor_)
-            debug_actor_ = new DebugActor;
+            debug_actor_ = memory::New<DebugActor>();
     }
     else
     {

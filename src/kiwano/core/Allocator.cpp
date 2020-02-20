@@ -18,42 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <atomic>
-#include <kiwano/core/Common.h>
+#include <kiwano/core/Allocator.h>
 
 namespace kiwano
 {
-/**
- * \~chinese
- * @brief 引用计数器
- */
-class KGE_API RefCounter : protected Noncopyable
+namespace memory
 {
-public:
-    RefCounter();
 
-    virtual ~RefCounter();
+MemoryAllocator* current_allocator_ = GetGlobalAllocator();
 
-    /// \~chinese
-    /// @brief 增加引用计数
-    void Retain();
-
-    /// \~chinese
-    /// @brief 减少引用计数
-    void Release();
-
-    /// \~chinese
-    /// @brief 获取引用计数
-    uint32_t GetRefCount() const;
-
-private:
-    std::atomic<uint32_t> ref_count_;
-};
-
-inline uint32_t RefCounter::GetRefCount() const
+MemoryAllocator* GetAllocator()
 {
-    return ref_count_;
+    return current_allocator_;
 }
 
+void SetAllocator(MemoryAllocator* allocator)
+{
+    KGE_ASSERT(allocator);
+    current_allocator_ = allocator;
+}
+
+GlobalAllocator* GetGlobalAllocator()
+{
+    static GlobalAllocator global_allocator;
+    return &global_allocator;
+}
+
+void* GlobalAllocator::Alloc(size_t size)
+{
+    return ::malloc(size);
+}
+
+void GlobalAllocator::Free(void* ptr)
+{
+    ::free(ptr);
+}
+
+}  // namespace memory
 }  // namespace kiwano

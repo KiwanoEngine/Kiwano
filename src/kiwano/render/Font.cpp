@@ -26,7 +26,7 @@ namespace kiwano
 
 FontPtr Font::Create(const String& file)
 {
-    FontPtr ptr = new (std::nothrow) Font;
+    FontPtr ptr = memory::New<Font>();
     if (ptr)
     {
         if (!ptr->Load(file))
@@ -37,7 +37,7 @@ FontPtr Font::Create(const String& file)
 
 FontPtr Font::Create(const Resource& resource)
 {
-    FontPtr ptr = new (std::nothrow) Font;
+    FontPtr ptr = memory::New<Font>();
     if (ptr)
     {
         if (!ptr->Load(resource))

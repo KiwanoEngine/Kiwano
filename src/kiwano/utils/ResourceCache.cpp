@@ -214,7 +214,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
     if (type == "gif")
     {
         // GIF image
-        GifImagePtr gif = new (std::nothrow) GifImage;
+        GifImagePtr gif = memory::New<GifImage>();
         if (gif && gif->Load(gdata->path + file))
         {
             return loader->AddObject(id, gif);
@@ -224,7 +224,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
     if (!file.empty())
     {
         // Simple image
-        FramePtr frame = new (std::nothrow) Frame;
+        FramePtr frame = memory::New<Frame>();
         if (frame && frame->Load(gdata->path + file))
         {
             return loader->AddObject(id, frame);
@@ -246,7 +246,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
     frames.reserve(files.size());
     for (const auto& file : files)
     {
-        FramePtr frame = new Frame;
+        FramePtr frame = memory::New<Frame>();
         if (frame->Load(gdata->path + file))
         {
             frames.push_back(frame);
@@ -271,10 +271,10 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
         if (rows || cols)
         {
             // Frame slices
-            FramePtr frame = new (std::nothrow) Frame;
+            FramePtr frame = memory::New<Frame>();
             if (frame && frame->Load(gdata->path + file))
             {
-                FrameSequencePtr frame_seq = new (std::nothrow) FrameSequence;
+                FrameSequencePtr frame_seq = memory::New<FrameSequence>();
                 if (frame_seq)
                 {
                     frame_seq->AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
@@ -285,7 +285,7 @@ bool LoadTexturesFromData(ResourceCache* loader, GlobalData* gdata, const String
         else
         {
             // Simple image
-            FramePtr frame = new (std::nothrow) Frame;
+            FramePtr frame = memory::New<Frame>();
             if (frame && frame->Load(gdata->path + file))
             {
                 return loader->AddObject(id, frame);
@@ -300,7 +300,7 @@ bool LoadFontsFromData(ResourceCache* loader, GlobalData* gdata, const String& i
     if (!gdata)
         return false;
 
-    FontPtr font = new (std::nothrow) Font;
+    FontPtr font = memory::New<Font>();
     if (font && font->Load(gdata->path + file))
     {
         return loader->AddObject(id, font);

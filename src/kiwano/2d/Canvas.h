@@ -295,7 +295,7 @@ inline void Canvas::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ = new Brush;
+        stroke_brush_ = memory::New<Brush>();
     }
     stroke_brush_->SetColor(color);
 }
@@ -304,7 +304,7 @@ inline void Canvas::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ = new Brush;
+        fill_brush_ = memory::New<Brush>();
     }
     fill_brush_->SetColor(color);
 }

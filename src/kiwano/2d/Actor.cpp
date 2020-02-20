@@ -41,7 +41,7 @@ void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 
 ActorPtr Actor::Create()
 {
-    ActorPtr ptr = new (std::nothrow) Actor;
+    ActorPtr ptr = memory::New<Actor>();
     return ptr;
 }
 
@@ -246,7 +246,7 @@ bool Actor::HandleEvent(Event* evt)
             {
                 hover_ = true;
 
-                MouseHoverEventPtr hover = new MouseHoverEvent;
+                MouseHoverEventPtr hover = memory::New<MouseHoverEvent>();
                 hover->pos               = mouse_evt->pos;
                 HandleEvent(hover.Get());
             }
@@ -255,7 +255,7 @@ bool Actor::HandleEvent(Event* evt)
                 hover_   = false;
                 pressed_ = false;
 
-                MouseOutEventPtr out = new MouseOutEvent;
+                MouseOutEventPtr out = memory::New<MouseOutEvent>();
                 out->pos             = mouse_evt->pos;
                 HandleEvent(out.Get());
             }
@@ -272,7 +272,7 @@ bool Actor::HandleEvent(Event* evt)
 
             auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
 
-            MouseClickEventPtr click = new MouseClickEvent;
+            MouseClickEventPtr click = memory::New<MouseClickEvent>();
             click->pos               = mouse_up_evt->pos;
             click->button            = mouse_up_evt->button;
             HandleEvent(click.Get());

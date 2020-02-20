@@ -32,7 +32,7 @@ StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line
 StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash,
                                    float dash_offset)
 {
-    StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
+    StrokeStylePtr ptr = memory::New<StrokeStyle>();
     if (ptr)
     {
         ptr->SetStrokeWidth(width);
@@ -47,7 +47,7 @@ StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line
 StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
                                    size_t dash_size, float dash_offset)
 {
-    StrokeStylePtr ptr = new (std::nothrow) StrokeStyle;
+    StrokeStylePtr ptr = memory::New<StrokeStyle>();
     if (ptr)
     {
         ptr->SetStrokeWidth(width);

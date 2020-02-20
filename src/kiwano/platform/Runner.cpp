@@ -26,7 +26,7 @@ namespace kiwano
 
 RunnerPtr Runner::Create(WindowPtr main_window)
 {
-    RunnerPtr ptr = new (std::nothrow) Runner;
+    RunnerPtr ptr = memory::New<Runner>();
     if (ptr)
     {
         ptr->SetMainWindow(main_window);
@@ -55,7 +55,7 @@ RunnerPtr Runner::Create(WindowPtr main_window, Function<void()> on_ready, Funct
         Function<void()> on_destroy;
     };
 
-    SmartPtr<CallbackRunner> ptr = new (std::nothrow) CallbackRunner;
+    SmartPtr<CallbackRunner> ptr = memory::New<CallbackRunner>();
     if (ptr)
     {
         ptr->on_ready   = on_ready;

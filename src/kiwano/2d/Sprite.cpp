@@ -26,7 +26,7 @@ namespace kiwano
 
 SpritePtr Sprite::Create(const String& file_path)
 {
-    SpritePtr ptr = new (std::nothrow) Sprite;
+    SpritePtr ptr = memory::New<Sprite>();
     if (ptr)
     {
         if (!ptr->Load(file_path))
@@ -37,7 +37,7 @@ SpritePtr Sprite::Create(const String& file_path)
 
 SpritePtr Sprite::Create(const Resource& res)
 {
-    SpritePtr ptr = new (std::nothrow) Sprite;
+    SpritePtr ptr = memory::New<Sprite>();
     if (ptr)
     {
         if (!ptr->Load(res))
@@ -48,7 +48,7 @@ SpritePtr Sprite::Create(const Resource& res)
 
 SpritePtr Sprite::Create(FramePtr frame)
 {
-    SpritePtr ptr = new (std::nothrow) Sprite;
+    SpritePtr ptr = memory::New<Sprite>();
     if (ptr)
     {
         ptr->SetFrame(frame);

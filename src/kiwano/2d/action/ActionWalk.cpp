@@ -26,7 +26,7 @@ namespace kiwano
 
 ActionWalkPtr ActionWalk::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
 {
-    ActionWalkPtr ptr = new (std::nothrow) ActionWalk;
+    ActionWalkPtr ptr = memory::New<ActionWalk>();
     if (ptr)
     {
         ptr->SetDuration(duration);

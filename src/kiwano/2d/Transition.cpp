@@ -128,7 +128,7 @@ void Transition::Stop()
 
 BoxTransitionPtr BoxTransition::Create(Duration duration)
 {
-    BoxTransitionPtr ptr = new (std::nothrow) BoxTransition;
+    BoxTransitionPtr ptr = memory::New<BoxTransition>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -169,7 +169,7 @@ void BoxTransition::Update(Duration dt)
 
 EmergeTransitionPtr EmergeTransition::Create(Duration duration)
 {
-    EmergeTransitionPtr ptr = new (std::nothrow) EmergeTransition;
+    EmergeTransitionPtr ptr = memory::New<EmergeTransition>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -201,7 +201,7 @@ void EmergeTransition::Update(Duration dt)
 
 FadeTransitionPtr FadeTransition::Create(Duration duration)
 {
-    FadeTransitionPtr ptr = new (std::nothrow) FadeTransition;
+    FadeTransitionPtr ptr = memory::New<FadeTransition>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -241,7 +241,7 @@ void FadeTransition::Update(Duration dt)
 
 MoveTransitionPtr MoveTransition::Create(Duration duration, Type type)
 {
-    MoveTransitionPtr ptr = new (std::nothrow) MoveTransition;
+    MoveTransitionPtr ptr = memory::New<MoveTransition>();
     if (ptr)
     {
         ptr->type_ = type;
@@ -330,7 +330,7 @@ void MoveTransition::Reset()
 
 RotationTransitionPtr RotationTransition::Create(Duration duration, float rotation)
 {
-    RotationTransitionPtr ptr = new (std::nothrow) RotationTransition;
+    RotationTransitionPtr ptr = memory::New<RotationTransition>();
     if (ptr)
     {
         ptr->rotation_ = rotation;

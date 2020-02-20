@@ -75,16 +75,16 @@ public:
 private:
     bool       resizable_;
     bool       is_fullscreen_;
-    wchar_t*   device_name_;
     CursorType mouse_cursor_;
 
-    std::array<KeyCode, 256> key_map_;
+    std::unique_ptr<wchar_t[]> device_name_;
+    std::array<KeyCode, 256>   key_map_;
 };
 
 WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
                          bool fullscreen)
 {
-    WindowWin32ImplPtr ptr = new (std::nothrow) WindowWin32Impl;
+    WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
     if (ptr)
     {
         ptr->Init(title, width, height, icon, resizable, fullscreen);
@@ -158,8 +158,7 @@ void RestoreResolution(WCHAR* device_name)
 }  // namespace
 
 WindowWin32Impl::WindowWin32Impl()
-    : device_name_(nullptr)
-    , is_fullscreen_(false)
+    : is_fullscreen_(false)
     , resizable_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
@@ -245,8 +244,8 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     // Save the device name
     int len = lstrlenW(monitor_info_ex.szDevice);
 
-    device_name_ = new wchar_t[len + 1];
-    lstrcpyW(device_name_, monitor_info_ex.szDevice);
+    device_name_ = std::unique_ptr<wchar_t[]>(new wchar_t[len + 1]);
+    lstrcpyW(device_name_.get(), monitor_info_ex.szDevice);
 
     int left = -1, top = -1;
 
@@ -303,7 +302,7 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     if (is_fullscreen_)
     {
-        ChangeFullScreenResolution(width, height, device_name_);
+        ChangeFullScreenResolution(width, height, device_name_.get());
     }
 }
 
@@ -366,7 +365,7 @@ void WindowWin32Impl::SetFullscreen(bool fullscreen)
             // move window to (0, 0) before display switch
             ::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE);
 
-            ChangeFullScreenResolution(width, height, device_name_);
+            ChangeFullScreenResolution(width, height, device_name_.get());
 
             MONITORINFOEX info = GetMoniterInfoEx(handle_);
 
@@ -376,7 +375,7 @@ void WindowWin32Impl::SetFullscreen(bool fullscreen)
         }
         else
         {
-            RestoreResolution(device_name_);
+            RestoreResolution(device_name_.get());
 
             MONITORINFOEX info = GetMoniterInfoEx(handle_);
 
@@ -402,13 +401,9 @@ void WindowWin32Impl::SetCursor(CursorType cursor)
 void WindowWin32Impl::Destroy()
 {
     if (is_fullscreen_)
-        RestoreResolution(device_name_);
+        RestoreResolution(device_name_.get());
 
-    if (device_name_)
-    {
-        delete[] device_name_;
-        device_name_ = nullptr;
-    }
+    device_name_.reset();
 
     if (handle_)
     {
@@ -466,7 +461,7 @@ void WindowWin32Impl::SetActive(bool actived)
     {
         if (actived)
         {
-            ChangeFullScreenResolution(GetWidth(), GetHeight(), device_name_);
+            ChangeFullScreenResolution(GetWidth(), GetHeight(), device_name_.get());
 
             MONITORINFOEX info = GetMoniterInfoEx(handle_);
             ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, GetWidth(), GetHeight(),
@@ -474,7 +469,7 @@ void WindowWin32Impl::SetActive(bool actived)
         }
         else
         {
-            RestoreResolution(device_name_);
+            RestoreResolution(device_name_.get());
 
             ::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
             ::ShowWindow(handle_, SW_MINIMIZE);

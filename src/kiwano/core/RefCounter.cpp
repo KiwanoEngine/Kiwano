@@ -37,8 +37,10 @@ void RefCounter::Retain()
 void RefCounter::Release()
 {
     --ref_count_;
-    if (ref_count_ <= 0)
-        delete this;
+    if (ref_count_ == 0)
+    {
+        memory::Delete(this);
+    }
 }
 
 }  // namespace kiwano

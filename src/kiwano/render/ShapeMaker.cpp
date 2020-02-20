@@ -30,7 +30,7 @@ namespace kiwano
 
 ShapeMakerPtr ShapeMaker::Create()
 {
-    ShapeMakerPtr maker = new (std::nothrow) ShapeMaker;
+    ShapeMakerPtr maker = memory::New<ShapeMaker>();
     return maker;
 }
 

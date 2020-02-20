@@ -13,6 +13,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\Component.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Allocator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Director.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />

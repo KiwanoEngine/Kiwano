@@ -61,7 +61,7 @@ RadialGradientStyle::RadialGradientStyle(const Point& center, const Vec2& offset
 
 BrushPtr Brush::Create(const Color& color)
 {
-    BrushPtr ptr = new (std::nothrow) Brush;
+    BrushPtr ptr = memory::New<Brush>();
     if (ptr)
     {
         ptr->SetColor(color);
@@ -71,7 +71,7 @@ BrushPtr Brush::Create(const Color& color)
 
 BrushPtr Brush::Create(const LinearGradientStyle& style)
 {
-    BrushPtr ptr = new (std::nothrow) Brush;
+    BrushPtr ptr = memory::New<Brush>();
     if (ptr)
     {
         ptr->SetStyle(style);
@@ -81,7 +81,7 @@ BrushPtr Brush::Create(const LinearGradientStyle& style)
 
 BrushPtr Brush::Create(const RadialGradientStyle& style)
 {
-    BrushPtr ptr = new (std::nothrow) Brush;
+    BrushPtr ptr = memory::New<Brush>();
     if (ptr)
     {
         ptr->SetStyle(style);

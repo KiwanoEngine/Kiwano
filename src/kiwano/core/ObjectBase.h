@@ -97,11 +97,12 @@ private:
     static void RemoveObjectFromTracingList(ObjectBase*);
 
 private:
-    bool    tracing_leak_;
-    Any     user_data_;
-    String* name_;
-
     const uint32_t id_;
+
+    bool tracing_leak_;
+    Any  user_data_;
+
+    std::unique_ptr<String> name_;
 };
 
 inline String ObjectBase::GetName() const

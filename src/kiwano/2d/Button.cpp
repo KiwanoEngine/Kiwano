@@ -33,7 +33,7 @@ ButtonPtr Button::Create(const Callback& click)
 ButtonPtr Button::Create(const Callback& click, const Callback& pressed, const Callback& mouse_over,
                          const Callback& mouse_out)
 {
-    ButtonPtr ptr = new (std::nothrow) Button;
+    ButtonPtr ptr = memory::New<Button>();
     if (ptr)
     {
         ptr->SetClickCallback(click);

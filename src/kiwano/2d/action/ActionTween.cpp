@@ -146,7 +146,7 @@ ActionPtr ActionTween::InnerClone(ActionTweenPtr to) const
 
 ActionMoveByPtr ActionMoveBy::Create(Duration duration, const Vec2& displacement)
 {
-    ActionMoveByPtr ptr = new (std::nothrow) ActionMoveBy;
+    ActionMoveByPtr ptr = memory::New<ActionMoveBy>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -188,7 +188,7 @@ ActionPtr ActionMoveBy::Reverse() const
 
 ActionMoveToPtr ActionMoveTo::Create(Duration duration, const Point& distination)
 {
-    ActionMoveToPtr ptr = new (std::nothrow) ActionMoveTo;
+    ActionMoveToPtr ptr = memory::New<ActionMoveTo>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -217,7 +217,7 @@ void ActionMoveTo::Init(Actor* target)
 ActionJumpByPtr ActionJumpBy::Create(Duration duration, const Vec2& displacement, float height, int count,
                                      EaseFunc ease)
 {
-    ActionJumpByPtr ptr = new (std::nothrow) ActionJumpBy;
+    ActionJumpByPtr ptr = memory::New<ActionJumpBy>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -272,7 +272,7 @@ void ActionJumpBy::UpdateTween(Actor* target, float percent)
 ActionJumpToPtr ActionJumpTo::Create(Duration duration, const Point& distination, float height, int count,
                                      EaseFunc ease)
 {
-    ActionJumpToPtr ptr = new (std::nothrow) ActionJumpTo;
+    ActionJumpToPtr ptr = memory::New<ActionJumpTo>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -303,7 +303,7 @@ void ActionJumpTo::Init(Actor* target)
 
 ActionScaleByPtr ActionScaleBy::Create(Duration duration, float scale_x, float scale_y)
 {
-    ActionScaleByPtr ptr = new (std::nothrow) ActionScaleBy;
+    ActionScaleByPtr ptr = memory::New<ActionScaleBy>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -347,7 +347,7 @@ ActionPtr ActionScaleBy::Reverse() const
 
 ActionScaleToPtr ActionScaleTo::Create(Duration duration, float scale_x, float scale_y)
 {
-    ActionScaleToPtr ptr = new (std::nothrow) ActionScaleTo;
+    ActionScaleToPtr ptr = memory::New<ActionScaleTo>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -381,7 +381,7 @@ void ActionScaleTo::Init(Actor* target)
 
 ActionFadeToPtr ActionFadeTo::Create(Duration duration, float opacity)
 {
-    ActionFadeToPtr ptr = new (std::nothrow) ActionFadeTo;
+    ActionFadeToPtr ptr = memory::New<ActionFadeTo>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -418,7 +418,7 @@ ActionPtr ActionFadeTo::Clone() const
 
 ActionFadeInPtr ActionFadeIn::Create(Duration duration)
 {
-    ActionFadeInPtr ptr = new (std::nothrow) ActionFadeIn;
+    ActionFadeInPtr ptr = memory::New<ActionFadeIn>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -429,7 +429,7 @@ ActionFadeInPtr ActionFadeIn::Create(Duration duration)
 
 ActionFadeOutPtr ActionFadeOut::Create(Duration duration)
 {
-    ActionFadeOutPtr ptr = new (std::nothrow) ActionFadeOut;
+    ActionFadeOutPtr ptr = memory::New<ActionFadeOut>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -444,7 +444,7 @@ ActionFadeOutPtr ActionFadeOut::Create(Duration duration)
 
 ActionRotateByPtr ActionRotateBy::Create(Duration duration, float rotation)
 {
-    ActionRotateByPtr ptr = new (std::nothrow) ActionRotateBy;
+    ActionRotateByPtr ptr = memory::New<ActionRotateBy>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -488,7 +488,7 @@ ActionPtr ActionRotateBy::Reverse() const
 
 ActionRotateToPtr ActionRotateTo::Create(Duration duration, float rotation)
 {
-    ActionRotateToPtr ptr = new (std::nothrow) ActionRotateTo;
+    ActionRotateToPtr ptr = memory::New<ActionRotateTo>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -519,7 +519,7 @@ void ActionRotateTo::Init(Actor* target)
 
 ActionCustomPtr ActionCustom::Create(Duration duration, TweenFunc tween_func)
 {
-    ActionCustomPtr ptr = new (std::nothrow) ActionCustom;
+    ActionCustomPtr ptr = memory::New<ActionCustom>();
     if (ptr)
     {
         ptr->SetDuration(duration);

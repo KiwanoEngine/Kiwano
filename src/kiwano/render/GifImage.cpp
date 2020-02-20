@@ -27,7 +27,7 @@ namespace kiwano
 
 GifImagePtr GifImage::Create(const String& file_path)
 {
-    GifImagePtr ptr = new (std::nothrow) GifImage;
+    GifImagePtr ptr = memory::New<GifImage>();
     if (ptr)
     {
         if (!ptr->Load(file_path))
@@ -38,7 +38,7 @@ GifImagePtr GifImage::Create(const String& file_path)
 
 GifImagePtr GifImage::Create(const Resource& res)
 {
-    GifImagePtr ptr = new (std::nothrow) GifImage;
+    GifImagePtr ptr = memory::New<GifImage>();
     if (ptr)
     {
         if (!ptr->Load(res))

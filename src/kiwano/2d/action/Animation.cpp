@@ -27,7 +27,7 @@ namespace kiwano
 
 AnimationPtr Animation::Create(Duration duration, FrameSequencePtr frame_seq)
 {
-    AnimationPtr ptr = new (std::nothrow) Animation;
+    AnimationPtr ptr = memory::New<Animation>();
     if (ptr)
     {
         ptr->SetDuration(duration);
