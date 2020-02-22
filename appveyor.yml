@@ -59,9 +59,11 @@ for:
   #   message: /\[build\]/
   environment:
     matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     global:
-      job_to_deploy: 2 # 1(images) * 1(platform) * 2(configuration)
+      job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
 
 configuration:
 - Debug
