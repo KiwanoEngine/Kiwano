@@ -26,25 +26,26 @@ namespace kiwano
 namespace physics
 {
 
-PhysicBodyPtr PhysicBody::Create(ActorPtr actor, Type type)
+PhysicBodyPtr PhysicBody::Create(PhysicWorldPtr world, Type type)
 {
-    return PhysicBody::Create(actor.Get(), type);
+    return PhysicBody::Create(world.Get(), type);
 }
 
-PhysicBodyPtr PhysicBody::Create(Actor* actor, Type type)
+PhysicBodyPtr PhysicBody::Create(PhysicWorld* world, Type type)
 {
-    if (!actor)
-    {
-        return nullptr;
-    }
+    KGE_ASSERT(world);
 
     PhysicBodyPtr ptr = new (std::nothrow) PhysicBody;
     if (ptr)
     {
         ptr->SetType(type);
-        actor->AddComponent(ptr);
+        if (ptr->Init(world))
+        {
+            world->AddBody(ptr);
+            return ptr;
+        }
     }
-    return ptr;
+    return nullptr;
 }
 
 PhysicBody::PhysicBody()
@@ -55,6 +56,7 @@ PhysicBody::PhysicBody()
     , mask_bits_(0xFFFF)
     , group_index_(0)
 {
+    SetName("KGE_PHYSIC_BODY");
 }
 
 PhysicBody::~PhysicBody() {}
@@ -62,7 +64,10 @@ PhysicBody::~PhysicBody() {}
 void PhysicBody::InitComponent(Actor* actor)
 {
     Component::InitComponent(actor);
-    UpdateFromActor();
+
+    actor->SetPhysicBody(this);
+
+    UpdateFromActor(actor);
 }
 
 void PhysicBody::DestroyComponent()
@@ -98,17 +103,88 @@ bool PhysicBody::Init(PhysicWorld* world)
     if (b2body)
     {
         SetB2Body(b2body);
-        UpdateFromActor();
-
-        // lazy init fixtures
-        for (auto fixture : fixtures_)
-        {
-            bool success = fixture->Init(this);
-            KGE_ASSERT(success);
-        }
         return true;
     }
     return false;
+}
+
+void PhysicBody::Destroy()
+{
+    RemoveAllFixtures();
+
+    if (body_ && world_)
+    {
+        b2World* b2world = world_->GetB2World();
+        b2world->DestroyBody(body_);
+    }
+
+    body_  = nullptr;
+    world_ = nullptr;
+
+    Component::RemoveFromActor();
+}
+
+void PhysicBody::BeforeSimulation(Actor* actor, const Matrix3x2& parent_to_world, const Matrix3x2& actor_to_world,
+                                  float parent_rotation)
+{
+    UpdateFromActor(actor, actor_to_world, parent_rotation + actor->GetRotation());
+
+    /*if (actor->GetAnchor() != Vec2(0.5f, 0.5f))
+    {
+        Point position = parent_to_world.Invert().Transform(position_cached_);
+
+        offset_ = position - actor->GetPosition();
+    }*/
+}
+
+void PhysicBody::AfterSimulation(Actor* actor, const Matrix3x2& parent_to_world, float parent_rotation)
+{
+    Point position_in_parent = GetPosition();
+    if (position_cached_ != position_in_parent)
+    {
+        /*position_in_parent = parent_to_world.Invert().Transform(position_in_parent);
+        actor->SetPosition(position_in_parent - offset_);*/
+
+        position_in_parent = parent_to_world.Invert().Transform(position_in_parent);
+        actor->SetPosition(position_in_parent);
+    }
+    actor->SetRotation(GetRotation() - parent_rotation);
+}
+
+void PhysicBody::UpdateFromActor(Actor* actor)
+{
+    KGE_ASSERT(actor);
+    KGE_ASSERT(world_);
+
+    Actor* world_actor = world_->GetBoundActor();
+    if (world_actor)
+    {
+        float     rotation = 0.0f;
+        Matrix3x2 transform_to_world;
+
+        Actor* ptr = actor;
+        while (ptr && ptr != world_actor)
+        {
+            rotation += ptr->GetRotation();
+            transform_to_world *= ptr->GetTransformMatrixToParent();
+
+            ptr = ptr->GetParent();
+        }
+
+        UpdateFromActor(actor, transform_to_world, rotation);
+    }
+}
+
+void PhysicBody::UpdateFromActor(Actor* actor, const Matrix3x2& actor_to_world, float rotation)
+{
+    /*Point center   = actor->GetSize() / 2;
+    Point position = actor_to_world.Transform(center);*/
+    Point anchor   = actor->GetAnchor();
+    Point size     = actor->GetSize();
+    Point position = actor_to_world.Transform(Point(anchor.x * size.x, anchor.y * size.y));
+    SetTransform(position, rotation);
+
+    position_cached_ = GetPosition();
 }
 
 void PhysicBody::AddFixture(FixturePtr fixture)
@@ -240,7 +316,7 @@ void PhysicBody::GetMassData(float* mass, Point* center, float* inertia) const
     if (mass)
         *mass = data.mass;
     if (center)
-        *center = global::ToPixels(data.center);
+        *center = global::WorldToLocal(data.center);
     if (inertia)
         *inertia = data.I;
 }
@@ -251,7 +327,7 @@ void PhysicBody::SetMassData(float mass, const Point& center, float inertia)
 
     b2MassData data;
     data.mass   = mass;
-    data.center = global::ToMeters(center);
+    data.center = global::LocalToWorld(center);
     data.I      = inertia;
     body_->SetMassData(&data);
 }
@@ -265,43 +341,43 @@ void PhysicBody::ResetMassData()
 Point PhysicBody::GetPosition() const
 {
     KGE_ASSERT(body_);
-    return global::ToPixels(body_->GetPosition());
+    return global::WorldToLocal(body_->GetPosition());
 }
 
 void PhysicBody::SetTransform(const Point& pos, float angle)
 {
     KGE_ASSERT(body_);
-    body_->SetTransform(global::ToMeters(pos), math::Degree2Radian(angle));
+    body_->SetTransform(global::LocalToWorld(pos), math::Degree2Radian(angle));
 }
 
 Point PhysicBody::GetLocalPoint(const Point& world) const
 {
     KGE_ASSERT(body_);
-    return global::ToPixels(body_->GetLocalPoint(global::ToMeters(world)));
+    return global::WorldToLocal(body_->GetLocalPoint(global::LocalToWorld(world)));
 }
 
 Point PhysicBody::GetWorldPoint(const Point& local) const
 {
     KGE_ASSERT(body_);
-    return global::ToPixels(body_->GetWorldPoint(global::ToMeters(local)));
+    return global::WorldToLocal(body_->GetWorldPoint(global::LocalToWorld(local)));
 }
 
 Point PhysicBody::GetLocalCenter() const
 {
     KGE_ASSERT(body_);
-    return global::ToPixels(body_->GetLocalCenter());
+    return global::WorldToLocal(body_->GetLocalCenter());
 }
 
 Point PhysicBody::GetWorldCenter() const
 {
     KGE_ASSERT(body_);
-    return global::ToPixels(body_->GetWorldCenter());
+    return global::WorldToLocal(body_->GetWorldCenter());
 }
 
 void PhysicBody::ApplyForce(const Vec2& force, const Point& point, bool wake)
 {
     KGE_ASSERT(body_);
-    body_->ApplyForce(b2Vec2(force.x, force.y), global::ToMeters(point), wake);
+    body_->ApplyForce(b2Vec2(force.x, force.y), global::LocalToWorld(point), wake);
 }
 
 void PhysicBody::ApplyForceToCenter(const Vec2& force, bool wake)
@@ -323,45 +399,6 @@ void PhysicBody::SetB2Body(b2Body* body)
     {
         body_->SetUserData(this);
         type_ = PhysicBody::Type(body_->GetType());
-    }
-}
-
-void PhysicBody::Destroy()
-{
-    RemoveAllFixtures();
-
-    if (body_ && world_)
-    {
-        b2World* b2world = world_->GetB2World();
-        b2world->DestroyBody(body_);
-    }
-
-    body_  = nullptr;
-    world_ = nullptr;
-
-    Component::RemoveFromActor();
-}
-
-void PhysicBody::UpdateActor()
-{
-    Actor* actor = GetBoundActor();
-    if (actor && body_)
-    {
-        Point position = global::ToPixels(body_->GetPosition());
-        float rotation = math::Radian2Degree(body_->GetAngle());
-        actor->SetPosition(position);
-        actor->SetRotation(rotation);
-    }
-}
-
-void PhysicBody::UpdateFromActor()
-{
-    Actor* actor = GetBoundActor();
-    if (actor && body_)
-    {
-        b2Vec2 position = global::ToMeters(actor->GetPosition());
-        float  angle    = math::Degree2Radian(actor->GetRotation());
-        body_->SetTransform(position, angle);
     }
 }
 

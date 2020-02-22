@@ -65,6 +65,7 @@ Actor::Actor()
     , opacity_(1.f)
     , displayed_opacity_(1.f)
     , anchor_(default_anchor_x, default_anchor_y)
+    , physic_body_(nullptr)
 {
 }
 
@@ -315,6 +316,12 @@ const Matrix3x2& Actor::GetTransformInverseMatrix() const
     return transform_matrix_inverse_;
 }
 
+const Matrix3x2& Actor::GetTransformMatrixToParent() const
+{
+    UpdateTransform();
+    return transform_matrix_to_parent_;
+}
+
 void Actor::UpdateTransform() const
 {
     if (!dirty_transform_)
@@ -326,16 +333,18 @@ void Actor::UpdateTransform() const
 
     if (is_fast_transform_)
     {
-        transform_matrix_ = Matrix3x2::Translation(transform_.position);
+        transform_matrix_to_parent_ = Matrix3x2::Translation(transform_.position);
     }
     else
     {
         // matrix multiplication is optimized by expression template
-        transform_matrix_ = transform_.ToMatrix();
+        transform_matrix_to_parent_ = transform_.ToMatrix();
     }
 
-    transform_matrix_.Translate(Point{ -size_.x * anchor_.x, -size_.y * anchor_.y });
+    Point anchor_offset(-size_.x * anchor_.x, -size_.y * anchor_.y);
+    transform_matrix_to_parent_.Translate(anchor_offset);
 
+    transform_matrix_ = transform_matrix_to_parent_;
     if (parent_)
     {
         transform_matrix_ *= parent_->transform_matrix_;
@@ -727,8 +736,20 @@ bool Actor::ContainsPoint(const Point& point) const
     if (size_.x == 0.f || size_.y == 0.f)
         return false;
 
+    Point local = ConvertToLocal(point);
+    return local.x >= 0 && local.y >= 0 && local.x <= size_.x && local.y <= size_.y;
+}
+
+Point Actor::ConvertToLocal(const Point& point) const
+{
     Point local = GetTransformInverseMatrix().Transform(point);
-    return GetBounds().ContainsPoint(local);
+    return local;
+}
+
+Point Actor::ConvertToWorld(const Point& point) const
+{
+    Point world = GetTransformMatrix().Transform(point);
+    return world;
 }
 
 }  // namespace kiwano

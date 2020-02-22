@@ -27,6 +27,8 @@ namespace kiwano
 namespace physics
 {
 
+class PhysicWorld;
+
 /**
  * \addtogroup Physics
  * @{
@@ -36,6 +38,8 @@ namespace physics
 /// @brief 物体
 class KGE_API PhysicBody : public Component
 {
+    friend class PhysicWorld;
+
 public:
     /// \~chinese
     /// @brief 物体类型
@@ -48,15 +52,15 @@ public:
 
     /// \~chinese
     /// @brief 初始化物体
-    /// @param actor 绑定该物体的角色
+    /// @param world 物理世界
     /// @param type 物体类型
-    static PhysicBodyPtr Create(ActorPtr actor, Type type);
+    static PhysicBodyPtr Create(PhysicWorldPtr world, Type type);
 
     /// \~chinese
     /// @brief 初始化物体
-    /// @param actor 绑定该物体的角色
+    /// @param world 物理世界
     /// @param type 物体类型
-    static PhysicBodyPtr Create(Actor* actor, Type type);
+    static PhysicBodyPtr Create(PhysicWorld* world, Type type);
 
     PhysicBody();
 
@@ -291,14 +295,6 @@ public:
     PhysicWorld* GetWorld() const;
 
     /// \~chinese
-    /// @brief 将物体信息更新到角色
-    void UpdateActor();
-
-    /// \~chinese
-    /// @brief 将角色信息更新到物体
-    void UpdateFromActor();
-
-    /// \~chinese
     /// @brief 销毁物体
     void Destroy();
 
@@ -319,21 +315,39 @@ protected:
     /// @brief 销毁组件
     void DestroyComponent() override;
 
-private:
+    /// \~chinese
+    /// @brief 更新物体状态
+    void UpdateFromActor(Actor* actor);
+
+    /// \~chinese
+    /// @brief 更新物体状态
+    void UpdateFromActor(Actor* actor, const Matrix3x2& actor_to_world, float parent_rotation);
+
     /// \~chinese
     /// @brief 更新夹具过滤器
     void UpdateFixtureFilter(b2Fixture* fixture);
 
+    /// \~chinese
+    /// @brief 更新物理身体前
+    void BeforeSimulation(Actor* actor, const Matrix3x2& parent_to_world, const Matrix3x2& actor_to_world,
+                          float parent_rotation);
+
+    /// \~chinese
+    /// @brief 更新物理身体后
+    void AfterSimulation(Actor* actorconst, const Matrix3x2& parent_to_world, float parent_rotation);
+
 private:
-    PhysicWorld*  world_;
-    b2Body* body_;
+    PhysicWorld* world_;
+    b2Body*      body_;
+    uint16_t     category_bits_;
+    uint16_t     mask_bits_;
+    int16_t      group_index_;
 
-    uint16_t   category_bits_;
-    uint16_t   mask_bits_;
-    int16_t    group_index_;
-    PhysicBody::Type type_;
-
+    PhysicBody::Type   type_;
     Vector<FixturePtr> fixtures_;
+
+    Point offset_;
+    Point position_cached_;
 };
 
 /** @} */

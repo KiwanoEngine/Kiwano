@@ -48,22 +48,22 @@ void SetScale(float scale);
 /// \~chinese
 /// @brief 游戏世界单位转换为物理世界单位
 /// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
-float ToPixels(float value);
+float WorldToLocal(float value);
 
 /// \~chinese
 /// @brief 游戏世界单位转换为物理世界单位
 /// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
-Vec2 ToPixels(const b2Vec2& pos);
+Vec2 WorldToLocal(const b2Vec2& pos);
 
 /// \~chinese
 /// @brief 物理世界单位转换为游戏世界单位
 /// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
-float ToMeters(float value);
+float LocalToWorld(float value);
 
 /// \~chinese
 /// @brief 物理世界单位转换为游戏世界单位
 /// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
-b2Vec2 ToMeters(const Vec2& pos);
+b2Vec2 LocalToWorld(const Vec2& pos);
 
 }  // namespace global
 }  // namespace physics

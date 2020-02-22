@@ -115,7 +115,7 @@ KGE_SUPPRESS_WARNING_POP
     }
 
     template <typename _Lty, typename _Rty>
-    inline Matrix3x2T& operator=(MatrixMultiply<ValueType, _Lty, const _Rty>& other)
+    inline Matrix3x2T& operator=(const MatrixMultiply<ValueType, _Lty, _Rty>& other)
     {
         Matrix3x2T result(other);
         (*this) = result;
@@ -280,7 +280,7 @@ inline MatrixMultiply<_Ty, Matrix3x2T<_Ty>, Matrix3x2T<_Ty>> operator*(const Mat
 
 template <typename _Ty, typename _Lty, typename _Rty>
 inline MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>
-operator*(MatrixMultiply<_Ty, _Lty, const _Rty>& lhs, const Matrix3x2T<_Ty>& rhs)
+operator*(const MatrixMultiply<_Ty, _Lty, _Rty>& lhs, const Matrix3x2T<_Ty>& rhs)
 {
     return MatrixMultiply<_Ty, MatrixMultiply<_Ty, _Lty, _Rty>, Matrix3x2T<_Ty>>(lhs, rhs);
 }

@@ -33,8 +33,8 @@ FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& 
     if (ptr)
     {
         auto shape      = std::make_unique<b2CircleShape>();
-        shape->m_radius = global::ToMeters(radius);
-        shape->m_p      = global::ToMeters(offset);
+        shape->m_radius = global::LocalToWorld(radius);
+        shape->m_p      = global::LocalToWorld(offset);
 
         ptr->shape_ = std::move(shape);
         ptr->param_ = param;
@@ -47,8 +47,8 @@ FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
     {
-        b2Vec2 b2size   = global::ToMeters(size);
-        b2Vec2 b2offset = global::ToMeters(offset);
+        b2Vec2 b2size   = global::LocalToWorld(size);
+        b2Vec2 b2offset = global::LocalToWorld(offset);
 
         auto shape = std::make_unique<b2PolygonShape>();
         shape->SetAsBox(b2size.x / 2, b2size.y / 2, b2offset, math::Degree2Radian(rotation));
@@ -68,7 +68,7 @@ FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& verte
         b2vertexs.reserve(vertexs.size());
         for (const auto& v : vertexs)
         {
-            b2vertexs.push_back(global::ToMeters(v));
+            b2vertexs.push_back(global::LocalToWorld(v));
         }
 
         auto shape = std::make_unique<b2PolygonShape>();
@@ -85,8 +85,8 @@ FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point&
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
     {
-        b2Vec2 start = global::ToMeters(p1);
-        b2Vec2 end   = global::ToMeters(p2);
+        b2Vec2 start = global::LocalToWorld(p1);
+        b2Vec2 end   = global::LocalToWorld(p2);
 
         auto shape = std::make_unique<b2EdgeShape>();
         shape->Set(start, end);
@@ -106,7 +106,7 @@ FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertexs
         b2vertexs.reserve(vertexs.size());
         for (const auto& v : vertexs)
         {
-            b2vertexs.push_back(global::ToMeters(v));
+            b2vertexs.push_back(global::LocalToWorld(v));
         }
 
         auto shape = std::make_unique<b2ChainShape>();
@@ -189,7 +189,7 @@ void Fixture::GetMassData(float* mass, Point* center, float* inertia) const
     if (mass)
         *mass = data.mass;
     if (center)
-        *center = global::ToPixels(data.center);
+        *center = global::WorldToLocal(data.center);
     if (inertia)
         *inertia = data.I;
 }
@@ -197,7 +197,7 @@ void Fixture::GetMassData(float* mass, Point* center, float* inertia) const
 bool Fixture::TestPoint(const Point& p) const
 {
     KGE_ASSERT(fixture_);
-    return fixture_->TestPoint(global::ToMeters(p));
+    return fixture_->TestPoint(global::LocalToWorld(p));
 }
 
 void Fixture::Destroy()

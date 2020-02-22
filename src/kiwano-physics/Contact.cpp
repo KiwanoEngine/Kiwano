@@ -61,13 +61,13 @@ PhysicBody* Contact::GetBodyB() const
 void Contact::SetTangentSpeed(float speed)
 {
     KGE_ASSERT(contact_);
-    contact_->SetTangentSpeed(global::ToMeters(speed));
+    contact_->SetTangentSpeed(global::LocalToWorld(speed));
 }
 
 float Contact::GetTangentSpeed() const
 {
     KGE_ASSERT(contact_);
-    return global::ToPixels(contact_->GetTangentSpeed());
+    return global::WorldToLocal(contact_->GetTangentSpeed());
 }
 
 }  // namespace physics

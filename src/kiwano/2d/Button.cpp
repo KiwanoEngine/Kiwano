@@ -47,6 +47,7 @@ ButtonPtr Button::Create(const Callback& click, const Callback& pressed, const C
 Button::Button()
     : status_(Status::Normal)
 {
+    SetName("KGE_BUTTON");
 }
 
 Button::~Button()

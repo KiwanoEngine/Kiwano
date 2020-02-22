@@ -43,24 +43,24 @@ void SetScale(float scale)
     global_scale = scale;
 }
 
-float ToPixels(float value)
+float WorldToLocal(float value)
 {
     return value * global_scale;
 }
 
-Vec2 ToPixels(const b2Vec2& pos)
+Vec2 WorldToLocal(const b2Vec2& pos)
 {
-    return Point(ToPixels(pos.x), ToPixels(pos.y));
+    return Point(WorldToLocal(pos.x), WorldToLocal(pos.y));
 }
 
-float ToMeters(float value)
+float LocalToWorld(float value)
 {
     return value / global_scale;
 }
 
-b2Vec2 ToMeters(const Vec2& pos)
+b2Vec2 LocalToWorld(const Vec2& pos)
 {
-    return b2Vec2(ToMeters(pos.x), ToMeters(pos.y));
+    return b2Vec2(LocalToWorld(pos.x), LocalToWorld(pos.y));
 }
 
 }  // namespace global

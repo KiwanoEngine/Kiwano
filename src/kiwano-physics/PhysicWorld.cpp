@@ -113,6 +113,8 @@ PhysicWorld::PhysicWorld()
     , vel_iter_(6)
     , pos_iter_(2)
 {
+    SetName("KGE_PHYSIC_WORLD");
+
     destroy_listener_ = std::make_unique<DestructionListener>(Closure(this, &PhysicWorld::JointRemoved));
     world_.SetDestructionListener(destroy_listener_.get());
 
@@ -134,9 +136,6 @@ void PhysicWorld::AddBody(PhysicBodyPtr body)
 {
     if (body)
     {
-        bool success = body->Init(this);
-        KGE_ASSERT(success);
-
         bodies_.push_back(body);
     }
 }
@@ -234,22 +233,25 @@ ContactList PhysicWorld::GetContactList()
     return ContactList(contact);
 }
 
+void PhysicWorld::InitComponent(Actor* actor)
+{
+    Component::InitComponent(actor);
+
+    // Update body status
+    Actor* world_actor = GetBoundActor();
+    BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
+}
+
 void PhysicWorld::OnUpdate(Duration dt)
 {
-    // Update bodies transform from actors
-    for (auto& body : bodies_)
-    {
-        body->UpdateFromActor();
-    }
+    Actor* world_actor = GetBoundActor();
 
+    BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
+
+    // Update physic world
     world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
 
-    // Update actors transform from bodies
-    for (auto& body : bodies_)
-    {
-        if (body->GetType() != PhysicBody::Type::Static)
-            body->UpdateActor();
-    }
+    AfterSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
 void PhysicWorld::DispatchEvent(Event* evt)
@@ -271,6 +273,39 @@ void PhysicWorld::JointRemoved(b2Joint* b2joint)
         {
             joints_.erase(iter);
         }
+    }
+}
+
+void PhysicWorld::BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
+{
+    for (auto child : parent->GetAllChildren())
+    {
+        Matrix3x2 child_to_world = child->GetTransformMatrixToParent() * parent_to_world;
+
+        PhysicBody* body = child->GetPhysicBody();
+        if (body)
+        {
+            body->BeforeSimulation(child.Get(), parent_to_world, child_to_world, parent_rotation);
+        }
+
+        float rotation = parent_rotation + child->GetRotation();
+        BeforeSimulation(child.Get(), child_to_world, rotation);
+    }
+}
+
+void PhysicWorld::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
+{
+    for (auto child : parent->GetAllChildren())
+    {
+        PhysicBody* body = child->GetPhysicBody();
+        if (body)
+        {
+            body->AfterSimulation(child.Get(), parent_to_world, parent_rotation);
+        }
+
+        Matrix3x2 child_to_world = child->GetTransformMatrixToParent() * parent_to_world;
+        float     rotation       = parent_rotation + child->GetRotation();
+        AfterSimulation(child.Get(), child_to_world, rotation);
     }
 }
 

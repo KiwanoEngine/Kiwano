@@ -33,8 +33,12 @@ class Stage;
 class Director;
 class RenderContext;
 
-KGE_DECLARE_SMART_PTR(Actor);
+namespace physics
+{
+class PhysicBody;
+}
 
+KGE_DECLARE_SMART_PTR(Actor);
 
 /// \~chinese
 /// @brief 角色列表
@@ -226,6 +230,10 @@ public:
     const Matrix3x2& GetTransformInverseMatrix() const;
 
     /// \~chinese
+    /// @brief 获取变换到父角色的二维变换矩阵
+    const Matrix3x2& GetTransformMatrixToParent() const;
+
+    /// \~chinese
     /// @brief 设置角色是否可见
     void SetVisible(bool val);
 
@@ -409,8 +417,24 @@ public:
     UpdateCallback GetCallbackOnUpdate() const;
 
     /// \~chinese
+    /// @brief 获取物理身体，仅当kiwano-physics包启用时生效
+    physics::PhysicBody* GetPhysicBody() const;
+
+    /// \~chinese
+    /// @brief 设置物理身体，仅当kiwano-physics包启用时生效
+    void SetPhysicBody(physics::PhysicBody* body);
+
+    /// \~chinese
     /// @brief 判断点是否在角色内
     virtual bool ContainsPoint(const Point& point) const;
+
+    /// \~chinese
+    /// @brief 将世界坐标系点转换为局部坐标系点
+    Point ConvertToLocal(const Point& point) const;
+
+    /// \~chinese
+    /// @brief 将局部坐标系点转换为世界坐标系点
+    Point ConvertToWorld(const Point& point) const;
 
     /// \~chinese
     /// @brief 渲染角色边界
@@ -499,6 +523,9 @@ private:
     mutable bool      dirty_transform_inverse_;
     mutable Matrix3x2 transform_matrix_;
     mutable Matrix3x2 transform_matrix_inverse_;
+    mutable Matrix3x2 transform_matrix_to_parent_;
+
+    physics::PhysicBody* physic_body_;
 };
 
 /** @} */
@@ -681,6 +708,16 @@ inline void Actor::SetCallbackOnUpdate(const UpdateCallback& cb)
 inline Actor::UpdateCallback Actor::GetCallbackOnUpdate() const
 {
     return cb_update_;
+}
+
+inline physics::PhysicBody* Actor::GetPhysicBody() const
+{
+    return physic_body_;
+}
+
+inline void Actor::SetPhysicBody(physics::PhysicBody* body)
+{
+    physic_body_ = body;
 }
 
 inline void Actor::ShowBorder(bool show)

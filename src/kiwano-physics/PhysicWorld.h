@@ -121,11 +121,29 @@ public:
     const b2World* GetB2World() const;
 
 protected:
+    /// \~chinese
+    /// @brief 初始化组件
+    void InitComponent(Actor* actor) override;
+
+    /// \~chinese
+    /// @brief 更新组件
     void OnUpdate(Duration dt) override;
 
+    /// \~chinese
+    /// @brief 分发物理世界事件
     void DispatchEvent(Event* evt);
 
+    /// \~chinese
+    /// @brief 关节移除时的回调函数
     void JointRemoved(b2Joint* b2joint);
+
+    /// \~chinese
+    /// @brief 更新物理世界前
+    void BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation);
+
+    /// \~chinese
+    /// @brief 更新物理世界后
+    void AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation);
 
 private:
     b2World world_;
