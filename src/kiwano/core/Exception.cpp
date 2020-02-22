@@ -23,6 +23,7 @@
 #include <kiwano/core/Logger.h>
 
 #if defined(KGE_PLATFORM_WINDOWS)
+#include <memory>
 #include <comdef.h>
 
 namespace kiwano
