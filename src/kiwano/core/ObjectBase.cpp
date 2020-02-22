@@ -34,6 +34,7 @@ uint32_t            last_object_id = 0;
 
 ObjectBase::ObjectBase()
     : tracing_leak_(false)
+    , name_(nullptr)
     , user_data_()
     , id_(++last_object_id)
 {
@@ -44,7 +45,11 @@ ObjectBase::ObjectBase()
 
 ObjectBase::~ObjectBase()
 {
-    name_.reset();
+    if (name_)
+    {
+        delete name_;
+        name_ = nullptr;
+    }
 
 #ifdef KGE_DEBUG
     ObjectBase::RemoveObjectFromTracingList(this);
@@ -75,7 +80,7 @@ void ObjectBase::SetName(const String& name)
 
     if (!name_)
     {
-        name_ = std::make_unique<String>(name);
+        name_ = new String(name);
         return;
     }
 

@@ -99,10 +99,9 @@ private:
 private:
     const uint32_t id_;
 
-    bool tracing_leak_;
-    Any  user_data_;
-
-    std::unique_ptr<String> name_;
+    bool    tracing_leak_;
+    String* name_;
+    Any     user_data_;
 };
 
 inline String ObjectBase::GetName() const

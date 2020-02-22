@@ -22,6 +22,7 @@
 
 #if defined(KGE_PLATFORM_WINDOWS)
 
+#include <memory>
 #include <array>
 #include <kiwano/core/Keys.h>
 #include <kiwano/core/Exception.h>
