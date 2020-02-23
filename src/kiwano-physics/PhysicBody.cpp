@@ -226,9 +226,9 @@ Fixture* PhysicBody::AddEdgeShape(const Point& p1, const Point& p2, float densit
     return fixture.Get();
 }
 
-Fixture* PhysicBody::AddChainShape(const Vector<Point>& vertexs, bool loop, float density, float friction)
+Fixture* PhysicBody::AddChainShape(const Vector<Point>& vertices, bool loop, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreateChain(Fixture::Param(density, friction), vertexs, loop);
+    FixturePtr fixture = Fixture::CreateChain(Fixture::Param(density, friction), vertices, loop);
     AddFixture(fixture);
     return fixture.Get();
 }
@@ -356,10 +356,22 @@ Point PhysicBody::GetLocalPoint(const Point& world) const
     return global::WorldToLocal(body_->GetLocalPoint(global::LocalToWorld(world)));
 }
 
+Vec2 PhysicBody::GetLocalVector(const Vec2& world) const
+{
+    KGE_ASSERT(body_);
+    return global::WorldToLocal(body_->GetLocalVector(global::LocalToWorld(world)));
+}
+
 Point PhysicBody::GetWorldPoint(const Point& local) const
 {
     KGE_ASSERT(body_);
     return global::WorldToLocal(body_->GetWorldPoint(global::LocalToWorld(local)));
+}
+
+Vec2 PhysicBody::GetWorldVector(const Vec2& local) const
+{
+    KGE_ASSERT(body_);
+    return global::WorldToLocal(body_->GetWorldVector(global::LocalToWorld(local)));
 }
 
 Point PhysicBody::GetLocalCenter() const

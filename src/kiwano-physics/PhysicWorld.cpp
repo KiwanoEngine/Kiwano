@@ -26,6 +26,124 @@ namespace kiwano
 namespace physics
 {
 
+class PhysicWorld::DebugDrawer : public b2Draw
+{
+public:
+    DebugDrawer(const Size& size)
+    {
+        canvas_ = Canvas::Create(size);
+
+        fill_brush_ = Brush::Create(Color::White);
+        line_brush_ = Brush::Create(Color::White);
+
+        canvas_->SetFillBrush(fill_brush_);
+        canvas_->SetStrokeBrush(line_brush_);
+
+        b2Draw::SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
+    }
+
+    void BeginDraw()
+    {
+        canvas_->BeginDraw();
+        canvas_->Clear();
+    }
+
+    void EndDraw()
+    {
+        canvas_->EndDraw();
+    }
+
+    void Render(RenderContext& ctx)
+    {
+        canvas_->OnRender(ctx);
+    }
+
+    void SetFillColor(const b2Color& color)
+    {
+        fill_brush_->SetColor(reinterpret_cast<const Color&>(color));
+    }
+
+    void SetLineColor(const b2Color& color)
+    {
+        line_brush_->SetColor(reinterpret_cast<const Color&>(color));
+    }
+
+    void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
+    {
+        SetLineColor(color);
+
+        b2Vec2 p1 = vertices[vertexCount - 1];
+        for (int32 i = 0; i < vertexCount; ++i)
+        {
+            b2Vec2 p2 = vertices[i];
+            canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+            p1 = p2;
+        }
+    }
+
+    void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
+    {
+        ShapeMaker maker;
+        maker.BeginPath(global::WorldToLocal(vertices[0]));
+        for (int32 i = 1; i < vertexCount; ++i)
+        {
+            maker.AddLine(global::WorldToLocal(vertices[i]));
+        }
+        maker.EndPath(true);
+
+        SetFillColor(color);
+        canvas_->FillShape(maker.GetShape());
+    }
+
+    void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override
+    {
+        SetLineColor(color);
+        canvas_->DrawCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+    }
+
+    void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) override
+    {
+        SetFillColor(color);
+        canvas_->FillCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+    }
+
+    void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override
+    {
+        SetLineColor(color);
+        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+    }
+
+    void DrawTransform(const b2Transform& xf) override
+    {
+        const float k_axisScale = 0.4f;
+
+        b2Color red(1.0f, 0.0f, 0.0f);
+        b2Color green(0.0f, 1.0f, 0.0f);
+        b2Vec2  p1 = xf.p, p2;
+
+        p2 = p1 + k_axisScale * xf.q.GetXAxis();
+
+        SetLineColor(red);
+        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+
+        p2 = p1 + k_axisScale * xf.q.GetYAxis();
+
+        SetLineColor(green);
+        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+    }
+
+    void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color) override
+    {
+        SetFillColor(color);
+        canvas_->FillCircle(global::WorldToLocal(p), global::WorldToLocal(size));
+    }
+
+private:
+    CanvasPtr canvas_;
+    BrushPtr  fill_brush_;
+    BrushPtr  line_brush_;
+};
+
 class DestructionListener : public b2DestructionListener
 {
     Function<void(b2Joint*)> joint_destruction_callback_;
@@ -254,6 +372,18 @@ void PhysicWorld::OnUpdate(Duration dt)
     AfterSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
+void PhysicWorld::OnRender(RenderContext& ctx)
+{
+    if (drawer_)
+    {
+        drawer_->BeginDraw();
+        world_.DrawDebugData();
+        drawer_->EndDraw();
+
+        drawer_->Render(ctx);
+    }
+}
+
 void PhysicWorld::DispatchEvent(Event* evt)
 {
     Actor* actor = GetBoundActor();
@@ -306,6 +436,24 @@ void PhysicWorld::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_worl
         Matrix3x2 child_to_world = child->GetTransformMatrixToParent() * parent_to_world;
         float     rotation       = parent_rotation + child->GetRotation();
         AfterSimulation(child.Get(), child_to_world, rotation);
+    }
+}
+
+void PhysicWorld::ShowDebugInfo(bool show)
+{
+    if (show)
+    {
+        if (!drawer_)
+        {
+            Size size = Renderer::GetInstance().GetOutputSize();
+            drawer_   = std::unique_ptr<DebugDrawer>(new DebugDrawer(size));
+
+            world_.SetDebugDraw(drawer_.get());
+        }
+    }
+    else
+    {
+        drawer_.reset();
     }
 }
 

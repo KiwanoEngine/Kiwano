@@ -93,7 +93,7 @@ public:
     /// @param param 夹具参数
     /// @param vertexs 链条顶点
     /// @param loop 是否连接链条的起点和终点
-    static FixturePtr CreateChain(const Param& param, const Vector<Point>& vertexs, bool loop = false);
+    static FixturePtr CreateChain(const Param& param, const Vector<Point>& vertices, bool loop = false);
 
     Fixture();
 

@@ -32,8 +32,6 @@ CanvasPtr Canvas::Create(const Size& size)
     {
         try
         {
-            ptr->stroke_brush_ = Brush::Create(Color::White);
-            ptr->fill_brush_   = Brush::Create(Color::White);
             ptr->ResizeAndClear(size);
         }
         catch (std::exception)
@@ -64,7 +62,6 @@ void Canvas::OnRender(RenderContext& ctx)
 {
     if (texture_cached_)
     {
-        PrepareToRender(ctx);
         ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
     }
 }

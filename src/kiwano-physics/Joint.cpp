@@ -42,15 +42,13 @@ Joint::~Joint()
 
 bool Joint::Init(PhysicWorld* world)
 {
-    return false;
+    return joint_ != nullptr;
 }
 
 bool Joint::Init(PhysicWorld* world, b2JointDef* joint_def)
 {
     KGE_ASSERT(joint_ == nullptr);
     KGE_ASSERT(world);
-
-    Destroy();
 
     world_ = world;
 
@@ -131,8 +129,9 @@ bool DistanceJoint::Init(PhysicWorld* world)
     b2DistanceJointDef def;
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.anchor_a),
                    global::LocalToWorld(param_.anchor_b));
-    def.frequencyHz  = param_.frequency_hz;
-    def.dampingRatio = param_.damping_ratio;
+    def.frequencyHz      = param_.frequency_hz;
+    def.dampingRatio     = param_.damping_ratio;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2DistanceJoint*>(GetB2Joint());
@@ -176,8 +175,9 @@ bool FrictionJoint::Init(PhysicWorld* world)
 
     b2FrictionJointDef def;
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.anchor));
-    def.maxForce  = param_.max_force;
-    def.maxTorque = global::LocalToWorld(param_.max_torque);
+    def.maxForce         = param_.max_force;
+    def.maxTorque        = global::LocalToWorld(param_.max_torque);
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2FrictionJoint*>(GetB2Joint());
@@ -232,9 +232,10 @@ bool GearJoint::Init(PhysicWorld* world)
     KGE_ASSERT(param_.joint_a && param_.joint_b);
 
     b2GearJointDef def;
-    def.joint1 = param_.joint_a->GetB2Joint();
-    def.joint2 = param_.joint_b->GetB2Joint();
-    def.ratio  = param_.ratio;
+    def.joint1           = param_.joint_a->GetB2Joint();
+    def.joint2           = param_.joint_b->GetB2Joint();
+    def.ratio            = param_.ratio;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2GearJoint*>(GetB2Joint());
@@ -281,6 +282,7 @@ bool MotorJoint::Init(PhysicWorld* world)
     def.maxForce         = param_.max_force;
     def.maxTorque        = global::LocalToWorld(param_.max_torque);
     def.correctionFactor = param_.correction_factor;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2MotorJoint*>(GetB2Joint());
@@ -343,6 +345,7 @@ bool PrismaticJoint::Init(PhysicWorld* world)
     def.enableMotor      = param_.enable_motor;
     def.maxMotorForce    = param_.max_motor_force;
     def.motorSpeed       = global::LocalToWorld(param_.motor_speed);
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2PrismaticJoint*>(GetB2Joint());
@@ -406,6 +409,7 @@ bool PulleyJoint::Init(PhysicWorld* world)
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.ground_anchor_a),
                    global::LocalToWorld(param_.ground_anchor_b), global::LocalToWorld(param_.anchor_a),
                    global::LocalToWorld(param_.anchor_b), param_.ratio);
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2PulleyJoint*>(GetB2Joint());
@@ -479,12 +483,13 @@ bool RevoluteJoint::Init(PhysicWorld* world)
 
     b2RevoluteJointDef def;
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.anchor));
-    def.enableLimit    = param_.enable_limit;
-    def.lowerAngle     = math::Degree2Radian(param_.lower_angle);
-    def.upperAngle     = math::Degree2Radian(param_.upper_angle);
-    def.enableMotor    = param_.enable_motor;
-    def.maxMotorTorque = global::LocalToWorld(param_.max_motor_torque);
-    def.motorSpeed     = math::Degree2Radian(param_.motor_speed);
+    def.enableLimit      = param_.enable_limit;
+    def.lowerAngle       = math::Degree2Radian(param_.lower_angle);
+    def.upperAngle       = math::Degree2Radian(param_.upper_angle);
+    def.enableMotor      = param_.enable_motor;
+    def.maxMotorTorque   = global::LocalToWorld(param_.max_motor_torque);
+    def.motorSpeed       = math::Degree2Radian(param_.motor_speed);
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2RevoluteJoint*>(GetB2Joint());
@@ -557,11 +562,12 @@ bool RopeJoint::Init(PhysicWorld* world)
     KGE_ASSERT(param_.body_a && param_.body_b);
 
     b2RopeJointDef def;
-    def.bodyA        = param_.body_a->GetB2Body();
-    def.bodyB        = param_.body_b->GetB2Body();
-    def.localAnchorA = global::LocalToWorld(param_.local_anchor_a);
-    def.localAnchorB = global::LocalToWorld(param_.local_anchor_b);
-    def.maxLength    = global::LocalToWorld(param_.max_length);
+    def.bodyA            = param_.body_a->GetB2Body();
+    def.bodyB            = param_.body_b->GetB2Body();
+    def.localAnchorA     = global::LocalToWorld(param_.local_anchor_a);
+    def.localAnchorB     = global::LocalToWorld(param_.local_anchor_b);
+    def.maxLength        = global::LocalToWorld(param_.max_length);
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2RopeJoint*>(GetB2Joint());
@@ -605,8 +611,9 @@ bool WeldJoint::Init(PhysicWorld* world)
 
     b2WeldJointDef def;
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.anchor));
-    def.frequencyHz  = param_.frequency_hz;
-    def.dampingRatio = param_.damping_ratio;
+    def.frequencyHz      = param_.frequency_hz;
+    def.dampingRatio     = param_.damping_ratio;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2WeldJoint*>(GetB2Joint());
@@ -639,11 +646,12 @@ bool WheelJoint::Init(PhysicWorld* world)
     b2WheelJointDef def;
     def.Initialize(param_.body_a->GetB2Body(), param_.body_b->GetB2Body(), global::LocalToWorld(param_.anchor),
                    b2Vec2(param_.axis.x, param_.axis.y));
-    def.enableMotor    = param_.enable_motor;
-    def.maxMotorTorque = global::LocalToWorld(param_.max_motor_torque);
-    def.motorSpeed     = global::LocalToWorld(param_.motor_speed);
-    def.frequencyHz    = param_.frequency_hz;
-    def.dampingRatio   = param_.damping_ratio;
+    def.enableMotor      = param_.enable_motor;
+    def.maxMotorTorque   = global::LocalToWorld(param_.max_motor_torque);
+    def.motorSpeed       = global::LocalToWorld(param_.motor_speed);
+    def.frequencyHz      = param_.frequency_hz;
+    def.dampingRatio     = param_.damping_ratio;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2WheelJoint*>(GetB2Joint());
@@ -698,12 +706,13 @@ bool MouseJoint::Init(PhysicWorld* world)
     KGE_ASSERT(param_.body_a && param_.body_b);
 
     b2MouseJointDef def;
-    def.bodyA        = param_.body_a->GetB2Body();
-    def.bodyB        = param_.body_b->GetB2Body();
-    def.target       = global::LocalToWorld(param_.target);
-    def.maxForce     = param_.max_force;
-    def.frequencyHz  = param_.frequency_hz;
-    def.dampingRatio = param_.damping_ratio;
+    def.bodyA            = param_.body_a->GetB2Body();
+    def.bodyB            = param_.body_b->GetB2Body();
+    def.target           = global::LocalToWorld(param_.target);
+    def.maxForce         = param_.max_force;
+    def.frequencyHz      = param_.frequency_hz;
+    def.dampingRatio     = param_.damping_ratio;
+    def.collideConnected = param_.collide_connected;
 
     Joint::Init(world, &def);
     raw_joint_ = static_cast<b2MouseJoint*>(GetB2Joint());

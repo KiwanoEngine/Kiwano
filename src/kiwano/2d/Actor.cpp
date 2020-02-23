@@ -112,6 +112,7 @@ void Actor::Render(RenderContext& ctx)
         if (CheckVisibility(ctx))
         {
             PrepareToRender(ctx);
+            RenderComponents(ctx);
             OnRender(ctx);
         }
     }
@@ -131,6 +132,7 @@ void Actor::Render(RenderContext& ctx)
         if (CheckVisibility(ctx))
         {
             PrepareToRender(ctx);
+            RenderComponents(ctx);
             OnRender(ctx);
         }
 
@@ -294,6 +296,23 @@ void Actor::UpdateComponents(Duration dt)
             if (component->IsEnable())
             {
                 component->OnUpdate(dt);
+            }
+        }
+    }
+}
+
+void Actor::RenderComponents(RenderContext& ctx)
+{
+    if (!components_.IsEmpty())
+    {
+        ComponentPtr next;
+        for (auto component = components_.GetFirst(); component; component = next)
+        {
+            next = component->GetNext();
+
+            if (component->IsEnable())
+            {
+                component->OnRender(ctx);
             }
         }
     }

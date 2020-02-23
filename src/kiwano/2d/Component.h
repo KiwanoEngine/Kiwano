@@ -22,6 +22,7 @@
 #include <kiwano/core/Time.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/IntrusiveList.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -81,6 +82,10 @@ protected:
     virtual void OnUpdate(Duration dt);
 
     /// \~chinese
+    /// @brief 渲染组件
+    virtual void OnRender(RenderContext& ctx);
+
+    /// \~chinese
     /// @brief 处理角色事件
     virtual void HandleEvent(Event* evt);
 
@@ -109,9 +114,14 @@ inline void Component::OnUpdate(Duration dt)
     KGE_NOT_USED(dt);
 }
 
-inline void Component::HandleEvent(Event* event)
+inline void Component::OnRender(RenderContext& ctx)
 {
-    KGE_NOT_USED(event);
+    KGE_NOT_USED(ctx);
+}
+
+inline void Component::HandleEvent(Event* evt)
+{
+    KGE_NOT_USED(evt);
 }
 
 }  // namespace kiwano

@@ -113,6 +113,10 @@ public:
     void SetPositionIterations(int pos_iter);
 
     /// \~chinese
+    /// @brief 设置是否绘制调试信息
+    void ShowDebugInfo(bool show);
+
+    /// \~chinese
     /// @brief 获取b2World
     b2World* GetB2World();
 
@@ -128,6 +132,10 @@ protected:
     /// \~chinese
     /// @brief 更新组件
     void OnUpdate(Duration dt) override;
+
+    /// \~chinese
+    /// @brief 渲染组件
+    void OnRender(RenderContext& ctx) override;
 
     /// \~chinese
     /// @brief 分发物理世界事件
@@ -146,9 +154,13 @@ protected:
     void AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation);
 
 private:
-    b2World world_;
+    bool    debug_;
     int     vel_iter_;
     int     pos_iter_;
+    b2World world_;
+
+    class DebugDrawer;
+    std::unique_ptr<DebugDrawer> drawer_;
 
     List<PhysicBodyPtr> bodies_;
     List<JointPtr>      joints_;

@@ -70,18 +70,19 @@ public:
     /// @brief 关节基础参数
     struct ParamBase
     {
-        PhysicBody* body_a;  ///< 关节连接的物体A
-        PhysicBody* body_b;  ///< 关节连接的物体B
+        PhysicBody* body_a;             ///< 关节连接的物体A
+        PhysicBody* body_b;             ///< 关节连接的物体B
+        bool        collide_connected;  // 关节连接的物体是否允许碰撞
 
         ParamBase(PhysicBody* body_a, PhysicBody* body_b)
             : body_a(body_a)
             , body_b(body_b)
+            , collide_connected(false)
         {
         }
 
         ParamBase(PhysicBodyPtr body_a, PhysicBodyPtr body_b)
-            : body_a(body_a.Get())
-            , body_b(body_b.Get())
+            : ParamBase(body_a.Get(), body_b.Get())
         {
         }
     };

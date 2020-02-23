@@ -97,26 +97,26 @@ FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point&
     return ptr;
 }
 
-FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertexs, bool loop)
+FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertices, bool loop)
 {
     FixturePtr ptr = new (std::nothrow) Fixture;
     if (ptr)
     {
-        Vector<b2Vec2> b2vertexs;
-        b2vertexs.reserve(vertexs.size());
-        for (const auto& v : vertexs)
+        Vector<b2Vec2> b2vertices;
+        b2vertices.reserve(vertices.size());
+        for (const auto& v : vertices)
         {
-            b2vertexs.push_back(global::LocalToWorld(v));
+            b2vertices.push_back(global::LocalToWorld(v));
         }
 
         auto shape = std::make_unique<b2ChainShape>();
         if (loop)
         {
-            shape->CreateLoop(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+            shape->CreateLoop(&b2vertices[0], static_cast<int32>(b2vertices.size()));
         }
         else
         {
-            shape->CreateChain(&b2vertexs[0], static_cast<int32>(b2vertexs.size()));
+            shape->CreateChain(&b2vertices[0], static_cast<int32>(b2vertices.size()));
         }
 
         ptr->shape_ = std::move(shape);

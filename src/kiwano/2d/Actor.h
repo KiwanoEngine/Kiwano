@@ -495,6 +495,10 @@ protected:
     /// @brief 更新组件
     void UpdateComponents(Duration dt);
 
+    /// \~chinese
+    /// @brief 渲染组件
+    void RenderComponents(RenderContext& ctx);
+
 private:
     bool           visible_;
     bool           update_pausing_;

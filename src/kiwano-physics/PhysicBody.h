@@ -111,7 +111,7 @@ public:
     /// @param vertexs 链条端点
     /// @param loop 是否闭合
     /// @param density 物体密度
-    Fixture* AddChainShape(const Vector<Point>& vertexs, bool loop, float density, float friction = 0.2f);
+    Fixture* AddChainShape(const Vector<Point>& vertices, bool loop, float density, float friction = 0.2f);
 
     /// \~chinese
     /// @brief 移除夹具
@@ -204,8 +204,16 @@ public:
     Point GetLocalPoint(const Point& world) const;
 
     /// \~chinese
+    /// @brief 将世界坐标系中的向量转换到物体坐标系下
+    Vec2 GetLocalVector(const Vec2& world) const;
+
+    /// \~chinese
     /// @brief 获取物体上的点在世界坐标系的位置
     Point GetWorldPoint(const Point& local) const;
+
+    /// \~chinese
+    /// @brief 将物体坐标系中的向量转换到世界坐标系下
+    Vec2 GetWorldVector(const Vec2& local) const;
 
     /// \~chinese
     /// @brief 获取物体质心相对于物体的位置
@@ -230,6 +238,22 @@ public:
     /// \~chinese
     /// @brief 设置物体受重力的比例
     void SetGravityScale(float scale);
+
+    /// \~chinese
+    /// @brief 获取线性阻尼
+    float GetLinearDamping() const;
+
+    /// \~chinese
+    /// @brief 设置线性阻尼
+    void SetLinearDamping(float damping);
+
+    /// \~chinese
+    /// @brief 获取旋转阻尼
+    float GetAngularDamping() const;
+
+    /// \~chinese
+    /// @brief 设置旋转阻尼
+    void SetAngularDamping(float damping);
 
     /// \~chinese
     /// @brief 施力
@@ -441,6 +465,30 @@ inline void PhysicBody::SetGravityScale(float scale)
 {
     KGE_ASSERT(body_);
     body_->SetGravityScale(scale);
+}
+
+inline float PhysicBody::GetLinearDamping() const
+{
+    KGE_ASSERT(body_);
+    return body_->GetLinearDamping();
+}
+
+inline void PhysicBody::SetLinearDamping(float damping)
+{
+    KGE_ASSERT(body_);
+    body_->SetLinearDamping(damping);
+}
+
+inline float PhysicBody::GetAngularDamping() const
+{
+    KGE_ASSERT(body_);
+    return body_->GetAngularDamping();
+}
+
+inline void PhysicBody::SetAngularDamping(float damping)
+{
+    KGE_ASSERT(body_);
+    body_->SetAngularDamping(damping);
 }
 
 inline bool PhysicBody::IsIgnoreRotation() const

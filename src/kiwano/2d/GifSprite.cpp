@@ -110,8 +110,6 @@ void GifSprite::OnRender(RenderContext& ctx)
 {
     if (frame_to_render_ && CheckVisibility(ctx))
     {
-        PrepareToRender(ctx);
-
         ctx.DrawTexture(*frame_to_render_, nullptr, &GetBounds());
     }
 }
