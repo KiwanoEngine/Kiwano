@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-namespace string
+namespace strings
 {
 
 #if defined(KGE_PLATFORM_WINDOWS)

@@ -89,7 +89,7 @@ void ObjectBase::SetName(const String& name)
 
 String ObjectBase::DumpObject()
 {
-    return string::Format("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*this).name(), GetObjectID(),
+    return strings::Format("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*this).name(), GetObjectID(),
                           GetRefCount(), GetName().c_str());
 }
 

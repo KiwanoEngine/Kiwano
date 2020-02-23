@@ -168,7 +168,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 
     if (SUCCEEDED(hr))
     {
-        WideString full_path = string::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
+        WideString full_path = strings::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
@@ -279,7 +279,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
     if (SUCCEEDED(hr))
     {
-        WideString full_path = string::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
+        WideString full_path = strings::ToWide(FileSystem::GetInstance().GetFullPathForFile(file_path));
 
         ComPtr<IWICBitmapDecoder> decoder;
         hr = d2d_res_->CreateBitmapDecoderFromFile(decoder, full_path.c_str());
@@ -581,7 +581,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
     if (SUCCEEDED(hr))
     {
-        WideString         font_family = style.font_family.empty() ? L"" : string::ToWide(style.font_family);
+        WideString         font_family = style.font_family.empty() ? L"" : strings::ToWide(style.font_family);
         DWRITE_FONT_WEIGHT font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
         DWRITE_FONT_STYLE  font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
         auto               collection  = NativePtr::Get<IDWriteFontCollection>(style.font);
@@ -592,7 +592,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
         if (SUCCEEDED(hr))
         {
-            WideString wide = string::ToWide(content);
+            WideString wide = strings::ToWide(content);
 
             ComPtr<IDWriteTextLayout> output;
             hr = d2d_res_->CreateTextLayout(output, wide.c_str(), wide.length(), format);

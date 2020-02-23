@@ -32,7 +32,7 @@ using String = std::string;
 /// @brief 宽字符串容器
 using WideString = std::wstring;
 
-namespace string
+namespace strings
 {
 
 /// \~chinese
