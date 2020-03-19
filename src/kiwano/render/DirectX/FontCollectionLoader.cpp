@@ -159,7 +159,8 @@ HRESULT STDMETHODCALLTYPE FontCollectionLoader::CreateEnumeratorFromKey(
 
         if (SUCCEEDED(hr))
         {
-            *fontFileEnumerator = DX::SafeAcquire(pEnumerator);
+            DX::SafeRelease(*fontFileEnumerator);
+            (*fontFileEnumerator) = pEnumerator;
         }
     }
     return hr;
@@ -468,7 +469,8 @@ HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::CreateEnumeratorFromKey(
 
         if (SUCCEEDED(hr))
         {
-            *fontFileEnumerator = DX::SafeAcquire(pEnumerator);
+            DX::SafeRelease(*fontFileEnumerator);
+            (*fontFileEnumerator) = pEnumerator;
         }
     }
     return hr;
@@ -574,7 +576,7 @@ HRESULT STDMETHODCALLTYPE ResourceFontFileLoader::CreateStreamFromKey(void const
         if (SUCCEEDED(hr))
         {
             DX::SafeRelease(*fontFileStream);
-            *fontFileStream = DX::SafeAcquire(pFileStream);
+            (*fontFileStream) = pFileStream;
         }
     }
     return hr;

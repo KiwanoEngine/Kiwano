@@ -31,18 +31,18 @@ KGE_DECLARE_SMART_PTR(Window);
 
 /**
  * \~chinese
- * @brief é¼ æ ‡æŒ‡é’ˆç±»å‹
+ * @brief Êó±êÖ¸ÕëÀàĞÍ
  */
 enum class CursorType
 {
-    Arrow,      ///< æŒ‡é’ˆ
-    TextInput,  ///< æ–‡æœ¬
-    Hand,       ///< æ‰‹
-    SizeAll,    ///< æŒ‡å‘å››ä¸ªæ–¹å‘çš„ç®­å¤´
-    SizeWE,     ///< æŒ‡å‘å·¦å³æ–¹å‘çš„ç®­å¤´
-    SizeNS,     ///< æŒ‡å‘ä¸Šä¸‹æ–¹å‘çš„ç®­å¤´
-    SizeNESW,   ///< æŒ‡å‘å·¦ä¸‹åˆ°å³ä¸Šæ–¹å‘çš„ç®­å¤´
-    SizeNWSE,   ///< æŒ‡å‘å·¦ä¸Šåˆ°å³ä¸‹æ–¹å‘çš„ç®­å¤´
+    Arrow,      ///< Ö¸Õë
+    TextInput,  ///< ÎÄ±¾
+    Hand,       ///< ÊÖ
+    SizeAll,    ///< Ö¸ÏòËÄ¸ö·½ÏòµÄ¼ıÍ·
+    SizeWE,     ///< Ö¸Ïò×óÓÒ·½ÏòµÄ¼ıÍ·
+    SizeNS,     ///< Ö¸ÏòÉÏÏÂ·½ÏòµÄ¼ıÍ·
+    SizeNESW,   ///< Ö¸Ïò×óÏÂµ½ÓÒÉÏ·½ÏòµÄ¼ıÍ·
+    SizeNWSE,   ///< Ö¸Ïò×óÉÏµ½ÓÒÏÂ·½ÏòµÄ¼ıÍ·
 };
 
 
@@ -53,133 +53,133 @@ typedef HWND WindowHandle;
 
 /**
  * \~chinese
- * @brief çª—å£ç±»ï¼Œæ§åˆ¶çª—å£æ ‡é¢˜ã€å¤§å°ã€å›¾æ ‡ç­‰
+ * @brief ´°¿ÚÀà£¬¿ØÖÆ´°¿Ú±êÌâ¡¢´óĞ¡¡¢Í¼±êµÈ
  */
 class KGE_API Window : public ObjectBase
 {
 public:
     /**
      * \~chinese
-     * @brief åˆå§‹åŒ–çª—å£
-     * @param title æ ‡é¢˜
-     * @param width å®½åº¦
-     * @param height é«˜åº¦
-     * @param icon å›¾æ ‡èµ„æºID
-     * @param resizable çª—å£å¤§å°å¯æ‹‰ä¼¸
-     * @param fullscreen å…¨å±æ¨¡å¼
-     * @throw kiwano::SystemError çª—å£åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+     * @brief ³õÊ¼»¯´°¿Ú
+     * @param title ±êÌâ
+     * @param width ¿í¶È
+     * @param height ¸ß¶È
+     * @param icon Í¼±ê×ÊÔ´ID
+     * @param resizable ´°¿Ú´óĞ¡¿ÉÀ­Éì
+     * @param fullscreen È«ÆÁÄ£Ê½
+     * @throw kiwano::SystemError ´°¿Ú´´½¨Ê§°ÜÊ±Å×³ö
      */
     static WindowPtr Create(const String& title, uint32_t width, uint32_t height, uint32_t icon = 0,
                             bool resizable = false, bool fullscreen = false);
 
     /**
      * \~chinese
-     * @brief è·å–çª—å£æ ‡é¢˜
-     * @return çª—å£æ ‡é¢˜
+     * @brief »ñÈ¡´°¿Ú±êÌâ
+     * @return ´°¿Ú±êÌâ
      */
     String GetTitle() const;
 
     /**
      * \~chinese
-     * @brief è·å–çª—å£å¤§å°
-     * @return çª—å£å¤§å°
+     * @brief »ñÈ¡´°¿Ú´óĞ¡
+     * @return ´°¿Ú´óĞ¡
      */
     Size GetSize() const;
 
     /**
      * \~chinese
-     * @brief è·å–çª—å£å®½åº¦
-     * @return çª—å£å®½åº¦
+     * @brief »ñÈ¡´°¿Ú¿í¶È
+     * @return ´°¿Ú¿í¶È
      */
     uint32_t GetWidth() const;
 
     /**
      * \~chinese
-     * @brief è·å–çª—å£é«˜åº¦
-     * @return çª—å£é«˜åº¦
+     * @brief »ñÈ¡´°¿Ú¸ß¶È
+     * @return ´°¿Ú¸ß¶È
      */
     uint32_t GetHeight() const;
 
     /**
      * \~chinese
-     * @brief è·å–çª—å£å¥æŸ„
+     * @brief »ñÈ¡´°¿Ú¾ä±ú
      */
     WindowHandle GetHandle() const;
 
     /**
      * \~chinese
-     * @brief è®¾ç½®æ ‡é¢˜
-     * @param title æ ‡é¢˜
+     * @brief ÉèÖÃ±êÌâ
+     * @param title ±êÌâ
      */
     virtual void SetTitle(const String& title) = 0;
 
     /**
      * \~chinese
-     * @brief è®¾ç½®çª—å£å›¾æ ‡
-     * @param icon_resource å›¾æ ‡èµ„æºID
+     * @brief ÉèÖÃ´°¿ÚÍ¼±ê
+     * @param icon_resource Í¼±ê×ÊÔ´ID
      */
     virtual void SetIcon(uint32_t icon_resource) = 0;
 
     /**
      * \~chinese
-     * @brief é‡è®¾çª—å£å¤§å°
-     * @param width çª—å£å®½åº¦
-     * @param height çª—å£é«˜åº¦
+     * @brief ÖØÉè´°¿Ú´óĞ¡
+     * @param width ´°¿Ú¿í¶È
+     * @param height ´°¿Ú¸ß¶È
      */
     virtual void Resize(uint32_t width, uint32_t height) = 0;
 
     /**
      * \~chinese
-     * @brief è®¾ç½®å…¨å±æ¨¡å¼
-     * @param fullscreen æ˜¯å¦å…¨å±
-     * @param width çª—å£å®½åº¦
-     * @param height çª—å£é«˜åº¦
+     * @brief ÉèÖÃÈ«ÆÁÄ£Ê½
+     * @param fullscreen ÊÇ·ñÈ«ÆÁ
+     * @param width ´°¿Ú¿í¶È
+     * @param height ´°¿Ú¸ß¶È
      */
     virtual void SetFullscreen(bool fullscreen) = 0;
 
     /**
      * \~chinese
-     * @brief è®¾ç½®é¼ æ ‡æŒ‡é’ˆç±»å‹
-     * @param cursor é¼ æ ‡æŒ‡é’ˆç±»å‹
+     * @brief ÉèÖÃÊó±êÖ¸ÕëÀàĞÍ
+     * @param cursor Êó±êÖ¸ÕëÀàĞÍ
      */
     virtual void SetCursor(CursorType cursor) = 0;
 
     /**
      * \~chinese
-     * @brief è½®è¯¢çª—å£äº‹ä»¶
-     * @return è¿”å›äº‹ä»¶é˜Ÿåˆ—ä¸­çš„ç¬¬ä¸€ä¸ªäº‹ä»¶å¹¶å°†å…¶ä»é˜Ÿåˆ—ä¸­ç§»é™¤\n
-     *         è‹¥äº‹ä»¶é˜Ÿåˆ—ä¸ºç©ºåˆ™è¿”å›ç©ºæŒ‡é’ˆ
+     * @brief ÂÖÑ¯´°¿ÚÊÂ¼ş
+     * @return ·µ»ØÊÂ¼ş¶ÓÁĞÖĞµÄµÚÒ»¸öÊÂ¼ş²¢½«Æä´Ó¶ÓÁĞÖĞÒÆ³ı\n
+     *         ÈôÊÂ¼ş¶ÓÁĞÎª¿ÕÔò·µ»Ø¿ÕÖ¸Õë
      */
     EventPtr PollEvent();
 
     /**
      * \~chinese
-     * @brief å°†äº‹ä»¶æ”¾å…¥é˜Ÿåˆ—
-     * @param evt äº‹ä»¶
+     * @brief ½«ÊÂ¼ş·ÅÈë¶ÓÁĞ
+     * @param evt ÊÂ¼ş
      */
     void PushEvent(EventPtr evt);
 
     /**
      * \~chinese
-     * @brief æŠ½å–çª—å£äº‹ä»¶
+     * @brief ³éÈ¡´°¿ÚÊÂ¼ş
      */
     virtual void PumpEvents() = 0;
 
     /**
      * \~chinese
-     * @brief çª—å£æ˜¯å¦éœ€è¦å…³é—­
+     * @brief ´°¿ÚÊÇ·ñĞèÒª¹Ø±Õ
      */
     bool ShouldClose();
 
     /**
      * \~chinese
-     * @brief è®¾ç½®æ˜¯å¦éœ€è¦å…³é—­
+     * @brief ÉèÖÃÊÇ·ñĞèÒª¹Ø±Õ
      */
     void SetShouldClose(bool should);
 
     /**
      * \~chinese
-     * @brief é”€æ¯çª—å£
+     * @brief Ïú»Ù´°¿Ú
      */
     virtual void Destroy();
 

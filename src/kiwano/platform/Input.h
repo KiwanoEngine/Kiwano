@@ -31,7 +31,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief è¾“å…¥è®¾å¤‡å®ä¾‹ï¼Œå¯è·å–é¼ æ ‡å’Œé”®ç›˜çš„æŒ‰é”®çŠ¶æ€
+ * @brief ÊäÈëÉè±¸ÊµÀı£¬¿É»ñÈ¡Êó±êºÍ¼üÅÌµÄ°´¼ü×´Ì¬
  */
 class KGE_API Input
     : public Singleton<Input>
@@ -43,63 +43,63 @@ class KGE_API Input
 public:
     /**
      * \~chinese
-     * @brief æ£€æµ‹é”®ç›˜æŒ‰é”®æ˜¯å¦æ­£è¢«æŒ‰ä¸‹
-     * @param key é”®å€¼
+     * @brief ¼ì²â¼üÅÌ°´¼üÊÇ·ñÕı±»°´ÏÂ
+     * @param key ¼üÖµ
      */
     bool IsDown(KeyCode key) const;
 
     /**
      * \~chinese
-     * @brief æ£€æµ‹é”®ç›˜æŒ‰é”®æ˜¯å¦åˆšè¢«ç‚¹å‡»
-     * @param key é”®å€¼
+     * @brief ¼ì²â¼üÅÌ°´¼üÊÇ·ñ¸Õ±»µã»÷
+     * @param key ¼üÖµ
      */
     bool WasPressed(KeyCode key) const;
 
     /**
      * \~chinese
-     * @brief æ£€æµ‹é”®ç›˜æŒ‰é”®æ˜¯å¦åˆšæŠ¬èµ·
-     * @param key é”®å€¼
+     * @brief ¼ì²â¼üÅÌ°´¼üÊÇ·ñ¸ÕÌ§Æğ
+     * @param key ¼üÖµ
      */
     bool WasReleased(KeyCode key) const;
     /**
      * \~chinese
-     * @brief æ£€æµ‹é¼ æ ‡æŒ‰é”®æ˜¯å¦æ­£è¢«æŒ‰ä¸‹
-     * @param btn é¼ æ ‡é”®å€¼
+     * @brief ¼ì²âÊó±ê°´¼üÊÇ·ñÕı±»°´ÏÂ
+     * @param btn Êó±ê¼üÖµ
      */
     bool IsDown(MouseButton btn) const;
 
     /**
      * \~chinese
-     * @brief æ£€æµ‹é¼ æ ‡æŒ‰é”®æ˜¯å¦åˆšè¢«ç‚¹å‡»
-     * @param btn é¼ æ ‡é”®å€¼
+     * @brief ¼ì²âÊó±ê°´¼üÊÇ·ñ¸Õ±»µã»÷
+     * @param btn Êó±ê¼üÖµ
      */
     bool WasPressed(MouseButton btn) const;
 
     /**
      * \~chinese
-     * @brief æ£€æµ‹é¼ æ ‡æŒ‰é”®æ˜¯å¦åˆšæŠ¬èµ·
-     * @param btn é¼ æ ‡é”®å€¼
+     * @brief ¼ì²âÊó±ê°´¼üÊÇ·ñ¸ÕÌ§Æğ
+     * @param btn Êó±ê¼üÖµ
      */
     bool WasReleased(MouseButton btn) const;
 
     /**
      * \~chinese
-     * @brief è·å¾—é¼ æ ‡ x åæ ‡
-     * @return é¼ æ ‡ x åæ ‡
+     * @brief »ñµÃÊó±ê x ×ø±ê
+     * @return Êó±ê x ×ø±ê
      */
     float GetMouseX() const;
 
     /**
      * \~chinese
-     * @brief è·å¾—é¼ æ ‡ y åæ ‡
-     * @return é¼ æ ‡ y åæ ‡
+     * @brief »ñµÃÊó±ê y ×ø±ê
+     * @return Êó±ê y ×ø±ê
      */
     float GetMouseY() const;
 
     /**
      * \~chinese
-     * @brief è·å¾—é¼ æ ‡åæ ‡
-     * @return é¼ æ ‡åæ ‡
+     * @brief »ñµÃÊó±ê×ø±ê
+     * @return Êó±ê×ø±ê
      */
     Point GetMousePos() const;
 

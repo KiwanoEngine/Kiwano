@@ -30,7 +30,7 @@ namespace imgui
 
 /**
  * \~chinese
- * @brief ImGuiæ¨¡å—
+ * @brief ImGuiÄ£¿é
  */
 class ImGuiModule
     : public Singleton<ImGuiModule>

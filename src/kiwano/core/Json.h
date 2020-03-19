@@ -26,7 +26,7 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief JSONå¯¹è±¡å®¹å™¨
+/// @brief JSON¶ÔÏóÈÝÆ÷
 using Json = nlohmann::basic_json<Map, Vector, String>;
 
 }  // namespace kiwano

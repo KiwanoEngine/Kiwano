@@ -32,7 +32,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief åº”ç”¨ç¨‹åºï¼Œæ§åˆ¶æ¸¸æˆçš„æ•´ä¸ªç”Ÿå‘½å‘¨æœŸï¼ŒåŒ…æ‹¬åˆå§‹åŒ–ã€å¯åŠ¨ã€ç»“æŸä»¥åŠäº‹ä»¶åˆ†å‘ç­‰
+ * @brief Ó¦ÓÃ³ÌĞò£¬¿ØÖÆÓÎÏ·µÄÕû¸öÉúÃüÖÜÆÚ£¬°üÀ¨³õÊ¼»¯¡¢Æô¶¯¡¢½áÊøÒÔ¼°ÊÂ¼ş·Ö·¢µÈ
  */
 class KGE_API Application : public Singleton<Application>
 {
@@ -45,85 +45,85 @@ public:
 
     /**
      * \~chinese
-     * @brief å¯åŠ¨åº”ç”¨ç¨‹åº
-     * @param runner ç¨‹åºè¿è¡Œå™¨
-     * @param debug æ˜¯å¦å¯ç”¨è°ƒè¯•æ¨¡å¼
-     * @note è¯¥å‡½æ•°æ˜¯é˜»å¡çš„ï¼Œåº”ç”¨ç¨‹åºç»“æŸæ—¶å‡½æ•°è¿”å›
+     * @brief Æô¶¯Ó¦ÓÃ³ÌĞò
+     * @param runner ³ÌĞòÔËĞĞÆ÷
+     * @param debug ÊÇ·ñÆôÓÃµ÷ÊÔÄ£Ê½
+     * @note ¸Ãº¯ÊıÊÇ×èÈûµÄ£¬Ó¦ÓÃ³ÌĞò½áÊøÊ±º¯Êı·µ»Ø
      */
     void Run(RunnerPtr runner, bool debug = false);
 
     /**
      * \~chinese
-     * @brief ç»ˆæ­¢åº”ç”¨ç¨‹åº
+     * @brief ÖÕÖ¹Ó¦ÓÃ³ÌĞò
      */
     void Quit();
 
     /**
      * \~chinese
-     * @brief è·å–ç¨‹åºè¿è¡Œå™¨
+     * @brief »ñÈ¡³ÌĞòÔËĞĞÆ÷
      */
     RunnerPtr GetRunner() const;
 
     /**
      * \~chinese
-     * @brief è·å–ä¸»çª—å£
+     * @brief »ñÈ¡Ö÷´°¿Ú
      */
     WindowPtr GetMainWindow() const;
 
     /**
      * \~chinese
-     * @brief è·å–ç‰ˆæœ¬å·
+     * @brief »ñÈ¡°æ±¾ºÅ
      */
     int GetVersion() const;
 
     /**
      * \~chinese
-     * @brief æ·»åŠ æ¨¡å—
-     * @param[in] module æ¨¡å—
+     * @brief Ìí¼ÓÄ£¿é
+     * @param[in] module Ä£¿é
      */
     void Use(Module& module);
 
     /**
      * \~chinese
-     * @brief è®¾ç½®æ—¶é—´ç¼©æ”¾å› å­
-     * @details è®¾ç½®æ—¶é—´ç¼©æ”¾å› å­å¯ç­‰æ¯”ä¾‹æ”¾å¤§æˆ–ç¼©å°æ—¶é—´è¿›åº¦
-     * @param scale_factor ç¼©æ”¾å› å­
-     * @warning è®¾ç½®ä¸ºè´Ÿæ•°å¯èƒ½å¯¼è‡´åŠ¨ç”»ç³»ç»Ÿç´Šä¹±
+     * @brief ÉèÖÃÊ±¼äËõ·ÅÒò×Ó
+     * @details ÉèÖÃÊ±¼äËõ·ÅÒò×Ó¿ÉµÈ±ÈÀı·Å´ó»òËõĞ¡Ê±¼ä½ø¶È
+     * @param scale_factor Ëõ·ÅÒò×Ó
+     * @warning ÉèÖÃÎª¸ºÊı¿ÉÄÜµ¼ÖÂ¶¯»­ÏµÍ³ÎÉÂÒ
      */
     void SetTimeScale(float scale_factor);
 
     /**
      * \~chinese
-     * @brief åˆ†å‘äº‹ä»¶
-     * @details å°†äº‹ä»¶åˆ†å‘ç»™æ‰€æœ‰äº‹ä»¶åŠŸèƒ½æ¨¡å—
-     * @param evt äº‹ä»¶
+     * @brief ·Ö·¢ÊÂ¼ş
+     * @details ½«ÊÂ¼ş·Ö·¢¸øËùÓĞÊÂ¼ş¹¦ÄÜÄ£¿é
+     * @param evt ÊÂ¼ş
      */
     void DispatchEvent(Event* evt);
 
     /**
      * \~chinese
-     * @brief åœ¨ä¸»çº¿ç¨‹ä¸­æ‰§è¡Œå‡½æ•°
-     * @details æä¾›åœ¨å…¶ä»–çº¿ç¨‹è°ƒç”¨ Kiwano å‡½æ•°çš„èƒ½åŠ›
-     * @param func éœ€è¦æ‰§è¡Œçš„å‡½æ•°
+     * @brief ÔÚÖ÷Ïß³ÌÖĞÖ´ĞĞº¯Êı
+     * @details Ìá¹©ÔÚÆäËûÏß³Ìµ÷ÓÃ Kiwano º¯ÊıµÄÄÜÁ¦
+     * @param func ĞèÒªÖ´ĞĞµÄº¯Êı
      */
     void PreformInMainThread(Function<void()> func);
 
     /**
      * \~chinese
-     * @brief æ›´æ–°æ‰€æœ‰æ¨¡å—
-     * @param dt æ—¶é—´é—´éš”
+     * @brief ¸üĞÂËùÓĞÄ£¿é
+     * @param dt Ê±¼ä¼ä¸ô
      */
     void Update(Duration dt);
 
     /**
      * \~chinese
-     * @brief åˆ›å»ºæ¸²æŸ“ä¸Šä¸‹æ–‡å¹¶æ¸²æŸ“ç”»é¢
+     * @brief ´´½¨äÖÈ¾ÉÏÏÂÎÄ²¢äÖÈ¾»­Ãæ
      */
     void Render();
 
     /**
      * \~chinese
-     * @brief é”€æ¯æ¸¸æˆè¿è¡Œè¿‡ç¨‹ä¸­äº§ç”Ÿçš„æ‰€æœ‰èµ„æº
+     * @brief Ïú»ÙÓÎÏ·ÔËĞĞ¹ı³ÌÖĞ²úÉúµÄËùÓĞ×ÊÔ´
      */
     void Destroy();
 

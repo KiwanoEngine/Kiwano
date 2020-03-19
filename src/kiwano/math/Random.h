@@ -26,11 +26,11 @@ namespace kiwano
 namespace math
 {
 //
-// éšæœºæ•°
+// Ëæ»úÊý
 //
-// èŽ·å–æŒ‡å®šèŒƒå›´å†…çš„ä¸€ä¸ªéšæœºæ•°, å¦‚:
-// int n = math::Random(1, 5);  // èŽ·å– 1~5 å†…çš„éšæœºæ•´æ•°, åŒ…å« 1 å’Œ 5
-// äº§ç”Ÿçš„éšæœºæ•°ç±»åž‹å–å†³äºŽå‚æ•°çš„ç±»åž‹, å¦‚èŽ·å–éšæœºæµ®ç‚¹æ•°:
+// »ñÈ¡Ö¸¶¨·¶Î§ÄÚµÄÒ»¸öËæ»úÊý, Èç:
+// int n = math::Random(1, 5);  // »ñÈ¡ 1~5 ÄÚµÄËæ»úÕûÊý, °üº¬ 1 ºÍ 5
+// ²úÉúµÄËæ»úÊýÀàÐÍÈ¡¾öÓÚ²ÎÊýµÄÀàÐÍ, Èç»ñÈ¡Ëæ»ú¸¡µãÊý:
 // float d = math::Random(1.2f, 1.5f);
 //
 

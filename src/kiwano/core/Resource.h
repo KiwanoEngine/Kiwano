@@ -26,26 +26,26 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief èµ„æº
+ * @brief ×ÊÔ´
  * @details
- *   èµ„æºæ˜¯ä¿å­˜åœ¨ exe ä¸­çš„äºŒè¿›åˆ¶æ•°æ®ï¼Œ
- *   ä¾‹å¦‚ï¼Œä¸€ä»½éŸ³é¢‘èµ„æºçš„ç±»å‹ä¸º "WAVE"ï¼Œåç§°æ ‡è¯†ç¬¦ä¸º
- * IDR_WAVE_1ï¼Œé‚£ä¹ˆå¯ä»¥è¿™æ ·æŒ‡å®šè¯¥èµ„æº:
+ *   ×ÊÔ´ÊÇ±£´æÔÚ exe ÖĞµÄ¶ş½øÖÆÊı¾İ£¬
+ *   ÀıÈç£¬Ò»·İÒôÆµ×ÊÔ´µÄÀàĞÍÎª "WAVE"£¬Ãû³Æ±êÊ¶·ûÎª
+ * IDR_WAVE_1£¬ÄÇÃ´¿ÉÒÔÕâÑùÖ¸¶¨¸Ã×ÊÔ´:
  *   @code
  *     Resource(IDR_WAVE_1, "WAVE");
  *   @endcode
- *   äº†è§£èµ„æºçš„æ›´å¤šä¿¡æ¯:
+ *   ÁË½â×ÊÔ´µÄ¸ü¶àĞÅÏ¢:
  * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
  */
 class KGE_API Resource
 {
 public:
     /// \~chinese
-    /// @brief èµ„æºçš„äºŒè¿›åˆ¶æ•°æ®
+    /// @brief ×ÊÔ´µÄ¶ş½øÖÆÊı¾İ
     struct Data
     {
-        void*    buffer;  ///< èµ„æºæ•°æ®
-        uint32_t size;    ///< èµ„æºæ•°æ®å¤§å°
+        void*    buffer;  ///< ×ÊÔ´Êı¾İ
+        uint32_t size;    ///< ×ÊÔ´Êı¾İ´óĞ¡
 
         Data();
 
@@ -53,26 +53,26 @@ public:
     };
 
     /// \~chinese
-    /// @brief æ„é€ èµ„æº
+    /// @brief ¹¹Ôì×ÊÔ´
     Resource();
 
     /// \~chinese
-    /// @brief æ„é€ èµ„æº
-    /// @param id èµ„æº ID
-    /// @param type èµ„æºç±»å‹
+    /// @brief ¹¹Ôì×ÊÔ´
+    /// @param id ×ÊÔ´ ID
+    /// @param type ×ÊÔ´ÀàĞÍ
     Resource(uint32_t id, const wchar_t* type);
 
     /// \~chinese
-    /// @brief è·å–èµ„æºçš„äºŒè¿›åˆ¶æ•°æ®
-    /// @return èµ„æºæ•°æ®
+    /// @brief »ñÈ¡×ÊÔ´µÄ¶ş½øÖÆÊı¾İ
+    /// @return ×ÊÔ´Êı¾İ
     Resource::Data GetData() const;
 
     /// \~chinese
-    /// @brief è·å–èµ„æº ID
+    /// @brief »ñÈ¡×ÊÔ´ ID
     uint32_t GetId() const;
 
     /// \~chinese
-    /// @brief è·å–èµ„æºç±»å‹
+    /// @brief »ñÈ¡×ÊÔ´ÀàĞÍ
     const wchar_t* GetType() const;
 
 private:

@@ -31,7 +31,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * \defgroup Render æ¸²æŸ“æ¨¡å—
+ * \defgroup Render äÖÈ¾Ä£¿é
  */
 
 /**
@@ -41,197 +41,197 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief æ¸²æŸ“å™¨
+ * @brief äÖÈ¾Æ÷
  */
 class KGE_API Renderer : public EventModule
 {
 public:
     /// \~chinese
-    /// @brief è·å–å®ä¾‹
+    /// @brief »ñÈ¡ÊµÀı
     static Renderer& GetInstance();
 
     /// \~chinese
-    /// @brief è·å–æ¸…å±é¢œè‰²
+    /// @brief »ñÈ¡ÇåÆÁÑÕÉ«
     virtual Color GetClearColor() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¸…å±é¢œè‰²
+    /// @brief ÉèÖÃÇåÆÁÑÕÉ«
     virtual void SetClearColor(const Color& clear_color);
 
     /// \~chinese
-    /// @brief å¼€å¯æˆ–å…³é—­å‚ç›´åŒæ­¥
+    /// @brief ¿ªÆô»ò¹Ø±Õ´¹Ö±Í¬²½
     virtual void SetVSyncEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¹ç†å†…éƒ¨èµ„æº
-    /// @param[out] texture çº¹ç†
-    /// @param[in] file_path å›¾ç‰‡è·¯å¾„
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÎÆÀíÄÚ²¿×ÊÔ´
+    /// @param[out] texture ÎÆÀí
+    /// @param[in] file_path Í¼Æ¬Â·¾¶
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateTexture(Texture& texture, const String& file_path) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¹ç†å†…éƒ¨èµ„æº
-    /// @param[out] texture çº¹ç†
-    /// @param[in] resource å›¾ç‰‡èµ„æº
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÎÆÀíÄÚ²¿×ÊÔ´
+    /// @param[out] texture ÎÆÀí
+    /// @param[in] resource Í¼Æ¬×ÊÔ´
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateTexture(Texture& texture, const Resource& resource) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFå›¾åƒå†…éƒ¨èµ„æº
-    /// @param[out] gif GIFå›¾åƒ
-    /// @param[in] file_path å›¾ç‰‡è·¯å¾„
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨GIFÍ¼ÏñÄÚ²¿×ÊÔ´
+    /// @param[out] gif GIFÍ¼Ïñ
+    /// @param[in] file_path Í¼Æ¬Â·¾¶
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateGifImage(GifImage& gif, const String& file_path) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFå›¾åƒå†…éƒ¨èµ„æº
-    /// @param[out] gif GIFå›¾åƒ
-    /// @param[in] resource å›¾ç‰‡èµ„æº
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨GIFÍ¼ÏñÄÚ²¿×ÊÔ´
+    /// @param[out] gif GIFÍ¼Ïñ
+    /// @param[in] resource Í¼Æ¬×ÊÔ´
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateGifImage(GifImage& gif, const Resource& resource) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFå›¾åƒå¸§å†…éƒ¨èµ„æº
-    /// @param[out] frame GIFå›¾åƒå¸§
-    /// @param[in] gif GIFå›¾åƒ
-    /// @param[in] frame_index å¸§ä¸‹æ ‡
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨GIFÍ¼ÏñÖ¡ÄÚ²¿×ÊÔ´
+    /// @param[out] frame GIFÍ¼ÏñÖ¡
+    /// @param[in] gif GIFÍ¼Ïñ
+    /// @param[in] frame_index Ö¡ÏÂ±ê
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºå­—ä½“é›†å†…éƒ¨èµ„æº
-    /// @param[out] font å­—ä½“
-    /// @param[in] file_paths å­—ä½“æ–‡ä»¶è·¯å¾„
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨×ÖÌå¼¯ÄÚ²¿×ÊÔ´
+    /// @param[out] font ×ÖÌå
+    /// @param[in] file_paths ×ÖÌåÎÄ¼şÂ·¾¶
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateFontCollection(Font& font, const String& file_path) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºå­—ä½“é›†å†…éƒ¨èµ„æº
-    /// @param[out] font å­—ä½“
-    /// @param[in] res_arr å­—ä½“èµ„æº
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨×ÖÌå¼¯ÄÚ²¿×ÊÔ´
+    /// @param[out] font ×ÖÌå
+    /// @param[in] res_arr ×ÖÌå×ÊÔ´
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateFontCollection(Font& font, const Resource& res) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºæ–‡å­—å¸ƒå±€å†…éƒ¨èµ„æº
-    /// @param[out] layout å­—ä½“å¸ƒå±€
-    /// @param text æ–‡å­—å†…å®¹
-    /// @param style æ–‡æœ¬æ ·å¼
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÎÄ×Ö²¼¾ÖÄÚ²¿×ÊÔ´
+    /// @param[out] layout ×ÖÌå²¼¾Ö
+    /// @param text ÎÄ×ÖÄÚÈİ
+    /// @param style ÎÄ±¾ÑùÊ½
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ®µå½¢çŠ¶å†…éƒ¨èµ„æº
-    /// @param[out] shape å½¢çŠ¶
-    /// @param[in] begin_pos çº¿æ®µèµ·ç‚¹
-    /// @param[in] end_pos çº¿æ®µç»ˆç‚¹
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨Ïß¶ÎĞÎ×´ÄÚ²¿×ÊÔ´
+    /// @param[out] shape ĞÎ×´
+    /// @param[in] begin_pos Ïß¶ÎÆğµã
+    /// @param[in] end_pos Ïß¶ÎÖÕµã
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçŸ©å½¢å½¢çŠ¶å†…éƒ¨èµ„æº
-    /// @param[out] shape å½¢çŠ¶
-    /// @param[in] rect çŸ©å½¢å¤§å°
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨¾ØĞÎĞÎ×´ÄÚ²¿×ÊÔ´
+    /// @param[out] shape ĞÎ×´
+    /// @param[in] rect ¾ØĞÎ´óĞ¡
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateRectShape(Shape& shape, const Rect& rect) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†è§’çŸ©å½¢å½¢çŠ¶å†…éƒ¨èµ„æº
-    /// @param[out] shape å½¢çŠ¶
-    /// @param[in] rect çŸ©å½¢å¤§å°
-    /// @param[in] radius åœ†è§’åŠå¾„
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨Ô²½Ç¾ØĞÎĞÎ×´ÄÚ²¿×ÊÔ´
+    /// @param[out] shape ĞÎ×´
+    /// @param[in] rect ¾ØĞÎ´óĞ¡
+    /// @param[in] radius Ô²½Ç°ë¾¶
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºæ¤­åœ†å½¢çŠ¶å†…éƒ¨èµ„æº
-    /// @param[out] shape å½¢çŠ¶
-    /// @param[in] center æ¤­åœ†åœ†å¿ƒ
-    /// @param[in] radius æ¤­åœ†åŠå¾„
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÍÖÔ²ĞÎ×´ÄÚ²¿×ÊÔ´
+    /// @param[out] shape ĞÎ×´
+    /// @param[in] center ÍÖÔ²Ô²ĞÄ
+    /// @param[in] radius ÍÖÔ²°ë¾¶
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºå‡ ä½•å›¾å½¢ç”Ÿæˆå™¨å†…éƒ¨èµ„æº
-    /// @param[out] maker å½¢çŠ¶ç”Ÿæˆå™¨
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨¼¸ºÎÍ¼ĞÎÉú³ÉÆ÷ÄÚ²¿×ÊÔ´
+    /// @param[out] maker ĞÎ×´Éú³ÉÆ÷
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateShapeSink(ShapeMaker& maker) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¯è‰²ç”»åˆ·å†…éƒ¨èµ„æº
-    /// @param[out] brush ç”»åˆ·
-    /// @param[in] color é¢œè‰²
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨´¿É«»­Ë¢ÄÚ²¿×ÊÔ´
+    /// @param[out] brush »­Ë¢
+    /// @param[in] color ÑÕÉ«
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateBrush(Brush& brush, const Color& color) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ€§æ¸å˜ç”»åˆ·å†…éƒ¨èµ„æº
-    /// @param[out] brush ç”»åˆ·
-    /// @param[in] style çº¿æ€§æ¸å˜æ ·å¼
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÏßĞÔ½¥±ä»­Ë¢ÄÚ²¿×ÊÔ´
+    /// @param[out] brush »­Ë¢
+    /// @param[in] style ÏßĞÔ½¥±äÑùÊ½
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateBrush(Brush& brush, const LinearGradientStyle& style) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºå¾„å‘æ¸å˜ç”»åˆ·å†…éƒ¨èµ„æº
-    /// @param[out] brush ç”»åˆ·
-    /// @param[in] style å¾„å‘æ¸å˜æ ·å¼
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨¾¶Ïò½¥±ä»­Ë¢ÄÚ²¿×ÊÔ´
+    /// @param[out] brush »­Ë¢
+    /// @param[in] style ¾¶Ïò½¥±äÑùÊ½
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateBrush(Brush& brush, const RadialGradientStyle& style) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¹ç†ç”»åˆ·å†…éƒ¨èµ„æº
-    /// @param[out] brush ç”»åˆ·
-    /// @param[in] texture çº¹ç†
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÎÆÀí»­Ë¢ÄÚ²¿×ÊÔ´
+    /// @param[out] brush »­Ë¢
+    /// @param[in] texture ÎÆÀí
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateBrush(Brush& brush, TexturePtr texture) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼å†…éƒ¨èµ„æº
-    /// @param[out] stroke_style çº¿æ¡æ ·å¼
-    /// @param[in] cap çº¿æ®µç«¯ç‚¹æ ·å¼
-    /// @param[in] line_join çº¿æ®µç›¸äº¤æ ·å¼
-    /// @param[in] dash_array è™šçº¿é•¿åº¦ä¸é—´éš™æ•°ç»„
-    /// @param[in] dash_size è™šçº¿æ•°ç»„å¤§å°
-    /// @param[in] dash_offset è™šçº¿åç§»é‡
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÏßÌõÑùÊ½ÄÚ²¿×ÊÔ´
+    /// @param[out] stroke_style ÏßÌõÑùÊ½
+    /// @param[in] cap Ïß¶Î¶ËµãÑùÊ½
+    /// @param[in] line_join Ïß¶ÎÏà½»ÑùÊ½
+    /// @param[in] dash_array ĞéÏß³¤¶ÈÓë¼äÏ¶Êı×é
+    /// @param[in] dash_size ĞéÏßÊı×é´óĞ¡
+    /// @param[in] dash_offset ĞéÏßÆ«ÒÆÁ¿
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡ï¼Œå°†ä¸Šä¸‹æ–‡çš„æ¸²æŸ“è¾“å‡ºåˆ°çº¹ç†ä¸­
-    /// @param[in,out] texture æ¸²æŸ“è¾“å‡ºçš„çº¹ç†
-    /// @param[in] desired_size æœŸæœ›çš„è¾“å‡ºå¤§å°
-    /// @return çº¹ç†æ¸²æŸ“ä¸Šä¸‹æ–‡
-    /// @throw kiwano::SystemError åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ´´½¨ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ£¬½«ÉÏÏÂÎÄµÄäÖÈ¾Êä³öµ½ÎÆÀíÖĞ
+    /// @param[in,out] texture äÖÈ¾Êä³öµÄÎÆÀí
+    /// @param[in] desired_size ÆÚÍûµÄÊä³ö´óĞ¡
+    /// @return ÎÆÀíäÖÈ¾ÉÏÏÂÎÄ
+    /// @throw kiwano::SystemError ´´½¨Ê§°ÜÊ±Å×³ö
     virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
 
 public:
     /// \~chinese
-    /// @brief è·å–æ¸²æŸ“ä¸Šä¸‹æ–‡
+    /// @brief »ñÈ¡äÖÈ¾ÉÏÏÂÎÄ
     RenderContext& GetContext();
 
     /// \~chinese
-    /// @brief è·å–æ¸²æŸ“è¾“å‡ºå¤§å°
+    /// @brief »ñÈ¡äÖÈ¾Êä³ö´óĞ¡
     Size GetOutputSize() const;
 
     /// \~chinese
-    /// @brief å¼€å§‹æ¸²æŸ“
+    /// @brief ¿ªÊ¼äÖÈ¾
     virtual void BeginDraw();
 
     /// \~chinese
-    /// @brief ç»“æŸæ¸²æŸ“
+    /// @brief ½áÊøäÖÈ¾
     virtual void EndDraw();
 
     /// \~chinese
-    /// @brief æ¸…é™¤ç»˜åˆ¶å†…å®¹
+    /// @brief Çå³ı»æÖÆÄÚÈİ
     virtual void Clear() = 0;
 
     /// \~chinese
-    /// @brief å°†ç»˜åˆ¶å†…å®¹å‘ˆç°è‡³çª—å£
-    /// @throw kiwano::SystemError å‘ˆç°å¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ½«»æÖÆÄÚÈİ³ÊÏÖÖÁ´°¿Ú
+    /// @throw kiwano::SystemError ³ÊÏÖÊ§°ÜÊ±Å×³ö
     virtual void Present() = 0;
 
     /// \~chinese
-    /// @brief é‡è®¾æ¸²æŸ“è¾“å‡ºå¤§å°
+    /// @brief ÖØÉèäÖÈ¾Êä³ö´óĞ¡
     virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 public:

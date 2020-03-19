@@ -28,26 +28,26 @@ KGE_DECLARE_SMART_PTR(Button);
 
 /**
  * \~chinese
- * @brief æŒ‰é’®
+ * @brief °´Å¥
  */
 class KGE_API Button : public Component
 {
 public:
     /// \~chinese
-    /// @brief æŒ‰é’®å›è°ƒå‡½æ•°
+    /// @brief °´Å¥»Øµ÷º¯Êı
     using Callback = Function<void(Button* /* self */, Actor* /* target */)>;
 
     /// \~chinese
-    /// @brief åˆ›å»ºæŒ‰é’®
-    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
+    /// @brief ´´½¨°´Å¥
+    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
     static ButtonPtr Create(const Callback& click);
 
     /// \~chinese
-    /// @brief åˆ›å»ºæŒ‰é’®
-    /// @param click æŒ‰é’®ç‚¹å‡»å›è°ƒå‡½æ•°
-    /// @param pressed æŒ‰é’®æŒ‰ä¸‹å›è°ƒå‡½æ•°
-    /// @param mouse_over æŒ‰é’®ç§»å…¥å›è°ƒå‡½æ•°
-    /// @param mouse_out æŒ‰é’®ç§»å‡ºå›è°ƒå‡½æ•°
+    /// @brief ´´½¨°´Å¥
+    /// @param click °´Å¥µã»÷»Øµ÷º¯Êı
+    /// @param pressed °´Å¥°´ÏÂ»Øµ÷º¯Êı
+    /// @param mouse_over °´Å¥ÒÆÈë»Øµ÷º¯Êı
+    /// @param mouse_out °´Å¥ÒÆ³ö»Øµ÷º¯Êı
     static ButtonPtr Create(const Callback& click, const Callback& pressed, const Callback& mouse_over,
                             const Callback& mouse_out);
 
@@ -56,49 +56,49 @@ public:
     virtual ~Button();
 
     /// \~chinese
-    /// @brief è®¾ç½®æŒ‰é’®ç‚¹å‡»åçš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ°´Å¥µã»÷ºóµÄ»Øµ÷º¯Êı
     void SetClickCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief è®¾ç½®æŒ‰é’®è¢«æŒ‰ä¸‹æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ°´Å¥±»°´ÏÂÊ±µÄ»Øµ÷º¯Êı
     void SetPressedCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief è®¾ç½®é¼ æ ‡ç§»å…¥æŒ‰é’®æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃÊó±êÒÆÈë°´Å¥Ê±µÄ»Øµ÷º¯Êı
     void SetMouseOverCallback(const Callback& func);
 
     /// \~chinese
-    /// @brief è®¾ç½®é¼ æ ‡ç§»å‡ºæŒ‰é’®æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃÊó±êÒÆ³ö°´Å¥Ê±µÄ»Øµ÷º¯Êı
     void SetMouseOutCallback(const Callback& func);
 
 protected:
     /// \~chinese
-    /// @brief æŒ‰é’®çŠ¶æ€
+    /// @brief °´Å¥×´Ì¬
     enum class Status
     {
-        Normal,  ///< æ™®é€š
-        Hover,   ///< é¼ æ ‡åœ¨æŒ‰é’®å†…
-        Pressed  ///< è¢«æŒ‰ä¸‹
+        Normal,  ///< ÆÕÍ¨
+        Hover,   ///< Êó±êÔÚ°´Å¥ÄÚ
+        Pressed  ///< ±»°´ÏÂ
     };
 
     /// \~chinese
-    /// @brief è·å–æŒ‰é’®çŠ¶æ€
+    /// @brief »ñÈ¡°´Å¥×´Ì¬
     Status GetStatus() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æŒ‰é’®çŠ¶æ€
+    /// @brief ÉèÖÃ°´Å¥×´Ì¬
     void SetStatus(Status status);
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç»„ä»¶
+    /// @brief ³õÊ¼»¯×é¼ş
     void InitComponent(Actor* actor) override;
 
     /// \~chinese
-    /// @brief é”€æ¯ç»„ä»¶
+    /// @brief Ïú»Ù×é¼ş
     void DestroyComponent() override;
 
     /// \~chinese
-    /// @brief å¤„ç†è§’è‰²äº‹ä»¶
+    /// @brief ´¦Àí½ÇÉ«ÊÂ¼ş
     void HandleEvent(Event* evt) override;
 
 private:

@@ -41,15 +41,15 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief 异常
+/// @brief �쳣
 typedef std::exception Exception;
 
 /// \~chinese
-/// @brief 运行时异常
+/// @brief ����ʱ�쳣
 typedef std::runtime_error RuntimeError;
 
 /// \~chinese
-/// @brief 系统异常
+/// @brief ϵͳ�쳣
 typedef std::system_error SystemError;
 
 class StackTracer

@@ -40,7 +40,7 @@ KGE_DECLARE_SMART_PTR(Sound);
 
 /**
  * \~chinese
- * @brief éŸ³é¢‘å¯¹è±¡
+ * @brief ÒôÆµ¶ÔÏó
  */
 class KGE_API Sound : public ObjectBase
 {
@@ -48,13 +48,13 @@ class KGE_API Sound : public ObjectBase
 
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºéŸ³é¢‘å¯¹è±¡
-    /// @param res æœ¬åœ°éŸ³é¢‘æ–‡ä»¶è·¯å¾„
+    /// @brief ´´½¨ÒôÆµ¶ÔÏó
+    /// @param res ±¾µØÒôÆµÎÄ¼şÂ·¾¶
     static SoundPtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief åˆ›å»ºéŸ³é¢‘å¯¹è±¡
-    /// @param res éŸ³é¢‘èµ„æº
+    /// @brief ´´½¨ÒôÆµ¶ÔÏó
+    /// @param res ÒôÆµ×ÊÔ´
     static SoundPtr Create(const Resource& res);
 
     Sound();
@@ -62,51 +62,51 @@ public:
     virtual ~Sound();
 
     /// \~chinese
-    /// @brief æ‰“å¼€æœ¬åœ°éŸ³é¢‘æ–‡ä»¶
-    /// @param res æœ¬åœ°éŸ³é¢‘æ–‡ä»¶è·¯å¾„
+    /// @brief ´ò¿ª±¾µØÒôÆµÎÄ¼ş
+    /// @param res ±¾µØÒôÆµÎÄ¼şÂ·¾¶
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief æ‰“å¼€éŸ³é¢‘èµ„æº
-    /// @param res éŸ³é¢‘èµ„æº
+    /// @brief ´ò¿ªÒôÆµ×ÊÔ´
+    /// @param res ÒôÆµ×ÊÔ´
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief æ˜¯å¦æœ‰æ•ˆ
+    /// @brief ÊÇ·ñÓĞĞ§
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief æ’­æ”¾
-    /// @param loop_count æ’­æ”¾å¾ªç¯æ¬¡æ•°ï¼Œè®¾ç½® -1 ä¸ºå¾ªç¯æ’­æ”¾
+    /// @brief ²¥·Å
+    /// @param loop_count ²¥·ÅÑ­»·´ÎÊı£¬ÉèÖÃ -1 ÎªÑ­»·²¥·Å
     void Play(int loop_count = 0);
 
     /// \~chinese
-    /// @brief æš‚åœ
+    /// @brief ÔİÍ£
     void Pause();
 
     /// \~chinese
-    /// @brief ç»§ç»­
+    /// @brief ¼ÌĞø
     void Resume();
 
     /// \~chinese
-    /// @brief åœæ­¢
+    /// @brief Í£Ö¹
     void Stop();
 
     /// \~chinese
-    /// @brief å…³é—­å¹¶é”€æ¯èµ„æº
+    /// @brief ¹Ø±Õ²¢Ïú»Ù×ÊÔ´
     void Close();
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ­£åœ¨æ’­æ”¾
+    /// @brief ÊÇ·ñÕıÔÚ²¥·Å
     bool IsPlaying() const;
 
     /// \~chinese
-    /// @brief è·å–éŸ³é‡
+    /// @brief »ñÈ¡ÒôÁ¿
     float GetVolume() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®éŸ³é‡
-    /// @param volume éŸ³é‡å¤§å°ï¼Œ1.0 ä¸ºåŸå§‹éŸ³é‡, å¤§äº 1 ä¸ºæ”¾å¤§éŸ³é‡, 0 ä¸ºæœ€å°éŸ³é‡
+    /// @brief ÉèÖÃÒôÁ¿
+    /// @param volume ÒôÁ¿´óĞ¡£¬1.0 ÎªÔ­Ê¼ÒôÁ¿, ´óÓÚ 1 Îª·Å´óÒôÁ¿, 0 Îª×îĞ¡ÒôÁ¿
     void SetVolume(float volume);
 
 private:

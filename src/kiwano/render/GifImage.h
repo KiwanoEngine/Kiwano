@@ -33,71 +33,71 @@ KGE_DECLARE_SMART_PTR(GifImage);
 
 /**
  * \~chinese
- * @brief GIFå›¾åƒ
+ * @brief GIFÍ¼Ïñ
  */
 class KGE_API GifImage : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºGIFå›¾ç‰‡
+    /// @brief ´´½¨GIFÍ¼Æ¬
     static GifImagePtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFå›¾ç‰‡
+    /// @brief ´´½¨GIFÍ¼Æ¬
     static GifImagePtr Create(const Resource& res);
 
     GifImage();
 
     /// \~chinese
-    /// @brief åŠ è½½æœ¬åœ°GIFå›¾ç‰‡
+    /// @brief ¼ÓÔØ±¾µØGIFÍ¼Æ¬
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief åŠ è½½GIFèµ„æº
+    /// @brief ¼ÓÔØGIF×ÊÔ´
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief è·å–åƒç´ å®½åº¦
+    /// @brief »ñÈ¡ÏñËØ¿í¶È
     uint32_t GetWidthInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ é«˜åº¦
+    /// @brief »ñÈ¡ÏñËØ¸ß¶È
     uint32_t GetHeightInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ å¤§å°
+    /// @brief »ñÈ¡ÏñËØ´óĞ¡
     PixelSize GetSizeInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–å¸§æ•°é‡
+    /// @brief »ñÈ¡Ö¡ÊıÁ¿
     uint32_t GetFramesCount() const;
 
 public:
     /// \~chinese
-    /// @brief GIFå¸§çš„å¤„ç½®æ–¹å¼
+    /// @brief GIFÖ¡µÄ´¦ÖÃ·½Ê½
     enum class DisposalType
     {
-        Unknown,     ///< æœªçŸ¥
-        None,        ///< ä¸å¤„ç†
-        Background,  ///< èƒŒæ™¯
-        Previous     ///< æ¢å¤å‰ä¸€å¸§
+        Unknown,     ///< Î´Öª
+        None,        ///< ²»´¦Àí
+        Background,  ///< ±³¾°
+        Previous     ///< »Ö¸´Ç°Ò»Ö¡
     };
 
     /// \~chinese
-    /// @brief GIFå¸§
+    /// @brief GIFÖ¡
     struct Frame
     {
-        Duration     delay;          ///< å¸§å»¶è¿Ÿ
-        TexturePtr   texture;        ///< å¸§å›¾åƒ
-        Rect         rect;           ///< ç»˜åˆ¶åŒºåŸŸ
-        DisposalType disposal_type;  ///< å¤„ç½®æ–¹å¼
+        Duration     delay;          ///< Ö¡ÑÓ³Ù
+        TexturePtr   texture;        ///< Ö¡Í¼Ïñ
+        Rect         rect;           ///< »æÖÆÇøÓò
+        DisposalType disposal_type;  ///< ´¦ÖÃ·½Ê½
 
         Frame();
     };
 
     /// \~chinese
-    /// @brief è·å–GIFå¸§
-    /// @param index å¸§ä¸‹æ ‡
+    /// @brief »ñÈ¡GIFÖ¡
+    /// @param index Ö¡ÏÂ±ê
     Frame GetFrame(uint32_t index);
 
 private:

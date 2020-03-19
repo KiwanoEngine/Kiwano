@@ -36,33 +36,33 @@ namespace global
 {
 
 /// \~chinese
-/// @brief 获取全局缩放比例
-/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+/// @brief ��ȡȫ�����ű���
+/// @details ���ű�����ָ����������ĵ�λ��ת������Ļ���صı�����Ĭ�ϱ���Ϊ1:100
 float GetScale();
 
 /// \~chinese
-/// @brief 设置全局缩放比例
-/// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
+/// @brief ����ȫ�����ű���
+/// @details ���ű�����ָ����������ĵ�λ��ת������Ļ���صı�����Ĭ�ϱ���Ϊ1:100
 void SetScale(float scale);
 
 /// \~chinese
-/// @brief 游戏世界单位转换为物理世界单位
-/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+/// @brief ��Ϸ���絥λת��Ϊ�������絥λ
+/// @details ����ȫ�����ű�������������ĵ�λ��ת��Ϊ���ص�λ
 float WorldToLocal(float value);
 
 /// \~chinese
-/// @brief 游戏世界单位转换为物理世界单位
-/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+/// @brief ��Ϸ���絥λת��Ϊ�������絥λ
+/// @details ����ȫ�����ű�������������ĵ�λ��ת��Ϊ���ص�λ
 Vec2 WorldToLocal(const b2Vec2& pos);
 
 /// \~chinese
-/// @brief 物理世界单位转换为游戏世界单位
-/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+/// @brief �������絥λת��Ϊ��Ϸ���絥λ
+/// @details ����ȫ�����ű��������ص�λת��Ϊ��������ĵ�λ��
 float LocalToWorld(float value);
 
 /// \~chinese
-/// @brief 物理世界单位转换为游戏世界单位
-/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+/// @brief �������絥λת��Ϊ��Ϸ���絥λ
+/// @details ����ȫ�����ű��������ص�λת��Ϊ��������ĵ�λ��
 b2Vec2 LocalToWorld(const Vec2& pos);
 
 }  // namespace global

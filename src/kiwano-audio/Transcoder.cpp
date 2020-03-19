@@ -148,25 +148,25 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
         hr = partial_type->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
     }
 
-    // è®¾ç½® source reader çš„åª’ä½“ç±»å‹ï¼Œå®ƒå°†ä½¿ç”¨åˆé€‚çš„è§£ç å™¨å»è§£ç è¿™ä¸ªéŸ³é¢‘
+    // ÉèÖÃ source reader µÄÃ½ÌåÀàĞÍ£¬Ëü½«Ê¹ÓÃºÏÊÊµÄ½âÂëÆ÷È¥½âÂëÕâ¸öÒôÆµ
     if (SUCCEEDED(hr))
     {
         hr = reader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, partial_type.Get());
     }
 
-    // ä» IMFMediaType ä¸­è·å– WAVEFORMAT ç»“æ„
+    // ´Ó IMFMediaType ÖĞ»ñÈ¡ WAVEFORMAT ½á¹¹
     if (SUCCEEDED(hr))
     {
         hr = reader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &uncompressed_type);
     }
 
-    // æŒ‡å®šéŸ³é¢‘æµ
+    // Ö¸¶¨ÒôÆµÁ÷
     if (SUCCEEDED(hr))
     {
         hr = reader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, true);
     }
 
-    // è·å– WAVEFORMAT æ•°æ®
+    // »ñÈ¡ WAVEFORMAT Êı¾İ
     if (SUCCEEDED(hr))
     {
         uint32_t size = 0;
@@ -174,7 +174,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
             uncompressed_type.Get(), &wave_format_, &size, (DWORD)MFWaveFormatExConvertFlag_Normal);
     }
 
-    // ä¼°ç®—éŸ³é¢‘æµå¤§å°
+    // ¹ÀËãÒôÆµÁ÷´óĞ¡
     if (SUCCEEDED(hr))
     {
         PROPVARIANT prop;
@@ -187,7 +187,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
         PropVariantClear(&prop);
     }
 
-    // è¯»å–éŸ³é¢‘æ•°æ®
+    // ¶ÁÈ¡ÒôÆµÊı¾İ
     if (SUCCEEDED(hr))
     {
         DWORD flags    = 0;

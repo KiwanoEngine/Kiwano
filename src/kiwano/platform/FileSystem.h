@@ -25,7 +25,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief æ–‡ä»¶ç³»ç»Ÿï¼Œä¸ºå…¶ä»–æ¨¡å—æä¾›æ–‡ä»¶æœç´¢è§„åˆ™ç­‰
+ * @brief ÎÄ¼şÏµÍ³£¬ÎªÆäËûÄ£¿éÌá¹©ÎÄ¼şËÑË÷¹æÔòµÈ
  */
 class KGE_API FileSystem : public Singleton<FileSystem>
 {
@@ -34,71 +34,71 @@ class KGE_API FileSystem : public Singleton<FileSystem>
 public:
     /**
      * \~chinese
-     * @brief æ·»åŠ æ–‡ä»¶æœç´¢è·¯å¾„
-     * @param path æ–‡ä»¶æœç´¢è·¯å¾„
+     * @brief Ìí¼ÓÎÄ¼şËÑË÷Â·¾¶
+     * @param path ÎÄ¼şËÑË÷Â·¾¶
      */
     void AddSearchPath(const String& path);
 
     /**
      * \~chinese
-     * @brief è®¾ç½®æ–‡ä»¶æœç´¢è·¯å¾„
-     * @param paths æœç´¢è·¯å¾„æ•°ç»„
+     * @brief ÉèÖÃÎÄ¼şËÑË÷Â·¾¶
+     * @param paths ËÑË÷Â·¾¶Êı×é
      */
     void SetSearchPaths(const Vector<String>& paths);
 
     /**
      * \~chinese
-     * @brief åœ¨æœç´¢åˆ—è¡¨ä¸­æŸ¥æ‰¾æ–‡ä»¶å¹¶è·å–å®Œæ•´è·¯å¾„
-     * @param file æ–‡ä»¶è·¯å¾„
-     * @return å®Œæ•´çš„æ–‡ä»¶è·¯å¾„
+     * @brief ÔÚËÑË÷ÁĞ±íÖĞ²éÕÒÎÄ¼ş²¢»ñÈ¡ÍêÕûÂ·¾¶
+     * @param file ÎÄ¼şÂ·¾¶
+     * @return ÍêÕûµÄÎÄ¼şÂ·¾¶
      */
     String GetFullPathForFile(const String& file) const;
 
     /**
      * \~chinese
-     * @brief æ·»åŠ æ–‡ä»¶è·¯å¾„æŸ¥æ‰¾å­—å…¸è§„åˆ™
-     * @param key æ–‡ä»¶å…³é”®è¯
-     * @param file_path æ–‡ä»¶è·¯å¾„
+     * @brief Ìí¼ÓÎÄ¼şÂ·¾¶²éÕÒ×Öµä¹æÔò
+     * @param key ÎÄ¼ş¹Ø¼ü´Ê
+     * @param file_path ÎÄ¼şÂ·¾¶
      */
     void AddFileLookupRule(const String& key, const String& file_path);
 
     /**
      * \~chinese
-     * @brief è®¾ç½®æ–‡ä»¶è·¯å¾„æŸ¥æ‰¾å­—å…¸
-     * @param dict æ–‡ä»¶è·¯å¾„æŸ¥æ‰¾å­—å…¸
+     * @brief ÉèÖÃÎÄ¼şÂ·¾¶²éÕÒ×Öµä
+     * @param dict ÎÄ¼şÂ·¾¶²éÕÒ×Öµä
      */
     void SetFileLookupDictionary(const UnorderedMap<String, String>& dict);
 
     /**
      * \~chinese
-     * @brief æ–‡ä»¶æ˜¯å¦å­˜åœ¨
-     * @param file_path æ–‡ä»¶è·¯å¾„
-     * @return è‹¥æ–‡ä»¶å­˜åœ¨ï¼Œè¿”å› true
+     * @brief ÎÄ¼şÊÇ·ñ´æÔÚ
+     * @param file_path ÎÄ¼şÂ·¾¶
+     * @return ÈôÎÄ¼ş´æÔÚ£¬·µ»Ø true
      */
     bool IsFileExists(const String& file_path) const;
 
     /**
      * \~chinese
-     * @brief åˆ¤æ–­è·¯å¾„æ˜¯å¦æ˜¯ç»å¯¹è·¯å¾„
-     * @param path æ–‡ä»¶è·¯å¾„
-     * @return è‹¥æ˜¯ç»å¯¹è·¯å¾„ï¼Œè¿”å› true
+     * @brief ÅĞ¶ÏÂ·¾¶ÊÇ·ñÊÇ¾ø¶ÔÂ·¾¶
+     * @param path ÎÄ¼şÂ·¾¶
+     * @return ÈôÊÇ¾ø¶ÔÂ·¾¶£¬·µ»Ø true
      */
     bool IsAbsolutePath(const String& path) const;
 
     /**
      * \~chinese
-     * @brief åˆ é™¤æ–‡ä»¶
-     * @param file_path æ–‡ä»¶è·¯å¾„
-     * @return åˆ é™¤æ˜¯å¦æˆåŠŸ
+     * @brief É¾³ıÎÄ¼ş
+     * @param file_path ÎÄ¼şÂ·¾¶
+     * @return É¾³ıÊÇ·ñ³É¹¦
      */
     bool RemoveFile(const String& file_path) const;
 
     /**
      * \~chinese
-     * @brief é‡Šæ”¾äºŒè¿›åˆ¶èµ„æºåˆ°ä¸´æ—¶æ–‡ä»¶ç›®å½•
-     * @param res èµ„æº
-     * @param dest_file_name ç›®æ ‡æ–‡ä»¶å
-     * @return æ“ä½œæ˜¯å¦æˆåŠŸ
+     * @brief ÊÍ·Å¶ş½øÖÆ×ÊÔ´µ½ÁÙÊ±ÎÄ¼şÄ¿Â¼
+     * @param res ×ÊÔ´
+     * @param dest_file_name Ä¿±êÎÄ¼şÃû
+     * @return ²Ù×÷ÊÇ·ñ³É¹¦
      */
     bool ExtractResourceToFile(const Resource& res, const String& dest_file_name) const;
 

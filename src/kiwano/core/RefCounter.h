@@ -26,7 +26,7 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief å¼•ç”¨è®¡æ•°å™¨
+ * @brief ÒıÓÃ¼ÆÊıÆ÷
  */
 class KGE_API RefCounter : protected Noncopyable
 {
@@ -36,15 +36,15 @@ public:
     virtual ~RefCounter();
 
     /// \~chinese
-    /// @brief å¢åŠ å¼•ç”¨è®¡æ•°
+    /// @brief Ôö¼ÓÒıÓÃ¼ÆÊı
     void Retain();
 
     /// \~chinese
-    /// @brief å‡å°‘å¼•ç”¨è®¡æ•°
+    /// @brief ¼õÉÙÒıÓÃ¼ÆÊı
     void Release();
 
     /// \~chinese
-    /// @brief è·å–å¼•ç”¨è®¡æ•°
+    /// @brief »ñÈ¡ÒıÓÃ¼ÆÊı
     uint32_t GetRefCount() const;
 
 private:

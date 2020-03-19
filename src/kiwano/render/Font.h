@@ -35,7 +35,7 @@ class Renderer;
 
 /**
  * \~chinese
- * @brief 瀛椾綋
+ * @brief 字体
  */
 class Font : public NativeObject
 {
@@ -43,21 +43,21 @@ class Font : public NativeObject
 
 public:
     /// \~chinese
-    /// @brief 鍒涘缓瀛椾綋
+    /// @brief 创建字体
     static FontPtr Create(const String& file);
 
     /// \~chinese
-    /// @brief 鍒涘缓瀛椾綋
+    /// @brief 创建字体
     static FontPtr Create(const Resource& resource);
 
     Font();
 
     /// \~chinese
-    /// @brief 鍔犺浇瀛椾綋鏂囦欢
+    /// @brief 加载字体文件
     bool Load(const String& file);
 
     /// \~chinese
-    /// @brief 鍔犺浇瀛椾綋璧勬簮
+    /// @brief 加载字体资源
     bool Load(const Resource& resource);
 };
 

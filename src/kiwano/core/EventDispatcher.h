@@ -25,32 +25,32 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief äº‹ä»¶åˆ†å‘ç³»ç»Ÿ
+ * @brief ÊÂ¼ş·Ö·¢ÏµÍ³
  */
 class KGE_API EventDispatcher
 {
 public:
     /// \~chinese
-    /// @brief æ·»åŠ ç›‘å¬å™¨
+    /// @brief Ìí¼Ó¼àÌıÆ÷
     EventListener* AddListener(EventListenerPtr listener);
 
     /// \~chinese
-    /// @brief æ·»åŠ ç›‘å¬å™¨
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     EventListener* AddListener(EventType type, EventListener::Callback callback);
 
     /// \~chinese
-    /// @brief æ·»åŠ ç›‘å¬å™¨
-    /// @param name ç›‘å¬å™¨åç§°
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     EventListener* AddListener(const String& name, EventType type, EventListener::Callback callback);
 
     /// \~chinese
-    /// @brief æ·»åŠ ç›‘å¬å™¨
-    /// @tparam _EventTy äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     EventListener* AddListener(EventListener::Callback callback)
     {
@@ -58,10 +58,10 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ·»åŠ ç›‘å¬å™¨
-    /// @tparam _EventTy äº‹ä»¶ç±»å‹
-    /// @param name ç›‘å¬å™¨åç§°
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief Ìí¼Ó¼àÌıÆ÷
+    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
+    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @param callback »Øµ÷º¯Êı
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>>
     EventListener* AddListener(const String& name, EventListener::Callback callback)
     {
@@ -69,55 +69,55 @@ public:
     }
 
     /// \~chinese
-    /// @brief å¯åŠ¨ç›‘å¬å™¨
-    /// @param name ç›‘å¬å™¨åç§°
+    /// @brief Æô¶¯¼àÌıÆ÷
+    /// @param name ¼àÌıÆ÷Ãû³Æ
     void StartListeners(const String& name);
 
     /// \~chinese
-    /// @brief åœæ­¢ç›‘å¬å™¨
-    /// @param name ç›‘å¬å™¨åç§°
+    /// @brief Í£Ö¹¼àÌıÆ÷
+    /// @param name ¼àÌıÆ÷Ãû³Æ
     void StopListeners(const String& name);
 
     /// \~chinese
-    /// @brief ç§»é™¤ç›‘å¬å™¨
-    /// @param name ç›‘å¬å™¨åç§°
+    /// @brief ÒÆ³ı¼àÌıÆ÷
+    /// @param name ¼àÌıÆ÷Ãû³Æ
     void RemoveListeners(const String& name);
 
     /// \~chinese
-    /// @brief å¯åŠ¨ç›‘å¬å™¨
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @brief Æô¶¯¼àÌıÆ÷
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
     void StartListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief åœæ­¢ç›‘å¬å™¨
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @brief Í£Ö¹¼àÌıÆ÷
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
     void StopListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief ç§»é™¤ç›‘å¬å™¨
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @brief ÒÆ³ı¼àÌıÆ÷
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
     void RemoveListeners(const EventType& type);
 
     /// \~chinese
-    /// @brief å¯åŠ¨æ‰€æœ‰ç›‘å¬å™¨
+    /// @brief Æô¶¯ËùÓĞ¼àÌıÆ÷
     void StartAllListeners();
 
     /// \~chinese
-    /// @brief åœæ­¢æ‰€æœ‰ç›‘å¬å™¨
+    /// @brief Í£Ö¹ËùÓĞ¼àÌıÆ÷
     void StopAllListeners();
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰ç›‘å¬å™¨
+    /// @brief ÒÆ³ıËùÓĞ¼àÌıÆ÷
     void RemoveAllListeners();
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰ç›‘å¬å™¨
+    /// @brief »ñÈ¡ËùÓĞ¼àÌıÆ÷
     const ListenerList& GetAllListeners() const;
 
     /// \~chinese
-    /// @brief åˆ†å‘äº‹ä»¶
-    /// @param evt äº‹ä»¶
-    /// @return æ˜¯å¦ç»§ç»­åˆ†å‘è¯¥äº‹ä»¶
+    /// @brief ·Ö·¢ÊÂ¼ş
+    /// @param evt ÊÂ¼ş
+    /// @return ÊÇ·ñ¼ÌĞø·Ö·¢¸ÃÊÂ¼ş
     bool DispatchEvent(Event* evt);
 
 private:

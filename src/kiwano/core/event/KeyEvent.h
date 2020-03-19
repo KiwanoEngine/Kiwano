@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(KeyCharEvent);
  */
 
 /// \~chinese
-/// @brief é”®ç›˜äº‹ä»¶
+/// @brief ¼üÅÌÊÂ¼ş
 class KGE_API KeyEvent : public Event
 {
 public:
@@ -43,31 +43,31 @@ public:
 };
 
 /// \~chinese
-/// @brief é”®ç›˜æŒ‰ä¸‹äº‹ä»¶
+/// @brief ¼üÅÌ°´ÏÂÊÂ¼ş
 class KGE_API KeyDownEvent : public KeyEvent
 {
 public:
-    KeyCode code;  ///< é”®å€¼
+    KeyCode code;  ///< ¼üÖµ
 
     KeyDownEvent();
 };
 
 /// \~chinese
-/// @brief é”®ç›˜æŠ¬èµ·äº‹ä»¶
+/// @brief ¼üÅÌÌ§ÆğÊÂ¼ş
 class KGE_API KeyUpEvent : public KeyEvent
 {
 public:
-    KeyCode code;  ///< é”®å€¼
+    KeyCode code;  ///< ¼üÖµ
 
     KeyUpEvent();
 };
 
 /// \~chinese
-/// @brief é”®ç›˜å­—ç¬¦äº‹ä»¶
+/// @brief ¼üÅÌ×Ö·ûÊÂ¼ş
 class KGE_API KeyCharEvent : public KeyEvent
 {
 public:
-    char value;  ///< å­—ç¬¦
+    char value;  ///< ×Ö·û
 
     KeyCharEvent();
 };

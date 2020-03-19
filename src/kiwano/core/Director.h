@@ -28,8 +28,8 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief å¯¼æ¼”
- * @details å¯¼æ¼”å®Œæˆèˆå°çš„æ¸²æŸ“ã€æ›´æ–°ã€äº‹ä»¶åˆ†å‘ä»¥åŠæ§åˆ¶èˆå°é—´è·³è½¬
+ * @brief µ¼Ñİ
+ * @details µ¼ÑİÍê³ÉÎèÌ¨µÄäÖÈ¾¡¢¸üĞÂ¡¢ÊÂ¼ş·Ö·¢ÒÔ¼°¿ØÖÆÎèÌ¨¼äÌø×ª
  * @see kiwano::Stage
  */
 class KGE_API Director
@@ -43,51 +43,51 @@ class KGE_API Director
 public:
     /**
      * \~chinese
-     * @brief åˆ‡æ¢èˆå°
-     * @param[in] stage èˆå°
-     * @param[in] transition è¿‡æ¸¡åŠ¨ç”»
+     * @brief ÇĞ»»ÎèÌ¨
+     * @param[in] stage ÎèÌ¨
+     * @param[in] transition ¹ı¶É¶¯»­
      */
     void EnterStage(StagePtr stage, TransitionPtr transition = nullptr);
 
     /**
      * \~chinese
-     * @brief åˆ‡æ¢èˆå°ï¼Œå¹¶å°†å½“å‰èˆå°å‚¨å­˜åˆ°æ ˆä¸­
-     * @param[in] stage èˆå°
-     * @param[in] transition è¿‡æ¸¡åŠ¨ç”»
+     * @brief ÇĞ»»ÎèÌ¨£¬²¢½«µ±Ç°ÎèÌ¨´¢´æµ½Õ»ÖĞ
+     * @param[in] stage ÎèÌ¨
+     * @param[in] transition ¹ı¶É¶¯»­
      */
     void PushStage(StagePtr stage, TransitionPtr transition = nullptr);
 
     /**
      * \~chinese
-     * @brief é€€å‡ºå½“å‰èˆå°ï¼Œå¹¶åˆ‡æ¢åˆ°ä¸Šä¸€ä¸ªèˆå°
-     * @param[in] transition è¿‡æ¸¡åŠ¨ç”»
+     * @brief ÍË³öµ±Ç°ÎèÌ¨£¬²¢ÇĞ»»µ½ÉÏÒ»¸öÎèÌ¨
+     * @param[in] transition ¹ı¶É¶¯»­
      */
     void PopStage(TransitionPtr transition = nullptr);
 
     /**
      * \~chinese
-     * @brief è·å–å½“å‰èˆå°
-     * @return è¿”å›å½“å‰èˆå°çš„æŒ‡é’ˆ
+     * @brief »ñÈ¡µ±Ç°ÎèÌ¨
+     * @return ·µ»Øµ±Ç°ÎèÌ¨µÄÖ¸Õë
      */
     StagePtr GetCurrentStage();
 
     /**
      * \~chinese
-     * @brief å¯ç”¨æˆ–ç¦ç”¨è§’è‰²è¾¹ç•Œæ¸²æŸ“åŠŸèƒ½
-     * @param enabled æ˜¯å¦å¯ç”¨
+     * @brief ÆôÓÃ»ò½ûÓÃ½ÇÉ«±ß½çäÖÈ¾¹¦ÄÜ
+     * @param enabled ÊÇ·ñÆôÓÃ
      */
     void SetRenderBorderEnabled(bool enabled);
 
     /**
      * \~chinese
-     * @brief æ˜¾ç¤ºæˆ–éšè—è°ƒè¯•ä¿¡æ¯
-     * @param show æ˜¯å¦æ˜¾ç¤º
+     * @brief ÏÔÊ¾»òÒş²Øµ÷ÊÔĞÅÏ¢
+     * @param show ÊÇ·ñÏÔÊ¾
      */
     void ShowDebugInfo(bool show = true);
 
     /**
      * \~chinese
-     * @brief é€€å‡ºå½“å‰èˆå°å¹¶æ¸…ç©ºèˆå°æ ˆ
+     * @brief ÍË³öµ±Ç°ÎèÌ¨²¢Çå¿ÕÎèÌ¨Õ»
      */
     void ClearStages();
 

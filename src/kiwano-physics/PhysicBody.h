@@ -35,31 +35,31 @@ class PhysicWorld;
  */
 
 /// \~chinese
-/// @brief ç‰©ä½“
+/// @brief ÎïÌå
 class KGE_API PhysicBody : public Component
 {
     friend class PhysicWorld;
 
 public:
     /// \~chinese
-    /// @brief ç‰©ä½“ç±»å‹
+    /// @brief ÎïÌåÀàĞÍ
     enum class Type
     {
-        Static = 0,  ///< é™æ€ç‰©ä½“
-        Kinematic,   ///< åŠ¨åŠ›å­¦ç‰©ä½“
-        Dynamic,     ///< åŠ¨æ€ç‰©ä½“
+        Static = 0,  ///< ¾²Ì¬ÎïÌå
+        Kinematic,   ///< ¶¯Á¦Ñ§ÎïÌå
+        Dynamic,     ///< ¶¯Ì¬ÎïÌå
     };
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç‰©ä½“
-    /// @param world ç‰©ç†ä¸–ç•Œ
-    /// @param type ç‰©ä½“ç±»å‹
+    /// @brief ³õÊ¼»¯ÎïÌå
+    /// @param world ÎïÀíÊÀ½ç
+    /// @param type ÎïÌåÀàĞÍ
     static PhysicBodyPtr Create(PhysicWorldPtr world, Type type);
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç‰©ä½“
-    /// @param world ç‰©ç†ä¸–ç•Œ
-    /// @param type ç‰©ä½“ç±»å‹
+    /// @brief ³õÊ¼»¯ÎïÌå
+    /// @param world ÎïÀíÊÀ½ç
+    /// @param type ÎïÌåÀàĞÍ
     static PhysicBodyPtr Create(PhysicWorld* world, Type type);
 
     PhysicBody();
@@ -67,297 +67,297 @@ public:
     virtual ~PhysicBody();
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç‰©ä½“
-    /// @param[in] world ç‰©ç†ä¸–ç•Œ
+    /// @brief ³õÊ¼»¯ÎïÌå
+    /// @param[in] world ÎïÀíÊÀ½ç
     bool Init(PhysicWorldPtr world);
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç‰©ä½“
-    /// @param[in] world ç‰©ç†ä¸–ç•Œ
+    /// @brief ³õÊ¼»¯ÎïÌå
+    /// @param[in] world ÎïÀíÊÀ½ç
     bool Init(PhysicWorld* world);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤¹å…·
+    /// @brief Ìí¼Ó¼Ğ¾ß
     void AddFixture(FixturePtr fixture);
 
     /// \~chinese
-    /// @brief æ·»åŠ åœ†å½¢å¤¹å…·
-    /// @param radius åœ†å½¢åŠå¾„
-    /// @param density ç‰©ä½“å¯†åº¦
+    /// @brief Ìí¼ÓÔ²ĞÎ¼Ğ¾ß
+    /// @param radius Ô²ĞÎ°ë¾¶
+    /// @param density ÎïÌåÃÜ¶È
     /// @param
     Fixture* AddCircleShape(float radius, float density, float friction = 0.2f);
 
     /// \~chinese
-    /// @brief æ·»åŠ çŸ©å½¢å¤¹å…·
-    /// @param size çŸ©å½¢å¤§å°
-    /// @param density ç‰©ä½“å¯†åº¦
+    /// @brief Ìí¼Ó¾ØĞÎ¼Ğ¾ß
+    /// @param size ¾ØĞÎ´óĞ¡
+    /// @param density ÎïÌåÃÜ¶È
     Fixture* AddRectShape(const Vec2& size, float density, float friction = 0.2f);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤šè¾¹å½¢å¤¹å…·
-    /// @param vertexs å¤šè¾¹å½¢ç«¯ç‚¹
-    /// @param density ç‰©ä½“å¯†åº¦
+    /// @brief Ìí¼Ó¶à±ßĞÎ¼Ğ¾ß
+    /// @param vertexs ¶à±ßĞÎ¶Ëµã
+    /// @param density ÎïÌåÃÜ¶È
     Fixture* AddPolygonShape(const Vector<Point>& vertexs, float density, float friction = 0.2f);
 
     /// \~chinese
-    /// @brief æ·»åŠ çº¿æ®µå½¢å¤¹å…·
-    /// @param p1 çº¿æ®µèµ·ç‚¹
-    /// @param p2 çº¿æ®µç»ˆç‚¹
-    /// @param density ç‰©ä½“å¯†åº¦
+    /// @brief Ìí¼ÓÏß¶ÎĞÎ¼Ğ¾ß
+    /// @param p1 Ïß¶ÎÆğµã
+    /// @param p2 Ïß¶ÎÖÕµã
+    /// @param density ÎïÌåÃÜ¶È
     Fixture* AddEdgeShape(const Point& p1, const Point& p2, float density, float friction = 0.2f);
 
     /// \~chinese
-    /// @brief æ·»åŠ é“¾æ¡å½¢å¤¹å…·
-    /// @param vertexs é“¾æ¡ç«¯ç‚¹
-    /// @param loop æ˜¯å¦é—­åˆ
-    /// @param density ç‰©ä½“å¯†åº¦
+    /// @brief Ìí¼ÓÁ´ÌõĞÎ¼Ğ¾ß
+    /// @param vertexs Á´Ìõ¶Ëµã
+    /// @param loop ÊÇ·ñ±ÕºÏ
+    /// @param density ÎïÌåÃÜ¶È
     Fixture* AddChainShape(const Vector<Point>& vertices, bool loop, float density, float friction = 0.2f);
 
     /// \~chinese
-    /// @brief ç§»é™¤å¤¹å…·
+    /// @brief ÒÆ³ı¼Ğ¾ß
     void RemoveFixture(FixturePtr fixture);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰å¤¹å…·
+    /// @brief ÒÆ³ıËùÓĞ¼Ğ¾ß
     void RemoveAllFixtures();
 
     /// \~chinese
-    /// @brief è·å–å¤¹å…·åˆ—è¡¨
+    /// @brief »ñÈ¡¼Ğ¾ßÁĞ±í
     FixtureList GetFixtureList() const;
 
     /// \~chinese
-    /// @brief è·å–æ¥è§¦è¾¹åˆ—è¡¨
+    /// @brief »ñÈ¡½Ó´¥±ßÁĞ±í
     ContactEdgeList GetContactList() const;
 
     /// \~chinese
-    /// @brief è·å–ç±»åˆ«ç 
+    /// @brief »ñÈ¡Àà±ğÂë
     uint16_t GetCategoryBits() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç±»åˆ«ç 
+    /// @brief ÉèÖÃÀà±ğÂë
     void SetCategoryBits(uint16_t category_bits);
 
     /// \~chinese
-    /// @brief è·å–ç¢°æ’æ©ç 
+    /// @brief »ñÈ¡Åö×²ÑÚÂë
     uint16_t GetMaskBits() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç¢°æ’æ©ç 
+    /// @brief ÉèÖÃÅö×²ÑÚÂë
     void SetMaskBits(uint16_t mask_bits);
 
     /// \~chinese
-    /// @brief è·å–ç»„ç´¢å¼•
+    /// @brief »ñÈ¡×éË÷Òı
     int16_t GetGroupIndex() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç»„ç´¢å¼•
+    /// @brief ÉèÖÃ×éË÷Òı
     void SetGroupIndex(int16_t index);
 
     /// \~chinese
-    /// @brief è·å–æ—‹è½¬è§’åº¦
+    /// @brief »ñÈ¡Ğı×ª½Ç¶È
     float GetRotation() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ—‹è½¬è§’åº¦
+    /// @brief ÉèÖÃĞı×ª½Ç¶È
     void SetRotation(float angle);
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“ä½ç½®
+    /// @brief »ñÈ¡ÎïÌåÎ»ÖÃ
     Point GetPosition() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç‰©ä½“ä½ç½®
+    /// @brief ÉèÖÃÎïÌåÎ»ÖÃ
     void SetPosition(const Point& pos);
 
     /// \~chinese
-    /// @brief ä½ç½®å’Œæ—‹è½¬å˜æ¢
+    /// @brief Î»ÖÃºÍĞı×ª±ä»»
     void SetTransform(const Point& pos, float angle);
 
     /// \~chinese
-    /// @brief è·å–è´¨é‡ [kg]
+    /// @brief »ñÈ¡ÖÊÁ¿ [kg]
     float GetMass() const;
 
     /// \~chinese
-    /// @brief è·å–æƒ¯æ€§
+    /// @brief »ñÈ¡¹ßĞÔ
     float GetInertia() const;
 
     /// \~chinese
-    /// @brief è·å–è´¨é‡æ•°æ®
-    /// @param[out] mass ç‰©ä½“è´¨é‡ [kg]
-    /// @param[out] center è´¨å¿ƒä½ç½®
-    /// @param[out] inertia æƒ¯æ€§
+    /// @brief »ñÈ¡ÖÊÁ¿Êı¾İ
+    /// @param[out] mass ÎïÌåÖÊÁ¿ [kg]
+    /// @param[out] center ÖÊĞÄÎ»ÖÃ
+    /// @param[out] inertia ¹ßĞÔ
     void GetMassData(float* mass, Point* center, float* inertia) const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è´¨é‡æ•°æ®
-    /// @param mass ç‰©ä½“è´¨é‡ [kg]
-    /// @param center è´¨å¿ƒä½ç½®
-    /// @param inertia æƒ¯æ€§
+    /// @brief ÉèÖÃÖÊÁ¿Êı¾İ
+    /// @param mass ÎïÌåÖÊÁ¿ [kg]
+    /// @param center ÖÊĞÄÎ»ÖÃ
+    /// @param inertia ¹ßĞÔ
     void SetMassData(float mass, const Point& center, float inertia);
 
     /// \~chinese
-    /// @brief é‡ç½®è´¨é‡æ•°æ®
+    /// @brief ÖØÖÃÖÊÁ¿Êı¾İ
     void ResetMassData();
 
     /// \~chinese
-    /// @brief è·å–ä¸–ç•Œåæ ‡ç³»ä¸Šçš„ç‚¹åœ¨ç‰©ä½“ä¸Šçš„ä½ç½®
+    /// @brief »ñÈ¡ÊÀ½ç×ø±êÏµÉÏµÄµãÔÚÎïÌåÉÏµÄÎ»ÖÃ
     Point GetLocalPoint(const Point& world) const;
 
     /// \~chinese
-    /// @brief å°†ä¸–ç•Œåæ ‡ç³»ä¸­çš„å‘é‡è½¬æ¢åˆ°ç‰©ä½“åæ ‡ç³»ä¸‹
+    /// @brief ½«ÊÀ½ç×ø±êÏµÖĞµÄÏòÁ¿×ª»»µ½ÎïÌå×ø±êÏµÏÂ
     Vec2 GetLocalVector(const Vec2& world) const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“ä¸Šçš„ç‚¹åœ¨ä¸–ç•Œåæ ‡ç³»çš„ä½ç½®
+    /// @brief »ñÈ¡ÎïÌåÉÏµÄµãÔÚÊÀ½ç×ø±êÏµµÄÎ»ÖÃ
     Point GetWorldPoint(const Point& local) const;
 
     /// \~chinese
-    /// @brief å°†ç‰©ä½“åæ ‡ç³»ä¸­çš„å‘é‡è½¬æ¢åˆ°ä¸–ç•Œåæ ‡ç³»ä¸‹
+    /// @brief ½«ÎïÌå×ø±êÏµÖĞµÄÏòÁ¿×ª»»µ½ÊÀ½ç×ø±êÏµÏÂ
     Vec2 GetWorldVector(const Vec2& local) const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“è´¨å¿ƒç›¸å¯¹äºç‰©ä½“çš„ä½ç½®
+    /// @brief »ñÈ¡ÎïÌåÖÊĞÄÏà¶ÔÓÚÎïÌåµÄÎ»ÖÃ
     Point GetLocalCenter() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“è´¨å¿ƒä½ç½®
+    /// @brief »ñÈ¡ÎïÌåÖÊĞÄÎ»ÖÃ
     Point GetWorldCenter() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“ç±»å‹
+    /// @brief »ñÈ¡ÎïÌåÀàĞÍ
     Type GetType() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç‰©ä½“ç±»å‹
+    /// @brief ÉèÖÃÎïÌåÀàĞÍ
     void SetType(Type type);
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“å—é‡åŠ›çš„æ¯”ä¾‹
+    /// @brief »ñÈ¡ÎïÌåÊÜÖØÁ¦µÄ±ÈÀı
     float GetGravityScale() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç‰©ä½“å—é‡åŠ›çš„æ¯”ä¾‹
+    /// @brief ÉèÖÃÎïÌåÊÜÖØÁ¦µÄ±ÈÀı
     void SetGravityScale(float scale);
 
     /// \~chinese
-    /// @brief è·å–çº¿æ€§é˜»å°¼
+    /// @brief »ñÈ¡ÏßĞÔ×èÄá
     float GetLinearDamping() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ€§é˜»å°¼
+    /// @brief ÉèÖÃÏßĞÔ×èÄá
     void SetLinearDamping(float damping);
 
     /// \~chinese
-    /// @brief è·å–æ—‹è½¬é˜»å°¼
+    /// @brief »ñÈ¡Ğı×ª×èÄá
     float GetAngularDamping() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ—‹è½¬é˜»å°¼
+    /// @brief ÉèÖÃĞı×ª×èÄá
     void SetAngularDamping(float damping);
 
     /// \~chinese
-    /// @brief æ–½åŠ›
-    /// @param force åŠ›çš„å¤§å°å’Œæ–¹å‘
-    /// @param point æ–½åŠ›ç‚¹
-    /// @param wake æ˜¯å¦å”¤é†’ç‰©ä½“
+    /// @brief Ê©Á¦
+    /// @param force Á¦µÄ´óĞ¡ºÍ·½Ïò
+    /// @param point Ê©Á¦µã
+    /// @param wake ÊÇ·ñ»½ĞÑÎïÌå
     void ApplyForce(const Vec2& force, const Point& point, bool wake = true);
 
     /// \~chinese
-    /// @brief ç»™ç‰©ä½“ä¸­å¿ƒæ–½åŠ›
-    /// @param force åŠ›çš„å¤§å°å’Œæ–¹å‘
-    /// @param wake æ˜¯å¦å”¤é†’ç‰©ä½“
+    /// @brief ¸øÎïÌåÖĞĞÄÊ©Á¦
+    /// @param force Á¦µÄ´óĞ¡ºÍ·½Ïò
+    /// @param wake ÊÇ·ñ»½ĞÑÎïÌå
     void ApplyForceToCenter(const Vec2& force, bool wake = true);
 
     /// \~chinese
-    /// @brief æ–½åŠ æ‰­çŸ©
-    /// @param torque æ‰­çŸ©
-    /// @param wake æ˜¯å¦å”¤é†’ç‰©ä½“
+    /// @brief Ê©¼ÓÅ¤¾Ø
+    /// @param torque Å¤¾Ø
+    /// @param wake ÊÇ·ñ»½ĞÑÎïÌå
     void ApplyTorque(float torque, bool wake = false);
 
     /// \~chinese
-    /// @brief æ—‹è½¬è§’åº¦æ˜¯å¦å›ºå®š
+    /// @brief Ğı×ª½Ç¶ÈÊÇ·ñ¹Ì¶¨
     bool IsIgnoreRotation() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ˜¯å¦å›ºå®šæ—‹è½¬è§’åº¦
+    /// @brief ÉèÖÃÊÇ·ñ¹Ì¶¨Ğı×ª½Ç¶È
     void SetIgnoreRotation(bool flag);
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ˜¯å­å¼¹ç‰©ä½“
+    /// @brief ÊÇ·ñÊÇ×Óµ¯ÎïÌå
     bool IsBullet() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç‰©ä½“æ˜¯å¦æ˜¯å­å¼¹ç‰©ä½“
+    /// @brief ÉèÖÃÎïÌåÊÇ·ñÊÇ×Óµ¯ÎïÌå
     void SetBullet(bool flag);
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¤„äºå”¤é†’çŠ¶æ€
+    /// @brief ÊÇ·ñ´¦ÓÚ»½ĞÑ×´Ì¬
     bool IsAwake() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å”¤é†’çŠ¶æ€
+    /// @brief ÉèÖÃ»½ĞÑ×´Ì¬
     void SetAwake(bool flag);
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨ä¼‘çœ 
+    /// @brief ÊÇ·ñÆôÓÃĞİÃß
     bool IsSleepingAllowed() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ˜¯å¦å…è®¸ä¼‘çœ 
+    /// @brief ÉèÖÃÊÇ·ñÔÊĞíĞİÃß
     void SetSleepingAllowed(bool flag);
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨
+    /// @brief ÊÇ·ñÆôÓÃ
     bool IsActive() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¯ç”¨çŠ¶æ€
+    /// @brief ÉèÖÃÆôÓÃ×´Ì¬
     void SetActive(bool flag);
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“æ‰€åœ¨ç‰©ç†ä¸–ç•Œ
+    /// @brief »ñÈ¡ÎïÌåËùÔÚÎïÀíÊÀ½ç
     PhysicWorld* GetWorld() const;
 
     /// \~chinese
-    /// @brief é”€æ¯ç‰©ä½“
+    /// @brief Ïú»ÙÎïÌå
     void Destroy();
 
     /// \~chinese
-    /// @brief è·å–b2Body
+    /// @brief »ñÈ¡b2Body
     b2Body* GetB2Body() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®b2Body
+    /// @brief ÉèÖÃb2Body
     void SetB2Body(b2Body* body);
 
 protected:
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç»„ä»¶
+    /// @brief ³õÊ¼»¯×é¼ş
     void InitComponent(Actor* actor) override;
 
     /// \~chinese
-    /// @brief é”€æ¯ç»„ä»¶
+    /// @brief Ïú»Ù×é¼ş
     void DestroyComponent() override;
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ä½“çŠ¶æ€
+    /// @brief ¸üĞÂÎïÌå×´Ì¬
     void UpdateFromActor(Actor* actor);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ä½“çŠ¶æ€
+    /// @brief ¸üĞÂÎïÌå×´Ì¬
     void UpdateFromActor(Actor* actor, const Matrix3x2& actor_to_world, float parent_rotation);
 
     /// \~chinese
-    /// @brief æ›´æ–°å¤¹å…·è¿‡æ»¤å™¨
+    /// @brief ¸üĞÂ¼Ğ¾ß¹ıÂËÆ÷
     void UpdateFixtureFilter(b2Fixture* fixture);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ç†èº«ä½“å‰
+    /// @brief ¸üĞÂÎïÀíÉíÌåÇ°
     void BeforeSimulation(Actor* actor, const Matrix3x2& parent_to_world, const Matrix3x2& actor_to_world,
                           float parent_rotation);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ç†èº«ä½“å
+    /// @brief ¸üĞÂÎïÀíÉíÌåºó
     void AfterSimulation(Actor* actorconst, const Matrix3x2& parent_to_world, float parent_rotation);
 
 private:

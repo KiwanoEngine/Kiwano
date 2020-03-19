@@ -28,88 +28,88 @@ KGE_DECLARE_SMART_PTR(Frame);
 
 /**
  * \~chinese
- * @brief å›¾åƒå¸§
+ * @brief Í¼ÏñÖ¡
  */
 class KGE_API Frame : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå›¾åƒå¸§
-    /// @param file_path å›¾åƒè·¯å¾„
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param file_path Í¼ÏñÂ·¾¶
     static FramePtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå›¾åƒå¸§
-    /// @param res å›¾åƒèµ„æº
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param res Í¼Ïñ×ÊÔ´
     static FramePtr Create(const Resource& res);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå›¾åƒå¸§
-    /// @param texture çº¹ç†
+    /// @brief ´´½¨Í¼ÏñÖ¡
+    /// @param texture ÎÆÀí
     static FramePtr Create(TexturePtr texture);
 
     /// \~chinese
-    /// @brief æ„å»ºç©ºå›¾åƒå¸§
+    /// @brief ¹¹½¨¿ÕÍ¼ÏñÖ¡
     Frame();
 
     /// \~chinese
-    /// @brief åŠ è½½å›¾åƒ
-    /// @param file_path å›¾åƒè·¯å¾„
+    /// @brief ¼ÓÔØÍ¼Ïñ
+    /// @param file_path Í¼ÏñÂ·¾¶
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief åŠ è½½å›¾åƒ
-    /// @param res å›¾åƒèµ„æº
+    /// @brief ¼ÓÔØÍ¼Ïñ
+    /// @param res Í¼Ïñ×ÊÔ´
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief è£å‰ªå›¾åƒå¸§ä¸ºçŸ©å½¢
-    /// @param crop_rect è£å‰ªçŸ©å½¢å®šä¹‰
+    /// @brief ²Ã¼ôÍ¼ÏñÖ¡Îª¾ØĞÎ
+    /// @param crop_rect ²Ã¼ô¾ØĞÎ¶¨Òå
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¹ç†
-    /// @param texture çº¹ç†
+    /// @brief ÉèÖÃÎÆÀí
+    /// @param texture ÎÆÀí
     void SetTexture(TexturePtr texture);
 
     /// \~chinese
-    /// @brief æ˜¯å¦æœ‰æ•ˆ
+    /// @brief ÊÇ·ñÓĞĞ§
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief è·å–å®½åº¦
+    /// @brief »ñÈ¡¿í¶È
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief è·å–é«˜åº¦
+    /// @brief »ñÈ¡¸ß¶È
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief è·å–å¤§å°
+    /// @brief »ñÈ¡´óĞ¡
     Size GetSize() const;
 
     /// \~chinese
-    /// @brief è·å–è£å‰ªä½ç½®
+    /// @brief »ñÈ¡²Ã¼ôÎ»ÖÃ
     Point GetCropPoint() const;
 
     /// \~chinese
-    /// @brief è·å–è£å‰ªçŸ©å½¢
+    /// @brief »ñÈ¡²Ã¼ô¾ØĞÎ
     const Rect& GetCropRect() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸå®½åº¦
+    /// @brief »ñÈ¡Í¼ÏñÔ­¿í¶È
     float GetSourceWidth() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸé«˜åº¦
+    /// @brief »ñÈ¡Í¼ÏñÔ­¸ß¶È
     float GetSourceHeight() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸå¤§å°
+    /// @brief »ñÈ¡Í¼ÏñÔ­´óĞ¡
     Size GetSourceSize() const;
 
     /// \~chinese
-    /// @brief è·å–çº¹ç†
+    /// @brief »ñÈ¡ÎÆÀí
     TexturePtr GetTexture() const;
 
 private:

@@ -32,7 +32,7 @@ KGE_DECLARE_SMART_PTR(Runner);
 
 /**
  * \~chinese
- * @brief ç¨‹åºè¿è¡Œå™¨
+ * @brief ³ÌĞòÔËĞĞÆ÷
  */
 class KGE_API Runner : public ObjectBase
 {
@@ -40,15 +40,15 @@ class KGE_API Runner : public ObjectBase
 
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç¨‹åºè¿è¡Œå™¨
-    /// @param main_window ä¸»çª—å£
+    /// @brief ´´½¨³ÌĞòÔËĞĞÆ÷
+    /// @param main_window Ö÷´°¿Ú
     static RunnerPtr Create(WindowPtr main_window);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç¨‹åºè¿è¡Œå™¨
-    /// @param main_window ä¸»çª—å£
-    /// @param on_ready åº”ç”¨ç¨‹åºåˆå§‹åŒ–å®Œæˆåæ‰§è¡Œçš„å›è°ƒå‡½æ•°
-    /// @param on_destroy åº”ç”¨ç¨‹åºé”€æ¯æ—¶æ‰§è¡Œçš„å›è°ƒå‡½æ•°
+    /// @brief ´´½¨³ÌĞòÔËĞĞÆ÷
+    /// @param main_window Ö÷´°¿Ú
+    /// @param on_ready Ó¦ÓÃ³ÌĞò³õÊ¼»¯Íê³ÉºóÖ´ĞĞµÄ»Øµ÷º¯Êı
+    /// @param on_destroy Ó¦ÓÃ³ÌĞòÏú»ÙÊ±Ö´ĞĞµÄ»Øµ÷º¯Êı
     static RunnerPtr Create(WindowPtr main_window, Function<void()> on_ready, Function<void()> on_destroy = nullptr);
 
     Runner();
@@ -56,37 +56,37 @@ public:
     virtual ~Runner();
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–å®Œæˆå¤„ç†
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥åœ¨åº”ç”¨ç¨‹åºåˆå§‹åŒ–å®Œæˆåè‡ªåŠ¨æ‰§è¡Œ
+    /// @brief ³õÊ¼»¯Íê³É´¦Àí
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔÔÚÓ¦ÓÃ³ÌĞò³õÊ¼»¯Íê³Éºó×Ô¶¯Ö´ĞĞ
     virtual void OnReady();
 
     /// \~chinese
-    /// @brief åº”ç”¨ç¨‹åºé”€æ¯å¤„ç†
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥å¤„ç†åº”ç”¨ç¨‹åºé”€æ¯æ—¶çš„è¡Œä¸ºï¼Œå¦‚å®Œæˆèµ„æºå›æ”¶ç­‰
+    /// @brief Ó¦ÓÃ³ÌĞòÏú»Ù´¦Àí
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔ´¦ÀíÓ¦ÓÃ³ÌĞòÏú»ÙÊ±µÄĞĞÎª£¬ÈçÍê³É×ÊÔ´»ØÊÕµÈ
     virtual void OnDestroy();
 
     /// \~chinese
-    /// @brief åº”ç”¨ç¨‹åºå…³é—­å¤„ç†
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥å¤„ç†ç”¨æˆ·å…³é—­åº”ç”¨ç¨‹åºæ—¶çš„è¡Œä¸ºï¼Œå¦‚ä¿å­˜ç”¨æˆ·æ•°æ®ç­‰
-    /// @return è¿”å›trueå…è®¸ç”¨æˆ·å…³é—­ç¨‹åºï¼Œå¦åˆ™é˜»æ­¢ç¨‹åºå…³é—­
+    /// @brief Ó¦ÓÃ³ÌĞò¹Ø±Õ´¦Àí
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔ´¦ÀíÓÃ»§¹Ø±ÕÓ¦ÓÃ³ÌĞòÊ±µÄĞĞÎª£¬Èç±£´æÓÃ»§Êı¾İµÈ
+    /// @return ·µ»ØtrueÔÊĞíÓÃ»§¹Ø±Õ³ÌĞò£¬·ñÔò×èÖ¹³ÌĞò¹Ø±Õ
     virtual bool OnClosing();
 
     /// \~chinese
-    /// @brief åº”ç”¨ç¨‹åºä¸»å¾ªç¯
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥
-    /// @return è¿”å›falseé€€å‡ºä¸»å¾ªç¯ï¼Œå¦åˆ™ç»§ç»­è¿è¡Œä¸»å¾ªç¯
+    /// @brief Ó¦ÓÃ³ÌĞòÖ÷Ñ­»·
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔ
+    /// @return ·µ»ØfalseÍË³öÖ÷Ñ­»·£¬·ñÔò¼ÌĞøÔËĞĞÖ÷Ñ­»·
     virtual bool MainLoop();
 
     /// \~chinese
-    /// @brief è·å–ä¸»çª—å£
+    /// @brief »ñÈ¡Ö÷´°¿Ú
     WindowPtr GetMainWindow() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ä¸»çª—å£
+    /// @brief ÉèÖÃÖ÷´°¿Ú
     void SetMainWindow(WindowPtr window);
 
     /// \~chinese
-    /// @brief è·å–ä¸Šä¸€æ¬¡æ›´æ–°æ—¶é—´
+    /// @brief »ñÈ¡ÉÏÒ»´Î¸üĞÂÊ±¼ä
     Time GetLastUpdateTime() const;
 
 private:

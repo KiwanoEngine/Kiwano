@@ -30,43 +30,43 @@
 namespace kiwano
 {
 /// \~chinese
-/// @brief èµ„æºç¼“å­˜
-/// @details èµ„æºç¼“å­˜
+/// @brief ×ÊÔ´»º´æ
+/// @details ×ÊÔ´»º´æ
 class KGE_API ResourceCache : public Singleton<ResourceCache>
 {
     friend Singleton<ResourceCache>;
 
 public:
     /// \~chinese
-    /// @brief ä» JSON æ–‡ä»¶åŠ è½½èµ„æºä¿¡æ¯
-    /// @param file_path JSONæ–‡ä»¶è·¯å¾„
+    /// @brief ´Ó JSON ÎÄ¼ş¼ÓÔØ×ÊÔ´ĞÅÏ¢
+    /// @param file_path JSONÎÄ¼şÂ·¾¶
     bool LoadFromJsonFile(const String& file_path);
 
     /// \~chinese
-    /// @brief ä» JSON åŠ è½½èµ„æºä¿¡æ¯
-    /// @param json_data JSONå¯¹è±¡
+    /// @brief ´Ó JSON ¼ÓÔØ×ÊÔ´ĞÅÏ¢
+    /// @param json_data JSON¶ÔÏó
     bool LoadFromJson(const Json& json_data);
 
     /// \~chinese
-    /// @brief ä» XML æ–‡ä»¶åŠ è½½èµ„æºä¿¡æ¯
-    /// @param file_path XMLæ–‡ä»¶è·¯å¾„
+    /// @brief ´Ó XML ÎÄ¼ş¼ÓÔØ×ÊÔ´ĞÅÏ¢
+    /// @param file_path XMLÎÄ¼şÂ·¾¶
     bool LoadFromXmlFile(const String& file_path);
 
     /// \~chinese
-    /// @brief ä» XML æ–‡æ¡£å¯¹è±¡åŠ è½½èµ„æºä¿¡æ¯
-    /// @param doc XMLæ–‡æ¡£å¯¹è±¡
+    /// @brief ´Ó XML ÎÄµµ¶ÔÏó¼ÓÔØ×ÊÔ´ĞÅÏ¢
+    /// @param doc XMLÎÄµµ¶ÔÏó
     bool LoadFromXml(const XmlDocument& doc);
 
     /// \~chinese
-    /// @brief è·å–èµ„æº
-    /// @param id å¯¹è±¡ID
+    /// @brief »ñÈ¡×ÊÔ´
+    /// @param id ¶ÔÏóID
     ObjectBasePtr Get(const String& id) const;
 
     /// \~chinese
-    /// @brief è·å–èµ„æº
-    /// @tparam _Ty å¯¹è±¡ç±»å‹
-    /// @param id å¯¹è±¡ID
-    /// @return æŒ‡å®šå¯¹è±¡ç±»å‹çš„æŒ‡é’ˆ
+    /// @brief »ñÈ¡×ÊÔ´
+    /// @tparam _Ty ¶ÔÏóÀàĞÍ
+    /// @param id ¶ÔÏóID
+    /// @return Ö¸¶¨¶ÔÏóÀàĞÍµÄÖ¸Õë
     template <typename _Ty>
     SmartPtr<_Ty> Get(const String& id) const
     {
@@ -74,18 +74,18 @@ public:
     }
 
     /// \~chinese
-    /// @brief å°†å¯¹è±¡æ”¾å…¥ç¼“å­˜
-    /// @param id å¯¹è±¡ID
-    /// @param obj å¯¹è±¡
+    /// @brief ½«¶ÔÏó·ÅÈë»º´æ
+    /// @param id ¶ÔÏóID
+    /// @param obj ¶ÔÏó
     bool AddObject(const String& id, ObjectBasePtr obj);
 
     /// \~chinese
-    /// @brief åˆ é™¤æŒ‡å®šèµ„æº
-    /// @param id å¯¹è±¡ID
+    /// @brief É¾³ıÖ¸¶¨×ÊÔ´
+    /// @param id ¶ÔÏóID
     void Remove(const String& id);
 
     /// \~chinese
-    /// @brief æ¸…ç©ºæ‰€æœ‰èµ„æº
+    /// @brief Çå¿ÕËùÓĞ×ÊÔ´
     void Clear();
 
 private:

@@ -34,7 +34,7 @@ KGE_DECLARE_SMART_PTR(Shape);
 
 /**
  * \~chinese
- * @brief å½¢çŠ¶
+ * @brief ĞÎ×´
  */
 class KGE_API Shape : public NativeObject
 {
@@ -42,68 +42,68 @@ class KGE_API Shape : public NativeObject
 
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ®µå½¢çŠ¶
-    /// @param begin çº¿æ®µèµ·ç‚¹
-    /// @param end çº¿æ®µç»ˆç‚¹
+    /// @brief ´´½¨Ïß¶ÎĞÎ×´
+    /// @param begin Ïß¶ÎÆğµã
+    /// @param end Ïß¶ÎÖÕµã
     static ShapePtr CreateLine(const Point& begin, const Point& end);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçŸ©å½¢
-    /// @param rect çŸ©å½¢
+    /// @brief ´´½¨¾ØĞÎ
+    /// @param rect ¾ØĞÎ
     static ShapePtr CreateRect(const Rect& rect);
 
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†è§’çŸ©å½¢
-    /// @param rect çŸ©å½¢
-    /// @param radius çŸ©å½¢åœ†è§’åŠå¾„
+    /// @brief ´´½¨Ô²½Ç¾ØĞÎ
+    /// @param rect ¾ØĞÎ
+    /// @param radius ¾ØĞÎÔ²½Ç°ë¾¶
     static ShapePtr CreateRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†å½¢
-    /// @param center åœ†å½¢åŸç‚¹
-    /// @param radius åœ†å½¢åŠå¾„
+    /// @brief ´´½¨Ô²ĞÎ
+    /// @param center Ô²ĞÎÔ­µã
+    /// @param radius Ô²ĞÎ°ë¾¶
     static ShapePtr CreateCircle(const Point& center, float radius);
 
     /// \~chinese
-    /// @brief åˆ›å»ºæ¤­åœ†å½¢
-    /// @param center æ¤­åœ†åŸç‚¹
-    /// @param radius æ¤­åœ†åŠå¾„
+    /// @brief ´´½¨ÍÖÔ²ĞÎ
+    /// @param center ÍÖÔ²Ô­µã
+    /// @param radius ÍÖÔ²°ë¾¶
     static ShapePtr CreateEllipse(const Point& center, const Vec2& radius);
 
     Shape();
 
     /// \~chinese
-    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
+    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
     Rect GetBoundingBox() const;
 
     /// \~chinese
-    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
-    /// @param transform äºŒç»´å˜æ¢
+    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
+    /// @param transform ¶şÎ¬±ä»»
     Rect GetBoundingBox(const Matrix3x2& transform) const;
 
     /// \~chinese
-    /// @brief åˆ¤æ–­å›¾å½¢æ˜¯å¦åŒ…å«ç‚¹
-    /// @param point ç‚¹
-    /// @param transform åº”ç”¨åˆ°ç‚¹ä¸Šçš„äºŒç»´å˜æ¢
+    /// @brief ÅĞ¶ÏÍ¼ĞÎÊÇ·ñ°üº¬µã
+    /// @param point µã
+    /// @param transform Ó¦ÓÃµ½µãÉÏµÄ¶şÎ¬±ä»»
     bool ContainsPoint(const Point& point, const Matrix3x2* transform = nullptr) const;
 
     /// \~chinese
-    /// @brief è·å–å›¾å½¢å±•å¼€æˆä¸€æ¡ç›´çº¿çš„é•¿åº¦
+    /// @brief »ñÈ¡Í¼ĞÎÕ¹¿ª³ÉÒ»ÌõÖ±ÏßµÄ³¤¶È
     float GetLength() const;
 
     /// \~chinese
-    /// @brief è®¡ç®—å›¾å½¢é¢ç§¯
+    /// @brief ¼ÆËãÍ¼ĞÎÃæ»ı
     float ComputeArea() const;
 
     /// \~chinese
-    /// @brief è®¡ç®—å›¾å½¢ä¸Šç‚¹çš„ä½ç½®å’Œåˆ‡çº¿å‘é‡
-    /// @param[in] length ç‚¹åœ¨å›¾å½¢ä¸Šçš„ä½ç½®ï¼ŒèŒƒå›´ [0.0 - 1.0]
-    /// @param[out] point ç‚¹çš„ä½ç½®
-    /// @param[out] tangent ç‚¹çš„åˆ‡çº¿å‘é‡
+    /// @brief ¼ÆËãÍ¼ĞÎÉÏµãµÄÎ»ÖÃºÍÇĞÏßÏòÁ¿
+    /// @param[in] length µãÔÚÍ¼ĞÎÉÏµÄÎ»ÖÃ£¬·¶Î§ [0.0 - 1.0]
+    /// @param[out] point µãµÄÎ»ÖÃ
+    /// @param[out] tangent µãµÄÇĞÏßÏòÁ¿
     bool ComputePointAtLength(float length, Point& point, Vec2& tangent) const;
 
     /// \~chinese
-    /// @brief æ¸…é™¤å½¢çŠ¶
+    /// @brief Çå³ıĞÎ×´
     void Clear();
 };
 

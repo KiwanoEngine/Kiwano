@@ -29,7 +29,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief é»˜è®¤çš„æ™ºèƒ½æŒ‡é’ˆå¼•ç”¨è®¡æ•°ä»£ç†
+ * @brief Ä¬ÈÏµÄÖÇÄÜÖ¸ÕëÒıÓÃ¼ÆÊı´úÀí
  */
 struct DefaultSmartPtrRefProxy
 {
@@ -48,7 +48,7 @@ struct DefaultSmartPtrRefProxy
 
 /**
  * \~chinese
- * @brief ä¾µå…¥å¼æ™ºèƒ½æŒ‡é’ˆ
+ * @brief ÇÖÈëÊ½ÖÇÄÜÖ¸Õë
  */
 template <typename _Ty, typename _ProxyTy = DefaultSmartPtrRefProxy>
 class SmartPtr

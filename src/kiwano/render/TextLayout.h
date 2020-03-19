@@ -34,186 +34,186 @@ KGE_DECLARE_SMART_PTR(TextLayout);
  */
 
 /// \~chinese
-/// @brief æ–‡æœ¬å¸ƒå±€
+/// @brief ÎÄ±¾²¼¾Ö
 class KGE_API TextLayout : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ–‡æœ¬å¸ƒå±€
+    /// @brief ´´½¨ÎÄ±¾²¼¾Ö
     static TextLayoutPtr Create();
 
     /// \~chinese
-    /// @brief åˆ›å»ºæ–‡æœ¬å¸ƒå±€
-    /// @param content æ–‡å­—å†…å®¹
-    /// @param style æ–‡æœ¬æ ·å¼
+    /// @brief ´´½¨ÎÄ±¾²¼¾Ö
+    /// @param content ÎÄ×ÖÄÚÈİ
+    /// @param style ÎÄ±¾ÑùÊ½
     static TextLayoutPtr Create(const String& content, const TextStyle& style);
 
     /// \~chinese
-    /// @brief æ„é€ ç©ºçš„æ–‡æœ¬å¸ƒå±€
+    /// @brief ¹¹Ôì¿ÕµÄÎÄ±¾²¼¾Ö
     TextLayout();
 
     /// \~chinese
-    /// @brief æ–‡æœ¬å¸ƒå±€æ˜¯å¦é™ˆæ—§
+    /// @brief ÎÄ±¾²¼¾ÖÊÇ·ñ³Â¾É
     bool IsDirty() const;
 
     /// \~chinese
-    /// @brief æ¸…ç©ºæ–‡æœ¬å¸ƒå±€
+    /// @brief Çå¿ÕÎÄ±¾²¼¾Ö
     void Clear();
 
     /// \~chinese
-    /// @brief é‡è®¾æ–‡æœ¬å¸ƒå±€
-    /// @param style æ–‡æœ¬æ ·å¼
+    /// @brief ÖØÉèÎÄ±¾²¼¾Ö
+    /// @param style ÎÄ±¾ÑùÊ½
     void Reset(const TextStyle& style);
 
     /// \~chinese
-    /// @brief é‡è®¾æ–‡æœ¬å¸ƒå±€
-    /// @param content æ–‡å­—å†…å®¹
-    /// @param style æ–‡æœ¬æ ·å¼
+    /// @brief ÖØÉèÎÄ±¾²¼¾Ö
+    /// @param content ÎÄ×ÖÄÚÈİ
+    /// @param style ÎÄ±¾ÑùÊ½
     void Reset(const String& content, const TextStyle& style);
 
     /// \~chinese
-    /// @brief è·å–æ–‡å­—å†…å®¹
+    /// @brief »ñÈ¡ÎÄ×ÖÄÚÈİ
     String GetContent() const;
 
     /// \~chinese
-    /// @brief è·å–æ–‡å­—å†…å®¹çš„é•¿åº¦
+    /// @brief »ñÈ¡ÎÄ×ÖÄÚÈİµÄ³¤¶È
     uint32_t GetContentLength() const;
 
     /// \~chinese
-    /// @brief è·å–æ–‡æœ¬å¸ƒå±€å¤§å°
+    /// @brief »ñÈ¡ÎÄ±¾²¼¾Ö´óĞ¡
     Size GetSize() const;
 
     /// \~chinese
-    /// @brief è·å–æ–‡æœ¬è¡Œæ•°
+    /// @brief »ñÈ¡ÎÄ±¾ĞĞÊı
     uint32_t GetLineCount() const;
 
     /// \~chinese
-    /// @brief è·å–é»˜è®¤å¡«å……ç”»åˆ·
+    /// @brief »ñÈ¡Ä¬ÈÏÌî³ä»­Ë¢
     BrushPtr GetDefaultFillBrush() const;
 
     /// \~chinese
-    /// @brief è·å–é»˜è®¤æè¾¹ç”»åˆ·
+    /// @brief »ñÈ¡Ä¬ÈÏÃè±ß»­Ë¢
     BrushPtr GetDefaultOutlineBrush() const;
 
     /// \~chinese
-    /// @brief è·å–é»˜è®¤æè¾¹çº¿æ¡æ ·å¼
+    /// @brief »ñÈ¡Ä¬ÈÏÃè±ßÏßÌõÑùÊ½
     StrokeStylePtr GetDefaultOutlineStrokeStyle() const;
 
     /// \~chinese
-    /// @brief æ–‡å­—èŒƒå›´
+    /// @brief ÎÄ×Ö·¶Î§
     struct TextRange
     {
-        uint32_t start;   ///< èµ·å§‹ä½ç½®
-        uint32_t length;  ///< é•¿åº¦
+        uint32_t start;   ///< ÆğÊ¼Î»ÖÃ
+        uint32_t length;  ///< ³¤¶È
     };
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“
-    /// @param font å­—ä½“
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃ×ÖÌå
+    /// @param font ×ÖÌå
+    /// @param range ÎÄ×Ö·¶Î§
     void SetFont(FontPtr font, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“æ—
-    /// @param family å­—ä½“æ—
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃ×ÖÌå×å
+    /// @param family ×ÖÌå×å
+    /// @param range ÎÄ×Ö·¶Î§
     void SetFontFamily(const String& family, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—å·ï¼ˆé»˜è®¤å€¼ä¸º 18ï¼‰
-    /// @param size å­—å·
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃ×ÖºÅ£¨Ä¬ÈÏÖµÎª 18£©
+    /// @param size ×ÖºÅ
+    /// @param range ÎÄ×Ö·¶Î§
     void SetFontSize(float size, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“ç²—ç»†å€¼ï¼ˆé»˜è®¤å€¼ä¸º FontWeight::Normalï¼‰
-    /// @param weight ç²—ç»†å€¼
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃ×ÖÌå´ÖÏ¸Öµ£¨Ä¬ÈÏÖµÎª FontWeight::Normal£©
+    /// @param weight ´ÖÏ¸Öµ
+    /// @param range ÎÄ×Ö·¶Î§
     void SetFontWeight(uint32_t weight, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—æ–œä½“ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
-    /// @param italic æ˜¯å¦æ˜¯æ–œä½“
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÎÄ×ÖĞ±Ìå£¨Ä¬ÈÏÖµÎª false£©
+    /// @param italic ÊÇ·ñÊÇĞ±Ìå
+    /// @param range ÎÄ×Ö·¶Î§
     void SetItalic(bool italic, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®ä¸‹åˆ’çº¿
-    /// @param enable æ˜¯å¦æ˜¾ç¤ºä¸‹åˆ’çº¿
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÏÂ»®Ïß
+    /// @param enable ÊÇ·ñÏÔÊ¾ÏÂ»®Ïß
+    /// @param range ÎÄ×Ö·¶Î§
     void SetUnderline(bool enable, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®åˆ é™¤çº¿
-    /// @param enable æ˜¯å¦æ˜¾ç¤ºåˆ é™¤çº¿
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÉ¾³ıÏß
+    /// @param enable ÊÇ·ñÏÔÊ¾É¾³ıÏß
+    /// @param range ÎÄ×Ö·¶Î§
     void SetStrikethrough(bool enable, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—å¡«å……ç”»åˆ·ï¼Œæè¾¹ç”»åˆ·å’Œæè¾¹çº¿å®½
-    /// @param brush ç”»åˆ·
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÎÄ×ÖÌî³ä»­Ë¢£¬Ãè±ß»­Ë¢ºÍÃè±ßÏß¿í
+    /// @param brush »­Ë¢
+    /// @param range ÎÄ×Ö·¶Î§
     void SetFillBrush(BrushPtr brush, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—æè¾¹ç”»åˆ·
-    /// @param brush ç”»åˆ·
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÎÄ×ÖÃè±ß»­Ë¢
+    /// @param brush »­Ë¢
+    /// @param range ÎÄ×Ö·¶Î§
     void SetOutlineBrush(BrushPtr brush, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®æè¾¹çº¿æ¡æ ·å¼
-    /// @param stroke çº¿æ¡æ ·å¼
-    /// @param range æ–‡å­—èŒƒå›´
+    /// @brief ÉèÖÃÃè±ßÏßÌõÑùÊ½
+    /// @param stroke ÏßÌõÑùÊ½
+    /// @param range ÎÄ×Ö·¶Î§
     void SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range);
 
     /// \~chinese
-    /// @brief è®¾ç½®å¯¹é½æ–¹å¼
-    /// @param align å¯¹é½æ–¹å¼
+    /// @brief ÉèÖÃ¶ÔÆë·½Ê½
+    /// @param align ¶ÔÆë·½Ê½
     void SetAlignment(TextAlign align);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡æœ¬è‡ªåŠ¨æ¢è¡Œçš„å®½åº¦
+    /// @brief ÉèÖÃÎÄ±¾×Ô¶¯»»ĞĞµÄ¿í¶È
     void SetWrapWidth(float wrap_width);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¡Œé—´è·ï¼ˆé»˜è®¤ä¸º 0ï¼‰
+    /// @brief ÉèÖÃĞĞ¼ä¾à£¨Ä¬ÈÏÎª 0£©
     void SetLineSpacing(float line_spacing);
 
     /// \~chinese
-    /// @brief è®¾ç½®é»˜è®¤æ–‡å­—å¡«å……ç”»åˆ·
-    /// @param brush ç”»åˆ·
+    /// @brief ÉèÖÃÄ¬ÈÏÎÄ×ÖÌî³ä»­Ë¢
+    /// @param brush »­Ë¢
     void SetDefaultFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®é»˜è®¤æ–‡å­—æè¾¹ç”»åˆ·
-    /// @param brush ç”»åˆ·
+    /// @brief ÉèÖÃÄ¬ÈÏÎÄ×ÖÃè±ß»­Ë¢
+    /// @param brush »­Ë¢
     void SetDefaultOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®é»˜è®¤æè¾¹çº¿æ¡æ ·å¼
-    /// @param stroke çº¿æ¡æ ·å¼
+    /// @brief ÉèÖÃÄ¬ÈÏÃè±ßÏßÌõÑùÊ½
+    /// @param stroke ÏßÌõÑùÊ½
     void SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
-    /// @brief è„å¸ƒå±€æ ‡å¿—
+    /// @brief Ôà²¼¾Ö±êÖ¾
     enum class DirtyFlag : uint8_t
     {
-        Clean = 0,      ///< å¹²å‡€å¸ƒå±€
-        Dirty = 1 << 0  ///< è„å¸ƒå±€
+        Clean = 0,      ///< ¸É¾»²¼¾Ö
+        Dirty = 1 << 0  ///< Ôà²¼¾Ö
     };
 
     /// \~chinese
-    /// @brief è·å–è„å¸ƒå±€æ ‡å¿—
+    /// @brief »ñÈ¡Ôà²¼¾Ö±êÖ¾
     DirtyFlag GetDirtyFlag() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è„å¸ƒå±€æ ‡å¿—
+    /// @brief ÉèÖÃÔà²¼¾Ö±êÖ¾
     void SetDirtyFlag(DirtyFlag flag);
 
     /// \~chinese
-    /// @brief æ›´æ–°è„å¸ƒå±€
-    /// @return æ˜¯å¦éœ€è¦æ›´æ–°
+    /// @brief ¸üĞÂÔà²¼¾Ö
+    /// @return ÊÇ·ñĞèÒª¸üĞÂ
     bool UpdateWhenDirty();
 
 private:

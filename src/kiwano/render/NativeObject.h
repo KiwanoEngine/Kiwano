@@ -37,7 +37,7 @@ KGE_DECLARE_SMART_PTR(NativeObject);
 
 /**
  * \~chinese
- * @brief å«æœ‰æœ¬æœºæŒ‡é’ˆçš„å¯¹è±¡
+ * @brief º¬ÓĞ±¾»úÖ¸ÕëµÄ¶ÔÏó
  */
 class KGE_API NativeObject : public ObjectBase
 {

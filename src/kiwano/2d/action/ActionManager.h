@@ -30,39 +30,39 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief åŠ¨ç”»ç®¡ç†å™¨
+ * @brief ¶¯»­¹ÜÀíÆ÷
  */
 class KGE_API ActionManager
 {
 public:
     /// \~chinese
-    /// @brief æ·»åŠ åŠ¨ç”»
+    /// @brief Ìí¼Ó¶¯»­
     Action* AddAction(ActionPtr action);
 
     /// \~chinese
-    /// @brief ç»§ç»­æ‰€æœ‰æš‚åœåŠ¨ç”»
+    /// @brief ¼ÌĞøËùÓĞÔİÍ£¶¯»­
     void ResumeAllActions();
 
     /// \~chinese
-    /// @brief æš‚åœæ‰€æœ‰åŠ¨ç”»
+    /// @brief ÔİÍ£ËùÓĞ¶¯»­
     void PauseAllActions();
 
     /// \~chinese
-    /// @brief åœæ­¢æ‰€æœ‰åŠ¨ç”»
+    /// @brief Í£Ö¹ËùÓĞ¶¯»­
     void StopAllActions();
 
     /// \~chinese
-    /// @brief è·å–æŒ‡å®šåç§°çš„åŠ¨ç”»
-    /// @param name åŠ¨ç”»åç§°
+    /// @brief »ñÈ¡Ö¸¶¨Ãû³ÆµÄ¶¯»­
+    /// @param name ¶¯»­Ãû³Æ
     ActionPtr GetAction(const String& name);
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰åŠ¨ç”»
+    /// @brief »ñÈ¡ËùÓĞ¶¯»­
     const ActionList& GetAllActions() const;
 
 protected:
     /// \~chinese
-    /// @brief æ›´æ–°åŠ¨ç”»
+    /// @brief ¸üĞÂ¶¯»­
     void UpdateActions(Actor* target, Duration dt);
 
 private:

@@ -34,13 +34,13 @@ KGE_DECLARE_SMART_PTR(LayerActor);
 
 /**
  * \~chinese
- * @brief å›¾å±‚è§’è‰²
+ * @brief Í¼²ã½ÇÉ«
  */
 class KGE_API LayerActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå›¾å±‚
+    /// @brief ´´½¨Í¼²ã
     static LayerActorPtr Create();
 
     LayerActor();
@@ -48,26 +48,26 @@ public:
     virtual ~LayerActor();
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¼€å¯æ¶ˆæ¯åæ²¡
+    /// @brief ÊÇ·ñ¿ªÆôÏûÏ¢ÍÌÃ»
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾å±‚
+    /// @brief »ñÈ¡Í¼²ã
     LayerPtr GetLayer() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å›¾å±‚
-    /// @param layer å›¾å±‚
+    /// @brief ÉèÖÃÍ¼²ã
+    /// @param layer Í¼²ã
     void SetLayer(LayerPtr layer);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¶ˆæ¯åæ²¡åŠŸèƒ½
-    /// @param enabled æ˜¯å¦å¯ç”¨
+    /// @brief ÉèÖÃÏûÏ¢ÍÌÃ»¹¦ÄÜ
+    /// @param enabled ÊÇ·ñÆôÓÃ
     void SetSwallowEvents(bool enabled);
 
     /// \~chinese
-    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
-    /// @param opacity é€æ˜åº¦
+    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
+    /// @param opacity Í¸Ã÷¶È
     void SetOpacity(float opacity) override;
 
     bool DispatchEvent(Event* evt) override;

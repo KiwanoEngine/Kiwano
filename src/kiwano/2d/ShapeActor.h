@@ -43,90 +43,90 @@ KGE_DECLARE_SMART_PTR(PolygonActor);
 
 /**
  * \~chinese
- * @brief å½¢çŠ¶è§’è‰²
+ * @brief ĞÎ×´½ÇÉ«
  */
 class KGE_API ShapeActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå½¢çŠ¶è§’è‰²
-    /// @param shape å½¢çŠ¶
+    /// @brief ´´½¨ĞÎ×´½ÇÉ«
+    /// @param shape ĞÎ×´
     static ShapeActorPtr Create(ShapePtr shape);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå½¢çŠ¶è§’è‰²
-    /// @param shape å½¢çŠ¶
-    /// @param fill_color å¡«å……é¢œè‰²
-    /// @param stroke_color è½®å»“é¢œè‰²
+    /// @brief ´´½¨ĞÎ×´½ÇÉ«
+    /// @param shape ĞÎ×´
+    /// @param fill_color Ìî³äÑÕÉ«
+    /// @param stroke_color ÂÖÀªÑÕÉ«
     static ShapeActorPtr Create(ShapePtr shape, const Color& fill_color, const Color& stroke_color);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå½¢çŠ¶è§’è‰²
-    /// @param shape å½¢çŠ¶
-    /// @param fill_brush å¡«å……ç”»åˆ·
-    /// @param stroke_brush è½®å»“ç”»åˆ·
+    /// @brief ´´½¨ĞÎ×´½ÇÉ«
+    /// @param shape ĞÎ×´
+    /// @param fill_brush Ìî³ä»­Ë¢
+    /// @param stroke_brush ÂÖÀª»­Ë¢
     static ShapeActorPtr Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush);
 
     /// \~chinese
-    /// @brief æ„é€ å½¢çŠ¶è§’è‰²
+    /// @brief ¹¹ÔìĞÎ×´½ÇÉ«
     ShapeActor();
 
     virtual ~ShapeActor();
 
     /// \~chinese
-    /// @brief è·å–å¡«å……ç”»åˆ·
+    /// @brief »ñÈ¡Ìî³ä»­Ë¢
     BrushPtr GetFillBrush() const;
 
     /// \~chinese
-    /// @brief è·å–è½®å»“ç”»åˆ·
+    /// @brief »ñÈ¡ÂÖÀª»­Ë¢
     BrushPtr GetStrokeBrush() const;
 
     /// \~chinese
-    /// @brief è·å–çº¿æ¡æ ·å¼
+    /// @brief »ñÈ¡ÏßÌõÑùÊ½
     StrokeStylePtr GetStrokeStyle() const;
 
     /// \~chinese
-    /// @brief è·å–å½¢çŠ¶
+    /// @brief »ñÈ¡ĞÎ×´
     ShapePtr GetShape() const;
 
     /// \~chinese
-    /// @brief è·å–è¾¹ç•Œ
+    /// @brief »ñÈ¡±ß½ç
     Rect GetBounds() const override;
 
     /// \~chinese
-    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
+    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
     Rect GetBoundingBox() const override;
 
     /// \~chinese
-    /// @brief åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨å½¢çŠ¶å†…
+    /// @brief ÅĞ¶ÏµãÊÇ·ñÔÚĞÎ×´ÄÚ
     bool ContainsPoint(const Point& point) const override;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¡«å……é¢œè‰²
-    /// @param color å¡«å……é¢œè‰²
+    /// @brief ÉèÖÃÌî³äÑÕÉ«
+    /// @param color Ìî³äÑÕÉ«
     void SetFillColor(const Color& color);
 
     /// \~chinese
-    /// @brief è®¾ç½®å¡«å……ç”»åˆ·
-    /// @param[in] brush å¡«å……ç”»åˆ·
+    /// @brief ÉèÖÃÌî³ä»­Ë¢
+    /// @param[in] brush Ìî³ä»­Ë¢
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®è½®å»“é¢œè‰²
-    /// @param color è½®å»“é¢œè‰²
+    /// @brief ÉèÖÃÂÖÀªÑÕÉ«
+    /// @param color ÂÖÀªÑÕÉ«
     void SetStrokeColor(const Color& color);
 
     /// \~chinese
-    /// @brief è®¾ç½®è½®å»“ç”»åˆ·
-    /// @param[in] brush è½®å»“ç”»åˆ·
+    /// @brief ÉèÖÃÂÖÀª»­Ë¢
+    /// @param[in] brush ÂÖÀª»­Ë¢
     void SetStrokeBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ¡æ ·å¼
+    /// @brief ÉèÖÃÏßÌõÑùÊ½
     void SetStrokeStyle(StrokeStylePtr stroke_style);
 
     /// \~chinese
-    /// @brief è®¾ç½®å½¢çŠ¶
+    /// @brief ÉèÖÃĞÎ×´
     void SetShape(ShapePtr shape);
 
     void OnRender(RenderContext& ctx) override;
@@ -143,14 +143,14 @@ private:
 };
 
 /// \~chinese
-/// @brief çº¿æ®µè§’è‰²
+/// @brief Ïß¶Î½ÇÉ«
 class KGE_API LineActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ®µè§’è‰²
-    /// @param begin çº¿æ®µèµ·ç‚¹
-    /// @param end çº¿æ®µç»ˆç‚¹
+    /// @brief ´´½¨Ïß¶Î½ÇÉ«
+    /// @param begin Ïß¶ÎÆğµã
+    /// @param end Ïß¶ÎÖÕµã
     static LineActorPtr Create(const Point& begin, const Point& end);
 
     LineActor();
@@ -158,27 +158,27 @@ public:
     virtual ~LineActor();
 
     /// \~chinese
-    /// @brief è·å–çº¿æ®µèµ·ç‚¹
+    /// @brief »ñÈ¡Ïß¶ÎÆğµã
     const Point& GetBeginPoint() const;
 
     /// \~chinese
-    /// @brief è·å–çº¿æ®µç»ˆç‚¹
+    /// @brief »ñÈ¡Ïß¶ÎÖÕµã
     const Point& GetEndPoint() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ®µèµ·ç‚¹
-    /// @param begin çº¿æ®µèµ·ç‚¹
+    /// @brief ÉèÖÃÏß¶ÎÆğµã
+    /// @param begin Ïß¶ÎÆğµã
     void SetBeginPoint(const Point& begin);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ®µç»ˆç‚¹
-    /// @param end çº¿æ®µç»ˆç‚¹
+    /// @brief ÉèÖÃÏß¶ÎÖÕµã
+    /// @param end Ïß¶ÎÖÕµã
     void SetEndPoint(const Point& end);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ®µèµ·ç‚¹å’Œç»ˆç‚¹
-    /// @param begin çº¿æ®µèµ·ç‚¹
-    /// @param end çº¿æ®µç»ˆç‚¹
+    /// @brief ÉèÖÃÏß¶ÎÆğµãºÍÖÕµã
+    /// @param begin Ïß¶ÎÆğµã
+    /// @param end Ïß¶ÎÖÕµã
     void SetLine(const Point& begin, const Point& end);
 
 private:
@@ -187,13 +187,13 @@ private:
 };
 
 /// \~chinese
-/// @brief çŸ©å½¢è§’è‰²
+/// @brief ¾ØĞÎ½ÇÉ«
 class KGE_API RectActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºçŸ©å½¢è§’è‰²
-    /// @param size çŸ©å½¢å¤§å°
+    /// @brief ´´½¨¾ØĞÎ½ÇÉ«
+    /// @param size ¾ØĞÎ´óĞ¡
     static RectActorPtr Create(const Size& size);
 
     RectActor();
@@ -201,12 +201,12 @@ public:
     virtual ~RectActor();
 
     /// \~chinese
-    /// @brief è·å–çŸ©å½¢å¤§å°
+    /// @brief »ñÈ¡¾ØĞÎ´óĞ¡
     const Size& GetRectSize() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çŸ©å½¢å¤§å°
-    /// @param size çŸ©å½¢å¤§å°
+    /// @brief ÉèÖÃ¾ØĞÎ´óĞ¡
+    /// @param size ¾ØĞÎ´óĞ¡
     void SetRectSize(const Size& size);
 
 private:
@@ -214,14 +214,14 @@ private:
 };
 
 /// \~chinese
-/// @brief åœ†è§’çŸ©å½¢è§’è‰²
+/// @brief Ô²½Ç¾ØĞÎ½ÇÉ«
 class KGE_API RoundedRectActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†è§’çŸ©å½¢è§’è‰²
-    /// @param size åœ†è§’çŸ©å½¢å¤§å°
-    /// @param radius åœ†è§’åŠå¾„
+    /// @brief ´´½¨Ô²½Ç¾ØĞÎ½ÇÉ«
+    /// @param size Ô²½Ç¾ØĞÎ´óĞ¡
+    /// @param radius Ô²½Ç°ë¾¶
     static RoundedRectActorPtr Create(const Size& size, const Vec2& radius);
 
     RoundedRectActor();
@@ -229,27 +229,27 @@ public:
     virtual ~RoundedRectActor();
 
     /// \~chinese
-    /// @brief è·å–åœ†è§’åŠå¾„
+    /// @brief »ñÈ¡Ô²½Ç°ë¾¶
     Vec2 GetRadius() const;
 
     /// \~chinese
-    /// @brief è·å–åœ†è§’çŸ©å½¢å¤§å°
+    /// @brief »ñÈ¡Ô²½Ç¾ØĞÎ´óĞ¡
     Size GetRectSize() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åœ†è§’åŠå¾„
-    /// @param radius åœ†è§’åŠå¾„
+    /// @brief ÉèÖÃÔ²½Ç°ë¾¶
+    /// @param radius Ô²½Ç°ë¾¶
     void SetRadius(const Vec2& radius);
 
     /// \~chinese
-    /// @brief è®¾ç½®åœ†è§’çŸ©å½¢å¤§å°
-    /// @param size åœ†è§’çŸ©å½¢å¤§å°
+    /// @brief ÉèÖÃÔ²½Ç¾ØĞÎ´óĞ¡
+    /// @param size Ô²½Ç¾ØĞÎ´óĞ¡
     void SetRectSize(const Size& size);
 
     /// \~chinese
-    /// @brief è®¾ç½®åœ†è§’çŸ©å½¢
-    /// @param size åœ†è§’çŸ©å½¢å¤§å°
-    /// @param radius åœ†è§’åŠå¾„
+    /// @brief ÉèÖÃÔ²½Ç¾ØĞÎ
+    /// @param size Ô²½Ç¾ØĞÎ´óĞ¡
+    /// @param radius Ô²½Ç°ë¾¶
     void SetRoundedRect(const Size& size, const Vec2& radius);
 
 private:
@@ -258,13 +258,13 @@ private:
 };
 
 /// \~chinese
-/// @brief åœ†å½¢è§’è‰²
+/// @brief Ô²ĞÎ½ÇÉ«
 class KGE_API CircleActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†å½¢è§’è‰²
-    /// @param radius åœ†å½¢åŠå¾„
+    /// @brief ´´½¨Ô²ĞÎ½ÇÉ«
+    /// @param radius Ô²ĞÎ°ë¾¶
     static CircleActorPtr Create(float radius);
 
     CircleActor();
@@ -272,12 +272,12 @@ public:
     virtual ~CircleActor();
 
     /// \~chinese
-    /// @brief è·å–åœ†å½¢åŠå¾„
+    /// @brief »ñÈ¡Ô²ĞÎ°ë¾¶
     float GetRadius() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åœ†å½¢åŠå¾„
-    /// @param radius åœ†å½¢åŠå¾„
+    /// @brief ÉèÖÃÔ²ĞÎ°ë¾¶
+    /// @param radius Ô²ĞÎ°ë¾¶
     void SetRadius(float radius);
 
 private:
@@ -285,13 +285,13 @@ private:
 };
 
 /// \~chinese
-/// @brief æ¤­åœ†è§’è‰²
+/// @brief ÍÖÔ²½ÇÉ«
 class KGE_API EllipseActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ¤­åœ†è§’è‰²
-    /// @param radius æ¤­åœ†åŠå¾„
+    /// @brief ´´½¨ÍÖÔ²½ÇÉ«
+    /// @param radius ÍÖÔ²°ë¾¶
     static EllipseActorPtr Create(const Vec2& radius);
 
     EllipseActor();
@@ -299,12 +299,12 @@ public:
     virtual ~EllipseActor();
 
     /// \~chinese
-    /// @brief è·å–æ¤­åœ†åŠå¾„
+    /// @brief »ñÈ¡ÍÖÔ²°ë¾¶
     Vec2 GetRadius() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¤­åœ†åŠå¾„
-    /// @param radius æ¤­åœ†åŠå¾„
+    /// @brief ÉèÖÃÍÖÔ²°ë¾¶
+    /// @param radius ÍÖÔ²°ë¾¶
     void SetRadius(const Vec2& radius);
 
 private:
@@ -312,13 +312,13 @@ private:
 };
 
 /// \~chinese
-/// @brief å¤šè¾¹å½¢è§’è‰²
+/// @brief ¶à±ßĞÎ½ÇÉ«
 class KGE_API PolygonActor : public ShapeActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå¤šè¾¹å½¢è§’è‰²
-    /// @param points å¤šè¾¹å½¢ç«¯ç‚¹é›†åˆ
+    /// @brief ´´½¨¶à±ßĞÎ½ÇÉ«
+    /// @param points ¶à±ßĞÎ¶Ëµã¼¯ºÏ
     static PolygonActorPtr Create(const Vector<Point>& points);
 
     PolygonActor();
@@ -326,8 +326,8 @@ public:
     virtual ~PolygonActor();
 
     /// \~chinese
-    /// @brief è®¾ç½®å¤šè¾¹å½¢ç«¯ç‚¹
-    /// @param points å¤šè¾¹å½¢ç«¯ç‚¹é›†åˆ
+    /// @brief ÉèÖÃ¶à±ßĞÎ¶Ëµã
+    /// @param points ¶à±ßĞÎ¶Ëµã¼¯ºÏ
     void SetVertices(const Vector<Point>& points);
 };
 

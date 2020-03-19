@@ -28,7 +28,7 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief ä¾µå…¥å¼é“¾è¡¨
+/// @brief ÇÖÈëÊ½Á´±í
 template <typename _PtrTy>
 class IntrusiveList
 {
@@ -49,42 +49,42 @@ public:
     }
 
     /// \~chinese
-    /// @brief è·å–é¦–å…ƒç´ 
+    /// @brief »ñÈ¡Ê×ÔªËØ
     const value_type& GetFirst() const
     {
         return first_;
     }
 
     /// \~chinese
-    /// @brief è·å–é¦–å…ƒç´ 
+    /// @brief »ñÈ¡Ê×ÔªËØ
     value_type& GetFirst()
     {
         return first_;
     }
 
     /// \~chinese
-    /// @brief è·å–å°¾å…ƒç´ 
+    /// @brief »ñÈ¡Î²ÔªËØ
     const value_type& GetLast() const
     {
         return last_;
     }
 
     /// \~chinese
-    /// @brief è·å–å°¾å…ƒç´ 
+    /// @brief »ñÈ¡Î²ÔªËØ
     value_type& GetLast()
     {
         return last_;
     }
 
     /// \~chinese
-    /// @brief é“¾è¡¨æ˜¯å¦ä¸ºç©º
+    /// @brief Á´±íÊÇ·ñÎª¿Õ
     inline bool IsEmpty() const
     {
         return first_ == nullptr;
     }
 
     /// \~chinese
-    /// @brief åœ¨é“¾è¡¨å°¾éƒ¨æ·»åŠ å¯¹è±¡
+    /// @brief ÔÚÁ´±íÎ²²¿Ìí¼Ó¶ÔÏó
     void PushBack(reference child)
     {
         if (child->prev_)
@@ -108,7 +108,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief åœ¨é“¾è¡¨å¤´éƒ¨æ·»åŠ å¯¹è±¡
+    /// @brief ÔÚÁ´±íÍ·²¿Ìí¼Ó¶ÔÏó
     void PushFront(reference child)
     {
         if (child->prev_)
@@ -132,7 +132,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief åœ¨é“¾è¡¨çš„å¯¹è±¡å‰æ’å…¥æ–°å¯¹è±¡
+    /// @brief ÔÚÁ´±íµÄ¶ÔÏóÇ°²åÈëĞÂ¶ÔÏó
     void InsertBefore(reference child, reference before)
     {
         if (child->prev_)
@@ -151,7 +151,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief åœ¨é“¾è¡¨çš„å¯¹è±¡åæ’å…¥æ–°å¯¹è±¡
+    /// @brief ÔÚÁ´±íµÄ¶ÔÏóºó²åÈëĞÂ¶ÔÏó
     void InsertAfter(reference child, reference after)
     {
         if (child->prev_)
@@ -170,7 +170,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief ç§»é™¤å¯¹è±¡
+    /// @brief ÒÆ³ı¶ÔÏó
     void Remove(reference child)
     {
         if (child->next_)
@@ -196,7 +196,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ¸…ç©ºæ‰€æœ‰å¯¹è±¡
+    /// @brief Çå¿ÕËùÓĞ¶ÔÏó
     void Clear()
     {
         value_type p = first_;
@@ -215,7 +215,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ£€æŸ¥é“¾è¡¨æ˜¯å¦æœ‰æ•ˆ
+    /// @brief ¼ì²éÁ´±íÊÇ·ñÓĞĞ§
     bool CheckValid()
     {
         if (!first_)
@@ -429,7 +429,7 @@ private:
 
 
 /// \~chinese
-/// @brief ä¾µå…¥å¼é“¾è¡¨å…ƒç´ 
+/// @brief ÇÖÈëÊ½Á´±íÔªËØ
 template <typename _PtrTy>
 class IntrusiveListValue
 {
@@ -456,28 +456,28 @@ public:
     }
 
     /// \~chinese
-    /// @brief è·å–å‰ä¸€å…ƒç´ 
+    /// @brief »ñÈ¡Ç°Ò»ÔªËØ
     const value_type& GetPrev() const
     {
         return prev_;
     }
 
     /// \~chinese
-    /// @brief è·å–å‰ä¸€å…ƒç´ 
+    /// @brief »ñÈ¡Ç°Ò»ÔªËØ
     value_type& GetPrev()
     {
         return prev_;
     }
 
     /// \~chinese
-    /// @brief è·å–ä¸‹ä¸€å…ƒç´ 
+    /// @brief »ñÈ¡ÏÂÒ»ÔªËØ
     const value_type& GetNext() const
     {
         return next_;
     }
 
     /// \~chinese
-    /// @brief è·å–ä¸‹ä¸€å…ƒç´ 
+    /// @brief »ñÈ¡ÏÂÒ»ÔªËØ
     value_type& GetNext()
     {
         return next_;

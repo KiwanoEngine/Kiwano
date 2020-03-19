@@ -29,11 +29,6 @@ namespace strings
 
 #if defined(KGE_PLATFORM_WINDOWS)
 
-//
-// This 中文 comment will enable utf-8 encoding in Visual Studio
-// Otherwise 'CP_UTF8' cannot work
-//
-
 String Format(const char* format, ...)
 {
     String result;
@@ -53,18 +48,37 @@ String Format(const char* format, ...)
     return result;
 }
 
+WideString Format(const wchar_t* format, ...)
+{
+    WideString result;
+    if (format)
+    {
+        va_list args = nullptr;
+        va_start(args, format);
+
+        const auto len = static_cast<size_t>(::_vscwprintf(format, args) + 1);
+        if (len)
+        {
+            result.resize(len);
+            ::_vsnwprintf_s(&result[0], len, len, format, args);
+        }
+        va_end(args);
+    }
+    return result;
+}
+
 String ToNarrow(const WideString& str)
 {
     if (str.empty())
         return String();
 
-    int chars_num = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+    int chars_num = ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
     if (chars_num)
     {
         String result;
         result.resize(chars_num);
 
-        ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, &result[0], chars_num, NULL, NULL);
+        ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, &result[0], chars_num, NULL, NULL);
         return result;
     }
     return String();
@@ -75,13 +89,13 @@ WideString ToWide(const String& str)
     if (str.empty())
         return WideString();
 
-    int chars_num = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+    int chars_num = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
     if (chars_num)
     {
         WideString result;
         result.resize(chars_num);
 
-        ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &result[0], chars_num);
+        ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &result[0], chars_num);
         return result;
     }
     return WideString();

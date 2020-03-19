@@ -29,7 +29,7 @@ namespace math
 
 /**
  * \~chinese
- * @brief 浜岀淮鏀惧皠鍙樻崲
+ * @brief 二维放射变换
  */
 template <typename _Ty>
 class TransformT
@@ -37,16 +37,16 @@ class TransformT
 public:
     using ValueType = _Ty;
 
-    float            rotation;  ///< 鏃嬭浆
-    Vec2T<ValueType> position;  ///< 鍧愭爣
-    Vec2T<ValueType> scale;     ///< 缂╂斁
-    Vec2T<ValueType> skew;      ///< 閿欏垏瑙掑害
+    float            rotation;  ///< 旋转
+    Vec2T<ValueType> position;  ///< 坐标
+    Vec2T<ValueType> scale;     ///< 缩放
+    Vec2T<ValueType> skew;      ///< 错切角度
 
 public:
     TransformT();
 
     /// \~chinese
-    /// @brief 灏嗕簩缁存斁灏勫彉鎹㈣浆鎹负鐭╅樀
+    /// @brief 将二维放射变换转换为矩阵
     Matrix3x2T<ValueType> ToMatrix() const;
 
     bool operator==(const TransformT& rhs) const;

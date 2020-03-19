@@ -31,7 +31,7 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief çº¹ç†ç¼“å­˜
+ * @brief ÎÆÀí»º´æ
  */
 class KGE_API TextureCache : public Singleton<TextureCache>
 {
@@ -39,39 +39,39 @@ class KGE_API TextureCache : public Singleton<TextureCache>
 
 public:
     /// \~chinese
-    /// @brief æ·»åŠ æˆ–è·å–çº¹ç†
+    /// @brief Ìí¼Ó»ò»ñÈ¡ÎÆÀí
     TexturePtr AddOrGetTexture(const String& file_path);
 
     /// \~chinese
-    /// @brief æ·»åŠ æˆ–è·å–çº¹ç†
+    /// @brief Ìí¼Ó»ò»ñÈ¡ÎÆÀí
     TexturePtr AddOrGetTexture(const Resource& res);
 
     /// \~chinese
-    /// @brief æ·»åŠ æˆ–è·å–GIFå›¾åƒ
+    /// @brief Ìí¼Ó»ò»ñÈ¡GIFÍ¼Ïñ
     GifImagePtr AddOrGetGifImage(const String& file_path);
 
     /// \~chinese
-    /// @brief æ·»åŠ æˆ–è·å–GIFå›¾åƒ
+    /// @brief Ìí¼Ó»ò»ñÈ¡GIFÍ¼Ïñ
     GifImagePtr AddOrGetGifImage(const Resource& res);
 
     /// \~chinese
-    /// @brief ç§»é™¤çº¹ç†ç¼“å­˜
+    /// @brief ÒÆ³ıÎÆÀí»º´æ
     void RemoveTexture(const String& file_path);
 
     /// \~chinese
-    /// @brief ç§»é™¤çº¹ç†ç¼“å­˜
+    /// @brief ÒÆ³ıÎÆÀí»º´æ
     void RemoveTexture(const Resource& res);
 
     /// \~chinese
-    /// @brief ç§»é™¤GIFå›¾åƒç¼“å­˜
+    /// @brief ÒÆ³ıGIFÍ¼Ïñ»º´æ
     void RemoveGifImage(const String& file_path);
 
     /// \~chinese
-    /// @brief ç§»é™¤GIFå›¾åƒç¼“å­˜
+    /// @brief ÒÆ³ıGIFÍ¼Ïñ»º´æ
     void RemoveGifImage(const Resource& res);
 
     /// \~chinese
-    /// @brief æ¸…ç©ºç¼“å­˜
+    /// @brief Çå¿Õ»º´æ
     void Clear();
 
 private:

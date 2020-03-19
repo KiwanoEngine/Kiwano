@@ -33,13 +33,13 @@ namespace kiwano
  */
 
 /// \~chinese
-/// @brief åŠ¨ç”»è¾…åŠ©ç±»
+/// @brief ¶¯»­¸¨ÖúÀà
 struct ActionHelper
 {
     using DoneCallback = Action::DoneCallback;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¾ªç¯æ¬¡æ•°
+    /// @brief ÉèÖÃÑ­»·´ÎÊı
     inline ActionHelper& SetLoops(int loops)
     {
         ptr->SetLoops(loops);
@@ -47,7 +47,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å»¶è¿Ÿ
+    /// @brief ÉèÖÃ¶¯»­ÑÓ³Ù
     inline ActionHelper& SetDelay(Duration delay)
     {
         ptr->SetDelay(delay);
@@ -55,7 +55,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»ç»“æŸå›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­½áÊø»Øµ÷º¯Êı
     inline ActionHelper& SetDoneCallback(const DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
@@ -63,7 +63,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
     inline ActionHelper& SetLoopDoneCallback(const DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
@@ -71,7 +71,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief åŠ¨ç”»ç»“æŸæ—¶ç§»é™¤ç›®æ ‡è§’è‰²
+    /// @brief ¶¯»­½áÊøÊ±ÒÆ³ıÄ¿±ê½ÇÉ«
     inline ActionHelper& RemoveTargetWhenDone()
     {
         ptr->RemoveTargetWhenDone();
@@ -79,7 +79,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åç§°
+    /// @brief ÉèÖÃÃû³Æ
     inline ActionHelper& SetName(const String& name)
     {
         ptr->SetName(name);
@@ -87,7 +87,7 @@ struct ActionHelper
     }
 
     /// \~chinese
-    /// @brief è·å–æŒ‡é’ˆ
+    /// @brief »ñÈ¡Ö¸Õë
     inline ActionPtr Get() const
     {
         return ptr;
@@ -113,13 +113,13 @@ private:
 };
 
 /// \~chinese
-/// @brief è¡¥é—´åŠ¨ç”»è¾…åŠ©ç±»
+/// @brief ²¹¼ä¶¯»­¸¨ÖúÀà
 struct TweenHelper
 {
     using DoneCallback = Action::DoneCallback;
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»æŒç»­æ—¶é•¿
+    /// @brief ÉèÖÃ¶¯»­³ÖĞøÊ±³¤
     inline TweenHelper& SetDuration(Duration dur)
     {
         ptr->SetDuration(dur);
@@ -127,7 +127,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®å¾ªç¯æ¬¡æ•°
+    /// @brief ÉèÖÃÑ­»·´ÎÊı
     inline TweenHelper& SetLoops(int loops)
     {
         ptr->SetLoops(loops);
@@ -135,7 +135,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®ç¼“åŠ¨å‡½æ•°
+    /// @brief ÉèÖÃ»º¶¯º¯Êı
     inline TweenHelper& SetEaseFunc(EaseFunc ease)
     {
         ptr->SetEaseFunc(ease);
@@ -143,7 +143,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å»¶è¿Ÿ
+    /// @brief ÉèÖÃ¶¯»­ÑÓ³Ù
     inline TweenHelper& SetDelay(Duration delay)
     {
         ptr->SetDelay(delay);
@@ -151,7 +151,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»ç»“æŸå›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­½áÊø»Øµ÷º¯Êı
     inline TweenHelper& SetDoneCallback(const DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
@@ -159,7 +159,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
     inline TweenHelper& SetLoopDoneCallback(const DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
@@ -167,7 +167,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief åŠ¨ç”»ç»“æŸæ—¶ç§»é™¤ç›®æ ‡è§’è‰²
+    /// @brief ¶¯»­½áÊøÊ±ÒÆ³ıÄ¿±ê½ÇÉ«
     inline TweenHelper& RemoveTargetWhenDone()
     {
         ptr->RemoveTargetWhenDone();
@@ -175,7 +175,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®åç§°
+    /// @brief ÉèÖÃÃû³Æ
     inline TweenHelper& SetName(const String& name)
     {
         ptr->SetName(name);
@@ -183,7 +183,7 @@ struct TweenHelper
     }
 
     /// \~chinese
-    /// @brief è·å–æŒ‡é’ˆ
+    /// @brief »ñÈ¡Ö¸Õë
     inline ActionTweenPtr Get() const
     {
         return ptr;
@@ -214,120 +214,120 @@ private:
 };
 
 /// \~chinese
-/// @brief åŠ¨ç”»æ„é€ å™¨
+/// @brief ¶¯»­¹¹ÔìÆ÷
 struct Tween
 {
 public:
     /// \~chinese
-    /// @brief æ„é€ ç›¸å¯¹ä½ç§»åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param vector ç§»åŠ¨å‘é‡
+    /// @brief ¹¹ÔìÏà¶ÔÎ»ÒÆ¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param vector ÒÆ¶¯ÏòÁ¿
     static inline TweenHelper MoveBy(Duration dur, const Point& vector)
     {
         return TweenHelper(ActionMoveBy::Create(dur, vector));
     }
 
     /// \~chinese
-    /// @brief æ„é€ ä½ç§»åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param pos ç›®çš„åæ ‡
+    /// @brief ¹¹ÔìÎ»ÒÆ¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param pos Ä¿µÄ×ø±ê
     static inline TweenHelper MoveTo(Duration dur, const Point& pos)
     {
         return TweenHelper(ActionMoveTo::Create(dur, pos));
     }
 
     /// \~chinese
-    /// @brief æ„é€ ç›¸å¯¹è·³è·ƒåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param vec è·³è·ƒä½ç§»å‘é‡
-    /// @param height è·³è·ƒé«˜åº¦
-    /// @param jumps è·³è·ƒæ¬¡æ•°
+    /// @brief ¹¹ÔìÏà¶ÔÌøÔ¾¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param vec ÌøÔ¾Î»ÒÆÏòÁ¿
+    /// @param height ÌøÔ¾¸ß¶È
+    /// @param jumps ÌøÔ¾´ÎÊı
     static inline TweenHelper JumpBy(Duration duration, const Vec2& vec, float height, int jumps = 1)
     {
         return TweenHelper(ActionJumpBy::Create(duration, vec, height, jumps));
     }
 
     /// \~chinese
-    /// @brief æ„é€ è·³è·ƒåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param pos ç›®çš„åæ ‡
-    /// @param height è·³è·ƒé«˜åº¦
-    /// @param jumps è·³è·ƒæ¬¡æ•°
+    /// @brief ¹¹ÔìÌøÔ¾¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param pos Ä¿µÄ×ø±ê
+    /// @param height ÌøÔ¾¸ß¶È
+    /// @param jumps ÌøÔ¾´ÎÊı
     static inline TweenHelper JumpTo(Duration duration, const Point& pos, float height, int jumps = 1)
     {
         return TweenHelper(ActionJumpTo::Create(duration, pos, height, jumps));
     }
 
     /// \~chinese
-    /// @brief æ„é€ ç›¸å¯¹ç¼©æ”¾åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
-    /// @param scale_y çºµå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ¹¹ÔìÏà¶ÔËõ·Å¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param scale_x ºáÏòËõ·ÅÏà¶Ô±ä»¯Öµ
+    /// @param scale_y ×İÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     static inline TweenHelper ScaleBy(Duration dur, float scale_x, float scale_y)
     {
         return TweenHelper(ActionScaleBy::Create(dur, scale_x, scale_y));
     }
 
     /// \~chinese
-    /// @brief æ„é€ ç¼©æ”¾åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›®æ ‡å€¼
-    /// @param scale_y çºµå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief ¹¹ÔìËõ·Å¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param scale_x ºáÏòËõ·ÅÄ¿±êÖµ
+    /// @param scale_y ×İÏòËõ·ÅÄ¿±êÖµ
     static inline TweenHelper ScaleTo(Duration dur, float scale_x, float scale_y)
     {
         return TweenHelper(ActionScaleTo::Create(dur, scale_x, scale_y));
     }
 
     /// \~chinese
-    /// @brief æ„é€ é€æ˜åº¦æ¸å˜åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param opacity ç›®æ ‡é€æ˜åº¦
+    /// @brief ¹¹ÔìÍ¸Ã÷¶È½¥±ä¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param opacity Ä¿±êÍ¸Ã÷¶È
     static inline TweenHelper FadeTo(Duration dur, float opacity)
     {
         return TweenHelper(ActionFadeTo::Create(dur, opacity));
     }
 
     /// \~chinese
-    /// @brief æ„é€ æ·¡å…¥åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @brief ¹¹Ôìµ­Èë¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
     static inline TweenHelper FadeIn(Duration dur)
     {
         return TweenHelper(ActionFadeIn::Create(dur));
     }
 
     /// \~chinese
-    /// @brief æ„é€ æ·¡å‡ºåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @brief ¹¹Ôìµ­³ö¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
     static inline TweenHelper FadeOut(Duration dur)
     {
         return TweenHelper(ActionFadeOut::Create(dur));
     }
 
     /// \~chinese
-    /// @brief æ„é€ ç›¸å¯¹æ—‹è½¬åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param rotation è§’åº¦ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ¹¹ÔìÏà¶ÔĞı×ª¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param rotation ½Ç¶ÈÏà¶Ô±ä»¯Öµ
     static inline TweenHelper RotateBy(Duration dur, float rotation)
     {
         return TweenHelper(ActionRotateBy::Create(dur, rotation));
     }
 
     /// \~chinese
-    /// @brief æ„é€ æ—‹è½¬åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param rotation ç›®æ ‡è§’åº¦
+    /// @brief ¹¹ÔìĞı×ª¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param rotation Ä¿±ê½Ç¶È
     static inline TweenHelper RotateTo(Duration dur, float rotation)
     {
         return TweenHelper(ActionRotateTo::Create(dur, rotation));
     }
 
     /// \~chinese
-    /// @brief æ„é€ è·¯å¾„è¡Œèµ°åŠ¨ç”»
-    /// @param duration æŒç»­æ—¶é•¿
-    /// @param path è·¯å¾„å½¢çŠ¶
-    /// @param rotating æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
-    /// @param start è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
-    /// @param end è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief ¹¹ÔìÂ·¾¶ĞĞ×ß¶¯»­
+    /// @param duration ³ÖĞøÊ±³¤
+    /// @param path Â·¾¶ĞÎ×´
+    /// @param rotating ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
+    /// @param start Â·¾¶Æğµã£¨°Ù·Ö±È£©
+    /// @param end Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
     static inline TweenHelper Walk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
                                    float end = 1.f)
     {
@@ -335,35 +335,35 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ„å»ºå¸§åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param[in] frame_seq åºåˆ—å¸§
+    /// @brief ¹¹½¨Ö¡¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param[in] frame_seq ĞòÁĞÖ¡
     static inline TweenHelper Animation(Duration dur, FrameSequencePtr frames)
     {
         return TweenHelper(Animation::Create(dur, frames));
     }
 
     /// \~chinese
-    /// @brief æ„é€ è‡ªå®šä¹‰åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param tween_func åŠ¨ç”»å›è°ƒå‡½æ•°
+    /// @brief ¹¹Ôì×Ô¶¨Òå¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param tween_func ¶¯»­»Øµ÷º¯Êı
     static inline TweenHelper Custom(Duration dur, ActionCustom::TweenFunc tween_func)
     {
         return TweenHelper(ActionCustom::Create(dur, tween_func));
     }
 
     /// \~chinese
-    /// @brief æ„å»ºå»¶æ—¶åŠ¨ç”»
-    /// @param delay å»¶æ—¶æ—¶é•¿
+    /// @brief ¹¹½¨ÑÓÊ±¶¯»­
+    /// @param delay ÑÓÊ±Ê±³¤
     static inline ActionHelper Delay(Duration delay)
     {
         return ActionHelper(ActionDelay::Create(delay));
     }
 
     /// \~chinese
-    /// @brief åŠ¨ç”»ç»„åˆ
-    /// @param actions åŠ¨ç”»é›†åˆ
-    /// @param sync åŒæ­¥æ‰§è¡Œ
+    /// @brief ¶¯»­×éºÏ
+    /// @param actions ¶¯»­¼¯ºÏ
+    /// @param sync Í¬²½Ö´ĞĞ
     static inline ActionHelper Group(const Vector<ActionPtr>& actions, bool sync = false)
     {
         return ActionHelper(ActionGroup::Create(actions, sync));

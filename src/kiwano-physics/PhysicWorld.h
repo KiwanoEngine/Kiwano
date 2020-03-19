@@ -29,7 +29,7 @@ namespace physics
 
 /**
  * \~chinese
- * \defgroup Physics ç‰©ç†æ¨¡å—
+ * \defgroup Physics ÎïÀíÄ£¿é
  */
 
 /**
@@ -39,7 +39,7 @@ namespace physics
 
 /**
  * \~chinese
- * @brief ç‰©ç†ä¸–ç•Œ
+ * @brief ÎïÀíÊÀ½ç
  */
 class KGE_API PhysicWorld : public Component
 {
@@ -48,12 +48,12 @@ class KGE_API PhysicWorld : public Component
 
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç‰©ç†ä¸–ç•Œ
+    /// @brief ´´½¨ÎïÀíÊÀ½ç
     static PhysicWorldPtr Create();
 
     /// \~chinese
-    /// @brief åˆ›å»ºç‰©ç†ä¸–ç•Œ
-    /// @param gravity é‡åŠ›
+    /// @brief ´´½¨ÎïÀíÊÀ½ç
+    /// @param gravity ÖØÁ¦
     static PhysicWorldPtr Create(const Vec2& gravity);
 
     PhysicWorld();
@@ -61,96 +61,96 @@ public:
     virtual ~PhysicWorld();
 
     /// \~chinese
-    /// @brief æ·»åŠ ç‰©ä½“
+    /// @brief Ìí¼ÓÎïÌå
     void AddBody(PhysicBodyPtr body);
 
     /// \~chinese
-    /// @brief ç§»é™¤ç‰©ä½“
+    /// @brief ÒÆ³ıÎïÌå
     void RemoveBody(PhysicBodyPtr body);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰ç‰©ä½“
+    /// @brief ÒÆ³ıËùÓĞÎïÌå
     void RemoveAllBodies();
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰ç‰©ä½“
+    /// @brief »ñÈ¡ËùÓĞÎïÌå
     const List<PhysicBodyPtr>& GetAllBodies() const;
 
     /// \~chinese
-    /// @brief æ·»åŠ å…³èŠ‚
+    /// @brief Ìí¼Ó¹Ø½Ú
     void AddJoint(JointPtr joint);
 
     /// \~chinese
-    /// @brief ç§»é™¤å…³èŠ‚
+    /// @brief ÒÆ³ı¹Ø½Ú
     void RemoveJoint(JointPtr joint);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰å…³èŠ‚
+    /// @brief ÒÆ³ıËùÓĞ¹Ø½Ú
     void RemoveAllJoints();
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰å…³èŠ‚
+    /// @brief »ñÈ¡ËùÓĞ¹Ø½Ú
     const List<JointPtr>& GetAllJoints() const;
 
     /// \~chinese
-    /// @brief è·å–é‡åŠ› [N]
+    /// @brief »ñÈ¡ÖØÁ¦ [N]
     Vec2 GetGravity() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®é‡åŠ› [N]
+    /// @brief ÉèÖÃÖØÁ¦ [N]
     void SetGravity(Vec2 gravity);
 
     /// \~chinese
-    /// @brief è·å–ç‰©ç†æ¥è§¦åˆ—è¡¨
+    /// @brief »ñÈ¡ÎïÀí½Ó´¥ÁĞ±í
     ContactList GetContactList();
 
     /// \~chinese
-    /// @brief è®¾ç½®é€Ÿåº¦è¿­ä»£æ¬¡æ•°, é»˜è®¤ä¸º 6
+    /// @brief ÉèÖÃËÙ¶Èµü´ú´ÎÊı, Ä¬ÈÏÎª 6
     void SetVelocityIterations(int vel_iter);
 
     /// \~chinese
-    /// @brief è®¾ç½®ä½ç½®è¿­ä»£æ¬¡æ•°, é»˜è®¤ä¸º 2
+    /// @brief ÉèÖÃÎ»ÖÃµü´ú´ÎÊı, Ä¬ÈÏÎª 2
     void SetPositionIterations(int pos_iter);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ˜¯å¦ç»˜åˆ¶è°ƒè¯•ä¿¡æ¯
+    /// @brief ÉèÖÃÊÇ·ñ»æÖÆµ÷ÊÔĞÅÏ¢
     void ShowDebugInfo(bool show);
 
     /// \~chinese
-    /// @brief è·å–b2World
+    /// @brief »ñÈ¡b2World
     b2World* GetB2World();
 
     /// \~chinese
-    /// @brief è·å–b2World
+    /// @brief »ñÈ¡b2World
     const b2World* GetB2World() const;
 
 protected:
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç»„ä»¶
+    /// @brief ³õÊ¼»¯×é¼ş
     void InitComponent(Actor* actor) override;
 
     /// \~chinese
-    /// @brief æ›´æ–°ç»„ä»¶
+    /// @brief ¸üĞÂ×é¼ş
     void OnUpdate(Duration dt) override;
 
     /// \~chinese
-    /// @brief æ¸²æŸ“ç»„ä»¶
+    /// @brief äÖÈ¾×é¼ş
     void OnRender(RenderContext& ctx) override;
 
     /// \~chinese
-    /// @brief åˆ†å‘ç‰©ç†ä¸–ç•Œäº‹ä»¶
+    /// @brief ·Ö·¢ÎïÀíÊÀ½çÊÂ¼ş
     void DispatchEvent(Event* evt);
 
     /// \~chinese
-    /// @brief å…³èŠ‚ç§»é™¤æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ¹Ø½ÚÒÆ³ıÊ±µÄ»Øµ÷º¯Êı
     void JointRemoved(b2Joint* b2joint);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ç†ä¸–ç•Œå‰
+    /// @brief ¸üĞÂÎïÀíÊÀ½çÇ°
     void BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç‰©ç†ä¸–ç•Œå
+    /// @brief ¸üĞÂÎïÀíÊÀ½çºó
     void AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation);
 
 private:

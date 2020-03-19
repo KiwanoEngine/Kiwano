@@ -33,60 +33,60 @@ KGE_DECLARE_SMART_PTR(ActionWalk);
  */
 
 /// \~chinese
-/// @brief è·¯å¾„è¡Œèµ°åŠ¨ç”»
+/// @brief Â·¾¶ĞĞ×ß¶¯»­
 class KGE_API ActionWalk : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºè·¯å¾„è¡Œèµ°åŠ¨ç”»
-    /// @param duration æŒç»­æ—¶é•¿
-    /// @param path è·¯å¾„å½¢çŠ¶
-    /// @param rotating æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
-    /// @param start è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
-    /// @param end è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief ´´½¨Â·¾¶ĞĞ×ß¶¯»­
+    /// @param duration ³ÖĞøÊ±³¤
+    /// @param path Â·¾¶ĞÎ×´
+    /// @param rotating ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
+    /// @param start Â·¾¶Æğµã£¨°Ù·Ö±È£©
+    /// @param end Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
     static ActionWalkPtr Create(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
                                 float end = 1.f);
 
     ActionWalk();
 
     /// \~chinese
-    /// @brief è·å–è·¯çº¿
+    /// @brief »ñÈ¡Â·Ïß
     ShapePtr GetPath() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
+    /// @brief ÊÇ·ñÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
     bool IsRotating() const;
 
     /// \~chinese
-    /// @brief è·å–è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief »ñÈ¡Â·¾¶Æğµã£¨°Ù·Ö±È£©
     float GetStartValue() const;
 
     /// \~chinese
-    /// @brief è·å–è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief »ñÈ¡Â·¾¶ÖÕµã£¨°Ù·Ö±È£©
     float GetEndValue() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è·¯å¾„å½¢çŠ¶
+    /// @brief ÉèÖÃÂ·¾¶ĞÎ×´
     void SetPath(ShapePtr path);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ²¿è·¯å¾„åˆ‡çº¿æ–¹å‘æ—‹è½¬
+    /// @brief ÉèÖÃÑØÂ·¾¶ÇĞÏß·½ÏòĞı×ª
     void SetRotating(bool rotating);
 
     /// \~chinese
-    /// @brief è®¾ç½®è·¯å¾„èµ·ç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief ÉèÖÃÂ·¾¶Æğµã£¨°Ù·Ö±È£©
     void SetStartValue(float start);
 
     /// \~chinese
-    /// @brief è®¾ç½®è·¯å¾„ç»ˆç‚¹ï¼ˆç™¾åˆ†æ¯”ï¼‰
+    /// @brief ÉèÖÃÂ·¾¶ÖÕµã£¨°Ù·Ö±È£©
     void SetEndValue(float end);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:

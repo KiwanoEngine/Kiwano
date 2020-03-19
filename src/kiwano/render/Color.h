@@ -31,46 +31,46 @@ namespace kiwano
 
 /*
  * \~chinese
- * @brief é¢œè‰²
+ * @brief ÑÕÉ«
  * @details
- * ä½¿ç”¨æšä¸¾è¡¨ç¤ºé¢œè‰²: @code Color blue = Color::Blue; @endcode
- * ä½¿ç”¨ RGB è¡¨ç¤ºä¸€ä¸ªé¢œè‰²: @code Color red = Color(1.0f, 0.0f, 0.0f); @endcode
- * ä½¿ç”¨ RGBA è¡¨ç¤ºä¸€ä¸ªå¸¦é€æ˜åº¦çš„é¢œè‰²: @code Color not_white = Color(1.0f, 1.0f,
+ * Ê¹ÓÃÃ¶¾Ù±íÊ¾ÑÕÉ«: @code Color blue = Color::Blue; @endcode
+ * Ê¹ÓÃ RGB ±íÊ¾Ò»¸öÑÕÉ«: @code Color red = Color(1.0f, 0.0f, 0.0f); @endcode
+ * Ê¹ÓÃ RGBA ±íÊ¾Ò»¸ö´øÍ¸Ã÷¶ÈµÄÑÕÉ«: @code Color not_white = Color(1.0f, 1.0f,
  * 1.0f, 0.5f); @endcode
- * ä½¿ç”¨ä¸€ä¸ª16è¿›åˆ¶æ•´å‹å€¼è¡¨ç¤º RGB é¢œè‰²: @code Color black(0x000000); @endcode
+ * Ê¹ÓÃÒ»¸ö16½øÖÆÕûĞÍÖµ±íÊ¾ RGB ÑÕÉ«: @code Color black(0x000000); @endcode
  */
 class KGE_API Color
 {
 public:
     /// \~chinese
-    /// @brief æ„é€ é¢œè‰²
-    /// @details é»˜è®¤é¢œè‰²ä¸º R: 0.0, G: 0.0, B: 0.0, A: 1.0
+    /// @brief ¹¹ÔìÑÕÉ«
+    /// @details Ä¬ÈÏÑÕÉ«Îª R: 0.0, G: 0.0, B: 0.0, A: 1.0
     Color();
 
     /// \~chinese
-    /// @brief æ„é€  RGB é¢œè‰²
-    /// @param r çº¢è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
-    /// @param g ç»¿è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
-    /// @param b è“è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
+    /// @brief ¹¹Ôì RGB ÑÕÉ«
+    /// @param r ºìÉ«Öµ£¬·¶Î§ 0.0 - 1.0
+    /// @param g ÂÌÉ«Öµ£¬·¶Î§ 0.0 - 1.0
+    /// @param b À¶É«Öµ£¬·¶Î§ 0.0 - 1.0
     Color(float r, float g, float b);
 
     /// \~chinese
-    /// @brief æ„é€  RGBA é¢œè‰²
-    /// @param r çº¢è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
-    /// @param g ç»¿è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
-    /// @param b è“è‰²å€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
-    /// @param a Alphaå€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
+    /// @brief ¹¹Ôì RGBA ÑÕÉ«
+    /// @param r ºìÉ«Öµ£¬·¶Î§ 0.0 - 1.0
+    /// @param g ÂÌÉ«Öµ£¬·¶Î§ 0.0 - 1.0
+    /// @param b À¶É«Öµ£¬·¶Î§ 0.0 - 1.0
+    /// @param a AlphaÖµ£¬·¶Î§ 0.0 - 1.0
     Color(float r, float g, float b, float alpha);
 
     /// \~chinese
-    /// @brief æ„é€  RGB é¢œè‰²
-    /// @param rgb ä½¿ç”¨16è¿›åˆ¶æ•´å½¢å€¼è¡¨ç¤º RGBé¢œè‰²
+    /// @brief ¹¹Ôì RGB ÑÕÉ«
+    /// @param rgb Ê¹ÓÃ16½øÖÆÕûĞÎÖµ±íÊ¾ RGBÑÕÉ«
     Color(uint32_t rgb);
 
     /// \~chinese
-    /// @brief æ„é€  RGBA é¢œè‰²
-    /// @param rgb ä½¿ç”¨16è¿›åˆ¶æ•´å½¢å€¼è¡¨ç¤º RGB é¢œè‰²
-    /// @param a Alphaå€¼ï¼ŒèŒƒå›´ 0.0 - 1.0
+    /// @brief ¹¹Ôì RGBA ÑÕÉ«
+    /// @param rgb Ê¹ÓÃ16½øÖÆÕûĞÎÖµ±íÊ¾ RGB ÑÕÉ«
+    /// @param a AlphaÖµ£¬·¶Î§ 0.0 - 1.0
     Color(uint32_t rgb, float alpha);
 
     bool operator==(const Color& rhs) const;
@@ -79,7 +79,7 @@ public:
 
 public:
     /// \~chinese
-    /// @brief å¸¸è§é¢œè‰²æšä¸¾
+    /// @brief ³£¼ûÑÕÉ«Ã¶¾Ù
     enum Value : uint32_t
     {
         Black         = 0x000000,
@@ -124,14 +124,14 @@ public:
     };
 
     /// \~chinese
-    /// @brief é€æ˜è‰²
+    /// @brief Í¸Ã÷É«
     static const Color Transparent;
 
 public:
-    float r;  ///< çº¢è‰²å€¼
-    float g;  ///< ç»¿è‰²å€¼
-    float b;  ///< è“è‰²å€¼
-    float a;  ///< Alphaå€¼
+    float r;  ///< ºìÉ«Öµ
+    float g;  ///< ÂÌÉ«Öµ
+    float b;  ///< À¶É«Öµ
+    float a;  ///< AlphaÖµ
 };
 
 /** @} */

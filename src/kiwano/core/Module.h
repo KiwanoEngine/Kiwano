@@ -31,17 +31,17 @@ struct ModuleFlag;
 
 /**
  * \~chinese
- * @brief åŸºç¡€æ¨¡å—
+ * @brief »ù´¡Ä£¿é
  */
 class KGE_API Module
 {
 public:
     /// \~chinese
-    /// @brief å¯åŠ¨æ¨¡å—
+    /// @brief Æô¶¯Ä£¿é
     virtual void SetupModule() {}
 
     /// \~chinese
-    /// @brief é”€æ¯æ¨¡å—
+    /// @brief Ïú»ÙÄ£¿é
     virtual void DestroyModule() {}
 
     template <typename _CompTy>
@@ -61,22 +61,22 @@ protected:
 
 /**
  * \~chinese
- * @brief æ¸²æŸ“æ¨¡å—
+ * @brief äÖÈ¾Ä£¿é
  */
 class KGE_API RenderModule : public virtual Module
 {
 public:
     /// \~chinese
-    /// @brief æ¸²æŸ“å‰
+    /// @brief äÖÈ¾Ç°
     virtual void BeforeRender() {}
 
     /// \~chinese
-    /// @brief æ¸²æŸ“æ—¶
-    /// @param ctx æ¸²æŸ“ä¸Šä¸‹æ–‡
+    /// @brief äÖÈ¾Ê±
+    /// @param ctx äÖÈ¾ÉÏÏÂÎÄ
     virtual void OnRender(RenderContext& ctx) {}
 
     /// \~chinese
-    /// @brief æ¸²æŸ“å
+    /// @brief äÖÈ¾ºó
     virtual void AfterRender() {}
 
 public:
@@ -85,22 +85,22 @@ public:
 
 /**
  * \~chinese
- * @brief æ›´æ–°æ¨¡å—
+ * @brief ¸üĞÂÄ£¿é
  */
 class KGE_API UpdateModule : public virtual Module
 {
 public:
     /// \~chinese
-    /// @brief æ›´æ–°å‰
+    /// @brief ¸üĞÂÇ°
     virtual void BeforeUpdate() {}
 
     /// \~chinese
-    /// @brief æ›´æ–°æ—¶
-    /// @param dt é—´éš”æ—¶é—´
+    /// @brief ¸üĞÂÊ±
+    /// @param dt ¼ä¸ôÊ±¼ä
     virtual void OnUpdate(Duration dt) {}
 
     /// \~chinese
-    /// @brief æ›´æ–°å
+    /// @brief ¸üĞÂºó
     virtual void AfterUpdate() {}
 
 public:
@@ -109,14 +109,14 @@ public:
 
 /**
  * \~chinese
- * @brief äº‹ä»¶æ¨¡å—
+ * @brief ÊÂ¼şÄ£¿é
  */
 class KGE_API EventModule : public virtual Module
 {
 public:
     /// \~chinese
-    /// @brief äº‹ä»¶å¤„ç†
-    /// @param evt äº‹ä»¶
+    /// @brief ÊÂ¼ş´¦Àí
+    /// @param evt ÊÂ¼ş
     virtual void HandleEvent(Event* evt) {}
 
 public:

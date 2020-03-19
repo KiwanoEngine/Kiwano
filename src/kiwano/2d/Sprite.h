@@ -33,36 +33,36 @@ KGE_DECLARE_SMART_PTR(Sprite);
 
 /**
  * \~chinese
- * @brief ç²¾çµ
+ * @brief ¾«Áé
  */
 class KGE_API Sprite : public Actor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç²¾çµ
-    /// @param file_path æœ¬åœ°å›¾ç‰‡è·¯å¾„
+    /// @brief ´´½¨¾«Áé
+    /// @param file_path ±¾µØÍ¼Æ¬Â·¾¶
     static SpritePtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç²¾çµ
-    /// @param res å›¾ç‰‡èµ„æº
+    /// @brief ´´½¨¾«Áé
+    /// @param res Í¼Æ¬×ÊÔ´
     static SpritePtr Create(const Resource& res);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç²¾çµ
-    /// @param frame å›¾åƒå¸§
+    /// @brief ´´½¨¾«Áé
+    /// @param frame Í¼ÏñÖ¡
     static SpritePtr Create(FramePtr frame);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç²¾çµ
-    /// @param file_path æœ¬åœ°å›¾ç‰‡è·¯å¾„
-    /// @param crop_rect è£å‰ªçŸ©å½¢
+    /// @brief ´´½¨¾«Áé
+    /// @param file_path ±¾µØÍ¼Æ¬Â·¾¶
+    /// @param crop_rect ²Ã¼ô¾ØĞÎ
     static SpritePtr Create(const String& file_path, const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç²¾çµ
-    /// @param res å›¾ç‰‡èµ„æº
-    /// @param crop_rect è£å‰ªçŸ©å½¢
+    /// @brief ´´½¨¾«Áé
+    /// @param res Í¼Æ¬×ÊÔ´
+    /// @param crop_rect ²Ã¼ô¾ØĞÎ
     static SpritePtr Create(const Resource& res, const Rect& crop_rect);
 
     Sprite();
@@ -70,46 +70,46 @@ public:
     virtual ~Sprite();
 
     /// \~chinese
-    /// @brief åŠ è½½æœ¬åœ°å›¾ç‰‡
-    /// @param file_path æœ¬åœ°å›¾ç‰‡è·¯å¾„
-    /// @param autoresize æ˜¯å¦è‡ªåŠ¨è°ƒæ•´è‡ªèº«å¤§å°ä¸ºå›¾åƒå¤§å°
+    /// @brief ¼ÓÔØ±¾µØÍ¼Æ¬
+    /// @param file_path ±¾µØÍ¼Æ¬Â·¾¶
+    /// @param autoresize ÊÇ·ñ×Ô¶¯µ÷Õû×ÔÉí´óĞ¡ÎªÍ¼Ïñ´óĞ¡
     bool Load(const String& file_path, bool autoresize = true);
 
     /// \~chinese
-    /// @brief åŠ è½½å›¾åƒèµ„æº
-    /// @param res å›¾ç‰‡èµ„æº
-    /// @param autoresize æ˜¯å¦è‡ªåŠ¨è°ƒæ•´è‡ªèº«å¤§å°ä¸ºå›¾åƒå¤§å°
+    /// @brief ¼ÓÔØÍ¼Ïñ×ÊÔ´
+    /// @param res Í¼Æ¬×ÊÔ´
+    /// @param autoresize ÊÇ·ñ×Ô¶¯µ÷Õû×ÔÉí´óĞ¡ÎªÍ¼Ïñ´óĞ¡
     bool Load(const Resource& res, bool autoresize = true);
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸå®½åº¦
+    /// @brief »ñÈ¡Í¼ÏñÔ­¿í¶È
     float GetSourceWidth() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸé«˜åº¦
+    /// @brief »ñÈ¡Í¼ÏñÔ­¸ß¶È
     float GetSourceHeight() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾åƒåŸå¤§å°
+    /// @brief »ñÈ¡Í¼ÏñÔ­´óĞ¡
     Size GetSourceSize() const;
 
     /// \~chinese
-    /// @brief è·å–è£å‰ªçŸ©å½¢
+    /// @brief »ñÈ¡²Ã¼ô¾ØĞÎ
     Rect GetCropRect() const;
 
     /// \~chinese
-    /// @brief ä½¿ç”¨çŸ©å½¢åŒºåŸŸè£å‰ªç²¾çµ
-    /// @param crop_rect è£å‰ªçŸ©å½¢
+    /// @brief Ê¹ÓÃ¾ØĞÎÇøÓò²Ã¼ô¾«Áé
+    /// @param crop_rect ²Ã¼ô¾ØĞÎ
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief è·å–å¸§å›¾åƒ
+    /// @brief »ñÈ¡Ö¡Í¼Ïñ
     FramePtr GetFrame() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å›¾åƒå¸§
-    /// @param[in] frame å›¾åƒå¸§
-    /// @param autoresize æ˜¯å¦è‡ªåŠ¨è°ƒæ•´è‡ªèº«å¤§å°ä¸ºå›¾åƒå¤§å°
+    /// @brief ÉèÖÃÍ¼ÏñÖ¡
+    /// @param[in] frame Í¼ÏñÖ¡
+    /// @param autoresize ÊÇ·ñ×Ô¶¯µ÷Õû×ÔÉí´óĞ¡ÎªÍ¼Ïñ´óĞ¡
     void SetFrame(FramePtr frame, bool autoresize = true);
 
     void OnRender(RenderContext& ctx) override;

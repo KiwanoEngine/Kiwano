@@ -33,11 +33,11 @@ KGE_DECLARE_SMART_PTR(Brush);
  */
 
 /// \~chinese
-/// @brief æ¸å˜è½¬æ¢ç‚¹
+/// @brief ½¥±ä×ª»»µã
 struct GradientStop
 {
-    float offset;  ///< åç§»è·ç¦»
-    Color color;   ///< æ¸å˜ç‚¹é¢œè‰²
+    float offset;  ///< Æ«ÒÆ¾àÀë
+    Color color;   ///< ½¥±äµãÑÕÉ«
 
     GradientStop();
 
@@ -45,37 +45,37 @@ struct GradientStop
 };
 
 /// \~chinese
-/// @brief æ¸å˜æ‰©å……æ¨¡å¼
-/// @details è¯¥æ¨¡å¼ç”¨äºæŒ‡å®šç”»ç¬”å¦‚ä½•ç»˜åˆ¶æ­£å¸¸åŒºåŸŸå¤–çš„éƒ¨åˆ†
+/// @brief ½¥±äÀ©³äÄ£Ê½
+/// @details ¸ÃÄ£Ê½ÓÃÓÚÖ¸¶¨»­±ÊÈçºÎ»æÖÆÕı³£ÇøÓòÍâµÄ²¿·Ö
 enum class GradientExtendMode
 {
-    Clamp,  ///< å¤¹æ¨¡å¼ï¼Œé‡å¤ç»˜åˆ¶è¾¹ç•Œé¢œè‰²
-    Wrap,   ///< åŒ…è£¹æ¨¡å¼ï¼Œé‡å¤ç”»ç¬”å†…å®¹
-    Mirror  ///< é•œåƒæ¨¡å¼ï¼Œåè½¬ç”»ç¬”å†…å®¹
+    Clamp,  ///< ¼ĞÄ£Ê½£¬ÖØ¸´»æÖÆ±ß½çÑÕÉ«
+    Wrap,   ///< °ü¹üÄ£Ê½£¬ÖØ¸´»­±ÊÄÚÈİ
+    Mirror  ///< ¾µÏñÄ£Ê½£¬·´×ª»­±ÊÄÚÈİ
 };
 
 /// \~chinese
-/// @brief çº¿æ€§æ¸å˜æ ·å¼
+/// @brief ÏßĞÔ½¥±äÑùÊ½
 struct LinearGradientStyle
 {
-    Point                begin;        ///< æ¸å˜èµ·å§‹ç‚¹
-    Point                end;          ///< æ¸å˜ç»ˆæ­¢ç‚¹
-    Vector<GradientStop> stops;        ///< æ¸å˜è½¬æ¢ç‚¹é›†åˆ
-    GradientExtendMode   extend_mode;  ///< æ¸å˜æ‰©å……æ¨¡å¼
+    Point                begin;        ///< ½¥±äÆğÊ¼µã
+    Point                end;          ///< ½¥±äÖÕÖ¹µã
+    Vector<GradientStop> stops;        ///< ½¥±ä×ª»»µã¼¯ºÏ
+    GradientExtendMode   extend_mode;  ///< ½¥±äÀ©³äÄ£Ê½
 
     LinearGradientStyle(const Point& begin, const Point& end, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 };
 
 /// \~chinese
-/// @brief å¾„å‘æ¸å˜æ ·å¼
+/// @brief ¾¶Ïò½¥±äÑùÊ½
 struct RadialGradientStyle
 {
-    Point                center;       ///< å¾„å‘æ¸å˜åœ†å¿ƒ
-    Vec2                 offset;       ///< å¾„å‘æ¸å˜åç§»
-    Vec2                 radius;       ///< å¾„å‘æ¸å˜åŠå¾„
-    Vector<GradientStop> stops;        ///< æ¸å˜è½¬æ¢ç‚¹é›†åˆ
-    GradientExtendMode   extend_mode;  ///< æ¸å˜æ‰©å……æ¨¡å¼
+    Point                center;       ///< ¾¶Ïò½¥±äÔ²ĞÄ
+    Vec2                 offset;       ///< ¾¶Ïò½¥±äÆ«ÒÆ
+    Vec2                 radius;       ///< ¾¶Ïò½¥±ä°ë¾¶
+    Vector<GradientStop> stops;        ///< ½¥±ä×ª»»µã¼¯ºÏ
+    GradientExtendMode   extend_mode;  ///< ½¥±äÀ©³äÄ£Ê½
 
     RadialGradientStyle(const Point& center, const Vec2& offset, const Vec2& radius, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);
@@ -83,66 +83,66 @@ struct RadialGradientStyle
 
 /**
  * \~chinese
- * @brief ç”»åˆ·
+ * @brief »­Ë¢
  */
 class KGE_API Brush : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºçº¯è‰²ç”»åˆ·
-    /// @param color ç”»åˆ·é¢œè‰²
+    /// @brief ´´½¨´¿É«»­Ë¢
+    /// @param color »­Ë¢ÑÕÉ«
     static BrushPtr Create(const Color& color);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ€§æ¸å˜æ ·å¼
-    /// @param style çº¿æ€§æ¸å˜æ ·å¼
+    /// @brief ´´½¨ÏßĞÔ½¥±äÑùÊ½
+    /// @param style ÏßĞÔ½¥±äÑùÊ½
     static BrushPtr Create(const LinearGradientStyle& style);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå¾„å‘æ¸å˜æ ·å¼
-    /// @param style å¾„å‘æ¸å˜æ ·å¼
+    /// @brief ´´½¨¾¶Ïò½¥±äÑùÊ½
+    /// @param style ¾¶Ïò½¥±äÑùÊ½
     static BrushPtr Create(const RadialGradientStyle& style);
 
     Brush();
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¯è‰²ç”»åˆ·é¢œè‰²
+    /// @brief ÉèÖÃ´¿É«»­Ë¢ÑÕÉ«
     void SetColor(const Color& color);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ€§æ¸å˜æ ·å¼
+    /// @brief ÉèÖÃÏßĞÔ½¥±äÑùÊ½
     void SetStyle(const LinearGradientStyle& style);
 
     /// \~chinese
-    /// @brief è®¾ç½®å¾„å‘æ¸å˜æ ·å¼
+    /// @brief ÉèÖÃ¾¶Ïò½¥±äÑùÊ½
     void SetStyle(const RadialGradientStyle& style);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¹ç†
+    /// @brief ÉèÖÃÎÆÀí
     void SetTexture(TexturePtr texture);
 
     /// \~chinese
-    /// @brief è®¾ç½®äºŒç»´å˜æ¢
+    /// @brief ÉèÖÃ¶şÎ¬±ä»»
     void SetTransform(const Transform& transform);
 
     /// \~chinese
-    /// @brief è®¾ç½®äºŒç»´å˜æ¢
+    /// @brief ÉèÖÃ¶şÎ¬±ä»»
     void SetTransform(const Matrix3x2& transform);
 
 public:
     /// \~chinese
-    /// @brief ç”»åˆ·ç±»å‹
+    /// @brief »­Ë¢ÀàĞÍ
     enum class Type
     {
         None,
-        SolidColor,      ///< çº¯è‰²å¡«å……ç”»åˆ·
-        LinearGradient,  ///< çº¿æ€§æ¸å˜ç”»åˆ·
-        RadialGradient,  ///< å¾„å‘æ¸å˜ç”»åˆ·
-        Texture          ///< çº¹ç†ç”»åˆ·
+        SolidColor,      ///< ´¿É«Ìî³ä»­Ë¢
+        LinearGradient,  ///< ÏßĞÔ½¥±ä»­Ë¢
+        RadialGradient,  ///< ¾¶Ïò½¥±ä»­Ë¢
+        Texture          ///< ÎÆÀí»­Ë¢
     };
 
     /// \~chinese
-    /// @brief è·å–ç”»åˆ·ç±»å‹
+    /// @brief »ñÈ¡»­Ë¢ÀàĞÍ
     Type GetType() const;
 
 private:

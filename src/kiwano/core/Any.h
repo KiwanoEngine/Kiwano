@@ -27,7 +27,7 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief å¯å‚¨å­˜å•ä¸ªä»»æ„å¯¹è±¡çš„å®¹å™¨
+/// @brief ¿É´¢´æµ¥¸öÈÎÒâ¶ÔÏóµÄÈİÆ÷
 class Any
 {
 public:
@@ -72,7 +72,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief è·å–å«æœ‰å¯¹è±¡ç±»å‹
+    /// @brief »ñÈ¡º¬ÓĞ¶ÔÏóÀàĞÍ
     inline const type_info& GetType() const noexcept
     {
         const type_info* const info = GetTypeinfo();
@@ -84,14 +84,14 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ˜¯å¦å«æœ‰å¯¹è±¡
+    /// @brief ÊÇ·ñº¬ÓĞ¶ÔÏó
     inline bool HasValue() const noexcept
     {
         return GetTypeinfo() != nullptr;
     }
 
     /// \~chinese
-    /// @brief ä»å‚æ•°æ„é€ å¯¹è±¡
+    /// @brief ´Ó²ÎÊı¹¹Ôì¶ÔÏó
     template <typename _Ty, typename... _Args>
     void Emplace(_Args&&... args)
     {
@@ -102,7 +102,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief äº¤æ¢å®¹å™¨
+    /// @brief ½»»»ÈİÆ÷
     void Swap(Any& rhs) noexcept
     {
         Any old = std::move(rhs);
@@ -111,14 +111,14 @@ public:
     }
 
     /// \~chinese
-    /// @brief é”€æ¯æ‰€å«å¯¹è±¡
+    /// @brief Ïú»ÙËùº¬¶ÔÏó
     inline void Clear() noexcept
     {
         Tidy();
     }
 
     /// \~chinese
-    /// @brief è½¬æ¢ä¸ºæŒ‡å®šç±»å‹çš„æŒ‡é’ˆ
+    /// @brief ×ª»»ÎªÖ¸¶¨ÀàĞÍµÄÖ¸Õë
     template <typename _Ty>
     _Ty* CastPtr() noexcept
     {
@@ -126,7 +126,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief è½¬æ¢ä¸ºæŒ‡å®šç±»å‹çš„æŒ‡é’ˆ
+    /// @brief ×ª»»ÎªÖ¸¶¨ÀàĞÍµÄÖ¸Õë
     template <typename _Ty>
     const _Ty* CastPtr() const noexcept
     {
@@ -148,8 +148,8 @@ public:
     }
 
     /// \~chinese
-    /// @brief è½¬æ¢ä¸ºæŒ‡å®šç±»å‹
-    /// @throw std::bad_cast è½¬æ¢å¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ×ª»»ÎªÖ¸¶¨ÀàĞÍ
+    /// @throw std::bad_cast ×ª»»Ê§°ÜÊ±Å×³ö
     template <typename _Ty>
     _Ty Cast()
     {
@@ -164,8 +164,8 @@ public:
     }
 
     /// \~chinese
-    /// @brief è½¬æ¢ä¸ºæŒ‡å®šç±»å‹
-    /// @throw std::bad_cast è½¬æ¢å¤±è´¥æ—¶æŠ›å‡º
+    /// @brief ×ª»»ÎªÖ¸¶¨ÀàĞÍ
+    /// @throw std::bad_cast ×ª»»Ê§°ÜÊ±Å×³ö
     template <typename _Ty>
     _Ty Cast() const
     {

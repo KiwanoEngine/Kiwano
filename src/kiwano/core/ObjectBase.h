@@ -30,65 +30,65 @@ KGE_DECLARE_SMART_PTR(ObjectBase);
 
 /**
  * \~chinese
- * @brief åŸºç¡€å¯¹è±¡
+ * @brief »ù´¡¶ÔÏó
  */
 class KGE_API ObjectBase : public RefCounter
 {
 public:
     /// \~chinese
-    /// @brief æ„é€ åŸºç¡€å¯¹è±¡
+    /// @brief ¹¹Ôì»ù´¡¶ÔÏó
     ObjectBase();
 
     virtual ~ObjectBase();
 
     /// \~chinese
-    /// @brief è®¾ç½®å¯¹è±¡å
+    /// @brief ÉèÖÃ¶ÔÏóÃû
     void SetName(const String& name);
 
     /// \~chinese
-    /// @brief è·å–å¯¹è±¡å
+    /// @brief »ñÈ¡¶ÔÏóÃû
     String GetName() const;
 
     /// \~chinese
-    /// @brief åˆ¤æ–­å¯¹è±¡çš„åç§°æ˜¯å¦ç›¸åŒ
-    /// @param name éœ€è¦åˆ¤æ–­çš„åç§°
+    /// @brief ÅĞ¶Ï¶ÔÏóµÄÃû³ÆÊÇ·ñÏàÍ¬
+    /// @param name ĞèÒªÅĞ¶ÏµÄÃû³Æ
     bool IsName(const String& name) const;
 
     /// \~chinese
-    /// @brief è·å–ç”¨æˆ·æ•°æ®
+    /// @brief »ñÈ¡ÓÃ»§Êı¾İ
     const Any& GetUserData() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç”¨æˆ·æ•°æ®
+    /// @brief ÉèÖÃÓÃ»§Êı¾İ
     void SetUserData(const Any& data);
 
     /// \~chinese
-    /// @brief è·å–å¯¹è±¡ID
+    /// @brief »ñÈ¡¶ÔÏóID
     uint32_t GetObjectID() const;
 
     /// \~chinese
-    /// @brief åºåˆ—åŒ–å¯¹è±¡
+    /// @brief ĞòÁĞ»¯¶ÔÏó
     String DumpObject();
 
 public:
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨äº†å†…å­˜æ³„æ¼è¿½è¸ª
+    /// @brief ÊÇ·ñÆôÓÃÁËÄÚ´æĞ¹Â©×·×Ù
     static bool IsTracingLeaks();
 
     /// \~chinese
-    /// @brief å¼€å§‹è¿½è¸ªå†…å­˜æ³„æ¼
+    /// @brief ¿ªÊ¼×·×ÙÄÚ´æĞ¹Â©
     static void StartTracingLeaks();
 
     /// \~chinese
-    /// @brief åœæ­¢è¿½è¸ªå†…å­˜æ³„æ¼
+    /// @brief Í£Ö¹×·×ÙÄÚ´æĞ¹Â©
     static void StopTracingLeaks();
 
     /// \~chinese
-    /// @brief æ‰“å°æ‰€æœ‰è¿½è¸ªä¸­çš„å¯¹è±¡ä¿¡æ¯
+    /// @brief ´òÓ¡ËùÓĞ×·×ÙÖĞµÄ¶ÔÏóĞÅÏ¢
     static void DumpTracingObjects();
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰è¿½è¸ªä¸­çš„å¯¹è±¡
+    /// @brief »ñÈ¡ËùÓĞ×·×ÙÖĞµÄ¶ÔÏó
     static Vector<ObjectBase*>& GetTracingObjects();
 
 private:

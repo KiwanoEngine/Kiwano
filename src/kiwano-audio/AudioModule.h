@@ -32,7 +32,7 @@ namespace audio
 
 /**
  * \~chinese
- * \defgroup Audio éŸ³é¢‘æ¨¡å—
+ * \defgroup Audio ÒôÆµÄ£¿é
  */
 
 /**
@@ -42,7 +42,7 @@ namespace audio
 
 /**
  * \~chinese
- * @brief éŸ³é¢‘æ¨¡å—
+ * @brief ÒôÆµÄ£¿é
  */
 class KGE_API AudioModule
     : public Singleton<AudioModule>
@@ -52,15 +52,15 @@ class KGE_API AudioModule
 
 public:
     /// \~chinese
-    /// @brief å¼€å¯éŸ³é¢‘è®¾å¤‡
+    /// @brief ¿ªÆôÒôÆµÉè±¸
     void Open();
 
     /// \~chinese
-    /// @brief å…³é—­éŸ³é¢‘è®¾å¤‡
+    /// @brief ¹Ø±ÕÒôÆµÉè±¸
     void Close();
 
     /// \~chinese
-    /// @brief ä»è§£ç å™¨æ•°æ®ç¼“å†²ä¸­åˆ›å»ºéŸ³é¢‘å¯¹è±¡
+    /// @brief ´Ó½âÂëÆ÷Êı¾İ»º³åÖĞ´´½¨ÒôÆµ¶ÔÏó
     bool CreateSound(Sound& sound, const Transcoder::Buffer& buffer);
 
 public:

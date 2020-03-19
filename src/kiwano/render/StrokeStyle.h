@@ -32,80 +32,80 @@ KGE_DECLARE_SMART_PTR(StrokeStyle);
  */
 
 /// \~chinese
-/// @brief çº¿æ¡ç«¯ç‚¹æ ·å¼
-/// @details çº¿æ¡ç«¯ç‚¹æ ·å¼è¡¨ç¤ºçº¿æ®µç«¯ç‚¹éƒ¨åˆ†çš„å½¢çŠ¶
+/// @brief ÏßÌõ¶ËµãÑùÊ½
+/// @details ÏßÌõ¶ËµãÑùÊ½±íÊ¾Ïß¶Î¶Ëµã²¿·ÖµÄĞÎ×´
 enum class CapStyle
 {
-    Flat,      ///< æ‰ç«¯ç‚¹
-    Square,    ///< æ–¹å½¢ç«¯ç‚¹ï¼Œæ–¹å½¢çªå‡ºéƒ¨åˆ†ç­‰äºçº¿æ®µå®½åº¦çš„ä¸€åŠ
-    Round,     ///< åœ†å½¢ç«¯ç‚¹ï¼Œåœ†ç›´å¾„ç­‰äºçº¿æ®µå®½åº¦
-    Triangle,  ///< ä¸‰è§’æ ·å¼ï¼Œä¸‰è§’æ–œè¾¹é•¿åº¦ç­‰äºçº¿æ®µå®½åº¦
+    Flat,      ///< ±â¶Ëµã
+    Square,    ///< ·½ĞÎ¶Ëµã£¬·½ĞÎÍ»³ö²¿·ÖµÈÓÚÏß¶Î¿í¶ÈµÄÒ»°ë
+    Round,     ///< Ô²ĞÎ¶Ëµã£¬Ô²Ö±¾¶µÈÓÚÏß¶Î¿í¶È
+    Triangle,  ///< Èı½ÇÑùÊ½£¬Èı½ÇĞ±±ß³¤¶ÈµÈÓÚÏß¶Î¿í¶È
 };
 
 /// \~chinese
-/// @brief çº¿æ¡äº¤ç‚¹æ ·å¼
-/// @details çº¿æ¡äº¤ç‚¹æ ·å¼è¡¨ç¤ºä¸¤æ¡çº¿ç›¸äº¤éƒ¨åˆ†çš„å½¢çŠ¶
+/// @brief ÏßÌõ½»µãÑùÊ½
+/// @details ÏßÌõ½»µãÑùÊ½±íÊ¾Á½ÌõÏßÏà½»²¿·ÖµÄĞÎ×´
 enum class LineJoinStyle
 {
-    Miter,  ///< æ–œåˆ‡æ ·å¼
-    Bevel,  ///< æ–œè§’æ ·å¼
-    Round   ///< åœ†è§’æ ·å¼
+    Miter,  ///< Ğ±ÇĞÑùÊ½
+    Bevel,  ///< Ğ±½ÇÑùÊ½
+    Round   ///< Ô²½ÇÑùÊ½
 };
 
 /// \~chinese
-/// @brief çº¿æ¡è™šçº¿æ ·å¼
-/// @details çº¿æ¡è™šçº¿æ ·å¼è¡¨ç¤ºçº¿æ®µçš„é—´éš™
+/// @brief ÏßÌõĞéÏßÑùÊ½
+/// @details ÏßÌõĞéÏßÑùÊ½±íÊ¾Ïß¶ÎµÄ¼äÏ¶
 enum class DashStyle
 {
-    Solid,       ///< æ— é—´æ–­çš„å®çº¿
-    Dash,        ///< æ–œè§’æ ·å¼
-    Dot,         ///< åœ†è§’æ ·å¼
-    DashDot,     ///< åœ†è§’æ ·å¼
-    DashDotDot,  ///< åœ†è§’æ ·å¼
+    Solid,       ///< ÎŞ¼ä¶ÏµÄÊµÏß
+    Dash,        ///< Ğ±½ÇÑùÊ½
+    Dot,         ///< Ô²½ÇÑùÊ½
+    DashDot,     ///< Ô²½ÇÑùÊ½
+    DashDotDot,  ///< Ô²½ÇÑùÊ½
 };
 
 /// \~chinese
-/// @brief çº¿æ¡æ ·å¼
+/// @brief ÏßÌõÑùÊ½
 class StrokeStyle : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
-    /// @param width çº¿æ¡å®½åº¦
-    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
-    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @brief ´´½¨ÏßÌõÑùÊ½
+    /// @param width ÏßÌõ¿í¶È
+    /// @param cap ÏßÌõ¶ËµãÑùÊ½
+    /// @param line_join ÏßÌõ½»µãÑùÊ½
     static StrokeStylePtr Create(float width, CapStyle cap = CapStyle::Flat,
                                  LineJoinStyle line_join = LineJoinStyle::Miter);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
-    /// @param width çº¿æ¡å®½åº¦
-    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
-    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
-    /// @param dash çº¿æ¡è™šçº¿æ ·å¼
-    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
+    /// @brief ´´½¨ÏßÌõÑùÊ½
+    /// @param width ÏßÌõ¿í¶È
+    /// @param cap ÏßÌõ¶ËµãÑùÊ½
+    /// @param line_join ÏßÌõ½»µãÑùÊ½
+    /// @param dash ÏßÌõĞéÏßÑùÊ½
+    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
     static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash,
                                  float dash_offset = 0.0f);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
-    /// @param width çº¿æ¡å®½åº¦
-    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
-    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
-    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
-    /// @param dash_size çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
-    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
+    /// @brief ´´½¨ÏßÌõÑùÊ½
+    /// @param width ÏßÌõ¿í¶È
+    /// @param cap ÏßÌõ¶ËµãÑùÊ½
+    /// @param line_join ÏßÌõ½»µãÑùÊ½
+    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
+    /// @param dash_size ÏßÌõĞéÏßÊı×é´óĞ¡
+    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
     static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
                                  size_t dash_size, float dash_offset = 0.0f);
 
     /// \~chinese
-    /// @brief åˆ›å»ºçº¿æ¡æ ·å¼
-    /// @tparam _DashSize çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
-    /// @param width çº¿æ¡å®½åº¦
-    /// @param cap çº¿æ¡ç«¯ç‚¹æ ·å¼
-    /// @param line_join çº¿æ¡äº¤ç‚¹æ ·å¼
-    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
-    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
+    /// @brief ´´½¨ÏßÌõÑùÊ½
+    /// @tparam _DashSize ÏßÌõĞéÏßÊı×é´óĞ¡
+    /// @param width ÏßÌõ¿í¶È
+    /// @param cap ÏßÌõ¶ËµãÑùÊ½
+    /// @param line_join ÏßÌõ½»µãÑùÊ½
+    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
+    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
     template <size_t _DashSize>
     static inline StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join,
                                         float (&dash_array)[_DashSize], float dash_offset = 0.0f)
@@ -116,59 +116,59 @@ public:
     StrokeStyle();
 
     /// \~chinese
-    /// @brief è·å–çº¿æ¡å®½åº¦
-    /// @param width çº¿æ¡å®½åº¦
+    /// @brief »ñÈ¡ÏßÌõ¿í¶È
+    /// @param width ÏßÌõ¿í¶È
     float GetStrokeWidth() const;
 
     /// \~chinese
-    /// @brief è·å–çº¿æ¡ç«¯ç‚¹æ ·å¼
+    /// @brief »ñÈ¡ÏßÌõ¶ËµãÑùÊ½
     CapStyle GetCapStyle() const;
 
     /// \~chinese
-    /// @brief è·å–çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @brief »ñÈ¡ÏßÌõ½»µãÑùÊ½
     LineJoinStyle GetLineJoinStyle() const;
 
     /// \~chinese
-    /// @brief è·å–çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
+    /// @brief »ñÈ¡ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
     const Vector<float>& GetDashArray() const;
 
     /// \~chinese
-    /// @brief è·å–è™šçº¿åç§»é‡
+    /// @brief »ñÈ¡ĞéÏßÆ«ÒÆÁ¿
     float GetDashOffset() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ¡å®½åº¦
-    /// @param width çº¿æ¡å®½åº¦
+    /// @brief ÉèÖÃÏßÌõ¿í¶È
+    /// @param width ÏßÌõ¿í¶È
     void SetStrokeWidth(float width);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ¡ç«¯ç‚¹æ ·å¼
+    /// @brief ÉèÖÃÏßÌõ¶ËµãÑùÊ½
     void SetCapStyle(CapStyle cap);
 
     /// \~chinese
-    /// @brief è®¾ç½®çº¿æ¡äº¤ç‚¹æ ·å¼
+    /// @brief ÉèÖÃÏßÌõ½»µãÑùÊ½
     void SetLineJoinStyle(LineJoinStyle line_join);
 
     /// \~chinese
-    /// @brief è®¾ç½®è™šçº¿æ ·å¼
-    /// @param dash_style çº¿æ¡è™šçº¿æ ·å¼
+    /// @brief ÉèÖÃĞéÏßÑùÊ½
+    /// @param dash_style ÏßÌõĞéÏßÑùÊ½
     void SetDashStyle(DashStyle dash_style);
 
     /// \~chinese
-    /// @brief è®¾ç½®è™šçº¿æ ·å¼
-    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
+    /// @brief ÉèÖÃĞéÏßÑùÊ½
+    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
     void SetDashStyle(const Vector<float>& dash_array);
 
     /// \~chinese
-    /// @brief è®¾ç½®è™šçº¿æ ·å¼
-    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
-    /// @param dash_size çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
+    /// @brief ÉèÖÃĞéÏßÑùÊ½
+    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
+    /// @param dash_size ÏßÌõĞéÏßÊı×é´óĞ¡
     void SetDashStyle(const float* dash_array, size_t dash_size);
 
     /// \~chinese
-    /// @brief è®¾ç½®è™šçº¿æ ·å¼
-    /// @tparam _DashSize çº¿æ¡è™šçº¿æ•°ç»„å¤§å°
-    /// @param dash_array çº¿æ¡è™šçº¿çš„é•¿åº¦ä¸é—´éš™æ•°ç»„
+    /// @brief ÉèÖÃĞéÏßÑùÊ½
+    /// @tparam _DashSize ÏßÌõĞéÏßÊı×é´óĞ¡
+    /// @param dash_array ÏßÌõĞéÏßµÄ³¤¶ÈÓë¼äÏ¶Êı×é
     template <size_t _DashSize>
     inline void SetDashStyle(float (&dash_array)[_DashSize])
     {
@@ -176,8 +176,8 @@ public:
     }
 
     /// \~chinese
-    /// @brief è®¾ç½®è™šçº¿åç§»é‡
-    /// @param dash_offset çº¿æ¡è™šçº¿åç§»é‡
+    /// @brief ÉèÖÃĞéÏßÆ«ÒÆÁ¿
+    /// @param dash_offset ÏßÌõĞéÏßÆ«ÒÆÁ¿
     void SetDashOffset(float dash_offset);
 
 private:

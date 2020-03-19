@@ -35,12 +35,12 @@ class EventDispatcher;
 KGE_DECLARE_SMART_PTR(EventListener);
 
 /// \~chinese
-/// @brief ç›‘å¬å™¨åˆ—è¡¨
+/// @brief ¼àÌıÆ÷ÁĞ±í
 typedef IntrusiveList<EventListenerPtr> ListenerList;
 
 /**
  * \~chinese
- * @brief äº‹ä»¶ç›‘å¬å™¨
+ * @brief ÊÂ¼ş¼àÌıÆ÷
  */
 class KGE_API EventListener
     : public ObjectBase
@@ -51,26 +51,26 @@ class KGE_API EventListener
 
 public:
     /// \~chinese
-    /// @brief ç›‘å¬å™¨å›è°ƒå‡½æ•°
+    /// @brief ¼àÌıÆ÷»Øµ÷º¯Êı
     using Callback = Function<void(Event*)>;
 
     /// \~chinese
-    /// @brief åˆ›å»ºç›‘å¬å™¨
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief ´´½¨¼àÌıÆ÷
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     static EventListenerPtr Create(EventType type, const Callback& callback);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç›‘å¬å™¨
-    /// @param name ç›‘å¬å™¨åç§°
-    /// @param type ç›‘å¬çš„äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief ´´½¨¼àÌıÆ÷
+    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     static EventListenerPtr Create(const String& name, EventType type, const Callback& callback);
 
     /// \~chinese
-    /// @brief åˆ›å»ºç›‘å¬å™¨
-    /// @tparam _EventTy äº‹ä»¶ç±»å‹
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief ´´½¨¼àÌıÆ÷
+    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
+    /// @param callback »Øµ÷º¯Êı
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     static inline EventListenerPtr Create(const Callback& callback)
     {
@@ -78,10 +78,10 @@ public:
     }
 
     /// \~chinese
-    /// @brief åˆ›å»ºç›‘å¬å™¨
-    /// @tparam _EventTy äº‹ä»¶ç±»å‹
-    /// @param name ç›‘å¬å™¨åç§°
-    /// @param callback å›è°ƒå‡½æ•°
+    /// @brief ´´½¨¼àÌıÆ÷
+    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
+    /// @param name ¼àÌıÆ÷Ãû³Æ
+    /// @param callback »Øµ÷º¯Êı
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     static inline EventListenerPtr Create(const String& name, const Callback& callback)
     {
@@ -93,53 +93,53 @@ public:
     virtual ~EventListener();
 
     /// \~chinese
-    /// @brief å¯åŠ¨ç›‘å¬å™¨
+    /// @brief Æô¶¯¼àÌıÆ÷
     void Start();
 
     /// \~chinese
-    /// @brief åœæ­¢ç›‘å¬å™¨
+    /// @brief Í£Ö¹¼àÌıÆ÷
     void Stop();
 
     /// \~chinese
-    /// @brief ç§»é™¤ç›‘å¬å™¨
+    /// @brief ÒÆ³ı¼àÌıÆ÷
     void Remove();
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ­£åœ¨è¿è¡Œ
+    /// @brief ÊÇ·ñÕıÔÚÔËĞĞ
     bool IsRunning() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç§»é™¤
+    /// @brief ÊÇ·ñ¿ÉÒÆ³ı
     bool IsRemoveable() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¼€å¯æ¶ˆæ¯åæ²¡
+    /// @brief ÊÇ·ñ¿ªÆôÏûÏ¢ÍÌÃ»
     bool IsSwallowEnabled() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¶ˆæ¯åæ²¡åŠŸèƒ½
-    /// @param enabled æ˜¯å¦å¯ç”¨
+    /// @brief ÉèÖÃÏûÏ¢ÍÌÃ»¹¦ÄÜ
+    /// @param enabled ÊÇ·ñÆôÓÃ
     void SetSwallowEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief è·å–å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡»Øµ÷º¯Êı
     const Callback& GetCallback() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ»Øµ÷º¯Êı
     void SetCallback(const Callback& cb);
 
     /// \~chinese
-    /// @brief è·å–ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @brief »ñÈ¡¼àÌıµÄÊÂ¼şÀàĞÍ
     EventType GetEventType() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›‘å¬çš„äº‹ä»¶ç±»å‹
+    /// @brief ÉèÖÃ¼àÌıµÄÊÂ¼şÀàĞÍ
     void SetEventType(const EventType& type);
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›‘å¬çš„äº‹ä»¶ç±»å‹
-    /// @tparam _EventTy äº‹ä»¶ç±»å‹
+    /// @brief ÉèÖÃ¼àÌıµÄÊÂ¼şÀàĞÍ
+    /// @tparam _EventTy ÊÂ¼şÀàĞÍ
     template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
     inline void SetEventType()
     {
@@ -147,7 +147,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief æ¥æ”¶æ¶ˆæ¯
+    /// @brief ½ÓÊÕÏûÏ¢
     void Receive(Event* evt);
 
 private:

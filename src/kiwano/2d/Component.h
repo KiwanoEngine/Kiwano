@@ -33,12 +33,12 @@ class Event;
 KGE_DECLARE_SMART_PTR(Component);
 
 /// \~chinese
-/// @brief ç»„ä»¶åˆ—è¡¨
+/// @brief ×é¼şÁĞ±í
 typedef IntrusiveList<ComponentPtr> ComponentList;
 
 /**
  * \~chinese
- * @brief ç»„ä»¶
+ * @brief ×é¼ş
  */
 class KGE_API Component
     : public ObjectBase
@@ -49,19 +49,19 @@ class KGE_API Component
 
 public:
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨ç»„ä»¶
+    /// @brief ÊÇ·ñÆôÓÃ×é¼ş
     bool IsEnable() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç»„ä»¶å¯ç”¨æˆ–ç¦ç”¨
+    /// @brief ÉèÖÃ×é¼şÆôÓÃ»ò½ûÓÃ
     void SetEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief è·å–ç»‘å®šçš„è§’è‰²
+    /// @brief »ñÈ¡°ó¶¨µÄ½ÇÉ«
     Actor* GetBoundActor() const;
 
     /// \~chinese
-    /// @brief ä»è§’è‰²ä¸­ç§»é™¤
+    /// @brief ´Ó½ÇÉ«ÖĞÒÆ³ı
     void RemoveFromActor();
 
 protected:
@@ -70,23 +70,23 @@ protected:
     virtual ~Component();
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–ç»„ä»¶
+    /// @brief ³õÊ¼»¯×é¼ş
     virtual void InitComponent(Actor* actor);
 
     /// \~chinese
-    /// @brief é”€æ¯ç»„ä»¶
+    /// @brief Ïú»Ù×é¼ş
     virtual void DestroyComponent();
 
     /// \~chinese
-    /// @brief æ›´æ–°ç»„ä»¶
+    /// @brief ¸üĞÂ×é¼ş
     virtual void OnUpdate(Duration dt);
 
     /// \~chinese
-    /// @brief æ¸²æŸ“ç»„ä»¶
+    /// @brief äÖÈ¾×é¼ş
     virtual void OnRender(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief å¤„ç†è§’è‰²äº‹ä»¶
+    /// @brief ´¦Àí½ÇÉ«ÊÂ¼ş
     virtual void HandleEvent(Event* evt);
 
 private:

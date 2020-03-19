@@ -32,14 +32,14 @@ KGE_DECLARE_SMART_PTR(Animation);
  */
 
 /// \~chinese
-/// @brief å¸§åŠ¨ç”»
+/// @brief Ö¡¶¯»­
 class KGE_API Animation : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå¸§åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param[in] frame_seq åºåˆ—å¸§
+    /// @brief ´´½¨Ö¡¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param[in] frame_seq ĞòÁĞÖ¡
     static AnimationPtr Create(Duration duration, FrameSequencePtr frame_seq);
 
     Animation();
@@ -47,20 +47,20 @@ public:
     virtual ~Animation();
 
     /// \~chinese
-    /// @brief è·å–åºåˆ—å¸§
+    /// @brief »ñÈ¡ĞòÁĞÖ¡
     FrameSequencePtr GetFrameSequence() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åºåˆ—å¸§
-    /// @param[in] frame_seq åºåˆ—å¸§
+    /// @brief ÉèÖÃĞòÁĞÖ¡
+    /// @param[in] frame_seq ĞòÁĞÖ¡
     void SetFrameSequence(FrameSequencePtr frame_seq);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:

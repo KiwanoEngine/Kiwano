@@ -28,24 +28,24 @@ namespace imgui
 KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
 /// \~chinese
-/// @brief ImGuiç®¡é“
+/// @brief ImGui¹ÜµÀ
 using ImGuiPipeline = Function<void()>;
 
 /**
  * \~chinese
- * @brief ImGuiå›¾å±‚
+ * @brief ImGuiÍ¼²ã
  */
 class ImGuiLayer : public LayerActor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºImGuiå›¾å±‚
+    /// @brief ´´½¨ImGuiÍ¼²ã
     static ImGuiLayerPtr Create();
 
     /// \~chinese
-    /// @brief åˆ›å»ºImGuiå›¾å±‚
-    /// @param name å…ƒç´ åç§°
-    /// @param item ç®¡é“
+    /// @brief ´´½¨ImGuiÍ¼²ã
+    /// @param name ÔªËØÃû³Æ
+    /// @param item ¹ÜµÀ
     static ImGuiLayerPtr Create(const String& name, const ImGuiPipeline& item);
 
     ImGuiLayer();
@@ -53,19 +53,19 @@ public:
     virtual ~ImGuiLayer();
 
     /// \~chinese
-    /// @brief æ·»åŠ  ImGui å…ƒç´ 
-    /// @param name å…ƒç´ åç§°
-    /// @param item ç®¡é“
+    /// @brief Ìí¼Ó ImGui ÔªËØ
+    /// @param name ÔªËØÃû³Æ
+    /// @param item ¹ÜµÀ
     void AddItem(const String& name, const ImGuiPipeline& item);
 
     /// \~chinese
-    /// @brief ç§»é™¤ ImGui å…ƒç´ 
-    /// @param name å…ƒç´ åç§°
+    /// @brief ÒÆ³ı ImGui ÔªËØ
+    /// @param name ÔªËØÃû³Æ
     void RemoveItem(const String& name);
 
-    // ç§»é™¤æ‰€æœ‰å…ƒç´ 
+    // ÒÆ³ıËùÓĞÔªËØ
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰å…ƒç´ 
+    /// @brief ÒÆ³ıËùÓĞÔªËØ
     void RemoveAllItems();
 
 public:

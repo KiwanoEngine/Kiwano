@@ -31,7 +31,7 @@ namespace kiwano
  */
 
 /// \~chinese
-/// @brief 浜嬩欢绫诲瀷
+/// @brief 事件类型
 class EventType : public std::type_index
 {
     class Dummy
@@ -40,7 +40,7 @@ class EventType : public std::type_index
 
 public:
     /// \~chinese
-    /// @brief 鏋勫缓浜嬩欢绫诲瀷
+    /// @brief 构建事件类型
     EventType();
 
     using std::type_index::type_index;

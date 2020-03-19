@@ -35,18 +35,18 @@ KGE_DECLARE_SMART_PTR(Fixture);
  */
 
 /// \~chinese
-/// @brief ç‰©ç†å¤¹å…·
+/// @brief ÎïÀí¼Ğ¾ß
 class KGE_API Fixture : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief å¤¹å…·å‚æ•°
+    /// @brief ¼Ğ¾ß²ÎÊı
     struct Param
     {
-        float density     = 0.0f;   ///< å¯†åº¦
-        float friction    = 0.2f;   ///< æ‘©æ“¦åŠ›
-        float restitution = 0.0f;   ///< å¼¹æ€§æ¢å¤
-        bool  is_sensor   = false;  ///< æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
+        float density     = 0.0f;   ///< ÃÜ¶È
+        float friction    = 0.2f;   ///< Ä¦²ÁÁ¦
+        float restitution = 0.0f;   ///< µ¯ĞÔ»Ö¸´
+        bool  is_sensor   = false;  ///< ÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
 
         Param() {}
 
@@ -60,39 +60,39 @@ public:
     };
 
     /// \~chinese
-    /// @brief åˆ›å»ºåœ†å½¢å¤¹å…·
-    /// @param param å¤¹å…·å‚æ•°
-    /// @param radius åœ†å½¢åŠå¾„
-    /// @param offset åç§»é‡
+    /// @brief ´´½¨Ô²ĞÎ¼Ğ¾ß
+    /// @param param ¼Ğ¾ß²ÎÊı
+    /// @param radius Ô²ĞÎ°ë¾¶
+    /// @param offset Æ«ÒÆÁ¿
     static FixturePtr CreateCircle(const Param& param, float radius, const Point& offset = Point());
 
     /// \~chinese
-    /// @brief åˆ›å»ºçŸ©å½¢å¤¹å…·
-    /// @param param å¤¹å…·å‚æ•°
-    /// @param size çŸ©å½¢å¤§å°
-    /// @param offset åç§»é‡
-    /// @param rotation æ—‹è½¬è§’åº¦
+    /// @brief ´´½¨¾ØĞÎ¼Ğ¾ß
+    /// @param param ¼Ğ¾ß²ÎÊı
+    /// @param size ¾ØĞÎ´óĞ¡
+    /// @param offset Æ«ÒÆÁ¿
+    /// @param rotation Ğı×ª½Ç¶È
     static FixturePtr CreateRect(const Param& param, const Size& size, const Point& offset = Point(),
                                  float rotation = 0.f);
 
     /// \~chinese
-    /// @brief åˆ›å»ºå¤šè¾¹å½¢å¤¹å…·
-    /// @param param å¤¹å…·å‚æ•°
-    /// @param vertexs å¤šè¾¹å½¢é¡¶ç‚¹
+    /// @brief ´´½¨¶à±ßĞÎ¼Ğ¾ß
+    /// @param param ¼Ğ¾ß²ÎÊı
+    /// @param vertexs ¶à±ßĞÎ¶¥µã
     static FixturePtr CreatePolygon(const Param& param, const Vector<Point>& vertexs);
 
     /// \~chinese
-    /// @brief åˆ›å»ºè¾¹å¤¹å…·
-    /// @param param å¤¹å…·å‚æ•°
-    /// @param p1 è¾¹çš„èµ·ç‚¹
-    /// @param p2 è¾¹çš„ç»ˆç‚¹
+    /// @brief ´´½¨±ß¼Ğ¾ß
+    /// @param param ¼Ğ¾ß²ÎÊı
+    /// @param p1 ±ßµÄÆğµã
+    /// @param p2 ±ßµÄÖÕµã
     static FixturePtr CreateEdge(const Param& param, const Point& p1, const Point& p2);
 
     /// \~chinese
-    /// @brief åˆ›å»ºé“¾æ¡å¤¹å…·
-    /// @param param å¤¹å…·å‚æ•°
-    /// @param vertexs é“¾æ¡é¡¶ç‚¹
-    /// @param loop æ˜¯å¦è¿æ¥é“¾æ¡çš„èµ·ç‚¹å’Œç»ˆç‚¹
+    /// @brief ´´½¨Á´Ìõ¼Ğ¾ß
+    /// @param param ¼Ğ¾ß²ÎÊı
+    /// @param vertexs Á´Ìõ¶¥µã
+    /// @param loop ÊÇ·ñÁ¬½ÓÁ´ÌõµÄÆğµãºÍÖÕµã
     static FixturePtr CreateChain(const Param& param, const Vector<Point>& vertices, bool loop = false);
 
     Fixture();
@@ -100,68 +100,68 @@ public:
     virtual ~Fixture();
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–å¤¹å…·
+    /// @brief ³õÊ¼»¯¼Ğ¾ß
     bool Init(PhysicBodyPtr body);
 
     /// \~chinese
-    /// @brief åˆå§‹åŒ–å¤¹å…·
+    /// @brief ³õÊ¼»¯¼Ğ¾ß
     bool Init(PhysicBody* body);
 
     /// \~chinese
-    /// @brief è·å–å¤¹å…·æ‰€åœ¨çš„ç‰©ä½“
+    /// @brief »ñÈ¡¼Ğ¾ßËùÔÚµÄÎïÌå
     PhysicBody* GetBody() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
+    /// @brief ÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
     bool IsSensor() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¤¹å…·æ˜¯å¦æ˜¯æ¥è§¦ä¼ æ„Ÿå™¨
-    /// @details æ¥è§¦ä¼ æ„Ÿå™¨åªä¼šäº§ç”Ÿç‰©ç†æ¥è§¦ï¼Œè€Œä¸ä¼šå½±å“ç‰©ä½“è¿åŠ¨
+    /// @brief ÉèÖÃ¼Ğ¾ßÊÇ·ñÊÇ½Ó´¥´«¸ĞÆ÷
+    /// @details ½Ó´¥´«¸ĞÆ÷Ö»»á²úÉúÎïÀí½Ó´¥£¬¶ø²»»áÓ°ÏìÎïÌåÔË¶¯
     void SetSensor(bool sensor);
 
     /// \~chinese
-    /// @brief è·å–å¤¹å…·çš„è´¨é‡æ•°æ®
+    /// @brief »ñÈ¡¼Ğ¾ßµÄÖÊÁ¿Êı¾İ
     void GetMassData(float* mass, Point* center, float* inertia) const;
 
     /// \~chinese
-    /// @brief è·å–å¯†åº¦
+    /// @brief »ñÈ¡ÃÜ¶È
     float GetDensity() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¯†åº¦
+    /// @brief ÉèÖÃÃÜ¶È
     void SetDensity(float density);
 
     /// \~chinese
-    /// @brief è·å–æ‘©æ“¦åŠ› [N]
+    /// @brief »ñÈ¡Ä¦²ÁÁ¦ [N]
     float GetFriction() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ‘©æ“¦åŠ› [N]
+    /// @brief ÉèÖÃÄ¦²ÁÁ¦ [N]
     void SetFriction(float friction);
 
     /// \~chinese
-    /// @brief è·å–å¼¹æ€§æ¢å¤
+    /// @brief »ñÈ¡µ¯ĞÔ»Ö¸´
     float GetRestitution() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å¼¹æ€§æ¢å¤
+    /// @brief ÉèÖÃµ¯ĞÔ»Ö¸´
     void SetRestitution(float restitution);
 
     /// \~chinese
-    /// @brief ç‚¹æµ‹è¯•
+    /// @brief µã²âÊÔ
     bool TestPoint(const Point& p) const;
 
     /// \~chinese
-    /// @brief é”€æ¯å¤¹å…·
+    /// @brief Ïú»Ù¼Ğ¾ß
     void Destroy();
 
     /// \~chinese
-    /// @brief è·å–b2Fixture
+    /// @brief »ñÈ¡b2Fixture
     b2Fixture* GetB2Fixture() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®b2Fixture
+    /// @brief ÉèÖÃb2Fixture
     void SetB2Fixture(b2Fixture* fixture);
 
     bool operator==(const Fixture& rhs) const;
@@ -174,7 +174,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ç‰©ç†å¤¹å…·åˆ—è¡¨
+/// @brief ÎïÀí¼Ğ¾ßÁĞ±í
 class FixtureList
 {
     template <typename _Ty>

@@ -25,94 +25,94 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief æ—¶é—´æ®µ
+ * @brief Ê±¼ä¶Î
  * @par
- *   æ—¶é—´æ®µè¡¨ç¤ºæ³•:
+ *   Ê±¼ä¶Î±íÊ¾·¨:
  *   @code
- *     time::Second * 5  // 5 ç§’
- *     time::Hour * 1.5  // 1.5 å°æ—¶
- *     time::Hour * 3 + time::Minute * 45 + time::Second * 15  // 3 å°æ—¶ 45 åˆ† 15
- * ç§’
+ *     time::Second * 5  // 5 Ãë
+ *     time::Hour * 1.5  // 1.5 Ğ¡Ê±
+ *     time::Hour * 3 + time::Minute * 45 + time::Second * 15  // 3 Ğ¡Ê± 45 ·Ö 15
+ * Ãë
  *   @endcode
- *   åœ¨ VS2015 åŠæ›´é«˜ç‰ˆæœ¬å¯ä»¥ä½¿ç”¨ time literals:
+ *   ÔÚ VS2015 ¼°¸ü¸ß°æ±¾¿ÉÒÔÊ¹ÓÃ time literals:
  *   @code
  *     using namespace kiwano;
- *     5_sec                     // 5 ç§’
- *     1.5_hour                  // 1.5 å°æ—¶
- *     3_hour + 45_min + 15_sec  // 3 å°æ—¶ 45 åˆ† 15 ç§’
+ *     5_sec                     // 5 Ãë
+ *     1.5_hour                  // 1.5 Ğ¡Ê±
+ *     3_hour + 45_min + 15_sec  // 3 Ğ¡Ê± 45 ·Ö 15 Ãë
  *   @endcode
  */
 struct KGE_API Duration
 {
     /// \~chinese
-    /// @brief æ„é€ æ—¶é—´æ®µ
+    /// @brief ¹¹ÔìÊ±¼ä¶Î
     Duration();
 
     /// \~chinese
-    /// @brief æ„é€ æ—¶é—´æ®µ
-    /// @param milliseconds æ¯«ç§’æ•°
+    /// @brief ¹¹ÔìÊ±¼ä¶Î
+    /// @param milliseconds ºÁÃëÊı
     Duration(long milliseconds);
 
     /// \~chinese
-    /// @brief è·å–æ¯«ç§’æ•°
+    /// @brief »ñÈ¡ºÁÃëÊı
     long Milliseconds() const;
 
     /// \~chinese
-    /// @brief è·å–ç§’æ•°
+    /// @brief »ñÈ¡ÃëÊı
     float Seconds() const;
 
     /// \~chinese
-    /// @brief è·å–åˆ†é’Ÿæ•°
+    /// @brief »ñÈ¡·ÖÖÓÊı
     float Minutes() const;
 
     /// \~chinese
-    /// @brief è·å–å°æ—¶æ•°
+    /// @brief »ñÈ¡Ğ¡Ê±Êı
     float Hours() const;
 
     /// \~chinese
-    /// @brief æ—¶é•¿æ˜¯å¦æ˜¯é›¶
-    /// @return è‹¥æ—¶é•¿æ˜¯é›¶ï¼Œè¿”å›true
+    /// @brief Ê±³¤ÊÇ·ñÊÇÁã
+    /// @return ÈôÊ±³¤ÊÇÁã£¬·µ»Øtrue
     bool IsZero() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¯«ç§’æ•°
-    /// @param ms æ¯«ç§’æ•°
+    /// @brief ÉèÖÃºÁÃëÊı
+    /// @param ms ºÁÃëÊı
     void SetMilliseconds(long ms);
 
     /// \~chinese
-    /// @brief è®¾ç½®ç§’æ•°
-    /// @param seconds ç§’æ•°
+    /// @brief ÉèÖÃÃëÊı
+    /// @param seconds ÃëÊı
     void SetSeconds(float seconds);
 
     /// \~chinese
-    /// @brief è®¾ç½®åˆ†é’Ÿæ•°
-    /// @param minutes åˆ†é’Ÿæ•°
+    /// @brief ÉèÖÃ·ÖÖÓÊı
+    /// @param minutes ·ÖÖÓÊı
     void SetMinutes(float minutes);
 
     /// \~chinese
-    /// @brief è®¾ç½®å°æ—¶æ•°
-    /// @param hours å°æ—¶æ•°
+    /// @brief ÉèÖÃĞ¡Ê±Êı
+    /// @param hours Ğ¡Ê±Êı
     void SetHours(float hours);
 
     /// \~chinese
-    /// @brief è½¬ä¸ºå­—ç¬¦ä¸²
+    /// @brief ×ªÎª×Ö·û´®
     String ToString() const;
 
     /// \~chinese
-    /// @brief è§£ææ—¶é—´æ®µå­—ç¬¦ä¸²
-    /// @param str æ—¶é—´æ®µå­—ç¬¦ä¸²
+    /// @brief ½âÎöÊ±¼ä¶Î×Ö·û´®
+    /// @param str Ê±¼ä¶Î×Ö·û´®
     /// @details
-    ///   æ—¶é—´æ®µå­—ç¬¦ä¸²å…è®¸æ˜¯æœ‰ç¬¦å·çš„æµ®ç‚¹æ•°, å¹¶ä¸”å¸¦æœ‰æ—¶é—´å•ä½åç¼€
-    ///   ä¾‹å¦‚: "300ms", "-1.5h", "2h45m"
-    ///   å…è®¸çš„æ—¶é—´å•ä½æœ‰ "ms", "s", "m", "h"
-    /// @return è§£æå‡ºçš„æ—¶é—´æ®µ
-    /// @throw kiwano::RuntimeError ä¼ å…¥ä¸€ä¸ªä¸åˆæ³•çš„æ ¼å¼æ—¶æŠ›å‡º
+    ///   Ê±¼ä¶Î×Ö·û´®ÔÊĞíÊÇÓĞ·ûºÅµÄ¸¡µãÊı, ²¢ÇÒ´øÓĞÊ±¼äµ¥Î»ºó×º
+    ///   ÀıÈç: "300ms", "-1.5h", "2h45m"
+    ///   ÔÊĞíµÄÊ±¼äµ¥Î»ÓĞ "ms", "s", "m", "h"
+    /// @return ½âÎö³öµÄÊ±¼ä¶Î
+    /// @throw kiwano::RuntimeError ´«ÈëÒ»¸ö²»ºÏ·¨µÄ¸ñÊ½Ê±Å×³ö
     static Duration Parse(const String& str);
 
-    static const Duration Ms;      ///< æ¯«ç§’
-    static const Duration Second;  ///< ç§’
-    static const Duration Minute;  ///< åˆ†é’Ÿ
-    static const Duration Hour;    ///< å°æ—¶
+    static const Duration Ms;      ///< ºÁÃë
+    static const Duration Second;  ///< Ãë
+    static const Duration Minute;  ///< ·ÖÖÓ
+    static const Duration Hour;    ///< Ğ¡Ê±
 
     bool operator==(const Duration&) const;
     bool operator!=(const Duration&) const;
@@ -158,28 +158,28 @@ private:
 
 /**
  * \~chinese
- * @brief æ—¶é—´
- * @par ç¤ºä¾‹ï¼š
+ * @brief Ê±¼ä
+ * @par Ê¾Àı£º
  * @code
- *   // ä¸¤æ—¶é—´ç›¸å‡, å¯å¾—åˆ°ä¸€ä¸ª Duration å¯¹è±¡
+ *   // Á½Ê±¼äÏà¼õ, ¿ÉµÃµ½Ò»¸ö Duration ¶ÔÏó
  *   Time t1 = Time::Now();
- *   // ç­‰å¾…ä¸€æ®µæ—¶é—´å
+ *   // µÈ´ıÒ»¶ÎÊ±¼äºó
  *   Time t2 = Time::Now();
- *   int ms = (t2 - t1).Milliseconds();  // è·å–ä¸¤æ—¶é—´ç›¸å·®çš„æ¯«ç§’æ•°
+ *   int ms = (t2 - t1).Milliseconds();  // »ñÈ¡Á½Ê±¼äÏà²îµÄºÁÃëÊı
  * @endcode
- * @note æ—¶é—´ç‚¹ä¸ç³»ç»Ÿæ—¶é’Ÿæ— å…³ï¼Œå› æ­¤ä¸èƒ½å°†æ—¶é—´ç‚¹è½¬åŒ–ä¸ºæ—¶åˆ†ç§’
+ * @note Ê±¼äµãÓëÏµÍ³Ê±ÖÓÎŞ¹Ø£¬Òò´Ë²»ÄÜ½«Ê±¼äµã×ª»¯ÎªÊ±·ÖÃë
  */
 struct KGE_API Time
 {
     Time();
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ˜¯é›¶æ—¶
-    /// @return è‹¥æ˜¯é›¶æ—¶ï¼Œè¿”å›true
+    /// @brief ÊÇ·ñÊÇÁãÊ±
+    /// @return ÈôÊÇÁãÊ±£¬·µ»Øtrue
     bool IsZero() const;
 
     /// \~chinese
-    /// @brief è·å–å½“å‰æ—¶é—´
+    /// @brief »ñÈ¡µ±Ç°Ê±¼ä
     static Time Now() noexcept;
 
     const Duration operator-(const Time&) const;

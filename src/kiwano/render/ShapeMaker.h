@@ -32,22 +32,22 @@ KGE_DECLARE_SMART_PTR(ShapeMaker);
  */
 
 /// \~chinese
-/// @brief å½¢çŠ¶åˆå¹¶æ–¹å¼
+/// @brief ĞÎ×´ºÏ²¢·½Ê½
 enum class CombineMode
 {
-    Union,      ///< å¹¶é›† (A + B)
-    Intersect,  ///< äº¤é›† (A + B)
-    Xor,        ///< å¯¹ç§°å·®é›† ((A - B) + (B - A))
-    Exclude     ///< å·®é›† (A - B)
+    Union,      ///< ²¢¼¯ (A + B)
+    Intersect,  ///< ½»¼¯ (A + B)
+    Xor,        ///< ¶Ô³Æ²î¼¯ ((A - B) + (B - A))
+    Exclude     ///< ²î¼¯ (A - B)
 };
 
 /// \~chinese
-/// @brief å½¢çŠ¶ç”Ÿæˆå™¨
+/// @brief ĞÎ×´Éú³ÉÆ÷
 class KGE_API ShapeMaker : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºå½¢çŠ¶ç”Ÿæˆå™¨
+    /// @brief ´´½¨ĞÎ×´Éú³ÉÆ÷
     static ShapeMakerPtr Create();
 
     ShapeMaker();
@@ -55,83 +55,83 @@ public:
     ~ShapeMaker();
 
     /// \~chinese
-    /// @brief è·å–ç”Ÿæˆçš„å½¢çŠ¶
+    /// @brief »ñÈ¡Éú³ÉµÄĞÎ×´
     ShapePtr GetShape();
 
     /// \~chinese
-    /// @brief æ¸…ç©ºå›¾å½¢
+    /// @brief Çå¿ÕÍ¼ĞÎ
     void Clear();
 
     /// \~chinese
-    /// @brief å¼€å§‹æ·»åŠ è·¯å¾„å¹¶æ‰“å¼€è¾“å…¥æµ
-    /// @param begin_pos è·¯å¾„èµ·å§‹ç‚¹
+    /// @brief ¿ªÊ¼Ìí¼ÓÂ·¾¶²¢´ò¿ªÊäÈëÁ÷
+    /// @param begin_pos Â·¾¶ÆğÊ¼µã
     void BeginPath(const Point& begin_pos = Point());
 
     /// \~chinese
-    /// @brief ç»“æŸè·¯å¾„å¹¶å…³é—­è¾“å…¥æµ
-    /// @param closed è·¯å¾„æ˜¯å¦é—­åˆ
+    /// @brief ½áÊøÂ·¾¶²¢¹Ø±ÕÊäÈëÁ÷
+    /// @param closed Â·¾¶ÊÇ·ñ±ÕºÏ
     void EndPath(bool closed = false);
 
     /// \~chinese
-    /// @brief æ·»åŠ ä¸€æ¡çº¿æ®µ
-    /// @param point ç«¯ç‚¹
+    /// @brief Ìí¼ÓÒ»ÌõÏß¶Î
+    /// @param point ¶Ëµã
     void AddLine(const Point& point);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤šæ¡çº¿æ®µ
-    /// @param points ç«¯ç‚¹é›†åˆ
+    /// @brief Ìí¼Ó¶àÌõÏß¶Î
+    /// @param points ¶Ëµã¼¯ºÏ
     void AddLines(const Vector<Point>& points);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤šæ¡çº¿æ®µ
-    /// @param points ç«¯ç‚¹æ•°ç»„
-    /// @param count ç«¯ç‚¹æ•°é‡
+    /// @brief Ìí¼Ó¶àÌõÏß¶Î
+    /// @param points ¶ËµãÊı×é
+    /// @param count ¶ËµãÊıÁ¿
     void AddLines(const Point* points, size_t count);
 
     /// \~chinese
-    /// @brief æ·»åŠ ä¸€æ¡ä¸‰æ¬¡æ–¹è´å¡å°”æ›²çº¿
-    /// @param point1 è´å¡å°”æ›²çº¿çš„ç¬¬ä¸€ä¸ªæ§åˆ¶ç‚¹
-    /// @param point2 è´å¡å°”æ›²çº¿çš„ç¬¬äºŒä¸ªæ§åˆ¶ç‚¹
-    /// @param point3 è´å¡å°”æ›²çº¿çš„ç»ˆç‚¹
+    /// @brief Ìí¼ÓÒ»ÌõÈı´Î·½±´Èû¶ûÇúÏß
+    /// @param point1 ±´Èû¶ûÇúÏßµÄµÚÒ»¸ö¿ØÖÆµã
+    /// @param point2 ±´Èû¶ûÇúÏßµÄµÚ¶ş¸ö¿ØÖÆµã
+    /// @param point3 ±´Èû¶ûÇúÏßµÄÖÕµã
     void AddBezier(const Point& point1, const Point& point2, const Point& point3);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¼§çº¿
-    /// @param point ç»ˆç‚¹
-    /// @param radius æ¤­åœ†åŠå¾„
-    /// @param rotation æ¤­åœ†æ—‹è½¬è§’åº¦
-    /// @param clockwise é¡ºæ—¶é’ˆ or é€†æ—¶é’ˆ
-    /// @param is_small æ˜¯å¦å–å°äº 180Â° çš„å¼§
+    /// @brief Ìí¼Ó»¡Ïß
+    /// @param point ÖÕµã
+    /// @param radius ÍÖÔ²°ë¾¶
+    /// @param rotation ÍÖÔ²Ğı×ª½Ç¶È
+    /// @param clockwise Ë³Ê±Õë or ÄæÊ±Õë
+    /// @param is_small ÊÇ·ñÈ¡Ğ¡ÓÚ 180¡ã µÄ»¡
     void AddArc(const Point& point, const Size& radius, float rotation, bool clockwise = true, bool is_small = true);
 
     /// \~chinese
-    /// @brief åˆå¹¶å½¢çŠ¶
-    /// @param shape_a è¾“å…¥çš„å½¢çŠ¶A
-    /// @param shape_b è¾“å…¥çš„å½¢çŠ¶B
-    /// @param mode åˆå¹¶æ–¹å¼
-    /// @param matrix åº”ç”¨åˆ°è¾“å…¥å½¢çŠ¶Bä¸Šçš„äºŒç»´å˜æ¢
-    /// @return è¿”å›åˆå¹¶åçš„å½¢çŠ¶
+    /// @brief ºÏ²¢ĞÎ×´
+    /// @param shape_a ÊäÈëµÄĞÎ×´A
+    /// @param shape_b ÊäÈëµÄĞÎ×´B
+    /// @param mode ºÏ²¢·½Ê½
+    /// @param matrix Ó¦ÓÃµ½ÊäÈëĞÎ×´BÉÏµÄ¶şÎ¬±ä»»
+    /// @return ·µ»ØºÏ²¢ºóµÄĞÎ×´
     static ShapePtr Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
-    /// @brief è®¾ç½®ç”Ÿæˆçš„å½¢çŠ¶
-    /// @note åº”ç”±ç³»ç»Ÿè°ƒç”¨è¯¥å‡½æ•°
+    /// @brief ÉèÖÃÉú³ÉµÄĞÎ×´
+    /// @note Ó¦ÓÉÏµÍ³µ÷ÓÃ¸Ãº¯Êı
     void SetShape(ShapePtr shape);
 
 private:
     /// \~chinese
-    /// @brief æ‰“å¼€è¾“å…¥æµ
-    /// @note åº”ç”±ç³»ç»Ÿè°ƒç”¨è¯¥å‡½æ•°
+    /// @brief ´ò¿ªÊäÈëÁ÷
+    /// @note Ó¦ÓÉÏµÍ³µ÷ÓÃ¸Ãº¯Êı
     void OpenStream();
 
     /// \~chinese
-    /// @brief å…³é—­è¾“å…¥æµ
-    /// @note åº”ç”±ç³»ç»Ÿè°ƒç”¨è¯¥å‡½æ•°
+    /// @brief ¹Ø±ÕÊäÈëÁ÷
+    /// @note Ó¦ÓÉÏµÍ³µ÷ÓÃ¸Ãº¯Êı
     void CloseStream();
 
     /// \~chinese
-    /// @brief è¾“å…¥æµæ˜¯å¦å·²ç»æ‰“å¼€
-    /// @note åº”ç”±ç³»ç»Ÿè°ƒç”¨è¯¥å‡½æ•°
+    /// @brief ÊäÈëÁ÷ÊÇ·ñÒÑ¾­´ò¿ª
+    /// @note Ó¦ÓÉÏµÍ³µ÷ÓÃ¸Ãº¯Êı
     bool IsStreamOpened() const;
 
 private:

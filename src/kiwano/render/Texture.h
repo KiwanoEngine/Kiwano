@@ -34,32 +34,32 @@ KGE_DECLARE_SMART_PTR(Texture);
 
 /**
  * \~chinese
- * @brief æ’å€¼æ¨¡å¼
- * @details æ’å€¼æ¨¡å¼æŒ‡å®šäº†ä½å›¾åœ¨ç¼©æ”¾å’Œæ—‹è½¬æ—¶åƒç´ é¢œè‰²çš„è®¡ç®—æ–¹å¼
+ * @brief ²åÖµÄ£Ê½
+ * @details ²åÖµÄ£Ê½Ö¸¶¨ÁËÎ»Í¼ÔÚËõ·ÅºÍĞı×ªÊ±ÏñËØÑÕÉ«µÄ¼ÆËã·½Ê½
  */
 enum class InterpolationMode
 {
-    Linear,  ///< åŒçº¿æ€§æ’å€¼ï¼Œå¯¹å‘¨å›´å››ä¸ªåƒç´ è¿›è¡Œä¸¤æ¬¡çº¿æ€§æ’å€¼è®¡ç®—ï¼Œåœ¨å›¾åƒæ”¾å¤§æ—¶å¯èƒ½ä¼šæ¨¡ç³Š
-    Nearest  ///< æœ€é‚»è¿‘æ’å€¼ï¼Œå–æœ€é‚»è¿‘çš„åƒç´ ç‚¹çš„é¢œè‰²å€¼
+    Linear,  ///< Ë«ÏßĞÔ²åÖµ£¬¶ÔÖÜÎ§ËÄ¸öÏñËØ½øĞĞÁ½´ÎÏßĞÔ²åÖµ¼ÆËã£¬ÔÚÍ¼Ïñ·Å´óÊ±¿ÉÄÜ»áÄ£ºı
+    Nearest  ///< ×îÁÚ½ü²åÖµ£¬È¡×îÁÚ½üµÄÏñËØµãµÄÑÕÉ«Öµ
 };
 
 /// \~chinese
-/// @brief åƒç´ å¤§å°
+/// @brief ÏñËØ´óĞ¡
 typedef math::Vec2T<uint32_t> PixelSize;
 
 /**
  * \~chinese
- * @brief çº¹ç†
+ * @brief ÎÆÀí
  */
 class KGE_API Texture : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief ä»æœ¬åœ°æ–‡ä»¶åˆ›å»ºçº¹ç†
+    /// @brief ´Ó±¾µØÎÄ¼ş´´½¨ÎÆÀí
     static TexturePtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief ä»èµ„æºåˆ›å»ºçº¹ç†
+    /// @brief ´Ó×ÊÔ´´´½¨ÎÆÀí
     static TexturePtr Create(const Resource& res);
 
     Texture();
@@ -67,70 +67,70 @@ public:
     virtual ~Texture();
 
     /// \~chinese
-    /// @brief åŠ è½½æœ¬åœ°æ–‡ä»¶
+    /// @brief ¼ÓÔØ±¾µØÎÄ¼ş
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief åŠ è½½èµ„æº
+    /// @brief ¼ÓÔØ×ÊÔ´
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief è·å–çº¹ç†å®½åº¦
+    /// @brief »ñÈ¡ÎÆÀí¿í¶È
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief è·å–çº¹ç†é«˜åº¦
+    /// @brief »ñÈ¡ÎÆÀí¸ß¶È
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief è·å–çº¹ç†å¤§å°
+    /// @brief »ñÈ¡ÎÆÀí´óĞ¡
     Size GetSize() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ å®½åº¦
+    /// @brief »ñÈ¡ÏñËØ¿í¶È
     uint32_t GetWidthInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ é«˜åº¦
+    /// @brief »ñÈ¡ÏñËØ¸ß¶È
     uint32_t GetHeightInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ å¤§å°
+    /// @brief »ñÈ¡ÏñËØ´óĞ¡
     PixelSize GetSizeInPixels() const;
 
     /// \~chinese
-    /// @brief è·å–åƒç´ æ’å€¼æ–¹å¼
+    /// @brief »ñÈ¡ÏñËØ²åÖµ·½Ê½
     InterpolationMode GetBitmapInterpolationMode() const;
     /// \~chinese
-    /// @brief è®¾ç½®å¤§å°
+    /// @brief ÉèÖÃ´óĞ¡
     void SetSize(const Size& size);
 
     /// \~chinese
-    /// @brief è®¾ç½®åƒç´ å¤§å°
+    /// @brief ÉèÖÃÏñËØ´óĞ¡
     void SetSizeInPixels(const PixelSize& size);
 
     /// \~chinese
-    /// @brief è®¾ç½®åƒç´ æ’å€¼æ–¹å¼
+    /// @brief ÉèÖÃÏñËØ²åÖµ·½Ê½
     void SetInterpolationMode(InterpolationMode mode);
 
     /// \~chinese
-    /// @brief æ‹·è´çº¹ç†
-    /// @param copy_from æºçº¹ç†
+    /// @brief ¿½±´ÎÆÀí
+    /// @param copy_from Ô´ÎÆÀí
     void CopyFrom(TexturePtr copy_from);
 
     /// \~chinese
-    /// @brief æ‹·è´çº¹ç†
-    /// @param copy_from æºçº¹ç†
-    /// @param src_rect æºçº¹ç†è£å‰ªçŸ©å½¢
-    /// @param dest_point æ‹·è´è‡³ç›®æ ‡ä½ç½®
+    /// @brief ¿½±´ÎÆÀí
+    /// @param copy_from Ô´ÎÆÀí
+    /// @param src_rect Ô´ÎÆÀí²Ã¼ô¾ØĞÎ
+    /// @param dest_point ¿½±´ÖÁÄ¿±êÎ»ÖÃ
     void CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& dest_point);
 
     /// \~chinese
-    /// @brief è®¾ç½®é»˜è®¤çš„åƒç´ æ’å€¼æ–¹å¼
+    /// @brief ÉèÖÃÄ¬ÈÏµÄÏñËØ²åÖµ·½Ê½
     static void SetDefaultInterpolationMode(InterpolationMode mode);
 
     /// \~chinese
-    /// @brief è·å–é»˜è®¤çš„åƒç´ æ’å€¼æ–¹å¼
+    /// @brief »ñÈ¡Ä¬ÈÏµÄÏñËØ²åÖµ·½Ê½
     static InterpolationMode GetDefaultInterpolationMode();
 
 private:

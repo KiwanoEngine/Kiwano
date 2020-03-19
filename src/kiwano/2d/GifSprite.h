@@ -35,81 +35,81 @@ KGE_DECLARE_SMART_PTR(GifSprite);
 
 /**
  * \~chinese
- * @brief GIF ç²¾çµ
+ * @brief GIF ¾«Áé
  */
 class KGE_API GifSprite : public Actor
 {
 public:
     /// \~chinese
-    /// @brief GIFæ’­æ”¾å¾ªç¯ç»“æŸå›è°ƒ
+    /// @brief GIF²¥·ÅÑ­»·½áÊø»Øµ÷
     using LoopDoneCallback = Function<void(int /* times */)>;
 
     /// \~chinese
-    /// @brief GIFæ’­æ”¾ç»“æŸå›è°ƒ
+    /// @brief GIF²¥·Å½áÊø»Øµ÷
     using DoneCallback = Function<void()>;
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFç²¾çµ
-    /// @param file_path GIFå›¾ç‰‡è·¯å¾„
+    /// @brief ´´½¨GIF¾«Áé
+    /// @param file_path GIFÍ¼Æ¬Â·¾¶
     static GifSpritePtr Create(const String& file_path);
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFç²¾çµ
-    /// @param res GIFå›¾ç‰‡èµ„æº
+    /// @brief ´´½¨GIF¾«Áé
+    /// @param res GIFÍ¼Æ¬×ÊÔ´
     static GifSpritePtr Create(const Resource& res);
 
     /// \~chinese
-    /// @brief åˆ›å»ºGIFç²¾çµ
-    /// @param gif GIFå›¾ç‰‡
+    /// @brief ´´½¨GIF¾«Áé
+    /// @param gif GIFÍ¼Æ¬
     static GifSpritePtr Create(GifImagePtr gif);
 
     GifSprite();
 
     /// \~chinese
-    /// @brief åŠ è½½GIFå›¾ç‰‡
-    /// @param file_path GIFå›¾ç‰‡è·¯å¾„
+    /// @brief ¼ÓÔØGIFÍ¼Æ¬
+    /// @param file_path GIFÍ¼Æ¬Â·¾¶
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief åŠ è½½GIFå›¾ç‰‡
-    /// @param res GIFå›¾ç‰‡èµ„æº
+    /// @brief ¼ÓÔØGIFÍ¼Æ¬
+    /// @param res GIFÍ¼Æ¬×ÊÔ´
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief åŠ è½½GIFå›¾ç‰‡
-    /// @param gif GIFå›¾ç‰‡
+    /// @brief ¼ÓÔØGIFÍ¼Æ¬
+    /// @param gif GIFÍ¼Æ¬
     bool Load(GifImagePtr gif);
 
     /// \~chinese
-    /// @brief è®¾ç½® GIF åŠ¨ç”»å¾ªç¯æ¬¡æ•°
+    /// @brief ÉèÖÃ GIF ¶¯»­Ñ­»·´ÎÊı
     void SetLoopCount(int loops);
 
     /// \~chinese
-    /// @brief è®¾ç½® GIF åŠ¨ç”»æ¯æ¬¡å¾ªç¯ç»“æŸå›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ GIF ¶¯»­Ã¿´ÎÑ­»·½áÊø»Øµ÷º¯Êı
     void SetLoopDoneCallback(const LoopDoneCallback& cb);
 
     /// \~chinese
-    /// @brief è®¾ç½® GIF åŠ¨ç”»ç»“æŸå›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ GIF ¶¯»­½áÊø»Øµ÷º¯Êı
     void SetDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
-    /// @brief è®¾ç½® GIF å›¾åƒ
+    /// @brief ÉèÖÃ GIF Í¼Ïñ
     void SetGifImage(GifImagePtr gif);
 
     /// \~chinese
-    /// @brief é‡æ–°æ’­æ”¾ GIF åŠ¨ç”»
+    /// @brief ÖØĞÂ²¥·Å GIF ¶¯»­
     void RestartAnimation();
 
     /// \~chinese
-    /// @brief è·å– GIF åŠ¨ç”»å¾ªç¯ç»“æŸå›è°ƒ
+    /// @brief »ñÈ¡ GIF ¶¯»­Ñ­»·½áÊø»Øµ÷
     LoopDoneCallback GetLoopDoneCallback() const;
 
     /// \~chinese
-    /// @brief è·å– GIF åŠ¨ç”»æ’­æ”¾ç»“æŸå›è°ƒ
+    /// @brief »ñÈ¡ GIF ¶¯»­²¥·Å½áÊø»Øµ÷
     DoneCallback GetDoneCallback() const;
 
     /// \~chinese
-    /// @brief è·å– GIF å›¾ç‰‡
+    /// @brief »ñÈ¡ GIF Í¼Æ¬
     GifImagePtr GetGifImage() const;
 
     void OnRender(RenderContext& ctx) override;
@@ -118,35 +118,35 @@ private:
     void Update(Duration dt) override;
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ˜¯æœ€åä¸€å¸§
+    /// @brief ÊÇ·ñÊÇ×îºóÒ»Ö¡
     bool IsLastFrame() const;
 
     /// \~chinese
-    /// @brief åŠ¨ç”»æ˜¯å¦å·²ç»“æŸ
+    /// @brief ¶¯»­ÊÇ·ñÒÑ½áÊø
     bool EndOfAnimation() const;
 
     /// \~chinese
-    /// @brief åˆæˆä¸‹ä¸€å¸§
+    /// @brief ºÏ³ÉÏÂÒ»Ö¡
     void ComposeNextFrame();
 
     /// \~chinese
-    /// @brief è§£æå½“å‰å›¾åƒå¸§
+    /// @brief ½âÎöµ±Ç°Í¼ÏñÖ¡
     void DisposeCurrentFrame();
 
     /// \~chinese
-    /// @brief è¦†ç›–ä¸‹ä¸€å¸§
+    /// @brief ¸²¸ÇÏÂÒ»Ö¡
     void OverlayNextFrame();
 
     /// \~chinese
-    /// @brief ä¿å­˜åˆæˆåçš„å›¾åƒå¸§
+    /// @brief ±£´æºÏ³ÉºóµÄÍ¼ÏñÖ¡
     void SaveComposedFrame();
 
     /// \~chinese
-    /// @brief æ¢å¤å·²ä¿å­˜çš„å›¾åƒå¸§
+    /// @brief »Ö¸´ÒÑ±£´æµÄÍ¼ÏñÖ¡
     void RestoreSavedFrame();
 
     /// \~chinese
-    /// @brief æ¸…ç©ºå½“å‰å›¾åƒåŒºåŸŸ
+    /// @brief Çå¿Õµ±Ç°Í¼ÏñÇøÓò
     void ClearCurrentFrameArea();
 
 private:

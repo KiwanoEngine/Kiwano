@@ -32,21 +32,21 @@ KGE_DECLARE_SMART_PTR(ActionDelay);
  */
 
 /// \~chinese
-/// @brief 寤舵椂鍔ㄧ敾
+/// @brief 延时动画
 class KGE_API ActionDelay : public Action
 {
 public:
     /// \~chinese
-    /// @brief 鍒涘缓寤舵椂鍔ㄧ敾
-    /// @param delay 寤舵椂鏃堕暱
+    /// @brief 创建延时动画
+    /// @param delay 延时时长
     static ActionDelayPtr Create(Duration delay);
 
     /// \~chinese
-    /// @brief 鑾峰彇璇ュ姩鐢荤殑鎷疯礉瀵硅薄
+    /// @brief 获取该动画的拷贝对象
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief 鑾峰彇璇ュ姩鐢荤殑鍊掕浆
+    /// @brief 获取该动画的倒转
     ActionPtr Reverse() const override;
 };
 

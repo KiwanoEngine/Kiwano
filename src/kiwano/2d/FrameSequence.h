@@ -29,76 +29,76 @@ KGE_DECLARE_SMART_PTR(FrameSequence);
 
 /**
  * \~chinese
- * @brief åºåˆ—å¸§
+ * @brief ĞòÁĞÖ¡
  */
 class KGE_API FrameSequence : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºåºåˆ—å¸§
+    /// @brief ´´½¨ĞòÁĞÖ¡
     static FrameSequencePtr Create();
 
     /// \~chinese
-    /// @brief åˆ›å»ºåºåˆ—å¸§
-    /// @param frames å›¾åƒå¸§é›†åˆ
+    /// @brief ´´½¨ĞòÁĞÖ¡
+    /// @param frames Í¼ÏñÖ¡¼¯ºÏ
     static FrameSequencePtr Create(const Vector<FramePtr>& frames);
 
     /// \~chinese
-    /// @brief æŒ‰è¡Œåˆ—åˆ†å‰²å›¾åƒå¹¶åˆ›å»ºåºåˆ—å¸§
-    /// @param frame å›¾åƒå¸§
-    /// @param cols åˆ—æ•°
-    /// @param rows è¡Œæ•°
-    /// @param max_num æœ€å¤§å¸§æ•°é‡ï¼Œè®¾-1ä¸ºå°†åˆ†å‰²åçš„å›¾åƒå…¨éƒ¨ä½œä¸ºåºåˆ—å¸§
-    /// @param padding_x Xæ–¹å‘é—´éš”
-    /// @param padding_y Yæ–¹å‘é—´éš”
+    /// @brief °´ĞĞÁĞ·Ö¸îÍ¼Ïñ²¢´´½¨ĞòÁĞÖ¡
+    /// @param frame Í¼ÏñÖ¡
+    /// @param cols ÁĞÊı
+    /// @param rows ĞĞÊı
+    /// @param max_num ×î´óÖ¡ÊıÁ¿£¬Éè-1Îª½«·Ö¸îºóµÄÍ¼ÏñÈ«²¿×÷ÎªĞòÁĞÖ¡
+    /// @param padding_x X·½Ïò¼ä¸ô
+    /// @param padding_y Y·½Ïò¼ä¸ô
     static FrameSequencePtr Create(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0,
                                    float padding_y = 0);
 
     /// \~chinese
-    /// @brief æ„å»ºç©ºåºåˆ—å¸§
+    /// @brief ¹¹½¨¿ÕĞòÁĞÖ¡
     FrameSequence();
 
     virtual ~FrameSequence();
 
     /// \~chinese
-    /// @brief æ·»åŠ å…³é”®å¸§
-    /// @param frame å›¾åƒå¸§
+    /// @brief Ìí¼Ó¹Ø¼üÖ¡
+    /// @param frame Í¼ÏñÖ¡
     void AddFrame(FramePtr frame);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤šä¸ªå…³é”®å¸§
-    /// @param frames å›¾åƒå¸§é›†åˆ
+    /// @brief Ìí¼Ó¶à¸ö¹Ø¼üÖ¡
+    /// @param frames Í¼ÏñÖ¡¼¯ºÏ
     void AddFrames(const Vector<FramePtr>& frames);
 
     /// \~chinese
-    /// @brief æŒ‰è¡Œåˆ—åˆ†å‰²å›¾åƒå¹¶æ·»åŠ åºåˆ—å¸§
-    /// @param frame å›¾åƒå¸§
-    /// @param cols åˆ—æ•°
-    /// @param rows è¡Œæ•°
-    /// @param max_num æœ€å¤§å¸§æ•°é‡ï¼Œè®¾-1ä¸ºå°†åˆ†å‰²åçš„å›¾åƒå…¨éƒ¨ä½œä¸ºåºåˆ—å¸§
-    /// @param padding_x Xæ–¹å‘é—´éš”
-    /// @param padding_y Yæ–¹å‘é—´éš”
+    /// @brief °´ĞĞÁĞ·Ö¸îÍ¼Ïñ²¢Ìí¼ÓĞòÁĞÖ¡
+    /// @param frame Í¼ÏñÖ¡
+    /// @param cols ÁĞÊı
+    /// @param rows ĞĞÊı
+    /// @param max_num ×î´óÖ¡ÊıÁ¿£¬Éè-1Îª½«·Ö¸îºóµÄÍ¼ÏñÈ«²¿×÷ÎªĞòÁĞÖ¡
+    /// @param padding_x X·½Ïò¼ä¸ô
+    /// @param padding_y Y·½Ïò¼ä¸ô
     void AddFrames(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0, float padding_y = 0);
 
     /// \~chinese
-    /// @brief è·å–å…³é”®å¸§
-    /// @param index å›¾åƒå¸§ä¸‹æ ‡
+    /// @brief »ñÈ¡¹Ø¼üÖ¡
+    /// @param index Í¼ÏñÖ¡ÏÂ±ê
     FramePtr GetFrame(size_t index) const;
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰å…³é”®å¸§
+    /// @brief »ñÈ¡ËùÓĞ¹Ø¼üÖ¡
     const Vector<FramePtr>& GetFrames() const;
 
     /// \~chinese
-    /// @brief è·å–å…³é”®å¸§æ•°é‡
+    /// @brief »ñÈ¡¹Ø¼üÖ¡ÊıÁ¿
     size_t GetFramesCount() const;
 
     /// \~chinese
-    /// @brief è·å–åºåˆ—å¸§çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡ĞòÁĞÖ¡µÄ¿½±´¶ÔÏó
     FrameSequencePtr Clone() const;
 
     /// \~chinese
-    /// @brief è·å–åºåˆ—å¸§çš„å€’è½¬
+    /// @brief »ñÈ¡ĞòÁĞÖ¡µÄµ¹×ª
     FrameSequencePtr Reverse() const;
 
 private:

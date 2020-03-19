@@ -33,7 +33,7 @@ KGE_DECLARE_SMART_PTR(Layer);
 
 /**
  * \~chinese
- * @brief å›¾å±‚
+ * @brief Í¼²ã
  */
 class KGE_API Layer : public NativeObject
 {
@@ -41,35 +41,35 @@ public:
     Layer();
 
     /// \~chinese
-    /// @brief è·å–å›¾å±‚è£å‰ªåŒºåŸŸ
+    /// @brief »ñÈ¡Í¼²ã²Ã¼ôÇøÓò
     const Rect& GetClipRect() const;
 
     /// \~chinese
-    /// @brief è·å–å›¾å±‚é€æ˜åº¦
+    /// @brief »ñÈ¡Í¼²ãÍ¸Ã÷¶È
     float GetOpacity() const;
 
     /// \~chinese
-    /// @brief è·å–å‡ ä½•è’™å±‚
+    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã
     ShapePtr GetMaskShape() const;
 
     /// \~chinese
-    /// @brief è·å–å‡ ä½•è’™å±‚å˜æ¢
+    /// @brief »ñÈ¡¼¸ºÎÃÉ²ã±ä»»
     const Matrix3x2& GetMaskTransform() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å›¾å±‚è£å‰ªåŒºåŸŸ
+    /// @brief ÉèÖÃÍ¼²ã²Ã¼ôÇøÓò
     void SetClipRect(const Rect& rect);
 
     /// \~chinese
-    /// @brief è®¾ç½®å›¾å±‚é€æ˜åº¦
+    /// @brief ÉèÖÃÍ¼²ãÍ¸Ã÷¶È
     void SetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief è®¾ç½®å‡ ä½•è’™å±‚
+    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã
     void SetMaskShape(ShapePtr mask);
 
     /// \~chinese
-    /// @brief è®¾ç½®å‡ ä½•è’™å±‚å˜æ¢
+    /// @brief ÉèÖÃ¼¸ºÎÃÉ²ã±ä»»
     void SetMaskTransform(const Matrix3x2& matrix);
 
 private:

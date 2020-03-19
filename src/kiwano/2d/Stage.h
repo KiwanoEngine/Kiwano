@@ -33,8 +33,8 @@ KGE_DECLARE_SMART_PTR(Stage);
 
 /**
  * \~chinese
- * @brief èˆå°
- * @details èˆå°æ˜¯æ‰€æœ‰è§’è‰²çš„è½½ä½“ï¼Œæ˜¯å¯¼æ¼”ç›´æ¥æ§åˆ¶çš„å¯¹è±¡
+ * @brief ÎèÌ¨
+ * @details ÎèÌ¨ÊÇËùÓĞ½ÇÉ«µÄÔØÌå£¬ÊÇµ¼ÑİÖ±½Ó¿ØÖÆµÄ¶ÔÏó
  * @see kiwano::Actor kiwano::Director
  */
 class KGE_API Stage : public Actor
@@ -44,7 +44,7 @@ class KGE_API Stage : public Actor
 
 public:
     /// \~chinese
-    /// @brief è¿›å…¥èˆå°æ—¶
+    /// @brief ½øÈëÎèÌ¨Ê±
     static StagePtr Create();
 
     Stage();
@@ -52,34 +52,34 @@ public:
     virtual ~Stage();
 
     /// \~chinese
-    /// @brief è¿›å…¥èˆå°æ—¶
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥å¤„ç†è¿›å…¥èˆå°å‰çš„è¡Œä¸º
+    /// @brief ½øÈëÎèÌ¨Ê±
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔ´¦Àí½øÈëÎèÌ¨Ç°µÄĞĞÎª
     virtual void OnEnter();
 
     /// \~chinese
-    /// @brief é€€å‡ºèˆå°æ—¶
-    /// @details é‡è½½è¯¥å‡½æ•°ä»¥å¤„ç†é€€å‡ºèˆå°å‰çš„è¡Œä¸º
+    /// @brief ÍË³öÎèÌ¨Ê±
+    /// @details ÖØÔØ¸Ãº¯ÊıÒÔ´¦ÀíÍË³öÎèÌ¨Ç°µÄĞĞÎª
     virtual void OnExit();
 
     /// \~chinese
-    /// @brief è·å–è§’è‰²è¾¹ç•Œå¡«å……ç”»åˆ·
+    /// @brief »ñÈ¡½ÇÉ«±ß½çÌî³ä»­Ë¢
     BrushPtr GetBorderFillBrush() const;
 
     /// \~chinese
-    /// @brief è·å–è§’è‰²è¾¹ç•Œè½®å»“ç”»åˆ·
+    /// @brief »ñÈ¡½ÇÉ«±ß½çÂÖÀª»­Ë¢
     BrushPtr GetBorderStrokeBrush() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è§’è‰²è¾¹ç•Œå¡«å……ç”»åˆ·
+    /// @brief ÉèÖÃ½ÇÉ«±ß½çÌî³ä»­Ë¢
     void SetBorderFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®è§’è‰²è¾¹ç•Œè½®å»“ç”»åˆ·
+    /// @brief ÉèÖÃ½ÇÉ«±ß½çÂÖÀª»­Ë¢
     void SetBorderStrokeBrush(BrushPtr brush);
 
 protected:
     /// \~chinese
-    /// @brief ç»˜åˆ¶æ‰€æœ‰å­è§’è‰²çš„è¾¹ç•Œ
+    /// @brief »æÖÆËùÓĞ×Ó½ÇÉ«µÄ±ß½ç
     void RenderBorder(RenderContext& ctx) override;
 
 private:

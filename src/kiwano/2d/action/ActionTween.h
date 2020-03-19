@@ -25,27 +25,27 @@
 namespace kiwano
 {
 /// \~chinese
-/// @brief ç¼“åŠ¨å‡½æ•°
+/// @brief »º¶¯º¯Êı
 using EaseFunc = Function<float(float)>;
 
 /// \~chinese
-/// @brief ç¼“åŠ¨å‡½æ•°æšä¸¾
-/// @details æŸ¥çœ‹ https://easings.net è·å–æ›´å¤šä¿¡æ¯
+/// @brief »º¶¯º¯ÊıÃ¶¾Ù
+/// @details ²é¿´ https://easings.net »ñÈ¡¸ü¶àĞÅÏ¢
 struct Ease
 {
-    static KGE_API EaseFunc Linear;        ///< çº¿æ€§
-    static KGE_API EaseFunc EaseIn;        ///< ç”±æ…¢å˜å¿«
-    static KGE_API EaseFunc EaseOut;       ///< ç”±å¿«å˜æ…¢
-    static KGE_API EaseFunc EaseInOut;     ///< ç”±æ…¢å˜å¿«, å†ç”±å¿«å˜æ…¢
-    static KGE_API EaseFunc ExpoIn;        ///< ç”±æ…¢å˜æå¿«
-    static KGE_API EaseFunc ExpoOut;       ///< ç”±æå¿«å˜æ…¢
-    static KGE_API EaseFunc ExpoInOut;     ///< ç”±æ…¢è‡³æå¿«, å†ç”±æå¿«è¾¹æ…¢
-    static KGE_API EaseFunc ElasticIn;     ///< è‡ªèµ·ç‚¹èµ‹äºˆå¼¹æ€§
-    static KGE_API EaseFunc ElasticOut;    ///< è‡ªç»ˆç‚¹èµ‹äºˆå¼¹æ€§
-    static KGE_API EaseFunc ElasticInOut;  ///< å†èµ·ç‚¹å’Œç»ˆç‚¹èµ‹äºˆå¼¹æ€§
-    static KGE_API EaseFunc BounceIn;      ///< è‡ªèµ·ç‚¹èµ‹äºˆåå¼¹åŠ›
-    static KGE_API EaseFunc BounceOut;     ///< è‡ªç»ˆç‚¹èµ‹äºˆåå¼¹åŠ›
-    static KGE_API EaseFunc BounceInOut;   ///< åœ¨èµ·ç‚¹å’Œç»ˆç‚¹èµ‹äºˆåå¼¹åŠ›
+    static KGE_API EaseFunc Linear;        ///< ÏßĞÔ
+    static KGE_API EaseFunc EaseIn;        ///< ÓÉÂı±ä¿ì
+    static KGE_API EaseFunc EaseOut;       ///< ÓÉ¿ì±äÂı
+    static KGE_API EaseFunc EaseInOut;     ///< ÓÉÂı±ä¿ì, ÔÙÓÉ¿ì±äÂı
+    static KGE_API EaseFunc ExpoIn;        ///< ÓÉÂı±ä¼«¿ì
+    static KGE_API EaseFunc ExpoOut;       ///< ÓÉ¼«¿ì±äÂı
+    static KGE_API EaseFunc ExpoInOut;     ///< ÓÉÂıÖÁ¼«¿ì, ÔÙÓÉ¼«¿ì±ßÂı
+    static KGE_API EaseFunc ElasticIn;     ///< ×ÔÆğµã¸³Óèµ¯ĞÔ
+    static KGE_API EaseFunc ElasticOut;    ///< ×ÔÖÕµã¸³Óèµ¯ĞÔ
+    static KGE_API EaseFunc ElasticInOut;  ///< ÔÙÆğµãºÍÖÕµã¸³Óèµ¯ĞÔ
+    static KGE_API EaseFunc BounceIn;      ///< ×ÔÆğµã¸³Óè·´µ¯Á¦
+    static KGE_API EaseFunc BounceOut;     ///< ×ÔÖÕµã¸³Óè·´µ¯Á¦
+    static KGE_API EaseFunc BounceInOut;   ///< ÔÚÆğµãºÍÖÕµã¸³Óè·´µ¯Á¦
     static KGE_API EaseFunc BackIn;
     static KGE_API EaseFunc BackOut;
     static KGE_API EaseFunc BackInOut;
@@ -86,32 +86,32 @@ KGE_DECLARE_SMART_PTR(ActionCustom);
  */
 
 /// \~chinese
-/// @brief è¡¥é—´åŠ¨ç”»
+/// @brief ²¹¼ä¶¯»­
 class KGE_API ActionTween : public Action
 {
 public:
     ActionTween();
 
     /// \~chinese
-    /// @brief è¡¥é—´åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param func åŠ¨ç”»é€Ÿåº¦ç¼“åŠ¨å‡½æ•°
+    /// @brief ²¹¼ä¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param func ¶¯»­ËÙ¶È»º¶¯º¯Êı
     ActionTween(Duration duration, EaseFunc ease);
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»æ—¶é•¿
+    /// @brief »ñÈ¡¶¯»­Ê±³¤
     Duration GetDuration() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»æ—¶é•¿
+    /// @brief ÉèÖÃ¶¯»­Ê±³¤
     void SetDuration(Duration duration);
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»é€Ÿåº¦ç¼“åŠ¨å‡½æ•°
+    /// @brief »ñÈ¡¶¯»­ËÙ¶È»º¶¯º¯Êı
     const EaseFunc& GetEaseFunc() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»é€Ÿåº¦ç¼“åŠ¨å‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­ËÙ¶È»º¶¯º¯Êı
     void SetEaseFunc(const EaseFunc& func);
 
 protected:
@@ -127,32 +127,32 @@ private:
 };
 
 /// \~chinese
-/// @brief ç›¸å¯¹ä½ç§»åŠ¨ç”»
+/// @brief Ïà¶ÔÎ»ÒÆ¶¯»­
 class KGE_API ActionMoveBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç›¸å¯¹ä½ç§»åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param displacement ä½ç§»å‘é‡
+    /// @brief ´´½¨Ïà¶ÔÎ»ÒÆ¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param displacement Î»ÒÆÏòÁ¿
     static ActionMoveByPtr Create(Duration duration, const Vec2& displacement);
 
     ActionMoveBy();
 
     /// \~chinese
-    /// @brief è·å–ä½ç§»å‘é‡
+    /// @brief »ñÈ¡Î»ÒÆÏòÁ¿
     Vec2 GetDisplacement() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ä½ç§»å‘é‡
+    /// @brief ÉèÖÃÎ»ÒÆÏòÁ¿
     void SetDisplacement(const Vec2& displacement);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:
@@ -167,32 +167,32 @@ protected:
 };
 
 /// \~chinese
-/// @brief ä½ç§»åŠ¨ç”»
+/// @brief Î»ÒÆ¶¯»­
 class KGE_API ActionMoveTo : public ActionMoveBy
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºä½ç§»åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param distination ç›®çš„åæ ‡
+    /// @brief ´´½¨Î»ÒÆ¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param distination Ä¿µÄ×ø±ê
     static ActionMoveToPtr Create(Duration duration, const Point& distination);
 
     ActionMoveTo();
 
     /// \~chinese
-    /// @brief è·å–ç›®çš„åæ ‡
+    /// @brief »ñÈ¡Ä¿µÄ×ø±ê
     Point GetDistination() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›®çš„åæ ‡
+    /// @brief ÉèÖÃÄ¿µÄ×ø±ê
     void SetDistination(const Point& distination);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionMoveTo");
@@ -207,51 +207,51 @@ private:
 };
 
 /// \~chinese
-/// @brief ç›¸å¯¹è·³è·ƒåŠ¨ç”»
+/// @brief Ïà¶ÔÌøÔ¾¶¯»­
 class KGE_API ActionJumpBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç›¸å¯¹è·³è·ƒåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param displacement è·³è·ƒä½ç§»å‘é‡
-    /// @param height è·³è·ƒé«˜åº¦
-    /// @param count è·³è·ƒæ¬¡æ•°
+    /// @brief ´´½¨Ïà¶ÔÌøÔ¾¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param displacement ÌøÔ¾Î»ÒÆÏòÁ¿
+    /// @param height ÌøÔ¾¸ß¶È
+    /// @param count ÌøÔ¾´ÎÊı
     static ActionJumpByPtr Create(Duration duration, const Vec2& displacement, float height, int count = 1,
                                   EaseFunc ease = nullptr);
 
     ActionJumpBy();
 
     /// \~chinese
-    /// @brief è·å–è·³è·ƒä½ç§»
+    /// @brief »ñÈ¡ÌøÔ¾Î»ÒÆ
     Vec2 GetDisplacement() const;
 
     /// \~chinese
-    /// @brief è·å–è·³è·ƒé«˜åº¦
+    /// @brief »ñÈ¡ÌøÔ¾¸ß¶È
     float GetJumpHeight() const;
 
     /// \~chinese
-    /// @brief è·å–è·³è·ƒæ¬¡æ•°
+    /// @brief »ñÈ¡ÌøÔ¾´ÎÊı
     int GetJumpCount() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è·³è·ƒä½ç§»
+    /// @brief ÉèÖÃÌøÔ¾Î»ÒÆ
     void SetDisplacement(const Vec2& displacement);
 
     /// \~chinese
-    /// @brief è®¾ç½®è·³è·ƒé«˜åº¦
+    /// @brief ÉèÖÃÌøÔ¾¸ß¶È
     void SetJumpHeight(float height);
 
     /// \~chinese
-    /// @brief è®¾ç½®è·³è·ƒæ¬¡æ•°
+    /// @brief ÉèÖÃÌøÔ¾´ÎÊı
     void SetJumpCount(int count);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:
@@ -268,35 +268,35 @@ protected:
 };
 
 /// \~chinese
-/// @brief è·³è·ƒåŠ¨ç”»
+/// @brief ÌøÔ¾¶¯»­
 class KGE_API ActionJumpTo : public ActionJumpBy
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºè·³è·ƒåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param distination ç›®çš„åæ ‡
-    /// @param height è·³è·ƒé«˜åº¦
-    /// @param count è·³è·ƒæ¬¡æ•°
+    /// @brief ´´½¨ÌøÔ¾¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param distination Ä¿µÄ×ø±ê
+    /// @param height ÌøÔ¾¸ß¶È
+    /// @param count ÌøÔ¾´ÎÊı
     static ActionJumpToPtr Create(Duration duration, const Point& distination, float height, int count = 1,
                                   EaseFunc ease = nullptr);
 
     ActionJumpTo();
 
     /// \~chinese
-    /// @brief è·å–ç›®çš„åæ ‡
+    /// @brief »ñÈ¡Ä¿µÄ×ø±ê
     Point GetDistination() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›®çš„åæ ‡
+    /// @brief ÉèÖÃÄ¿µÄ×ø±ê
     void SetDistination(const Point& distination);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionJumpTo");
@@ -311,41 +311,41 @@ private:
 };
 
 /// \~chinese
-/// @brief ç›¸å¯¹ç¼©æ”¾åŠ¨ç”»
+/// @brief Ïà¶ÔËõ·Å¶¯»­
 class KGE_API ActionScaleBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç›¸å¯¹ç¼©æ”¾åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
-    /// @param scale_y çºµå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ´´½¨Ïà¶ÔËõ·Å¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param scale_x ºáÏòËõ·ÅÏà¶Ô±ä»¯Öµ
+    /// @param scale_y ×İÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     static ActionScaleByPtr Create(Duration duration, float scale_x, float scale_y);
 
     ActionScaleBy();
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief »ñÈ¡ºáÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     float GetScaleX() const;
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief »ñÈ¡ºáÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     float GetScaleY() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çºµå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ÉèÖÃ×İÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     void SetScaleX(float scale_x);
 
     /// \~chinese
-    /// @brief è®¾ç½®çºµå‘ç¼©æ”¾ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ÉèÖÃ×İÏòËõ·ÅÏà¶Ô±ä»¯Öµ
     void SetScaleY(float scale_y);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:
@@ -361,41 +361,41 @@ protected:
 };
 
 /// \~chinese
-/// @brief ç¼©æ”¾åŠ¨ç”»
+/// @brief Ëõ·Å¶¯»­
 class KGE_API ActionScaleTo : public ActionScaleBy
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç¼©æ”¾åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param scale_x æ¨ªå‘ç¼©æ”¾ç›®æ ‡å€¼
-    /// @param scale_y çºµå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief ´´½¨Ëõ·Å¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param scale_x ºáÏòËõ·ÅÄ¿±êÖµ
+    /// @param scale_y ×İÏòËõ·ÅÄ¿±êÖµ
     static ActionScaleToPtr Create(Duration duration, float scale_x, float scale_y);
 
     ActionScaleTo();
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief »ñÈ¡ºáÏòËõ·ÅÄ¿±êÖµ
     float GetTargetScaleX() const;
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief »ñÈ¡ºáÏòËõ·ÅÄ¿±êÖµ
     float GetTargetScaleY() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®çºµå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief ÉèÖÃ×İÏòËõ·ÅÄ¿±êÖµ
     void SetTargetScaleX(float scale_x);
 
     /// \~chinese
-    /// @brief è®¾ç½®çºµå‘ç¼©æ”¾ç›®æ ‡å€¼
+    /// @brief ÉèÖÃ×İÏòËõ·ÅÄ¿±êÖµ
     void SetTargetScaleY(float scale_y);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionScaleTo");
@@ -411,32 +411,32 @@ private:
 };
 
 /// \~chinese
-/// @brief é€æ˜åº¦æ¸å˜åŠ¨ç”»
+/// @brief Í¸Ã÷¶È½¥±ä¶¯»­
 class KGE_API ActionFadeTo : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºé€æ˜åº¦æ¸å˜åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param opacity ç›®æ ‡é€æ˜åº¦
+    /// @brief ´´½¨Í¸Ã÷¶È½¥±ä¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param opacity Ä¿±êÍ¸Ã÷¶È
     static ActionFadeToPtr Create(Duration duration, float opacity);
 
     ActionFadeTo();
 
     /// \~chinese
-    /// @brief è·å–ç›®æ ‡é€æ˜åº¦
+    /// @brief »ñÈ¡Ä¿±êÍ¸Ã÷¶È
     float GetTargetOpacity() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›®æ ‡é€æ˜åº¦
+    /// @brief ÉèÖÃÄ¿±êÍ¸Ã÷¶È
     void SetTargetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionFadeTo");
@@ -455,54 +455,54 @@ private:
 };
 
 /// \~chinese
-/// @brief æ·¡å…¥åŠ¨ç”»
+/// @brief µ­Èë¶¯»­
 class KGE_API ActionFadeIn : public ActionFadeTo
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ·¡å…¥åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @brief ´´½¨µ­Èë¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
     static ActionFadeInPtr Create(Duration duration);
 };
 
 /// \~chinese
-/// @brief æ·¡å‡ºåŠ¨ç”»
+/// @brief µ­³ö¶¯»­
 class KGE_API ActionFadeOut : public ActionFadeTo
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ·¡å‡ºåŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
+    /// @brief ´´½¨µ­³ö¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
     static ActionFadeOutPtr Create(Duration duration);
 };
 
 /// \~chinese
-/// @brief ç›¸å¯¹æ—‹è½¬åŠ¨ç”»
+/// @brief Ïà¶ÔĞı×ª¶¯»­
 class KGE_API ActionRotateBy : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºç›¸å¯¹æ—‹è½¬åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param rotation è§’åº¦ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ´´½¨Ïà¶ÔĞı×ª¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param rotation ½Ç¶ÈÏà¶Ô±ä»¯Öµ
     static ActionRotateByPtr Create(Duration duration, float rotation);
 
     ActionRotateBy();
 
     /// \~chinese
-    /// @brief è·å–è§’åº¦ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief »ñÈ¡½Ç¶ÈÏà¶Ô±ä»¯Öµ
     float GetRotation() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è§’åº¦ç›¸å¯¹å˜åŒ–å€¼
+    /// @brief ÉèÖÃ½Ç¶ÈÏà¶Ô±ä»¯Öµ
     void SetRotation(float rotation);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override;
 
 protected:
@@ -516,32 +516,32 @@ protected:
 };
 
 /// \~chinese
-/// @brief æ—‹è½¬åŠ¨ç”»
+/// @brief Ğı×ª¶¯»­
 class KGE_API ActionRotateTo : public ActionRotateBy
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ—‹è½¬åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param rotation ç›®æ ‡è§’åº¦
+    /// @brief ´´½¨Ğı×ª¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param rotation Ä¿±ê½Ç¶È
     static ActionRotateToPtr Create(Duration duration, float rotation);
 
     ActionRotateTo();
 
     /// \~chinese
-    /// @brief è·å–ç›®æ ‡è§’åº¦
+    /// @brief »ñÈ¡Ä¿±ê½Ç¶È
     float GetTargetRotation() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç›®æ ‡è§’åº¦
+    /// @brief ÉèÖÃÄ¿±ê½Ç¶È
     void SetTargetRotation(float rotation);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionRotateTo");
@@ -556,37 +556,37 @@ private:
 };
 
 /// \~chinese
-/// @brief è‡ªå®šä¹‰åŠ¨ç”»
+/// @brief ×Ô¶¨Òå¶¯»­
 class KGE_API ActionCustom : public ActionTween
 {
 public:
     /// \~chinese
-    /// @brief åŠ¨ç”»å›è°ƒå‡½æ•°
-    /// @details åœ¨åŠ¨ç”»æ›´æ–°æ—¶å›è°ƒè¯¥å‡½æ•°ï¼Œç¬¬ä¸€ä¸ªå‚æ•°æ˜¯æ‰§è¡ŒåŠ¨ç”»çš„ç›®æ ‡ï¼Œç¬¬äºŒä¸ªå‚æ•°æ˜¯åŠ¨ç”»è¿›åº¦ï¼ˆ0.0 - 1.0ï¼‰
+    /// @brief ¶¯»­»Øµ÷º¯Êı
+    /// @details ÔÚ¶¯»­¸üĞÂÊ±»Øµ÷¸Ãº¯Êı£¬µÚÒ»¸ö²ÎÊıÊÇÖ´ĞĞ¶¯»­µÄÄ¿±ê£¬µÚ¶ş¸ö²ÎÊıÊÇ¶¯»­½ø¶È£¨0.0 - 1.0£©
     using TweenFunc = Function<void(Actor* /* target */, float /* percent */)>;
 
     /// \~chinese
-    /// @brief åˆ›å»ºè‡ªå®šä¹‰åŠ¨ç”»
-    /// @param duration åŠ¨ç”»æ—¶é•¿
-    /// @param tween_func åŠ¨ç”»å›è°ƒå‡½æ•°
+    /// @brief ´´½¨×Ô¶¨Òå¶¯»­
+    /// @param duration ¶¯»­Ê±³¤
+    /// @param tween_func ¶¯»­»Øµ÷º¯Êı
     static ActionCustomPtr Create(Duration duration, TweenFunc tween_func);
 
     ActionCustom();
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡¶¯»­»Øµ÷º¯Êı
     TweenFunc GetTweenFunc() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­»Øµ÷º¯Êı
     void SetTweenFunc(const TweenFunc& tween_func);
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„æ‹·è´å¯¹è±¡
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄ¿½±´¶ÔÏó
     ActionPtr Clone() const override;
 
     /// \~chinese
-    /// @brief è·å–è¯¥åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¸Ã¶¯»­µÄµ¹×ª
     ActionPtr Reverse() const override
     {
         KGE_ERROR("Reverse() not supported in ActionCustom");

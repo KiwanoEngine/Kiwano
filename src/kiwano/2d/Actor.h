@@ -41,12 +41,12 @@ class PhysicBody;
 KGE_DECLARE_SMART_PTR(Actor);
 
 /// \~chinese
-/// @brief è§’è‰²åˆ—è¡¨
+/// @brief ½ÇÉ«ÁĞ±í
 typedef IntrusiveList<ActorPtr> ActorList;
 
 /**
  * \~chinese
- * \defgroup Actors åŸºç¡€è§’è‰²
+ * \defgroup Actors »ù´¡½ÇÉ«
  */
 
 /**
@@ -56,9 +56,9 @@ typedef IntrusiveList<ActorPtr> ActorList;
 
 /**
  * \~chinese
- * @brief è§’è‰²
+ * @brief ½ÇÉ«
  * @details
- * è§’è‰²æ˜¯èˆå°ä¸Šæœ€åŸºæœ¬çš„å…ƒç´ ï¼Œæ˜¯å®Œæˆæ¸²æŸ“ã€æ›´æ–°ã€äº‹ä»¶åˆ†å‘ç­‰åŠŸèƒ½çš„æœ€å°å•ä½ï¼Œä¹Ÿæ˜¯åŠ¨ç”»ã€å®šæ—¶å™¨ã€äº‹ä»¶ç›‘å¬ç­‰åŠŸèƒ½çš„è½½ä½“
+ * ½ÇÉ«ÊÇÎèÌ¨ÉÏ×î»ù±¾µÄÔªËØ£¬ÊÇÍê³ÉäÖÈ¾¡¢¸üĞÂ¡¢ÊÂ¼ş·Ö·¢µÈ¹¦ÄÜµÄ×îĞ¡µ¥Î»£¬Ò²ÊÇ¶¯»­¡¢¶¨Ê±Æ÷¡¢ÊÂ¼ş¼àÌıµÈ¹¦ÄÜµÄÔØÌå
  */
 class KGE_API Actor
     : public ObjectBase
@@ -73,11 +73,11 @@ class KGE_API Actor
 
 public:
     /// \~chinese
-    /// @brief è§’è‰²æ›´æ–°å›è°ƒå‡½æ•°
+    /// @brief ½ÇÉ«¸üĞÂ»Øµ÷º¯Êı
     typedef Function<void(Duration)> UpdateCallback;
 
     /// \~chinese
-    /// @brief åˆ›å»ºè§’è‰²
+    /// @brief ´´½¨½ÇÉ«
     static ActorPtr Create();
 
     Actor();
@@ -85,418 +85,418 @@ public:
     virtual ~Actor();
 
     /// \~chinese
-    /// @brief æ›´æ–°è§’è‰²
-    /// @details æ¯å¸§ç”»é¢åˆ·æ–°å‰è°ƒç”¨è¯¥å‡½æ•°ï¼Œé‡è½½è¯¥å‡½æ•°ä»¥å®ç°è§’è‰²çš„æ›´æ–°å¤„ç†
-    /// @param dt è·ä¸Šä¸€æ¬¡æ›´æ–°çš„æ—¶é—´é—´éš”
+    /// @brief ¸üĞÂ½ÇÉ«
+    /// @details Ã¿Ö¡»­ÃæË¢ĞÂÇ°µ÷ÓÃ¸Ãº¯Êı£¬ÖØÔØ¸Ãº¯ÊıÒÔÊµÏÖ½ÇÉ«µÄ¸üĞÂ´¦Àí
+    /// @param dt ¾àÉÏÒ»´Î¸üĞÂµÄÊ±¼ä¼ä¸ô
     virtual void OnUpdate(Duration dt);
 
     /// \~chinese
-    /// @brief æ¸²æŸ“è§’è‰²
+    /// @brief äÖÈ¾½ÇÉ«
     /// @details
-    /// æ¯å¸§ç”»é¢åˆ·æ–°æ—¶è°ƒç”¨è¯¥å‡½æ•°ï¼Œé»˜è®¤ä¸è¿›è¡Œæ¸²æŸ“ï¼Œé‡è½½è¯¥å‡½æ•°ä»¥å®ç°å…·ä½“æ¸²æŸ“è¿‡ç¨‹
-    /// @param ctx æ¸²æŸ“ä¸Šä¸‹æ–‡
+    /// Ã¿Ö¡»­ÃæË¢ĞÂÊ±µ÷ÓÃ¸Ãº¯Êı£¬Ä¬ÈÏ²»½øĞĞäÖÈ¾£¬ÖØÔØ¸Ãº¯ÊıÒÔÊµÏÖ¾ßÌåäÖÈ¾¹ı³Ì
+    /// @param ctx äÖÈ¾ÉÏÏÂÎÄ
     virtual void OnRender(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief è·å–æ˜¾ç¤ºçŠ¶æ€
+    /// @brief »ñÈ¡ÏÔÊ¾×´Ì¬
     bool IsVisible() const;
 
     /// \~chinese
-    /// @brief è·å–å“åº”çŠ¶æ€
+    /// @brief »ñÈ¡ÏìÓ¦×´Ì¬
     bool IsResponsible() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨çº§è”é€æ˜åº¦
+    /// @brief ÊÇ·ñÆôÓÃ¼¶ÁªÍ¸Ã÷¶È
     bool IsCascadeOpacityEnabled() const;
 
     /// \~chinese
-    /// @brief è·å–åç§°çš„ Hash å€¼
+    /// @brief »ñÈ¡Ãû³ÆµÄ Hash Öµ
     size_t GetHashName() const;
 
     /// \~chinese
-    /// @brief è·å– Z è½´é¡ºåº
+    /// @brief »ñÈ¡ Z ÖáË³Ğò
     int GetZOrder() const;
 
     /// \~chinese
-    /// @brief è·å–åæ ‡
+    /// @brief »ñÈ¡×ø±ê
     virtual Point GetPosition() const;
 
     /// \~chinese
-    /// @brief è·å– x åæ ‡
+    /// @brief »ñÈ¡ x ×ø±ê
     float GetPositionX() const;
 
     /// \~chinese
-    /// @brief è·å– y åæ ‡
+    /// @brief »ñÈ¡ y ×ø±ê
     float GetPositionY() const;
 
     /// \~chinese
-    /// @brief è·å–å¤§å°
+    /// @brief »ñÈ¡´óĞ¡
     virtual Size GetSize() const;
 
     /// \~chinese
-    /// @brief è·å–å®½åº¦
+    /// @brief »ñÈ¡¿í¶È
     float GetWidth() const;
 
     /// \~chinese
-    /// @brief è·å–é«˜åº¦
+    /// @brief »ñÈ¡¸ß¶È
     float GetHeight() const;
 
     /// \~chinese
-    /// @brief è·å–ç¼©æ”¾åçš„å®½åº¦
+    /// @brief »ñÈ¡Ëõ·ÅºóµÄ¿í¶È
     float GetScaledWidth() const;
 
     /// \~chinese
-    /// @brief è·å–ç¼©æ”¾åçš„é«˜åº¦
+    /// @brief »ñÈ¡Ëõ·ÅºóµÄ¸ß¶È
     float GetScaledHeight() const;
 
     /// \~chinese
-    /// @brief è·å–ç¼©æ”¾åçš„å¤§å°
+    /// @brief »ñÈ¡Ëõ·ÅºóµÄ´óĞ¡
     Size GetScaledSize() const;
 
     /// \~chinese
-    /// @brief è·å–é”šç‚¹
+    /// @brief »ñÈ¡Ãªµã
     virtual Point GetAnchor() const;
 
     /// \~chinese
-    /// @brief è·å– x æ–¹å‘é”šç‚¹
+    /// @brief »ñÈ¡ x ·½ÏòÃªµã
     float GetAnchorX() const;
 
     /// \~chinese
-    /// @brief è·å– y æ–¹å‘é”šç‚¹
+    /// @brief »ñÈ¡ y ·½ÏòÃªµã
     float GetAnchorY() const;
 
     /// \~chinese
-    /// @brief è·å–é€æ˜åº¦
+    /// @brief »ñÈ¡Í¸Ã÷¶È
     virtual float GetOpacity() const;
 
     /// \~chinese
-    /// @brief è·å–æ˜¾ç¤ºé€æ˜åº¦
+    /// @brief »ñÈ¡ÏÔÊ¾Í¸Ã÷¶È
     float GetDisplayedOpacity() const;
 
     /// \~chinese
-    /// @brief è·å–æ—‹è½¬è§’åº¦
+    /// @brief »ñÈ¡Ğı×ª½Ç¶È
     virtual float GetRotation() const;
 
     /// \~chinese
-    /// @brief è·å–ç¼©æ”¾æ¯”ä¾‹
+    /// @brief »ñÈ¡Ëõ·Å±ÈÀı
     virtual Point GetScale() const;
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘ç¼©æ”¾æ¯”ä¾‹
+    /// @brief »ñÈ¡ºáÏòËõ·Å±ÈÀı
     float GetScaleX() const;
 
     /// \~chinese
-    /// @brief è·å–çºµå‘ç¼©æ”¾æ¯”ä¾‹
+    /// @brief »ñÈ¡×İÏòËõ·Å±ÈÀı
     float GetScaleY() const;
 
     /// \~chinese
-    /// @brief è·å–é”™åˆ‡è§’åº¦
+    /// @brief »ñÈ¡´íÇĞ½Ç¶È
     virtual Point GetSkew() const;
 
     /// \~chinese
-    /// @brief è·å–æ¨ªå‘é”™åˆ‡è§’åº¦
+    /// @brief »ñÈ¡ºáÏò´íÇĞ½Ç¶È
     float GetSkewX() const;
 
     /// \~chinese
-    /// @brief è·å–çºµå‘é”™åˆ‡è§’åº¦
+    /// @brief »ñÈ¡×İÏò´íÇĞ½Ç¶È
     float GetSkewY() const;
 
     /// \~chinese
-    /// @brief è·å–å˜æ¢
+    /// @brief »ñÈ¡±ä»»
     Transform GetTransform() const;
 
     /// \~chinese
-    /// @brief è·å–çˆ¶è§’è‰²
+    /// @brief »ñÈ¡¸¸½ÇÉ«
     Actor* GetParent() const;
 
     /// \~chinese
-    /// @brief è·å–æ‰€åœ¨èˆå°
+    /// @brief »ñÈ¡ËùÔÚÎèÌ¨
     Stage* GetStage() const;
 
     /// \~chinese
-    /// @brief è·å–è¾¹æ¡†
+    /// @brief »ñÈ¡±ß¿ò
     virtual Rect GetBounds() const;
 
     /// \~chinese
-    /// @brief è·å–å¤–åˆ‡åŒ…å›´ç›’
+    /// @brief »ñÈ¡ÍâÇĞ°üÎ§ºĞ
     virtual Rect GetBoundingBox() const;
 
     /// \~chinese
-    /// @brief è·å–äºŒç»´å˜æ¢çŸ©é˜µ
+    /// @brief »ñÈ¡¶şÎ¬±ä»»¾ØÕó
     const Matrix3x2& GetTransformMatrix() const;
 
     /// \~chinese
-    /// @brief è·å–äºŒç»´å˜æ¢çš„é€†çŸ©é˜µ
+    /// @brief »ñÈ¡¶şÎ¬±ä»»µÄÄæ¾ØÕó
     const Matrix3x2& GetTransformInverseMatrix() const;
 
     /// \~chinese
-    /// @brief è·å–å˜æ¢åˆ°çˆ¶è§’è‰²çš„äºŒç»´å˜æ¢çŸ©é˜µ
+    /// @brief »ñÈ¡±ä»»µ½¸¸½ÇÉ«µÄ¶şÎ¬±ä»»¾ØÕó
     const Matrix3x2& GetTransformMatrixToParent() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®è§’è‰²æ˜¯å¦å¯è§
+    /// @brief ÉèÖÃ½ÇÉ«ÊÇ·ñ¿É¼û
     void SetVisible(bool val);
 
     /// \~chinese
-    /// @brief è®¾ç½®åç§°
+    /// @brief ÉèÖÃÃû³Æ
     void SetName(const String& name);
 
     /// \~chinese
-    /// @brief è®¾ç½®åæ ‡
+    /// @brief ÉèÖÃ×ø±ê
     virtual void SetPosition(const Point& point);
 
     /// \~chinese
-    /// @brief è®¾ç½®åæ ‡
+    /// @brief ÉèÖÃ×ø±ê
     void SetPosition(float x, float y);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ¨ªåæ ‡
+    /// @brief ÉèÖÃºá×ø±ê
     void SetPositionX(float x);
 
     /// \~chinese
-    /// @brief è®¾ç½®çºµåæ ‡
+    /// @brief ÉèÖÃ×İ×ø±ê
     void SetPositionY(float y);
 
     /// \~chinese
-    /// @brief ç§»åŠ¨åæ ‡
+    /// @brief ÒÆ¶¯×ø±ê
     void Move(const Vec2& v);
 
     /// \~chinese
-    /// @brief ç§»åŠ¨åæ ‡
+    /// @brief ÒÆ¶¯×ø±ê
     void Move(float vx, float vy);
 
     /// \~chinese
-    /// @brief è®¾ç½®ç¼©æ”¾æ¯”ä¾‹ï¼Œé»˜è®¤ä¸º (1.0, 1.0)
+    /// @brief ÉèÖÃËõ·Å±ÈÀı£¬Ä¬ÈÏÎª (1.0, 1.0)
     virtual void SetScale(const Vec2& scale);
 
     /// \~chinese
-    /// @brief è®¾ç½®ç¼©æ”¾æ¯”ä¾‹ï¼Œé»˜è®¤ä¸º (1.0, 1.0)
+    /// @brief ÉèÖÃËõ·Å±ÈÀı£¬Ä¬ÈÏÎª (1.0, 1.0)
     void SetScale(float scalex, float scaley);
 
     /// \~chinese
-    /// @brief è®¾ç½®é”™åˆ‡è§’åº¦ï¼Œé»˜è®¤ä¸º (0, 0)
+    /// @brief ÉèÖÃ´íÇĞ½Ç¶È£¬Ä¬ÈÏÎª (0, 0)
     virtual void SetSkew(const Vec2& skew);
 
     /// \~chinese
-    /// @brief è®¾ç½®é”™åˆ‡è§’åº¦ï¼Œé»˜è®¤ä¸º (0, 0)
+    /// @brief ÉèÖÃ´íÇĞ½Ç¶È£¬Ä¬ÈÏÎª (0, 0)
     void SetSkew(float skewx, float skewy);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ—‹è½¬è§’åº¦ï¼Œé»˜è®¤ä¸º 0
+    /// @brief ÉèÖÃĞı×ª½Ç¶È£¬Ä¬ÈÏÎª 0
     virtual void SetRotation(float rotation);
 
     /// \~chinese
-    /// @brief è®¾ç½®é”šç‚¹ä½ç½®ï¼Œé»˜è®¤ä¸º (0, 0), èŒƒå›´ [0, 1]
+    /// @brief ÉèÖÃÃªµãÎ»ÖÃ£¬Ä¬ÈÏÎª (0, 0), ·¶Î§ [0, 1]
     virtual void SetAnchor(const Vec2& anchor);
 
     /// \~chinese
-    /// @brief è®¾ç½®é”šç‚¹ä½ç½®ï¼Œé»˜è®¤ä¸º (0, 0), èŒƒå›´ [0, 1]
+    /// @brief ÉèÖÃÃªµãÎ»ÖÃ£¬Ä¬ÈÏÎª (0, 0), ·¶Î§ [0, 1]
     void SetAnchor(float anchorx, float anchory);
 
     /// \~chinese
-    /// @brief ä¿®æ”¹å¤§å°
+    /// @brief ĞŞ¸Ä´óĞ¡
     virtual void SetSize(const Size& size);
 
     /// \~chinese
-    /// @brief ä¿®æ”¹å¤§å°
+    /// @brief ĞŞ¸Ä´óĞ¡
     void SetSize(float width, float height);
 
     /// \~chinese
-    /// @brief ä¿®æ”¹å®½åº¦
+    /// @brief ĞŞ¸Ä¿í¶È
     void SetWidth(float width);
 
     /// \~chinese
-    /// @brief ä¿®æ”¹é«˜åº¦
+    /// @brief ĞŞ¸Ä¸ß¶È
     void SetHeight(float height);
 
     /// \~chinese
-    /// @brief è®¾ç½®é€æ˜åº¦ï¼Œé»˜è®¤ä¸º 1.0, èŒƒå›´ [0, 1]
+    /// @brief ÉèÖÃÍ¸Ã÷¶È£¬Ä¬ÈÏÎª 1.0, ·¶Î§ [0, 1]
     virtual void SetOpacity(float opacity);
 
     /// \~chinese
-    /// @brief å¯ç”¨æˆ–ç¦ç”¨çº§è”é€æ˜åº¦
+    /// @brief ÆôÓÃ»ò½ûÓÃ¼¶ÁªÍ¸Ã÷¶È
     void SetCascadeOpacityEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief è®¾ç½®äºŒç»´ä»¿å°„å˜æ¢
+    /// @brief ÉèÖÃ¶şÎ¬·ÂÉä±ä»»
     void SetTransform(const Transform& transform);
 
     /// \~chinese
-    /// @brief è®¾ç½® Z è½´é¡ºåºï¼Œé»˜è®¤ä¸º 0
+    /// @brief ÉèÖÃ Z ÖáË³Ğò£¬Ä¬ÈÏÎª 0
     void SetZOrder(int zorder);
 
     /// \~chinese
-    /// @brief è®¾ç½®è§’è‰²æ˜¯å¦å¯å“åº”ï¼Œé»˜è®¤ä¸º false
-    /// @details å¯å“åº”çš„è§’è‰²ä¼šæ”¶åˆ°é¼ æ ‡çš„ Hover | Out | Click æ¶ˆæ¯
+    /// @brief ÉèÖÃ½ÇÉ«ÊÇ·ñ¿ÉÏìÓ¦£¬Ä¬ÈÏÎª false
+    /// @details ¿ÉÏìÓ¦µÄ½ÇÉ«»áÊÕµ½Êó±êµÄ Hover | Out | Click ÏûÏ¢
     void SetResponsible(bool enable);
 
     /// \~chinese
-    /// @brief æ·»åŠ å­è§’è‰²
+    /// @brief Ìí¼Ó×Ó½ÇÉ«
     void AddChild(ActorPtr child, int zorder = 0);
 
     /// \~chinese
-    /// @brief æ·»åŠ å¤šä¸ªå­è§’è‰²
+    /// @brief Ìí¼Ó¶à¸ö×Ó½ÇÉ«
     void AddChildren(const Vector<ActorPtr>& children);
 
     /// \~chinese
-    /// @brief è·å–åç§°ç›¸åŒçš„å­è§’è‰²
+    /// @brief »ñÈ¡Ãû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
     ActorPtr GetChild(const String& name) const;
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰åç§°ç›¸åŒçš„å­è§’è‰²
+    /// @brief »ñÈ¡ËùÓĞÃû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
     Vector<ActorPtr> GetChildren(const String& name) const;
 
     /// \~chinese
-    /// @brief è·å–å…¨éƒ¨å­è§’è‰²
+    /// @brief »ñÈ¡È«²¿×Ó½ÇÉ«
     ActorList& GetAllChildren();
 
     /// \~chinese
-    /// @brief è·å–å…¨éƒ¨å­è§’è‰²
+    /// @brief »ñÈ¡È«²¿×Ó½ÇÉ«
     const ActorList& GetAllChildren() const;
 
     /// \~chinese
-    /// @brief ç§»é™¤å­è§’è‰²
+    /// @brief ÒÆ³ı×Ó½ÇÉ«
     void RemoveChild(ActorPtr child);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰åç§°ç›¸åŒçš„å­è§’è‰²
+    /// @brief ÒÆ³ıËùÓĞÃû³ÆÏàÍ¬µÄ×Ó½ÇÉ«
     void RemoveChildren(const String& child_name);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰è§’è‰²
+    /// @brief ÒÆ³ıËùÓĞ½ÇÉ«
     void RemoveAllChildren();
 
     /// \~chinese
-    /// @brief ä»çˆ¶è§’è‰²ç§»é™¤
+    /// @brief ´Ó¸¸½ÇÉ«ÒÆ³ı
     void RemoveFromParent();
 
     /// \~chinese
-    /// @brief æ·»åŠ ç»„ä»¶
-    /// @param component ç»„ä»¶
+    /// @brief Ìí¼Ó×é¼ş
+    /// @param component ×é¼ş
     Component* AddComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰ç»„ä»¶
+    /// @brief »ñÈ¡ËùÓĞ×é¼ş
     ComponentList& GetAllComponents();
 
     /// \~chinese
-    /// @brief è·å–æ‰€æœ‰ç»„ä»¶
+    /// @brief »ñÈ¡ËùÓĞ×é¼ş
     const ComponentList& GetAllComponents() const;
 
     /// \~chinese
-    /// @brief ç§»é™¤ç»„ä»¶
+    /// @brief ÒÆ³ı×é¼ş
     void RemoveComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief ç§»é™¤ç»„ä»¶
-    /// @param name ç»„ä»¶åç§°
+    /// @brief ÒÆ³ı×é¼ş
+    /// @param name ×é¼şÃû³Æ
     void RemoveComponents(const String& name);
 
     /// \~chinese
-    /// @brief ç§»é™¤æ‰€æœ‰ç»„ä»¶
+    /// @brief ÒÆ³ıËùÓĞ×é¼ş
     void RemoveAllComponents();
 
     /// \~chinese
-    /// @brief æš‚åœè§’è‰²æ›´æ–°
+    /// @brief ÔİÍ£½ÇÉ«¸üĞÂ
     void PauseUpdating();
 
     /// \~chinese
-    /// @brief ç»§ç»­è§’è‰²æ›´æ–°
+    /// @brief ¼ÌĞø½ÇÉ«¸üĞÂ
     void ResumeUpdating();
 
     /// \~chinese
-    /// @brief è§’è‰²æ›´æ–°æ˜¯å¦æš‚åœ
+    /// @brief ½ÇÉ«¸üĞÂÊÇ·ñÔİÍ£
     bool IsUpdatePausing() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ›´æ–°æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¸üĞÂÊ±µÄ»Øµ÷º¯Êı
     void SetCallbackOnUpdate(const UpdateCallback& cb);
 
     /// \~chinese
-    /// @brief è·å–æ›´æ–°æ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡¸üĞÂÊ±µÄ»Øµ÷º¯Êı
     UpdateCallback GetCallbackOnUpdate() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ç†èº«ä½“ï¼Œä»…å½“kiwano-physicsåŒ…å¯ç”¨æ—¶ç”Ÿæ•ˆ
+    /// @brief »ñÈ¡ÎïÀíÉíÌå£¬½öµ±kiwano-physics°üÆôÓÃÊ±ÉúĞ§
     physics::PhysicBody* GetPhysicBody() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®ç‰©ç†èº«ä½“ï¼Œä»…å½“kiwano-physicsåŒ…å¯ç”¨æ—¶ç”Ÿæ•ˆ
+    /// @brief ÉèÖÃÎïÀíÉíÌå£¬½öµ±kiwano-physics°üÆôÓÃÊ±ÉúĞ§
     void SetPhysicBody(physics::PhysicBody* body);
 
     /// \~chinese
-    /// @brief åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨è§’è‰²å†…
+    /// @brief ÅĞ¶ÏµãÊÇ·ñÔÚ½ÇÉ«ÄÚ
     virtual bool ContainsPoint(const Point& point) const;
 
     /// \~chinese
-    /// @brief å°†ä¸–ç•Œåæ ‡ç³»ç‚¹è½¬æ¢ä¸ºå±€éƒ¨åæ ‡ç³»ç‚¹
+    /// @brief ½«ÊÀ½ç×ø±êÏµµã×ª»»Îª¾Ö²¿×ø±êÏµµã
     Point ConvertToLocal(const Point& point) const;
 
     /// \~chinese
-    /// @brief å°†å±€éƒ¨åæ ‡ç³»ç‚¹è½¬æ¢ä¸ºä¸–ç•Œåæ ‡ç³»ç‚¹
+    /// @brief ½«¾Ö²¿×ø±êÏµµã×ª»»ÎªÊÀ½ç×ø±êÏµµã
     Point ConvertToWorld(const Point& point) const;
 
     /// \~chinese
-    /// @brief æ¸²æŸ“è§’è‰²è¾¹ç•Œ
+    /// @brief äÖÈ¾½ÇÉ«±ß½ç
     void ShowBorder(bool show);
 
     /// \~chinese
-    /// @brief åˆ†å‘äº‹ä»¶
-    /// @param evt äº‹ä»¶
-    /// @return æ˜¯å¦ç»§ç»­åˆ†å‘è¯¥äº‹ä»¶
+    /// @brief ·Ö·¢ÊÂ¼ş
+    /// @param evt ÊÂ¼ş
+    /// @return ÊÇ·ñ¼ÌĞø·Ö·¢¸ÃÊÂ¼ş
     virtual bool DispatchEvent(Event* evt);
 
     /// \~chinese
-    /// @brief è®¾ç½®é»˜è®¤é”šç‚¹
+    /// @brief ÉèÖÃÄ¬ÈÏÃªµã
     static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
 protected:
     /// \~chinese
-    /// @brief æ›´æ–°è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²
+    /// @brief ¸üĞÂ×ÔÉíºÍËùÓĞ×Ó½ÇÉ«
     virtual void Update(Duration dt);
 
     /// \~chinese
-    /// @brief æ¸²æŸ“è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²
+    /// @brief äÖÈ¾×ÔÉíºÍËùÓĞ×Ó½ÇÉ«
     virtual void Render(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief ç»˜åˆ¶è‡ªèº«å’Œæ‰€æœ‰å­è§’è‰²çš„è¾¹ç•Œ
+    /// @brief »æÖÆ×ÔÉíºÍËùÓĞ×Ó½ÇÉ«µÄ±ß½ç
     virtual void RenderBorder(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief æ£€æŸ¥æ˜¯å¦åœ¨æ¸²æŸ“ä¸Šä¸‹æ–‡çš„è§†åŒºå†…
+    /// @brief ¼ì²éÊÇ·ñÔÚäÖÈ¾ÉÏÏÂÎÄµÄÊÓÇøÄÚ
     virtual bool CheckVisibility(RenderContext& ctx) const;
 
     /// \~chinese
-    /// @brief æ¸²æŸ“å‰åˆå§‹åŒ–æ¸²æŸ“ä¸Šä¸‹æ–‡çŠ¶æ€ï¼Œä»…å½“ CheckVisibility è¿”å›çœŸæ—¶è°ƒç”¨è¯¥å‡½æ•°
+    /// @brief äÖÈ¾Ç°³õÊ¼»¯äÖÈ¾ÉÏÏÂÎÄ×´Ì¬£¬½öµ± CheckVisibility ·µ»ØÕæÊ±µ÷ÓÃ¸Ãº¯Êı
     virtual void PrepareToRender(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief æ›´æ–°è‡ªå·±çš„äºŒç»´å˜æ¢ï¼Œå¹¶é€šçŸ¥æ‰€æœ‰å­è§’è‰²
+    /// @brief ¸üĞÂ×Ô¼ºµÄ¶şÎ¬±ä»»£¬²¢Í¨ÖªËùÓĞ×Ó½ÇÉ«
     void UpdateTransform() const;
 
     /// \~chinese
-    /// @brief æ›´æ–°è‡ªå·±å’Œæ‰€æœ‰å­è§’è‰²çš„é€æ˜åº¦
+    /// @brief ¸üĞÂ×Ô¼ººÍËùÓĞ×Ó½ÇÉ«µÄÍ¸Ã÷¶È
     void UpdateOpacity();
 
     /// \~chinese
-    /// @brief å°†æ‰€æœ‰å­è§’è‰²æŒ‰Zè½´é¡ºåºæ’åº
+    /// @brief ½«ËùÓĞ×Ó½ÇÉ«°´ZÖáË³ĞòÅÅĞò
     void Reorder();
 
     /// \~chinese
-    /// @brief è®¾ç½®èŠ‚ç‚¹æ‰€åœ¨èˆå°
+    /// @brief ÉèÖÃ½ÚµãËùÔÚÎèÌ¨
     void SetStage(Stage* stage);
 
     /// \~chinese
-    /// @brief å¤„ç†äº‹ä»¶
+    /// @brief ´¦ÀíÊÂ¼ş
     bool HandleEvent(Event* evt);
 
     /// \~chinese
-    /// @brief æ›´æ–°ç»„ä»¶
+    /// @brief ¸üĞÂ×é¼ş
     void UpdateComponents(Duration dt);
 
     /// \~chinese
-    /// @brief æ¸²æŸ“ç»„ä»¶
+    /// @brief äÖÈ¾×é¼ş
     void RenderComponents(RenderContext& ctx);
 
 private:

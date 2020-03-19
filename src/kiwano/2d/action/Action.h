@@ -34,12 +34,12 @@ class ActionManager;
 KGE_DECLARE_SMART_PTR(Action);
 
 /// \~chinese
-/// @brief åŠ¨ç”»åˆ—è¡¨
+/// @brief ¶¯»­ÁĞ±í
 typedef IntrusiveList<ActionPtr> ActionList;
 
 /**
  * \~chinese
- * \defgroup Actions åŠ¨ç”»
+ * \defgroup Actions ¶¯»­
  */
 
 /**
@@ -48,7 +48,7 @@ typedef IntrusiveList<ActionPtr> ActionList;
  */
 
 /// \~chinese
-/// @brief åŠ¨ç”»
+/// @brief ¶¯»­
 class KGE_API Action
     : public ObjectBase
     , protected IntrusiveListValue<ActionPtr>
@@ -59,7 +59,7 @@ class KGE_API Action
 
 public:
     /// \~chinese
-    /// @brief åŠ¨ç”»ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ¶¯»­½áÊøÊ±µÄ»Øµ÷º¯Êı
     using DoneCallback = Function<void(Actor* /* target */)>;
 
     Action();
@@ -67,120 +67,120 @@ public:
     virtual ~Action();
 
     /// \~chinese
-    /// @brief ç»§ç»­åŠ¨ç”»
+    /// @brief ¼ÌĞø¶¯»­
     void Resume();
 
     /// \~chinese
-    /// @brief æš‚åœåŠ¨ç”»
+    /// @brief ÔİÍ£¶¯»­
     void Pause();
 
     /// \~chinese
-    /// @brief åœæ­¢åŠ¨ç”»
+    /// @brief Í£Ö¹¶¯»­
     void Stop();
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å»¶æ—¶
+    /// @brief ÉèÖÃ¶¯»­ÑÓÊ±
     void SetDelay(Duration delay);
 
     /// \~chinese
-    /// @brief è®¾ç½®å¾ªç¯æ¬¡æ•°
-    /// @param loops å¾ªç¯æ¬¡æ•°ï¼Œ-1 ä¸ºæ°¸ä¹…å¾ªç¯
+    /// @brief ÉèÖÃÑ­»·´ÎÊı
+    /// @param loops Ñ­»·´ÎÊı£¬-1 ÎªÓÀ¾ÃÑ­»·
     void SetLoops(int loops);
 
     /// \~chinese
-    /// @brief åŠ¨ç”»ç»“æŸæ—¶ç§»é™¤ç›®æ ‡è§’è‰²
+    /// @brief ¶¯»­½áÊøÊ±ÒÆ³ıÄ¿±ê½ÇÉ«
     void RemoveTargetWhenDone();
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­½áÊøÊ±µÄ»Øµ÷º¯Êı
     void SetDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
-    /// @brief è®¾ç½®åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃ¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
     void SetLoopDoneCallback(const DoneCallback& cb);
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çš„æ‹·è´
+    /// @brief »ñÈ¡¶¯»­µÄ¿½±´
     virtual ActionPtr Clone() const = 0;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çš„å€’è½¬
+    /// @brief »ñÈ¡¶¯»­µÄµ¹×ª
     virtual ActionPtr Reverse() const = 0;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çš„è¿è¡ŒçŠ¶æ€
+    /// @brief »ñÈ¡¶¯»­µÄÔËĞĞ×´Ì¬
     bool IsRunning() const;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çš„å¾ªç¯æ¬¡æ•°
+    /// @brief »ñÈ¡¶¯»­µÄÑ­»·´ÎÊı
     int GetLoops() const;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çš„å»¶æ—¶
+    /// @brief »ñÈ¡¶¯»­µÄÑÓÊ±
     Duration GetDelay() const;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡¶¯»­½áÊøÊ±µÄ»Øµ÷º¯Êı
     DoneCallback GetDoneCallback() const;
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»å¾ªç¯ç»“æŸæ—¶çš„å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡¶¯»­Ñ­»·½áÊøÊ±µÄ»Øµ÷º¯Êı
     DoneCallback GetLoopDoneCallback() const;
 
 protected:
     /// \~chinese
-    /// @brief åˆå§‹åŒ–åŠ¨ç”»
+    /// @brief ³õÊ¼»¯¶¯»­
     virtual void Init(Actor* target);
 
     /// \~chinese
-    /// @brief æ›´æ–°åŠ¨ç”»
+    /// @brief ¸üĞÂ¶¯»­
     virtual void Update(Actor* target, Duration dt);
 
     /// \~chinese
-    /// @brief æ›´æ–°ä¸€ä¸ªæ—¶é—´æ­¥
+    /// @brief ¸üĞÂÒ»¸öÊ±¼ä²½
     void UpdateStep(Actor* target, Duration dt);
 
     /// \~chinese
-    /// @brief å®ŒæˆåŠ¨ç”»
+    /// @brief Íê³É¶¯»­
     void Complete(Actor* target);
 
     /// \~chinese
-    /// @brief é‡æ–°å¼€å§‹åŠ¨ç”»
+    /// @brief ÖØĞÂ¿ªÊ¼¶¯»­
     void Restart(Actor* target);
 
     /// \~chinese
-    /// @brief åŠ¨ç”»çŠ¶æ€
+    /// @brief ¶¯»­×´Ì¬
     enum class Status
     {
-        NotStarted,  ///< æœªå¼€å§‹
-        Delayed,     ///< ç­‰å¾…å»¶æ—¶
-        Started,     ///< å·²å¼€å§‹
-        Done,        ///< å·²ç»“æŸ
-        Removeable   ///< å¯ç§»é™¤
+        NotStarted,  ///< Î´¿ªÊ¼
+        Delayed,     ///< µÈ´ıÑÓÊ±
+        Started,     ///< ÒÑ¿ªÊ¼
+        Done,        ///< ÒÑ½áÊø
+        Removeable   ///< ¿ÉÒÆ³ı
     };
 
     /// \~chinese
-    /// @brief è·å–åŠ¨ç”»çŠ¶æ€
+    /// @brief »ñÈ¡¶¯»­×´Ì¬
     Status GetStatus() const;
 
     /// \~chinese
-    /// @brief è·å–æ¶ˆé€æ—¶é—´
+    /// @brief »ñÈ¡ÏûÊÅÊ±¼ä
     Duration GetElapsed() const;
 
     /// \~chinese
-    /// @brief è·å–å®Œæˆçš„å¾ªç¯æ¬¡æ•°
+    /// @brief »ñÈ¡Íê³ÉµÄÑ­»·´ÎÊı
     int GetLoopsDone() const;
 
     /// \~chinese
-    /// @brief ç»“æŸåŠ¨ç”»
+    /// @brief ½áÊø¶¯»­
     void Done();
 
     /// \~chinese
-    /// @brief æ˜¯å¦å·²ç»“æŸ
+    /// @brief ÊÇ·ñÒÑ½áÊø
     bool IsDone() const;
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç§»é™¤
+    /// @brief ÊÇ·ñ¿ÉÒÆ³ı
     bool IsRemoveable() const;
 
 protected:

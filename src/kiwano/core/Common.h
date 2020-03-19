@@ -39,68 +39,68 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief è¾“å…¥æµ
+/// @brief ÊäÈëÁ÷
 using InputStream = std::istream;
 
 /// \~chinese
-/// @brief è¾“å‡ºæµ
+/// @brief Êä³öÁ÷
 using OutputStream = std::ostream;
 
 /// \~chinese
-/// @brief å­—ç¬¦ä¸²æµ
+/// @brief ×Ö·û´®Á÷
 using StringStream = std::stringstream;
 
 /// \~chinese
-/// @brief å®½å­—ç¬¦ä¸²æµ
+/// @brief ¿í×Ö·û´®Á÷
 using WideStringStream = std::wstringstream;
 
 /// \~chinese
-/// @brief çº¿æ€§æ•°ç»„å®¹å™¨
+/// @brief ÏßĞÔÊı×éÈİÆ÷
 template <typename _Ty, typename... _Args>
 using Vector = std::vector<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief é“¾è¡¨å®¹å™¨
+/// @brief Á´±íÈİÆ÷
 template <typename _Ty, typename... _Args>
 using List = std::list<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief é˜Ÿåˆ—å®¹å™¨
+/// @brief ¶ÓÁĞÈİÆ÷
 template <typename _Ty, typename... _Args>
 using Queue = std::queue<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief é›†åˆå®¹å™¨
+/// @brief ¼¯ºÏÈİÆ÷
 template <typename _Ty, typename... _Args>
 using Set = std::set<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief å¯¹å®¹å™¨
+/// @brief ¶ÔÈİÆ÷
 template <typename _Ty1, typename _Ty2>
 using Pair = std::pair<_Ty1, _Ty2>;
 
 /// \~chinese
-/// @brief æ— åºé›†åˆå®¹å™¨
+/// @brief ÎŞĞò¼¯ºÏÈİÆ÷
 template <typename _Ty, typename... _Args>
 using UnorderedSet = std::unordered_set<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief æ ˆå®¹å™¨
+/// @brief Õ»ÈİÆ÷
 template <typename _Ty, typename... _Args>
 using Stack = std::stack<_Ty, _Args...>;
 
 /// \~chinese
-/// @brief å­—ç¬¦ä¸²å®¹å™¨
+/// @brief ×Ö·û´®ÈİÆ÷
 template <typename _Kty, typename _Ty, typename... _Args>
 using Map = std::map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
-/// @brief å­—ç¬¦ä¸²å®¹å™¨
+/// @brief ×Ö·û´®ÈİÆ÷
 template <typename _Kty, typename _Ty, typename... _Args>
 using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
 
 /// \~chinese
-/// @brief ä¸å¯æ‹·è´å¯¹è±¡
+/// @brief ²»¿É¿½±´¶ÔÏó
 class Noncopyable
 {
 protected:

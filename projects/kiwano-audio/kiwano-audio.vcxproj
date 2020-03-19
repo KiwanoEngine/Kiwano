@@ -74,7 +74,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
@@ -94,7 +93,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>

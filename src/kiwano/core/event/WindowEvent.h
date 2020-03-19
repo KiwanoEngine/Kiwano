@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(WindowClosedEvent);
  */
 
 /// \~chinese
-/// @brief çª—å£äº‹ä»¶
+/// @brief ´°¿ÚÊÂ¼ş
 class KGE_API WindowEvent : public Event
 {
 public:
@@ -44,49 +44,49 @@ public:
 };
 
 /// \~chinese
-/// @brief çª—å£ç§»åŠ¨äº‹ä»¶
+/// @brief ´°¿ÚÒÆ¶¯ÊÂ¼ş
 class KGE_API WindowMovedEvent : public WindowEvent
 {
 public:
-    int x;  ///< çª—å£å·¦ä¸Šè§’ x åæ ‡
-    int y;  ///< çª—å£å·¦ä¸Šè§’ y åæ ‡
+    int x;  ///< ´°¿Ú×óÉÏ½Ç x ×ø±ê
+    int y;  ///< ´°¿Ú×óÉÏ½Ç y ×ø±ê
 
     WindowMovedEvent();
 };
 
 /// \~chinese
-/// @brief çª—å£å¤§å°å˜åŒ–äº‹ä»¶
+/// @brief ´°¿Ú´óĞ¡±ä»¯ÊÂ¼ş
 class KGE_API WindowResizedEvent : public WindowEvent
 {
 public:
-    uint32_t width;   ///< çª—å£å®½åº¦
-    uint32_t height;  ///< çª—å£é«˜åº¦
+    uint32_t width;   ///< ´°¿Ú¿í¶È
+    uint32_t height;  ///< ´°¿Ú¸ß¶È
 
     WindowResizedEvent();
 };
 
 /// \~chinese
-/// @brief çª—å£ç„¦ç‚¹å˜åŒ–äº‹ä»¶
+/// @brief ´°¿Ú½¹µã±ä»¯ÊÂ¼ş
 class KGE_API WindowFocusChangedEvent : public WindowEvent
 {
 public:
-    bool focus;  ///< æ˜¯å¦è·å–åˆ°ç„¦ç‚¹
+    bool focus;  ///< ÊÇ·ñ»ñÈ¡µ½½¹µã
 
     WindowFocusChangedEvent();
 };
 
 /// \~chinese
-/// @brief çª—å£æ ‡é¢˜æ›´æ”¹äº‹ä»¶
+/// @brief ´°¿Ú±êÌâ¸ü¸ÄÊÂ¼ş
 class KGE_API WindowTitleChangedEvent : public WindowEvent
 {
 public:
-    String title;  ///< æ ‡é¢˜
+    String title;  ///< ±êÌâ
 
     WindowTitleChangedEvent();
 };
 
 /// \~chinese
-/// @brief çª—å£å…³é—­äº‹ä»¶
+/// @brief ´°¿Ú¹Ø±ÕÊÂ¼ş
 class KGE_API WindowClosedEvent : public WindowEvent
 {
 public:

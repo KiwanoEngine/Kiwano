@@ -28,112 +28,112 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(LocalStorage);
 
 /// \~chinese
-/// @brief æœ¬åœ°å­˜å‚¨
-/// @details LocalStorageæ˜¯ä¸€ä¸ªç®€æ˜“çš„æŒä¹…åŒ–å·¥å…·ï¼Œå­˜æ”¾ï¼ˆå­—ç¬¦ä¸²-å€¼ï¼‰çš„é”®å€¼å¯¹
-/// æ”¯æŒçš„æ•°æ®ç±»å‹åŒ…æ‹¬ (bool | int | float | double | String)
-/// ä¾‹å¦‚, ä¿å­˜æ¸¸æˆæœ€é«˜åˆ†, ä»¥ä¾¿ä¸‹æ¬¡è¿›è¡Œæ¸¸æˆæ—¶è¯»å–:
+/// @brief ±¾µØ´æ´¢
+/// @details LocalStorageÊÇÒ»¸ö¼òÒ×µÄ³Ö¾Ã»¯¹¤¾ß£¬´æ·Å£¨×Ö·û´®-Öµ£©µÄ¼üÖµ¶Ô
+/// Ö§³ÖµÄÊı¾İÀàĞÍ°üÀ¨ (bool | int | float | double | String)
+/// ÀıÈç, ±£´æÓÎÏ·×î¸ß·Ö, ÒÔ±ãÏÂ´Î½øĞĞÓÎÏ·Ê±¶ÁÈ¡:
 ///   @code
-///     LocalStorage data;                      // åˆ›å»ºæ•°æ®å¯¹è±¡
-///     data.SaveInt("best-score", 20);        // ä¿å­˜æœ€é«˜åˆ† 20
-///     int best = data.GetInt("best-score");  // è¯»å–ä¹‹å‰å‚¨å­˜çš„æœ€é«˜åˆ†
+///     LocalStorage data;                      // ´´½¨Êı¾İ¶ÔÏó
+///     data.SaveInt("best-score", 20);        // ±£´æ×î¸ß·Ö 20
+///     int best = data.GetInt("best-score");  // ¶ÁÈ¡Ö®Ç°´¢´æµÄ×î¸ß·Ö
 ///   @endcode
 class KGE_API LocalStorage : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief æ„å»ºæœ¬åœ°å­˜å‚¨å¯¹è±¡
-    /// @param file_path æ–‡ä»¶å‚¨å­˜è·¯å¾„
-    /// @param field å­—æ®µå
+    /// @brief ¹¹½¨±¾µØ´æ´¢¶ÔÏó
+    /// @param file_path ÎÄ¼ş´¢´æÂ·¾¶
+    /// @param field ×Ö¶ÎÃû
     LocalStorage(const String& file_path = "data.ini", const String& field = "defalut");
 
     /// \~chinese
-    /// @brief è·å–æ–‡ä»¶å‚¨å­˜è·¯å¾„
+    /// @brief »ñÈ¡ÎÄ¼ş´¢´æÂ·¾¶
     const String& GetFilePath() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡ä»¶å‚¨å­˜è·¯å¾„
+    /// @brief ÉèÖÃÎÄ¼ş´¢´æÂ·¾¶
     void SetFilePath(const String& file_path);
 
     /// \~chinese
-    /// @brief è·å–å­—æ®µå
+    /// @brief »ñÈ¡×Ö¶ÎÃû
     const String& GetFieldName() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—æ®µå
+    /// @brief ÉèÖÃ×Ö¶ÎÃû
     void SetFieldName(const String& field);
 
     /// \~chinese
-    /// @brief åˆ¤æ–­é”®å¯¹åº”çš„æ•°æ®æ˜¯å¦å­˜åœ¨
+    /// @brief ÅĞ¶Ï¼ü¶ÔÓ¦µÄÊı¾İÊÇ·ñ´æÔÚ
     bool Exists(const String& key) const;
 
     /// \~chinese
-    /// @brief ä¿å­˜ int ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param val å€¼
-    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
+    /// @brief ±£´æ int ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param val Öµ
+    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
     bool SaveInt(const String& key, int val) const;
 
     /// \~chinese
-    /// @brief ä¿å­˜ float ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param val å€¼
-    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
+    /// @brief ±£´æ float ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param val Öµ
+    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
     bool SaveFloat(const String& key, float val) const;
 
     /// \~chinese
-    /// @brief ä¿å­˜ double ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param val å€¼
-    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
+    /// @brief ±£´æ double ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param val Öµ
+    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
     bool SaveDouble(const String& key, double val) const;
 
     /// \~chinese
-    /// @brief ä¿å­˜ bool ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param val å€¼
-    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
+    /// @brief ±£´æ bool ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param val Öµ
+    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
     bool SaveBool(const String& key, bool val) const;
 
     /// \~chinese
-    /// @brief ä¿å­˜ String ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param val å€¼
-    /// @return æ“ä½œæ˜¯å¦æˆåŠŸ
+    /// @brief ±£´æ String ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param val Öµ
+    /// @return ²Ù×÷ÊÇ·ñ³É¹¦
     bool SaveString(const String& key, const String& val) const;
 
     /// \~chinese
-    /// @brief è·å– int ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param default_value å€¼ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
-    /// @return å€¼
+    /// @brief »ñÈ¡ int ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param default_value Öµ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
+    /// @return Öµ
     int GetInt(const String& key, int default_value = 0) const;
 
     /// \~chinese
-    /// @brief è·å– float ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param default_value å€¼ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
-    /// @return å€¼
+    /// @brief »ñÈ¡ float ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param default_value Öµ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
+    /// @return Öµ
     float GetFloat(const String& key, float default_value = 0.0f) const;
 
     /// \~chinese
-    /// @brief è·å– double ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param default_value å€¼ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
-    /// @return å€¼
+    /// @brief »ñÈ¡ double ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param default_value Öµ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
+    /// @return Öµ
     double GetDouble(const String& key, double default_value = 0.0) const;
 
     /// \~chinese
-    /// @brief è·å– bool ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param default_value å€¼ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
-    /// @return å€¼
+    /// @brief »ñÈ¡ bool ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param default_value Öµ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
+    /// @return Öµ
     bool GetBool(const String& key, bool default_value = false) const;
 
     /// \~chinese
-    /// @brief è·å– å­—ç¬¦ä¸² ç±»å‹çš„å€¼
-    /// @param key é”®
-    /// @param default_value å€¼ä¸å­˜åœ¨æ—¶è¿”å›çš„é»˜è®¤å€¼
-    /// @return å€¼
+    /// @brief »ñÈ¡ ×Ö·û´® ÀàĞÍµÄÖµ
+    /// @param key ¼ü
+    /// @param default_value Öµ²»´æÔÚÊ±·µ»ØµÄÄ¬ÈÏÖµ
+    /// @return Öµ
     String GetString(const String& key, const String& default_value = String()) const;
 
 private:

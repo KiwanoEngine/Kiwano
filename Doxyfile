@@ -32,7 +32,7 @@ SHOW_NAMESPACES        = YES
 #---------------------------------------------------------------------------
 
 INPUT                  = src/
-INPUT_ENCODING         = UTF-8
+INPUT_ENCODING         = GBK
 FILE_PATTERNS          = *.c \
                          *.cc \
                          *.cxx \

@@ -34,20 +34,20 @@ KGE_DECLARE_SMART_PTR(TextActor);
 
 /**
  * \~chinese
- * @brief æ–‡æœ¬è§’è‰²
+ * @brief ÎÄ±¾½ÇÉ«
  */
 class KGE_API TextActor : public Actor
 {
 public:
     /// \~chinese
-    /// @brief åˆ›å»ºæ–‡æœ¬è§’è‰²
-    /// @param text æ–‡å­—å†…å®¹
+    /// @brief ´´½¨ÎÄ±¾½ÇÉ«
+    /// @param text ÎÄ×ÖÄÚÈİ
     static TextActorPtr Create(const String& text);
 
     /// \~chinese
-    /// @brief åˆ›å»ºæ–‡æœ¬è§’è‰²
-    /// @param text æ–‡å­—å†…å®¹
-    /// @param style æ–‡æœ¬æ ·å¼
+    /// @brief ´´½¨ÎÄ±¾½ÇÉ«
+    /// @param text ÎÄ×ÖÄÚÈİ
+    /// @param style ÎÄ±¾ÑùÊ½
     static TextActorPtr Create(const String& text, const TextStyle& style);
 
     TextActor();
@@ -55,117 +55,117 @@ public:
     virtual ~TextActor();
 
     /// \~chinese
-    /// @brief è·å–æ–‡æœ¬
+    /// @brief »ñÈ¡ÎÄ±¾
     String GetText() const;
 
     /// \~chinese
-    /// @brief è·å–æ–‡æœ¬æ ·å¼
+    /// @brief »ñÈ¡ÎÄ±¾ÑùÊ½
     TextStyle GetStyle() const;
 
     /// \~chinese
-    /// @brief è·å–æ–‡æœ¬å¸ƒå±€
+    /// @brief »ñÈ¡ÎÄ±¾²¼¾Ö
     TextLayoutPtr GetLayout() const;
 
     /// \~chinese
-    /// @brief è·å–å¤§å°
+    /// @brief »ñÈ¡´óĞ¡
     Size GetSize() const override;
 
     /// \~chinese
-    /// @brief è·å–å¡«å……ç”»åˆ·
+    /// @brief »ñÈ¡Ìî³ä»­Ë¢
     BrushPtr GetFillBrush() const;
 
     /// \~chinese
-    /// @brief è·å–æè¾¹ç”»åˆ·
+    /// @brief »ñÈ¡Ãè±ß»­Ë¢
     BrushPtr GetOutlineBrush() const;
 
     /// \~chinese
-    /// @brief è·å–æè¾¹çº¿æ¡æ ·å¼
+    /// @brief »ñÈ¡Ãè±ßÏßÌõÑùÊ½
     StrokeStylePtr GetOutlineStrokeStyle() const;
 
     /// \~chinese
-    /// @brief è·å–å­—ä½“
+    /// @brief »ñÈ¡×ÖÌå
     FontPtr GetFont() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡æœ¬
+    /// @brief ÉèÖÃÎÄ±¾
     void SetText(const String& text);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡æœ¬æ ·å¼
+    /// @brief ÉèÖÃÎÄ±¾ÑùÊ½
     void SetStyle(const TextStyle& style);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“
+    /// @brief ÉèÖÃ×ÖÌå
     void SetFont(FontPtr font);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“æ—
+    /// @brief ÉèÖÃ×ÖÌå×å
     void SetFontFamily(const String& family);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—å·ï¼ˆé»˜è®¤å€¼ä¸º 18ï¼‰
+    /// @brief ÉèÖÃ×ÖºÅ£¨Ä¬ÈÏÖµÎª 18£©
     void SetFontSize(float size);
 
     /// \~chinese
-    /// @brief è®¾ç½®å­—ä½“ç²—ç»†å€¼ï¼ˆé»˜è®¤å€¼ä¸º FontWeight::Normalï¼‰
+    /// @brief ÉèÖÃ×ÖÌå´ÖÏ¸Öµ£¨Ä¬ÈÏÖµÎª FontWeight::Normal£©
     void SetFontWeight(uint32_t weight);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—å¡«å……ç”»åˆ·
+    /// @brief ÉèÖÃÎÄ×ÖÌî³ä»­Ë¢
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—å¡«å……é¢œè‰²ï¼ˆé»˜è®¤å€¼ä¸º Color::Whiteï¼‰
+    /// @brief ÉèÖÃÎÄ×ÖÌî³äÑÕÉ«£¨Ä¬ÈÏÖµÎª Color::White£©
     void SetFillColor(const Color& color);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—æ–œä½“ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
+    /// @brief ÉèÖÃÎÄ×ÖĞ±Ìå£¨Ä¬ÈÏÖµÎª false£©
     void SetItalic(bool italic);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡æœ¬è‡ªåŠ¨æ¢è¡Œçš„å®½åº¦ï¼ˆé»˜è®¤ä¸º 0ï¼‰
+    /// @brief ÉèÖÃÎÄ±¾×Ô¶¯»»ĞĞµÄ¿í¶È£¨Ä¬ÈÏÎª 0£©
     void SetWrapWidth(float wrap_width);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¡Œé—´è·ï¼ˆé»˜è®¤ä¸º 0ï¼‰
+    /// @brief ÉèÖÃĞĞ¼ä¾à£¨Ä¬ÈÏÎª 0£©
     void SetLineSpacing(float line_spacing);
 
     /// \~chinese
-    /// @brief è®¾ç½®å¯¹é½æ–¹å¼ï¼ˆé»˜è®¤ä¸º TextAlign::Leftï¼‰
+    /// @brief ÉèÖÃ¶ÔÆë·½Ê½£¨Ä¬ÈÏÎª TextAlign::Left£©
     void SetAlignment(TextAlign align);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—æè¾¹ç”»åˆ·
+    /// @brief ÉèÖÃÎÄ×ÖÃè±ß»­Ë¢
     void SetOutlineBrush(BrushPtr brush);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡å­—æè¾¹é¢œè‰²
+    /// @brief ÉèÖÃÎÄ×ÖÃè±ßÑÕÉ«
     void SetOutlineColor(const Color& outline_color);
 
     /// \~chinese
-    /// @brief è®¾ç½®æè¾¹çº¿æ¡æ ·å¼
+    /// @brief ÉèÖÃÃè±ßÏßÌõÑùÊ½
     void SetOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ˜¯å¦æ˜¾ç¤ºä¸‹åˆ’çº¿ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
+    /// @brief ÉèÖÃÊÇ·ñÏÔÊ¾ÏÂ»®Ïß£¨Ä¬ÈÏÖµÎª false£©
     void SetUnderline(bool enable);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ˜¯å¦æ˜¾ç¤ºåˆ é™¤çº¿ï¼ˆé»˜è®¤å€¼ä¸º falseï¼‰
+    /// @brief ÉèÖÃÊÇ·ñÏÔÊ¾É¾³ıÏß£¨Ä¬ÈÏÖµÎª false£©
     void SetStrikethrough(bool enable);
 
     /// \~chinese
-    /// @brief è®¾ç½®æ–‡æœ¬å¸ƒå±€
+    /// @brief ÉèÖÃÎÄ±¾²¼¾Ö
     void SetTextLayout(TextLayoutPtr layout);
 
     /// \~chinese
-    /// @brief æ›´æ–°è„æ–‡å­—å¸ƒå±€
-    /// @details ä»…å½“æ–‡å­—å¸ƒå±€è„æ—¶æ›´æ–°
+    /// @brief ¸üĞÂÔàÎÄ×Ö²¼¾Ö
+    /// @details ½öµ±ÎÄ×Ö²¼¾ÖÔàÊ±¸üĞÂ
     void UpdateDirtyLayout();
 
     /// \~chinese
-    /// @brief å¼ºåˆ¶æ›´æ–°æ–‡å­—å¸ƒå±€
-    /// @details æ–‡å­—å¸ƒå±€æ˜¯æ‡’æ›´æ–°çš„ï¼Œæ‰‹åŠ¨æ›´æ–°æ–‡å­—å¸ƒå±€ä»¥æ›´æ–°èŠ‚ç‚¹çŠ¶æ€
+    /// @brief Ç¿ÖÆ¸üĞÂÎÄ×Ö²¼¾Ö
+    /// @details ÎÄ×Ö²¼¾ÖÊÇÀÁ¸üĞÂµÄ£¬ÊÖ¶¯¸üĞÂÎÄ×Ö²¼¾ÖÒÔ¸üĞÂ½Úµã×´Ì¬
     void ForceUpdateLayout();
 
     void OnRender(RenderContext& ctx) override;

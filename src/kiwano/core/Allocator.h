@@ -29,29 +29,29 @@ namespace memory
 {
 
 /// \~chinese
-/// @brief å†…å­˜åˆ†é…å™¨
+/// @brief ÄÚ´æ·ÖÅäÆ÷
 class KGE_API MemoryAllocator
 {
 public:
     /// \~chinese
-    /// @brief ç”³è¯·å†…å­˜
+    /// @brief ÉêÇëÄÚ´æ
     virtual void* Alloc(size_t size) = 0;
 
     /// \~chinese
-    /// @brief é‡Šæ”¾å†…å­˜
+    /// @brief ÊÍ·ÅÄÚ´æ
     virtual void Free(void* ptr) = 0;
 };
 
 /// \~chinese
-/// @brief è·å–å½“å‰å†…å­˜åˆ†é…å™¨
+/// @brief »ñÈ¡µ±Ç°ÄÚ´æ·ÖÅäÆ÷
 MemoryAllocator* GetAllocator();
 
 /// \~chinese
-/// @brief è®¾ç½®å½“å‰å†…å­˜åˆ†é…å™¨
+/// @brief ÉèÖÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷
 void SetAllocator(MemoryAllocator* allocator);
 
 /// \~chinese
-/// @brief ä½¿ç”¨å½“å‰å†…å­˜åˆ†é…å™¨åˆ†é…å†…å­˜
+/// @brief Ê¹ÓÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷·ÖÅäÄÚ´æ
 template <typename _Ty>
 inline void* Alloc()
 {
@@ -59,14 +59,14 @@ inline void* Alloc()
 }
 
 /// \~chinese
-/// @brief ä½¿ç”¨å½“å‰å†…å­˜åˆ†é…å™¨é‡Šæ”¾å†…å­˜
+/// @brief Ê¹ÓÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷ÊÍ·ÅÄÚ´æ
 inline void Free(void* ptr)
 {
     return memory::GetAllocator()->Free(ptr);
 }
 
 /// \~chinese
-/// @brief ä½¿ç”¨å½“å‰å†…å­˜åˆ†é…å™¨åˆ›å»ºå¯¹è±¡
+/// @brief Ê¹ÓÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷´´½¨¶ÔÏó
 template <typename _Ty>
 inline _Ty* New()
 {
@@ -79,7 +79,7 @@ inline _Ty* New()
 }
 
 /// \~chinese
-/// @brief ä½¿ç”¨å½“å‰å†…å­˜åˆ†é…å™¨åˆ›å»ºå¯¹è±¡
+/// @brief Ê¹ÓÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷´´½¨¶ÔÏó
 template <typename _Ty, typename... _Args>
 inline _Ty* New(_Args&&... args)
 {
@@ -92,7 +92,7 @@ inline _Ty* New(_Args&&... args)
 }
 
 /// \~chinese
-/// @brief ä½¿ç”¨å½“å‰å†…å­˜åˆ†é…å™¨é”€æ¯å¯¹è±¡
+/// @brief Ê¹ÓÃµ±Ç°ÄÚ´æ·ÖÅäÆ÷Ïú»Ù¶ÔÏó
 template <typename _Ty>
 inline void Delete(_Ty* ptr)
 {
@@ -104,21 +104,21 @@ inline void Delete(_Ty* ptr)
 }
 
 /// \~chinese
-/// @brief å…¨å±€å†…å­˜åˆ†é…å™¨ï¼Œä½¿ç”¨mallocå’Œfreeåˆ†é…å†…å­˜
+/// @brief È«¾ÖÄÚ´æ·ÖÅäÆ÷£¬Ê¹ÓÃmallocºÍfree·ÖÅäÄÚ´æ
 class KGE_API GlobalAllocator : public MemoryAllocator
 {
 public:
     /// \~chinese
-    /// @brief ç”³è¯·å†…å­˜
+    /// @brief ÉêÇëÄÚ´æ
     virtual void* Alloc(size_t size) override;
 
     /// \~chinese
-    /// @brief é‡Šæ”¾å†…å­˜
+    /// @brief ÊÍ·ÅÄÚ´æ
     virtual void Free(void* ptr) override;
 };
 
 /// \~chinese
-/// @brief è·å–å…¨å±€å†…å­˜åˆ†é…å™¨
+/// @brief »ñÈ¡È«¾ÖÄÚ´æ·ÖÅäÆ÷
 GlobalAllocator* GetGlobalAllocator();
 
 }  // namespace memory

@@ -25,26 +25,30 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief å­—ç¬¦ä¸²å®¹å™¨
+/// @brief ×Ö·û´®ÈİÆ÷
 using String = std::string;
 
 /// \~chinese
-/// @brief å®½å­—ç¬¦ä¸²å®¹å™¨
+/// @brief ¿í×Ö·û´®ÈİÆ÷
 using WideString = std::wstring;
 
 namespace strings
 {
 
 /// \~chinese
-/// @brief æ ¼å¼åŒ–å­—ç¬¦ä¸²
+/// @brief ¸ñÊ½»¯×Ö·û´®
 String Format(const char* format, ...);
 
 /// \~chinese
-/// @brief å®½å­—ç¬¦ä¸²è½¬çª„å­—ç¬¦ä¸²
+/// @brief ¸ñÊ½»¯×Ö·û´®
+WideString Format(const wchar_t* format, ...);
+
+/// \~chinese
+/// @brief ¿í×Ö·û´®×ªÕ­×Ö·û´®
 String ToNarrow(const WideString& str);
 
 /// \~chinese
-/// @brief çª„å­—ç¬¦ä¸²è½¬å®½å­—ç¬¦ä¸²
+/// @brief Õ­×Ö·û´®×ª¿í×Ö·û´®
 WideString ToWide(const String& str);
 
 }

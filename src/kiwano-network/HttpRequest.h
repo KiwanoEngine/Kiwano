@@ -37,48 +37,48 @@ KGE_DECLARE_SMART_PTR(HttpRequest);
  */
 
 /// \~chinese
-/// @brief HTTPè¯·æ±‚ç±»å‹
+/// @brief HTTPÇëÇóÀàĞÍ
 enum class HttpType
 {
-    Unknown,  ///< æœªçŸ¥
-    Get,      ///< HTTP GETè¯·æ±‚
-    Post,     ///< HTTP POSTè¯·æ±‚
-    Put,      ///< HTTP PUTè¯·æ±‚
-    Delete    ///< HTTP DELETEè¯·æ±‚
+    Unknown,  ///< Î´Öª
+    Get,      ///< HTTP GETÇëÇó
+    Post,     ///< HTTP POSTÇëÇó
+    Put,      ///< HTTP PUTÇëÇó
+    Delete    ///< HTTP DELETEÇëÇó
 };
 
 /**
  * \~chinese
- * @brief HTTPè¯·æ±‚
+ * @brief HTTPÇëÇó
  */
 class KGE_API HttpRequest : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief å“åº”å›è°ƒå‡½æ•°
+    /// @brief ÏìÓ¦»Øµ÷º¯Êı
     using ResponseCallback = Function<void(HttpRequest* /* request */, HttpResponse* /* response */)>;
 
     /// \~chinese
-    /// @brief åˆ›å»ºHTTPè¯·æ±‚
-    /// @param url è¯·æ±‚åœ°å€
-    /// @param type è¯·æ±‚ç±»å‹
-    /// @param callback å“åº”å›è°ƒå‡½æ•°
+    /// @brief ´´½¨HTTPÇëÇó
+    /// @param url ÇëÇóµØÖ·
+    /// @param type ÇëÇóÀàĞÍ
+    /// @param callback ÏìÓ¦»Øµ÷º¯Êı
     static HttpRequestPtr Create(const String& url, HttpType type, const ResponseCallback& callback);
 
     /// \~chinese
-    /// @brief åˆ›å»ºHTTPè¯·æ±‚
-    /// @param url è¯·æ±‚åœ°å€
-    /// @param type è¯·æ±‚ç±»å‹
-    /// @param data è¯·æ±‚æ•°æ®
-    /// @param callback å“åº”å›è°ƒå‡½æ•°
+    /// @brief ´´½¨HTTPÇëÇó
+    /// @param url ÇëÇóµØÖ·
+    /// @param type ÇëÇóÀàĞÍ
+    /// @param data ÇëÇóÊı¾İ
+    /// @param callback ÏìÓ¦»Øµ÷º¯Êı
     static HttpRequestPtr Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback);
 
     /// \~chinese
-    /// @brief åˆ›å»ºHTTPè¯·æ±‚
-    /// @param url è¯·æ±‚åœ°å€
-    /// @param type è¯·æ±‚ç±»å‹
-    /// @param json è¯·æ±‚çš„JSONæ•°æ®
-    /// @param callback å“åº”å›è°ƒå‡½æ•°
+    /// @brief ´´½¨HTTPÇëÇó
+    /// @param url ÇëÇóµØÖ·
+    /// @param type ÇëÇóÀàĞÍ
+    /// @param json ÇëÇóµÄJSONÊı¾İ
+    /// @param callback ÏìÓ¦»Øµ÷º¯Êı
     static HttpRequestPtr Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback);
 
     HttpRequest();
@@ -86,55 +86,55 @@ public:
     HttpRequest(HttpType type);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¯·æ±‚åœ°å€
+    /// @brief ÉèÖÃÇëÇóµØÖ·
     void SetUrl(const String& url);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¯·æ±‚ç±»å‹
+    /// @brief ÉèÖÃÇëÇóÀàĞÍ
     void SetType(HttpType type);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¯·æ±‚æ•°æ®
+    /// @brief ÉèÖÃÇëÇóÊı¾İ
     void SetData(const String& data);
 
     /// \~chinese
-    /// @brief è®¾ç½®è¯·æ±‚çš„JSONæ•°æ®
+    /// @brief ÉèÖÃÇëÇóµÄJSONÊı¾İ
     void SetJsonData(const Json& json);
 
     /// \~chinese
-    /// @brief è®¾ç½®HTTPå¤´
+    /// @brief ÉèÖÃHTTPÍ·
     void SetHeaders(const Map<String, String>& headers);
 
     /// \~chinese
-    /// @brief è®¾ç½®HTTPå¤´
+    /// @brief ÉèÖÃHTTPÍ·
     void SetHeader(const String& field, const String& content);
 
     /// \~chinese
-    /// @brief è®¾ç½®å“åº”å›è°ƒå‡½æ•°
+    /// @brief ÉèÖÃÏìÓ¦»Øµ÷º¯Êı
     void SetResponseCallback(const ResponseCallback& callback);
 
     /// \~chinese
-    /// @brief è·å–è¯·æ±‚åœ°å€
+    /// @brief »ñÈ¡ÇëÇóµØÖ·
     const String& GetUrl() const;
 
     /// \~chinese
-    /// @brief è·å–è¯·æ±‚ç±»å‹
+    /// @brief »ñÈ¡ÇëÇóÀàĞÍ
     HttpType GetType() const;
 
     /// \~chinese
-    /// @brief è·å–è¯·æ±‚æ•°æ®
+    /// @brief »ñÈ¡ÇëÇóÊı¾İ
     const String& GetData() const;
 
     /// \~chinese
-    /// @brief è·å–HTTPå¤´
+    /// @brief »ñÈ¡HTTPÍ·
     Map<String, String>& GetHeaders();
 
     /// \~chinese
-    /// @brief è·å–HTTPå¤´
+    /// @brief »ñÈ¡HTTPÍ·
     const String& GetHeader(const String& header) const;
 
     /// \~chinese
-    /// @brief è·å–å“åº”å›è°ƒå‡½æ•°
+    /// @brief »ñÈ¡ÏìÓ¦»Øµ÷º¯Êı
     const ResponseCallback& GetResponseCallback() const;
 
 private:

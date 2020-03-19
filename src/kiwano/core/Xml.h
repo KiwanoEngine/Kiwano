@@ -26,11 +26,11 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief XMLæ–‡æ¡£
+/// @brief XMLÎÄµµ
 using XmlDocument = pugi::xml_document;
 
 /// \~chinese
-/// @brief XMLæ–‡æ¡£
+/// @brief XMLÎÄµµ
 using XmlNode = pugi::xml_node;
 
 }  // namespace kiwano

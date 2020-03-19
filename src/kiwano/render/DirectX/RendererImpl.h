@@ -88,15 +88,15 @@ public:
     void Present() override;
 
     /// \~chinese
-    /// @brief 鑾峰彇Direct2D璁惧璧勬簮
+    /// @brief 获取Direct2D设备资源
     ID2DDeviceResources* GetD2DDeviceResources();
 
     /// \~chinese
-    /// @brief 鑾峰彇Direct3D璁惧璧勬簮
+    /// @brief 获取Direct3D设备资源
     ID3DDeviceResources* GetD3DDeviceResources();
 
     /// \~chinese
-    /// @brief 閲嶈娓叉煋杈撳嚭澶у皬
+    /// @brief 重设渲染输出大小
     void Resize(uint32_t width, uint32_t height) override;
 
 protected:

@@ -32,78 +32,78 @@ namespace physics
  */
 
 /// \~chinese
-/// @brief ç‰©ç†æ¥è§¦
+/// @brief ÎïÀí½Ó´¥
 class KGE_API Contact
 {
 public:
     Contact();
 
     /// \~chinese
-    /// @brief æ˜¯å¦æ˜¯æ¥è§¦
+    /// @brief ÊÇ·ñÊÇ½Ó´¥
     bool IsTouching() const;
 
     /// \~chinese
-    /// @brief å¯ç”¨æˆ–ç¦ç”¨ (ä»…ä½œç”¨äºä¸€ä¸ªæ—¶é—´æ­¥)
+    /// @brief ÆôÓÃ»ò½ûÓÃ (½ö×÷ÓÃÓÚÒ»¸öÊ±¼ä²½)
     void SetEnabled(bool flag);
 
     /// \~chinese
-    /// @brief æ˜¯å¦å¯ç”¨
+    /// @brief ÊÇ·ñÆôÓÃ
     bool IsEnabled() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“Açš„å¤¹å…·
+    /// @brief »ñÈ¡ÎïÌåAµÄ¼Ğ¾ß
     Fixture* GetFixtureA() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“Bçš„å¤¹å…·
+    /// @brief »ñÈ¡ÎïÌåBµÄ¼Ğ¾ß
     Fixture* GetFixtureB() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“A
+    /// @brief »ñÈ¡ÎïÌåA
     PhysicBody* GetBodyA() const;
 
     /// \~chinese
-    /// @brief è·å–ç‰©ä½“B
+    /// @brief »ñÈ¡ÎïÌåB
     PhysicBody* GetBodyB() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®æ‘©æ“¦åŠ›
+    /// @brief ÉèÖÃÄ¦²ÁÁ¦
     void SetFriction(float friction);
 
     /// \~chinese
-    /// @brief è·å–æ‘©æ“¦åŠ›
+    /// @brief »ñÈ¡Ä¦²ÁÁ¦
     float GetFriction() const;
 
     /// \~chinese
-    /// @brief é‡ç½®æ‘©æ“¦åŠ›
+    /// @brief ÖØÖÃÄ¦²ÁÁ¦
     void ResetFriction();
 
     /// \~chinese
-    /// @brief è®¾ç½®å¼¹æ€§æ¢å¤
+    /// @brief ÉèÖÃµ¯ĞÔ»Ö¸´
     void SetRestitution(float restitution);
 
     /// \~chinese
-    /// @brief è·å–å¼¹æ€§æ¢å¤
+    /// @brief »ñÈ¡µ¯ĞÔ»Ö¸´
     float GetRestitution() const;
 
     /// \~chinese
-    /// @brief é‡ç½®å¼¹æ€§æ¢å¤
+    /// @brief ÖØÖÃµ¯ĞÔ»Ö¸´
     void ResetRestitution();
 
     /// \~chinese
-    /// @brief è®¾ç½®åˆ‡çº¿é€Ÿåº¦
+    /// @brief ÉèÖÃÇĞÏßËÙ¶È
     void SetTangentSpeed(float speed);
 
     /// \~chinese
-    /// @brief è·å–åˆ‡çº¿é€Ÿåº¦
+    /// @brief »ñÈ¡ÇĞÏßËÙ¶È
     float GetTangentSpeed() const;
 
     /// \~chinese
-    /// @brief è·å–b2Contact
+    /// @brief »ñÈ¡b2Contact
     b2Contact* GetB2Contact() const;
 
     /// \~chinese
-    /// @brief è®¾ç½®b2Contact
+    /// @brief ÉèÖÃb2Contact
     void SetB2Contact(b2Contact* contact);
 
     bool operator==(const Contact& rhs) const;
@@ -114,7 +114,7 @@ private:
 };
 
 /// \~chinese
-/// @brief ç‰©ç†æ¥è§¦åˆ—è¡¨
+/// @brief ÎïÀí½Ó´¥ÁĞ±í
 class ContactList
 {
     template <typename _Ty>

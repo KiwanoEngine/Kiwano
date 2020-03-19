@@ -121,10 +121,10 @@ bool GifImage::GetGlobalMetadata()
             PROPVARIANT prop_val;
             ::PropVariantInit(&prop_val);
 
-            // è·å–å…¨å±€ frame å¤§å°
+            // »ñÈ¡È«¾Ö frame ´óĞ¡
             if (SUCCEEDED(hr))
             {
-                // è·å–å®½åº¦
+                // »ñÈ¡¿í¶È
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Width", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -140,7 +140,7 @@ bool GifImage::GetGlobalMetadata()
 
             if (SUCCEEDED(hr))
             {
-                // è·å–é«˜åº¦
+                // »ñÈ¡¸ß¶È
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/Height", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -156,7 +156,7 @@ bool GifImage::GetGlobalMetadata()
 
             if (SUCCEEDED(hr))
             {
-                // è·å¾—åƒç´ çºµæ¨ªæ¯”
+                // »ñµÃÏñËØ×İºá±È
                 hr = metadata_reader->GetMetadataByName(L"/logscrdesc/PixelAspectRatio", &prop_val);
 
                 if (SUCCEEDED(hr))
@@ -166,11 +166,11 @@ bool GifImage::GetGlobalMetadata()
                     {
                         if (prop_val.bVal != 0)
                         {
-                            // éœ€è¦è®¡ç®—æ¯”ç‡
-                            // æœ€é«˜åƒç´  1ï¼š4ï¼Œæœ€å®½åƒç´  4ï¼š1ï¼Œå¢é‡ä¸º 1/64
+                            // ĞèÒª¼ÆËã±ÈÂÊ
+                            // ×î¸ßÏñËØ 1£º4£¬×î¿íÏñËØ 4£º1£¬ÔöÁ¿Îª 1/64
                             float pixel_asp_ratio = (prop_val.bVal + 15.f) / 64.f;
 
-                            // æ ¹æ®åƒç´ é•¿å®½æ¯”è®¡ç®—åƒç´ ä¸­çš„å›¾åƒå®½åº¦å’Œé«˜åº¦ï¼Œåªç¼©å°å›¾åƒ
+                            // ¸ù¾İÏñËØ³¤¿í±È¼ÆËãÏñËØÖĞµÄÍ¼Ïñ¿í¶ÈºÍ¸ß¶È£¬Ö»ËõĞ¡Í¼Ïñ
                             if (pixel_asp_ratio > 1.f)
                             {
                                 size_in_pixels_ = { width, static_cast<uint32_t>(height / pixel_asp_ratio) };
@@ -182,7 +182,7 @@ bool GifImage::GetGlobalMetadata()
                         }
                         else
                         {
-                            // å€¼ä¸º 0, æ‰€ä»¥åƒç´ æ¯”ä¸º 1
+                            // ÖµÎª 0, ËùÒÔÏñËØ±ÈÎª 1
                             size_in_pixels_ = { width, height };
                         }
                     }
