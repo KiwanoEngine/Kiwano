@@ -29,6 +29,11 @@
 namespace kiwano
 {
 
+int GetVersion()
+{
+    return KGE_VERSION;
+}
+
 Application::Application()
     : quiting_(false)
     , time_scale_(1.f)
@@ -39,11 +44,6 @@ Application::Application()
 }
 
 Application::~Application() {}
-
-int Application::GetVersion() const
-{
-    return KGE_VERSION;
-}
 
 void Application::Run(RunnerPtr runner, bool debug)
 {
@@ -110,6 +110,22 @@ void Application::Use(Module& module)
 void Application::SetTimeScale(float scale_factor)
 {
     time_scale_ = scale_factor;
+}
+
+void Application::DispatchEvent(EventPtr evt)
+{
+    this->DispatchEvent(evt.Get());
+}
+
+void Application::DispatchEvent(Event* evt)
+{
+    for (auto comp : modules_)
+    {
+        if (auto event_comp = comp->Cast<EventModule>())
+        {
+            event_comp->HandleEvent(evt);
+        }
+    }
 }
 
 void Application::Update(Duration dt)
@@ -198,17 +214,6 @@ void Application::Render()
     }
 
     renderer.Present();
-}
-
-void Application::DispatchEvent(Event* evt)
-{
-    for (auto comp : modules_)
-    {
-        if (auto event_comp = comp->Cast<EventModule>())
-        {
-            event_comp->HandleEvent(evt);
-        }
-    }
 }
 
 void Application::PreformInMainThread(Function<void()> func)

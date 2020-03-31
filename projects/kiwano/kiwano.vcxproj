@@ -182,6 +182,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF7F943D-A89C-4E6C-97CF-84F7D8FF8EDF}</ProjectGuid>
     <RootNamespace>kiwano</RootNamespace>

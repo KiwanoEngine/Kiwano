@@ -30,6 +30,13 @@
 
 namespace kiwano
 {
+
+/**
+ * \~chinese
+ * @brief 获取版本号
+ */
+extern KGE_API int GetVersion();
+
 /**
  * \~chinese
  * @brief 应用程序，控制游戏的整个生命周期，包括初始化、启动、结束以及事件分发等
@@ -72,12 +79,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取版本号
-     */
-    int GetVersion() const;
-
-    /**
-     * \~chinese
      * @brief 添加模块
      * @param[in] module 模块
      */
@@ -91,6 +92,14 @@ public:
      * @warning 设置为负数可能导致动画系统紊乱
      */
     void SetTimeScale(float scale_factor);
+
+    /**
+     * \~chinese
+     * @brief 分发事件
+     * @details 将事件分发给所有事件功能模块
+     * @param evt 事件
+     */
+    void DispatchEvent(EventPtr evt);
 
     /**
      * \~chinese
