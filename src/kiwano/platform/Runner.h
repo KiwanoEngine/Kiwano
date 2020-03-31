@@ -73,9 +73,10 @@ public:
 
     /// \~chinese
     /// @brief 应用程序主循环
-    /// @details 重载该函数以
+    /// @param dt 时间间隔
+    /// @details 重载该函数以控制程序主循环
     /// @return 返回false退出主循环，否则继续运行主循环
-    virtual bool MainLoop();
+    virtual bool MainLoop(Duration dt);
 
     /// \~chinese
     /// @brief 获取主窗口
@@ -85,18 +86,8 @@ public:
     /// @brief 设置主窗口
     void SetMainWindow(WindowPtr window);
 
-    /// \~chinese
-    /// @brief 获取上一次更新时间
-    Time GetLastUpdateTime() const;
-
-private:
-    void Ready();
-
-    void Destroy();
-
 private:
     WindowPtr main_window_;
-    Time      last_update_time_;
 };
 
 inline void Runner::OnReady() {}
@@ -116,11 +107,6 @@ inline WindowPtr Runner::GetMainWindow() const
 inline void Runner::SetMainWindow(WindowPtr window)
 {
     main_window_ = window;
-}
-
-inline Time Runner::GetLastUpdateTime() const
-{
-    return last_update_time_;
 }
 
 }  // namespace kiwano

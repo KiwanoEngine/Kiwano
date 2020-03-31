@@ -63,17 +63,22 @@ void Application::Run(RunnerPtr runner, bool debug)
     }
 
     // Everything is ready
-    runner->Ready();
+    runner->OnReady();
 
-    quiting_ = false;
+    quiting_          = false;
+    last_update_time_ = Time::Now();
     while (!quiting_)
     {
-        if (!runner->MainLoop())
+        const Time     now = Time::Now();
+        const Duration dt  = (now - last_update_time_);
+        last_update_time_  = now;
+
+        if (!runner->MainLoop(dt))
             quiting_ = true;
     }
 
     // Destroy all resources
-    runner->Destroy();
+    runner->OnDestroy();
     this->Destroy();
 }
 

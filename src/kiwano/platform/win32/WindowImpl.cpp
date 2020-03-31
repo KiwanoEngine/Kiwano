@@ -205,7 +205,10 @@ WindowWin32Impl::WindowWin32Impl()
         key_map_[VK_F1 + i] = KeyCode(size_t(KeyCode::F1) + i);
 }
 
-WindowWin32Impl::~WindowWin32Impl() {}
+WindowWin32Impl::~WindowWin32Impl()
+{
+    this->Destroy();
+}
 
 void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
                            bool fullscreen)

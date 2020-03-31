@@ -69,7 +69,7 @@ Runner::Runner() {}
 
 Runner::~Runner() {}
 
-bool Runner::MainLoop()
+bool Runner::MainLoop(Duration dt)
 {
     if (main_window_->ShouldClose())
     {
@@ -88,30 +88,9 @@ bool Runner::MainLoop()
     }
 
     // Update & render
-    const Time     now = Time::Now();
-    const Duration dt  = (now - last_update_time_);
-    last_update_time_  = now;
-
     app.Update(dt);
     app.Render();
     return true;
-}
-
-void Runner::Ready()
-{
-    OnReady();
-    last_update_time_ = Time::Now();
-}
-
-void Runner::Destroy()
-{
-    OnDestroy();
-
-    if (main_window_)
-    {
-        main_window_->Destroy();
-        main_window_.Reset();
-    }
 }
 
 }  // namespace kiwano

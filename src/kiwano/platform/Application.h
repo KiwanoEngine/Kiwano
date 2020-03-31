@@ -136,10 +136,17 @@ public:
      */
     void Destroy();
 
+    /**
+     * \~chinese
+     * @brief 获取上一次更新时间
+     */
+    Time GetLastUpdateTime() const;
+
 private:
     bool                    quiting_;
     float                   time_scale_;
     RunnerPtr               runner_;
+    Time                    last_update_time_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -154,6 +161,11 @@ inline WindowPtr Application::GetMainWindow() const
 {
     KGE_ASSERT(runner_);
     return runner_->GetMainWindow();
+}
+
+inline Time Application::GetLastUpdateTime() const
+{
+    return last_update_time_;
 }
 
 }  // namespace kiwano
