@@ -91,11 +91,6 @@ public:
     void Println(Level level, _Args&&... args);
 
     /// \~chinese
-    /// @brief 显示或关闭控制台
-    /// @note 此操作会重置输出流
-    void ShowConsole(bool show);
-
-    /// \~chinese
     /// @brief 启用日志
     void Enable();
 
@@ -108,20 +103,21 @@ public:
     OutputStream& GetOutputStream();
 
     /// \~chinese
-    /// @brief 获取错误流
+    /// @brief 获取错误输出流
     OutputStream& GetErrorStream();
 
     /// \~chinese
     /// @brief 重定向输出流
-    std::streambuf* RedirectOutputStreamBuffer(std::streambuf* buf);
+    std::streambuf* RedirectOutputStream(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief 重定向错误流
-    std::streambuf* RedirectErrorStreamBuffer(std::streambuf* buf);
+    /// @brief 重定向错误输出流
+    std::streambuf* RedirectErrorStream(std::streambuf* buf);
 
     /// \~chinese
-    /// @brief 重置输出流
-    void ResetOutputStream();
+    /// @brief 显示或关闭控制台
+    /// @note 此操作会重定向输出流到标准输出流
+    void ShowConsole(bool show);
 
 private:
     Logger();
@@ -131,6 +127,8 @@ private:
     void Prepare(Level level, StringStream& sstream);
 
     void Output(Level level, StringStream& sstream);
+
+    void ResetStreamToStdStream();
 
     void ResetConsoleColor() const;
 

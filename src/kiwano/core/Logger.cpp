@@ -178,7 +178,7 @@ Logger::Logger()
     , output_stream_(std::cout.rdbuf())
     , error_stream_(std::cerr.rdbuf())
 {
-    ResetOutputStream();
+    ResetStreamToStdStream();
 }
 
 Logger::~Logger()
@@ -277,7 +277,7 @@ void Logger::Output(Level level, StringStream& sstream)
     }
 }
 
-void Logger::ResetOutputStream()
+void Logger::ResetStreamToStdStream()
 {
     bool has_console = ::GetConsoleWindow() != nullptr;
     if (has_console)
@@ -302,17 +302,17 @@ void Logger::ResetOutputStream()
         (void)std::cout.imbue(std::locale());
         (void)std::cerr.imbue(std::locale());
 
-        RedirectOutputStreamBuffer(std::cout.rdbuf());
-        RedirectErrorStreamBuffer(std::cerr.rdbuf());
+        RedirectOutputStream(std::cout.rdbuf());
+        RedirectErrorStream(std::cerr.rdbuf());
     }
 }
 
-std::streambuf* Logger::RedirectOutputStreamBuffer(std::streambuf* buf)
+std::streambuf* Logger::RedirectOutputStream(std::streambuf* buf)
 {
     return output_stream_.rdbuf(buf);
 }
 
-std::streambuf* Logger::RedirectErrorStreamBuffer(std::streambuf* buf)
+std::streambuf* Logger::RedirectErrorStream(std::streambuf* buf)
 {
     return error_stream_.rdbuf(buf);
 }
@@ -335,6 +335,8 @@ void Logger::ShowConsole(bool show)
             }
             else
             {
+                ResetStreamToStdStream();
+
                 // disable the close button of console
                 HMENU hmenu = ::GetSystemMenu(console, FALSE);
                 ::RemoveMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
@@ -355,8 +357,6 @@ void Logger::ShowConsole(bool show)
             }
         }
     }
-
-    ResetOutputStream();
 }
 
 }  // namespace kiwano
