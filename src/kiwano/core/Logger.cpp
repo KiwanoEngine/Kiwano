@@ -201,10 +201,10 @@ void Logger::Printf(Level level, const char* format, ...)
         va_start(args, format);
 
         static char temp_buffer[1024 * 3 + 1];
-        const auto     len = ::_vscprintf(format, args) + 1;
+        const auto  len = ::_vscprintf(format, args) + 1;
         ::_vsnprintf_s(temp_buffer, len, len, format, args);
 
-        sstream << ' ' << temp_buffer << "\r\n";
+        sstream << ' ' << temp_buffer << "\n";
 
         va_end(args);
     }
