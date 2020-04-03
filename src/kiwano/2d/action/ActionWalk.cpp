@@ -48,12 +48,12 @@ ActionWalk::ActionWalk()
 
 ActionPtr ActionWalk::Clone() const
 {
-    return InnerClone(ActionWalk::Create(GetDuration(), path_, rotating_, start_, end_));
+    return DoClone(ActionWalk::Create(GetDuration(), path_, rotating_, start_, end_));
 }
 
 ActionPtr ActionWalk::Reverse() const
 {
-    return InnerClone(ActionWalk::Create(GetDuration(), path_, rotating_, end_, start_));
+    return DoClone(ActionWalk::Create(GetDuration(), path_, rotating_, end_, start_));
 }
 
 void ActionWalk::Init(Actor* target)

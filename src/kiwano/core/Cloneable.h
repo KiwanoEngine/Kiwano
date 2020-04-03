@@ -18,29 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/action/ActionDelay.h>
+#pragma once
+#include <kiwano/core/SmartPtr.hpp>
 
 namespace kiwano
 {
 
-ActionDelayPtr ActionDelay::Create(Duration delay)
+template <typename _Ty>
+class Cloneable
 {
-    ActionDelayPtr ptr = memory::New<ActionDelay>();
-    if (ptr)
-    {
-        ptr->SetDelay(delay);
-    }
-    return ptr;
-}
+public:
+    virtual SmartPtr<_Ty> Clone() const = 0;
 
-ActionPtr ActionDelay::Clone() const
-{
-    return DoClone(ActionDelay::Create(GetDelay()));
-}
+protected:
+    Cloneable() = default;
 
-ActionPtr ActionDelay::Reverse() const
-{
-    return DoClone(ActionDelay::Create(GetDelay()));
-}
+private:
+    Cloneable(const Cloneable&) = delete;
+
+    Cloneable& operator=(const Cloneable&) = delete;
+};
 
 }  // namespace kiwano

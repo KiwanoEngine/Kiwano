@@ -15,6 +15,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Director.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />

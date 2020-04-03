@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/core/Cloneable.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
@@ -51,6 +52,7 @@ typedef IntrusiveList<ActionPtr> ActionList;
 /// @brief 动画
 class KGE_API Action
     : public ObjectBase
+    , public Cloneable<Action>
     , protected IntrusiveListValue<ActionPtr>
 {
     friend class ActionManager;
@@ -98,10 +100,6 @@ public:
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
     void SetLoopDoneCallback(const DoneCallback& cb);
-
-    /// \~chinese
-    /// @brief 获取动画的拷贝
-    virtual ActionPtr Clone() const = 0;
 
     /// \~chinese
     /// @brief 获取动画的倒转
@@ -184,7 +182,7 @@ protected:
     bool IsRemoveable() const;
 
 protected:
-    ActionPtr InnerClone(ActionPtr to) const;
+    ActionPtr DoClone(ActionPtr to) const;
 
 private:
     Status       status_;

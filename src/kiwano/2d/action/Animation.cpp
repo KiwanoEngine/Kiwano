@@ -89,7 +89,7 @@ ActionPtr Animation::Clone() const
 {
     if (frame_seq_)
     {
-        return InnerClone(Animation::Create(GetDuration(), frame_seq_));
+        return DoClone(Animation::Create(GetDuration(), frame_seq_));
     }
     return nullptr;
 }
@@ -101,7 +101,7 @@ ActionPtr Animation::Reverse() const
         FrameSequencePtr frames = frame_seq_->Reverse();
         if (frames)
         {
-            return InnerClone(Animation::Create(GetDuration(), frames));
+            return DoClone(Animation::Create(GetDuration(), frames));
         }
     }
     return nullptr;

@@ -105,7 +105,7 @@ void Action::Restart(Actor* target)
     Init(target);
 }
 
-ActionPtr Action::InnerClone(ActionPtr to) const
+ActionPtr Action::DoClone(ActionPtr to) const
 {
     if (to)
     {
