@@ -49,7 +49,7 @@ public:
 
         Data();
 
-        operator bool() const;
+        bool IsValid() const;
     };
 
     /// \~chinese
@@ -60,7 +60,7 @@ public:
     /// @brief 构造资源
     /// @param id 资源 ID
     /// @param type 资源类型
-    Resource(uint32_t id, const wchar_t* type);
+    Resource(uint32_t id, const String& type);
 
     /// \~chinese
     /// @brief 获取资源的二进制数据
@@ -73,11 +73,11 @@ public:
 
     /// \~chinese
     /// @brief 获取资源类型
-    const wchar_t* GetType() const;
+    String GetType() const;
 
 private:
-    uint32_t       id_;
-    const wchar_t* type_;
+    uint32_t id_;
+    String   type_;
 
     mutable Resource::Data data_;
 };
@@ -88,7 +88,7 @@ inline Resource::Data::Data()
 {
 }
 
-inline Resource::Data::operator bool() const
+inline bool Resource::Data::IsValid() const
 {
     return buffer != nullptr && size;
 }
@@ -98,7 +98,7 @@ inline uint32_t Resource::GetId() const
     return id_;
 }
 
-inline const wchar_t* Resource::GetType() const
+inline String Resource::GetType() const
 {
     return type_;
 }

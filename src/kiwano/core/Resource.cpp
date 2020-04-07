@@ -26,11 +26,11 @@ namespace kiwano
 {
 Resource::Resource()
     : id_(0)
-    , type_(nullptr)
+    , type_()
 {
 }
 
-Resource::Resource(uint32_t id, const wchar_t* type)
+Resource::Resource(uint32_t id, const String& type)
     : id_(id)
     , type_(type)
 {
@@ -45,7 +45,7 @@ Resource::Data Resource::GetData() const
             break;
         }
 
-        HRSRC res_info = FindResourceW(nullptr, MAKEINTRESOURCE(id_), type_);
+        HRSRC res_info = FindResourceA(nullptr, MAKEINTRESOURCEA(id_), type_.data());
         if (res_info == nullptr)
         {
             KGE_ERROR("FindResource failed");

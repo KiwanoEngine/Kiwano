@@ -220,7 +220,7 @@ void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
     {
         Resource::Data data = resource.GetData();
 
-        hr = data ? S_OK : E_FAIL;
+        hr = data.IsValid() ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
         {
@@ -308,7 +308,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
     {
         Resource::Data data = resource.GetData();
 
-        hr = data ? S_OK : E_FAIL;
+        hr = data.IsValid() ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
         {

@@ -177,7 +177,7 @@ bool FileSystem::ExtractResourceToFile(const Resource& res, const String& dest_f
         return false;
 
     Resource::Data data = res.GetData();
-    if (data)
+    if (data.IsValid())
     {
         DWORD written_bytes = 0;
         ::WriteFile(file_handle, data.buffer, data.size, &written_bytes, NULL);

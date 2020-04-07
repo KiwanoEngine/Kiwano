@@ -824,7 +824,7 @@ ResourceFontFileStream::ResourceFontFileStream()
 STDMETHODIMP ResourceFontFileStream::Initialize(const Resource resource)
 {
     Resource::Data data = resource.GetData();
-    HRESULT        hr   = data ? S_OK : E_FAIL;
+    HRESULT        hr   = data.IsValid() ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
     {
