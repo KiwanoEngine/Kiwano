@@ -40,7 +40,7 @@ String Format(const char* format, ...)
         const auto len = static_cast<size_t>(::_vscprintf(format, args) + 1);
         if (len)
         {
-            result.resize(len);
+            result.resize(len - 1);
             ::_vsnprintf_s(&result[0], len, len, format, args);
         }
         va_end(args);
@@ -59,7 +59,7 @@ WideString Format(const wchar_t* format, ...)
         const auto len = static_cast<size_t>(::_vscwprintf(format, args) + 1);
         if (len)
         {
-            result.resize(len);
+            result.resize(len - 1);
             ::_vsnwprintf_s(&result[0], len, len, format, args);
         }
         va_end(args);
@@ -72,13 +72,13 @@ String ToNarrow(const WideString& str)
     if (str.empty())
         return String();
 
-    int chars_num = ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
-    if (chars_num)
+    int len = ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+    if (len > 0)
     {
         String result;
-        result.resize(chars_num);
+        result.resize(len - 1);
 
-        ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, &result[0], chars_num, NULL, NULL);
+        ::WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, &result[0], len, NULL, NULL);
         return result;
     }
     return String();
@@ -89,13 +89,13 @@ WideString ToWide(const String& str)
     if (str.empty())
         return WideString();
 
-    int chars_num = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
-    if (chars_num)
+    int len = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+    if (len > 0)
     {
         WideString result;
-        result.resize(chars_num);
+        result.resize(len - 1);
 
-        ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &result[0], chars_num);
+        ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &result[0], len);
         return result;
     }
     return WideString();
