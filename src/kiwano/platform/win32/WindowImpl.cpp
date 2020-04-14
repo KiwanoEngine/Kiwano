@@ -109,8 +109,8 @@ MONITORINFOEXA GetMoniterInfoEx(HWND hwnd)
     HMONITOR       monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
     MONITORINFOEXA monitor_info;
 
-    memset(&monitor_info, 0, sizeof(MONITORINFOEXA));
-    monitor_info.cbSize = sizeof(MONITORINFOEXA);
+    memset(&monitor_info, 0, sizeof(monitor_info));
+    monitor_info.cbSize = sizeof(monitor_info);
     ::GetMonitorInfoA(monitor, &monitor_info);
 
     return monitor_info;
@@ -141,19 +141,25 @@ void ChangeFullScreenResolution(uint32_t width, uint32_t height, const CHAR* dev
     DEVMODEA mode;
 
     memset(&mode, 0, sizeof(mode));
-    mode.dmSize       = sizeof(DEVMODEA);
-    mode.dmBitsPerPel = ::GetDeviceCaps(::GetDC(0), BITSPIXEL);
+    mode.dmSize       = sizeof(mode);
     mode.dmPelsWidth  = width;
     mode.dmPelsHeight = height;
-    mode.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+    mode.dmFields     = DM_PELSWIDTH | DM_PELSHEIGHT;
 
-    if (::ChangeDisplaySettingsExA(device_name, &mode, NULL, CDS_FULLSCREEN, NULL) != DISP_CHANGE_SUCCESSFUL)
-        KGE_ERROR("ChangeDisplaySettings failed");
+    LONG ret = ::ChangeDisplaySettingsExA(device_name, &mode, NULL, CDS_FULLSCREEN, NULL);
+    if (ret != DISP_CHANGE_SUCCESSFUL)
+    {
+        KGE_ERROR("ChangeDisplaySettings failed with error code %d", ret);
+    }
 }
 
 void RestoreResolution(const CHAR* device_name)
 {
-    ::ChangeDisplaySettingsExA(device_name, NULL, NULL, 0, NULL);
+    LONG ret = ::ChangeDisplaySettingsExA(device_name, NULL, NULL, 0, NULL);
+    if (ret != DISP_CHANGE_SUCCESSFUL)
+    {
+        KGE_ERROR("ChangeDisplaySettings failed with error code %d", ret);
+    }
 }
 }  // namespace
 
@@ -337,14 +343,37 @@ void WindowWin32Impl::SetIcon(uint32_t icon_resource)
 
 void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
 {
-    if (handle_ && !is_fullscreen_)
+    if (handle_)
     {
-        RECT rc = { 0, 0, LONG(width), LONG(height) };
-        ::AdjustWindowRect(&rc, GetStyle(), false);
+        if (!is_fullscreen_)
+        {
+            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
 
-        width  = rc.right - rc.left;
-        height = rc.bottom - rc.top;
-        ::SetWindowPos(handle_, 0, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+            uint32_t screenw = uint32_t(info.rcWork.right - info.rcWork.left);
+            uint32_t screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
+
+            RECT rc = { 0, 0, LONG(width), LONG(height) };
+            ::AdjustWindowRect(&rc, GetStyle(), false);
+
+            width  = rc.right - rc.left;
+            height = rc.bottom - rc.top;
+
+            int left = screenw > width ? ((screenw - width) / 2) : 0;
+            int top  = screenh > height ? ((screenh - height) / 2) : 0;
+
+            ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+        else
+        {
+            // move window to (0, 0) before display switch
+            ::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE);
+
+            ChangeFullScreenResolution(width, height, device_name_.c_str());
+
+            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
+            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height,
+                           SWP_NOACTIVATE);
+        }
     }
 }
 
