@@ -69,6 +69,8 @@ public:
 
     void DiscardResources() override;
 
+    void SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target) override;
+
 public:
     unsigned long STDMETHODCALLTYPE AddRef();
 
@@ -276,8 +278,7 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
 
         if (SUCCEEDED(hr))
         {
-            target_bitmap_ = target;
-            device_context_->SetTarget(target_bitmap_.Get());
+            SetTargetBitmap(target);
         }
     }
     return hr;
@@ -309,6 +310,15 @@ HRESULT D2DDeviceResources::HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_devic
         hr = CreateWindowSizeDependentResources();
     }
     return hr;
+}
+
+void D2DDeviceResources::SetTargetBitmap(ComPtr<ID2D1Bitmap1> target)
+{
+    target_bitmap_ = target;
+    if (device_context_)
+    {
+        device_context_->SetTarget(target_bitmap_.Get());
+    }
 }
 
 HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter,

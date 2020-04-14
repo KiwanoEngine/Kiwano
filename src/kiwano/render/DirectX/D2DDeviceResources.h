@@ -63,6 +63,8 @@ public:
 
     virtual void DiscardResources() = 0;
 
+    virtual void SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target) = 0;
+
     inline ID2D1Factory1* GetFactory()
     {
         KGE_ASSERT(factory_);

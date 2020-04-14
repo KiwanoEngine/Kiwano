@@ -193,11 +193,11 @@ WindowWin32Impl::WindowWin32Impl()
         key_map_['A' + i] = KeyCode(size_t(KeyCode::A) + i);
 
     // Num 0 - 9
-    for (size_t i = 0; i < 9; ++i)
+    for (size_t i = 0; i < 10; ++i)
         key_map_['0' + i] = KeyCode(size_t(KeyCode::Num0) + i);
 
     // Numpad 0 - 9
-    for (size_t i = 0; i < 9; ++i)
+    for (size_t i = 0; i < 10; ++i)
         key_map_[VK_NUMPAD0 + i] = KeyCode(size_t(KeyCode::Numpad0) + i);
 
     // F1 - F12

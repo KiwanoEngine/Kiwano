@@ -956,6 +956,12 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
 
     if (SUCCEEDED(hr))
     {
+        // Clear resources
+        d2d_res_->SetTargetBitmap(nullptr);
+    }
+
+    if (SUCCEEDED(hr))
+    {
         output_size_.x = static_cast<float>(width);
         output_size_.y = static_cast<float>(height);
 
