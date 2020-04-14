@@ -96,7 +96,7 @@ HRESULT Transcoder::LoadMediaResource(const Resource& res)
     ComPtr<IMFSourceReader> reader;
 
     Resource::Data data = res.GetData();
-    if (!data)
+    if (!data.IsValid())
     {
         return E_FAIL;
     }
