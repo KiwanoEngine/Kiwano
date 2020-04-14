@@ -67,7 +67,7 @@ WideString Format(const wchar_t* format, ...)
     return result;
 }
 
-String ToNarrow(const WideString& str)
+String WideToNarrow(const WideString& str)
 {
     if (str.empty())
         return String();
@@ -84,7 +84,7 @@ String ToNarrow(const WideString& str)
     return String();
 }
 
-WideString ToWide(const String& str)
+WideString NarrowToWide(const String& str)
 {
     if (str.empty())
         return WideString();

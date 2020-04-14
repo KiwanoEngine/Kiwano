@@ -127,7 +127,7 @@ void TextLayout::SetFontFamily(const String& family, TextRange range)
 
     if (native)
     {
-        WideString font_family = family.empty() ? L"" : strings::ToWide(family);
+        WideString font_family = family.empty() ? L"" : strings::NarrowToWide(family);
 
         HRESULT hr = native->SetFontFamilyName(font_family.c_str(), { range.start, range.length });
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontFamilyName failed");

@@ -624,7 +624,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("Window title changed");
 
-        this->title_ = strings::ToNarrow(reinterpret_cast<LPCWSTR>(lparam));
+        this->title_ = strings::WideToNarrow(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
         evt->title                     = this->title_;

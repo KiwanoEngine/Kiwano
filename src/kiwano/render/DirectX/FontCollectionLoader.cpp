@@ -306,7 +306,7 @@ HRESULT STDMETHODCALLTYPE FontFileEnumerator::MoveNext(_Out_ BOOL* hasCurrentFil
 
     if (nextIndex_ < filePaths_.size())
     {
-        WideString file_name = strings::ToWide(filePaths_[nextIndex_]);
+        WideString file_name = strings::NarrowToWide(filePaths_[nextIndex_]);
 
         hr = pFactory_->CreateFontFileReference(file_name.c_str(), NULL, &currentFile_);
 

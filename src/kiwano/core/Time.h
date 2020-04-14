@@ -23,6 +23,7 @@
 
 namespace kiwano
 {
+
 /**
  * \~chinese
  * @brief Ê±¼ä¶Î

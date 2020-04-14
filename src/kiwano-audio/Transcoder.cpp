@@ -74,7 +74,7 @@ HRESULT Transcoder::LoadMediaFile(const String& file_path)
 {
     HRESULT hr = S_OK;
 
-    WideString path = strings::ToWide(file_path);
+    WideString path = strings::NarrowToWide(file_path);
 
     ComPtr<IMFSourceReader> reader;
     hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(path.c_str(), nullptr, &reader);

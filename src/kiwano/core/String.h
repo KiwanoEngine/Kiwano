@@ -45,11 +45,11 @@ WideString Format(const wchar_t* format, ...);
 
 /// \~chinese
 /// @brief ¿í×Ö·û´®×ªÕ­×Ö·û´®
-String ToNarrow(const WideString& str);
+String WideToNarrow(const WideString& str);
 
 /// \~chinese
 /// @brief Õ­×Ö·û´®×ª¿í×Ö·û´®
-WideString ToWide(const String& str);
+WideString NarrowToWide(const String& str);
 
 }
 
