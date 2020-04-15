@@ -34,74 +34,6 @@ struct Serializer
     virtual void WriteBytes(const uint8_t* bytes, size_t size) = 0;
 
     /// \~chinese
-    /// @brief 写入字符串
-    void WriteValue(const char* str)
-    {
-        size_t len = std::char_traits<char>::length(str);
-        this->WriteValue(len);
-        this->WriteBytes(reinterpret_cast<const uint8_t*>(str), len);
-    }
-
-    /// \~chinese
-    /// @brief 写入字符串
-    void WriteValue(const String& str)
-    {
-        this->WriteValue(str.c_str());
-    }
-
-    /// \~chinese
-    /// @brief 写入数组
-    template <typename _Ty>
-    void WriteValue(const Vector<_Ty>& arr)
-    {
-        size_t size = arr.size();
-        this->WriteValue(size);
-        for (const auto& v : arr)
-        {
-            (*this) << v;
-        }
-    }
-
-    /// \~chinese
-    /// @brief 写入链表
-    template <typename _Ty>
-    void WriteValue(const List<_Ty>& list)
-    {
-        size_t size = list.size();
-        this->WriteValue(size);
-        for (const auto& v : list)
-        {
-            (*this) << v;
-        }
-    }
-
-    /// \~chinese
-    /// @brief 写入集合
-    template <typename _Ty>
-    void WriteValue(const Set<_Ty>& set)
-    {
-        size_t size = set.size();
-        this->WriteValue(size);
-        for (const auto& v : set)
-        {
-            (*this) << v;
-        }
-    }
-
-    /// \~chinese
-    /// @brief 写入字典
-    template <typename _KTy, typename _Ty>
-    void WriteValue(const Map<_KTy, _Ty>& map)
-    {
-        size_t size = map.size();
-        this->WriteValue(size);
-        for (const auto& p : map)
-        {
-            (*this) << p.first << p.second;
-        }
-    }
-
-    /// \~chinese
     /// @brief 写入值
     template <typename _Ty>
     void WriteValue(const _Ty& value)
@@ -207,80 +139,6 @@ struct Deserializer
     /// \~chinese
     /// @brief 读取字节序列
     virtual void ReadBytes(uint8_t* bytes, size_t size) = 0;
-
-    /// \~chinese
-    /// @brief 读取字符串
-    void ReadValue(String* str)
-    {
-        size_t len = 0;
-        this->ReadValue(&len);
-        if (len)
-        {
-            str->resize(len);
-            this->ReadBytes(reinterpret_cast<uint8_t*>(&(*str)[0]), len);
-        }
-    }
-
-    /// \~chinese
-    /// @brief 读取数组
-    template <typename _Ty>
-    void ReadValue(Vector<_Ty>* arr)
-    {
-        size_t len = 0;
-        this->ReadValue(&len);
-        for (size_t i = 0; i < len; ++i)
-        {
-            _Ty value;
-            (*this) >> value;
-            arr->push_back(value);
-        }
-    }
-
-    /// \~chinese
-    /// @brief 读取链表
-    template <typename _Ty>
-    void ReadValue(List<_Ty>* list)
-    {
-        size_t len = 0;
-        this->ReadValue(&len);
-        for (size_t i = 0; i < len; ++i)
-        {
-            _Ty value;
-            (*this) >> value;
-            list->push_back(value);
-        }
-    }
-
-    /// \~chinese
-    /// @brief 读取集合
-    template <typename _Ty>
-    void ReadValue(Set<_Ty>* set)
-    {
-        size_t len = 0;
-        this->ReadValue(&len);
-        for (size_t i = 0; i < len; ++i)
-        {
-            _Ty value;
-            (*this) >> value;
-            set->insert(value);
-        }
-    }
-
-    /// \~chinese
-    /// @brief 读取字典
-    template <typename _KTy, typename _Ty>
-    void ReadValue(Map<_KTy, _Ty>* map)
-    {
-        size_t len = 0;
-        this->ReadValue(&len);
-        for (size_t i = 0; i < len; ++i)
-        {
-            _KTy key;
-            _Ty value;
-            (*this) >> key >> value;
-            map->insert(std::make_pair(key, value));
-        }
-    }
 
     /// \~chinese
     /// @brief 读取值
@@ -402,6 +260,70 @@ public:
 //
 // operator<< for Serializer
 //
+inline Serializer& operator<<(Serializer& serializer, const char* str)
+{
+    size_t len = std::char_traits<char>::length(str);
+    serializer.WriteValue(len);
+    if (len)
+    {
+        serializer.WriteBytes(reinterpret_cast<const uint8_t*>(str), len);
+    }
+    return serializer;
+}
+
+inline Serializer& operator<<(Serializer& serializer, const String& str)
+{
+    return serializer << str.c_str();
+}
+
+template <typename _Ty>
+inline Serializer& operator<<(Serializer& serializer, const Vector<_Ty>& arr)
+{
+    size_t size = arr.size();
+    serializer.WriteValue(size);
+    for (const auto& v : arr)
+    {
+        serializer << v;
+    }
+    return serializer;
+}
+
+template <typename _Ty>
+inline Serializer& operator<<(Serializer& serializer, const List<_Ty>& list)
+{
+    size_t size = list.size();
+    serializer.WriteValue(size);
+    for (const auto& v : list)
+    {
+        serializer << v;
+    }
+    return serializer;
+}
+
+template <typename _Ty>
+inline Serializer& operator<<(Serializer& serializer, const Set<_Ty>& set)
+{
+    size_t size = set.size();
+    serializer.WriteValue(size);
+    for (const auto& v : set)
+    {
+        serializer << v;
+    }
+    return serializer;
+}
+
+template <typename _KTy, typename _Ty>
+inline Serializer& operator<<(Serializer& serializer, const Map<_KTy, _Ty>& map)
+{
+    size_t size = map.size();
+    serializer.WriteValue(size);
+    for (const auto& p : map)
+    {
+        serializer << p.first << p.second;
+    }
+    return serializer;
+}
+
 inline Serializer& operator<<(Serializer& serializer, const math::Vec2T<float>& vec)
 {
     return serializer << vec.x << vec.y;
@@ -417,9 +339,90 @@ inline Serializer& operator<<(Serializer& serializer, const math::TransformT<flo
     return serializer << transform.position << transform.rotation << transform.scale << transform.skew;
 }
 
+
 //
 // operator>> for Deserializer
 //
+inline Deserializer& operator>>(Deserializer& deserializer, char* str)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    if (len)
+    {
+        deserializer.ReadBytes(reinterpret_cast<uint8_t*>(str), len);
+    }
+    return deserializer;
+}
+
+inline Deserializer& operator>>(Deserializer& deserializer, String& str)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    if (len)
+    {
+        str.resize(len);
+        deserializer.ReadBytes(reinterpret_cast<uint8_t*>(&str[0]), len);
+    }
+    return deserializer;
+}
+
+template <typename _Ty>
+inline Deserializer& operator>>(Deserializer& deserializer, Vector<_Ty>& arr)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    for (size_t i = 0; i < len; ++i)
+    {
+        _Ty value;
+        deserializer >> value;
+        arr.push_back(value);
+    }
+    return deserializer;
+}
+
+template <typename _Ty>
+inline Deserializer& operator>>(Deserializer& deserializer, List<_Ty>& list)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    for (size_t i = 0; i < len; ++i)
+    {
+        _Ty value;
+        deserializer >> value;
+        list.push_back(value);
+    }
+    return deserializer;
+}
+
+template <typename _Ty>
+inline Deserializer& operator>>(Deserializer& deserializer, Set<_Ty>& set)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    for (size_t i = 0; i < len; ++i)
+    {
+        _Ty value;
+        deserializer >> value;
+        set.insert(value);
+    }
+    return deserializer;
+}
+
+template <typename _KTy, typename _Ty>
+inline Deserializer& operator>>(Deserializer& deserializer, Map<_KTy, _Ty>& map)
+{
+    size_t len = 0;
+    deserializer.ReadValue(&len);
+    for (size_t i = 0; i < len; ++i)
+    {
+        _KTy key;
+        _Ty  value;
+        deserializer >> key >> value;
+        map.insert(std::make_pair(key, value));
+    }
+    return deserializer;
+}
+
 inline Deserializer& operator>>(Deserializer& deserializer, math::Vec2T<float>& vec)
 {
     return deserializer >> vec.x >> vec.y;
