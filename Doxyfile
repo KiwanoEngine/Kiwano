@@ -5,9 +5,9 @@
 #---------------------------------------------------------------------------
 
 PROJECT_NAME           = "Kiwano Engine"
-PROJECT_NUMBER         = v1.0.2
+PROJECT_NUMBER         = v1.0.14
 PROJECT_BRIEF          =
-PROJECT_LOGO           = logo/logo_square_tiny.png
+PROJECT_LOGO           = logo/logo_tiny.png
 
 DOXYFILE_ENCODING      = UTF-8
 CREATE_SUBDIRS         = YES
