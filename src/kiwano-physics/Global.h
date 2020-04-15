@@ -22,7 +22,7 @@
 #include <kiwano/kiwano.h>
 
 // Box2D
-#include <3rd-party/Box2D/Box2D.h>
+#include <Box2D/Box2D.h>
 
 namespace kiwano
 {

@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <3rd-party/pugixml/pugixml.hpp>
+#include <pugixml/pugixml.hpp>
 
 namespace kiwano
 {

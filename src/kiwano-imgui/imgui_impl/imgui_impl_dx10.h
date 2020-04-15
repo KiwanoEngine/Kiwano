@@ -1,7 +1,7 @@
 // dear imgui: Renderer for Kiwano (DirectX10)
 
 #pragma once
-#include <3rd-party/imgui/imgui.h>
+#include <imgui/imgui.h>
 
 #ifndef KGE_DOXYGEN_DO_NOT_INCLUDE
 

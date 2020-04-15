@@ -37,31 +37,37 @@ public:
         KGE_ASSERT(device_);
         return device_.Get();
     }
+
     inline ID3D11DeviceContext* GetDeviceContext()
     {
         KGE_ASSERT(device_context_);
         return device_context_.Get();
     }
+
     inline ID3D11RenderTargetView* GetRenderTargetView()
     {
         KGE_ASSERT(rt_view_);
         return rt_view_.Get();
     }
+
     inline ID3D11DepthStencilView* GetDepthStencilView()
     {
         KGE_ASSERT(ds_view_);
         return ds_view_.Get();
     }
+
     inline IDXGIFactory* GetDXGIFactory()
     {
         KGE_ASSERT(dxgi_factory_);
         return dxgi_factory_.Get();
     }
+
     inline IDXGIDevice* GetDXGIDevice()
     {
         KGE_ASSERT(dxgi_device_);
         return dxgi_device_.Get();
     }
+
     inline IDXGISwapChain* GetDXGISwapChain()
     {
         KGE_ASSERT(dxgi_swap_chain_);

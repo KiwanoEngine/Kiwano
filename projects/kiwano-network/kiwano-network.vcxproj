@@ -67,7 +67,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>
@@ -86,7 +86,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>../../src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../src/3rd-party;</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>

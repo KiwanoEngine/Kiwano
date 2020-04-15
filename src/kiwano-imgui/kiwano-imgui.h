@@ -24,4 +24,4 @@
 #include <kiwano-imgui/ImGuiModule.h>
 
 // ImGui
-#include <3rd-party/imgui/imgui.h>
+#include <imgui/imgui.h>

@@ -25,7 +25,7 @@
 #include <kiwano-network/HttpRequest.h>
 #include <kiwano-network/HttpResponse.hpp>
 #include <kiwano-network/HttpModule.h>
-#include <3rd-party/curl/curl.h>  // CURL
+#include <curl/curl.h>  // CURL
 
 namespace
 {

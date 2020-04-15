@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <3rd-party/nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 
 namespace kiwano
 {
