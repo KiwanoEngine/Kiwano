@@ -220,6 +220,20 @@ bool Actor::DispatchEvent(Event* evt)
     return true;
 }
 
+void Actor::DoSerialize(Serializer* serializer) const
+{
+    ObjectBase::DoSerialize(serializer);
+    (*serializer) << visible_ << update_pausing_ << cascade_opacity_ << responsible_ << z_order_ << opacity_ << anchor_
+                  << size_ << transform_;
+}
+
+void Actor::DoDeserialize(Deserializer* deserializer)
+{
+    ObjectBase::DoDeserialize(deserializer);
+    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> responsible_ >> z_order_ >> opacity_
+        >> anchor_ >> size_ >> transform_;
+}
+
 bool Actor::HandleEvent(Event* evt)
 {
     if (!components_.IsEmpty())

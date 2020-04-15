@@ -447,6 +447,14 @@ public:
     virtual bool DispatchEvent(Event* evt);
 
     /// \~chinese
+    /// @brief 序列化
+    void DoSerialize(Serializer* serializer) const override;
+
+    /// \~chinese
+    /// @brief 反序列化
+    void DoDeserialize(Deserializer* deserializer) override;
+
+    /// \~chinese
     /// @brief 设置默认锚点
     static void SetDefaultAnchor(float anchor_x, float anchor_y);
 

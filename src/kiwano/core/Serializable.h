@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/math/Math.h>
 
 namespace kiwano
 {
@@ -397,19 +398,41 @@ public:
     virtual void DoDeserialize(Deserializer* deserializer) = 0;
 };
 
-/// \~chinese
-/// @brief 使用序列化克隆对象
-template <typename _Ty, typename _Ty2>
-void SerializedClone(const _Ty& src, _Ty2& dest)
-{
-    static_assert(std::is_base_of<Serializable, _Ty>::value && std::is_base_of<Serializable, _Ty2>::value,
-                  "Serialized object must be serializable.");
 
-    String bytes = src.Serialize();
-    if (!bytes.empty())
-    {
-        dest.Deserialize(bytes);
-    }
+//
+// operator<< for Serializer
+//
+inline Serializer& operator<<(Serializer& serializer, const math::Vec2T<float>& vec)
+{
+    return serializer << vec.x << vec.y;
+}
+
+inline Serializer& operator<<(Serializer& serializer, const math::RectT<float>& rect)
+{
+    return serializer << rect.left_top << rect.right_bottom;
+}
+
+inline Serializer& operator<<(Serializer& serializer, const math::TransformT<float>& transform)
+{
+    return serializer << transform.position << transform.rotation << transform.scale << transform.skew;
+}
+
+//
+// operator>> for Deserializer
+//
+inline Deserializer& operator>>(Deserializer& deserializer, math::Vec2T<float>& vec)
+{
+    return deserializer >> vec.x >> vec.y;
+}
+
+inline Deserializer& operator>>(Deserializer& deserializer, math::RectT<float>& rect)
+{
+    return deserializer >> rect.left_top >> rect.right_bottom;
+}
+
+inline Deserializer& operator>>(Deserializer& deserializer, math::TransformT<float>& transform)
+{
+    return deserializer >> transform.position >> transform.rotation >> transform.scale >> transform.skew;
 }
 
 }  // namespace kiwano
