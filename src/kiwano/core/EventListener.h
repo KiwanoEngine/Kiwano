@@ -71,9 +71,10 @@ public:
     /// @brief 创建监听器
     /// @tparam _EventTy 事件类型
     /// @param callback 回调函数
-    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
+    template <typename _EventTy>
     static inline EventListenerPtr Create(const Callback& callback)
     {
+        static_assert(kiwano::IsEvent<_EventTy>::value, "_EventTy is not an event type.");
         return EventListener::Create(KGE_EVENT(_EventTy), callback);
     }
 
@@ -82,9 +83,10 @@ public:
     /// @tparam _EventTy 事件类型
     /// @param name 监听器名称
     /// @param callback 回调函数
-    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
+    template <typename _EventTy>
     static inline EventListenerPtr Create(const String& name, const Callback& callback)
     {
+        static_assert(kiwano::IsEvent<_EventTy>::value, "_EventTy is not an event type.");
         return EventListener::Create(name, KGE_EVENT(_EventTy), callback);
     }
 

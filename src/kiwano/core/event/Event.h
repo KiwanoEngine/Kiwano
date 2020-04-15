@@ -55,19 +55,19 @@ public:
     /// \~chinese
     /// @brief 判断事件类型
     /// @return 是否是指定事件类型
-    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
+    template <typename _Ty>
     bool IsType() const;
 
     /// \~chinese
     /// @brief 安全转换为其他类型事件
     /// @throw std::bad_cast 类型无法转换时抛出
-    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
+    template <typename _Ty>
     const _Ty* SafeCast() const;
 
     /// \~chinese
     /// @brief 安全转换为其他类型事件
     /// @throw std::bad_cast 类型无法转换时抛出
-    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<Event, _Ty>::value, int>::type>
+    template <typename _Ty>
     _Ty* SafeCast();
 
 private:
@@ -99,22 +99,23 @@ inline const EventType& Event::GetType() const
     return type_;
 }
 
-template <typename _Ty, typename>
+template <typename _Ty>
 inline bool Event::IsType() const
 {
+    static_assert(kiwano::IsEvent<_Ty>::value, "_Ty is not an event type.");
     return kiwano::IsEventType<_Ty>()(this);
 }
 
-template <typename _Ty, typename>
+template <typename _Ty>
 inline const _Ty* Event::SafeCast() const
 {
     return const_cast<Event*>(this)->SafeCast<_Ty>();
 }
 
-template <typename _Ty, typename>
+template <typename _Ty>
 inline _Ty* Event::SafeCast()
 {
-    if (!IsType<_Ty>())
+    if (!this->IsType<_Ty>())
         throw std::bad_cast();
     return dynamic_cast<_Ty*>(this);
 }
