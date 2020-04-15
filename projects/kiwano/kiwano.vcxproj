@@ -29,6 +29,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Json.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Serializable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\String.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />

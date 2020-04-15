@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/core/Serializable.h>
 #include <kiwano/core/RefCounter.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/macros.h>
@@ -32,7 +33,9 @@ KGE_DECLARE_SMART_PTR(ObjectBase);
  * \~chinese
  * @brief 基础对象
  */
-class KGE_API ObjectBase : public RefCounter
+class KGE_API ObjectBase
+    : public RefCounter
+    , public Serializable
 {
 public:
     /// \~chinese
@@ -67,8 +70,12 @@ public:
     uint32_t GetObjectID() const;
 
     /// \~chinese
-    /// @brief 序列化对象
-    String DumpObject();
+    /// @brief 序列化
+    void DoSerialize(Serializer* serializer) const override;
+
+    /// \~chinese
+    /// @brief 反序列化
+    void DoDeserialize(Deserializer* deserializer) override;
 
 public:
     /// \~chinese
