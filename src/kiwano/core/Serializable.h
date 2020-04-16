@@ -24,6 +24,15 @@
 
 namespace kiwano
 {
+/**
+ * \~chinese
+ * \defgroup Serialization 序列化
+ */
+
+/**
+ * \addtogroup Serialization
+ * @{
+ */
 
 /// \~chinese
 /// @brief 序列化器
@@ -230,7 +239,7 @@ class Serializable
 {
 public:
     /// \~chinese
-    /// @brief 序列化为字符串
+    /// @brief 序列化为字节串
     inline Vector<uint8_t> Serialize() const
     {
         Vector<uint8_t> data;
@@ -240,7 +249,7 @@ public:
     }
 
     /// \~chinese
-    /// @brief 从字符串反序列化
+    /// @brief 从字节串反序列化
     inline void Deserialize(const Vector<uint8_t>& data)
     {
         ByteDeserializer deserializer(data);
@@ -437,5 +446,8 @@ inline Deserializer& operator>>(Deserializer& deserializer, math::TransformT<flo
 {
     return deserializer >> transform.position >> transform.rotation >> transform.scale >> transform.skew;
 }
+
+/** @} */
+
 
 }  // namespace kiwano

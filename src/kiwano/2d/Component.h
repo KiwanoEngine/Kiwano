@@ -32,6 +32,16 @@ class Event;
 
 KGE_DECLARE_SMART_PTR(Component);
 
+/**
+ * \~chinese
+ * \defgroup Component 组件
+ */
+
+/**
+ * \addtogroup Component
+ * @{
+ */
+
 /// \~chinese
 /// @brief 组件列表
 typedef IntrusiveList<ComponentPtr> ComponentList;
@@ -93,6 +103,8 @@ private:
     bool   enabled_;
     Actor* actor_;
 };
+
+/** @} */
 
 inline bool Component::IsEnable() const
 {

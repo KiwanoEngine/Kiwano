@@ -27,6 +27,11 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(Button);
 
 /**
+ * \addtogroup Component
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief °´Å¥
  */
@@ -108,6 +113,8 @@ private:
     Callback mouse_over_callback_;
     Callback mouse_out_callback_;
 };
+
+/** @} */
 
 inline void Button::SetClickCallback(const Callback& func)
 {
