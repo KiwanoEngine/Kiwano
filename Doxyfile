@@ -81,6 +81,7 @@ HTML_HEADER            =
 HTML_FOOTER            =
 HTML_STYLESHEET        =
 HTML_EXTRA_STYLESHEET  =
+HTML_EXTRA_FILES       = logo/favicon.ico
 
 GENERATE_TREEVIEW      = YES
 ENUM_VALUES_PER_LINE   = 4
