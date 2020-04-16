@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 
 PROJECT_NAME           = "Kiwano Engine"
-PROJECT_NUMBER         = v1.0.14
+PROJECT_NUMBER         = v1.0.x
 PROJECT_BRIEF          =
 PROJECT_LOGO           = logo/logo_tiny.png
 
