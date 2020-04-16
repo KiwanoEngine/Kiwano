@@ -233,17 +233,17 @@ public:
     /// @brief 序列化为字符串
     inline Vector<uint8_t> Serialize() const
     {
-        Vector<uint8_t>  result;
-        ByteSerializer serializer(result);
+        Vector<uint8_t> data;
+        ByteSerializer  serializer(data);
         this->DoSerialize(&serializer);
-        return result;
+        return data;
     }
 
     /// \~chinese
     /// @brief 从字符串反序列化
-    inline void Deserialize(const Vector<uint8_t>& serialized)
+    inline void Deserialize(const Vector<uint8_t>& data)
     {
-        ByteDeserializer deserializer(serialized);
+        ByteDeserializer deserializer(data);
         this->DoDeserialize(&deserializer);
     }
 

@@ -230,8 +230,14 @@ void Actor::DoSerialize(Serializer* serializer) const
 void Actor::DoDeserialize(Deserializer* deserializer)
 {
     ObjectBase::DoDeserialize(deserializer);
-    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> responsible_ >> z_order_ >> opacity_
-        >> anchor_ >> size_ >> transform_;
+
+    float opacity = 1.0f;
+    Transform transform;
+    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> responsible_ >> z_order_ >> opacity >> anchor_
+        >> size_ >> transform;
+
+    SetOpacity(opacity);
+    SetTransform(transform);
 }
 
 bool Actor::HandleEvent(Event* evt)
