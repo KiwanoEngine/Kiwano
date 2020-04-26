@@ -32,25 +32,23 @@ public:
     DebugDrawer(const Size& size)
     {
         canvas_ = Canvas::Create(size);
+        ctx_    = canvas_->GetContext2D();
 
         fill_brush_ = Brush::Create(Color::White);
         line_brush_ = Brush::Create(Color::White);
-
-        canvas_->SetFillBrush(fill_brush_);
-        canvas_->SetStrokeBrush(line_brush_);
 
         b2Draw::SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
     }
 
     void BeginDraw()
     {
-        canvas_->BeginDraw();
-        canvas_->Clear();
+        ctx_->BeginDraw();
+        ctx_->Clear();
     }
 
     void EndDraw()
     {
-        canvas_->EndDraw();
+        ctx_->EndDraw();
     }
 
     void Render(RenderContext& ctx)
@@ -61,11 +59,13 @@ public:
     void SetFillColor(const b2Color& color)
     {
         fill_brush_->SetColor(reinterpret_cast<const Color&>(color));
+        ctx_->SetCurrentBrush(fill_brush_);
     }
 
     void SetLineColor(const b2Color& color)
     {
         line_brush_->SetColor(reinterpret_cast<const Color&>(color));
+        ctx_->SetCurrentBrush(line_brush_);
     }
 
     void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
@@ -76,7 +76,7 @@ public:
         for (int32 i = 0; i < vertexCount; ++i)
         {
             b2Vec2 p2 = vertices[i];
-            canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+            ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
             p1 = p2;
         }
     }
@@ -92,25 +92,25 @@ public:
         maker.EndPath(true);
 
         SetFillColor(color);
-        canvas_->FillShape(maker.GetShape());
+        ctx_->FillShape(*maker.GetShape());
     }
 
     void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override
     {
         SetLineColor(color);
-        canvas_->DrawCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+        ctx_->DrawCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
     }
 
     void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) override
     {
         SetFillColor(color);
-        canvas_->FillCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+        ctx_->FillCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
     }
 
     void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override
     {
         SetLineColor(color);
-        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
     }
 
     void DrawTransform(const b2Transform& xf) override
@@ -124,24 +124,25 @@ public:
         p2 = p1 + k_axisScale * xf.q.GetXAxis();
 
         SetLineColor(red);
-        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
 
         p2 = p1 + k_axisScale * xf.q.GetYAxis();
 
         SetLineColor(green);
-        canvas_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
     }
 
     void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color) override
     {
         SetFillColor(color);
-        canvas_->FillCircle(global::WorldToLocal(p), global::WorldToLocal(size));
+        ctx_->FillCircle(global::WorldToLocal(p), global::WorldToLocal(size));
     }
 
 private:
-    CanvasPtr canvas_;
-    BrushPtr  fill_brush_;
-    BrushPtr  line_brush_;
+    CanvasPtr        canvas_;
+    RenderContextPtr ctx_;
+    BrushPtr         fill_brush_;
+    BrushPtr         line_brush_;
 };
 
 class DestructionListener : public b2DestructionListener

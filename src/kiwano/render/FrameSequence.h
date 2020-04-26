@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Frame.h>
+#include <kiwano/render/Frame.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Time.h>
 

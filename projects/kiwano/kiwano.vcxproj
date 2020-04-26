@@ -11,7 +11,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Button.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Component.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Frame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
@@ -39,7 +38,6 @@
     <ClInclude Include="..\..\src\kiwano\macros.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h" />
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h" />
     <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
@@ -86,6 +84,8 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Frame.h" />
+    <ClInclude Include="..\..\src\kiwano\render\FrameSequence.h" />
     <ClInclude Include="..\..\src\kiwano\render\NativeObject.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h" />
@@ -114,8 +114,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Component.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Frame.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp" />
@@ -160,6 +158,8 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Frame.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />

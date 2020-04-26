@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/render/FrameSequence.h>
 #include <kiwano/2d/action/ActionTween.h>
 
 namespace kiwano

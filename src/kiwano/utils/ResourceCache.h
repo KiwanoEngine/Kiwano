@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Frame.h>
-#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/render/Frame.h>
+#include <kiwano/render/FrameSequence.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/Json.h>
 #include <kiwano/core/Xml.h>

@@ -68,6 +68,8 @@
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/render/Frame.h>
+#include <kiwano/render/FrameSequence.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
@@ -82,8 +84,6 @@
 #include <kiwano/2d/Button.h>
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/2d/Frame.h>
-#include <kiwano/2d/FrameSequence.h>
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>
