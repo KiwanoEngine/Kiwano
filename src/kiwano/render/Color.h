@@ -78,12 +78,12 @@ public:
     /// @param r 红色值，范围 0.0 - 1.0
     /// @param g 绿色值，范围 0.0 - 1.0
     /// @param b 蓝色值，范围 0.0 - 1.0
-    static Color RGB(float r, float g, float b);
+    static Color Rgb(float r, float g, float b);
 
     /// \~chinese
     /// @brief 构造 RGB 颜色
     /// @param rgb 使用16进制整形值表示 RGB颜色
-    static Color RGB(uint32_t rgb);
+    static Color Rgb(uint32_t rgb);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
@@ -91,13 +91,13 @@ public:
     /// @param g 绿色值，范围 0.0 - 1.0
     /// @param b 蓝色值，范围 0.0 - 1.0
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    static Color RGBA(float r, float g, float b, float alpha);
+    static Color Rgba(float r, float g, float b, float alpha);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
     /// @param rgb 使用16进制整形值表示 RGB颜色
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    static Color RGBA(uint32_t rgb, float alpha);
+    static Color Rgba(uint32_t rgb, float alpha);
 
     bool operator==(const Color& rhs) const;
 

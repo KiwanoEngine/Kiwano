@@ -75,22 +75,22 @@ Color::Color(uint32_t rgb, float alpha)
 {
 }
 
-Color Color::RGB(float r, float g, float b)
+Color Color::Rgb(float r, float g, float b)
 {
-    return Color::RGBA(r, g, b, 1.0f);
+    return Color::Rgba(r, g, b, 1.0f);
 }
 
-Color Color::RGB(uint32_t rgb)
+Color Color::Rgb(uint32_t rgb)
 {
-    return Color::RGBA(rgb, 1.0f);
+    return Color::Rgba(rgb, 1.0f);
 }
 
-Color Color::RGBA(float r, float g, float b, float alpha)
+Color Color::Rgba(float r, float g, float b, float alpha)
 {
     return Color(r, g, b, alpha);
 }
 
-Color Color::RGBA(uint32_t rgb, float alpha)
+Color Color::Rgba(uint32_t rgb, float alpha)
 {
     return Color(rgb, alpha);
 }
