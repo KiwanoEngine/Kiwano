@@ -268,7 +268,7 @@ inline bool operator<(const SmartPtr<_Ty, _ProxyTy>& lhs, const SmartPtr<_UTy, _
 }
 
 // template class cannot specialize std::swap,
-// so implement a Swap Function in kiwano namespace
+// so implement a swap function in kiwano namespace
 template <class _Ty, class _ProxyTy>
 inline void swap(SmartPtr<_Ty, _ProxyTy>& lhs, SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {

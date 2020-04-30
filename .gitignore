@@ -8,7 +8,6 @@ Release/
 
 # Application folders
 .vs
-.vscode
 
 # vs2010
 ipch/

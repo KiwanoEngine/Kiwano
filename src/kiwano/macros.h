@@ -77,7 +77,7 @@
 //
 /////////////////////////////////////////////////////////////
 
-#ifdef KGE_PLATFORM_WINDOWS
+#if defined(KGE_PLATFORM_WINDOWS)
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_NONE
 #   undef KGE_RENDER_ENGINE
@@ -156,6 +156,32 @@ KGE_SUPPRESS_WARNING(4251)
 // Windows Header Files
 #include <wincodec.h>
 #include <windows.h>
+
+#elif defined(KGE_PLATFORM_MACOS)
+
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_NONE
+#   undef KGE_RENDER_ENGINE
+#   define KGE_RENDER_ENGINE KGE_RENDER_ENGINE_OPENGL
+#endif
+
+#define KGE_DEPRECATED(...)
+
+#define KGE_SUPPRESS_WARNING_PUSH
+#define KGE_SUPPRESS_WARNING(CODE)
+#define KGE_SUPPRESS_WARNING_POP
+
+#ifndef KGE_API
+#   if defined(KGE_USE_DLL)
+#       define KGE_API
+#   elif defined(KGE_EXPORT_DLL)
+#       define KGE_API
+#   endif
+#endif
+
+#ifndef KGE_API
+/* Building or calling Kiwano as a static library */
+#   define KGE_API
+#endif
 
 #else
 
