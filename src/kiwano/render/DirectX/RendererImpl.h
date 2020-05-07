@@ -104,6 +104,8 @@ protected:
 
     void MakeContextForWindow(WindowPtr window) override;
 
+    void SetFullscreenState(bool fullscreen) override;
+
     void Destroy() override;
 
 private:

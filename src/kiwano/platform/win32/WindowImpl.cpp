@@ -55,7 +55,7 @@ public:
 
     void Resize(uint32_t width, uint32_t height) override;
 
-    void SetFullscreen(bool fullscreen) override;
+    void SetFullscreenState(bool fullscreen) override;
 
     void SetCursor(CursorType cursor) override;
 
@@ -279,7 +279,7 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     if (is_fullscreen_)
     {
-        SetFullscreen(true);
+        SetFullscreenState(true);
     }
 }
 
@@ -316,19 +316,17 @@ void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
     KGE_ASSERT(handle_);
     if (!is_fullscreen_)
     {
-        MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-
-        uint32_t screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-        uint32_t screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-
         RECT rc = { 0, 0, LONG(width), LONG(height) };
         ::AdjustWindowRect(&rc, GetStyle(), false);
 
         width  = rc.right - rc.left;
         height = rc.bottom - rc.top;
 
-        int left = screenw > width ? ((screenw - width) / 2) : 0;
-        int top  = screenh > height ? ((screenh - height) / 2) : 0;
+        MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
+        uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
+        uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
+        int            left    = screenw > width ? ((screenw - width) / 2) : 0;
+        int            top     = screenh > height ? ((screenh - height) / 2) : 0;
 
         ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
     }
@@ -339,11 +337,18 @@ void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
     }
 }
 
-void WindowWin32Impl::SetFullscreen(bool fullscreen)
+void WindowWin32Impl::SetFullscreenState(bool fullscreen)
 {
     if (is_fullscreen_ != fullscreen)
     {
         is_fullscreen_ = fullscreen;
+
+        // Adjust the rect of client area
+        RECT rc = { 0, 0, LONG(width_), LONG(height_) };
+        ::AdjustWindowRect(&rc, GetStyle(), false);
+
+        uint32_t width  = uint32_t(rc.right - rc.left);
+        uint32_t height = uint32_t(rc.bottom - rc.top);
 
         if (is_fullscreen_)
         {
@@ -352,17 +357,22 @@ void WindowWin32Impl::SetFullscreen(bool fullscreen)
 
             // Top the window
             MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width_, height_,
+            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height,
                            SWP_NOACTIVATE);
         }
         else
         {
+            MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
+            uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
+            uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
+            int            left    = screenw > width ? ((screenw - width) / 2) : 0;
+            int            top     = screenh > height ? ((screenh - height) / 2) : 0;
+
             // Reset window style
             ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
 
             // Unpin the window
-            ::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0,
-                           SWP_DRAWFRAME | SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+            ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
         }
 
         ::ShowWindow(handle_, SW_SHOWNORMAL);

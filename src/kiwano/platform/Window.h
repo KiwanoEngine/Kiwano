@@ -133,7 +133,7 @@ public:
      * @brief 设置全屏模式
      * @param fullscreen 是否全屏
      */
-    virtual void SetFullscreen(bool fullscreen) = 0;
+    virtual void SetFullscreenState(bool fullscreen) = 0;
 
     /**
      * \~chinese

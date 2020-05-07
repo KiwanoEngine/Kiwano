@@ -246,6 +246,8 @@ protected:
 
     virtual void MakeContextForWindow(WindowPtr window) = 0;
 
+    virtual void SetFullscreenState(bool fullscreen) = 0;
+
     virtual void Destroy() = 0;
 
 protected:

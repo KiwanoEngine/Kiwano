@@ -120,6 +120,12 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
 
+void RendererImpl::SetFullscreenState(bool fullscreen)
+{
+    KGE_ASSERT(d3d_res_);
+    d3d_res_->SetFullscreenState(fullscreen);
+}
+
 void RendererImpl::Destroy()
 {
     KGE_SYS_LOG("Destroying device resources");

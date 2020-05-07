@@ -49,6 +49,11 @@ void Renderer::HandleEvent(Event* evt)
         auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
         Resize(window_evt->width, window_evt->height);
     }
+    else if (evt->IsType<WindowFullscreenEvent>())
+    {
+        auto window_evt = dynamic_cast<WindowFullscreenEvent*>(evt);
+        SetFullscreenState(window_evt->fullscreen);
+    }
 }
 
 void Renderer::BeginDraw()
