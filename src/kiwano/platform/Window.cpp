@@ -26,6 +26,7 @@ namespace kiwano
 Window::Window()
     : handle_(nullptr)
     , should_close_(false)
+    , is_fullscreen_(false)
     , width_(0)
     , height_(0)
 {
@@ -86,11 +87,6 @@ void Window::SetShouldClose(bool should)
 void Window::PushEvent(EventPtr evt)
 {
     event_queue_.push(evt);
-}
-
-void Window::Destroy()
-{
-    should_close_ = true;
 }
 
 }  // namespace kiwano

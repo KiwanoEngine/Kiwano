@@ -65,17 +65,19 @@ inline bool SdkLayersAvailable()
 struct D3D10DeviceResources : public ID3D10DeviceResources
 {
 public:
-    HRESULT Present(bool vsync);
+    HRESULT Present(bool vsync) override;
 
-    void ClearRenderTarget(Color& clear_color);
+    void ClearRenderTarget(Color& clear_color) override;
 
-    HRESULT HandleDeviceLost();
+    HRESULT HandleDeviceLost() override;
 
-    HRESULT SetLogicalSize(Size logical_size);
+    HRESULT SetLogicalSize(Size logical_size) override;
 
-    HRESULT SetDpi(float dpi);
+    HRESULT SetDpi(float dpi) override;
 
-    void DiscardResources();
+    HRESULT SetFullscreenState(bool fullscreen) override;
+
+    void DiscardResources() override;
 
 public:
     unsigned long STDMETHODCALLTYPE AddRef();
@@ -394,6 +396,11 @@ HRESULT D3D10DeviceResources::SetDpi(float dpi)
         return CreateWindowSizeDependentResources();
     }
     return S_OK;
+}
+
+HRESULT D3D10DeviceResources::SetFullscreenState(bool fullscreen)
+{
+    return dxgi_swap_chain_->SetFullscreenState(fullscreen ? TRUE : FALSE, nullptr);
 }
 
 STDMETHODIMP_(unsigned long) D3D10DeviceResources::AddRef()

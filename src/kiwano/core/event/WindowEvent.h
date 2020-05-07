@@ -29,6 +29,7 @@ KGE_DECLARE_SMART_PTR(WindowResizedEvent);
 KGE_DECLARE_SMART_PTR(WindowFocusChangedEvent);
 KGE_DECLARE_SMART_PTR(WindowTitleChangedEvent);
 KGE_DECLARE_SMART_PTR(WindowClosedEvent);
+KGE_DECLARE_SMART_PTR(WindowFullscreenEvent);
 
 /**
  * \addtogroup Events
@@ -93,6 +94,16 @@ public:
     WindowClosedEvent();
 };
 
+/// \~chinese
+/// @brief 窗口切换全屏事件
+class KGE_API WindowFullscreenEvent : public WindowEvent
+{
+public:
+    bool fullscreen;
+
+    WindowFullscreenEvent();
+};
+
 /** @} */
 
 template <>
@@ -102,8 +113,8 @@ struct IsEventType<WindowEvent>
     {
         return evt->GetType() == KGE_EVENT(WindowMovedEvent) || evt->GetType() == KGE_EVENT(WindowResizedEvent)
                || evt->GetType() == KGE_EVENT(WindowFocusChangedEvent)
-               || evt->GetType() == KGE_EVENT(WindowTitleChangedEvent)
-               || evt->GetType() == KGE_EVENT(WindowClosedEvent);
+               || evt->GetType() == KGE_EVENT(WindowTitleChangedEvent) || evt->GetType() == KGE_EVENT(WindowClosedEvent)
+               || evt->GetType() == KGE_EVENT(WindowFullscreenEvent);
     }
 };
 

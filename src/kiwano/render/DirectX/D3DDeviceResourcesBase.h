@@ -37,6 +37,8 @@ public:
 
     virtual HRESULT SetDpi(float dpi) = 0;
 
+    virtual HRESULT SetFullscreenState(bool fullscreen) = 0;
+
     virtual void DiscardResources() = 0;
 };
 

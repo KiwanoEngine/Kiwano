@@ -132,8 +132,6 @@ public:
      * \~chinese
      * @brief 设置全屏模式
      * @param fullscreen 是否全屏
-     * @param width 窗口宽度
-     * @param height 窗口高度
      */
     virtual void SetFullscreen(bool fullscreen) = 0;
 
@@ -147,8 +145,7 @@ public:
     /**
      * \~chinese
      * @brief 轮询窗口事件
-     * @return 返回事件队列中的第一个事件并将其从队列中移除\n
-     *         若事件队列为空则返回空指针
+     * @return 返回事件队列中的第一个事件并将其从队列中移除, 若队列为空则返回空指针
      */
     EventPtr PollEvent();
 
@@ -177,12 +174,6 @@ public:
      */
     void SetShouldClose(bool should);
 
-    /**
-     * \~chinese
-     * @brief 销毁窗口
-     */
-    virtual void Destroy();
-
 protected:
     Window();
 
@@ -190,6 +181,7 @@ protected:
 
 protected:
     bool                 should_close_;
+    bool                 is_fullscreen_;
     uint32_t             width_;
     uint32_t             height_;
     WindowHandle         handle_;
