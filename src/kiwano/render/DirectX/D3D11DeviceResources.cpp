@@ -64,6 +64,8 @@ public:
 
     HRESULT SetDpi(float dpi) override;
 
+    HRESULT SetFullscreenState(bool fullscreen) override;
+
     void DiscardResources() override;
 
 public:
@@ -414,6 +416,11 @@ HRESULT D3D11DeviceResources::SetDpi(float dpi)
         return CreateWindowSizeDependentResources();
     }
     return S_OK;
+}
+
+HRESULT D3D11DeviceResources::SetFullscreenState(bool fullscreen)
+{
+    return dxgi_swap_chain_->SetFullscreenState(fullscreen ? TRUE : FALSE, nullptr);
 }
 
 STDMETHODIMP_(unsigned long) D3D11DeviceResources::AddRef()
