@@ -73,13 +73,13 @@ public:
     SmartPtr(pointer_type p)
         : ptr_(p)
     {
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     SmartPtr(const SmartPtr& other)
         : ptr_(other.ptr_)
     {
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     SmartPtr(SmartPtr&& other) noexcept
@@ -97,7 +97,7 @@ public:
     SmartPtr(const SmartPtr<_UTy, _ProxyTy>& other)
     {
         ptr_ = const_cast<pointer_type>(dynamic_cast<const_pointer_type>(other.Get()));
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     inline pointer_type Get() noexcept
@@ -193,7 +193,7 @@ public:
 private:
     void Tidy()
     {
-        typename _ProxyTy::Release(ptr_);
+        _ProxyTy::Release(ptr_);
         ptr_ = nullptr;
     }
 

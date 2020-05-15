@@ -65,6 +65,9 @@ void Action::UpdateStep(Actor* target, Duration dt)
     case Status::Started:
         Update(target, dt);
         break;
+
+    default:
+        break;
     }
 
     if (status_ == Status::Done)
