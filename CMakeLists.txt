@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.16)
+project(Kiwano C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+
+if (WIN32)
+    message(STATUS "Building on Windows platform.")
+elseif (APPLE)
+    message(STATUS "Building on MacOS platform.")
+    add_compile_definitions(TARGET_OS_MAC)
+elseif (UNIX)
+    message(STATUS "Building on UNIX-like OS platform.")
+endif ()
+
+include_directories(src/3rd-party)
+include_directories(src)
+
+add_subdirectory(src/kiwano)
+add_subdirectory(src/kiwano-audio)
+add_subdirectory(src/kiwano-imgui)
+add_subdirectory(src/kiwano-network)
+add_subdirectory(src/kiwano-physics)
+add_subdirectory(src/3rd-party/Box2D)
+add_subdirectory(src/3rd-party/curl)
+add_subdirectory(src/3rd-party/nlohmann)
+add_subdirectory(src/3rd-party/pugixml)

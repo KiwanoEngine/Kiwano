@@ -6,8 +6,13 @@ x64/
 Debug/
 Release/
 
+# CMake folders
+/cmake-build-release/
+/cmake-build-debug/
+
 # Application folders
 .vs
+.idea
 
 # vs2010
 ipch/
@@ -27,4 +32,8 @@ packages/
 # Resources bin
 *.aps
 
+# Mac cache files
+.DS_Store
+
+# Documents
 docs/

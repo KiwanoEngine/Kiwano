@@ -75,9 +75,9 @@ public:
     virtual void Release()                     = 0;
     virtual _Ret Invoke(_Args&&... args) const = 0;
 
-    virtual const type_info& TargetType() const noexcept = 0;
+    virtual const std::type_info& TargetType() const noexcept = 0;
 
-    virtual const void* Target(const type_info& type) const noexcept = 0;
+    virtual const void* Target(const std::type_info& type) const noexcept = 0;
 };
 
 template <typename _Ret, typename... _Args>
@@ -121,12 +121,12 @@ public:
         return std::invoke(callee_, std::forward<_Args>(args)...);
     }
 
-    virtual const type_info& TargetType() const noexcept
+    virtual const std::type_info& TargetType() const noexcept
     {
         return typeid(_Ty);
     }
 
-    virtual const void* Target(const type_info& type) const noexcept
+    virtual const void* Target(const std::type_info& type) const noexcept
     {
         if (type == this->TargetType())
             return &callee_;
@@ -153,12 +153,12 @@ public:
         return std::invoke(func_, ptr_, std::forward<_Args>(args)...);
     }
 
-    virtual const type_info& TargetType() const noexcept
+    virtual const std::type_info& TargetType() const noexcept
     {
         return typeid(ProxyMemCallable);
     }
 
-    virtual const void* Target(const type_info& type) const noexcept
+    virtual const void* Target(const std::type_info& type) const noexcept
     {
         if (type == this->TargetType())
             return this;
@@ -193,12 +193,12 @@ public:
         return std::invoke(func_, ptr_, std::forward<_Args>(args)...);
     }
 
-    virtual const type_info& TargetType() const noexcept
+    virtual const std::type_info& TargetType() const noexcept
     {
         return typeid(ProxyConstMemCallable);
     }
 
-    virtual const void* Target(const type_info& type) const noexcept
+    virtual const void* Target(const std::type_info& type) const noexcept
     {
         if (type == this->TargetType())
             return this;
@@ -321,7 +321,7 @@ public:
         std::swap(callable_, rhs.callable_);
     }
 
-    const type_info& target_type() const noexcept
+    const std::type_info& target_type() const noexcept
     {
         return callable_->TargetType();
     }
