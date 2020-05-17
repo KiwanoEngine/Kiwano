@@ -82,6 +82,10 @@ public:
 
     RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) override;
 
+    void SetResolution(uint32_t width, uint32_t height, bool fullscreen) override;
+
+    Vector<Resolution> GetResolutions() override;
+
 public:
     void Clear() override;
 
@@ -104,8 +108,6 @@ protected:
 
     void MakeContextForWindow(WindowPtr window) override;
 
-    void SetFullscreenState(bool fullscreen) override;
-
     void Destroy() override;
 
 private:
@@ -114,6 +116,8 @@ private:
     ComPtr<IFontCollectionLoader>         font_collection_loader_;
     ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
     ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
+
+    Vector<Resolution> resolutions_;
 };
 
 /** @} */

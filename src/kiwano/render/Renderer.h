@@ -41,6 +41,18 @@ namespace kiwano
 
 /**
  * \~chinese
+ * @brief 分辨率
+ */
+struct Resolution
+{
+    uint32_t width;         ///< 分辨率宽度
+    uint32_t height;        ///< 分辨率高度
+    uint32_t refresh_rate;  ///< 刷新率
+};
+
+
+/**
+ * \~chinese
  * @brief 渲染器
  */
 class KGE_API Renderer : public EventModule
@@ -61,6 +73,14 @@ public:
     /// \~chinese
     /// @brief 开启或关闭垂直同步
     virtual void SetVSyncEnabled(bool enabled);
+
+    /// \~chinese
+    /// @brief 设置分辨率
+    virtual void SetResolution(uint32_t width, uint32_t height, bool fullscreen) = 0;
+
+    /// \~chinese
+    /// @brief 获取屏幕分辨率
+    virtual Vector<Resolution> GetResolutions() = 0;
 
     /// \~chinese
     /// @brief 创建纹理内部资源
@@ -245,8 +265,6 @@ protected:
     Renderer();
 
     virtual void MakeContextForWindow(WindowPtr window) = 0;
-
-    virtual void SetFullscreenState(bool fullscreen) = 0;
 
     virtual void Destroy() = 0;
 

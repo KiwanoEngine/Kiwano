@@ -31,6 +31,7 @@
 #include <kiwano/core/event/MouseEvent.h>
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/Application.h>
+#include <kiwano/render/Renderer.h>
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
@@ -55,8 +56,6 @@ public:
 
     void Resize(uint32_t width, uint32_t height) override;
 
-    void SetFullscreenState(bool fullscreen) override;
-
     void SetCursor(CursorType cursor) override;
 
     void PumpEvents() override;
@@ -64,8 +63,6 @@ public:
     DWORD GetStyle() const;
 
     void UpdateCursor();
-
-    void SetActive(bool actived);
 
     LRESULT MessageProc(HWND, UINT32, WPARAM, LPARAM);
 
@@ -97,7 +94,6 @@ namespace kiwano
 
 #define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
-#define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
 
 namespace
 {
@@ -276,11 +272,6 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     ::ShowWindow(handle_, SW_SHOWNORMAL);
     ::UpdateWindow(handle_);
-
-    if (is_fullscreen_)
-    {
-        SetFullscreenState(true);
-    }
 }
 
 void WindowWin32Impl::PumpEvents()
@@ -314,74 +305,20 @@ void WindowWin32Impl::SetIcon(uint32_t icon_resource)
 void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
 {
     KGE_ASSERT(handle_);
-    if (!is_fullscreen_)
-    {
-        RECT rc = { 0, 0, LONG(width), LONG(height) };
-        ::AdjustWindowRect(&rc, GetStyle(), false);
 
-        width  = rc.right - rc.left;
-        height = rc.bottom - rc.top;
+    RECT rc = { 0, 0, LONG(width), LONG(height) };
+    ::AdjustWindowRect(&rc, GetStyle(), false);
 
-        MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
-        uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-        uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-        int            left    = screenw > width ? ((screenw - width) / 2) : 0;
-        int            top     = screenh > height ? ((screenh - height) / 2) : 0;
+    width  = rc.right - rc.left;
+    height = rc.bottom - rc.top;
 
-        ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
-    }
-    else
-    {
-        MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-        ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height, SWP_NOACTIVATE);
-    }
-}
+    MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
+    uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
+    uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
+    int            left    = screenw > width ? ((screenw - width) / 2) : 0;
+    int            top     = screenh > height ? ((screenh - height) / 2) : 0;
 
-void WindowWin32Impl::SetFullscreenState(bool fullscreen)
-{
-    if (is_fullscreen_ != fullscreen)
-    {
-        is_fullscreen_ = fullscreen;
-
-        // Adjust the rect of client area
-        RECT rc = { 0, 0, LONG(width_), LONG(height_) };
-        ::AdjustWindowRect(&rc, GetStyle(), false);
-
-        uint32_t width  = uint32_t(rc.right - rc.left);
-        uint32_t height = uint32_t(rc.bottom - rc.top);
-
-        if (is_fullscreen_)
-        {
-            // Reset window style
-            ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
-
-            // Top the window
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height,
-                           SWP_NOACTIVATE);
-        }
-        else
-        {
-            MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
-            uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-            uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-            int            left    = screenw > width ? ((screenw - width) / 2) : 0;
-            int            top     = screenh > height ? ((screenh - height) / 2) : 0;
-
-            // Reset window style
-            ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
-
-            // Unpin the window
-            ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
-        }
-
-        ::ShowWindow(handle_, SW_SHOWNORMAL);
-
-        // Send event
-        WindowFullscreenEventPtr evt = new WindowFullscreenEvent;
-        evt->fullscreen              = is_fullscreen_;
-        PushEvent(evt);
-    }
+    ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
 void WindowWin32Impl::SetCursor(CursorType cursor)
@@ -389,31 +326,9 @@ void WindowWin32Impl::SetCursor(CursorType cursor)
     mouse_cursor_ = cursor;
 }
 
-void WindowWin32Impl::SetActive(bool actived)
-{
-    if (!handle_)
-        return;
-
-    if (is_fullscreen_)
-    {
-        // Hide window when it is not active
-        if (actived)
-        {
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width_, height_,
-                           SWP_NOACTIVATE);
-        }
-        else
-        {
-            ::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-            ::ShowWindow(handle_, SW_MINIMIZE);
-        }
-    }
-}
-
 DWORD WindowWin32Impl::GetStyle() const
 {
-    return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
+    return (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
 }
 
 void WindowWin32Impl::UpdateCursor()
@@ -563,7 +478,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         }
         else
         {
-            // KGE_SYS_LOG("Window resized");
+            KGE_SYS_LOG("Window resized");
 
             this->width_  = ((uint32_t)(short)LOWORD(lparam));
             this->height_ = ((uint32_t)(short)HIWORD(lparam));
@@ -587,13 +502,29 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_ACTIVATE:
     {
-        bool active = (LOWORD(wparam) != WA_INACTIVE);
-
-        this->SetActive(active);
-
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
-        evt->focus                     = active;
+        evt->focus                     = (LOWORD(wparam) != WA_INACTIVE);
         this->PushEvent(evt);
+    }
+    break;
+
+    case WM_SETFOCUS:
+    {
+        if (is_fullscreen_)
+        {
+            // TODO restore to fullscreen mode
+            // Renderer::GetInstance().SetResolution();
+        }
+    }
+    break;
+
+    case WM_KILLFOCUS:
+    {
+        if (is_fullscreen_)
+        {
+            // TODO exit fullscreen mode
+            // ::ShowWindow(handle_, SW_MINIMIZE);
+        }
     }
     break;
 
@@ -619,7 +550,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("The display resolution has changed");
 
-        ::InvalidateRect(hwnd, nullptr, FALSE);
+        ::InvalidateRect(hwnd, NULL, FALSE);
     }
     break;
 

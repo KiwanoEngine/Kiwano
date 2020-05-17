@@ -39,6 +39,10 @@ public:
 
     virtual HRESULT SetFullscreenState(bool fullscreen) = 0;
 
+    virtual HRESULT ResizeTarget(UINT width, UINT height) = 0;
+
+    virtual HRESULT GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num) = 0;
+
     virtual void DiscardResources() = 0;
 };
 

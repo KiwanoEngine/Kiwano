@@ -130,13 +130,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 设置全屏模式
-     * @param fullscreen 是否全屏
-     */
-    virtual void SetFullscreenState(bool fullscreen) = 0;
-
-    /**
-     * \~chinese
      * @brief 设置鼠标指针类型
      * @param cursor 鼠标指针类型
      */
@@ -173,6 +166,12 @@ public:
      * @brief 设置是否需要关闭
      */
     void SetShouldClose(bool should);
+
+    /**
+     * \~chinese
+     * @brief 设置当前是否是全屏状态
+     */
+    void SetFullscreenState(bool is_fullscreen);
 
 protected:
     Window();

@@ -77,6 +77,10 @@ public:
 
     HRESULT SetFullscreenState(bool fullscreen) override;
 
+    HRESULT ResizeTarget(UINT width, UINT height) override;
+
+    HRESULT GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num) override;
+
     void DiscardResources() override;
 
 public:
@@ -217,21 +221,29 @@ HRESULT D3D10DeviceResources::CreateDeviceResources()
             if (SUCCEEDED(hr))
             {
                 dxgi_device_ = dxgi_device;
-
-                ComPtr<IDXGIAdapter> dxgi_adapter;
-                hr = dxgi_device_->GetAdapter(&dxgi_adapter);
-
-                if (SUCCEEDED(hr))
-                {
-                    ComPtr<IDXGIFactory> dxgi_factory;
-                    hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
-
-                    if (SUCCEEDED(hr))
-                    {
-                        dxgi_factory_ = dxgi_factory;
-                    }
-                }
             }
+        }
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<IDXGIAdapter> dxgi_adapter;
+        hr = dxgi_device_->GetAdapter(&dxgi_adapter);
+
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<IDXGIFactory> dxgi_factory;
+            hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
+
+            if (SUCCEEDED(hr))
+            {
+                dxgi_factory_ = dxgi_factory;
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            hr = dxgi_factory_->MakeWindowAssociation(hwnd_, DXGI_MWA_NO_ALT_ENTER);
         }
     }
 
@@ -246,6 +258,7 @@ HRESULT D3D10DeviceResources::CreateDeviceResources()
         swap_chain_desc.BufferDesc.Format                  = DXGI_FORMAT_B8G8R8A8_UNORM;
         swap_chain_desc.BufferDesc.RefreshRate.Numerator   = 60;
         swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
+        swap_chain_desc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_CENTERED;
         swap_chain_desc.Flags                              = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         swap_chain_desc.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swap_chain_desc.OutputWindow                       = hwnd_;
@@ -400,7 +413,61 @@ HRESULT D3D10DeviceResources::SetDpi(float dpi)
 
 HRESULT D3D10DeviceResources::SetFullscreenState(bool fullscreen)
 {
-    return dxgi_swap_chain_->SetFullscreenState(fullscreen ? TRUE : FALSE, nullptr);
+    HRESULT hr = dxgi_swap_chain_->SetFullscreenState(fullscreen ? TRUE : FALSE, nullptr);
+    return hr;
+}
+
+HRESULT D3D10DeviceResources::ResizeTarget(UINT width, UINT height)
+{
+    DXGI_MODE_DESC desc = { 0 };
+    desc.Width          = width;
+    desc.Height         = height;
+    desc.Format         = DXGI_FORMAT_UNKNOWN;
+
+    HRESULT hr = dxgi_swap_chain_->ResizeTarget(&desc);
+    return hr;
+}
+
+HRESULT D3D10DeviceResources::GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num)
+{
+    ComPtr<IDXGIAdapter> dxgi_adapter;
+
+    HRESULT hr = dxgi_device_->GetAdapter(&dxgi_adapter);
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<IDXGIOutput> output;
+        hr = dxgi_adapter->EnumOutputs(0, &output);
+
+        if (SUCCEEDED(hr))
+        {
+            UINT        modes_num = 0;
+            DXGI_FORMAT format    = DXGI_FORMAT_B8G8R8A8_UNORM;
+            UINT        flags     = DXGI_ENUM_MODES_INTERLACED;
+
+            output->GetDisplayModeList(format, flags, &modes_num, 0);
+
+            if (modes_num > 0)
+            {
+                DXGI_MODE_DESC* temp = new DXGI_MODE_DESC[modes_num];
+
+                hr = output->GetDisplayModeList(format, flags, &modes_num, temp);
+                if (SUCCEEDED(hr) && mode_descs && num)
+                {
+                    (*mode_descs) = temp;
+                    (*num)        = (int)modes_num;
+                }
+                else
+                {
+                    delete[] temp;
+                }
+            }
+            else
+            {
+                hr = E_FAIL;
+            }
+        }
+    }
+    return hr;
 }
 
 STDMETHODIMP_(unsigned long) D3D10DeviceResources::AddRef()

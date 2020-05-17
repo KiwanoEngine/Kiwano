@@ -26,6 +26,7 @@
 
 namespace kiwano
 {
+
 MIDL_INTERFACE("3ede2b87-a202-4799-a39b-2308ad34cae8")
 KGE_API ID3D11DeviceResources : public ID3DDeviceResourcesBase
 {

@@ -27,6 +27,8 @@
 #include <kiwano/render/DirectX/RendererImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 
+#include <memory>
+
 namespace kiwano
 {
 
@@ -118,12 +120,6 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     }
 
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
-}
-
-void RendererImpl::SetFullscreenState(bool fullscreen)
-{
-    KGE_ASSERT(d3d_res_);
-    d3d_res_->SetFullscreenState(fullscreen);
 }
 
 void RendererImpl::Destroy()
@@ -951,6 +947,77 @@ RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, cons
     if (SUCCEEDED(hr))
         return ptr;
     return nullptr;
+}
+
+void RendererImpl::SetResolution(uint32_t width, uint32_t height, bool fullscreen)
+{
+    KGE_ASSERT(d3d_res_);
+
+    if (fullscreen)
+    {
+        HRESULT hr = d3d_res_->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+
+        hr = d3d_res_->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+    }
+    else
+    {
+        HRESULT hr = d3d_res_->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+
+        hr = d3d_res_->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+    }
+
+    Application::GetInstance().GetMainWindow()->SetFullscreenState(fullscreen);
+}
+
+Vector<Resolution> RendererImpl::GetResolutions()
+{
+    if (resolutions_.empty())
+    {
+
+        DXGI_MODE_DESC* mode_descs = nullptr;
+        int             mode_num   = 0;
+
+        HRESULT hr = d3d_res_->GetDisplaySettings(&mode_descs, &mode_num);
+        if (SUCCEEDED(hr))
+        {
+            std::unique_ptr<DXGI_MODE_DESC[]> mode_list(mode_descs);
+
+            if (mode_list)
+            {
+                for (int i = 0; i < mode_num; i++)
+                {
+                    Resolution res;
+                    res.width        = mode_descs[i].Width;
+                    res.height       = mode_descs[i].Height;
+                    res.refresh_rate = 0;
+
+                    if (mode_descs[i].RefreshRate.Denominator > 0)
+                    {
+                        res.refresh_rate = mode_descs[i].RefreshRate.Numerator / mode_descs[i].RefreshRate.Denominator;
+                    }
+
+                    if (!resolutions_.empty())
+                    {
+                        auto& back = resolutions_.back();
+                        if (back.width == res.width && back.height == res.height
+                            && back.refresh_rate == res.refresh_rate)
+                            continue;
+                    }
+
+                    resolutions_.push_back(res);
+                }
+            }
+        }
+        else
+        {
+            KGE_THROW_IF_FAILED(hr, "DXGI GetDisplaySettings failed!");
+        }
+    }
+    return resolutions_;
 }
 
 void RendererImpl::Resize(uint32_t width, uint32_t height)

@@ -38,8 +38,6 @@ Window::~Window()
 
 EventPtr Window::PollEvent()
 {
-    PumpEvents();
-
     EventPtr evt;
     if (!event_queue_.empty())
     {
@@ -82,6 +80,11 @@ bool Window::ShouldClose()
 void Window::SetShouldClose(bool should)
 {
     should_close_ = should;
+}
+
+void Window::SetFullscreenState(bool is_fullscreen)
+{
+    is_fullscreen_ = is_fullscreen;
 }
 
 void Window::PushEvent(EventPtr evt)

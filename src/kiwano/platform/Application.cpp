@@ -35,7 +35,7 @@ int GetVersion()
 }
 
 Application::Application()
-    : quiting_(false)
+    : running_(false)
     , time_scale_(1.f)
 {
     Use(Renderer::GetInstance());
@@ -43,7 +43,10 @@ Application::Application()
     Use(Director::GetInstance());
 }
 
-Application::~Application() {}
+Application::~Application()
+{
+    this->Destroy();
+}
 
 void Application::Run(RunnerPtr runner, bool debug)
 {
@@ -65,30 +68,34 @@ void Application::Run(RunnerPtr runner, bool debug)
     // Everything is ready
     runner->OnReady();
 
-    quiting_          = false;
+    running_          = true;
     last_update_time_ = Time::Now();
-    while (!quiting_)
+    while (running_)
     {
         const Time     now = Time::Now();
         const Duration dt  = (now - last_update_time_);
         last_update_time_  = now;
 
         if (!runner->MainLoop(dt))
-            quiting_ = true;
+            running_ = false;
     }
 
-    // Destroy all resources
-    runner->OnDestroy();
     this->Destroy();
 }
 
 void Application::Quit()
 {
-    quiting_ = true;
+    running_ = false;
 }
 
 void Application::Destroy()
 {
+    if (runner_)
+    {
+        runner_->OnDestroy();
+        runner_ = nullptr;
+    }
+
     // Clear all resources
     Director::GetInstance().ClearStages();
     ResourceCache::GetInstance().Clear();
@@ -98,6 +105,7 @@ void Application::Destroy()
     {
         (*iter)->DestroyModule();
     }
+    modules_.clear();
 }
 
 void Application::Use(Module& module)
@@ -124,6 +132,9 @@ void Application::DispatchEvent(EventPtr evt)
 
 void Application::DispatchEvent(Event* evt)
 {
+    if (!running_)
+        return;
+
     for (auto comp : modules_)
     {
         if (auto event_comp = comp->Cast<EventModule>())
@@ -135,6 +146,9 @@ void Application::DispatchEvent(Event* evt)
 
 void Application::Update(Duration dt)
 {
+    if (!running_)
+        return;
+
     // Before update
     for (auto comp : modules_)
     {
@@ -186,6 +200,9 @@ void Application::Update(Duration dt)
 
 void Application::Render()
 {
+    if (!running_)
+        return;
+
     Renderer& renderer = Renderer::GetInstance();
     renderer.Clear();
 

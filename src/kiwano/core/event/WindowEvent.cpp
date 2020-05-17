@@ -39,10 +39,4 @@ WindowClosedEvent::WindowClosedEvent()
 {
 }
 
-WindowFullscreenEvent::WindowFullscreenEvent() 
-    : WindowEvent(KGE_EVENT(WindowFullscreenEvent))
-    , fullscreen(false)
-{
-}
-
 }  // namespace kiwano

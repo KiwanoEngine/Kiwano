@@ -79,6 +79,12 @@ public:
 
     /**
      * \~chinese
+     * @brief 是否正在运行
+     */
+    bool IsRunning() const;
+
+    /**
+     * \~chinese
      * @brief 添加模块
      * @param[in] module 模块
      */
@@ -143,7 +149,7 @@ public:
     Time GetLastUpdateTime() const;
 
 private:
-    bool                    quiting_;
+    bool                    running_;
     float                   time_scale_;
     RunnerPtr               runner_;
     Time                    last_update_time_;
@@ -161,6 +167,11 @@ inline WindowPtr Application::GetMainWindow() const
 {
     KGE_ASSERT(runner_);
     return runner_->GetMainWindow();
+}
+
+inline bool Application::IsRunning() const
+{
+    return running_;
 }
 
 inline Time Application::GetLastUpdateTime() const

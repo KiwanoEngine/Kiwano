@@ -71,6 +71,9 @@ Runner::~Runner() {}
 
 bool Runner::MainLoop(Duration dt)
 {
+    if (!main_window_)
+        return false;
+
     if (main_window_->ShouldClose())
     {
         if (this->OnClosing())
@@ -81,14 +84,16 @@ bool Runner::MainLoop(Duration dt)
 
     Application& app = Application::GetInstance();
 
+    // Update modules before poll events
+    app.Update(dt);
+
     // Poll events
+    main_window_->PumpEvents();
     while (EventPtr evt = main_window_->PollEvent())
     {
         app.DispatchEvent(evt.Get());
     }
 
-    // Update & render
-    app.Update(dt);
     app.Render();
     return true;
 }
