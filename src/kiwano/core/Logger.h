@@ -19,10 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <iomanip>
 #include <kiwano/core/Common.h>
-#include <kiwano/macros.h>
-#include <sstream>
+#include <iomanip>
+#include <streambuf>
 
 #ifndef KGE_SYS_LOG
 #ifdef KGE_DEBUG
@@ -47,6 +46,14 @@
 
 #ifndef KGE_LOGF
 #define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
+#endif
+
+#ifndef KGE_LOG_STREAM
+#define KGE_LOG_STREAM() ::kiwano::Logger::GetInstance().GetOutputStream()
+#endif
+
+#ifndef KGE_ERROR_STREAM
+#define KGE_ERROR_STREAM() ::kiwano::Logger::GetInstance().GetErrorStream()
 #endif
 
 namespace kiwano

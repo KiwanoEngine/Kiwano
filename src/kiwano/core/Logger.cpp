@@ -298,7 +298,7 @@ void Logger::ResetStreamToStdStream()
         }
 
         // replace the C++ global locale with the user-preferred locale
-        (void)std::locale::global(std::locale(""));
+        (void)std::locale::global(std::locale());
         (void)std::cout.imbue(std::locale());
         (void)std::cerr.imbue(std::locale());
 
