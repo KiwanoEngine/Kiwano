@@ -20,19 +20,22 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <kiwano/core/Logger.h>
 #include <stdexcept>
 #include <system_error>
 
-#define KGE_THROW(MESSAGE)                   \
-    do                                       \
-    {                                        \
-        kiwano::StackTracer().Print();       \
-        throw kiwano::RuntimeError(MESSAGE); \
+#define KGE_THROW(MESSAGE)                               \
+    do                                                   \
+    {                                                    \
+        KGE_ERROR("An exception occurred: %s", MESSAGE); \
+        kiwano::StackTracer().Print();                   \
+        throw kiwano::RuntimeError(MESSAGE);             \
     } while (0)
 
 #define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
     do                                                                                    \
     {                                                                                     \
+        KGE_ERROR("An exception occurred (%#x): %s", ERRCODE, MESSAGE);                   \
         kiwano::StackTracer().Print();                                                    \
         throw kiwano::SystemError(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
     } while (0)
