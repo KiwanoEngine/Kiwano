@@ -23,6 +23,7 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/Timer.h>
 #include <kiwano/core/Singleton.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/platform/Runner.h>
@@ -76,6 +77,12 @@ public:
      * @brief 获取主窗口
      */
     WindowPtr GetMainWindow() const;
+
+    /**
+     * \~chinese
+     * @brief 获取计时器
+     */
+    TimerPtr GetTimer() const;
 
     /**
      * \~chinese
@@ -142,17 +149,11 @@ public:
      */
     void Destroy();
 
-    /**
-     * \~chinese
-     * @brief 获取上一次更新时间
-     */
-    Time GetLastUpdateTime() const;
-
 private:
     bool                    running_;
     float                   time_scale_;
     RunnerPtr               runner_;
-    Time                    last_update_time_;
+    TimerPtr                timer_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -169,14 +170,14 @@ inline WindowPtr Application::GetMainWindow() const
     return runner_->GetMainWindow();
 }
 
+inline TimerPtr Application::GetTimer() const
+{
+    return timer_;
+}
+
 inline bool Application::IsRunning() const
 {
     return running_;
-}
-
-inline Time Application::GetLastUpdateTime() const
-{
-    return last_update_time_;
 }
 
 }  // namespace kiwano

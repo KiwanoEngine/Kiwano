@@ -68,15 +68,13 @@ void Application::Run(RunnerPtr runner, bool debug)
     // Everything is ready
     runner->OnReady();
 
-    running_          = true;
-    last_update_time_ = Time::Now();
+    running_ = true;
+    timer_   = Timer::Create();
     while (running_)
     {
-        const Time     now = Time::Now();
-        const Duration dt  = (now - last_update_time_);
-        last_update_time_  = now;
+        timer_->Tick();
 
-        if (!runner->MainLoop(dt))
+        if (!runner->MainLoop(timer_->GetDeltaTime()))
             running_ = false;
     }
 

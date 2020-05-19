@@ -502,9 +502,21 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_ACTIVATE:
     {
+        bool active = (LOWORD(wparam) != WA_INACTIVE);
+
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
-        evt->focus                     = (LOWORD(wparam) != WA_INACTIVE);
+        evt->focus                     = active;
         this->PushEvent(evt);
+
+        // Pause game when window is inactive
+        TimerPtr timer = Application::GetInstance().GetTimer();
+        if (timer)
+        {
+            if (active)
+                timer->Resume();
+            else
+                timer->Pause();
+        }
     }
     break;
 
