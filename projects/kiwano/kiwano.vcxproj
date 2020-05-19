@@ -17,6 +17,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Director.h" />
+    <ClInclude Include="..\..\src\kiwano\core\EventTicker.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\EventType.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Serializable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\String.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Ticker.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
     <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
     <ClInclude Include="..\..\src\kiwano\core\Xml.h" />
@@ -124,6 +126,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\EventTicker.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\String.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Ticker.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Task.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TaskManager.cpp" />

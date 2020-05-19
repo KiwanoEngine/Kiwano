@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Time.h>
+#include <kiwano/core/Ticker.h>
 #include <kiwano/core/IntrusiveList.h>
 
 namespace kiwano
@@ -47,8 +46,21 @@ public:
     /// \~chinese
     /// @brief 任务回调函数
     /// @details
-    /// 回调函数第一个参数是任务自身，第二个参数是距离上次执行任务的时间间隔
+    /// 回调函数第一个参数是任务自身，第二个参数是时间增量
     using Callback = Function<void(Task* /* self */, Duration /* dt */)>;
+
+    /// \~chinese
+    /// @brief 创建任务
+    /// @param cb 回调函数
+    /// @param 报时器
+    static TaskPtr Create(const Callback& cb, TickerPtr ticker);
+
+    /// \~chinese
+    /// @brief 创建任务
+    /// @param name 名称
+    /// @param cb 回调函数
+    /// @param 报时器
+    static TaskPtr Create(const String& name, const Callback& cb, TickerPtr ticker);
 
     /// \~chinese
     /// @brief 创建任务
@@ -90,32 +102,20 @@ public:
     bool IsRemoveable() const;
 
     /// \~chinese
-    /// @brief 获取任务执行过回调函数的次数
-    int GetRunTimes() const;
-
-    /// \~chinese
-    /// @brief 获取任务执行回调函数的总次数
-    int GetTotalRunTimes() const;
-
-    /// \~chinese
-    /// @brief 设置任务执行回调函数的总次数
-    void SetTotalRunTimes(int times);
-
-    /// \~chinese
-    /// @brief 获取任务执行时间间隔
-    Duration GetInterval() const;
-
-    /// \~chinese
-    /// @brief 设置任务执行时间间隔
-    void SetInterval(Duration interval);
-
-    /// \~chinese
     /// @brief 获取任务回调函数
     Callback GetCallback() const;
 
     /// \~chinese
     /// @brief 设置任务回调函数
     void SetCallback(const Callback& callback);
+
+    /// \~chinese
+    /// @brief 获取任务的报时器
+    TickerPtr GetTicker() const;
+
+    /// \~chinese
+    /// @brief 设置任务的报时器
+    void SetTicker(TickerPtr ticker);
 
 private:
     /// \~chinese
@@ -127,13 +127,10 @@ private:
     void Reset();
 
 private:
-    bool     running_;
-    bool     removeable_;
-    int      run_times_;
-    int      total_times_;
-    Duration interval_;
-    Duration elapsed_;
-    Callback callback_;
+    bool      running_;
+    bool      removeable_;
+    TickerPtr ticker_;
+    Callback  callback_;
 };
 
 inline void Task::Start()
@@ -161,29 +158,14 @@ inline bool Task::IsRemoveable() const
     return removeable_;
 }
 
-inline int Task::GetRunTimes() const
+inline TickerPtr Task::GetTicker() const
 {
-    return run_times_;
+    return ticker_;
 }
 
-inline int Task::GetTotalRunTimes() const
+inline void Task::SetTicker(TickerPtr ticker)
 {
-    return total_times_;
-}
-
-inline void Task::SetTotalRunTimes(int times)
-{
-    total_times_ = times;
-}
-
-inline Duration Task::GetInterval() const
-{
-    return interval_;
-}
-
-inline void Task::SetInterval(Duration interval)
-{
-    interval_ = interval;
+    ticker_ = ticker;
 }
 
 inline Task::Callback Task::GetCallback() const

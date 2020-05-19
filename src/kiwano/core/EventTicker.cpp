@@ -18,65 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/Time.h>
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/core/EventTicker.h>
 
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Timer);
-
-/// \~chinese
-/// @brief 计时器
-class KGE_API Timer
-    : public ObjectBase
+TickEvent::TickEvent()
+    : Event(KGE_EVENT(TickEvent))
+    , ticker_(nullptr)
 {
-public:
-    /// \~chinese
-    /// @brief 创建计时器
-    static TimerPtr Create();
+}
 
-    Timer();
+EventTickerPtr EventTicker::Create(Duration interval, int times)
+{
+    EventTickerPtr ptr = memory::New<EventTicker>();
+    if (ptr)
+    {
+        ptr->SetInterval(interval);
+        ptr->SetTotalTickTimes(times);
+    }
+    return ptr;
+}
 
-    virtual ~Timer();
+bool EventTicker::Tick(Duration dt)
+{
+    if (Ticker::Tick(dt))
+    {
+        TickEventPtr evt = new TickEvent;
+        evt->delta_time_ = GetDeltaTime();
+        evt->ticker_     = this;
+        DispatchEvent(evt.Get());
 
-    /// \~chinese
-    /// @brief 获取时间增量
-    Duration GetDeltaTime() const;
-
-    /// \~chinese
-    /// @brief 获取总时长
-    Duration GetTotalTime() const;
-
-    /// \~chinese
-    /// @brief 获取暂停状态
-    bool IsPausing() const;
-
-    /// \~chinese
-    /// @brief 计时
-    void Tick();
-
-    /// \~chinese
-    /// @brief 继续计时
-    void Resume();
-
-    /// \~chinese
-    /// @brief 暂停计时
-    void Pause();
-
-    /// \~chinese
-    /// @brief 重置计时器
-    void Reset();
-
-private:
-    bool     is_paused_;
-    Time     start_time_;
-    Time     paused_time_;
-    Time     current_time_;
-    Time     previous_time_;
-    Duration delta_time_;
-    Duration total_idle_time_;
-};
+        return true;
+    }
+    return false;
+}
 
 }  // namespace kiwano

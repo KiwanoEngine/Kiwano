@@ -19,13 +19,21 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Timer.h>
+#include <kiwano/core/Allocator.h>
 
 namespace kiwano
 {
 
-Timer::Timer()
-    : is_stopped_(false)
+TimerPtr Timer::Create()
 {
+    TimerPtr ptr = memory::New<Timer>();
+    return ptr;
+}
+
+Timer::Timer()
+    : is_paused_(false)
+{
+    Reset();
 }
 
 Timer::~Timer() {}
@@ -37,42 +45,19 @@ Duration Timer::GetDeltaTime() const
 
 Duration Timer::GetTotalTime() const
 {
-    if (is_stopped_)
+    if (is_paused_)
         return paused_time_ - start_time_ - total_idle_time_;
     return current_time_ - start_time_ - total_idle_time_;
 }
 
-void Timer::Start()
+bool Timer::IsPausing() const
 {
-    if (is_stopped_)
-    {
-        const auto now = Time::Now();
-
-        // add the duration of the pause to the total idle time
-        total_idle_time_ += (now - paused_time_);
-
-        // set the previous time to the current time
-        previous_time_ = now;
-
-        paused_time_ = Time();
-        is_stopped_  = false;
-    }
-}
-
-void Timer::Stop()
-{
-    if (!is_stopped_)
-    {
-        const auto now = Time::Now();
-
-        paused_time_ = now;
-        is_stopped_  = true;
-    }
+    return is_paused_;
 }
 
 void Timer::Tick()
 {
-    if (is_stopped_)
+    if (is_paused_)
     {
         delta_time_ = 0;
         return;
@@ -91,14 +76,44 @@ void Timer::Tick()
         delta_time_ = 0;
 }
 
+void Timer::Resume()
+{
+    if (is_paused_)
+    {
+        const auto now = Time::Now();
+
+        // add the duration of the pause to the total idle time
+        total_idle_time_ += (now - paused_time_);
+
+        // set the previous time to the current time
+        previous_time_ = now;
+
+        paused_time_ = Time();
+        is_paused_   = false;
+    }
+}
+
+void Timer::Pause()
+{
+    if (!is_paused_)
+    {
+        const auto now = Time::Now();
+
+        paused_time_ = now;
+        is_paused_   = true;
+    }
+}
+
 void Timer::Reset()
 {
     const auto now = Time::Now();
 
     start_time_    = now;
+    current_time_  = now;
     previous_time_ = now;
     paused_time_   = Time();
-    is_stopped_    = false;
+    delta_time_    = 0;
+    is_paused_     = false;
 }
 
 }  // namespace kiwano

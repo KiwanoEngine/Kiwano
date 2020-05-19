@@ -22,75 +22,74 @@
 
 namespace kiwano
 {
-
-TaskPtr Task::Create(const Callback& cb, Duration interval, int times)
+TaskPtr Task::Create(const Callback& cb, TickerPtr ticker)
 {
     TaskPtr ptr = memory::New<Task>();
     if (ptr)
     {
         ptr->SetCallback(cb);
-        ptr->SetInterval(interval);
-        ptr->SetTotalRunTimes(times);
+        ptr->SetTicker(ticker);
     }
     return ptr;
 }
 
-TaskPtr Task::Create(const String& name, const Callback& cb, Duration interval, int times)
+TaskPtr Task::Create(const String& name, const Callback& cb, TickerPtr ticker)
 {
-    TaskPtr ptr = memory::New<Task>();
+    TaskPtr ptr = Task::Create(cb, ticker);
     if (ptr)
     {
         ptr->SetName(name);
-        ptr->SetCallback(cb);
-        ptr->SetInterval(interval);
-        ptr->SetTotalRunTimes(times);
     }
     return ptr;
+}
+
+TaskPtr Task::Create(const Callback& cb, Duration interval, int times)
+{
+    TickerPtr ticker = Ticker::Create(interval, times);
+    return Task::Create(cb, ticker);
+}
+
+TaskPtr Task::Create(const String& name, const Callback& cb, Duration interval, int times)
+{
+    TickerPtr ticker = Ticker::Create(interval, times);
+    return Task::Create(name, cb, ticker);
 }
 
 Task::Task()
     : running_(true)
     , removeable_(false)
-    , run_times_(0)
-    , total_times_(0)
-    , interval_(0)
-    , elapsed_(0)
     , callback_()
 {
 }
 
 void Task::Update(Duration dt)
 {
-    if (total_times_ == 0)
+    if (!ticker_)
     {
         Remove();
         return;
     }
 
-    if (IsRunning())
+    if (ticker_->GetTotalTickTimes() == 0)
     {
-        if (!interval_.IsZero())
-        {
-            elapsed_ += dt;
-            if (elapsed_ < interval_)
-                return;
-        }
+        Remove();
+        return;
+    }
 
+    if (ticker_->Tick(dt))
+    {
         if (callback_)
-            callback_(this, elapsed_);
+            callback_(this, ticker_->GetDeltaTime());
 
-        ++run_times_;
-        elapsed_ = 0;
-
-        if (run_times_ == total_times_)
+        if (ticker_->GetTickedTimes() == ticker_->GetTotalTickTimes())
             Remove();
     }
 }
 
 void Task::Reset()
 {
-    elapsed_   = 0;
-    run_times_ = 0;
+    if (ticker_)
+        ticker_->Reset();
 }
 
 }  // namespace kiwano

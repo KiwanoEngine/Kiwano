@@ -40,17 +40,6 @@ void TaskManager::UpdateTasks(Duration dt)
     }
 }
 
-Task* TaskManager::AddTask(const Task::Callback& cb, Duration interval, int times)
-{
-    return AddTask(String(), cb, interval, times);
-}
-
-Task* TaskManager::AddTask(const String& name, const Task::Callback& cb, Duration interval, int times)
-{
-    TaskPtr task = Task::Create(name, cb, interval, times);
-    return AddTask(task);
-}
-
 Task* TaskManager::AddTask(TaskPtr task)
 {
     KGE_ASSERT(task && "AddTask failed, NULL pointer exception");
