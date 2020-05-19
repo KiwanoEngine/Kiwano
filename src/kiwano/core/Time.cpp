@@ -23,6 +23,7 @@
 #include <kiwano/core/Time.h>
 #include <regex>
 #include <unordered_map>
+#include <chrono>
 
 namespace kiwano
 {
@@ -69,19 +70,32 @@ const Duration Time::operator-(const Time& other) const
 
 Time Time::Now() noexcept
 {
-    static LARGE_INTEGER freq = {};
-    if (freq.QuadPart == 0LL)
+#if defined(KGE_PLATFORM_WINDOWS)
+
+    static double millisecs_per_count = {};
+    if (millisecs_per_count == 0)
     {
+        LARGE_INTEGER freq = {};
         // the Function will always succceed on systems that run Windows XP or later
         QueryPerformanceFrequency(&freq);
+        millisecs_per_count = 1000.0 / static_cast<double>(freq.QuadPart);
     }
 
     LARGE_INTEGER count;
     QueryPerformanceCounter(&count);
+    return Time{ static_cast<long>(count.QuadPart * millisecs_per_count) };
 
-    const long long whole = (count.QuadPart / freq.QuadPart) * 1000LL;
-    const long long part  = (count.QuadPart % freq.QuadPart) * 1000LL / freq.QuadPart;
-    return Time{ static_cast<long>(whole + part) };
+#else
+
+    using std::chrono::steady_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+
+    const auto      now   = steady_clock::now();
+    const long long count = duration_cast<milliseconds>(now.time_since_epoch()).count();
+    return Time{ static_cast<long>(count) };
+
+#endif
 }
 
 //-------------------------------------------------------
