@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Timer.h>
+#include <kiwano/core/Time.h>
 #include <kiwano/platform/Window.h>
 
 namespace kiwano

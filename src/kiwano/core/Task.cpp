@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Timer.h>
+#include <kiwano/core/Task.h>
 
 namespace kiwano
 {
 
-TimerPtr Timer::Create(const Callback& cb, Duration interval, int times)
+TaskPtr Task::Create(const Callback& cb, Duration interval, int times)
 {
-    TimerPtr ptr = memory::New<Timer>();
+    TaskPtr ptr = memory::New<Task>();
     if (ptr)
     {
         ptr->SetCallback(cb);
@@ -35,9 +35,9 @@ TimerPtr Timer::Create(const Callback& cb, Duration interval, int times)
     return ptr;
 }
 
-TimerPtr Timer::Create(const String& name, const Callback& cb, Duration interval, int times)
+TaskPtr Task::Create(const String& name, const Callback& cb, Duration interval, int times)
 {
-    TimerPtr ptr = memory::New<Timer>();
+    TaskPtr ptr = memory::New<Task>();
     if (ptr)
     {
         ptr->SetName(name);
@@ -48,7 +48,7 @@ TimerPtr Timer::Create(const String& name, const Callback& cb, Duration interval
     return ptr;
 }
 
-Timer::Timer()
+Task::Task()
     : running_(true)
     , removeable_(false)
     , run_times_(0)
@@ -59,7 +59,7 @@ Timer::Timer()
 {
 }
 
-void Timer::Update(Duration dt)
+void Task::Update(Duration dt)
 {
     if (total_times_ == 0)
     {
@@ -87,7 +87,7 @@ void Timer::Update(Duration dt)
     }
 }
 
-void Timer::Reset()
+void Task::Reset()
 {
     elapsed_   = 0;
     run_times_ = 0;

@@ -69,12 +69,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Timer.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\TimerManager.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
     </ClInclude>
@@ -327,6 +321,12 @@
     <ClInclude Include="..\..\src\kiwano\render\FrameSequence.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Task.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\TaskManager.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -349,12 +349,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
       <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
       <Filter>2d</Filter>
@@ -538,6 +532,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\TaskManager.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Task.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

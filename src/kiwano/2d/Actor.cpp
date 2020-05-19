@@ -79,7 +79,7 @@ void Actor::Update(Duration dt)
 {
     UpdateActions(this, dt);
     UpdateComponents(dt);
-    UpdateTimers(dt);
+    UpdateTasks(dt);
 
     if (!update_pausing_)
     {

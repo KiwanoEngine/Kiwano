@@ -25,105 +25,105 @@
 
 namespace kiwano
 {
-class TimerManager;
+class TaskManager;
 
-KGE_DECLARE_SMART_PTR(Timer);
-
-/// \~chinese
-/// @brief 定时器列表
-typedef IntrusiveList<TimerPtr> TimerList;
+KGE_DECLARE_SMART_PTR(Task);
 
 /// \~chinese
-/// @brief 定时器
-/// @details 定时器用于每隔一段时间执行一次回调函数，且可以指定执行总次数
-class KGE_API Timer
+/// @brief 任务列表
+typedef IntrusiveList<TaskPtr> TaskList;
+
+/// \~chinese
+/// @brief 任务
+/// @details 任务用于每隔一段时间执行一次回调函数，且可以指定执行总次数
+class KGE_API Task
     : public ObjectBase
-    , protected IntrusiveListValue<TimerPtr>
+    , protected IntrusiveListValue<TaskPtr>
 {
-    friend class TimerManager;
-    friend IntrusiveList<TimerPtr>;
+    friend class TaskManager;
+    friend IntrusiveList<TaskPtr>;
 
 public:
     /// \~chinese
-    /// @brief 定时器回调函数
+    /// @brief 任务回调函数
     /// @details
-    /// 回调函数第一个参数是定时器自身，第二个参数是距离上次更新的时间间隔
-    using Callback = Function<void(Timer* /* self */, Duration /* dt */)>;
+    /// 回调函数第一个参数是任务自身，第二个参数是距离上次执行任务的时间间隔
+    using Callback = Function<void(Task* /* self */, Duration /* dt */)>;
 
     /// \~chinese
-    /// @brief 创建定时器
+    /// @brief 创建任务
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TimerPtr Create(const Callback& cb, Duration interval, int times = -1);
+    static TaskPtr Create(const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief 创建定时器
+    /// @brief 创建任务
     /// @param name 名称
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TimerPtr Create(const String& name, const Callback& cb, Duration interval, int times = -1);
+    static TaskPtr Create(const String& name, const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief 构造空定时器
-    Timer();
+    /// @brief 构造空任务
+    Task();
 
     /// \~chinese
-    /// @brief 启动定时器
+    /// @brief 启动任务
     void Start();
 
     /// \~chinese
-    /// @brief 停止定时器
+    /// @brief 停止任务
     void Stop();
 
     /// \~chinese
-    /// @brief 移除定时器
+    /// @brief 移除任务
     void Remove();
 
     /// \~chinese
-    /// @brief 定时器是否在运行
+    /// @brief 任务是否在运行
     bool IsRunning() const;
 
     /// \~chinese
-    /// @brief 定时器是否可移除
+    /// @brief 任务是否可移除
     bool IsRemoveable() const;
 
     /// \~chinese
-    /// @brief 获取定时器执行过回调函数的次数
+    /// @brief 获取任务执行过回调函数的次数
     int GetRunTimes() const;
 
     /// \~chinese
-    /// @brief 获取定时器执行回调函数的总次数
+    /// @brief 获取任务执行回调函数的总次数
     int GetTotalRunTimes() const;
 
     /// \~chinese
-    /// @brief 设置定时器执行回调函数的总次数
+    /// @brief 设置任务执行回调函数的总次数
     void SetTotalRunTimes(int times);
 
     /// \~chinese
-    /// @brief 获取定时器执行时间间隔
+    /// @brief 获取任务执行时间间隔
     Duration GetInterval() const;
 
     /// \~chinese
-    /// @brief 设置定时器执行时间间隔
+    /// @brief 设置任务执行时间间隔
     void SetInterval(Duration interval);
 
     /// \~chinese
-    /// @brief 获取定时器回调函数
+    /// @brief 获取任务回调函数
     Callback GetCallback() const;
 
     /// \~chinese
-    /// @brief 设置定时器回调函数
+    /// @brief 设置任务回调函数
     void SetCallback(const Callback& callback);
 
 private:
     /// \~chinese
-    /// @brief 更新定时器
+    /// @brief 更新任务
     void Update(Duration dt);
 
     /// \~chinese
-    /// @brief 重置定时器
+    /// @brief 重置任务
     void Reset();
 
 private:
@@ -136,62 +136,62 @@ private:
     Callback callback_;
 };
 
-inline void Timer::Start()
+inline void Task::Start()
 {
     running_ = true;
 }
 
-inline void Timer::Stop()
+inline void Task::Stop()
 {
     running_ = false;
 }
 
-inline void Timer::Remove()
+inline void Task::Remove()
 {
     removeable_ = true;
 }
 
-inline bool Timer::IsRunning() const
+inline bool Task::IsRunning() const
 {
     return running_;
 }
 
-inline bool Timer::IsRemoveable() const
+inline bool Task::IsRemoveable() const
 {
     return removeable_;
 }
 
-inline int Timer::GetRunTimes() const
+inline int Task::GetRunTimes() const
 {
     return run_times_;
 }
 
-inline int Timer::GetTotalRunTimes() const
+inline int Task::GetTotalRunTimes() const
 {
     return total_times_;
 }
 
-inline void Timer::SetTotalRunTimes(int times)
+inline void Task::SetTotalRunTimes(int times)
 {
     total_times_ = times;
 }
 
-inline Duration Timer::GetInterval() const
+inline Duration Task::GetInterval() const
 {
     return interval_;
 }
 
-inline void Timer::SetInterval(Duration interval)
+inline void Task::SetInterval(Duration interval)
 {
     interval_ = interval;
 }
 
-inline Timer::Callback Timer::GetCallback() const
+inline Task::Callback Task::GetCallback() const
 {
     return callback_;
 }
 
-inline void Timer::SetCallback(const Timer::Callback& callback)
+inline void Task::SetCallback(const Task::Callback& callback)
 {
     callback_ = callback;
 }

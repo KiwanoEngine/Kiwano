@@ -52,8 +52,8 @@
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/Timer.h>
-#include <kiwano/core/TimerManager.h>
+#include <kiwano/core/Task.h>
+#include <kiwano/core/TaskManager.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>

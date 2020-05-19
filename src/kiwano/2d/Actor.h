@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/TimerManager.h>
+#include <kiwano/core/TaskManager.h>
 #include <kiwano/core/EventDispatcher.h>
 #include <kiwano/math/Math.h>
 #include <kiwano/2d/action/ActionManager.h>
@@ -58,11 +58,11 @@ typedef IntrusiveList<ActorPtr> ActorList;
  * \~chinese
  * @brief 角色
  * @details
- * 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、定时器、事件监听等功能的载体
+ * 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、任务、事件监听等功能的载体
  */
 class KGE_API Actor
     : public ObjectBase
-    , public TimerManager
+    , public TaskManager
     , public ActionManager
     , public EventDispatcher
     , protected IntrusiveListValue<ActorPtr>

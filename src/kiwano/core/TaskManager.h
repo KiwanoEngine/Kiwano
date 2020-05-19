@@ -19,70 +19,70 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Timer.h>
+#include <kiwano/core/Task.h>
 
 namespace kiwano
 {
 /**
  * \~chinese
- * @brief 定时器管理器
+ * @brief 任务管理器
  */
-class KGE_API TimerManager
+class KGE_API TaskManager
 {
 public:
     /// \~chinese
-    /// @brief 添加定时器
+    /// @brief 添加任务
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer* AddTimer(const Timer::Callback& cb, Duration interval, int times = -1);
+    Task* AddTask(const Task::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief 添加定时器
-    /// @param name 定时器名称
+    /// @brief 添加任务
+    /// @param name 任务名称
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Timer* AddTimer(const String& name, const Timer::Callback& cb, Duration interval, int times = -1);
+    Task* AddTask(const String& name, const Task::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
-    /// @brief 添加定时器
-    Timer* AddTimer(TimerPtr timer);
+    /// @brief 添加任务
+    Task* AddTask(TaskPtr task);
 
     /// \~chinese
-    /// @brief 启动定时器
-    void StartTimers(const String& timer_name);
+    /// @brief 启动任务
+    void StartTasks(const String& task_name);
 
     /// \~chinese
-    /// @brief 停止定时器
-    void StopTimers(const String& timer_name);
+    /// @brief 停止任务
+    void StopTasks(const String& task_name);
 
     /// \~chinese
-    /// @brief 移除定时器
-    void RemoveTimers(const String& timer_name);
+    /// @brief 移除任务
+    void RemoveTasks(const String& task_name);
 
     /// \~chinese
-    /// @brief 启动所有定时器
-    void StartAllTimers();
+    /// @brief 启动所有任务
+    void StartAllTasks();
 
     /// \~chinese
-    /// @brief 停止所有定时器
-    void StopAllTimers();
+    /// @brief 停止所有任务
+    void StopAllTasks();
 
     /// \~chinese
-    /// @brief 移除所有定时器
-    void RemoveAllTimers();
+    /// @brief 移除所有任务
+    void RemoveAllTasks();
 
     /// \~chinese
-    /// @brief 获取所有定时器
-    const TimerList& GetAllTimers() const;
+    /// @brief 获取所有任务
+    const TaskList& GetAllTasks() const;
 
 protected:
     /// \~chinese
-    /// @brief 更新定时器
-    void UpdateTimers(Duration dt);
+    /// @brief 更新任务
+    void UpdateTasks(Duration dt);
 
 private:
-    TimerList timers_;
+    TaskList tasks_;
 };
 }  // namespace kiwano
