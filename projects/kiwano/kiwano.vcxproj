@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\String.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
     <ClInclude Include="..\..\src\kiwano\core\Xml.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
@@ -141,6 +142,7 @@
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Task.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\TaskManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />

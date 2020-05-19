@@ -327,6 +327,9 @@
     <ClInclude Include="..\..\src\kiwano\core\TaskManager.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Timer.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -537,6 +540,9 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Task.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
       <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
