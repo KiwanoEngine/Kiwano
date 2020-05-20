@@ -130,6 +130,14 @@ public:
 
     /**
      * \~chinese
+     * @brief 设置窗口最小大小
+     * @param width 最小窗口宽度
+     * @param height 最小窗口高度
+     */
+    virtual void SetMinimumSize(uint32_t width, uint32_t height) = 0;
+
+    /**
+     * \~chinese
      * @brief 设置鼠标指针类型
      * @param cursor 鼠标指针类型
      */
@@ -183,6 +191,8 @@ protected:
     bool                 is_fullscreen_;
     uint32_t             width_;
     uint32_t             height_;
+    uint32_t             min_width_;
+    uint32_t             min_height_;
     WindowHandle         handle_;
     String               title_;
     std::queue<EventPtr> event_queue_;

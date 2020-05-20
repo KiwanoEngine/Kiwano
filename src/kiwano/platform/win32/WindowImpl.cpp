@@ -56,6 +56,8 @@ public:
 
     void Resize(uint32_t width, uint32_t height) override;
 
+    void SetMinimumSize(uint32_t width, uint32_t height) override;
+
     void SetCursor(CursorType cursor) override;
 
     void PumpEvents() override;
@@ -70,6 +72,8 @@ public:
 
 private:
     bool       resizable_;
+    bool       is_resizing_;
+    bool       is_minimized_;
     CursorType mouse_cursor_;
     String     device_name_;
 
@@ -133,6 +137,8 @@ void AdjustWindow(uint32_t width, uint32_t height, DWORD style, uint32_t* win_wi
 
 WindowWin32Impl::WindowWin32Impl()
     : resizable_(false)
+    , is_resizing_(false)
+    , is_minimized_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
 {
@@ -321,6 +327,12 @@ void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
     ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
+void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
+{
+    min_width_  = width;
+    min_height_ = height;
+}
+
 void WindowWin32Impl::SetCursor(CursorType cursor)
 {
     mouse_cursor_ = cursor;
@@ -475,21 +487,92 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
             KGE_SYS_LOG("Window minimized");
+
+            is_minimized_ = true;
+            // Pause game when window is minimized
+            if (Application::GetInstance().IsRunning())
+            {
+                TimerPtr timer = Application::GetInstance().GetTimer();
+                timer->Pause();
+            }
         }
-        else
+        else if (SIZE_MAXIMIZED == wparam)
         {
-            KGE_SYS_LOG("Window resized");
+            if (is_minimized_)
+            {
+                is_minimized_ = false;
+                if (Application::GetInstance().IsRunning())
+                {
+                    TimerPtr timer = Application::GetInstance().GetTimer();
+                    timer->Pause();
+                }
+            }
+        }
+        else if (wparam == SIZE_RESTORED)
+        {
+            if (is_minimized_)
+            {
+                KGE_SYS_LOG("Window restored");
 
-            this->width_  = ((uint32_t)(short)LOWORD(lparam));
-            this->height_ = ((uint32_t)(short)HIWORD(lparam));
+                // the window was restored and was previously minimized
+                is_minimized_ = false;
+                if (Application::GetInstance().IsRunning())
+                {
+                    TimerPtr timer = Application::GetInstance().GetTimer();
+                    timer->Pause();
+                }
+            }
+            else if (is_resizing_)
+            {
+                // DO NOTHING until the dragging / resizing has stopped.
+            }
+            else
+            {
+                KGE_SYS_LOG("Window resized");
 
-            WindowResizedEventPtr evt = new WindowResizedEvent;
-            evt->width                = this->GetWidth();
-            evt->height               = this->GetHeight();
-            this->PushEvent(evt);
+                this->width_  = ((uint32_t)(short)LOWORD(lparam));
+                this->height_ = ((uint32_t)(short)HIWORD(lparam));
+
+                WindowResizedEventPtr evt = new WindowResizedEvent;
+                evt->width                = this->GetWidth();
+                evt->height               = this->GetHeight();
+                this->PushEvent(evt);
+            }
         }
     }
     break;
+
+    case WM_ENTERSIZEMOVE:
+    {
+        is_resizing_ = true;
+        if (Application::GetInstance().IsRunning())
+        {
+            TimerPtr timer = Application::GetInstance().GetTimer();
+            timer->Pause();
+        }
+        return 0;
+    }
+    break;
+
+    case WM_EXITSIZEMOVE:
+    {
+        is_resizing_ = false;
+        if (Application::GetInstance().IsRunning())
+        {
+            TimerPtr timer = Application::GetInstance().GetTimer();
+            timer->Resume();
+        }
+        return 0;
+    }
+    break;
+
+    case WM_GETMINMAXINFO:
+    {
+        // prevent the window from becoming too small
+        ((MINMAXINFO*)lparam)->ptMinTrackSize.x = LONG(min_width_);
+        ((MINMAXINFO*)lparam)->ptMinTrackSize.y = LONG(min_height_);
+    }
+    return 0;
 
     case WM_MOVE:
     {
@@ -500,6 +583,13 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     }
     break;
 
+    case WM_MENUCHAR:
+    {
+        // Disables the crazy beeping sound when pressing a mnemonic key.
+        // Simply tell Windows that we want the menu closed.
+        return MAKELRESULT(0, MNC_CLOSE);
+    }
+
     case WM_ACTIVATE:
     {
         bool active = (LOWORD(wparam) != WA_INACTIVE);
@@ -507,16 +597,6 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
         evt->focus                     = active;
         this->PushEvent(evt);
-
-        // Pause game when window is inactive
-        TimerPtr timer = Application::GetInstance().GetTimer();
-        if (timer)
-        {
-            if (active)
-                timer->Resume();
-            else
-                timer->Pause();
-        }
     }
     break;
 
