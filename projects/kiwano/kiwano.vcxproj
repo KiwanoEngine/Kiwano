@@ -5,7 +5,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionDelay.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionHelper.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
@@ -99,7 +99,7 @@
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Task.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\TaskManager.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\TaskScheduler.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Ticker.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Timer.h" />
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h" />
@@ -109,7 +109,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionDelay.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionGroup.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionScheduler.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp" />
@@ -175,7 +175,7 @@
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Task.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\TaskManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\TaskScheduler.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp" />

@@ -30,9 +30,9 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief 动画管理器
+ * @brief 动画调度器
  */
-class KGE_API ActionManager
+class KGE_API ActionScheduler
 {
 public:
     /// \~chinese
@@ -60,10 +60,9 @@ public:
     /// @brief 获取所有动画
     const ActionList& GetAllActions() const;
 
-protected:
     /// \~chinese
     /// @brief 更新动画
-    void UpdateActions(Actor* target, Duration dt);
+    void Update(Actor* target, Duration dt);
 
 private:
     ActionList actions_;

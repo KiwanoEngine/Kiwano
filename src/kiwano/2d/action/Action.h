@@ -30,7 +30,7 @@
 namespace kiwano
 {
 class Actor;
-class ActionManager;
+class ActionScheduler;
 
 KGE_DECLARE_SMART_PTR(Action);
 
@@ -55,7 +55,7 @@ class KGE_API Action
     , public Cloneable<Action>
     , protected IntrusiveListValue<ActionPtr>
 {
-    friend class ActionManager;
+    friend class ActionScheduler;
     friend class ActionGroup;
     friend IntrusiveList<ActionPtr>;
 

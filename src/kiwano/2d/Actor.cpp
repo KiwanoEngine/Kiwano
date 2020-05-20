@@ -77,9 +77,9 @@ Actor::~Actor()
 
 void Actor::Update(Duration dt)
 {
-    UpdateActions(this, dt);
+    ActionScheduler::Update(this, dt);
+    TaskScheduler::Update(dt);
     UpdateComponents(dt);
-    UpdateTasks(dt);
 
     if (!update_pausing_)
     {

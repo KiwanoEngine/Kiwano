@@ -25,9 +25,9 @@ namespace kiwano
 {
 /**
  * \~chinese
- * @brief 任务管理器
+ * @brief 任务调度器
  */
-class KGE_API TaskManager
+class KGE_API TaskScheduler
 {
 public:
     /// \~chinese
@@ -62,12 +62,12 @@ public:
     /// @brief 获取所有任务
     const TaskList& GetAllTasks() const;
 
-protected:
     /// \~chinese
-    /// @brief 更新任务
-    void UpdateTasks(Duration dt);
+    /// @brief 更新调度器
+    void Update(Duration dt);
 
 private:
     TaskList tasks_;
 };
+
 }  // namespace kiwano

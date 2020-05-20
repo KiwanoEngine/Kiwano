@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h">
       <Filter>2d\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h">
-      <Filter>2d\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h">
       <Filter>2d\action</Filter>
     </ClInclude>
@@ -324,9 +321,6 @@
     <ClInclude Include="..\..\src\kiwano\utils\Task.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\utils\TaskManager.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\Ticker.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -335,6 +329,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\Xml.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\TaskScheduler.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h">
+      <Filter>2d\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,9 +375,6 @@
       <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp">
-      <Filter>2d\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp">
@@ -548,14 +545,17 @@
     <ClCompile Include="..\..\src\kiwano\utils\Task.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\TaskManager.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp">
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\Timer.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\TaskScheduler.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionScheduler.cpp">
+      <Filter>2d\action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

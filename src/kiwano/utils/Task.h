@@ -24,7 +24,7 @@
 
 namespace kiwano
 {
-class TaskManager;
+class TaskScheduler;
 
 KGE_DECLARE_SMART_PTR(Task);
 
@@ -39,7 +39,7 @@ class KGE_API Task
     : public ObjectBase
     , protected IntrusiveListValue<TaskPtr>
 {
-    friend class TaskManager;
+    friend class TaskScheduler;
     friend IntrusiveList<TaskPtr>;
 
 public:

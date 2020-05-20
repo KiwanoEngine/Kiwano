@@ -19,12 +19,13 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/core/Logger.h>
 
 namespace kiwano
 {
-void ActionManager::UpdateActions(Actor* target, Duration dt)
+
+void ActionScheduler::Update(Actor* target, Duration dt)
 {
     if (actions_.IsEmpty() || !target)
         return;
@@ -42,7 +43,7 @@ void ActionManager::UpdateActions(Actor* target, Duration dt)
     }
 }
 
-Action* ActionManager::AddAction(ActionPtr action)
+Action* ActionScheduler::AddAction(ActionPtr action)
 {
     KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 
@@ -53,7 +54,7 @@ Action* ActionManager::AddAction(ActionPtr action)
     return action.Get();
 }
 
-void ActionManager::ResumeAllActions()
+void ActionScheduler::ResumeAllActions()
 {
     if (actions_.IsEmpty())
         return;
@@ -64,7 +65,7 @@ void ActionManager::ResumeAllActions()
     }
 }
 
-void ActionManager::PauseAllActions()
+void ActionScheduler::PauseAllActions()
 {
     if (actions_.IsEmpty())
         return;
@@ -75,7 +76,7 @@ void ActionManager::PauseAllActions()
     }
 }
 
-void ActionManager::StopAllActions()
+void ActionScheduler::StopAllActions()
 {
     if (actions_.IsEmpty())
         return;
@@ -86,7 +87,7 @@ void ActionManager::StopAllActions()
     }
 }
 
-ActionPtr ActionManager::GetAction(const String& name)
+ActionPtr ActionScheduler::GetAction(const String& name)
 {
     if (actions_.IsEmpty())
         return nullptr;
@@ -97,7 +98,7 @@ ActionPtr ActionManager::GetAction(const String& name)
     return nullptr;
 }
 
-const ActionList& ActionManager::GetAllActions() const
+const ActionList& ActionScheduler::GetAllActions() const
 {
     return actions_;
 }

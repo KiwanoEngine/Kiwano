@@ -93,7 +93,7 @@
 #include <kiwano/2d/action/ActionDelay.h>
 #include <kiwano/2d/action/ActionGroup.h>
 #include <kiwano/2d/action/ActionHelper.h>
-#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/2d/action/ActionWalk.h>
 #include <kiwano/2d/action/Animation.h>
@@ -119,4 +119,4 @@
 #include <kiwano/utils/Ticker.h>
 #include <kiwano/utils/EventTicker.h>
 #include <kiwano/utils/Task.h>
-#include <kiwano/utils/TaskManager.h>
+#include <kiwano/utils/TaskScheduler.h>
