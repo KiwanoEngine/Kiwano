@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Timer.h>
+#include <kiwano/utils/Timer.h>
 #include <kiwano/core/Allocator.h>
 
 namespace kiwano

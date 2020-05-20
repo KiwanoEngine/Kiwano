@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/TaskManager.h>
+#include <kiwano/utils/TaskManager.h>
 
 namespace kiwano
 {

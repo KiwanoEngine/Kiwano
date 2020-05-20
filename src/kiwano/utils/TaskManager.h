@@ -19,51 +19,55 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Ticker.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/utils/Task.h>
 
 namespace kiwano
 {
-
-KGE_DECLARE_SMART_PTR(TickEvent);
-KGE_DECLARE_SMART_PTR(EventTicker);
-
 /**
- * \addtogroup Events
- * @{
+ * \~chinese
+ * @brief 任务管理器
  */
-
-/// \~chinese
-/// @brief 报时时间
-class KGE_API TickEvent : public Event
-{
-public:
-    TickEvent();
-
-    EventTicker* ticker_;
-    Duration     delta_time_;
-};
-
-/**
- * @}
- */
-
-
-/// \~chinese
-/// @brief 事件报时器
-class KGE_API EventTicker
-    : public Ticker
-    , public EventDispatcher
+class KGE_API TaskManager
 {
 public:
     /// \~chinese
-    /// @brief 创建事件报时器
-    /// @param interval 报时间隔
-    /// @param times 报时次数（设 -1 为永久）
-    static EventTickerPtr Create(Duration interval, int times = -1);
+    /// @brief 添加任务
+    Task* AddTask(TaskPtr task);
 
-    bool Tick(Duration dt) override;
+    /// \~chinese
+    /// @brief 启动任务
+    void StartTasks(const String& task_name);
+
+    /// \~chinese
+    /// @brief 停止任务
+    void StopTasks(const String& task_name);
+
+    /// \~chinese
+    /// @brief 移除任务
+    void RemoveTasks(const String& task_name);
+
+    /// \~chinese
+    /// @brief 启动所有任务
+    void StartAllTasks();
+
+    /// \~chinese
+    /// @brief 停止所有任务
+    void StopAllTasks();
+
+    /// \~chinese
+    /// @brief 移除所有任务
+    void RemoveAllTasks();
+
+    /// \~chinese
+    /// @brief 获取所有任务
+    const TaskList& GetAllTasks() const;
+
+protected:
+    /// \~chinese
+    /// @brief 更新任务
+    void UpdateTasks(Duration dt);
+
+private:
+    TaskList tasks_;
 };
-
 }  // namespace kiwano

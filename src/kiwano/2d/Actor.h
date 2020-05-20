@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/math/Math.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/TaskManager.h>
 #include <kiwano/core/EventDispatcher.h>
-#include <kiwano/math/Math.h>
+#include <kiwano/utils/TaskManager.h>
 #include <kiwano/2d/action/ActionManager.h>
 #include <kiwano/2d/Component.h>
 

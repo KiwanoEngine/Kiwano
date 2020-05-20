@@ -17,7 +17,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Director.h" />
-    <ClInclude Include="..\..\src\kiwano\core\EventTicker.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\Event.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\EventType.h" />
     <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h" />
@@ -26,16 +25,12 @@
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Json.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Serializable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\String.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Ticker.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Timer.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Xml.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\config.h" />
     <ClInclude Include="..\..\src\kiwano\macros.h" />
@@ -56,8 +51,6 @@
     <ClInclude Include="..\..\src\kiwano\core\RefCounter.h" />
     <ClInclude Include="..\..\src\kiwano\core\Resource.h" />
     <ClInclude Include="..\..\src\kiwano\core\SmartPtr.hpp" />
-    <ClInclude Include="..\..\src\kiwano\core\Task.h" />
-    <ClInclude Include="..\..\src\kiwano\core\TaskManager.h" />
     <ClInclude Include="..\..\src\kiwano\math\Constants.h" />
     <ClInclude Include="..\..\src\kiwano\math\EaseFunctions.h" />
     <ClInclude Include="..\..\src\kiwano\math\Math.h" />
@@ -101,9 +94,16 @@
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.hpp" />
     <ClInclude Include="..\..\src\kiwano\render\Texture.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextureCache.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\EventTicker.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Json.h" />
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Task.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\TaskManager.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Ticker.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Timer.h" />
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\Xml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
@@ -126,7 +126,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\EventTicker.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp" />
@@ -142,11 +141,7 @@
     <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\String.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Ticker.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Task.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\TaskManager.cpp" />
-    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Input.cpp" />
@@ -176,8 +171,13 @@
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\Task.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\TaskManager.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\Timer.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp" />
   </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">

@@ -18,40 +18,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/EventTicker.h>
+#pragma once
+#include <kiwano/utils/Ticker.h>
+#include <kiwano/core/EventDispatcher.h>
+#include <kiwano/core/event/Event.h>
 
 namespace kiwano
 {
 
-TickEvent::TickEvent()
-    : Event(KGE_EVENT(TickEvent))
-    , ticker_(nullptr)
-{
-}
+KGE_DECLARE_SMART_PTR(TickEvent);
+KGE_DECLARE_SMART_PTR(EventTicker);
 
-EventTickerPtr EventTicker::Create(Duration interval, int times)
-{
-    EventTickerPtr ptr = memory::New<EventTicker>();
-    if (ptr)
-    {
-        ptr->SetInterval(interval);
-        ptr->SetTotalTickTimes(times);
-    }
-    return ptr;
-}
+/**
+ * \addtogroup Events
+ * @{
+ */
 
-bool EventTicker::Tick(Duration dt)
+/// \~chinese
+/// @brief 报时时间
+class KGE_API TickEvent : public Event
 {
-    if (Ticker::Tick(dt))
-    {
-        TickEventPtr evt = new TickEvent;
-        evt->delta_time_ = GetDeltaTime();
-        evt->ticker_     = this;
-        DispatchEvent(evt.Get());
+public:
+    TickEvent();
 
-        return true;
-    }
-    return false;
-}
+    EventTicker* ticker_;
+    Duration     delta_time_;
+};
+
+/**
+ * @}
+ */
+
+
+/// \~chinese
+/// @brief 事件报时器
+class KGE_API EventTicker
+    : public Ticker
+    , public EventDispatcher
+{
+public:
+    /// \~chinese
+    /// @brief 创建事件报时器
+    /// @param interval 报时间隔
+    /// @param times 报时次数（设 -1 为永久）
+    static EventTickerPtr Create(Duration interval, int times = -1);
+
+    bool Tick(Duration dt) override;
+};
 
 }  // namespace kiwano

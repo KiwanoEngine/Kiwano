@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Ticker.h>
+#include <kiwano/utils/Ticker.h>
 #include <kiwano/core/IntrusiveList.h>
 
 namespace kiwano
