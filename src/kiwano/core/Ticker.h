@@ -100,6 +100,7 @@ public:
     void Reset();
 
 private:
+    bool     is_paused_;
     int      ticked_times_;
     int      total_times_;
     Duration interval_;
@@ -111,21 +112,17 @@ private:
 
 inline void Ticker::Pause()
 {
-    KGE_ASSERT(timer_);
-    timer_->Pause();
+    is_paused_ = true;
 }
 
 inline void Ticker::Resume()
 {
-    KGE_ASSERT(timer_);
-    timer_->Resume();
+    is_paused_ = false;
 }
 
 inline bool Ticker::IsPausing() const
 {
-    if (timer_)
-        return timer_->IsPausing();
-    return true;
+    return is_paused_;
 }
 
 inline int Ticker::GetTickedTimes() const

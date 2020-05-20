@@ -37,11 +37,15 @@ TickerPtr Ticker::Create(Duration interval, int times)
 Ticker::Ticker()
     : ticked_times_(0)
     , total_times_(0)
+    , is_paused_(false)
 {
 }
 
 bool Ticker::Tick()
 {
+    if (is_paused_)
+        return false;
+
     if (!timer_)
         timer_ = Timer::Create();
 
@@ -55,6 +59,9 @@ bool Ticker::Tick()
 
 bool Ticker::Tick(Duration dt)
 {
+    if (is_paused_)
+        return false;
+
     if (ticked_times_ == total_times_)
         return false;
 
