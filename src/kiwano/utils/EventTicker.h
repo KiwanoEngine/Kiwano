@@ -63,6 +63,8 @@ public:
     /// @param times 报时次数（设 -1 为永久）
     static EventTickerPtr Create(Duration interval, int times = -1);
 
+    using Ticker::Tick;
+
     bool Tick(Duration dt) override;
 };
 
