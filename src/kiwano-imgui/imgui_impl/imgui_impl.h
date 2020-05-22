@@ -7,13 +7,12 @@
 #if !defined(KGE_USE_DIRECTX10)
 
 #include <kiwano-imgui/imgui_impl/imgui_impl_dx11.h>
-#include <kiwano/render/DirectX/RendererImpl.h>
+#include <kiwano/render/DirectX/D3DDeviceResources.h>
 
 inline bool ImGui_Impl_Init()
 {
-    ::kiwano::RendererImpl& renderer = ::kiwano::RendererImpl::GetInstance();
-    return ImGui_ImplDX11_Init(renderer.GetD3DDeviceResources()->GetDevice(),
-                               renderer.GetD3DDeviceResources()->GetDeviceContext());
+    auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+    return ImGui_ImplDX11_Init(d3d->GetDevice(), d3d->GetDeviceContext());
 }
 
 inline void ImGui_Impl_Shutdown()
@@ -44,11 +43,12 @@ inline bool ImGui_Impl_CreateDeviceObjects()
 #else
 
 #include <kiwano-imgui/imgui_impl/imgui_impl_dx10.h>
+#include <kiwano/render/DirectX/D3DDeviceResources.h>
 
 inline bool ImGui_Impl_Init()
 {
-    ::kiwano::RendererImpl& renderer = ::kiwano::RendererImpl::GetInstance();
-    return ImGui_ImplDX10_Init(renderer.GetD3DDeviceResources()->GetDevice());
+    auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+    return ImGui_ImplDX10_Init(d3d->GetDevice());
 }
 
 inline void ImGui_Impl_Shutdown()

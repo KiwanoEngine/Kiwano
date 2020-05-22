@@ -20,23 +20,13 @@
 
 #pragma once
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/DirectX/D3DDeviceResources.h>
 #include <kiwano/render/DirectX/FontCollectionLoader.h>
 #include <kiwano/render/DirectX/RenderContextImpl.h>
 
-#if defined(KGE_USE_DIRECTX10)
-#include <kiwano/render/DirectX/D3D10DeviceResources.h>
-#else
-#include <kiwano/render/DirectX/D3D11DeviceResources.h>
-#endif
 
 namespace kiwano
 {
-
-#if defined(KGE_USE_DIRECTX10)
-typedef ID3D10DeviceResources ID3DDeviceResources;
-#else
-typedef ID3D11DeviceResources ID3DDeviceResources;
-#endif
 
 class KGE_API RendererImpl
     : public Renderer
@@ -82,25 +72,11 @@ public:
 
     RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) override;
 
-    void SetResolution(uint32_t width, uint32_t height, bool fullscreen) override;
-
-    Vector<Resolution> GetResolutions() override;
-
 public:
     void Clear() override;
 
     void Present() override;
 
-    /// \~chinese
-    /// @brief 获取Direct2D设备资源
-    ID2DDeviceResources* GetD2DDeviceResources();
-
-    /// \~chinese
-    /// @brief 获取Direct3D设备资源
-    ID3DDeviceResources* GetD3DDeviceResources();
-
-    /// \~chinese
-    /// @brief 重设渲染输出大小
     void Resize(uint32_t width, uint32_t height) override;
 
 protected:
@@ -111,27 +87,17 @@ protected:
     void Destroy() override;
 
 private:
+    using ID2DDeviceResources = kiwano::graphics::directx::ID2DDeviceResources;
+    using ID3DDeviceResources = kiwano::graphics::directx::ID3DDeviceResources;
+
     ComPtr<ID2DDeviceResources>           d2d_res_;
     ComPtr<ID3DDeviceResources>           d3d_res_;
     ComPtr<IFontCollectionLoader>         font_collection_loader_;
     ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
     ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
-
-    Vector<Resolution> resolutions_;
 };
 
+
 /** @} */
-
-inline ID2DDeviceResources* RendererImpl::GetD2DDeviceResources()
-{
-    KGE_ASSERT(d2d_res_);
-    return d2d_res_.Get();
-}
-
-inline ID3DDeviceResources* RendererImpl::GetD3DDeviceResources()
-{
-    KGE_ASSERT(d3d_res_);
-    return d3d_res_.Get();
-}
 
 }  // namespace kiwano

@@ -45,6 +45,17 @@ enum class CursorType
     SizeNWSE,   ///< 指向左上到右下方向的箭头
 };
 
+/**
+ * \~chinese
+ * @brief 分辨率
+ */
+struct Resolution
+{
+    uint32_t width;         ///< 分辨率宽度
+    uint32_t height;        ///< 分辨率高度
+    uint32_t refresh_rate;  ///< 刷新率
+};
+
 
 #if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
@@ -145,6 +156,21 @@ public:
 
     /**
      * \~chinese
+     * @brief 设置分辨率
+     * @param width 分辨率宽度
+     * @param height 分辨率高度
+     * @param fullscreen 是否全屏
+     */
+    virtual void SetResolution(uint32_t width, uint32_t height, bool fullscreen) = 0;
+
+    /**
+     * \~chinese
+     * @brief 获取支持的屏幕分辨率列表
+     */
+    virtual Vector<Resolution> GetResolutions() = 0;
+
+    /**
+     * \~chinese
      * @brief 轮询窗口事件
      * @return 返回事件队列中的第一个事件并将其从队列中移除, 若队列为空则返回空指针
      */
@@ -174,12 +200,6 @@ public:
      * @brief 设置是否需要关闭
      */
     void SetShouldClose(bool should);
-
-    /**
-     * \~chinese
-     * @brief 设置当前是否是全屏状态
-     */
-    void SetFullscreenState(bool is_fullscreen);
 
 protected:
     Window();

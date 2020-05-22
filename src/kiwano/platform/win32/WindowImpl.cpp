@@ -32,6 +32,7 @@
 #include <kiwano/core/event/WindowEvent.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/DirectX/D3DDeviceResources.h>
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
@@ -60,6 +61,10 @@ public:
 
     void SetCursor(CursorType cursor) override;
 
+    void SetResolution(uint32_t width, uint32_t height, bool fullscreen) override;
+
+    Vector<Resolution> GetResolutions() override;
+
     void PumpEvents() override;
 
     DWORD GetStyle() const;
@@ -77,6 +82,7 @@ private:
     CursorType mouse_cursor_;
     String     device_name_;
 
+    Vector<Resolution>       resolutions_;
     std::array<KeyCode, 256> key_map_;
 };
 
@@ -336,6 +342,78 @@ void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
 void WindowWin32Impl::SetCursor(CursorType cursor)
 {
     mouse_cursor_ = cursor;
+}
+
+void WindowWin32Impl::SetResolution(uint32_t width, uint32_t height, bool fullscreen)
+{
+    auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+
+    if (fullscreen)
+    {
+        HRESULT hr = d3d->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+
+        hr = d3d->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+    }
+    else
+    {
+        HRESULT hr = d3d->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+
+        hr = d3d->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+    }
+
+    is_fullscreen_ = fullscreen;
+}
+
+Vector<Resolution> WindowWin32Impl::GetResolutions()
+{
+    if (resolutions_.empty())
+    {
+        auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+
+        DXGI_MODE_DESC* mode_descs = nullptr;
+        int             mode_num   = 0;
+
+        HRESULT hr = d3d->GetDisplaySettings(&mode_descs, &mode_num);
+        if (SUCCEEDED(hr))
+        {
+            std::unique_ptr<DXGI_MODE_DESC[]> mode_list(mode_descs);
+
+            if (mode_list)
+            {
+                for (int i = 0; i < mode_num; i++)
+                {
+                    Resolution res;
+                    res.width        = mode_descs[i].Width;
+                    res.height       = mode_descs[i].Height;
+                    res.refresh_rate = 0;
+
+                    if (mode_descs[i].RefreshRate.Denominator > 0)
+                    {
+                        res.refresh_rate = mode_descs[i].RefreshRate.Numerator / mode_descs[i].RefreshRate.Denominator;
+                    }
+
+                    if (!resolutions_.empty())
+                    {
+                        auto& back = resolutions_.back();
+                        if (back.width == res.width && back.height == res.height
+                            && back.refresh_rate == res.refresh_rate)
+                            continue;
+                    }
+
+                    resolutions_.push_back(res);
+                }
+            }
+        }
+        else
+        {
+            KGE_THROW_IF_FAILED(hr, "DXGI GetDisplaySettings failed!");
+        }
+    }
+    return resolutions_;
 }
 
 DWORD WindowWin32Impl::GetStyle() const

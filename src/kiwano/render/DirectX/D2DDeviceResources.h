@@ -26,12 +26,16 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
+
 MIDL_INTERFACE("5706684a-bf6d-4b03-b627-094758a33032")
 KGE_API ID2DDeviceResources : public IUnknown
 {
 public:
-    static HRESULT Create(_Out_ ID2DDeviceResources * *device_resources, _In_ ComPtr<IDXGIDevice> dxgi_device,
-                          _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain);
+    virtual HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) = 0;
 
     virtual HRESULT CreateBitmapConverter(_Out_    ComPtr<IWICFormatConverter> & converter,
                                           _In_opt_ ComPtr<IWICBitmapSource> source, _In_ REFWICPixelFormatGUID format,
@@ -51,8 +55,8 @@ public:
                                      _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                                      DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size) = 0;
 
-    virtual HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ LPCWSTR text,
-                                     UINT32 length, _In_ ComPtr<IDWriteTextFormat> text_format) = 0;
+    virtual HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ LPCWSTR text, UINT32 length,
+                                     _In_ ComPtr<IDWriteTextFormat> text_format) = 0;
 
     virtual HRESULT SetDpi(float dpi) = 0;
 
@@ -111,4 +115,9 @@ protected:
     ComPtr<IDWriteFactory>     dwrite_factory_;
 };
 
+
+extern ComPtr<ID2DDeviceResources> GetD2DDeviceResources();
+
+}
+}
 }  // namespace kiwano

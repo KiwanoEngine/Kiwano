@@ -32,6 +32,8 @@
 namespace kiwano
 {
 
+using namespace kiwano::graphics::directx;
+
 Renderer& Renderer::GetInstance()
 {
     return RendererImpl::GetInstance();
@@ -64,16 +66,26 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     // Direct3D device resources
     if (SUCCEEDED(hr))
     {
-        hr = ID3DDeviceResources::Create(&d3d_res_, target_window);
+        auto d3d_res = graphics::directx::GetD3DDeviceResources();
+
+        // Initialize Direct3D resources
+        hr = d3d_res->Initialize(target_window);
 
         // Direct2D device resources
         if (SUCCEEDED(hr))
         {
-            hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+            d3d_res_ = d3d_res;
 
-            // Other device resources
+            auto d2d_res = graphics::directx::GetD2DDeviceResources();
+
+            // Initialize Direct2D resources
+            hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+
             if (SUCCEEDED(hr))
             {
+                d2d_res_ = d2d_res;
+
+                // Initialize other device resources
                 RenderContextImplPtr ctx = memory::New<RenderContextImpl>();
 
                 hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
@@ -151,7 +163,10 @@ void RendererImpl::Present()
     KGE_ASSERT(d3d_res_);
 
     HRESULT hr = d3d_res_->Present(vsync_);
-    KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
+    if (FAILED(hr) && hr != DXGI_ERROR_WAS_STILL_DRAWING)
+    {
+        KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
+    }
 }
 
 void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
@@ -947,77 +962,6 @@ RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, cons
     if (SUCCEEDED(hr))
         return ptr;
     return nullptr;
-}
-
-void RendererImpl::SetResolution(uint32_t width, uint32_t height, bool fullscreen)
-{
-    KGE_ASSERT(d3d_res_);
-
-    if (fullscreen)
-    {
-        HRESULT hr = d3d_res_->ResizeTarget(width, height);
-        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
-
-        hr = d3d_res_->SetFullscreenState(fullscreen);
-        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
-    }
-    else
-    {
-        HRESULT hr = d3d_res_->SetFullscreenState(fullscreen);
-        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
-
-        hr = d3d_res_->ResizeTarget(width, height);
-        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
-    }
-
-    Application::GetInstance().GetMainWindow()->SetFullscreenState(fullscreen);
-}
-
-Vector<Resolution> RendererImpl::GetResolutions()
-{
-    if (resolutions_.empty())
-    {
-
-        DXGI_MODE_DESC* mode_descs = nullptr;
-        int             mode_num   = 0;
-
-        HRESULT hr = d3d_res_->GetDisplaySettings(&mode_descs, &mode_num);
-        if (SUCCEEDED(hr))
-        {
-            std::unique_ptr<DXGI_MODE_DESC[]> mode_list(mode_descs);
-
-            if (mode_list)
-            {
-                for (int i = 0; i < mode_num; i++)
-                {
-                    Resolution res;
-                    res.width        = mode_descs[i].Width;
-                    res.height       = mode_descs[i].Height;
-                    res.refresh_rate = 0;
-
-                    if (mode_descs[i].RefreshRate.Denominator > 0)
-                    {
-                        res.refresh_rate = mode_descs[i].RefreshRate.Numerator / mode_descs[i].RefreshRate.Denominator;
-                    }
-
-                    if (!resolutions_.empty())
-                    {
-                        auto& back = resolutions_.back();
-                        if (back.width == res.width && back.height == res.height
-                            && back.refresh_rate == res.refresh_rate)
-                            continue;
-                    }
-
-                    resolutions_.push_back(res);
-                }
-            }
-        }
-        else
-        {
-            KGE_THROW_IF_FAILED(hr, "DXGI GetDisplaySettings failed!");
-        }
-    }
-    return resolutions_;
 }
 
 void RendererImpl::Resize(uint32_t width, uint32_t height)

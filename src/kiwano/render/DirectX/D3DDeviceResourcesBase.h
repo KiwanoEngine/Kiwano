@@ -23,10 +23,17 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
+
 MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
 ID3DDeviceResourcesBase : public IUnknown
 {
 public:
+    virtual HRESULT Initialize(HWND hwnd) = 0;
+
     virtual HRESULT Present(bool vsync) = 0;
 
     virtual void ClearRenderTarget(Color & clear_color) = 0;
@@ -39,6 +46,8 @@ public:
 
     virtual HRESULT SetFullscreenState(bool fullscreen) = 0;
 
+    virtual HRESULT GetFullscreenState(bool* fullscreen) = 0;
+
     virtual HRESULT ResizeTarget(UINT width, UINT height) = 0;
 
     virtual HRESULT GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num) = 0;
@@ -46,4 +55,6 @@ public:
     virtual void DiscardResources() = 0;
 };
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

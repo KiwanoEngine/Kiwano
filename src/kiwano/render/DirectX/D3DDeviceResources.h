@@ -18,75 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#pragma once
+
+#if defined(KGE_USE_DIRECTX10)
+#include <kiwano/render/DirectX/D3D10DeviceResources.h>
+#else
+#include <kiwano/render/DirectX/D3D11DeviceResources.h>
+#endif
 
 namespace kiwano
 {
-
-Window::Window()
-    : handle_(nullptr)
-    , should_close_(false)
-    , is_fullscreen_(false)
-    , width_(0)
-    , height_(0)
-    , min_width_(100)
-    , min_height_(50)
+namespace graphics
 {
-}
-
-Window::~Window()
+namespace directx
 {
-}
 
-EventPtr Window::PollEvent()
-{
-    EventPtr evt;
-    if (!event_queue_.empty())
+#if defined(KGE_USE_DIRECTX10)
+    using ID3DDeviceResources = kiwano::graphics::directx::ID3D10DeviceResources;
+
+    inline ComPtr<ID3D10DeviceResources> GetD3DDeviceResources()
     {
-        evt = event_queue_.front();
-        event_queue_.pop();
+        return kiwano::graphics::directx::GetD3D10DeviceResources();
     }
-    return evt;
-}
+#else
+    using ID3DDeviceResources = kiwano::graphics::directx::ID3D11DeviceResources;
 
-String Window::GetTitle() const
-{
-    return title_;
-}
+    inline ComPtr<ID3D11DeviceResources> GetD3DDeviceResources()
+    {
+        return kiwano::graphics::directx::GetD3D11DeviceResources();
+    }
+#endif
 
-Size Window::GetSize() const
-{
-    return Size(float(width_), float(height_));
-}
-
-uint32_t Window::GetWidth() const
-{
-    return width_;
-}
-
-uint32_t Window::GetHeight() const
-{
-    return height_;
-}
-
-WindowHandle Window::GetHandle() const
-{
-    return handle_;
-}
-
-bool Window::ShouldClose()
-{
-    return should_close_;
-}
-
-void Window::SetShouldClose(bool should)
-{
-    should_close_ = should;
-}
-
-void Window::PushEvent(EventPtr evt)
-{
-    event_queue_.push(evt);
-}
-
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

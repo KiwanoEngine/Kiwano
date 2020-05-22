@@ -29,6 +29,7 @@ namespace kiwano
 {
 namespace DX
 {
+
 template <typename T>
 inline void SafeRelease(T*& ptr)
 {
@@ -174,5 +175,6 @@ inline float ConvertDipsToPixels(float dips, float dpi)
     static const float dips_per_inch = 96.0f;
     return math::Floor(dips * dpi / dips_per_inch + 0.5f);  // Round to nearest integer.
 }
+
 }  // namespace DX
 }  // namespace kiwano

@@ -79,6 +79,7 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
