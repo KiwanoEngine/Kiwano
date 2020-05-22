@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h">
       <Filter>2d\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h">
-      <Filter>2d\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h">
       <Filter>2d\action</Filter>
     </ClInclude>
@@ -285,12 +282,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Any.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Json.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Xml.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -321,20 +312,29 @@
     <ClInclude Include="..\..\src\kiwano\render\FrameSequence.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Task.h">
-      <Filter>core</Filter>
+    <ClInclude Include="..\..\src\kiwano\utils\EventTicker.h">
+      <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\TaskManager.h">
-      <Filter>core</Filter>
+    <ClInclude Include="..\..\src\kiwano\utils\Json.h">
+      <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Timer.h">
-      <Filter>core</Filter>
+    <ClInclude Include="..\..\src\kiwano\utils\Task.h">
+      <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Ticker.h">
-      <Filter>core</Filter>
+    <ClInclude Include="..\..\src\kiwano\utils\Ticker.h">
+      <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\EventTicker.h">
-      <Filter>core</Filter>
+    <ClInclude Include="..\..\src\kiwano\utils\Timer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Xml.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\TaskScheduler.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h">
+      <Filter>2d\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResources.h">
       <Filter>render\DirectX</Filter>
@@ -378,9 +378,6 @@
       <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp">
-      <Filter>2d\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp">
@@ -545,20 +542,23 @@
     <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\TaskManager.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Task.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="..\..\src\kiwano\utils\Task.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Ticker.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="..\..\src\kiwano\utils\Timer.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\EventTicker.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="..\..\src\kiwano\utils\TaskScheduler.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionScheduler.cpp">
+      <Filter>2d\action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

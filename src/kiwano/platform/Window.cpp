@@ -29,8 +29,10 @@ Window::Window()
     , is_fullscreen_(false)
     , width_(0)
     , height_(0)
-    , min_width_(100)
-    , min_height_(50)
+    , min_width_(0)
+    , min_height_(0)
+    , max_width_(0)
+    , max_height_(0)
 {
 }
 

@@ -149,6 +149,14 @@ public:
 
     /**
      * \~chinese
+     * @brief 设置窗口最大大小
+     * @param width 最大窗口宽度
+     * @param height 最大窗口高度
+     */
+    virtual void SetMaximumSize(uint32_t width, uint32_t height) = 0;
+
+    /**
+     * \~chinese
      * @brief 设置鼠标指针类型
      * @param cursor 鼠标指针类型
      */
@@ -213,6 +221,8 @@ protected:
     uint32_t             height_;
     uint32_t             min_width_;
     uint32_t             min_height_;
+    uint32_t             max_width_;
+    uint32_t             max_height_;
     WindowHandle         handle_;
     String               title_;
     std::queue<EventPtr> event_queue_;

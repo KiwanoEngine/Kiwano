@@ -52,11 +52,6 @@
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/Timer.h>
-#include <kiwano/core/Ticker.h>
-#include <kiwano/core/EventTicker.h>
-#include <kiwano/core/Task.h>
-#include <kiwano/core/TaskManager.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/core/event/KeyEvent.h>
 #include <kiwano/core/event/MouseEvent.h>
@@ -98,7 +93,7 @@
 #include <kiwano/2d/action/ActionDelay.h>
 #include <kiwano/2d/action/ActionGroup.h>
 #include <kiwano/2d/action/ActionHelper.h>
-#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/2d/action/ActionWalk.h>
 #include <kiwano/2d/action/Animation.h>
@@ -120,3 +115,8 @@
 #include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/utils/UserData.h>
+#include <kiwano/utils/Timer.h>
+#include <kiwano/utils/Ticker.h>
+#include <kiwano/utils/EventTicker.h>
+#include <kiwano/utils/Task.h>
+#include <kiwano/utils/TaskScheduler.h>

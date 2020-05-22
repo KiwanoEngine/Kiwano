@@ -20,7 +20,7 @@
 
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/Json.h>
+#include <kiwano/utils/Json.h>
 #include <typeinfo>
 
 namespace kiwano

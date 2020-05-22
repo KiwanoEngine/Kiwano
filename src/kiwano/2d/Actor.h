@@ -19,12 +19,12 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/math/Math.h>
 #include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/TaskManager.h>
 #include <kiwano/core/EventDispatcher.h>
-#include <kiwano/math/Math.h>
-#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/utils/TaskScheduler.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/Component.h>
 
 namespace kiwano
@@ -62,8 +62,8 @@ typedef IntrusiveList<ActorPtr> ActorList;
  */
 class KGE_API Actor
     : public ObjectBase
-    , public TaskManager
-    , public ActionManager
+    , public TaskScheduler
+    , public ActionScheduler
     , public EventDispatcher
     , protected IntrusiveListValue<ActorPtr>
 {

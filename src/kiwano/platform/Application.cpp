@@ -52,6 +52,8 @@ void Application::Run(RunnerPtr runner, bool debug)
 {
     KGE_ASSERT(runner);
     runner_ = runner;
+    timer_   = Timer::Create();
+    running_ = true;
 
     // Setup all modules
     for (auto c : modules_)
@@ -68,8 +70,6 @@ void Application::Run(RunnerPtr runner, bool debug)
     // Everything is ready
     runner->OnReady();
 
-    running_ = true;
-    timer_   = Timer::Create();
     while (running_)
     {
         timer_->Tick();

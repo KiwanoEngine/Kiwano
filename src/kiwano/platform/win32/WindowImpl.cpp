@@ -59,6 +59,8 @@ public:
 
     void SetMinimumSize(uint32_t width, uint32_t height) override;
 
+    void SetMaximumSize(uint32_t width, uint32_t height) override;
+
     void SetCursor(CursorType cursor) override;
 
     void SetResolution(uint32_t width, uint32_t height, bool fullscreen) override;
@@ -263,18 +265,17 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
         height = win_height;
     }
 
-    handle_ = ::CreateWindowExA(fullscreen ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(),
-                                left, top, width, height, nullptr, nullptr, hinst, nullptr);
+    width_     = width;
+    height_    = height;
+    resizable_ = resizable;
+    handle_    = ::CreateWindowExA(fullscreen ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top,
+                                width, height, nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
         ::UnregisterClassA("KiwanoAppWnd", hinst);
         KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
-
-    width_     = width;
-    height_    = height;
-    resizable_ = resizable;
 
     // disable imm
     ::ImmAssociateContext(handle_, nullptr);
@@ -337,6 +338,12 @@ void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
 {
     min_width_  = width;
     min_height_ = height;
+}
+
+void WindowWin32Impl::SetMaximumSize(uint32_t width, uint32_t height)
+{
+    max_width_  = width;
+    max_height_ = height;
 }
 
 void WindowWin32Impl::SetCursor(CursorType cursor)
@@ -576,13 +583,15 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         }
         else if (SIZE_MAXIMIZED == wparam)
         {
+            KGE_SYS_LOG("Window maximized");
+
             if (is_minimized_)
             {
                 is_minimized_ = false;
                 if (Application::GetInstance().IsRunning())
                 {
                     TimerPtr timer = Application::GetInstance().GetTimer();
-                    timer->Pause();
+                    timer->Resume();
                 }
             }
         }
@@ -597,7 +606,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 if (Application::GetInstance().IsRunning())
                 {
                     TimerPtr timer = Application::GetInstance().GetTimer();
-                    timer->Pause();
+                    timer->Resume();
                 }
             }
             else if (is_resizing_)
@@ -606,8 +615,6 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             }
             else
             {
-                KGE_SYS_LOG("Window resized");
-
                 this->width_  = ((uint32_t)(short)LOWORD(lparam));
                 this->height_ = ((uint32_t)(short)HIWORD(lparam));
 
@@ -615,6 +622,8 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 evt->width                = this->GetWidth();
                 evt->height               = this->GetHeight();
                 this->PushEvent(evt);
+
+                KGE_SYS_LOG("Window resized to (%d, %d)", this->width_, this->height_);
             }
         }
     }
@@ -630,7 +639,6 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         }
         return 0;
     }
-    break;
 
     case WM_EXITSIZEMOVE:
     {
@@ -640,17 +648,40 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             TimerPtr timer = Application::GetInstance().GetTimer();
             timer->Resume();
         }
+
+        // Send window resized event when client size changed
+        RECT client_rect = { 0 };
+        ::GetClientRect(hwnd, &client_rect);
+
+        uint32_t client_width  = uint32_t(client_rect.right - client_rect.left);
+        uint32_t client_height = uint32_t(client_rect.bottom - client_rect.top);
+        if (client_width != this->GetWidth() || client_height != this->GetHeight())
+        {
+            KGE_SYS_LOG("Window resized to (%d, %d)", client_width, client_height);
+
+            this->width_  = client_width;
+            this->height_ = client_height;
+
+            WindowResizedEventPtr evt = new WindowResizedEvent;
+            evt->width                = this->GetWidth();
+            evt->height               = this->GetHeight();
+            this->PushEvent(evt);
+        }
         return 0;
     }
-    break;
 
     case WM_GETMINMAXINFO:
     {
-        // prevent the window from becoming too small
-        ((MINMAXINFO*)lparam)->ptMinTrackSize.x = LONG(min_width_);
-        ((MINMAXINFO*)lparam)->ptMinTrackSize.y = LONG(min_height_);
+        if (min_width_ || min_height_)
+        {
+            ((MINMAXINFO*)lparam)->ptMinTrackSize = POINT{ LONG(min_width_), LONG(min_height_) };
+        }
+        if (max_width_ || max_height_)
+        {
+            ((MINMAXINFO*)lparam)->ptMaxTrackSize = POINT{ LONG(max_width_), LONG(max_height_) };
+        }
+        return 0;
     }
-    return 0;
 
     case WM_MOVE:
     {

@@ -23,11 +23,11 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Module.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/Timer.h>
 #include <kiwano/core/Singleton.h>
 #include <kiwano/core/event/Event.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Window.h>
+#include <kiwano/utils/Timer.h>
 
 namespace kiwano
 {

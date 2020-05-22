@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Logger.h>
-#include <kiwano/core/TaskManager.h>
+#include <kiwano/utils/TaskScheduler.h>
 
 namespace kiwano
 {
-void TaskManager::UpdateTasks(Duration dt)
+void TaskScheduler::Update(Duration dt)
 {
     if (tasks_.IsEmpty())
         return;
@@ -40,7 +40,7 @@ void TaskManager::UpdateTasks(Duration dt)
     }
 }
 
-Task* TaskManager::AddTask(TaskPtr task)
+Task* TaskScheduler::AddTask(TaskPtr task)
 {
     KGE_ASSERT(task && "AddTask failed, NULL pointer exception");
 
@@ -53,7 +53,7 @@ Task* TaskManager::AddTask(TaskPtr task)
     return task.Get();
 }
 
-void TaskManager::StopTasks(const String& name)
+void TaskScheduler::StopTasks(const String& name)
 {
     if (tasks_.IsEmpty())
         return;
@@ -67,7 +67,7 @@ void TaskManager::StopTasks(const String& name)
     }
 }
 
-void TaskManager::StartTasks(const String& name)
+void TaskScheduler::StartTasks(const String& name)
 {
     if (tasks_.IsEmpty())
         return;
@@ -81,7 +81,7 @@ void TaskManager::StartTasks(const String& name)
     }
 }
 
-void TaskManager::RemoveTasks(const String& name)
+void TaskScheduler::RemoveTasks(const String& name)
 {
     if (tasks_.IsEmpty())
         return;
@@ -95,7 +95,7 @@ void TaskManager::RemoveTasks(const String& name)
     }
 }
 
-void TaskManager::StopAllTasks()
+void TaskScheduler::StopAllTasks()
 {
     if (tasks_.IsEmpty())
         return;
@@ -106,7 +106,7 @@ void TaskManager::StopAllTasks()
     }
 }
 
-void TaskManager::StartAllTasks()
+void TaskScheduler::StartAllTasks()
 {
     if (tasks_.IsEmpty())
         return;
@@ -117,12 +117,12 @@ void TaskManager::StartAllTasks()
     }
 }
 
-void TaskManager::RemoveAllTasks()
+void TaskScheduler::RemoveAllTasks()
 {
     tasks_.Clear();
 }
 
-const TaskList& TaskManager::GetAllTasks() const
+const TaskList& TaskScheduler::GetAllTasks() const
 {
     return tasks_;
 }

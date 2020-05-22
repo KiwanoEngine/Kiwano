@@ -18,56 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/Task.h>
+#include <kiwano/utils/EventTicker.h>
 
 namespace kiwano
 {
-/**
- * \~chinese
- * @brief 任务管理器
- */
-class KGE_API TaskManager
+
+TickEvent::TickEvent()
+    : Event(KGE_EVENT(TickEvent))
+    , ticker_(nullptr)
 {
-public:
-    /// \~chinese
-    /// @brief 添加任务
-    Task* AddTask(TaskPtr task);
+}
 
-    /// \~chinese
-    /// @brief 启动任务
-    void StartTasks(const String& task_name);
+EventTickerPtr EventTicker::Create(Duration interval, int times)
+{
+    EventTickerPtr ptr = memory::New<EventTicker>();
+    if (ptr)
+    {
+        ptr->SetInterval(interval);
+        ptr->SetTotalTickTimes(times);
+    }
+    return ptr;
+}
 
-    /// \~chinese
-    /// @brief 停止任务
-    void StopTasks(const String& task_name);
+bool EventTicker::Tick(Duration dt)
+{
+    if (Ticker::Tick(dt))
+    {
+        TickEventPtr evt = new TickEvent;
+        evt->delta_time_ = GetDeltaTime();
+        evt->ticker_     = this;
+        DispatchEvent(evt.Get());
 
-    /// \~chinese
-    /// @brief 移除任务
-    void RemoveTasks(const String& task_name);
+        return true;
+    }
+    return false;
+}
 
-    /// \~chinese
-    /// @brief 启动所有任务
-    void StartAllTasks();
-
-    /// \~chinese
-    /// @brief 停止所有任务
-    void StopAllTasks();
-
-    /// \~chinese
-    /// @brief 移除所有任务
-    void RemoveAllTasks();
-
-    /// \~chinese
-    /// @brief 获取所有任务
-    const TaskList& GetAllTasks() const;
-
-protected:
-    /// \~chinese
-    /// @brief 更新任务
-    void UpdateTasks(Duration dt);
-
-private:
-    TaskList tasks_;
-};
 }  // namespace kiwano
