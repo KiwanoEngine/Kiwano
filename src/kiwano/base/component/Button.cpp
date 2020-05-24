@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/Button.h>
+#include <kiwano/base/component/Button.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/platform/Application.h>
 

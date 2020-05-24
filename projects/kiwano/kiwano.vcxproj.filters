@@ -34,6 +34,9 @@
     <Filter Include="event">
       <UniqueIdentifier>{b0d28d20-bfaf-4816-8415-28c20ecf9fac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base\component">
+      <UniqueIdentifier>{d15f4de1-7c2c-40d6-a3ce-68860b95a61e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
@@ -67,9 +70,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h">
@@ -131,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h">
       <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Button.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h">
       <Filter>core</Filter>
@@ -261,9 +258,6 @@
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Component.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -345,6 +339,18 @@
     <ClInclude Include="..\..\src\kiwano\event\WindowEvent.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\Button.h">
+      <Filter>base\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\Component.h">
+      <Filter>base\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\ComponentManager.h">
+      <Filter>base\component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -363,9 +369,6 @@
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp">
@@ -421,9 +424,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
       <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Button.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\WindowImpl.cpp">
       <Filter>platform\win32</Filter>
@@ -503,9 +503,6 @@
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Component.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -565,6 +562,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\WindowEvent.cpp">
       <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\Button.cpp">
+      <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\Component.cpp">
+      <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\ComponentManager.cpp">
+      <Filter>base\component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

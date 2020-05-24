@@ -19,23 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/IntrusiveList.h>
-#include <kiwano/render/RenderContext.h>
+#include <kiwano/base/component/Component.h>
 
 namespace kiwano
 {
-
-class Actor;
-class Event;
-
-KGE_DECLARE_SMART_PTR(Component);
-
-/**
- * \~chinese
- * \defgroup Component 组件
- */
 
 /**
  * \addtogroup Component
@@ -48,92 +36,57 @@ typedef IntrusiveList<ComponentPtr> ComponentList;
 
 /**
  * \~chinese
- * @brief 组件
+ * @brief 组件管理器
  */
-class KGE_API Component
-    : public ObjectBase
-    , protected IntrusiveListValue<ComponentPtr>
+class KGE_API ComponentManager
 {
-    friend class Actor;
-    friend IntrusiveList<ComponentPtr>;
-
 public:
     /// \~chinese
-    /// @brief 是否启用组件
-    bool IsEnable() const;
+    /// @brief 添加组件
+    /// @param component 组件
+    Component* AddComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief 设置组件启用或禁用
-    void SetEnabled(bool enabled);
+    /// @brief 获取所有组件
+    ComponentList& GetAllComponents();
 
     /// \~chinese
-    /// @brief 获取绑定的角色
-    Actor* GetBoundActor() const;
+    /// @brief 获取所有组件
+    const ComponentList& GetAllComponents() const;
 
     /// \~chinese
-    /// @brief 从角色中移除
-    void RemoveFromActor();
-
-protected:
-    Component();
-
-    virtual ~Component();
+    /// @brief 移除组件
+    void RemoveComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief 初始化组件
-    virtual void InitComponent(Actor* actor);
+    /// @brief 移除组件
+    /// @param name 组件名称
+    void RemoveComponents(const String& name);
 
     /// \~chinese
-    /// @brief 销毁组件
-    virtual void DestroyComponent();
+    /// @brief 移除所有组件
+    void RemoveAllComponents();
 
     /// \~chinese
     /// @brief 更新组件
-    virtual void OnUpdate(Duration dt);
+    void Update(Duration dt);
 
     /// \~chinese
     /// @brief 渲染组件
-    virtual void OnRender(RenderContext& ctx);
+    void Render(RenderContext& ctx);
 
     /// \~chinese
-    /// @brief 处理角色事件
-    virtual void HandleEvent(Event* evt);
+    /// @brief 分发事件
+    void DispatchToComponents(Event* evt);
+
+protected:
+    ComponentManager(Actor* target);
 
 private:
-    bool   enabled_;
-    Actor* actor_;
+    Actor*        target_;
+    ComponentList components_;
 };
 
 /** @} */
-
-inline bool Component::IsEnable() const
-{
-    return enabled_;
-}
-
-inline void Component::SetEnabled(bool enabled)
-{
-    enabled_ = enabled;
-}
-
-inline Actor* Component::GetBoundActor() const
-{
-    return actor_;
-}
-
-inline void Component::OnUpdate(Duration dt)
-{
-    KGE_NOT_USED(dt);
-}
-
-inline void Component::OnRender(RenderContext& ctx)
-{
-    KGE_NOT_USED(ctx);
-}
-
-inline void Component::HandleEvent(Event* evt)
-{
-    KGE_NOT_USED(evt);
-}
 
 }  // namespace kiwano

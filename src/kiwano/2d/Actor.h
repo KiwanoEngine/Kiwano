@@ -20,12 +20,12 @@
 
 #pragma once
 #include <kiwano/math/Math.h>
-#include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/Time.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/component/ComponentManager.h>
 #include <kiwano/event/EventDispatcher.h>
 #include <kiwano/utils/TaskScheduler.h>
 #include <kiwano/2d/action/ActionScheduler.h>
-#include <kiwano/2d/Component.h>
 
 namespace kiwano
 {
@@ -65,6 +65,7 @@ class KGE_API Actor
     , public TaskScheduler
     , public ActionScheduler
     , public EventDispatcher
+    , public ComponentManager
     , protected IntrusiveListValue<ActorPtr>
 {
     friend class Director;
@@ -371,32 +372,6 @@ public:
     void RemoveFromParent();
 
     /// \~chinese
-    /// @brief 添加组件
-    /// @param component 组件
-    Component* AddComponent(ComponentPtr component);
-
-    /// \~chinese
-    /// @brief 获取所有组件
-    ComponentList& GetAllComponents();
-
-    /// \~chinese
-    /// @brief 获取所有组件
-    const ComponentList& GetAllComponents() const;
-
-    /// \~chinese
-    /// @brief 移除组件
-    void RemoveComponent(ComponentPtr component);
-
-    /// \~chinese
-    /// @brief 移除组件
-    /// @param name 组件名称
-    void RemoveComponents(const String& name);
-
-    /// \~chinese
-    /// @brief 移除所有组件
-    void RemoveAllComponents();
-
-    /// \~chinese
     /// @brief 暂停角色更新
     void PauseUpdating();
 
@@ -499,14 +474,6 @@ protected:
     /// @brief 处理事件
     bool HandleEvent(Event* evt);
 
-    /// \~chinese
-    /// @brief 更新组件
-    void UpdateComponents(Duration dt);
-
-    /// \~chinese
-    /// @brief 渲染组件
-    void RenderComponents(RenderContext& ctx);
-
 private:
     bool           visible_;
     bool           update_pausing_;
@@ -524,7 +491,6 @@ private:
     Point          anchor_;
     Size           size_;
     ActorList      children_;
-    ComponentList  components_;
     UpdateCallback cb_update_;
     Transform      transform_;
 

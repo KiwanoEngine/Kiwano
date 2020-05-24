@@ -23,6 +23,11 @@
 
 namespace kiwano
 {
+
+/// \~chinese
+/// @brief 任务列表
+typedef IntrusiveList<TaskPtr> TaskList;
+
 /**
  * \~chinese
  * @brief 任务调度器

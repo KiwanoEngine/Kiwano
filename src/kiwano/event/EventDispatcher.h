@@ -23,6 +23,11 @@
 
 namespace kiwano
 {
+
+/// \~chinese
+/// @brief 监听器列表
+typedef IntrusiveList<EventListenerPtr> ListenerList;
+
 /**
  * \~chinese
  * @brief 事件分发系统

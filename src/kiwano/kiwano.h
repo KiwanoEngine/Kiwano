@@ -56,6 +56,9 @@
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/Director.h>
 #include <kiwano/base/Module.h>
+#include <kiwano/base/component/Component.h>
+#include <kiwano/base/component/ComponentManager.h>
+#include <kiwano/base/component/Button.h>
 
 
 //
@@ -91,7 +94,6 @@
 //
 
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/Button.h>
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/2d/DebugActor.h>
 #include <kiwano/2d/GifSprite.h>

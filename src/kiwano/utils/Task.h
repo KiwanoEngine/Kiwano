@@ -29,10 +29,6 @@ class TaskScheduler;
 KGE_DECLARE_SMART_PTR(Task);
 
 /// \~chinese
-/// @brief 任务列表
-typedef IntrusiveList<TaskPtr> TaskList;
-
-/// \~chinese
 /// @brief 任务
 /// @details 任务用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Task

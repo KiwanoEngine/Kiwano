@@ -28,6 +28,10 @@ namespace kiwano
  * @{
  */
 
+/// \~chinese
+/// @brief 动画列表
+typedef IntrusiveList<ActionPtr> ActionList;
+
 /**
  * \~chinese
  * @brief 动画调度器
