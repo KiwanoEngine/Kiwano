@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <ctime>
 
 namespace kiwano
 {
@@ -198,6 +199,49 @@ private:
     long dur_;
 };
 
+/**
+ * \~chinese
+ * @brief 时钟时间
+ */
+struct KGE_API ClockTime
+{
+    ClockTime();
+
+    /// \~chinese
+    /// @brief 获取当前时间戳
+    long GetTimeStamp() const;
+
+    /// \~chinese
+    /// @brief 获取自纪元以来的毫秒数
+    long GetMillisecondsSinceEpoch() const;
+
+    /// \~chinese
+    /// @brief 获取 C 风格的时间
+    std::time_t GetCTime() const;
+
+    /// \~chinese
+    /// @brief 获取当前时间
+    static ClockTime Now() noexcept;
+
+    /// \~chinese
+    /// @brief 时间戳转化为时间
+    static ClockTime FromTimeStamp(long timestamp) noexcept;
+
+    const Duration operator-(const ClockTime&) const;
+
+    const ClockTime operator+(const Duration&) const;
+    const ClockTime operator-(const Duration&) const;
+
+    ClockTime& operator+=(const Duration&);
+    ClockTime& operator-=(const Duration&);
+
+private:
+    ClockTime(long ms_since_epoch);
+
+private:
+    long ms_since_epoch_;
+};
+
 inline long Duration::Milliseconds() const
 {
     return milliseconds_;
@@ -232,6 +276,7 @@ inline bool Time::IsZero() const
 {
     return dur_ == 0;
 }
+
 }  // namespace kiwano
 
 #if defined(KGE_HAS_LITERALS)

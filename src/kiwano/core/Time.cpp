@@ -99,6 +99,88 @@ Time Time::Now() noexcept
 }
 
 //-------------------------------------------------------
+// ClockTime
+//-------------------------------------------------------
+
+ClockTime::ClockTime()
+    : ms_since_epoch_(0)
+{
+}
+
+long ClockTime::GetTimeStamp() const
+{
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::seconds;
+
+    const auto timestamp = duration_cast<seconds>(milliseconds(ms_since_epoch_)).count();
+    return static_cast<long>(timestamp);
+}
+
+long ClockTime::GetMillisecondsSinceEpoch() const
+{
+    return ms_since_epoch_;
+}
+
+std::time_t ClockTime::GetCTime() const
+{
+    return static_cast<time_t>(GetTimeStamp());
+}
+
+ClockTime::ClockTime(long ms_since_epoch)
+    : ms_since_epoch_(ms_since_epoch)
+{
+}
+
+ClockTime ClockTime::FromTimeStamp(long timestamp) noexcept
+{
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::seconds;
+
+    const auto ms = duration_cast<milliseconds>(seconds(timestamp)).count();
+    return ClockTime(static_cast<long>(ms));
+}
+
+ClockTime ClockTime::Now() noexcept
+{
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::system_clock;
+
+    const auto      now   = system_clock::now();
+    const long long count = duration_cast<milliseconds>(now.time_since_epoch()).count();
+    return ClockTime{ static_cast<long>(count) };
+}
+
+const Duration ClockTime::operator-(const ClockTime& other) const
+{
+    return Duration(ms_since_epoch_ - other.ms_since_epoch_);
+}
+
+const ClockTime ClockTime::operator+(const Duration& dur) const
+{
+    return ClockTime{ ms_since_epoch_ + dur.Milliseconds() };
+}
+
+const ClockTime ClockTime::operator-(const Duration& dur) const
+{
+    return ClockTime{ ms_since_epoch_ - dur.Milliseconds() };
+}
+
+ClockTime& ClockTime::operator+=(const Duration& other)
+{
+    ms_since_epoch_ += other.Milliseconds();
+    return (*this);
+}
+
+ClockTime& ClockTime::operator-=(const Duration& other)
+{
+    ms_since_epoch_ -= other.Milliseconds();
+    return (*this);
+}
+
+//-------------------------------------------------------
 // Duration
 //-------------------------------------------------------
 
