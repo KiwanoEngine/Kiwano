@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/action/ActionScheduler.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

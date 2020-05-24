@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/FrameSequence.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

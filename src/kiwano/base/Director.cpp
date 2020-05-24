@@ -22,7 +22,7 @@
 #include <kiwano/2d/DebugActor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
-#include <kiwano/core/Director.h>
+#include <kiwano/base/Director.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano

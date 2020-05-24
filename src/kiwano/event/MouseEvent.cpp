@@ -1,4 +1,4 @@
-#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/event/MouseEvent.h>
 
 namespace kiwano
 {

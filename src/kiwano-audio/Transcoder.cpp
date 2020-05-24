@@ -25,9 +25,8 @@
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Logger.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/macros.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
 #include <kiwano/platform/win32/libraries.h>
 

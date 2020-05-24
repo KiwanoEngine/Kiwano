@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.hpp>

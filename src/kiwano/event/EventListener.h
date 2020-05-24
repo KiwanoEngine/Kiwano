@@ -20,13 +20,10 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/IntrusiveList.h>
-#include <kiwano/core/event/Event.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/event/Events.h>
 
 namespace kiwano
 {

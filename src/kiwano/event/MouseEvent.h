@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Keys.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/event/Event.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano

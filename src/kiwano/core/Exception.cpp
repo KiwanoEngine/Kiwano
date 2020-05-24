@@ -20,7 +20,7 @@
 
 #include <kiwano/core/Exception.h>
 #include <kiwano/core/Library.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 #if defined(KGE_PLATFORM_WINDOWS)
 #include <memory>

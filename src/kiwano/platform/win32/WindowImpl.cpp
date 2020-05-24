@@ -26,10 +26,8 @@
 #include <array>
 #include <kiwano/core/Keys.h>
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/utils/Logger.h>
+#include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/DirectX/D3DDeviceResources.h>

@@ -44,18 +44,30 @@
 //
 
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Director.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/EventListener.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/event/Event.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
+
+//
+// base
+//
+
+#include <kiwano/base/RefCounter.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/base/Module.h>
+
+
+//
+// event
+//
+
+#include <kiwano/event/Event.h>
+#include <kiwano/event/KeyEvent.h>
+#include <kiwano/event/MouseEvent.h>
+#include <kiwano/event/WindowEvent.h>
+#include <kiwano/event/EventListener.h>
+#include <kiwano/event/EventDispatcher.h>
 
 //
 // renderer
@@ -112,6 +124,7 @@
 // utils
 //
 
+#include <kiwano/utils/Logger.h>
 #include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/utils/UserData.h>

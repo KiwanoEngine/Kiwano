@@ -22,7 +22,7 @@
 #include <utility>
 #include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/RefCounter.h>
+#include <kiwano/base/RefCounter.h>
 
 namespace kiwano
 {

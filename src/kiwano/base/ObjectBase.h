@@ -19,11 +19,11 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/macros.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Serializable.h>
-#include <kiwano/core/RefCounter.h>
 #include <kiwano/core/SmartPtr.hpp>
-#include <kiwano/macros.h>
+#include <kiwano/base/RefCounter.h>
 
 namespace kiwano
 {

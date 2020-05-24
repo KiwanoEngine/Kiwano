@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
 #include <typeinfo>
 

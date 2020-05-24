@@ -1,4 +1,4 @@
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/event/WindowEvent.h>
 
 namespace kiwano
 {

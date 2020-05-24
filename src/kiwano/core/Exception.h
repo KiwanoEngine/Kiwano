@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <stdexcept>
 #include <system_error>
 

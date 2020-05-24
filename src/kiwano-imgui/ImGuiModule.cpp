@@ -2,8 +2,7 @@
 
 
 #include <kiwano/core/Common.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/event/Events.h>
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>

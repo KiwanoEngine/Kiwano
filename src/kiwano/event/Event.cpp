@@ -1,4 +1,4 @@
-#include <kiwano/core/event/Event.h>
+#include <kiwano/event/Event.h>
 
 namespace kiwano
 {

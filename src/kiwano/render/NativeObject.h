@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/base/ObjectBase.h>
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 #include <kiwano/render/DirectX/D2DDeviceResources.h>

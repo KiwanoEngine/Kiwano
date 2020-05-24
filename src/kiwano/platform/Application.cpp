@@ -20,8 +20,8 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/core/Director.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>

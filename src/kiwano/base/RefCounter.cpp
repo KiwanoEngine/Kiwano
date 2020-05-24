@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/RefCounter.h>
+#include <kiwano/base/RefCounter.h>
 
 namespace kiwano
 {

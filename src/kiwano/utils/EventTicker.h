@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/utils/Ticker.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/event/EventDispatcher.h>
+#include <kiwano/event/Event.h>
 
 namespace kiwano
 {

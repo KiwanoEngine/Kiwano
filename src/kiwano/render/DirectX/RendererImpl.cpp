@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/utils/Logger.h>
+#include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>

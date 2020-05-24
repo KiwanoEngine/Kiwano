@@ -20,7 +20,7 @@
 
 #include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/Sound.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/FileSystem.h>
 
 namespace kiwano

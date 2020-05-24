@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/Application.h>
 
 namespace kiwano

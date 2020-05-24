@@ -20,9 +20,9 @@
 
 #pragma once
 #include <kiwano/math/Math.h>
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/EventDispatcher.h>
+#include <kiwano/event/EventDispatcher.h>
 #include <kiwano/utils/TaskScheduler.h>
 #include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/Component.h>

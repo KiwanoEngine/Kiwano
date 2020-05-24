@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/DirectX/D3D11DeviceResources.h>
 #include <memory>
 

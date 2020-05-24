@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/event/Event.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano

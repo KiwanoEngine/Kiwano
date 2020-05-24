@@ -19,69 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Keys.h>
-#include <kiwano/core/event/Event.h>
 
-namespace kiwano
-{
-KGE_DECLARE_SMART_PTR(KeyEvent);
-KGE_DECLARE_SMART_PTR(KeyDownEvent);
-KGE_DECLARE_SMART_PTR(KeyUpEvent);
-KGE_DECLARE_SMART_PTR(KeyCharEvent);
-
-/**
- * \addtogroup Events
- * @{
- */
-
-/// \~chinese
-/// @brief 键盘事件
-class KGE_API KeyEvent : public Event
-{
-public:
-    KeyEvent(const EventType& type);
-};
-
-/// \~chinese
-/// @brief 键盘按下事件
-class KGE_API KeyDownEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyDownEvent();
-};
-
-/// \~chinese
-/// @brief 键盘抬起事件
-class KGE_API KeyUpEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyUpEvent();
-};
-
-/// \~chinese
-/// @brief 键盘字符事件
-class KGE_API KeyCharEvent : public KeyEvent
-{
-public:
-    char value;  ///< 字符
-
-    KeyCharEvent();
-};
-
-/** @} */
-
-template <>
-struct IsEventType<KeyEvent>
-{
-    inline bool operator()(const Event* evt) const
-    {
-        return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent);
-    }
-};
-
-}  // namespace kiwano
+#include <kiwano/event/Event.h>
+#include <kiwano/event/KeyEvent.h>
+#include <kiwano/event/MouseEvent.h>
+#include <kiwano/event/WindowEvent.h>

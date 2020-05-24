@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/event/EventDispatcher.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

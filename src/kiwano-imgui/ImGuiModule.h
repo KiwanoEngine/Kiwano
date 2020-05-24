@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 #include <kiwano/platform/Window.h>
 
 namespace kiwano

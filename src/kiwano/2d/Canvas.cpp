@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Canvas.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
