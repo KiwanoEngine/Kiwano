@@ -36,11 +36,15 @@ int GetVersion()
 
 Application::Application()
     : running_(false)
+    , is_paused_(false)
     , time_scale_(1.f)
 {
     Use(Renderer::GetInstance());
     Use(Input::GetInstance());
     Use(Director::GetInstance());
+
+    ticker_ = Ticker::Create(0);
+    ticker_->Tick();
 }
 
 Application::~Application()
@@ -52,8 +56,8 @@ void Application::Run(RunnerPtr runner, bool debug)
 {
     KGE_ASSERT(runner);
     runner_ = runner;
-    timer_   = Timer::Create();
     running_ = true;
+    is_paused_ = false;
 
     // Setup all modules
     for (auto c : modules_)
@@ -72,13 +76,32 @@ void Application::Run(RunnerPtr runner, bool debug)
 
     while (running_)
     {
-        timer_->Tick();
-
-        if (!runner->MainLoop(timer_->GetDeltaTime()))
-            running_ = false;
+        if (ticker_->Tick())
+        {
+            if (!runner->MainLoop(ticker_->GetDeltaTime()))
+                running_ = false;
+        }
     }
 
     this->Destroy();
+}
+
+void Application::Pause()
+{
+    is_paused_ = true;
+    if (ticker_)
+    {
+        ticker_->Pause();
+    }
+}
+
+void Application::Resume()
+{
+    is_paused_ = false;
+    if (ticker_)
+    {
+        ticker_->Resume();
+    }
 }
 
 void Application::Quit()
@@ -130,7 +153,7 @@ void Application::DispatchEvent(EventPtr evt)
 
 void Application::DispatchEvent(Event* evt)
 {
-    if (!running_)
+    if (!running_ /* Dispatch events even if application is paused */)
         return;
 
     for (auto comp : modules_)
@@ -144,7 +167,7 @@ void Application::DispatchEvent(Event* evt)
 
 void Application::Update(Duration dt)
 {
-    if (!running_)
+    if (!running_ || is_paused_)
         return;
 
     // Before update
@@ -198,7 +221,7 @@ void Application::Update(Duration dt)
 
 void Application::Render()
 {
-    if (!running_)
+    if (!running_ /* Render even if application is paused */)
         return;
 
     Renderer& renderer = Renderer::GetInstance();

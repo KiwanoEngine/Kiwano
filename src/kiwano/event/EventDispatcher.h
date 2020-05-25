@@ -30,7 +30,7 @@ typedef IntrusiveList<EventListenerPtr> ListenerList;
 
 /**
  * \~chinese
- * @brief 事件分发系统
+ * @brief 事件分发器
  */
 class KGE_API EventDispatcher
 {

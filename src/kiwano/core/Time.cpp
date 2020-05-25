@@ -24,6 +24,7 @@
 #include <regex>
 #include <unordered_map>
 #include <chrono>
+#include <thread>
 
 namespace kiwano
 {
@@ -229,6 +230,17 @@ float Duration::Hours() const
     long hour = milliseconds_ / Hour.milliseconds_;
     long ms   = milliseconds_ % Hour.milliseconds_;
     return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
+}
+
+void Duration::Sleep() const
+{
+    using std::chrono::milliseconds;
+    using std::this_thread::sleep_for;
+
+    if (milliseconds_)
+    {
+        sleep_for(milliseconds(milliseconds_));
+    }
 }
 
 String Duration::ToString() const

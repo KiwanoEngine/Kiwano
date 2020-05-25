@@ -573,11 +573,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
             is_minimized_ = true;
             // Pause game when window is minimized
-            if (Application::GetInstance().IsRunning())
-            {
-                TimerPtr timer = Application::GetInstance().GetTimer();
-                timer->Pause();
-            }
+            Application::GetInstance().Pause();
         }
         else if (SIZE_MAXIMIZED == wparam)
         {
@@ -586,11 +582,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             if (is_minimized_)
             {
                 is_minimized_ = false;
-                if (Application::GetInstance().IsRunning())
-                {
-                    TimerPtr timer = Application::GetInstance().GetTimer();
-                    timer->Resume();
-                }
+                Application::GetInstance().Resume();
             }
         }
         else if (wparam == SIZE_RESTORED)
@@ -601,11 +593,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
                 // the window was restored and was previously minimized
                 is_minimized_ = false;
-                if (Application::GetInstance().IsRunning())
-                {
-                    TimerPtr timer = Application::GetInstance().GetTimer();
-                    timer->Resume();
-                }
+                Application::GetInstance().Resume();
             }
             else if (is_resizing_)
             {
@@ -630,22 +618,14 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_ENTERSIZEMOVE:
     {
         is_resizing_ = true;
-        if (Application::GetInstance().IsRunning())
-        {
-            TimerPtr timer = Application::GetInstance().GetTimer();
-            timer->Pause();
-        }
+        Application::GetInstance().Pause();
         return 0;
     }
 
     case WM_EXITSIZEMOVE:
     {
         is_resizing_ = false;
-        if (Application::GetInstance().IsRunning())
-        {
-            TimerPtr timer = Application::GetInstance().GetTimer();
-            timer->Resume();
-        }
+        Application::GetInstance().Resume();
 
         // Send window resized event when client size changed
         RECT client_rect = { 0 };

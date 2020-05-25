@@ -27,7 +27,7 @@
 #include <kiwano/event/Event.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Window.h>
-#include <kiwano/utils/Timer.h>
+#include <kiwano/utils/Ticker.h>
 
 namespace kiwano
 {
@@ -62,6 +62,18 @@ public:
 
     /**
      * \~chinese
+     * @brief 暂停应用程序
+     */
+    void Pause();
+
+    /**
+     * \~chinese
+     * @brief 继续应用程序
+     */
+    void Resume();
+
+    /**
+     * \~chinese
      * @brief 终止应用程序
      */
     void Quit();
@@ -80,15 +92,15 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取计时器
+     * @brief 获取报时器
      */
-    TimerPtr GetTimer() const;
+    TickerPtr GetTicker() const;
 
     /**
      * \~chinese
-     * @brief 是否正在运行
+     * @brief 获取暂停状态
      */
-    bool IsRunning() const;
+    bool IsPaused() const;
 
     /**
      * \~chinese
@@ -151,9 +163,10 @@ public:
 
 private:
     bool                    running_;
+    bool                    is_paused_;
     float                   time_scale_;
     RunnerPtr               runner_;
-    TimerPtr                timer_;
+    TickerPtr               ticker_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -170,14 +183,14 @@ inline WindowPtr Application::GetMainWindow() const
     return runner_->GetMainWindow();
 }
 
-inline TimerPtr Application::GetTimer() const
+inline TickerPtr Application::GetTicker() const
 {
-    return timer_;
+    return ticker_;
 }
 
-inline bool Application::IsRunning() const
+inline bool Application::IsPaused() const
 {
-    return running_;
+    return is_paused_;
 }
 
 }  // namespace kiwano

@@ -21,6 +21,8 @@
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Application.h>
 
+#define KGE_MAX_SKIP_FRAMES 10
+
 namespace kiwano
 {
 
@@ -95,6 +97,12 @@ bool Runner::MainLoop(Duration dt)
     }
 
     app.Render();
+
+    if (app.IsPaused())
+    {
+        // Slow down when the application is paused
+        Duration(5).Sleep();
+    }
     return true;
 }
 

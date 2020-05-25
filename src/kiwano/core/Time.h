@@ -97,6 +97,10 @@ struct KGE_API Duration
     void SetHours(float hours);
 
     /// \~chinese
+    /// @brief ÐÝÃß
+    void Sleep() const;
+
+    /// \~chinese
     /// @brief ×ªÎª×Ö·û´®
     String ToString() const;
 

@@ -23,6 +23,7 @@
 
 namespace kiwano
 {
+
 /**
  * \addtogroup Actions
  * @{

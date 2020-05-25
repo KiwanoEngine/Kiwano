@@ -23,6 +23,7 @@
 
 namespace kiwano
 {
+
 void TaskScheduler::Update(Duration dt)
 {
     if (tasks_.IsEmpty())
