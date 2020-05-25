@@ -37,7 +37,7 @@ Time::Time()
 {
 }
 
-Time::Time(long dur)
+Time::Time(int64_t dur)
     : dur_(dur)
 {
 }
@@ -84,7 +84,7 @@ Time Time::Now() noexcept
 
     LARGE_INTEGER count;
     QueryPerformanceCounter(&count);
-    return Time{ static_cast<long>(count.QuadPart * millisecs_per_count) };
+    return Time{ static_cast<int64_t>(count.QuadPart * millisecs_per_count) };
 
 #else
 
@@ -92,9 +92,9 @@ Time Time::Now() noexcept
     using std::chrono::duration_cast;
     using std::chrono::milliseconds;
 
-    const auto      now   = steady_clock::now();
-    const long long count = duration_cast<milliseconds>(now.time_since_epoch()).count();
-    return Time{ static_cast<long>(count) };
+    const auto now   = steady_clock::now();
+    const auto count = duration_cast<milliseconds>(now.time_since_epoch()).count();
+    return Time{ static_cast<int64_t>(count) };
 
 #endif
 }
@@ -108,17 +108,17 @@ ClockTime::ClockTime()
 {
 }
 
-long ClockTime::GetTimeStamp() const
+int64_t ClockTime::GetTimeStamp() const
 {
     using std::chrono::duration_cast;
     using std::chrono::milliseconds;
     using std::chrono::seconds;
 
     const auto timestamp = duration_cast<seconds>(milliseconds(ms_since_epoch_)).count();
-    return static_cast<long>(timestamp);
+    return static_cast<int64_t>(timestamp);
 }
 
-long ClockTime::GetMillisecondsSinceEpoch() const
+int64_t ClockTime::GetMillisecondsSinceEpoch() const
 {
     return ms_since_epoch_;
 }
@@ -128,19 +128,19 @@ std::time_t ClockTime::GetCTime() const
     return static_cast<time_t>(GetTimeStamp());
 }
 
-ClockTime::ClockTime(long ms_since_epoch)
+ClockTime::ClockTime(int64_t ms_since_epoch)
     : ms_since_epoch_(ms_since_epoch)
 {
 }
 
-ClockTime ClockTime::FromTimeStamp(long timestamp) noexcept
+ClockTime ClockTime::FromTimeStamp(int64_t timestamp) noexcept
 {
     using std::chrono::duration_cast;
     using std::chrono::milliseconds;
     using std::chrono::seconds;
 
     const auto ms = duration_cast<milliseconds>(seconds(timestamp)).count();
-    return ClockTime(static_cast<long>(ms));
+    return ClockTime(static_cast<int64_t>(ms));
 }
 
 ClockTime ClockTime::Now() noexcept
@@ -149,9 +149,9 @@ ClockTime ClockTime::Now() noexcept
     using std::chrono::milliseconds;
     using std::chrono::system_clock;
 
-    const auto      now   = system_clock::now();
-    const long long count = duration_cast<milliseconds>(now.time_since_epoch()).count();
-    return ClockTime{ static_cast<long>(count) };
+    const auto now   = system_clock::now();
+    const auto count = duration_cast<milliseconds>(now.time_since_epoch()).count();
+    return ClockTime{ static_cast<int64_t>(count) };
 }
 
 const Duration ClockTime::operator-(const ClockTime& other) const
@@ -206,30 +206,30 @@ Duration::Duration()
 {
 }
 
-Duration::Duration(long milliseconds)
+Duration::Duration(int64_t milliseconds)
     : milliseconds_(milliseconds)
 {
 }
 
 float Duration::Seconds() const
 {
-    long sec = milliseconds_ / Second.milliseconds_;
-    long ms  = milliseconds_ % Second.milliseconds_;
-    return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
+    auto sec = milliseconds_ / Second.milliseconds_;
+    auto ms  = milliseconds_ % Second.milliseconds_;
+    return static_cast<float>(sec + ms) / 1000.f;
 }
 
 float Duration::Minutes() const
 {
-    long min = milliseconds_ / Minute.milliseconds_;
-    long ms  = milliseconds_ % Minute.milliseconds_;
-    return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
+    auto min = milliseconds_ / Minute.milliseconds_;
+    auto ms  = milliseconds_ % Minute.milliseconds_;
+    return static_cast<float>(min + ms) / (60 * 1000.f);
 }
 
 float Duration::Hours() const
 {
-    long hour = milliseconds_ / Hour.milliseconds_;
-    long ms   = milliseconds_ % Hour.milliseconds_;
-    return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
+    auto hour = milliseconds_ / Hour.milliseconds_;
+    auto ms   = milliseconds_ % Hour.milliseconds_;
+    return static_cast<float>(hour + ms) / (60 * 60 * 1000.f);
 }
 
 void Duration::Sleep() const
@@ -250,18 +250,18 @@ String Duration::ToString() const
         return String("0s");
     }
 
-    String result;
-    long   total_ms = milliseconds_;
+    String   result;
+    int64_t total_ms = milliseconds_;
     if (total_ms < 0)
     {
         result.append("-");
         total_ms = -total_ms;
     }
 
-    long hour = total_ms / Hour.milliseconds_;
-    long min  = total_ms / Minute.milliseconds_ - hour * 60;
-    long sec  = total_ms / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
-    long ms   = total_ms % Second.milliseconds_;
+    int64_t hour = total_ms / Hour.milliseconds_;
+    int64_t min  = total_ms / Minute.milliseconds_ - hour * 60;
+    int64_t sec  = total_ms / Second.milliseconds_ - (hour * 60 * 60 + min * 60);
+    int64_t ms   = total_ms % Second.milliseconds_;
 
     if (hour)
     {
@@ -275,7 +275,7 @@ String Duration::ToString() const
 
     if (ms != 0)
     {
-        result.append(std::to_string(static_cast<float>(sec) + static_cast<float>(ms) / 1000.f)).append("s");
+        result.append(std::to_string(static_cast<float>(sec + ms) / 1000.f)).append("s");
     }
     else if (sec != 0)
     {
@@ -341,22 +341,22 @@ const Duration Duration::operator*(int val) const
 
 const Duration Duration::operator*(unsigned long long val) const
 {
-    return Duration(static_cast<long>(milliseconds_ * val));
+    return Duration(static_cast<int64_t>(milliseconds_ * val));
 }
 
 const Duration Duration::operator*(float val) const
 {
-    return Duration(static_cast<long>(milliseconds_ * val));
+    return Duration(static_cast<int64_t>(milliseconds_ * val));
 }
 
 const Duration Duration::operator*(double val) const
 {
-    return Duration(static_cast<long>(milliseconds_ * val));
+    return Duration(static_cast<int64_t>(milliseconds_ * val));
 }
 
 const Duration Duration::operator*(long double val) const
 {
-    return Duration(static_cast<long>(milliseconds_ * val));
+    return Duration(static_cast<int64_t>(milliseconds_ * val));
 }
 
 const Duration Duration::operator/(int val) const
@@ -366,12 +366,12 @@ const Duration Duration::operator/(int val) const
 
 const Duration Duration::operator/(float val) const
 {
-    return Duration(static_cast<long>(milliseconds_ / val));
+    return Duration(static_cast<int64_t>(milliseconds_ / val));
 }
 
 const Duration Duration::operator/(double val) const
 {
-    return Duration(static_cast<long>(milliseconds_ / val));
+    return Duration(static_cast<int64_t>(milliseconds_ / val));
 }
 
 Duration& Duration::operator+=(const Duration& other)
@@ -394,31 +394,31 @@ Duration& Duration::operator*=(int val)
 
 Duration& Duration::operator/=(int val)
 {
-    milliseconds_ = static_cast<long>(milliseconds_ / val);
+    milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
     return (*this);
 }
 
 Duration& Duration::operator*=(float val)
 {
-    milliseconds_ = static_cast<long>(milliseconds_ * val);
+    milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
     return (*this);
 }
 
 Duration& Duration::operator/=(float val)
 {
-    milliseconds_ = static_cast<long>(milliseconds_ / val);
+    milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
     return (*this);
 }
 
 Duration& Duration::operator*=(double val)
 {
-    milliseconds_ = static_cast<long>(milliseconds_ * val);
+    milliseconds_ = static_cast<int64_t>(milliseconds_ * val);
     return (*this);
 }
 
 Duration& Duration::operator/=(double val)
 {
-    milliseconds_ = static_cast<long>(milliseconds_ / val);
+    milliseconds_ = static_cast<int64_t>(milliseconds_ / val);
     return (*this);
 }
 

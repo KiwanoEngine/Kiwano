@@ -53,11 +53,11 @@ struct KGE_API Duration
     /// \~chinese
     /// @brief 构造时间段
     /// @param milliseconds 毫秒数
-    Duration(long milliseconds);
+    Duration(int64_t milliseconds);
 
     /// \~chinese
     /// @brief 获取毫秒数
-    long Milliseconds() const;
+    int64_t Milliseconds() const;
 
     /// \~chinese
     /// @brief 获取秒数
@@ -79,7 +79,7 @@ struct KGE_API Duration
     /// \~chinese
     /// @brief 设置毫秒数
     /// @param ms 毫秒数
-    void SetMilliseconds(long ms);
+    void SetMilliseconds(int64_t ms);
 
     /// \~chinese
     /// @brief 设置秒数
@@ -159,7 +159,7 @@ struct KGE_API Duration
     friend const Duration operator/(double, const Duration&);
 
 private:
-    long milliseconds_;
+    int64_t milliseconds_;
 };
 
 /**
@@ -197,10 +197,10 @@ struct KGE_API Time
     Time& operator-=(const Duration&);
 
 private:
-    Time(long ms);
+    Time(int64_t ms);
 
 private:
-    long dur_;
+    int64_t dur_;
 };
 
 /**
@@ -213,11 +213,11 @@ struct KGE_API ClockTime
 
     /// \~chinese
     /// @brief 获取当前时间戳
-    long GetTimeStamp() const;
+    int64_t GetTimeStamp() const;
 
     /// \~chinese
     /// @brief 获取自纪元以来的毫秒数
-    long GetMillisecondsSinceEpoch() const;
+    int64_t GetMillisecondsSinceEpoch() const;
 
     /// \~chinese
     /// @brief 获取 C 风格的时间
@@ -229,7 +229,7 @@ struct KGE_API ClockTime
 
     /// \~chinese
     /// @brief 时间戳转化为时间
-    static ClockTime FromTimeStamp(long timestamp) noexcept;
+    static ClockTime FromTimeStamp(int64_t timestamp) noexcept;
 
     const Duration operator-(const ClockTime&) const;
 
@@ -240,13 +240,13 @@ struct KGE_API ClockTime
     ClockTime& operator-=(const Duration&);
 
 private:
-    ClockTime(long ms_since_epoch);
+    ClockTime(int64_t ms_since_epoch);
 
 private:
-    long ms_since_epoch_;
+    int64_t ms_since_epoch_;
 };
 
-inline long Duration::Milliseconds() const
+inline int64_t Duration::Milliseconds() const
 {
     return milliseconds_;
 }
@@ -256,7 +256,7 @@ inline bool Duration::IsZero() const
     return milliseconds_ == 0LL;
 }
 
-inline void Duration::SetMilliseconds(long ms)
+inline void Duration::SetMilliseconds(int64_t ms)
 {
     milliseconds_ = ms;
 }
