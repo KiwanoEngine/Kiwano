@@ -78,6 +78,20 @@ bool Ticker::Tick(Duration dt)
     return false;
 }
 
+void Ticker::Pause()
+{
+    is_paused_ = true;
+    if (timer_)
+        timer_->Pause();
+}
+
+void Ticker::Resume()
+{
+    is_paused_ = false;
+    if (timer_)
+        timer_->Resume();
+}
+
 Duration Ticker::GetDeltaTime()
 {
     return delta_time_;

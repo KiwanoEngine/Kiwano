@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Application.h>
 
@@ -85,6 +86,8 @@ bool Runner::MainLoop(Duration dt)
     }
 
     Application& app = Application::GetInstance();
+
+    KGE_LOG(dt.Milliseconds());
 
     // Update modules before poll events
     app.Update(dt);

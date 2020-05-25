@@ -110,16 +110,6 @@ private:
     TimerPtr timer_;
 };
 
-inline void Ticker::Pause()
-{
-    is_paused_ = true;
-}
-
-inline void Ticker::Resume()
-{
-    is_paused_ = false;
-}
-
 inline bool Ticker::IsPausing() const
 {
     return is_paused_;

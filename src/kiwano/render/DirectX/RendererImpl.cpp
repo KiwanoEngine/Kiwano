@@ -58,75 +58,51 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HWND target_window = window->GetHandle();
     output_size_       = window->GetSize();
 
-    d2d_res_ = nullptr;
-    d3d_res_ = nullptr;
+    d2d_res_ = graphics::directx::GetD2DDeviceResources();
+    d3d_res_ = graphics::directx::GetD3DDeviceResources();
 
     HRESULT hr = target_window ? S_OK : E_FAIL;
 
-    // Direct3D device resources
+    // Initialize other device resources
     if (SUCCEEDED(hr))
     {
-        auto d3d_res = graphics::directx::GetD3DDeviceResources();
+        RenderContextImplPtr ctx = memory::New<RenderContextImpl>();
 
-        // Initialize Direct3D resources
-        hr = d3d_res->Initialize(target_window);
-
-        // Direct2D device resources
+        hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
         if (SUCCEEDED(hr))
         {
-            d3d_res_ = d3d_res;
+            render_ctx_ = ctx;
+        }
+    }
 
-            auto d2d_res = graphics::directx::GetD2DDeviceResources();
+    // FontFileLoader and FontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IFontCollectionLoader::Create(&font_collection_loader_);
 
-            // Initialize Direct2D resources
-            hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+        if (SUCCEEDED(hr))
+        {
+            hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
+        }
+    }
+
+    // ResourceFontFileLoader and ResourceFontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.Get());
 
             if (SUCCEEDED(hr))
             {
-                d2d_res_ = d2d_res;
-
-                // Initialize other device resources
-                RenderContextImplPtr ctx = memory::New<RenderContextImpl>();
-
-                hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
-                if (SUCCEEDED(hr))
-                {
-                    render_ctx_ = ctx;
-                }
-            }
-
-            // FontFileLoader and FontCollectionLoader
-            if (SUCCEEDED(hr))
-            {
-                hr = IFontCollectionLoader::Create(&font_collection_loader_);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
-                }
-            }
-
-            // ResourceFontFileLoader and ResourceFontCollectionLoader
-            if (SUCCEEDED(hr))
-            {
-                hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
-                }
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_,
-                                                               res_font_file_loader_.Get());
-
-                    if (SUCCEEDED(hr))
-                    {
-                        hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(
-                            res_font_collection_loader_.Get());
-                    }
-                }
+                hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.Get());
             }
         }
     }

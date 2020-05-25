@@ -25,10 +25,14 @@ namespace kiwano
 namespace memory
 {
 
-MemoryAllocator* current_allocator_ = GetGlobalAllocator();
+MemoryAllocator* current_allocator_ = nullptr;
 
 MemoryAllocator* GetAllocator()
 {
+    if (!current_allocator_)
+    {
+        current_allocator_ = GetGlobalAllocator();
+    }
     return current_allocator_;
 }
 

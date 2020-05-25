@@ -47,13 +47,11 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
+    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable);
 
     void SetTitle(const String& title) override;
 
     void SetIcon(uint32_t icon_resource) override;
-
-    void Resize(uint32_t width, uint32_t height) override;
 
     void SetMinimumSize(uint32_t width, uint32_t height) override;
 
@@ -86,13 +84,12 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                         bool fullscreen)
+WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
 {
     WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
     if (ptr)
     {
-        ptr->Init(title, width, height, icon, resizable, fullscreen);
+        ptr->Init(title, width, height, icon, resizable);
     }
     return ptr;
 }
@@ -199,8 +196,7 @@ WindowWin32Impl::~WindowWin32Impl()
     }
 }
 
-void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                           bool fullscreen)
+void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
 {
     HINSTANCE  hinst   = GetModuleHandle(nullptr);
     WNDCLASSEXA wcex   = { 0 };
@@ -236,38 +232,22 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     // Save the device name
     device_name_ = monitor_info_ex.szDevice;
 
-    int left = -1, top = -1;
+    uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
+    uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
-    if (fullscreen)
-    {
-        top  = monitor_info_ex.rcMonitor.top;
-        left = monitor_info_ex.rcMonitor.left;
+    uint32_t win_width, win_height;
+    AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
 
-        if (width > static_cast<uint32_t>(monitor_info_ex.rcWork.right - left))
-            width = static_cast<uint32_t>(monitor_info_ex.rcWork.right - left);
-
-        if (height > static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top))
-            height = static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top);
-    }
-    else
-    {
-        uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
-        uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
-
-        uint32_t win_width, win_height;
-        AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
-
-        left   = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
-        top    = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
-        width  = win_width;
-        height = win_height;
-    }
+    int left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
+    int top  = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
+    width  = win_width;
+    height = win_height;
 
     width_     = width;
     height_    = height;
     resizable_ = resizable;
-    handle_    = ::CreateWindowExA(fullscreen ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top,
-                                width, height, nullptr, nullptr, hinst, nullptr);
+    handle_    = ::CreateWindowExA(0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top, width, height, nullptr,
+                                nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
@@ -283,6 +263,21 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     ::ShowWindow(handle_, SW_SHOWNORMAL);
     ::UpdateWindow(handle_);
+
+    // Initialize Direct3D resources
+    auto d3d_res = graphics::directx::GetD3DDeviceResources();
+
+    HRESULT hr = d3d_res->Initialize(handle_);
+
+    // Initialize Direct2D resources
+    if (SUCCEEDED(hr))
+    {
+        auto d2d_res = graphics::directx::GetD2DDeviceResources();
+
+        hr = d2d_res->Initialize(d3d_res->GetDXGIDevice(), d3d_res->GetDXGISwapChain());
+    }
+
+    KGE_THROW_IF_FAILED(hr, "Create DirectX resources failed");
 }
 
 void WindowWin32Impl::PumpEvents()
@@ -311,25 +306,6 @@ void WindowWin32Impl::SetIcon(uint32_t icon_resource)
 
     ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)icon);
     ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
-}
-
-void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
-{
-    KGE_ASSERT(handle_);
-
-    RECT rc = { 0, 0, LONG(width), LONG(height) };
-    ::AdjustWindowRect(&rc, GetStyle(), false);
-
-    width  = rc.right - rc.left;
-    height = rc.bottom - rc.top;
-
-    MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
-    uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-    uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-    int            left    = screenw > width ? ((screenw - width) / 2) : 0;
-    int            top     = screenh > height ? ((screenh - height) / 2) : 0;
-
-    ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
 void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
