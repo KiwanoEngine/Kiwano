@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/win32/libraries.h>
 
 namespace kiwano

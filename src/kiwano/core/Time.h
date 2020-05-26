@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
+#include <ctime>
 
 namespace kiwano
 {
@@ -52,11 +53,11 @@ struct KGE_API Duration
     /// \~chinese
     /// @brief 构造时间段
     /// @param milliseconds 毫秒数
-    Duration(long milliseconds);
+    Duration(int64_t milliseconds);
 
     /// \~chinese
     /// @brief 获取毫秒数
-    long Milliseconds() const;
+    int64_t Milliseconds() const;
 
     /// \~chinese
     /// @brief 获取秒数
@@ -78,7 +79,7 @@ struct KGE_API Duration
     /// \~chinese
     /// @brief 设置毫秒数
     /// @param ms 毫秒数
-    void SetMilliseconds(long ms);
+    void SetMilliseconds(int64_t ms);
 
     /// \~chinese
     /// @brief 设置秒数
@@ -94,6 +95,10 @@ struct KGE_API Duration
     /// @brief 设置小时数
     /// @param hours 小时数
     void SetHours(float hours);
+
+    /// \~chinese
+    /// @brief 休眠
+    void Sleep() const;
 
     /// \~chinese
     /// @brief 转为字符串
@@ -154,7 +159,7 @@ struct KGE_API Duration
     friend const Duration operator/(double, const Duration&);
 
 private:
-    long milliseconds_;
+    int64_t milliseconds_;
 };
 
 /**
@@ -192,13 +197,56 @@ struct KGE_API Time
     Time& operator-=(const Duration&);
 
 private:
-    Time(long ms);
+    Time(int64_t ms);
 
 private:
-    long dur_;
+    int64_t dur_;
 };
 
-inline long Duration::Milliseconds() const
+/**
+ * \~chinese
+ * @brief 时钟时间
+ */
+struct KGE_API ClockTime
+{
+    ClockTime();
+
+    /// \~chinese
+    /// @brief 获取当前时间戳
+    int64_t GetTimeStamp() const;
+
+    /// \~chinese
+    /// @brief 获取自纪元以来的毫秒数
+    int64_t GetMillisecondsSinceEpoch() const;
+
+    /// \~chinese
+    /// @brief 获取 C 风格的时间
+    std::time_t GetCTime() const;
+
+    /// \~chinese
+    /// @brief 获取当前时间
+    static ClockTime Now() noexcept;
+
+    /// \~chinese
+    /// @brief 时间戳转化为时间
+    static ClockTime FromTimeStamp(int64_t timestamp) noexcept;
+
+    const Duration operator-(const ClockTime&) const;
+
+    const ClockTime operator+(const Duration&) const;
+    const ClockTime operator-(const Duration&) const;
+
+    ClockTime& operator+=(const Duration&);
+    ClockTime& operator-=(const Duration&);
+
+private:
+    ClockTime(int64_t ms_since_epoch);
+
+private:
+    int64_t ms_since_epoch_;
+};
+
+inline int64_t Duration::Milliseconds() const
 {
     return milliseconds_;
 }
@@ -208,7 +256,7 @@ inline bool Duration::IsZero() const
     return milliseconds_ == 0LL;
 }
 
-inline void Duration::SetMilliseconds(long ms)
+inline void Duration::SetMilliseconds(int64_t ms)
 {
     milliseconds_ = ms;
 }
@@ -232,6 +280,7 @@ inline bool Time::IsZero() const
 {
     return dur_ == 0;
 }
+
 }  // namespace kiwano
 
 #if defined(KGE_HAS_LITERALS)

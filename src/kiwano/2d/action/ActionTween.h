@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/action/Action.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

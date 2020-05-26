@@ -21,9 +21,9 @@
 #pragma once
 #include <array>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 #include <kiwano/core/Keys.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/event/Event.h>
 #include <kiwano/macros.h>
 #include <kiwano/math/Math.h>
 

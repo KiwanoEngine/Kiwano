@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/FrameSequence.h>
+#include <kiwano/render/FrameSequence.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/action/Animation.h>
 

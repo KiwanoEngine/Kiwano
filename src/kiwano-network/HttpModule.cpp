@@ -20,7 +20,7 @@
 
 #include <chrono>
 #include <thread>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano-network/HttpRequest.h>
 #include <kiwano-network/HttpResponse.hpp>

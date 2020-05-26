@@ -26,8 +26,13 @@ namespace kiwano
 Window::Window()
     : handle_(nullptr)
     , should_close_(false)
+    , is_fullscreen_(false)
     , width_(0)
     , height_(0)
+    , min_width_(0)
+    , min_height_(0)
+    , max_width_(0)
+    , max_height_(0)
 {
 }
 
@@ -37,8 +42,6 @@ Window::~Window()
 
 EventPtr Window::PollEvent()
 {
-    PumpEvents();
-
     EventPtr evt;
     if (!event_queue_.empty())
     {
@@ -86,11 +89,6 @@ void Window::SetShouldClose(bool should)
 void Window::PushEvent(EventPtr evt)
 {
     event_queue_.push(evt);
-}
-
-void Window::Destroy()
-{
-    should_close_ = true;
 }
 
 }  // namespace kiwano

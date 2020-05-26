@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 
 PROJECT_NAME           = "Kiwano Engine"
-PROJECT_NUMBER         = v1.0.14
+PROJECT_NUMBER         = v1.0.x
 PROJECT_BRIEF          =
 PROJECT_LOGO           = logo/logo_tiny.png
 
@@ -81,6 +81,7 @@ HTML_HEADER            =
 HTML_FOOTER            =
 HTML_STYLESHEET        =
 HTML_EXTRA_STYLESHEET  =
+HTML_EXTRA_FILES       = logo/favicon.ico
 
 GENERATE_TREEVIEW      = YES
 ENUM_VALUES_PER_LINE   = 4

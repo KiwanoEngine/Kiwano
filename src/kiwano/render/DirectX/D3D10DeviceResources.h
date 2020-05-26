@@ -26,12 +26,15 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
+
 MIDL_INTERFACE("3a150b9d-cc23-4022-a463-7e95452a54c4")
 KGE_API ID3D10DeviceResources : public ID3DDeviceResourcesBase
 {
 public:
-    static HRESULT Create(ID3D10DeviceResources * *device_resources, HWND hwnd);
-
     inline ID3D10Device* GetDevice()
     {
         KGE_ASSERT(device_);
@@ -77,4 +80,8 @@ protected:
     ComPtr<IDXGISwapChain>         dxgi_swap_chain_;
 };
 
+extern ComPtr<ID3D10DeviceResources> GetD3D11DeviceResources();
+
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

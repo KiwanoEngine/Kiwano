@@ -18,8 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/DirectX/D3D11DeviceResources.h>
+#include <memory>
 
 KGE_SUPPRESS_WARNING_PUSH
 KGE_SUPPRESS_WARNING(4800)   // Implicit conversion from 'type' to bool
@@ -30,9 +31,16 @@ KGE_SUPPRESS_WARNING_POP
 
 namespace kiwano
 {
-#if defined(KGE_DEBUG)
-namespace DX
+namespace graphics
 {
+namespace directx
+{
+
+// Global pointer for Direct3D11 device resources
+static ComPtr<ID3D11DeviceResources> global_d3d11_device_resources;
+
+
+#if defined(KGE_DEBUG)
 inline bool SdkLayersAvailable()
 {
     HRESULT hr = D3D11CreateDevice(nullptr,
@@ -45,15 +53,15 @@ inline bool SdkLayersAvailable()
                                    nullptr,  // No need to know the feature level.
                                    nullptr   // No need to keep the D3D device context reference.
     );
-
     return SUCCEEDED(hr);
 }
-}  // namespace DX
 #endif
 
 struct D3D11DeviceResources : public ID3D11DeviceResources
 {
 public:
+    HRESULT Initialize(HWND hwnd) override;
+
     HRESULT Present(bool vsync) override;
 
     void ClearRenderTarget(Color& clear_color) override;
@@ -63,6 +71,14 @@ public:
     HRESULT SetLogicalSize(Size logical_size) override;
 
     HRESULT SetDpi(float dpi) override;
+
+    HRESULT SetFullscreenState(bool fullscreen) override;
+
+    HRESULT GetFullscreenState(bool* fullscreen) override;
+
+    HRESULT ResizeTarget(UINT width, UINT height) override;
+
+    HRESULT GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num) override;
 
     void DiscardResources() override;
 
@@ -90,12 +106,24 @@ public:
     unsigned long ref_count_;
 
     D3D_FEATURE_LEVEL d3d_feature_level_;
+    DXGI_FORMAT       desired_color_format_;
 };
+
+
+ComPtr<ID3D11DeviceResources> GetD3D11DeviceResources()
+{
+    if (!global_d3d11_device_resources)
+    {
+        global_d3d11_device_resources.Reset(new (std::nothrow) D3D11DeviceResources);
+    }
+    return global_d3d11_device_resources;
+}
 
 D3D11DeviceResources::D3D11DeviceResources()
     : ref_count_(0)
     , hwnd_(nullptr)
     , d3d_feature_level_(D3D_FEATURE_LEVEL_9_1)
+    , desired_color_format_(DXGI_FORMAT_B8G8R8A8_UNORM)
 {
     dpi_ = 96.f;  // dpi_ = (float)GetDpiForWindow(hwnd);
 }
@@ -105,55 +133,34 @@ D3D11DeviceResources::~D3D11DeviceResources()
     DiscardResources();
 }
 
-HRESULT ID3D11DeviceResources::Create(ID3D11DeviceResources** device_resources, HWND hwnd)
+HRESULT D3D11DeviceResources::Initialize(HWND hwnd)
 {
-    HRESULT hr = E_FAIL;
+    RECT rc;
+    ::GetClientRect(hwnd, &rc);
 
-    if (device_resources)
+    this->hwnd_           = hwnd;
+    this->logical_size_.x = float(rc.right - rc.left);
+    this->logical_size_.y = float(rc.bottom - rc.top);
+
+    HRESULT hr = this->CreateDeviceResources();
+
+    if (SUCCEEDED(hr))
     {
-        D3D11DeviceResources* res = new (std::nothrow) D3D11DeviceResources;
-        if (res)
-        {
-            RECT rc;
-            ::GetClientRect(hwnd, &rc);
-
-            res->hwnd_           = hwnd;
-            res->logical_size_.x = float(rc.right - rc.left);
-            res->logical_size_.y = float(rc.bottom - rc.top);
-
-            hr = res->CreateDeviceResources();
-
-            if (SUCCEEDED(hr))
-            {
-                hr = res->CreateWindowSizeDependentResources();
-            }
-
-            if (SUCCEEDED(hr))
-            {
-                res->AddRef();
-
-                if (*device_resources)
-                {
-                    (*device_resources)->Release();
-                }
-                (*device_resources) = res;
-            }
-            else
-            {
-                delete res;
-                res = nullptr;
-            }
-        }
+        hr = this->CreateWindowSizeDependentResources();
     }
     return hr;
 }
 
 HRESULT D3D11DeviceResources::Present(bool vsync)
 {
-    KGE_ASSERT(dxgi_swap_chain_ != nullptr);
+    HRESULT hr = E_FAIL;
 
-    // The first argument instructs DXGI to block until VSync.
-    return dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
+    if (dxgi_swap_chain_)
+    {
+        // The first argument instructs DXGI to block until VSync.
+        hr = dxgi_swap_chain_->Present(vsync ? 1 : 0, DXGI_PRESENT_DO_NOT_WAIT);
+    }
+    return hr;
 }
 
 void D3D11DeviceResources::ClearRenderTarget(Color& clear_color)
@@ -195,7 +202,7 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
     uint32_t creation_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(KGE_DEBUG) && defined(KGE_ENABLE_DX_DEBUG)
-    if (DX::SdkLayersAvailable())
+    if (SdkLayersAvailable())
     {
         creation_flags |= D3D11_CREATE_DEVICE_DEBUG;
     }
@@ -237,20 +244,28 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
             if (SUCCEEDED(hr))
             {
                 dxgi_device_ = dxgi_device;
+            }
+        }
 
-                ComPtr<IDXGIAdapter> dxgi_adapter;
-                hr = dxgi_device_->GetAdapter(&dxgi_adapter);
+        if (SUCCEEDED(hr))
+        {
+            ComPtr<IDXGIAdapter> dxgi_adapter;
+            hr = dxgi_device_->GetAdapter(&dxgi_adapter);
+
+            if (SUCCEEDED(hr))
+            {
+                ComPtr<IDXGIFactory> dxgi_factory;
+                hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
 
                 if (SUCCEEDED(hr))
                 {
-                    ComPtr<IDXGIFactory> dxgi_factory;
-                    hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
-
-                    if (SUCCEEDED(hr))
-                    {
-                        dxgi_factory_ = dxgi_factory;
-                    }
+                    dxgi_factory_ = dxgi_factory;
                 }
+            }
+
+            if (SUCCEEDED(hr))
+            {
+                hr = dxgi_factory_->MakeWindowAssociation(hwnd_, DXGI_MWA_NO_ALT_ENTER);
             }
         }
     }
@@ -263,9 +278,10 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
         swap_chain_desc.BufferCount                        = 2;
         swap_chain_desc.BufferDesc.Width                   = ::lround(output_size_.x);
         swap_chain_desc.BufferDesc.Height                  = ::lround(output_size_.y);
-        swap_chain_desc.BufferDesc.Format                  = DXGI_FORMAT_B8G8R8A8_UNORM;
+        swap_chain_desc.BufferDesc.Format                  = desired_color_format_;
         swap_chain_desc.BufferDesc.RefreshRate.Numerator   = 60;
         swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
+        swap_chain_desc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_CENTERED;
         swap_chain_desc.Flags                              = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         swap_chain_desc.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swap_chain_desc.OutputWindow                       = hwnd_;
@@ -320,8 +336,9 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
     output_size_.x = std::max(output_size_.x, 1.f);
     output_size_.y = std::max(output_size_.y, 1.f);
 
-    hr = dxgi_swap_chain_->ResizeBuffers(2,  // Double-buffered swap chain.
-                                         ::lround(output_size_.x), ::lround(output_size_.y), DXGI_FORMAT_UNKNOWN, 0);
+    hr = dxgi_swap_chain_->ResizeBuffers(2, /* Double-buffered swap chain */
+                                         ::lround(output_size_.x), ::lround(output_size_.y), DXGI_FORMAT_UNKNOWN,
+                                         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
     if (SUCCEEDED(hr))
     {
@@ -371,7 +388,6 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
 
         device_context_->RSSetViewports(1, &screen_viewport);
     }
-
     return hr;
 }
 
@@ -414,6 +430,85 @@ HRESULT D3D11DeviceResources::SetDpi(float dpi)
         return CreateWindowSizeDependentResources();
     }
     return S_OK;
+}
+
+HRESULT D3D11DeviceResources::SetFullscreenState(bool fullscreen)
+{
+    HRESULT hr = E_FAIL;
+    if (dxgi_swap_chain_)
+    {
+        hr = dxgi_swap_chain_->SetFullscreenState(fullscreen ? TRUE : FALSE, nullptr);
+    }
+    return hr;
+}
+
+HRESULT D3D11DeviceResources::GetFullscreenState(bool* fullscreen)
+{
+    HRESULT hr = E_FAIL;
+    if (dxgi_swap_chain_)
+    {
+        BOOL is_fullscreen;
+        hr = dxgi_swap_chain_->GetFullscreenState(&is_fullscreen, nullptr);
+
+        if (SUCCEEDED(hr))
+        {
+            (*fullscreen) = (is_fullscreen == TRUE);
+        }
+    }
+    return hr;
+}
+
+HRESULT D3D11DeviceResources::ResizeTarget(UINT width, UINT height)
+{
+    HRESULT hr = E_FAIL;
+    if (dxgi_swap_chain_)
+    {
+        DXGI_MODE_DESC desc = { 0 };
+        desc.Width          = width;
+        desc.Height         = height;
+        desc.Format         = DXGI_FORMAT_UNKNOWN;
+
+        hr = dxgi_swap_chain_->ResizeTarget(&desc);
+    }
+    return hr;
+}
+
+HRESULT D3D11DeviceResources::GetDisplaySettings(DXGI_MODE_DESC** mode_descs, int* num)
+{
+    HRESULT hr = E_FAIL;
+    if (dxgi_swap_chain_)
+    {
+        ComPtr<IDXGIOutput> output;
+        HRESULT             hr = dxgi_swap_chain_->GetContainingOutput(&output);
+
+        if (SUCCEEDED(hr))
+        {
+            UINT num_of_supported_modes = 0;
+            output->GetDisplayModeList(desired_color_format_, 0, &num_of_supported_modes, 0);
+
+            if (num_of_supported_modes > 0)
+            {
+                DXGI_MODE_DESC* supported_modes = new DXGI_MODE_DESC[num_of_supported_modes];
+                ZeroMemory(supported_modes, sizeof(DXGI_MODE_DESC) * num_of_supported_modes);
+
+                hr = output->GetDisplayModeList(desired_color_format_, 0, &num_of_supported_modes, supported_modes);
+                if (SUCCEEDED(hr) && mode_descs && num)
+                {
+                    (*mode_descs) = supported_modes;
+                    (*num)        = (int)num_of_supported_modes;
+                }
+                else
+                {
+                    delete[] supported_modes;
+                }
+            }
+            else
+            {
+                hr = E_FAIL;
+            }
+        }
+    }
+    return hr;
 }
 
 STDMETHODIMP_(unsigned long) D3D11DeviceResources::AddRef()
@@ -459,4 +554,6 @@ STDMETHODIMP D3D11DeviceResources::QueryInterface(const IID& riid, void** object
     return S_OK;
 }
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

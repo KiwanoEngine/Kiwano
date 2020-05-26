@@ -18,9 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
+#include <kiwano/utils/Logger.h>
+#include <kiwano/event/Events.h>
 #include <kiwano/platform/Input.h>
 
 namespace kiwano

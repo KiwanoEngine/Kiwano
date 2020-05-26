@@ -21,7 +21,7 @@
 #include <kiwano/render/DirectX/RenderContextImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

@@ -21,7 +21,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Renderer.h>
 

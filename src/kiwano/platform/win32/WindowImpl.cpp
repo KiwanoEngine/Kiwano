@@ -26,11 +26,11 @@
 #include <array>
 #include <kiwano/core/Keys.h>
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/utils/Logger.h>
+#include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>
+#include <kiwano/render/Renderer.h>
+#include <kiwano/render/DirectX/D3DDeviceResources.h>
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
@@ -47,19 +47,21 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
+    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable);
 
     void SetTitle(const String& title) override;
 
     void SetIcon(uint32_t icon_resource) override;
 
-    void Resize(uint32_t width, uint32_t height) override;
+    void SetMinimumSize(uint32_t width, uint32_t height) override;
 
-    void SetFullscreen(bool fullscreen) override;
+    void SetMaximumSize(uint32_t width, uint32_t height) override;
 
     void SetCursor(CursorType cursor) override;
 
-    void Destroy() override;
+    void SetResolution(uint32_t width, uint32_t height, bool fullscreen) override;
+
+    Vector<Resolution> GetResolutions() override;
 
     void PumpEvents() override;
 
@@ -67,28 +69,27 @@ public:
 
     void UpdateCursor();
 
-    void SetActive(bool actived);
-
     LRESULT MessageProc(HWND, UINT32, WPARAM, LPARAM);
 
     static LRESULT CALLBACK StaticWndProc(HWND, UINT32, WPARAM, LPARAM);
 
 private:
     bool       resizable_;
-    bool       is_fullscreen_;
+    bool       is_resizing_;
+    bool       is_minimized_;
     CursorType mouse_cursor_;
     String     device_name_;
 
+    Vector<Resolution>       resolutions_;
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                         bool fullscreen)
+WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
 {
     WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
     if (ptr)
     {
-        ptr->Init(title, width, height, icon, resizable, fullscreen);
+        ptr->Init(title, width, height, icon, resizable);
     }
     return ptr;
 }
@@ -100,7 +101,6 @@ namespace kiwano
 
 #define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
-#define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
 
 namespace
 {
@@ -136,36 +136,12 @@ void AdjustWindow(uint32_t width, uint32_t height, DWORD style, uint32_t* win_wi
         *win_height = screenh;
 }
 
-void ChangeFullScreenResolution(uint32_t width, uint32_t height, const CHAR* device_name)
-{
-    DEVMODEA mode;
-
-    memset(&mode, 0, sizeof(mode));
-    mode.dmSize       = sizeof(mode);
-    mode.dmPelsWidth  = width;
-    mode.dmPelsHeight = height;
-    mode.dmFields     = DM_PELSWIDTH | DM_PELSHEIGHT;
-
-    LONG ret = ::ChangeDisplaySettingsExA(device_name, &mode, NULL, CDS_FULLSCREEN, NULL);
-    if (ret != DISP_CHANGE_SUCCESSFUL)
-    {
-        KGE_ERROR("ChangeDisplaySettings failed with error code %d", ret);
-    }
-}
-
-void RestoreResolution(const CHAR* device_name)
-{
-    LONG ret = ::ChangeDisplaySettingsExA(device_name, NULL, NULL, 0, NULL);
-    if (ret != DISP_CHANGE_SUCCESSFUL)
-    {
-        KGE_ERROR("ChangeDisplaySettings failed with error code %d", ret);
-    }
-}
 }  // namespace
 
 WindowWin32Impl::WindowWin32Impl()
-    : is_fullscreen_(false)
-    , resizable_(false)
+    : resizable_(false)
+    , is_resizing_(false)
+    , is_minimized_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
 {
@@ -213,11 +189,14 @@ WindowWin32Impl::WindowWin32Impl()
 
 WindowWin32Impl::~WindowWin32Impl()
 {
-    this->Destroy();
+    if (handle_)
+    {
+        ::DestroyWindow(handle_);
+        handle_ = nullptr;
+    }
 }
 
-void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
-                           bool fullscreen)
+void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
 {
     HINSTANCE  hinst   = GetModuleHandle(nullptr);
     WNDCLASSEXA wcex   = { 0 };
@@ -253,47 +232,28 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     // Save the device name
     device_name_ = monitor_info_ex.szDevice;
 
-    int left = -1, top = -1;
+    uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
+    uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
-    resizable_     = resizable;
-    is_fullscreen_ = fullscreen;
+    uint32_t win_width, win_height;
+    AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
 
-    if (is_fullscreen_)
-    {
-        top  = monitor_info_ex.rcMonitor.top;
-        left = monitor_info_ex.rcMonitor.left;
+    int left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
+    int top  = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
+    width  = win_width;
+    height = win_height;
 
-        if (width > static_cast<uint32_t>(monitor_info_ex.rcWork.right - left))
-            width = static_cast<uint32_t>(monitor_info_ex.rcWork.right - left);
-
-        if (height > static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top))
-            height = static_cast<uint32_t>(monitor_info_ex.rcWork.bottom - top);
-    }
-    else
-    {
-        uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
-        uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
-
-        uint32_t win_width, win_height;
-        AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
-
-        left   = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
-        top    = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
-        width  = win_width;
-        height = win_height;
-    }
-
-    handle_ = ::CreateWindowExA(is_fullscreen_ ? WS_EX_TOPMOST : 0, "KiwanoAppWnd", title.c_str(), GetStyle(),
-                                left, top, width, height, nullptr, nullptr, hinst, nullptr);
+    width_     = width;
+    height_    = height;
+    resizable_ = resizable;
+    handle_    = ::CreateWindowExA(0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top, width, height, nullptr,
+                                nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
         ::UnregisterClassA("KiwanoAppWnd", hinst);
         KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
-
-    width_  = width;
-    height_ = height;
 
     // disable imm
     ::ImmAssociateContext(handle_, nullptr);
@@ -304,10 +264,20 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     ::ShowWindow(handle_, SW_SHOWNORMAL);
     ::UpdateWindow(handle_);
 
-    if (is_fullscreen_)
+    // Initialize Direct3D resources
+    auto d3d_res = graphics::directx::GetD3DDeviceResources();
+
+    HRESULT hr = d3d_res->Initialize(handle_);
+
+    // Initialize Direct2D resources
+    if (SUCCEEDED(hr))
     {
-        ChangeFullScreenResolution(width, height, device_name_.c_str());
+        auto d2d_res = graphics::directx::GetD2DDeviceResources();
+
+        hr = d2d_res->Initialize(d3d_res->GetDXGIDevice(), d3d_res->GetDXGISwapChain());
     }
+
+    KGE_THROW_IF_FAILED(hr, "Create DirectX resources failed");
 }
 
 void WindowWin32Impl::PumpEvents()
@@ -322,101 +292,32 @@ void WindowWin32Impl::PumpEvents()
 
 void WindowWin32Impl::SetTitle(const String& title)
 {
-    if (handle_)
-    {
-        ::SetWindowTextA(handle_, title.c_str());
-    }
+    KGE_ASSERT(handle_);
+    ::SetWindowTextA(handle_, title.c_str());
 }
 
 void WindowWin32Impl::SetIcon(uint32_t icon_resource)
 {
-    if (handle_)
-    {
-        HINSTANCE hinstance = ::GetModuleHandle(nullptr);
-        HICON     icon      = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon_resource), IMAGE_ICON, 0, 0,
-                                        LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+    KGE_ASSERT(handle_);
 
-        ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)icon);
-        ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
-    }
+    HINSTANCE hinstance = ::GetModuleHandle(nullptr);
+    HICON     icon      = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon_resource), IMAGE_ICON, 0, 0,
+                                    LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+
+    ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)icon);
+    ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
 }
 
-void WindowWin32Impl::Resize(uint32_t width, uint32_t height)
+void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
 {
-    if (handle_)
-    {
-        if (!is_fullscreen_)
-        {
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-
-            uint32_t screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-            uint32_t screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-
-            RECT rc = { 0, 0, LONG(width), LONG(height) };
-            ::AdjustWindowRect(&rc, GetStyle(), false);
-
-            width  = rc.right - rc.left;
-            height = rc.bottom - rc.top;
-
-            int left = screenw > width ? ((screenw - width) / 2) : 0;
-            int top  = screenh > height ? ((screenh - height) / 2) : 0;
-
-            ::SetWindowPos(handle_, 0, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
-        }
-        else
-        {
-            // move window to (0, 0) before display switch
-            ::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE);
-
-            ChangeFullScreenResolution(width, height, device_name_.c_str());
-
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height,
-                           SWP_NOACTIVATE);
-        }
-    }
+    min_width_  = width;
+    min_height_ = height;
 }
 
-void WindowWin32Impl::SetFullscreen(bool fullscreen)
+void WindowWin32Impl::SetMaximumSize(uint32_t width, uint32_t height)
 {
-    if (is_fullscreen_ != fullscreen)
-    {
-        is_fullscreen_ = fullscreen;
-
-        uint32_t width  = GetWidth();
-        uint32_t height = GetHeight();
-
-        if (is_fullscreen_)
-        {
-            // move window to (0, 0) before display switch
-            ::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE);
-
-            ChangeFullScreenResolution(width, height, device_name_.c_str());
-
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-
-            ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, width, height,
-                           SWP_NOACTIVATE);
-        }
-        else
-        {
-            RestoreResolution(device_name_.c_str());
-
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-
-            uint32_t screenw = uint32_t(info.rcWork.right - info.rcWork.left);
-            uint32_t screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-
-            int left = screenw > width ? ((screenw - width) / 2) : 0;
-            int top  = screenh > height ? ((screenh - height) / 2) : 0;
-
-            ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
-            ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
-        }
-
-        ::ShowWindow(handle_, SW_SHOWNORMAL);
-    }
+    max_width_  = width;
+    max_height_ = height;
 }
 
 void WindowWin32Impl::SetCursor(CursorType cursor)
@@ -424,23 +325,81 @@ void WindowWin32Impl::SetCursor(CursorType cursor)
     mouse_cursor_ = cursor;
 }
 
-void WindowWin32Impl::Destroy()
+void WindowWin32Impl::SetResolution(uint32_t width, uint32_t height, bool fullscreen)
 {
-    if (is_fullscreen_)
-        RestoreResolution(device_name_.c_str());
+    auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
 
-    if (handle_)
+    if (fullscreen)
     {
-        ::DestroyWindow(handle_);
-        handle_ = nullptr;
+        HRESULT hr = d3d->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+
+        hr = d3d->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+    }
+    else
+    {
+        HRESULT hr = d3d->SetFullscreenState(fullscreen);
+        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+
+        hr = d3d->ResizeTarget(width, height);
+        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
     }
 
-    Window::Destroy();
+    is_fullscreen_ = fullscreen;
+}
+
+Vector<Resolution> WindowWin32Impl::GetResolutions()
+{
+    if (resolutions_.empty())
+    {
+        auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+
+        DXGI_MODE_DESC* mode_descs = nullptr;
+        int             mode_num   = 0;
+
+        HRESULT hr = d3d->GetDisplaySettings(&mode_descs, &mode_num);
+        if (SUCCEEDED(hr))
+        {
+            std::unique_ptr<DXGI_MODE_DESC[]> mode_list(mode_descs);
+
+            if (mode_list)
+            {
+                for (int i = 0; i < mode_num; i++)
+                {
+                    Resolution res;
+                    res.width        = mode_descs[i].Width;
+                    res.height       = mode_descs[i].Height;
+                    res.refresh_rate = 0;
+
+                    if (mode_descs[i].RefreshRate.Denominator > 0)
+                    {
+                        res.refresh_rate = mode_descs[i].RefreshRate.Numerator / mode_descs[i].RefreshRate.Denominator;
+                    }
+
+                    if (!resolutions_.empty())
+                    {
+                        auto& back = resolutions_.back();
+                        if (back.width == res.width && back.height == res.height
+                            && back.refresh_rate == res.refresh_rate)
+                            continue;
+                    }
+
+                    resolutions_.push_back(res);
+                }
+            }
+        }
+        else
+        {
+            KGE_THROW_IF_FAILED(hr, "DXGI GetDisplaySettings failed!");
+        }
+    }
+    return resolutions_;
 }
 
 DWORD WindowWin32Impl::GetStyle() const
 {
-    return is_fullscreen_ ? (WINDOW_FULLSCREEN_STYLE) : (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
+    return (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
 }
 
 void WindowWin32Impl::UpdateCursor()
@@ -474,31 +433,6 @@ void WindowWin32Impl::UpdateCursor()
         break;
     }
     ::SetCursor(::LoadCursor(nullptr, win32_cursor));
-}
-
-void WindowWin32Impl::SetActive(bool actived)
-{
-    if (!handle_)
-        return;
-
-    if (is_fullscreen_)
-    {
-        if (actived)
-        {
-            ChangeFullScreenResolution(GetWidth(), GetHeight(), device_name_.c_str());
-
-            MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-            ::SetWindowPos(handle_, HWND_TOPMOST, info.rcMonitor.top, info.rcMonitor.left, GetWidth(), GetHeight(),
-                           SWP_NOACTIVATE);
-        }
-        else
-        {
-            RestoreResolution(device_name_.c_str());
-
-            ::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-            ::ShowWindow(handle_, SW_MINIMIZE);
-        }
-    }
 }
 
 LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARAM lparam)
@@ -612,21 +546,96 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
             KGE_SYS_LOG("Window minimized");
-        }
-        else
-        {
-            // KGE_SYS_LOG("Window resized");
 
-            this->width_  = ((uint32_t)(short)LOWORD(lparam));
-            this->height_ = ((uint32_t)(short)HIWORD(lparam));
+            is_minimized_ = true;
+            // Pause game when window is minimized
+            Application::GetInstance().Pause();
+        }
+        else if (SIZE_MAXIMIZED == wparam)
+        {
+            KGE_SYS_LOG("Window maximized");
+
+            if (is_minimized_)
+            {
+                is_minimized_ = false;
+                Application::GetInstance().Resume();
+            }
+        }
+        else if (wparam == SIZE_RESTORED)
+        {
+            if (is_minimized_)
+            {
+                KGE_SYS_LOG("Window restored");
+
+                // the window was restored and was previously minimized
+                is_minimized_ = false;
+                Application::GetInstance().Resume();
+            }
+            else if (is_resizing_)
+            {
+                // DO NOTHING until the dragging / resizing has stopped.
+            }
+            else
+            {
+                this->width_  = ((uint32_t)(short)LOWORD(lparam));
+                this->height_ = ((uint32_t)(short)HIWORD(lparam));
+
+                WindowResizedEventPtr evt = new WindowResizedEvent;
+                evt->width                = this->GetWidth();
+                evt->height               = this->GetHeight();
+                this->PushEvent(evt);
+
+                KGE_SYS_LOG("Window resized to (%d, %d)", this->width_, this->height_);
+            }
+        }
+    }
+    break;
+
+    case WM_ENTERSIZEMOVE:
+    {
+        is_resizing_ = true;
+        Application::GetInstance().Pause();
+        return 0;
+    }
+
+    case WM_EXITSIZEMOVE:
+    {
+        is_resizing_ = false;
+        Application::GetInstance().Resume();
+
+        // Send window resized event when client size changed
+        RECT client_rect = { 0 };
+        ::GetClientRect(hwnd, &client_rect);
+
+        uint32_t client_width  = uint32_t(client_rect.right - client_rect.left);
+        uint32_t client_height = uint32_t(client_rect.bottom - client_rect.top);
+        if (client_width != this->GetWidth() || client_height != this->GetHeight())
+        {
+            KGE_SYS_LOG("Window resized to (%d, %d)", client_width, client_height);
+
+            this->width_  = client_width;
+            this->height_ = client_height;
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
             evt->width                = this->GetWidth();
             evt->height               = this->GetHeight();
             this->PushEvent(evt);
         }
+        return 0;
     }
-    break;
+
+    case WM_GETMINMAXINFO:
+    {
+        if (min_width_ || min_height_)
+        {
+            ((MINMAXINFO*)lparam)->ptMinTrackSize = POINT{ LONG(min_width_), LONG(min_height_) };
+        }
+        if (max_width_ || max_height_)
+        {
+            ((MINMAXINFO*)lparam)->ptMaxTrackSize = POINT{ LONG(max_width_), LONG(max_height_) };
+        }
+        return 0;
+    }
 
     case WM_MOVE:
     {
@@ -637,15 +646,40 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     }
     break;
 
+    case WM_MENUCHAR:
+    {
+        // Disables the crazy beeping sound when pressing a mnemonic key.
+        // Simply tell Windows that we want the menu closed.
+        return MAKELRESULT(0, MNC_CLOSE);
+    }
+
     case WM_ACTIVATE:
     {
         bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-        this->SetActive(active);
-
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
         evt->focus                     = active;
         this->PushEvent(evt);
+    }
+    break;
+
+    case WM_SETFOCUS:
+    {
+        if (is_fullscreen_)
+        {
+            // TODO restore to fullscreen mode
+            // SetResolution();
+        }
+    }
+    break;
+
+    case WM_KILLFOCUS:
+    {
+        if (is_fullscreen_)
+        {
+            // TODO exit fullscreen mode
+            // ::ShowWindow(handle_, SW_MINIMIZE);
+        }
     }
     break;
 
@@ -671,7 +705,17 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("The display resolution has changed");
 
-        ::InvalidateRect(hwnd, nullptr, FALSE);
+        // Check fullscreen state
+        auto d3d_res = graphics::directx::GetD3DDeviceResources();
+        auto swap_chain = d3d_res->GetDXGISwapChain();
+        if (swap_chain)
+        {
+            BOOL is_fullscreen = FALSE;
+            if (SUCCEEDED(swap_chain->GetFullscreenState(&is_fullscreen, nullptr)))
+            {
+                is_fullscreen_ = !!is_fullscreen;
+            }
+        }
     }
     break;
 

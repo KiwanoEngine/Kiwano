@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 #include <psapi.h>
 

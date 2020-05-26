@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/event/Event.h>
 #include <kiwano/math/Math.h>
 
 namespace kiwano
@@ -45,6 +45,17 @@ enum class CursorType
     SizeNWSE,   ///< 指向左上到右下方向的箭头
 };
 
+/**
+ * \~chinese
+ * @brief 分辨率
+ */
+struct Resolution
+{
+    uint32_t width;         ///< 分辨率宽度
+    uint32_t height;        ///< 分辨率高度
+    uint32_t refresh_rate;  ///< 刷新率
+};
+
 
 #if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
@@ -66,11 +77,10 @@ public:
      * @param height 高度
      * @param icon 图标资源ID
      * @param resizable 窗口大小可拉伸
-     * @param fullscreen 全屏模式
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
     static WindowPtr Create(const String& title, uint32_t width, uint32_t height, uint32_t icon = 0,
-                            bool resizable = false, bool fullscreen = false);
+                            bool resizable = false);
 
     /**
      * \~chinese
@@ -108,6 +118,12 @@ public:
 
     /**
      * \~chinese
+     * @brief 获取支持的屏幕分辨率列表
+     */
+    virtual Vector<Resolution> GetResolutions() = 0;
+
+    /**
+     * \~chinese
      * @brief 设置标题
      * @param title 标题
      */
@@ -122,20 +138,28 @@ public:
 
     /**
      * \~chinese
-     * @brief 重设窗口大小
-     * @param width 窗口宽度
-     * @param height 窗口高度
+     * @brief 设置窗口分辨率
+     * @param width 分辨率宽度
+     * @param height 分辨率高度
+     * @param fullscreen 是否全屏
      */
-    virtual void Resize(uint32_t width, uint32_t height) = 0;
+    virtual void SetResolution(uint32_t width, uint32_t height, bool fullscreen) = 0;
 
     /**
      * \~chinese
-     * @brief 设置全屏模式
-     * @param fullscreen 是否全屏
-     * @param width 窗口宽度
-     * @param height 窗口高度
+     * @brief 设置窗口最小大小
+     * @param width 最小窗口宽度
+     * @param height 最小窗口高度
      */
-    virtual void SetFullscreen(bool fullscreen) = 0;
+    virtual void SetMinimumSize(uint32_t width, uint32_t height) = 0;
+
+    /**
+     * \~chinese
+     * @brief 设置窗口最大大小
+     * @param width 最大窗口宽度
+     * @param height 最大窗口高度
+     */
+    virtual void SetMaximumSize(uint32_t width, uint32_t height) = 0;
 
     /**
      * \~chinese
@@ -147,8 +171,7 @@ public:
     /**
      * \~chinese
      * @brief 轮询窗口事件
-     * @return 返回事件队列中的第一个事件并将其从队列中移除\n
-     *         若事件队列为空则返回空指针
+     * @return 返回事件队列中的第一个事件并将其从队列中移除, 若队列为空则返回空指针
      */
     EventPtr PollEvent();
 
@@ -177,12 +200,6 @@ public:
      */
     void SetShouldClose(bool should);
 
-    /**
-     * \~chinese
-     * @brief 销毁窗口
-     */
-    virtual void Destroy();
-
 protected:
     Window();
 
@@ -190,8 +207,13 @@ protected:
 
 protected:
     bool                 should_close_;
+    bool                 is_fullscreen_;
     uint32_t             width_;
     uint32_t             height_;
+    uint32_t             min_width_;
+    uint32_t             min_height_;
+    uint32_t             max_width_;
+    uint32_t             max_height_;
     WindowHandle         handle_;
     String               title_;
     std::queue<EventPtr> event_queue_;

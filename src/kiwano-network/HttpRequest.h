@@ -20,8 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/ObjectBase.h>
-#include <kiwano/core/Json.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/utils/Json.h>
 
 namespace kiwano
 {

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <iostream>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/core/Resource.h>
 
 namespace kiwano

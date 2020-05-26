@@ -19,16 +19,20 @@
 // THE SOFTWARE.
 
 #include <kiwano/core/Exception.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/utils/Logger.h>
+#include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 
+#include <memory>
+
 namespace kiwano
 {
+
+using namespace kiwano::graphics::directx;
 
 Renderer& Renderer::GetInstance()
 {
@@ -54,65 +58,51 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HWND target_window = window->GetHandle();
     output_size_       = window->GetSize();
 
-    d2d_res_ = nullptr;
-    d3d_res_ = nullptr;
+    d2d_res_ = graphics::directx::GetD2DDeviceResources();
+    d3d_res_ = graphics::directx::GetD3DDeviceResources();
 
     HRESULT hr = target_window ? S_OK : E_FAIL;
 
-    // Direct3D device resources
+    // Initialize other device resources
     if (SUCCEEDED(hr))
     {
-        hr = ID3DDeviceResources::Create(&d3d_res_, target_window);
+        RenderContextImplPtr ctx = memory::New<RenderContextImpl>();
 
-        // Direct2D device resources
+        hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
         if (SUCCEEDED(hr))
         {
-            hr = ID2DDeviceResources::Create(&d2d_res_, d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+            render_ctx_ = ctx;
+        }
+    }
 
-            // Other device resources
+    // FontFileLoader and FontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IFontCollectionLoader::Create(&font_collection_loader_);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
+        }
+    }
+
+    // ResourceFontFileLoader and ResourceFontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.Get());
+
             if (SUCCEEDED(hr))
             {
-                RenderContextImplPtr ctx = memory::New<RenderContextImpl>();
-
-                hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
-                if (SUCCEEDED(hr))
-                {
-                    render_ctx_ = ctx;
-                }
-            }
-
-            // FontFileLoader and FontCollectionLoader
-            if (SUCCEEDED(hr))
-            {
-                hr = IFontCollectionLoader::Create(&font_collection_loader_);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
-                }
-            }
-
-            // ResourceFontFileLoader and ResourceFontCollectionLoader
-            if (SUCCEEDED(hr))
-            {
-                hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
-                }
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_,
-                                                               res_font_file_loader_.Get());
-
-                    if (SUCCEEDED(hr))
-                    {
-                        hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(
-                            res_font_collection_loader_.Get());
-                    }
-                }
+                hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.Get());
             }
         }
     }
@@ -149,7 +139,10 @@ void RendererImpl::Present()
     KGE_ASSERT(d3d_res_);
 
     HRESULT hr = d3d_res_->Present(vsync_);
-    KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
+    if (FAILED(hr) && hr != DXGI_ERROR_WAS_STILL_DRAWING)
+    {
+        KGE_THROW_IF_FAILED(hr, "Unexpected DXGI exception");
+    }
 }
 
 void RendererImpl::CreateTexture(Texture& texture, const String& file_path)

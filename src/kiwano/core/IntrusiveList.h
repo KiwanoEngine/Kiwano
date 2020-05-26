@@ -246,13 +246,13 @@ public:
     }
 
 public:
-    template <typename _PtrTy>
+    template <typename _IterPtrTy>
     struct Iterator
     {
         using iterator_category = std::bidirectional_iterator_tag;
-        using value_type        = _PtrTy;
-        using pointer           = _PtrTy*;
-        using reference         = _PtrTy&;
+        using value_type        = _IterPtrTy;
+        using pointer           = _IterPtrTy*;
+        using reference         = _IterPtrTy&;
         using difference_type   = ptrdiff_t;
 
         inline Iterator(value_type ptr = nullptr, bool is_end = false)

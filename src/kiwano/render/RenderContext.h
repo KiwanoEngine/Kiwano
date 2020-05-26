@@ -25,6 +25,7 @@
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/render/Frame.h>
 
 namespace kiwano
 {
@@ -80,6 +81,18 @@ public:
                              const Rect* dest_rect = nullptr) = 0;
 
     /// \~chinese
+    /// @brief 绘制图像帧
+    /// @param frame 图像帧
+    /// @param dest_pos 绘制图像的位置
+    virtual void DrawFrame(FramePtr frame, const Point& dest_pos);
+
+    /// \~chinese
+    /// @brief 绘制图像帧
+    /// @param frame 图像帧
+    /// @param dest_rect 绘制的目标区域
+    virtual void DrawFrame(FramePtr frame, const Rect& dest_rect);
+
+    /// \~chinese
     /// @brief 绘制文本布局
     /// @param layout 文本布局
     /// @param offset 偏移量
@@ -108,6 +121,12 @@ public:
     virtual void DrawRoundedRectangle(const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
+    /// @brief 绘制圆形边框
+    /// @param center 圆心
+    /// @param radius 椭圆半径
+    virtual void DrawCircle(const Point& center, float radius);
+
+    /// \~chinese
     /// @brief 绘制椭圆边框
     /// @param center 圆心
     /// @param radius 椭圆半径
@@ -128,6 +147,12 @@ public:
     /// @param rect 矩形
     /// @param radius 圆角半径
     virtual void FillRoundedRectangle(const Rect& rect, const Vec2& radius) = 0;
+
+    /// \~chinese
+    /// @brief 填充圆形
+    /// @param center 圆心
+    /// @param radius 椭圆半径
+    virtual void FillCircle(const Point& center, float radius);
 
     /// \~chinese
     /// @brief 填充椭圆

@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Cloneable.h>
-#include <kiwano/core/ObjectBase.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/IntrusiveList.h>
@@ -30,13 +30,9 @@
 namespace kiwano
 {
 class Actor;
-class ActionManager;
+class ActionScheduler;
 
 KGE_DECLARE_SMART_PTR(Action);
-
-/// \~chinese
-/// @brief ¶¯»­ÁÐ±í
-typedef IntrusiveList<ActionPtr> ActionList;
 
 /**
  * \~chinese
@@ -55,7 +51,7 @@ class KGE_API Action
     , public Cloneable<Action>
     , protected IntrusiveListValue<ActionPtr>
 {
-    friend class ActionManager;
+    friend class ActionScheduler;
     friend class ActionGroup;
     friend IntrusiveList<ActionPtr>;
 

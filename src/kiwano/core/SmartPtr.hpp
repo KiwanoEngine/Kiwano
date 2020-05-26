@@ -22,7 +22,7 @@
 #include <utility>
 #include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/RefCounter.h>
+#include <kiwano/base/RefCounter.h>
 
 namespace kiwano
 {
@@ -73,13 +73,13 @@ public:
     SmartPtr(pointer_type p)
         : ptr_(p)
     {
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     SmartPtr(const SmartPtr& other)
         : ptr_(other.ptr_)
     {
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     SmartPtr(SmartPtr&& other) noexcept
@@ -97,7 +97,7 @@ public:
     SmartPtr(const SmartPtr<_UTy, _ProxyTy>& other)
     {
         ptr_ = const_cast<pointer_type>(dynamic_cast<const_pointer_type>(other.Get()));
-        typename _ProxyTy::Retain(ptr_);
+        _ProxyTy::Retain(ptr_);
     }
 
     inline pointer_type Get() noexcept
@@ -193,7 +193,7 @@ public:
 private:
     void Tidy()
     {
-        typename _ProxyTy::Release(ptr_);
+        _ProxyTy::Release(ptr_);
         ptr_ = nullptr;
     }
 
@@ -268,7 +268,7 @@ inline bool operator<(const SmartPtr<_Ty, _ProxyTy>& lhs, const SmartPtr<_UTy, _
 }
 
 // template class cannot specialize std::swap,
-// so implement a Swap Function in kiwano namespace
+// so implement a swap function in kiwano namespace
 template <class _Ty, class _ProxyTy>
 inline void swap(SmartPtr<_Ty, _ProxyTy>& lhs, SmartPtr<_Ty, _ProxyTy>& rhs) noexcept
 {

@@ -73,9 +73,9 @@ public:
 
     /// \~chinese
     /// @brief 获取含有对象类型
-    inline const type_info& GetType() const noexcept
+    inline const std::type_info& GetType() const noexcept
     {
-        const type_info* const info = GetTypeinfo();
+        const std::type_info* const info = GetTypeinfo();
         if (info)
         {
             return *info;
@@ -132,7 +132,7 @@ public:
     {
         static_assert(!std::is_void<_Ty>::value, "oc::Any cannot contain void");
 
-        const type_info* const info = GetTypeinfo();
+        const std::type_info* const info = GetTypeinfo();
         if (info && (*info == typeid(std::decay<_Ty>::type)))
         {
             if (HasSmallType())
@@ -193,12 +193,12 @@ public:
     }
 
 private:
-    const type_info*& GetTypeinfo()
+    const std::type_info*& GetTypeinfo()
     {
         return storage_.small_.info_;
     }
 
-    const type_info* GetTypeinfo() const
+    const std::type_info* GetTypeinfo() const
     {
         return storage_.small_.info_;
     }
@@ -430,14 +430,14 @@ private:
 private:
     struct SmallStorage
     {
-        const type_info* info_;
+        const std::type_info* info_;
         SmallStorageRTTI rtti_;
         char             buffer_[ANY_SMALL_SPACE_SIZE];
     };
 
     struct BigStorage
     {
-        const type_info* info_;
+        const std::type_info* info_;
         BigStorageRTTI   rtti_;
         void*            ptr_;
     };

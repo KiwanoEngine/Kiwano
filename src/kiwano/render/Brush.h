@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/render/Color.h>
 #include <kiwano/render/NativeObject.h>
 #include <kiwano/render/Texture.h>
 

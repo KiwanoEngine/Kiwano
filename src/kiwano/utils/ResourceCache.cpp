@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <fstream>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/utils/ResourceCache.h>

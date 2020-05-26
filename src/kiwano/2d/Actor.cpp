@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 
 namespace kiwano
@@ -46,7 +46,8 @@ ActorPtr Actor::Create()
 }
 
 Actor::Actor()
-    : visible_(true)
+    : ComponentManager(this)
+    , visible_(true)
     , visible_in_rt_(true)
     , update_pausing_(false)
     , hover_(false)
@@ -77,9 +78,9 @@ Actor::~Actor()
 
 void Actor::Update(Duration dt)
 {
-    UpdateActions(this, dt);
-    UpdateComponents(dt);
-    UpdateTimers(dt);
+    ActionScheduler::Update(this, dt);
+    TaskScheduler::Update(dt);
+    ComponentManager::Update(dt);
 
     if (!update_pausing_)
     {
@@ -112,7 +113,7 @@ void Actor::Render(RenderContext& ctx)
         if (CheckVisibility(ctx))
         {
             PrepareToRender(ctx);
-            RenderComponents(ctx);
+            ComponentManager::Render(ctx);
             OnRender(ctx);
         }
     }
@@ -132,7 +133,7 @@ void Actor::Render(RenderContext& ctx)
         if (CheckVisibility(ctx))
         {
             PrepareToRender(ctx);
-            RenderComponents(ctx);
+            ComponentManager::Render(ctx);
             OnRender(ctx);
         }
 
@@ -242,19 +243,7 @@ void Actor::DoDeserialize(Deserializer* deserializer)
 
 bool Actor::HandleEvent(Event* evt)
 {
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
-
-            if (component->IsEnable())
-            {
-                component->HandleEvent(evt);
-            }
-        }
-    }
+    ComponentManager::DispatchToComponents(evt);
 
     if (!EventDispatcher::DispatchEvent(evt))
         return false;
@@ -302,40 +291,6 @@ bool Actor::HandleEvent(Event* evt)
         }
     }
     return true;
-}
-
-void Actor::UpdateComponents(Duration dt)
-{
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
-
-            if (component->IsEnable())
-            {
-                component->OnUpdate(dt);
-            }
-        }
-    }
-}
-
-void Actor::RenderComponents(RenderContext& ctx)
-{
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
-
-            if (component->IsEnable())
-            {
-                component->OnRender(ctx);
-            }
-        }
-    }
 }
 
 const Matrix3x2& Actor::GetTransformMatrix() const
@@ -655,72 +610,6 @@ void Actor::RemoveFromParent()
     {
         parent_->RemoveChild(this);
     }
-}
-
-Component* Actor::AddComponent(ComponentPtr component)
-{
-    KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
-
-    if (component)
-    {
-        component->InitComponent(this);
-        components_.PushBack(component);
-    }
-    return component.Get();
-}
-
-ComponentList& Actor::GetAllComponents()
-{
-    return components_;
-}
-
-const ComponentList& Actor::GetAllComponents() const
-{
-    return components_;
-}
-
-void Actor::RemoveComponent(ComponentPtr component)
-{
-    auto iter = std::find(components_.begin(), components_.end(), component);
-    if (iter != components_.end())
-    {
-        component->DestroyComponent();
-        components_.Remove(component);
-    }
-}
-
-void Actor::RemoveComponents(const String& name)
-{
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
-
-            if (component->IsName(name))
-            {
-                component->DestroyComponent();
-                components_.Remove(component);
-            }
-        }
-    }
-}
-
-void Actor::RemoveAllComponents()
-{
-    // Destroy all components
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
-
-            component->DestroyComponent();
-        }
-    }
-    components_.Clear();
 }
 
 void Actor::RemoveChild(ActorPtr child)

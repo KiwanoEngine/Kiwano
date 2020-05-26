@@ -74,4 +74,25 @@ Color::Color(uint32_t rgb, float alpha)
     , a(alpha)
 {
 }
+
+Color Color::Rgb(float r, float g, float b)
+{
+    return Color::Rgba(r, g, b, 1.0f);
+}
+
+Color Color::Rgb(uint32_t rgb)
+{
+    return Color::Rgba(rgb, 1.0f);
+}
+
+Color Color::Rgba(float r, float g, float b, float alpha)
+{
+    return Color(r, g, b, alpha);
+}
+
+Color Color::Rgba(uint32_t rgb, float alpha)
+{
+    return Color(rgb, alpha);
+}
+
 }  // namespace kiwano

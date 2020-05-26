@@ -44,20 +44,33 @@
 //
 
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Director.h>
-#include <kiwano/core/EventDispatcher.h>
-#include <kiwano/core/EventListener.h>
-#include <kiwano/core/Logger.h>
-#include <kiwano/core/ObjectBase.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/Timer.h>
-#include <kiwano/core/TimerManager.h>
-#include <kiwano/core/event/Event.h>
-#include <kiwano/core/event/KeyEvent.h>
-#include <kiwano/core/event/MouseEvent.h>
-#include <kiwano/core/event/WindowEvent.h>
+
+//
+// base
+//
+
+#include <kiwano/base/RefCounter.h>
+#include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/base/Module.h>
+#include <kiwano/base/component/Component.h>
+#include <kiwano/base/component/ComponentManager.h>
+#include <kiwano/base/component/Button.h>
+
+
+//
+// event
+//
+
+#include <kiwano/event/Event.h>
+#include <kiwano/event/KeyEvent.h>
+#include <kiwano/event/MouseEvent.h>
+#include <kiwano/event/WindowEvent.h>
+#include <kiwano/event/EventListener.h>
+#include <kiwano/event/EventDispatcher.h>
 
 //
 // renderer
@@ -68,6 +81,8 @@
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/render/Frame.h>
+#include <kiwano/render/FrameSequence.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
@@ -79,11 +94,8 @@
 //
 
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/Button.h>
 #include <kiwano/2d/Canvas.h>
 #include <kiwano/2d/DebugActor.h>
-#include <kiwano/2d/Frame.h>
-#include <kiwano/2d/FrameSequence.h>
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>
@@ -95,7 +107,7 @@
 #include <kiwano/2d/action/ActionDelay.h>
 #include <kiwano/2d/action/ActionGroup.h>
 #include <kiwano/2d/action/ActionHelper.h>
-#include <kiwano/2d/action/ActionManager.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/2d/action/ActionWalk.h>
 #include <kiwano/2d/action/Animation.h>
@@ -114,6 +126,12 @@
 // utils
 //
 
+#include <kiwano/utils/Logger.h>
 #include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/utils/UserData.h>
+#include <kiwano/utils/Timer.h>
+#include <kiwano/utils/Ticker.h>
+#include <kiwano/utils/EventTicker.h>
+#include <kiwano/utils/Task.h>
+#include <kiwano/utils/TaskScheduler.h>

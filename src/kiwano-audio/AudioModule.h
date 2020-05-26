@@ -22,7 +22,7 @@
 #include <kiwano-audio/Sound.h>
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 #include <xaudio2.h>
 
 namespace kiwano

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
-#include <kiwano/core/event/WindowEvent.h>
+#include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/Application.h>
 
 namespace kiwano
@@ -44,11 +44,7 @@ void Renderer::DestroyModule()
 
 void Renderer::HandleEvent(Event* evt)
 {
-    if (evt->IsType<WindowResizedEvent>())
-    {
-        auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
-        Resize(window_evt->width, window_evt->height);
-    }
+    // DO NOTHING
 }
 
 void Renderer::BeginDraw()

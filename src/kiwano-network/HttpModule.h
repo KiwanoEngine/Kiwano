@@ -23,7 +23,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 
 namespace kiwano
 {

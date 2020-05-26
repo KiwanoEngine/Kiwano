@@ -22,14 +22,20 @@
     <Filter Include="platform\win32">
       <UniqueIdentifier>{e84dcf9a-e650-473e-8c9c-193804ab9e76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="core\event">
-      <UniqueIdentifier>{c629aedd-ffb9-4bc1-82c3-f50e77c82e77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="render">
       <UniqueIdentifier>{adb44ca9-674a-4b77-993f-d65193d8ab06}</UniqueIdentifier>
     </Filter>
     <Filter Include="render\DirectX">
       <UniqueIdentifier>{fd281702-0006-46d2-8fd1-28c502464164}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{f514ae4f-2f6a-4d47-aa38-245628d6e01c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{b0d28d20-bfaf-4816-8415-28c20ecf9fac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\component">
+      <UniqueIdentifier>{d15f4de1-7c2c-40d6-a3ce-68860b95a61e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,12 +47,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Transition.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\EventDispatcher.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\EventListener.h">
-      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Resource.h">
       <Filter>core</Filter>
@@ -69,22 +69,10 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Timer.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\TimerManager.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Frame.h">
       <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\Action.h">
@@ -99,17 +87,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h">
       <Filter>2d\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionManager.h">
-      <Filter>2d\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h">
       <Filter>2d\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\FrameSequence.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h">
       <Filter>2d</Filter>
@@ -122,12 +104,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h">
       <Filter>2d\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Logger.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\ObjectBase.h">
-      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
       <Filter>utils</Filter>
@@ -150,35 +126,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\RefCounter.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp">
       <Filter>platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h">
       <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\event\Event.h">
-      <Filter>core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\event\EventType.h">
-      <Filter>core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\event\KeyEvent.h">
-      <Filter>core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\event\MouseEvent.h">
-      <Filter>core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\event\WindowEvent.h">
-      <Filter>core\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Button.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Director.h">
-      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h">
       <Filter>core</Filter>
@@ -282,9 +234,6 @@
     <ClInclude Include="..\..\src\kiwano\render\Layer.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Module.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Runner.h">
       <Filter>platform</Filter>
     </ClInclude>
@@ -295,12 +244,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Any.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Json.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Xml.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
@@ -315,9 +258,6 @@
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Component.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -326,6 +266,90 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Serializable.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\Frame.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\FrameSequence.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\EventTicker.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Json.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Task.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Ticker.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Timer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Xml.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\TaskScheduler.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResources.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\Logger.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Director.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\Module.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\RefCounter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\Event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\EventDispatcher.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\EventListener.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\Events.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\EventType.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\KeyEvent.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\MouseEvent.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\WindowEvent.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
+      <Filter>2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\Button.h">
+      <Filter>base\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\Component.h">
+      <Filter>base\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\component\ComponentManager.h">
+      <Filter>base\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,34 +362,16 @@
     <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\EventDispatcher.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\EventListener.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Timer.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\TimerManager.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Frame.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp">
@@ -377,17 +383,11 @@
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionManager.cpp">
-      <Filter>2d\action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp">
       <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp">
       <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\FrameSequence.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp">
       <Filter>2d</Filter>
@@ -400,12 +400,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp">
       <Filter>2d\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Logger.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\ObjectBase.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp">
       <Filter>utils</Filter>
@@ -428,29 +422,8 @@
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\RefCounter.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
       <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\event\Event.cpp">
-      <Filter>core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\event\KeyEvent.cpp">
-      <Filter>core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\event\MouseEvent.cpp">
-      <Filter>core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\event\WindowEvent.cpp">
-      <Filter>core\event</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Button.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Director.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\WindowImpl.cpp">
       <Filter>platform\win32</Filter>
@@ -521,9 +494,6 @@
     <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\core\Module.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Runner.cpp">
       <Filter>platform</Filter>
     </ClCompile>
@@ -533,14 +503,80 @@
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Component.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Frame.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\Task.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\Timer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\TaskScheduler.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\ActionScheduler.cpp">
+      <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\Logger.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Director.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\Module.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\RefCounter.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\Event.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\EventDispatcher.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\EventListener.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\KeyEvent.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\MouseEvent.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\WindowEvent.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
+      <Filter>2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\Button.cpp">
+      <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\Component.cpp">
+      <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\component\ComponentManager.cpp">
+      <Filter>base\component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
+    <None Include="suppress_warning.ruleset" />
   </ItemGroup>
 </Project>

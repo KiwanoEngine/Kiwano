@@ -19,19 +19,29 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
+
+// Global pointer for Direct2D device resources
+static ComPtr<ID2DDeviceResources> global_d2d_device_resource;
+
 struct D2DDeviceResources : public ID2DDeviceResources
 {
 public:
     D2DDeviceResources();
 
     virtual ~D2DDeviceResources();
+
+    HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) override;
 
     HRESULT CreateDeviceIndependentResources();
 
@@ -57,8 +67,8 @@ public:
                              _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                              DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size) override;
 
-    HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ LPCWSTR text,
-                             UINT32 length, _In_ ComPtr<IDWriteTextFormat> text_format) override;
+    HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ LPCWSTR text, UINT32 length,
+                             _In_ ComPtr<IDWriteTextFormat> text_format) override;
 
     HRESULT SetDpi(float dpi) override;
 
@@ -85,40 +95,14 @@ private:
     ComPtr<IDXGISwapChain> dxgi_swap_chain_;
 };
 
-HRESULT ID2DDeviceResources::Create(_Out_ ID2DDeviceResources** device_resources, _In_ ComPtr<IDXGIDevice> dxgi_device,
-                                    _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
+
+ComPtr<ID2DDeviceResources> GetD2DDeviceResources()
 {
-    HRESULT hr = E_FAIL;
-    if (device_resources)
+    if (!global_d2d_device_resource)
     {
-        D2DDeviceResources* res = new (std::nothrow) D2DDeviceResources;
-        if (res)
-        {
-            hr = res->CreateDeviceIndependentResources();
-
-            if (SUCCEEDED(hr))
-            {
-                hr = res->CreateDeviceResources(dxgi_device, dxgi_swap_chain);
-            }
-
-            if (SUCCEEDED(hr))
-            {
-                hr = res->CreateWindowSizeDependentResources();
-            }
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            DX::SafeRelease(*device_resources);
-            (*device_resources) = DX::SafeAcquire(res);
-        }
-        else
-        {
-            delete res;
-            res = nullptr;
-        }
+        global_d2d_device_resource.Reset(new (std::nothrow) D2DDeviceResources);
     }
-    return hr;
+    return global_d2d_device_resource;
 }
 
 D2DDeviceResources::D2DDeviceResources()
@@ -130,6 +114,22 @@ D2DDeviceResources::D2DDeviceResources()
 D2DDeviceResources::~D2DDeviceResources()
 {
     DiscardResources();
+}
+
+HRESULT D2DDeviceResources::Initialize(ComPtr<IDXGIDevice> dxgi_device, ComPtr<IDXGISwapChain> dxgi_swap_chain)
+{
+    HRESULT hr = this->CreateDeviceIndependentResources();
+
+    if (SUCCEEDED(hr))
+    {
+        hr = this->CreateDeviceResources(dxgi_device, dxgi_swap_chain);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = this->CreateWindowSizeDependentResources();
+    }
+    return hr;
 }
 
 STDMETHODIMP_(unsigned long) D2DDeviceResources::AddRef()
@@ -423,8 +423,8 @@ HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& te
         return E_UNEXPECTED;
 
     ComPtr<IDWriteTextFormat> output;
-    HRESULT hr = dwrite_factory_->CreateTextFormat(family, collection.Get(), weight, style, stretch, font_size,
-                                                   L"", &output);
+    HRESULT                   hr =
+        dwrite_factory_->CreateTextFormat(family, collection.Get(), weight, style, stretch, font_size, L"", &output);
 
     if (SUCCEEDED(hr))
     {
@@ -450,4 +450,6 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
     return hr;
 }
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

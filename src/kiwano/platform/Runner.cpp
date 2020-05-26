@@ -18,8 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/utils/Logger.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Application.h>
+
+#define KGE_MAX_SKIP_FRAMES 10
 
 namespace kiwano
 {
@@ -71,6 +74,9 @@ Runner::~Runner() {}
 
 bool Runner::MainLoop(Duration dt)
 {
+    if (!main_window_)
+        return false;
+
     if (main_window_->ShouldClose())
     {
         if (this->OnClosing())
@@ -81,15 +87,25 @@ bool Runner::MainLoop(Duration dt)
 
     Application& app = Application::GetInstance();
 
+    KGE_LOG(dt.Milliseconds());
+
+    // Update modules before poll events
+    app.Update(dt);
+
     // Poll events
+    main_window_->PumpEvents();
     while (EventPtr evt = main_window_->PollEvent())
     {
         app.DispatchEvent(evt.Get());
     }
 
-    // Update & render
-    app.Update(dt);
     app.Render();
+
+    if (app.IsPaused())
+    {
+        // Slow down when the application is paused
+        Duration(5).Sleep();
+    }
     return true;
 }
 

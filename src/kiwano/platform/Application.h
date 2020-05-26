@@ -21,12 +21,13 @@
 #pragma once
 #include <mutex>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Module.h>
+#include <kiwano/base/Module.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/Singleton.h>
-#include <kiwano/core/event/Event.h>
+#include <kiwano/event/Event.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Window.h>
+#include <kiwano/utils/Ticker.h>
 
 namespace kiwano
 {
@@ -61,6 +62,18 @@ public:
 
     /**
      * \~chinese
+     * @brief 暂停应用程序
+     */
+    void Pause();
+
+    /**
+     * \~chinese
+     * @brief 继续应用程序
+     */
+    void Resume();
+
+    /**
+     * \~chinese
      * @brief 终止应用程序
      */
     void Quit();
@@ -76,6 +89,18 @@ public:
      * @brief 获取主窗口
      */
     WindowPtr GetMainWindow() const;
+
+    /**
+     * \~chinese
+     * @brief 获取报时器
+     */
+    TickerPtr GetTicker() const;
+
+    /**
+     * \~chinese
+     * @brief 获取暂停状态
+     */
+    bool IsPaused() const;
 
     /**
      * \~chinese
@@ -136,17 +161,12 @@ public:
      */
     void Destroy();
 
-    /**
-     * \~chinese
-     * @brief 获取上一次更新时间
-     */
-    Time GetLastUpdateTime() const;
-
 private:
-    bool                    quiting_;
+    bool                    running_;
+    bool                    is_paused_;
     float                   time_scale_;
     RunnerPtr               runner_;
-    Time                    last_update_time_;
+    TickerPtr               ticker_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -163,9 +183,14 @@ inline WindowPtr Application::GetMainWindow() const
     return runner_->GetMainWindow();
 }
 
-inline Time Application::GetLastUpdateTime() const
+inline TickerPtr Application::GetTicker() const
 {
-    return last_update_time_;
+    return ticker_;
+}
+
+inline bool Application::IsPaused() const
+{
+    return is_paused_;
 }
 
 }  // namespace kiwano

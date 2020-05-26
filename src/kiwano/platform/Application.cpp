@@ -20,8 +20,8 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/Input.h>
-#include <kiwano/core/Director.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/base/Director.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
@@ -35,20 +35,29 @@ int GetVersion()
 }
 
 Application::Application()
-    : quiting_(false)
+    : running_(false)
+    , is_paused_(false)
     , time_scale_(1.f)
 {
     Use(Renderer::GetInstance());
     Use(Input::GetInstance());
     Use(Director::GetInstance());
+
+    ticker_ = Ticker::Create(0);
+    ticker_->Tick();
 }
 
-Application::~Application() {}
+Application::~Application()
+{
+    this->Destroy();
+}
 
 void Application::Run(RunnerPtr runner, bool debug)
 {
     KGE_ASSERT(runner);
     runner_ = runner;
+    running_ = true;
+    is_paused_ = false;
 
     // Setup all modules
     for (auto c : modules_)
@@ -65,30 +74,49 @@ void Application::Run(RunnerPtr runner, bool debug)
     // Everything is ready
     runner->OnReady();
 
-    quiting_          = false;
-    last_update_time_ = Time::Now();
-    while (!quiting_)
+    while (running_)
     {
-        const Time     now = Time::Now();
-        const Duration dt  = (now - last_update_time_);
-        last_update_time_  = now;
-
-        if (!runner->MainLoop(dt))
-            quiting_ = true;
+        if (ticker_->Tick())
+        {
+            if (!runner->MainLoop(ticker_->GetDeltaTime()))
+                running_ = false;
+        }
     }
 
-    // Destroy all resources
-    runner->OnDestroy();
     this->Destroy();
+}
+
+void Application::Pause()
+{
+    is_paused_ = true;
+    if (ticker_)
+    {
+        ticker_->Pause();
+    }
+}
+
+void Application::Resume()
+{
+    is_paused_ = false;
+    if (ticker_)
+    {
+        ticker_->Resume();
+    }
 }
 
 void Application::Quit()
 {
-    quiting_ = true;
+    running_ = false;
 }
 
 void Application::Destroy()
 {
+    if (runner_)
+    {
+        runner_->OnDestroy();
+        runner_ = nullptr;
+    }
+
     // Clear all resources
     Director::GetInstance().ClearStages();
     ResourceCache::GetInstance().Clear();
@@ -98,6 +126,7 @@ void Application::Destroy()
     {
         (*iter)->DestroyModule();
     }
+    modules_.clear();
 }
 
 void Application::Use(Module& module)
@@ -124,6 +153,9 @@ void Application::DispatchEvent(EventPtr evt)
 
 void Application::DispatchEvent(Event* evt)
 {
+    if (!running_ /* Dispatch events even if application is paused */)
+        return;
+
     for (auto comp : modules_)
     {
         if (auto event_comp = comp->Cast<EventModule>())
@@ -135,6 +167,9 @@ void Application::DispatchEvent(Event* evt)
 
 void Application::Update(Duration dt)
 {
+    if (!running_ || is_paused_)
+        return;
+
     // Before update
     for (auto comp : modules_)
     {
@@ -186,6 +221,9 @@ void Application::Update(Duration dt)
 
 void Application::Render()
 {
+    if (!running_ /* Render even if application is paused */)
+        return;
+
     Renderer& renderer = Renderer::GetInstance();
     renderer.Clear();
 

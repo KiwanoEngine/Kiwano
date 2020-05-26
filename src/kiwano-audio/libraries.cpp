@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-audio/libraries.h>
-#include <kiwano/core/Logger.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/core/Exception.h>
 
 namespace kiwano
