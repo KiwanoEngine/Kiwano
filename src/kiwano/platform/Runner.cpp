@@ -87,8 +87,6 @@ bool Runner::MainLoop(Duration dt)
 
     Application& app = Application::GetInstance();
 
-    KGE_LOG(dt.Milliseconds());
-
     // Update modules before poll events
     app.Update(dt);
 
