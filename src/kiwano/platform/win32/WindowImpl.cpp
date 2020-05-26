@@ -668,7 +668,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         if (is_fullscreen_)
         {
             // TODO restore to fullscreen mode
-            // Renderer::GetInstance().SetResolution();
+            // SetResolution();
         }
     }
     break;
@@ -705,7 +705,17 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_SYS_LOG("The display resolution has changed");
 
-        ::InvalidateRect(hwnd, NULL, FALSE);
+        // Check fullscreen state
+        auto d3d_res = graphics::directx::GetD3DDeviceResources();
+        auto swap_chain = d3d_res->GetDXGISwapChain();
+        if (swap_chain)
+        {
+            BOOL is_fullscreen = FALSE;
+            if (SUCCEEDED(swap_chain->GetFullscreenState(&is_fullscreen, nullptr)))
+            {
+                is_fullscreen_ = !!is_fullscreen;
+            }
+        }
     }
     break;
 

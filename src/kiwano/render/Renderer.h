@@ -56,6 +56,18 @@ public:
     virtual Color GetClearColor() const;
 
     /// \~chinese
+    /// @brief 获取渲染输出大小
+    Size GetOutputSize() const;
+
+    /// \~chinese
+    /// @brief 获取渲染上下文
+    RenderContext& GetContext();
+
+    /// \~chinese
+    /// @brief 重设渲染输出大小
+    virtual void Resize(uint32_t width, uint32_t height) = 0;
+
+    /// \~chinese
     /// @brief 设置清屏颜色
     virtual void SetClearColor(const Color& clear_color);
 
@@ -207,14 +219,6 @@ public:
 
 public:
     /// \~chinese
-    /// @brief 获取渲染上下文
-    RenderContext& GetContext();
-
-    /// \~chinese
-    /// @brief 获取渲染输出大小
-    Size GetOutputSize() const;
-
-    /// \~chinese
     /// @brief 开始渲染
     virtual void BeginDraw();
 
@@ -230,10 +234,6 @@ public:
     /// @brief 将绘制内容呈现至窗口
     /// @throw kiwano::SystemError 呈现失败时抛出
     virtual void Present() = 0;
-
-    /// \~chinese
-    /// @brief 重设渲染输出大小
-    virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 public:
     void SetupModule() override;

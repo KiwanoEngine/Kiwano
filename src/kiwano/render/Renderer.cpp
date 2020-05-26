@@ -44,11 +44,7 @@ void Renderer::DestroyModule()
 
 void Renderer::HandleEvent(Event* evt)
 {
-    if (evt->IsType<WindowResizedEvent>())
-    {
-        auto window_evt = dynamic_cast<WindowResizedEvent*>(evt);
-        Resize(window_evt->width, window_evt->height);
-    }
+    // DO NOTHING
 }
 
 void Renderer::BeginDraw()
