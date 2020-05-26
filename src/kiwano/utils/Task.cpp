@@ -64,13 +64,7 @@ Task::Task()
 
 void Task::Update(Duration dt)
 {
-    if (!ticker_)
-    {
-        Remove();
-        return;
-    }
-
-    if (ticker_->GetTotalTickTimes() == 0)
+    if (!ticker_ || ticker_->GetTotalTickCount() == 0)
     {
         Remove();
         return;
@@ -81,7 +75,7 @@ void Task::Update(Duration dt)
         if (callback_)
             callback_(this, ticker_->GetDeltaTime());
 
-        if (ticker_->GetTickedTimes() == ticker_->GetTotalTickTimes())
+        if (ticker_->GetTickedCount() == ticker_->GetTotalTickCount())
             Remove();
     }
 }

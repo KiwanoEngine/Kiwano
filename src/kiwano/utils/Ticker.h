@@ -35,8 +35,8 @@ public:
     /// \~chinese
     /// @brief 创建报时器
     /// @param interval 报时间隔
-    /// @param times 报时次数（设 -1 为永久）
-    static TickerPtr Create(Duration interval, int times = -1);
+    /// @param tick_count 报时次数（设 -1 为永久）
+    static TickerPtr Create(Duration interval, int tick_count = -1);
 
     Ticker();
 
@@ -69,15 +69,15 @@ public:
 
     /// \~chinese
     /// @brief 获取报时器报时次数
-    int GetTickedTimes() const;
+    int GetTickedCount() const;
 
     /// \~chinese
     /// @brief 获取报时器总报时次数
-    int GetTotalTickTimes() const;
+    int GetTotalTickCount() const;
 
     /// \~chinese
     /// @brief 设置报时器总报时次数
-    void SetTotalTickTimes(int times);
+    void SetTotalTickCount(int count);
 
     /// \~chinese
     /// @brief 获取报时间隔
@@ -101,8 +101,8 @@ public:
 
 private:
     bool     is_paused_;
-    int      ticked_times_;
-    int      total_times_;
+    int      ticked_count_;
+    int      total_tick_count_;
     Duration interval_;
     Duration elapsed_time_;
     Duration delta_time_;
@@ -115,19 +115,19 @@ inline bool Ticker::IsPausing() const
     return is_paused_;
 }
 
-inline int Ticker::GetTickedTimes() const
+inline int Ticker::GetTickedCount() const
 {
-    return ticked_times_;
+    return ticked_count_;
 }
 
-inline int Ticker::GetTotalTickTimes() const
+inline int Ticker::GetTotalTickCount() const
 {
-    return total_times_;
+    return total_tick_count_;
 }
 
-inline void Ticker::SetTotalTickTimes(int times)
+inline void Ticker::SetTotalTickCount(int count)
 {
-    total_times_ = times;
+    total_tick_count_ = count;
 }
 
 inline Duration Ticker::GetInterval() const

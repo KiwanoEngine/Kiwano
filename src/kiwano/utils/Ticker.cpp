@@ -29,14 +29,14 @@ TickerPtr Ticker::Create(Duration interval, int times)
     if (ptr)
     {
         ptr->SetInterval(interval);
-        ptr->SetTotalTickTimes(times);
+        ptr->SetTotalTickCount(times);
     }
     return ptr;
 }
 
 Ticker::Ticker()
-    : ticked_times_(0)
-    , total_times_(0)
+    : ticked_count_(0)
+    , total_tick_count_(0)
     , is_paused_(false)
 {
 }
@@ -62,7 +62,7 @@ bool Ticker::Tick(Duration dt)
     if (is_paused_)
         return false;
 
-    if (ticked_times_ == total_times_)
+    if (ticked_count_ == total_tick_count_)
         return false;
 
     elapsed_time_ += dt;
@@ -72,7 +72,7 @@ bool Ticker::Tick(Duration dt)
         delta_time_   = elapsed_time_;
         error_time_   = (elapsed_time_ + error_time_) - interval_;
         elapsed_time_ = 0;
-        ++ticked_times_;
+        ++ticked_count_;
         return true;
     }
     return false;
@@ -115,7 +115,7 @@ void Ticker::Reset()
     elapsed_time_ = 0;
     delta_time_   = 0;
     error_time_   = 0;
-    ticked_times_ = 0;
+    ticked_count_ = 0;
 }
 
 }  // namespace kiwano

@@ -35,7 +35,7 @@ EventTickerPtr EventTicker::Create(Duration interval, int times)
     if (ptr)
     {
         ptr->SetInterval(interval);
-        ptr->SetTotalTickTimes(times);
+        ptr->SetTotalTickCount(times);
     }
     return ptr;
 }
