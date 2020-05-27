@@ -105,9 +105,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h">
       <Filter>2d\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -351,6 +348,9 @@
     <ClInclude Include="..\..\src\kiwano\base\component\ComponentManager.h">
       <Filter>base\component</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -400,9 +400,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp">
       <Filter>2d\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp">
       <Filter>utils</Filter>
@@ -574,6 +571,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\component\ComponentManager.cpp">
       <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

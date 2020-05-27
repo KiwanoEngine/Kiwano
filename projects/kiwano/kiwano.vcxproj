@@ -96,9 +96,9 @@
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.hpp" />
     <ClInclude Include="..\..\src\kiwano\render\Texture.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextureCache.h" />
+    <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h" />
     <ClInclude Include="..\..\src\kiwano\utils\EventTicker.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Json.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\LocalStorage.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Logger.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Task.h" />
@@ -174,8 +174,8 @@
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Texture.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\LocalStorage.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Task.cpp" />
