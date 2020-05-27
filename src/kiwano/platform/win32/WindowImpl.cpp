@@ -34,6 +34,8 @@
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
+#include <timeapi.h>  // timeBeginPeriod, timeEndPeriod
+#pragma comment(lib, "winmm.lib")
 
 namespace kiwano
 {
@@ -185,6 +187,8 @@ WindowWin32Impl::WindowWin32Impl()
     // F1 - F12
     for (size_t i = 0; i < 12; ++i)
         key_map_[VK_F1 + i] = KeyCode(size_t(KeyCode::F1) + i);
+
+    ::timeBeginPeriod(0);
 }
 
 WindowWin32Impl::~WindowWin32Impl()
@@ -194,6 +198,8 @@ WindowWin32Impl::~WindowWin32Impl()
         ::DestroyWindow(handle_);
         handle_ = nullptr;
     }
+
+    ::timeEndPeriod(0);
 }
 
 void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)

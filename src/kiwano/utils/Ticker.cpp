@@ -65,9 +65,16 @@ bool Ticker::Tick(Duration dt)
     if (ticked_count_ == total_tick_count_)
         return false;
 
+    if (interval_.IsZero())
+    {
+        delta_time_ = dt;
+        ++ticked_count_;
+        return true;
+    }
+
     elapsed_time_ += dt;
 
-    if (elapsed_time_ + error_time_ > interval_)
+    if (elapsed_time_ + error_time_ >= interval_)
     {
         delta_time_   = elapsed_time_;
         error_time_   = (elapsed_time_ + error_time_) - interval_;

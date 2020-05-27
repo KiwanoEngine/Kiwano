@@ -88,6 +88,10 @@ public:
     void SetInterval(Duration interval);
 
     /// \~chinese
+    /// @brief 获取时间误差
+    Duration GetErrorTime() const;
+
+    /// \~chinese
     /// @brief 获取计时器
     TimerPtr GetTimer();
 
@@ -138,6 +142,11 @@ inline Duration Ticker::GetInterval() const
 inline void Ticker::SetInterval(Duration interval)
 {
     interval_ = interval;
+}
+
+inline Duration Ticker::GetErrorTime() const
+{
+    return error_time_;
 }
 
 }  // namespace kiwano

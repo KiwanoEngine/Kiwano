@@ -80,6 +80,19 @@ public:
 
     /**
      * \~chinese
+     * @brief 获取暂停状态
+     */
+    bool IsPaused() const;
+
+    /**
+     * \~chinese
+     * @brief 添加模块
+     * @param[in] module 模块
+     */
+    void Use(Module& module);
+
+    /**
+     * \~chinese
      * @brief 获取程序运行器
      */
     RunnerPtr GetRunner() const;
@@ -92,22 +105,15 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取报时器
+     * @brief 获取帧报时器
      */
-    TickerPtr GetTicker() const;
+    TickerPtr GetFrameTicker() const;
 
     /**
      * \~chinese
-     * @brief 获取暂停状态
+     * @brief 设置帧报时器
      */
-    bool IsPaused() const;
-
-    /**
-     * \~chinese
-     * @brief 添加模块
-     * @param[in] module 模块
-     */
-    void Use(Module& module);
+    void SetFrameTicker(TickerPtr ticker);
 
     /**
      * \~chinese
@@ -166,7 +172,7 @@ private:
     bool                    is_paused_;
     float                   time_scale_;
     RunnerPtr               runner_;
-    TickerPtr               ticker_;
+    TickerPtr               frame_ticker_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -183,9 +189,14 @@ inline WindowPtr Application::GetMainWindow() const
     return runner_->GetMainWindow();
 }
 
-inline TickerPtr Application::GetTicker() const
+inline TickerPtr Application::GetFrameTicker() const
 {
-    return ticker_;
+    return frame_ticker_;
+}
+
+inline void Application::SetFrameTicker(TickerPtr ticker)
+{
+    frame_ticker_ = ticker;
 }
 
 inline bool Application::IsPaused() const
