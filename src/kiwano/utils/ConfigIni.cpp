@@ -20,8 +20,9 @@
 
 #include <kiwano/utils/ConfigIni.h>
 #include <kiwano/core/Exception.h>
-#include <fstream>
-#include <algorithm>
+#include <fstream>  // std::ifstream, std::ofstream
+#include <algorithm>  // std::sort, std::for_each
+#include <cctype>  // std::isspace
 
 #define KGE_DEFAULT_INI_SECTION_NAME "default"
 
