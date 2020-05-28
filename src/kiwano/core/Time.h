@@ -263,17 +263,17 @@ inline void Duration::SetMilliseconds(int64_t ms)
 
 inline void Duration::SetSeconds(float seconds)
 {
-    milliseconds_ = static_cast<long>(seconds * 1000.f);
+    milliseconds_ = static_cast<int64_t>(seconds * 1000.f);
 }
 
 inline void Duration::SetMinutes(float minutes)
 {
-    milliseconds_ = static_cast<long>(minutes * 60 * 1000.f);
+    milliseconds_ = static_cast<int64_t>(minutes * 60 * 1000.f);
 }
 
 inline void Duration::SetHours(float hours)
 {
-    milliseconds_ = static_cast<long>(hours * 60 * 60 * 1000.f);
+    milliseconds_ = static_cast<int64_t>(hours * 60 * 60 * 1000.f);
 }
 
 inline bool Time::IsZero() const

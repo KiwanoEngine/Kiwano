@@ -42,9 +42,6 @@ Application::Application()
     Use(Renderer::GetInstance());
     Use(Input::GetInstance());
     Use(Director::GetInstance());
-
-    ticker_ = Ticker::Create(0);
-    ticker_->Tick();
 }
 
 Application::~Application()
@@ -76,10 +73,26 @@ void Application::Run(RunnerPtr runner, bool debug)
 
     while (running_)
     {
-        if (ticker_->Tick())
+        if (!frame_ticker_)
         {
-            if (!runner->MainLoop(ticker_->GetDeltaTime()))
+            frame_ticker_ = Ticker::Create(0);
+        }
+
+        if (frame_ticker_->Tick())
+        {
+            // Execute main loop
+            if (!runner->MainLoop(frame_ticker_->GetDeltaTime()))
                 running_ = false;
+        }
+        else
+        {
+            // Releases CPU
+            Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
+            Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
+            if (sleep_dt.Milliseconds() > 1LL)
+            {
+                sleep_dt.Sleep();
+            }
         }
     }
 
@@ -89,19 +102,17 @@ void Application::Run(RunnerPtr runner, bool debug)
 void Application::Pause()
 {
     is_paused_ = true;
-    if (ticker_)
-    {
-        ticker_->Pause();
-    }
+
+    if (frame_ticker_)
+        frame_ticker_->Pause();
 }
 
 void Application::Resume()
 {
     is_paused_ = false;
-    if (ticker_)
-    {
-        ticker_->Resume();
-    }
+
+    if (frame_ticker_)
+        frame_ticker_->Resume();
 }
 
 void Application::Quit()

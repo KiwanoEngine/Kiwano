@@ -127,7 +127,6 @@
 //
 
 #include <kiwano/utils/Logger.h>
-#include <kiwano/utils/LocalStorage.h>
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/utils/UserData.h>
 #include <kiwano/utils/Timer.h>
@@ -135,3 +134,4 @@
 #include <kiwano/utils/EventTicker.h>
 #include <kiwano/utils/Task.h>
 #include <kiwano/utils/TaskScheduler.h>
+#include <kiwano/utils/ConfigIni.h>
