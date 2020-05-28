@@ -165,15 +165,9 @@ public:
     /// @param value ֵ
     void SetBool(const String& section, const String& key, bool value);
 
-    inline ValueMap& operator[](const String& section)
-    {
-        return sections_[section];
-    }
+    ValueMap& operator[](const String& section);
 
-    inline const ValueMap& operator[](const String& section) const
-    {
-        return sections_.at(section);
-    }
+    const ValueMap& operator[](const String& section) const;
 
 private:
     void ParseLine(StringView line, String* section);

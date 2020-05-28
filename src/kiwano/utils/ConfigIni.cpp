@@ -261,9 +261,9 @@ bool ConfigIni::GetBool(const String& section, const String& key, bool default_v
     String str = GetString(section, key);
     if (!str.empty())
     {
-        if (str == "true")
+        if (str == "true" || str == "1")
             return true;
-        else if (str == "false")
+        else if (str == "false" || str == "0")
             return false;
     }
     return default_value;
@@ -322,6 +322,24 @@ void ConfigIni::SetInt(const String& section, const String& key, int value)
 void ConfigIni::SetBool(const String& section, const String& key, bool value)
 {
     SetString(section, key, value ? "true" : "false");
+}
+
+ConfigIni::ValueMap& ConfigIni::operator[](const String& section)
+{
+    if (!HasSection(section))
+    {
+        sections_.insert(std::make_pair(section, ValueMap()));
+    }
+    return sections_[section];
+}
+
+const ConfigIni::ValueMap& ConfigIni::operator[](const String& section) const
+{
+    if (!HasSection(section))
+    {
+        const_cast<SectionMap&>(sections_).insert(std::make_pair(section, ValueMap()));
+    }
+    return sections_.at(section);
 }
 
 void ConfigIni::ParseLine(StringView line, String* section)
