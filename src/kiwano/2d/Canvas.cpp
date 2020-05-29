@@ -26,7 +26,7 @@ namespace kiwano
 
 CanvasPtr Canvas::Create(const Size& size)
 {
-    void*     mem = memory::Alloc<Canvas>();
+    void*     mem = memory::Alloc(sizeof(Canvas));
     CanvasPtr ptr = ::new (mem) Canvas;
     if (ptr)
     {

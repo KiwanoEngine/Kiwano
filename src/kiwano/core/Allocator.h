@@ -19,8 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <utility>
-#include <type_traits>
+#include <utility>  // std::forward
+#include <limits>  // std::numeric_limits
+#include <memory>  // std::addressof
 #include <kiwano/macros.h>
 
 namespace kiwano
@@ -52,29 +53,16 @@ void SetAllocator(MemoryAllocator* allocator);
 
 /// \~chinese
 /// @brief 使用当前内存分配器分配内存
-template <typename _Ty>
-inline void* Alloc()
+inline void* Alloc(size_t size)
 {
-    return memory::GetAllocator()->Alloc(sizeof(_Ty));
+    return memory::GetAllocator()->Alloc(size);
 }
 
 /// \~chinese
 /// @brief 使用当前内存分配器释放内存
 inline void Free(void* ptr, size_t size)
 {
-    return memory::GetAllocator()->Free(ptr, size);
-}
-
-/// \~chinese
-/// @brief 构造对象
-template <typename _Ty>
-inline _Ty* Construct(void* addr)
-{
-    if (addr)
-    {
-        return ::new (addr) _Ty;
-    }
-    return nullptr;
+    memory::GetAllocator()->Free(ptr, size);
 }
 
 /// \~chinese
@@ -95,23 +83,10 @@ inline void Destroy(_Ty* ptr)
 
 /// \~chinese
 /// @brief 使用当前内存分配器创建对象
-template <typename _Ty>
-inline _Ty* New()
-{
-    void* ptr = memory::Alloc<_Ty>();
-    if (ptr)
-    {
-        return memory::Construct<_Ty>(ptr);
-    }
-    return nullptr;
-}
-
-/// \~chinese
-/// @brief 使用当前内存分配器创建对象
 template <typename _Ty, typename... _Args>
 inline _Ty* New(_Args&&... args)
 {
-    void* ptr = memory::Alloc<_Ty>();
+    void* ptr = memory::Alloc(sizeof(_Ty));
     if (ptr)
     {
         return memory::Construct<_Ty>(ptr, std::forward<_Args>(args)...);
@@ -131,23 +106,114 @@ inline void Delete(_Ty* ptr)
     }
 }
 
+
 /// \~chinese
-/// @brief 全局内存分配器，使用malloc和free分配内存
-class KGE_API GlobalAllocator : public MemoryAllocator
+/// @brief 分配器
+template <typename _Ty>
+class Allocator
 {
 public:
-    /// \~chinese
-    /// @brief 申请内存
-    virtual void* Alloc(size_t size) override;
+    typedef _Ty        value_type;
+    typedef _Ty*       pointer;
+    typedef const _Ty* const_pointer;
+    typedef _Ty&       reference;
+    typedef const _Ty& const_reference;
 
-    /// \~chinese
-    /// @brief 释放内存
-    virtual void Free(void* ptr, size_t size) override;
+    using size_type       = size_t;
+    using difference_type = ptrdiff_t;
+
+    template <class _Other>
+    struct rebind
+    {
+        using other = Allocator<_Other>;
+    };
+
+    Allocator() noexcept {}
+
+    Allocator(const Allocator&) noexcept = default;
+
+    template <class _Other>
+    Allocator(const Allocator<_Other>&) noexcept
+    {
+    }
+
+    inline _Ty* allocate(size_t count)
+    {
+        if (count > 0)
+        {
+            return static_cast<_Ty*>(memory::Alloc(sizeof(_Ty) * count));
+        }
+        return nullptr;
+    }
+
+    inline void* allocate(size_t count, const void*)
+    {
+        return allocate(count);
+    }
+
+    inline void deallocate(void* ptr, size_t count)
+    {
+        memory::Free(ptr, sizeof(_Ty) * count);
+    }
+
+    template <typename _UTy, typename... _Args>
+    inline void construct(_UTy* ptr, _Args&&... args)
+    {
+        memory::Construct<_UTy>(ptr, std::forward<_Args>(args)...);
+    }
+
+    template <typename _UTy>
+    inline void destroy(_UTy* ptr)
+    {
+        memory::Destroy<_UTy>(ptr);
+    }
+
+    size_t max_size() const noexcept
+    {
+        return std::numeric_limits<size_t>::max() / sizeof(_Ty);
+    }
+
+    _Ty* address(_Ty& val) const noexcept
+    {
+        return std::addressof(val);
+    }
+
+    const _Ty* address(const _Ty& val) const noexcept
+    {
+        return std::addressof(val);
+    }
 };
 
-/// \~chinese
-/// @brief 获取全局内存分配器
-GlobalAllocator* GetGlobalAllocator();
+// Allocator<void>
+template <>
+class Allocator<void>
+{
+public:
+    using value_type = void;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+
+    using size_type       = size_t;
+    using difference_type = ptrdiff_t;
+
+    template <class _Other>
+    struct rebind
+    {
+        using other = Allocator<_Other>;
+    };
+};
+
+template <class _Ty, class _Other>
+bool operator==(const Allocator<_Ty>&, const Allocator<_Other>&) noexcept
+{
+    return true;
+}
+
+template <class _Ty, class _Other>
+bool operator!=(const Allocator<_Ty>&, const Allocator<_Other>&) noexcept
+{
+    return false;
+}
 
 }  // namespace memory
 }  // namespace kiwano
