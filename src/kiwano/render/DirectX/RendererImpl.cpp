@@ -58,10 +58,40 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HWND target_window = window->GetHandle();
     output_size_       = window->GetSize();
 
-    d2d_res_ = graphics::directx::GetD2DDeviceResources();
-    d3d_res_ = graphics::directx::GetD3DDeviceResources();
-
     HRESULT hr = target_window ? S_OK : E_FAIL;
+
+    // Initialize Direct3D resources
+    if (SUCCEEDED(hr))
+    {
+        auto d3d_res = graphics::directx::GetD3DDeviceResources();
+
+        hr = d3d_res->Initialize(target_window);
+        if (FAILED(hr))
+        {
+            d3d_res->DiscardResources();
+        }
+        else
+        {
+            d3d_res_ = d3d_res;
+        }
+    }
+
+    // Initialize Direct2D resources
+    if (SUCCEEDED(hr))
+    {
+        auto d2d_res = graphics::directx::GetD2DDeviceResources();
+
+        hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+        if (FAILED(hr))
+        {
+            d2d_res->DiscardResources();
+        }
+        else
+        {
+            d2d_res_ = d2d_res;
+        }
+    }
+
 
     // Initialize other device resources
     if (SUCCEEDED(hr))
@@ -114,15 +144,23 @@ void RendererImpl::Destroy()
 {
     KGE_SYS_LOG("Destroying device resources");
 
-    d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.Get());
-    res_font_file_loader_.Reset();
+    if (d2d_res_)
+    {
+        d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.Get());
+        res_font_file_loader_.Reset();
 
-    d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
-    res_font_collection_loader_.Reset();
+        d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
+        res_font_collection_loader_.Reset();
 
-    render_ctx_.Reset();
-    d2d_res_.Reset();
-    d3d_res_.Reset();
+        render_ctx_.Reset();
+        d2d_res_->DiscardResources();
+    }
+
+    if (d3d_res_)
+    {
+        d3d_res_->DiscardResources();
+        d3d_res_.Reset();
+    }
 
     ::CoUninitialize();
 }
