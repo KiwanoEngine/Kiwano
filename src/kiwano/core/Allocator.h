@@ -39,7 +39,7 @@ public:
 
     /// \~chinese
     /// @brief 释放内存
-    virtual void Free(void* ptr) = 0;
+    virtual void Free(void* ptr, size_t size) = 0;
 };
 
 /// \~chinese
@@ -60,9 +60,37 @@ inline void* Alloc()
 
 /// \~chinese
 /// @brief 使用当前内存分配器释放内存
-inline void Free(void* ptr)
+inline void Free(void* ptr, size_t size)
 {
-    return memory::GetAllocator()->Free(ptr);
+    return memory::GetAllocator()->Free(ptr, size);
+}
+
+/// \~chinese
+/// @brief 构造对象
+template <typename _Ty>
+inline _Ty* Construct(void* addr)
+{
+    if (addr)
+    {
+        return ::new (addr) _Ty;
+    }
+    return nullptr;
+}
+
+/// \~chinese
+/// @brief 构造对象
+template <typename _Ty, typename... _Args>
+inline _Ty* Construct(void* ptr, _Args&&... args)
+{
+    return ::new (ptr) _Ty(std::forward<_Args>(args)...);
+}
+
+/// \~chinese
+/// @brief 销毁对象
+template <typename _Ty, typename... _Args>
+inline void Destroy(_Ty* ptr)
+{
+    ptr->~_Ty();
 }
 
 /// \~chinese
@@ -73,7 +101,7 @@ inline _Ty* New()
     void* ptr = memory::Alloc<_Ty>();
     if (ptr)
     {
-        return ::new (ptr) _Ty;
+        return memory::Construct<_Ty>(ptr);
     }
     return nullptr;
 }
@@ -86,7 +114,7 @@ inline _Ty* New(_Args&&... args)
     void* ptr = memory::Alloc<_Ty>();
     if (ptr)
     {
-        return ::new (ptr) _Ty(std::forward<_Args>(args)...);
+        return memory::Construct<_Ty>(ptr, std::forward<_Args>(args)...);
     }
     return nullptr;
 }
@@ -98,8 +126,8 @@ inline void Delete(_Ty* ptr)
 {
     if (ptr)
     {
-        ptr->~_Ty();
-        memory::Free(ptr);
+        memory::Destroy<_Ty>(ptr);
+        memory::Free(ptr, sizeof(_Ty));
     }
 }
 
@@ -114,7 +142,7 @@ public:
 
     /// \~chinese
     /// @brief 释放内存
-    virtual void Free(void* ptr) override;
+    virtual void Free(void* ptr, size_t size) override;
 };
 
 /// \~chinese

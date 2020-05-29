@@ -53,8 +53,9 @@ void* GlobalAllocator::Alloc(size_t size)
     return ::malloc(size);
 }
 
-void GlobalAllocator::Free(void* ptr)
+void GlobalAllocator::Free(void* ptr, size_t size)
 {
+    KGE_NOT_USED(size);
     ::free(ptr);
 }
 
