@@ -62,14 +62,14 @@ void Button::SetStatus(Status status)
 
         if (status == Status::Normal)
         {
-            Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Arrow);
+            Application::GetInstance().GetWindow()->SetCursor(CursorType::Arrow);
 
             if (mouse_out_callback_)
                 mouse_out_callback_(this, GetBoundActor());
         }
         else if (status == Status::Hover)
         {
-            Application::GetInstance().GetMainWindow()->SetCursor(CursorType::Hand);
+            Application::GetInstance().GetWindow()->SetCursor(CursorType::Hand);
 
             if (old_status != Status::Pressed)
             {

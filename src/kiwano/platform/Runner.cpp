@@ -20,24 +20,25 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/platform/Runner.h>
+#include <kiwano/platform/Input.h>
 #include <kiwano/platform/Application.h>
-
-#define KGE_MAX_SKIP_FRAMES 10
+#include <kiwano/render/Renderer.h>
+#include <kiwano/base/Director.h>
 
 namespace kiwano
 {
 
-RunnerPtr Runner::Create(WindowPtr main_window)
+RunnerPtr Runner::Create(Settings settings)
 {
     RunnerPtr ptr = memory::New<Runner>();
     if (ptr)
     {
-        ptr->SetMainWindow(main_window);
+        ptr->SetSettings(settings);
     }
     return ptr;
 }
 
-RunnerPtr Runner::Create(WindowPtr main_window, Function<void()> on_ready, Function<void()> on_destroy)
+RunnerPtr Runner::Create(Settings settings, Function<void()> on_ready, Function<void()> on_destroy)
 {
     class CallbackRunner : public Runner
     {
@@ -63,7 +64,7 @@ RunnerPtr Runner::Create(WindowPtr main_window, Function<void()> on_ready, Funct
     {
         ptr->on_ready   = on_ready;
         ptr->on_destroy = on_destroy;
-        ptr->SetMainWindow(main_window);
+        ptr->SetSettings(settings);
     }
     return ptr;
 }
@@ -72,6 +73,36 @@ Runner::Runner() {}
 
 Runner::~Runner() {}
 
+void Runner::InitSettings()
+{
+    if (settings_.debug_mode)
+    {
+        // Show console window before creating main window
+        Logger::GetInstance().ShowConsole(true);
+    }
+
+    // Create game window
+    WindowPtr window =
+        Window::Create(settings_.title, settings_.width, settings_.height, settings_.icon, settings_.resizable);
+    SetWindow(window);
+
+    // Update renderer settings
+    Renderer::GetInstance().MakeContextForWindow(window);
+    Renderer::GetInstance().SetClearColor(settings_.bg_color);
+    Renderer::GetInstance().SetVSyncEnabled(settings_.vsync_enabled);
+
+    // Use defaut modules
+    Application::GetInstance().Use(Input::GetInstance());
+    Application::GetInstance().Use(Director::GetInstance());
+
+    // Enable debug mode
+    if (settings_.debug_mode)
+    {
+        Director::GetInstance().ShowDebugInfo(true);
+        Renderer::GetInstance().GetContext().SetCollectingStatus(true);
+    }
+}
+
 bool Runner::MainLoop(Duration dt)
 {
     if (!main_window_)
@@ -79,7 +110,7 @@ bool Runner::MainLoop(Duration dt)
 
     if (main_window_->ShouldClose())
     {
-        if (this->OnClosing())
+        if (this->OnClose())
             return false;
 
         main_window_->SetShouldClose(false);

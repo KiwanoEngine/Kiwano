@@ -79,12 +79,12 @@ public:
 
     void Resize(uint32_t width, uint32_t height) override;
 
-protected:
-    RendererImpl();
-
     void MakeContextForWindow(WindowPtr window) override;
 
     void Destroy() override;
+
+protected:
+    RendererImpl();
 
 private:
     using ID2DDeviceResources = kiwano::graphics::directx::ID2DDeviceResources;

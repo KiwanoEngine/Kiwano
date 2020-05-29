@@ -28,7 +28,7 @@ void ImGuiModule::SetupModule()
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    window_ = Application::GetInstance().GetMainWindow();
+    window_ = Application::GetInstance().GetWindow();
 
     // Setup Platform/Renderer bindings
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;  // We can honor GetMouseCursor() values (optional)
