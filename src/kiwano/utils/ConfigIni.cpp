@@ -158,16 +158,20 @@ bool ConfigIni::Save(std::ostream& os)
     std::sort(keys.begin(), keys.end());
 
     // Output to ini
-    for (const auto& key : keys)
+    std::ostream::sentry ok(os);
+    if (ok)
     {
-        os << '[' << key << ']' << std::endl;
-        for (const auto& pair : sections_[key])
+        for (const auto& key : keys)
         {
-            os << pair.first << " = " << pair.second << std::endl;
+            os << '[' << key << ']' << std::endl;
+            for (const auto& pair : sections_[key])
+            {
+                os << pair.first << " = " << pair.second << std::endl;
+            }
+            os << std::endl;
         }
-        os << std::endl;
     }
-    return false;
+    return !os.fail();
 }
 
 ConfigIni::SectionMap ConfigIni::GetSectionMap() const
