@@ -31,22 +31,6 @@ Renderer::Renderer()
 {
 }
 
-void Renderer::SetupModule()
-{
-    WindowPtr window = Application::GetInstance().GetMainWindow();
-    MakeContextForWindow(window);
-}
-
-void Renderer::DestroyModule()
-{
-    Destroy();
-}
-
-void Renderer::HandleEvent(Event* evt)
-{
-    // DO NOTHING
-}
-
 void Renderer::BeginDraw()
 {
     KGE_ASSERT(render_ctx_);

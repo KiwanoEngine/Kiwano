@@ -39,7 +39,7 @@ StringView Trim(StringView str)
         while (std::isspace(str[end - 1]))
             --end;
 
-        if (end - start)
+        if (end > start)
             return StringView(str.Data() + start, end - start);
     }
     return StringView();
@@ -158,16 +158,20 @@ bool ConfigIni::Save(std::ostream& os)
     std::sort(keys.begin(), keys.end());
 
     // Output to ini
-    for (const auto& key : keys)
+    std::ostream::sentry ok(os);
+    if (ok)
     {
-        os << '[' << key << ']' << std::endl;
-        for (const auto& pair : sections_[key])
+        for (const auto& key : keys)
         {
-            os << pair.first << " = " << pair.second << std::endl;
+            os << '[' << key << ']' << std::endl;
+            for (const auto& pair : sections_[key])
+            {
+                os << pair.first << " = " << pair.second << std::endl;
+            }
+            os << std::endl;
         }
-        os << std::endl;
     }
-    return false;
+    return !os.fail();
 }
 
 ConfigIni::SectionMap ConfigIni::GetSectionMap() const
@@ -177,23 +181,20 @@ ConfigIni::SectionMap ConfigIni::GetSectionMap() const
 
 ConfigIni::ValueMap ConfigIni::GetSection(const String& section) const
 {
-    auto iter = sections_.find(section);
-    if (iter != sections_.end())
-        return iter->second;
+    if (HasSection(section))
+    {
+        return sections_.at(section);
+    }
     return ValueMap();
 }
 
-String ConfigIni::GetString(const String& section_name, const String& key) const
+String ConfigIni::GetString(const String& section, const String& key, const String& default_value) const
 {
-    if (HasSection(section_name))
+    if (HasKey(section, key))
     {
-        const auto& section = sections_.at(section_name);
-
-        auto iter_key = section.find(key);
-        if (iter_key != section.end())
-            return iter_key->second;
+        return sections_.at(section).at(key);
     }
-    return String();
+    return default_value;
 }
 
 float ConfigIni::GetFloat(const String& section, const String& key, float default_value) const
@@ -274,7 +275,7 @@ bool ConfigIni::HasSection(const String& section) const
     return !!sections_.count(section);
 }
 
-bool ConfigIni::HasValue(const String& section, const String& key) const
+bool ConfigIni::HasKey(const String& section, const String& key) const
 {
     if (HasSection(section))
     {
@@ -322,6 +323,22 @@ void ConfigIni::SetInt(const String& section, const String& key, int value)
 void ConfigIni::SetBool(const String& section, const String& key, bool value)
 {
     SetString(section, key, value ? "true" : "false");
+}
+
+void ConfigIni::DeleteSection(const String& section)
+{
+    if (HasSection(section))
+    {
+        sections_.erase(section);
+    }
+}
+
+void ConfigIni::DeleteKey(const String& section, const String& key)
+{
+    if (HasKey(section, key))
+    {
+        sections_.at(section).erase(key);
+    }
 }
 
 ConfigIni::ValueMap& ConfigIni::operator[](const String& section)

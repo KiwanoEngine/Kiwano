@@ -39,7 +39,7 @@ public:
 
     /// \~chinese
     /// @brief 键值字典
-    typedef Map<String, String> ValueMap;
+    typedef UnorderedMap<String, String> ValueMap;
 
     /// \~chinese
     /// @brief Section字典
@@ -66,6 +66,17 @@ public:
     bool Save(std::ostream& os);
 
     /// \~chinese
+    /// @brief 是否存在section
+    /// @param section section的名称
+    bool HasSection(const String& section) const;
+
+    /// \~chinese
+    /// @brief 是否存在值
+    /// @param section section的名称
+    /// @param key key的名称
+    bool HasKey(const String& section, const String& key) const;
+
+    /// \~chinese
     /// @brief 获取所有section
     SectionMap GetSectionMap() const;
 
@@ -78,7 +89,7 @@ public:
     /// @brief 获取值
     /// @param section section的名称
     /// @param key key的名称
-    String GetString(const String& section, const String& key) const;
+    String GetString(const String& section, const String& key, const String& default_value = String()) const;
 
     /// \~chinese
     /// @brief 获取值
@@ -107,17 +118,6 @@ public:
     /// @param key key的名称
     /// @param default_value 不存在时的默认值
     bool GetBool(const String& section, const String& key, bool default_value = false) const;
-
-    /// \~chinese
-    /// @brief 是否存在section
-    /// @param section section的名称
-    bool HasSection(const String& section) const;
-
-    /// \~chinese
-    /// @brief 是否存在值
-    /// @param section section的名称
-    /// @param key key的名称
-    bool HasValue(const String& section, const String& key) const;
 
     /// \~chinese
     /// @brief 设置所有section
@@ -164,6 +164,17 @@ public:
     /// @param key key的名称
     /// @param value 值
     void SetBool(const String& section, const String& key, bool value);
+
+    /// \~chinese
+    /// @brief 删除section
+    /// @param section section的名称
+    void DeleteSection(const String& section);
+
+    /// \~chinese
+    /// @brief 删除值
+    /// @param section section的名称
+    /// @param key key的名称
+    void DeleteKey(const String& section, const String& key);
 
     ValueMap& operator[](const String& section);
 

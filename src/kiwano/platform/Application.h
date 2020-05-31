@@ -58,7 +58,7 @@ public:
      * @param debug 是否启用调试模式
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
-    void Run(RunnerPtr runner, bool debug = false);
+    void Run(RunnerPtr runner);
 
     /**
      * \~chinese
@@ -99,9 +99,9 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取主窗口
+     * @brief 获取窗口
      */
-    WindowPtr GetMainWindow() const;
+    WindowPtr GetWindow() const;
 
     /**
      * \~chinese
@@ -183,10 +183,10 @@ inline RunnerPtr Application::GetRunner() const
     return runner_;
 }
 
-inline WindowPtr Application::GetMainWindow() const
+inline WindowPtr Application::GetWindow() const
 {
     KGE_ASSERT(runner_);
-    return runner_->GetMainWindow();
+    return runner_->GetWindow();
 }
 
 inline TickerPtr Application::GetFrameTicker() const

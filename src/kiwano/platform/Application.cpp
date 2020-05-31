@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Application.h>
-#include <kiwano/platform/Input.h>
-#include <kiwano/base/Director.h>
 #include <kiwano/utils/Logger.h>
+#include <kiwano/base/Director.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
@@ -39,9 +38,6 @@ Application::Application()
     , is_paused_(false)
     , time_scale_(1.f)
 {
-    Use(Renderer::GetInstance());
-    Use(Input::GetInstance());
-    Use(Director::GetInstance());
 }
 
 Application::~Application()
@@ -49,23 +45,20 @@ Application::~Application()
     this->Destroy();
 }
 
-void Application::Run(RunnerPtr runner, bool debug)
+void Application::Run(RunnerPtr runner)
 {
     KGE_ASSERT(runner);
     runner_ = runner;
     running_ = true;
     is_paused_ = false;
 
+    // Initialize runner
+    runner->InitSettings();
+
     // Setup all modules
     for (auto c : modules_)
     {
         c->SetupModule();
-    }
-
-    if (debug)
-    {
-        Director::GetInstance().ShowDebugInfo(true);
-        Renderer::GetInstance().GetContext().SetCollectingStatus(true);
     }
 
     // Everything is ready
@@ -128,16 +121,19 @@ void Application::Destroy()
         runner_ = nullptr;
     }
 
-    // Clear all resources
+    // Clear user resources
     Director::GetInstance().ClearStages();
     ResourceCache::GetInstance().Clear();
-    TextureCache::GetInstance().Clear();
 
     for (auto iter = modules_.rbegin(); iter != modules_.rend(); ++iter)
     {
         (*iter)->DestroyModule();
     }
     modules_.clear();
+
+    // Clear device resources
+    TextureCache::GetInstance().Clear();
+    Renderer::GetInstance().Destroy();
 }
 
 void Application::Use(Module& module)

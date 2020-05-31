@@ -44,7 +44,7 @@ namespace kiwano
  * \~chinese
  * @brief 渲染器
  */
-class KGE_API Renderer : public EventModule
+class KGE_API Renderer : public Noncopyable
 {
 public:
     /// \~chinese
@@ -235,19 +235,16 @@ public:
     /// @throw kiwano::SystemError 呈现失败时抛出
     virtual void Present() = 0;
 
-public:
-    void SetupModule() override;
+    /// \~chinese
+    /// @brief 为窗口创建渲染上下文
+    virtual void MakeContextForWindow(WindowPtr window) = 0;
 
-    void DestroyModule() override;
-
-    void HandleEvent(Event* evt) override;
+    /// \~chinese
+    /// @brief 销毁渲染器资源
+    virtual void Destroy() = 0;
 
 protected:
     Renderer();
-
-    virtual void MakeContextForWindow(WindowPtr window) = 0;
-
-    virtual void Destroy() = 0;
 
 protected:
     bool             vsync_;

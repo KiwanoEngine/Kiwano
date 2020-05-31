@@ -27,6 +27,26 @@ namespace memory
 
 MemoryAllocator* current_allocator_ = nullptr;
 
+MemoryAllocator* GetGlobalAllocator()
+{
+    class KGE_API GlobalAllocator : public MemoryAllocator
+    {
+    public:
+        virtual void* Alloc(size_t size) override
+        {
+            return ::operator new(size);
+        }
+
+        virtual void Free(void* ptr, size_t size) override
+        {
+            ::operator delete(ptr, size);
+        }
+    };
+
+    static GlobalAllocator global_allocator;
+    return &global_allocator;
+}
+
 MemoryAllocator* GetAllocator()
 {
     if (!current_allocator_)
@@ -40,22 +60,6 @@ void SetAllocator(MemoryAllocator* allocator)
 {
     KGE_ASSERT(allocator);
     current_allocator_ = allocator;
-}
-
-GlobalAllocator* GetGlobalAllocator()
-{
-    static GlobalAllocator global_allocator;
-    return &global_allocator;
-}
-
-void* GlobalAllocator::Alloc(size_t size)
-{
-    return ::malloc(size);
-}
-
-void GlobalAllocator::Free(void* ptr)
-{
-    ::free(ptr);
 }
 
 }  // namespace memory

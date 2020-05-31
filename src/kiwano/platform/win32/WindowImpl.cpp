@@ -269,21 +269,6 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     ::ShowWindow(handle_, SW_SHOWNORMAL);
     ::UpdateWindow(handle_);
-
-    // Initialize Direct3D resources
-    auto d3d_res = graphics::directx::GetD3DDeviceResources();
-
-    HRESULT hr = d3d_res->Initialize(handle_);
-
-    // Initialize Direct2D resources
-    if (SUCCEEDED(hr))
-    {
-        auto d2d_res = graphics::directx::GetD2DDeviceResources();
-
-        hr = d2d_res->Initialize(d3d_res->GetDXGIDevice(), d3d_res->GetDXGISwapChain());
-    }
-
-    KGE_THROW_IF_FAILED(hr, "Create DirectX resources failed");
 }
 
 void WindowWin32Impl::PumpEvents()
