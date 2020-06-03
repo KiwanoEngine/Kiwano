@@ -101,6 +101,9 @@ void Runner::InitSettings()
         Director::GetInstance().ShowDebugInfo(true);
         Renderer::GetInstance().GetContext().SetCollectingStatus(true);
     }
+
+    // Create frame ticker
+    frame_ticker_ = Ticker::Create(settings_.frame_interval, -1);
 }
 
 bool Runner::MainLoop(Duration dt)
@@ -118,9 +121,6 @@ bool Runner::MainLoop(Duration dt)
 
     Application& app = Application::GetInstance();
 
-    // Update modules before poll events
-    app.Update(dt);
-
     // Poll events
     main_window_->PumpEvents();
     while (EventPtr evt = main_window_->PollEvent())
@@ -128,12 +128,27 @@ bool Runner::MainLoop(Duration dt)
         app.DispatchEvent(evt.Get());
     }
 
-    app.Render();
-
-    if (app.IsPaused())
+    // Update frame ticker
+    if (frame_ticker_)
     {
-        // Slow down when the application is paused
-        Duration(5).Sleep();
+        if (frame_ticker_->Tick(dt))
+        {
+            app.UpdateFrame(frame_ticker_->GetDeltaTime());
+        }
+        else
+        {
+            // Releases CPU
+            Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
+            Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
+            if (sleep_dt.Milliseconds() > 1LL)
+            {
+                sleep_dt.Sleep();
+            }
+        }
+    }
+    else
+    {
+        app.UpdateFrame(dt);
     }
     return true;
 }

@@ -27,7 +27,7 @@
 #include <kiwano/event/Event.h>
 #include <kiwano/platform/Runner.h>
 #include <kiwano/platform/Window.h>
-#include <kiwano/utils/Ticker.h>
+#include <kiwano/utils/Timer.h>
 
 namespace kiwano
 {
@@ -105,18 +105,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取帧报时器
-     */
-    TickerPtr GetFrameTicker() const;
-
-    /**
-     * \~chinese
-     * @brief 设置帧报时器
-     */
-    void SetFrameTicker(TickerPtr ticker);
-
-    /**
-     * \~chinese
      * @brief 设置时间缩放因子
      * @details 设置时间缩放因子可等比例放大或缩小时间进度
      * @param scale_factor 缩放因子
@@ -150,16 +138,10 @@ public:
 
     /**
      * \~chinese
-     * @brief 更新所有模块
+     * @brief 更新一帧
      * @param dt 时间间隔
      */
-    void Update(Duration dt);
-
-    /**
-     * \~chinese
-     * @brief 创建渲染上下文并渲染画面
-     */
-    void Render();
+    void UpdateFrame(Duration dt);
 
     /**
      * \~chinese
@@ -168,11 +150,25 @@ public:
     void Destroy();
 
 private:
+    /**
+     * \~chinese
+     * @brief 更新所有模块
+     * @param dt 时间间隔
+     */
+    void Update(Duration dt);
+
+    /**
+     * \~chinese
+     * @brief 渲染画面
+     */
+    void Render();
+
+private:
     bool                    running_;
     bool                    is_paused_;
     float                   time_scale_;
     RunnerPtr               runner_;
-    TickerPtr               frame_ticker_;
+    TimerPtr                timer_;
     List<Module*>           modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
@@ -185,18 +181,9 @@ inline RunnerPtr Application::GetRunner() const
 
 inline WindowPtr Application::GetWindow() const
 {
-    KGE_ASSERT(runner_);
-    return runner_->GetWindow();
-}
-
-inline TickerPtr Application::GetFrameTicker() const
-{
-    return frame_ticker_;
-}
-
-inline void Application::SetFrameTicker(TickerPtr ticker)
-{
-    frame_ticker_ = ticker;
+    if (runner_)
+        return runner_->GetWindow();
+    return nullptr;
 }
 
 inline bool Application::IsPaused() const
