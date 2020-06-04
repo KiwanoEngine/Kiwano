@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/ObjectBase.h>
+#include <kiwano/base/ObjectPool.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
 #include <typeinfo>
@@ -54,6 +55,11 @@ ObjectBase::~ObjectBase()
 #ifdef KGE_DEBUG
     ObjectBase::RemoveObjectFromTracingList(this);
 #endif
+}
+
+void ObjectBase::AutoRelease()
+{
+    ObjectPool::GetInstance().AddObject(this);
 }
 
 const Any& ObjectBase::GetUserData() const
