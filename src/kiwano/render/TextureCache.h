@@ -74,10 +74,10 @@ public:
     /// @brief Çå¿Õ»º´æ
     void Clear();
 
+    virtual ~TextureCache();
+
 private:
     TextureCache();
-
-    virtual ~TextureCache();
 
 private:
     using TextureMap = UnorderedMap<size_t, TexturePtr>;

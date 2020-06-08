@@ -88,10 +88,10 @@ public:
     /// @brief 清空所有资源
     void Clear();
 
+    virtual ~ResourceCache();
+
 private:
     ResourceCache();
-
-    virtual ~ResourceCache();
 
 private:
     UnorderedMap<String, ObjectBasePtr> object_cache_;

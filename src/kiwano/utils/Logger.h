@@ -126,10 +126,10 @@ public:
     /// @note 此操作会重定向输出流到标准输出流
     void ShowConsole(bool show);
 
+    ~Logger();
+
 private:
     Logger();
-
-    ~Logger();
 
     void Prepare(Level level, StringStream& sstream);
 

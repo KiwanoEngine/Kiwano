@@ -19,12 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <memory>
 
 namespace kiwano
 {
 
 template <typename _Ty>
-struct Singleton
+class Singleton
 {
 protected:
     Singleton()                 = default;
@@ -32,29 +33,47 @@ protected:
     Singleton& operator=(const Singleton&) = delete;
 
 private:
-    struct ObjectCreator
+    struct InstanceCreator
     {
-        ObjectCreator()
+        InstanceCreator()
         {
-            (void)Singleton<_Ty>::GetInstance();
+            (void)Singleton<_Ty>::GetInstancePtr();
         }
 
         inline void Dummy() const {}
     };
-    static ObjectCreator creator_;
+    static InstanceCreator creator_;
 
 public:
     using object_type = _Ty;
 
+    static std::unique_ptr<object_type> instance_ptr_;
+
     static inline object_type& GetInstance()
     {
-        static object_type instance;
+        return *GetInstancePtr();
+    }
+
+    static inline object_type* GetInstancePtr()
+    {
         creator_.Dummy();
-        return instance;
+        if (!instance_ptr_)
+        {
+            instance_ptr_.reset(new object_type);
+        }
+        return instance_ptr_.get();
+    }
+
+    static inline void DestroyInstance()
+    {
+        instance_ptr_.reset();
     }
 };
 
 template <typename _Ty>
-typename Singleton<_Ty>::ObjectCreator Singleton<_Ty>::creator_;
+typename Singleton<_Ty>::InstanceCreator Singleton<_Ty>::creator_;
+
+template <typename _Ty>
+typename std::unique_ptr<_Ty> Singleton<_Ty>::instance_ptr_;
 
 }  // namespace kiwano

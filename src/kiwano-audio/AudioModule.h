@@ -68,10 +68,10 @@ public:
 
     void DestroyModule() override;
 
+    ~AudioModule();
+
 private:
     AudioModule();
-
-    ~AudioModule();
 
 private:
     IXAudio2*               x_audio2_;
