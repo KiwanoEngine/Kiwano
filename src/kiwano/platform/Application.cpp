@@ -42,7 +42,6 @@ Application::Application()
 
 Application::~Application()
 {
-    this->Destroy();
 }
 
 void Application::Run(RunnerPtr runner)
@@ -62,6 +61,25 @@ void Application::Run(RunnerPtr runner)
         c->SetupModule();
     }
 
+    // Ensure resources are destroyed before exiting
+    class DestroyHelper
+    {
+        Function<void()> f;
+
+    public:
+        DestroyHelper(Function<void()> f)
+            : f(f)
+        {
+        }
+
+        ~DestroyHelper()
+        {
+            f();
+        }
+    };
+
+    DestroyHelper helper([=]() { this->Destroy(); });
+
     // Everything is ready
     runner->OnReady();
 
@@ -77,8 +95,6 @@ void Application::Run(RunnerPtr runner)
         if (!runner->MainLoop(timer_->GetDeltaTime()))
             running_ = false;
     }
-
-    this->Destroy();
 }
 
 void Application::Pause()
