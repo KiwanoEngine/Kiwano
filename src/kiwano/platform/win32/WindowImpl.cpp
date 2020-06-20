@@ -30,7 +30,6 @@
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/render/DirectX/D3DDeviceResources.h>
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
 #pragma comment(lib, "imm32.lib")
@@ -49,7 +48,7 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable);
+    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
 
     void SetTitle(const String& title) override;
 
@@ -69,6 +68,8 @@ public:
 
     DWORD GetStyle() const;
 
+    void SetActive(bool active);
+
     void UpdateCursor();
 
     LRESULT MessageProc(HWND, UINT32, WPARAM, LPARAM);
@@ -86,12 +87,13 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
+WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                         bool fullscreen)
 {
     WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
     if (ptr)
     {
-        ptr->Init(title, width, height, icon, resizable);
+        ptr->Init(title, width, height, icon, resizable, fullscreen);
     }
     return ptr;
 }
@@ -103,6 +105,7 @@ namespace kiwano
 
 #define WINDOW_FIXED_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
 #define WINDOW_RESIZABLE_STYLE WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX | WS_MAXIMIZEBOX
+#define WINDOW_FULLSCREEN_STYLE WS_CLIPCHILDREN | WS_POPUP
 
 namespace
 {
@@ -202,7 +205,8 @@ WindowWin32Impl::~WindowWin32Impl()
     ::timeEndPeriod(0);
 }
 
-void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable)
+void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+                           bool fullscreen)
 {
     HINSTANCE  hinst   = GetModuleHandle(nullptr);
     WNDCLASSEXA wcex   = { 0 };
@@ -249,10 +253,13 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     width  = win_width;
     height = win_height;
 
-    width_     = width;
-    height_    = height;
-    resizable_ = resizable;
-    handle_    = ::CreateWindowExA(0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top, width, height, nullptr,
+    width_         = width;
+    height_        = height;
+    resizable_     = resizable;
+    is_fullscreen_ = fullscreen;
+    resolution_    = Resolution{ width_, height_, 0 };
+
+    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top, width, height, nullptr,
                                 nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
@@ -269,6 +276,19 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
 
     ::ShowWindow(handle_, SW_SHOWNORMAL);
     ::UpdateWindow(handle_);
+
+    if (is_fullscreen_)
+    {
+        MONITORINFOEXA info = GetMoniterInfoEx(handle_);
+        int            x    = (int)info.rcMonitor.left;
+        int            y    = (int)info.rcMonitor.top;
+        int            cx   = (int)(info.rcMonitor.right - info.rcMonitor.left);
+        int            cy   = (int)(info.rcMonitor.bottom - info.rcMonitor.top);
+
+        // Top the window
+        ::SetWindowPos(handle_, HWND_TOPMOST, x, y, cx, cy, SWP_NOACTIVATE);
+        ::ShowWindow(handle_, SW_SHOWNORMAL);
+    }
 }
 
 void WindowWin32Impl::PumpEvents()
@@ -318,71 +338,78 @@ void WindowWin32Impl::SetCursor(CursorType cursor)
 
 void WindowWin32Impl::SetResolution(uint32_t width, uint32_t height, bool fullscreen)
 {
-    auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
-
-    if (fullscreen)
+    if (is_fullscreen_ != fullscreen)
     {
-        HRESULT hr = d3d->ResizeTarget(width, height);
-        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+        is_fullscreen_ = fullscreen;
 
-        hr = d3d->SetFullscreenState(fullscreen);
-        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+        // Reset window style
+        ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
+    }
+
+    if (is_fullscreen_)
+    {
+        MONITORINFOEXA info = GetMoniterInfoEx(handle_);
+        int            x    = (int)info.rcMonitor.left;
+        int            y    = (int)info.rcMonitor.top;
+        int            cx   = (int)(info.rcMonitor.right - info.rcMonitor.left);
+        int            cy   = (int)(info.rcMonitor.bottom - info.rcMonitor.top);
+
+        // Top the window
+        ::SetWindowPos(handle_, HWND_TOPMOST, x, y, cx, cy, SWP_NOACTIVATE);
+        ::ShowWindow(handle_, SW_SHOWNORMAL);
     }
     else
     {
-        HRESULT hr = d3d->SetFullscreenState(fullscreen);
-        KGE_THROW_IF_FAILED(hr, "DXGI SetFullscreenState failed!");
+        // Adjust the rect of client area
+        RECT rc = { 0, 0, LONG(width), LONG(height) };
+        ::AdjustWindowRect(&rc, GetStyle(), false);
 
-        hr = d3d->ResizeTarget(width, height);
-        KGE_THROW_IF_FAILED(hr, "DXGI ResizeTarget failed!");
+        width  = uint32_t(rc.right - rc.left);
+        height = uint32_t(rc.bottom - rc.top);
+
+        MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
+        uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
+        uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
+        int            left    = screenw > width ? ((screenw - width) / 2) : 0;
+        int            top     = screenh > height ? ((screenh - height) / 2) : 0;
+
+        // Reset window style
+        ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
+
+        // Unpin the window
+        ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
+        ::ShowWindow(handle_, SW_SHOWNORMAL);
     }
 
-    is_fullscreen_ = fullscreen;
+    resolution_ = Resolution{ width, height, 0 };
+
+    // Resize render target
+    Renderer::GetInstance().Resize(width, height);
 }
 
 Vector<Resolution> WindowWin32Impl::GetResolutions()
 {
     if (resolutions_.empty())
     {
-        auto d3d = kiwano::graphics::directx::GetD3DDeviceResources();
+        Set<String> resolution_list;
 
-        DXGI_MODE_DESC* mode_descs = nullptr;
-        int             mode_num   = 0;
+        DEVMODEA dmi;
+        ZeroMemory(&dmi, sizeof(dmi));
+        dmi.dmSize = sizeof(dmi);
 
-        HRESULT hr = d3d->GetDisplaySettings(&mode_descs, &mode_num);
-        if (SUCCEEDED(hr))
+        DWORD mode_count = 0;
+        while (EnumDisplaySettingsA(device_name_.c_str(), mode_count++, &dmi) != 0)
         {
-            std::unique_ptr<DXGI_MODE_DESC[]> mode_list(mode_descs);
+            StringStream ss;
+            ss << dmi.dmPelsWidth << 'x' << dmi.dmPelsHeight << ':' << dmi.dmDisplayFrequency;
 
-            if (mode_list)
+            if (resolution_list.find(ss.str()) == resolution_list.end())
             {
-                for (int i = 0; i < mode_num; i++)
-                {
-                    Resolution res;
-                    res.width        = mode_descs[i].Width;
-                    res.height       = mode_descs[i].Height;
-                    res.refresh_rate = 0;
-
-                    if (mode_descs[i].RefreshRate.Denominator > 0)
-                    {
-                        res.refresh_rate = mode_descs[i].RefreshRate.Numerator / mode_descs[i].RefreshRate.Denominator;
-                    }
-
-                    if (!resolutions_.empty())
-                    {
-                        auto& back = resolutions_.back();
-                        if (back.width == res.width && back.height == res.height
-                            && back.refresh_rate == res.refresh_rate)
-                            continue;
-                    }
-
-                    resolutions_.push_back(res);
-                }
+                resolution_list.insert(ss.str());
+                resolutions_.push_back(Resolution{ uint32_t(dmi.dmPelsWidth), uint32_t(dmi.dmPelsHeight),
+                                                   uint32_t(dmi.dmDisplayFrequency) });
             }
-        }
-        else
-        {
-            KGE_THROW_IF_FAILED(hr, "DXGI GetDisplaySettings failed!");
+            ZeroMemory(&dmi, sizeof(dmi));
         }
     }
     return resolutions_;
@@ -390,7 +417,30 @@ Vector<Resolution> WindowWin32Impl::GetResolutions()
 
 DWORD WindowWin32Impl::GetStyle() const
 {
-    return (resizable_ ? (WINDOW_RESIZABLE_STYLE) : (WINDOW_FIXED_STYLE));
+    if (is_fullscreen_)
+        return WINDOW_FULLSCREEN_STYLE;
+    if (resizable_)
+        return WINDOW_RESIZABLE_STYLE;
+    return WINDOW_FIXED_STYLE;
+}
+
+void WindowWin32Impl::SetActive(bool active)
+{
+    if (!handle_)
+        return;
+
+    if (is_fullscreen_)
+    {
+        // Hide window when it is not active
+        if (active)
+        {
+            ::SetWindowPos(handle_, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+        else
+        {
+            ::SetWindowPos(handle_, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+    }
 }
 
 void WindowWin32Impl::UpdateCursor()
@@ -658,8 +708,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         if (is_fullscreen_)
         {
-            // TODO restore to fullscreen mode
-            // SetResolution();
+            SetActive(true);
         }
     }
     break;
@@ -668,8 +717,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         if (is_fullscreen_)
         {
-            // TODO exit fullscreen mode
-            // ::ShowWindow(handle_, SW_MINIMIZE);
+            SetActive(false);
         }
     }
     break;
@@ -695,18 +743,6 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_DISPLAYCHANGE:
     {
         KGE_SYS_LOG("The display resolution has changed");
-
-        // Check fullscreen state
-        auto d3d_res = graphics::directx::GetD3DDeviceResources();
-        auto swap_chain = d3d_res->GetDXGISwapChain();
-        if (swap_chain)
-        {
-            BOOL is_fullscreen = FALSE;
-            if (SUCCEEDED(swap_chain->GetFullscreenState(&is_fullscreen, nullptr)))
-            {
-                is_fullscreen_ = !!is_fullscreen;
-            }
-        }
     }
     break;
 

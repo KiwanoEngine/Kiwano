@@ -45,6 +45,7 @@ struct Settings
     String   title;           ///< 窗口标题
     uint32_t icon;            ///< 窗口图标
     bool     resizable;       ///< 窗口大小可调整
+    bool     fullscreen;      ///< 窗口全屏
     Color    bg_color;        ///< 窗口背景色
     Duration frame_interval;  ///< 帧间隔
     bool     vsync_enabled;   ///< 垂直同步
@@ -56,6 +57,7 @@ struct Settings
         , title("Kiwano")
         , icon()
         , resizable(false)
+        , fullscreen(false)
         , bg_color(Color::Black)
         , frame_interval(16)
         , vsync_enabled(false)

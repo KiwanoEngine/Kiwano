@@ -82,8 +82,8 @@ void Runner::InitSettings()
     }
 
     // Create game window
-    WindowPtr window =
-        Window::Create(settings_.title, settings_.width, settings_.height, settings_.icon, settings_.resizable);
+    WindowPtr window = Window::Create(settings_.title, settings_.width, settings_.height, settings_.icon,
+                                      settings_.resizable, settings_.fullscreen);
     SetWindow(window);
 
     // Update renderer settings
