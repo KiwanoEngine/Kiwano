@@ -66,7 +66,6 @@ Actor::Actor()
     , opacity_(1.f)
     , displayed_opacity_(1.f)
     , anchor_(default_anchor_x, default_anchor_y)
-    , physic_body_(nullptr)
 {
 }
 

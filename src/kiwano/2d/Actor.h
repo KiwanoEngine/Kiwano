@@ -33,11 +33,6 @@ class Stage;
 class Director;
 class RenderContext;
 
-namespace physics
-{
-class PhysicBody;
-}
-
 KGE_DECLARE_SMART_PTR(Actor);
 
 /// \~chinese
@@ -392,14 +387,6 @@ public:
     UpdateCallback GetCallbackOnUpdate() const;
 
     /// \~chinese
-    /// @brief 获取物理身体，仅当kiwano-physics包启用时生效
-    physics::PhysicBody* GetPhysicBody() const;
-
-    /// \~chinese
-    /// @brief 设置物理身体，仅当kiwano-physics包启用时生效
-    void SetPhysicBody(physics::PhysicBody* body);
-
-    /// \~chinese
     /// @brief 判断点是否在角色内
     virtual bool ContainsPoint(const Point& point) const;
 
@@ -502,8 +489,6 @@ private:
     mutable Matrix3x2 transform_matrix_;
     mutable Matrix3x2 transform_matrix_inverse_;
     mutable Matrix3x2 transform_matrix_to_parent_;
-
-    physics::PhysicBody* physic_body_;
 };
 
 /** @} */
@@ -686,16 +671,6 @@ inline void Actor::SetCallbackOnUpdate(const UpdateCallback& cb)
 inline Actor::UpdateCallback Actor::GetCallbackOnUpdate() const
 {
     return cb_update_;
-}
-
-inline physics::PhysicBody* Actor::GetPhysicBody() const
-{
-    return physic_body_;
-}
-
-inline void Actor::SetPhysicBody(physics::PhysicBody* body)
-{
-    physic_body_ = body;
 }
 
 inline void Actor::ShowBorder(bool show)
