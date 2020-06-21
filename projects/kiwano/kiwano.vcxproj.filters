@@ -354,6 +354,9 @@
     <ClInclude Include="..\..\src\kiwano\base\ObjectPool.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Defer.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">

@@ -19,11 +19,12 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Application.h>
-#include <kiwano/utils/Logger.h>
+#include <kiwano/core/Defer.h>
 #include <kiwano/base/Director.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
@@ -62,23 +63,10 @@ void Application::Run(RunnerPtr runner)
     }
 
     // Ensure resources are destroyed before exiting
-    class DestroyHelper
+    KGE_DEFER[=]()
     {
-        Function<void()> f;
-
-    public:
-        DestroyHelper(Function<void()> f)
-            : f(f)
-        {
-        }
-
-        ~DestroyHelper()
-        {
-            f();
-        }
+        this->Destroy();
     };
-
-    DestroyHelper helper([=]() { this->Destroy(); });
 
     // Everything is ready
     runner->OnReady();

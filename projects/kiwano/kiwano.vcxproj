@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Defer.h" />
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
