@@ -112,10 +112,10 @@ public:
 
     void HandleEvent(Event* evt) override;
 
+    ~Input();
+
 private:
     Input();
-
-    ~Input();
 
     void UpdateKey(KeyCode key, bool down);
 

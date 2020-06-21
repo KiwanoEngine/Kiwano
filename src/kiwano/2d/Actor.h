@@ -33,11 +33,6 @@ class Stage;
 class Director;
 class RenderContext;
 
-namespace physics
-{
-class PhysicBody;
-}
-
 KGE_DECLARE_SMART_PTR(Actor);
 
 /// \~chinese
@@ -109,6 +104,10 @@ public:
     /// \~chinese
     /// @brief 是否启用级联透明度
     bool IsCascadeOpacityEnabled() const;
+
+    /// \~chinese
+    /// @brief 是否启用事件分发
+    bool IsEventDispatchEnabled() const;
 
     /// \~chinese
     /// @brief 获取名称的 Hash 值
@@ -392,14 +391,6 @@ public:
     UpdateCallback GetCallbackOnUpdate() const;
 
     /// \~chinese
-    /// @brief 获取物理身体，仅当kiwano-physics包启用时生效
-    physics::PhysicBody* GetPhysicBody() const;
-
-    /// \~chinese
-    /// @brief 设置物理身体，仅当kiwano-physics包启用时生效
-    void SetPhysicBody(physics::PhysicBody* body);
-
-    /// \~chinese
     /// @brief 判断点是否在角色内
     virtual bool ContainsPoint(const Point& point) const;
 
@@ -420,6 +411,11 @@ public:
     /// @param evt 事件
     /// @return 是否继续分发该事件
     virtual bool DispatchEvent(Event* evt);
+
+    /// \~chinese
+    /// @brief 开启或关闭事件分发功能
+    /// @param enabled 是否开启
+    void SetEventDispatchEnabled(bool enabled);
 
     /// \~chinese
     /// @brief 序列化
@@ -482,6 +478,7 @@ private:
     bool           hover_;
     bool           pressed_;
     bool           responsible_;
+    bool           evt_dispatch_enabled_;
     int            z_order_;
     float          opacity_;
     float          displayed_opacity_;
@@ -502,8 +499,6 @@ private:
     mutable Matrix3x2 transform_matrix_;
     mutable Matrix3x2 transform_matrix_inverse_;
     mutable Matrix3x2 transform_matrix_to_parent_;
-
-    physics::PhysicBody* physic_body_;
 };
 
 /** @} */
@@ -531,6 +526,11 @@ inline bool Actor::IsResponsible() const
 inline bool Actor::IsCascadeOpacityEnabled() const
 {
     return cascade_opacity_;
+}
+
+inline bool Actor::IsEventDispatchEnabled() const
+{
+    return evt_dispatch_enabled_;
 }
 
 inline size_t Actor::GetHashName() const
@@ -686,16 +686,6 @@ inline void Actor::SetCallbackOnUpdate(const UpdateCallback& cb)
 inline Actor::UpdateCallback Actor::GetCallbackOnUpdate() const
 {
     return cb_update_;
-}
-
-inline physics::PhysicBody* Actor::GetPhysicBody() const
-{
-    return physic_body_;
-}
-
-inline void Actor::SetPhysicBody(physics::PhysicBody* body)
-{
-    physic_body_ = body;
 }
 
 inline void Actor::ShowBorder(bool show)

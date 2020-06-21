@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/component/ComponentManager.h>
+#include <functional>
 
 namespace kiwano
 {
@@ -34,46 +35,74 @@ Component* ComponentManager::AddComponent(ComponentPtr component)
 
     if (component)
     {
-        component->InitComponent(target_);
-        components_.PushBack(component);
+        size_t hash = std::hash<String>{}(component->GetName());
+        AddComponent(hash, component);
     }
     return component.Get();
 }
 
-ComponentList& ComponentManager::GetAllComponents()
+Component* ComponentManager::AddComponent(size_t index, ComponentPtr component)
+{
+    KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
+
+    if (component)
+    {
+        component->InitComponent(target_);
+
+        components_.insert(std::make_pair(index, component));
+    }
+    return component.Get();
+}
+
+Component* ComponentManager::GetComponent(const String& name)
+{
+    size_t hash = std::hash<String>{}(name);
+    return GetComponent(hash);
+}
+
+Component* ComponentManager::GetComponent(size_t name_hash)
+{
+    if (!components_.empty())
+    {
+        auto   iter = components_.find(name_hash);
+        if (iter != components_.end())
+        {
+            return iter->second.Get();
+        }
+    }
+    return nullptr;
+}
+
+ComponentMap& ComponentManager::GetAllComponents()
 {
     return components_;
 }
 
-const ComponentList& ComponentManager::GetAllComponents() const
+const ComponentMap& ComponentManager::GetAllComponents() const
 {
     return components_;
 }
 
 void ComponentManager::RemoveComponent(ComponentPtr component)
 {
-    auto iter = std::find(components_.begin(), components_.end(), component);
-    if (iter != components_.end())
-    {
-        component->DestroyComponent();
-        components_.Remove(component);
-    }
+    RemoveComponent(component->GetName());
 }
 
-void ComponentManager::RemoveComponents(const String& name)
+void ComponentManager::RemoveComponent(const String& name)
 {
-    if (!components_.IsEmpty())
-    {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
-        {
-            next = component->GetNext();
+    size_t hash = std::hash<String>{}(name);
+    RemoveComponent(hash);
+}
 
-            if (component->IsName(name))
-            {
-                component->DestroyComponent();
-                components_.Remove(component);
-            }
+void ComponentManager::RemoveComponent(size_t name_hash)
+{
+    if (!components_.empty())
+    {
+        auto iter = components_.find(name_hash);
+        if (iter != components_.end())
+        {
+            iter->second->DestroyComponent();
+            components_.erase(iter);
         }
     }
 }
@@ -81,31 +110,28 @@ void ComponentManager::RemoveComponents(const String& name)
 void ComponentManager::RemoveAllComponents()
 {
     // Destroy all components
-    if (!components_.IsEmpty())
+    if (!components_.empty())
     {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
+        for (auto& p : components_)
         {
-            next = component->GetNext();
-
-            component->DestroyComponent();
+            p.second->DestroyComponent();
         }
     }
-    components_.Clear();
+    components_.clear();
 }
 
 void ComponentManager::Update(Duration dt)
 {
-    if (!components_.IsEmpty())
+    if (!components_.empty())
     {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
+        if (!components_.empty())
         {
-            next = component->GetNext();
-
-            if (component->IsEnable())
+            for (auto& p : components_)
             {
-                component->OnUpdate(dt);
+                if (p.second->IsEnable())
+                {
+                    p.second->OnUpdate(dt);
+                }
             }
         }
     }
@@ -113,16 +139,16 @@ void ComponentManager::Update(Duration dt)
 
 void ComponentManager::Render(RenderContext& ctx)
 {
-    if (!components_.IsEmpty())
+    if (!components_.empty())
     {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
+        if (!components_.empty())
         {
-            next = component->GetNext();
-
-            if (component->IsEnable())
+            for (auto& p : components_)
             {
-                component->OnRender(ctx);
+                if (p.second->IsEnable())
+                {
+                    p.second->OnRender(ctx);
+                }
             }
         }
     }
@@ -130,16 +156,16 @@ void ComponentManager::Render(RenderContext& ctx)
 
 void ComponentManager::DispatchToComponents(Event* evt)
 {
-    if (!components_.IsEmpty())
+    if (!components_.empty())
     {
-        ComponentPtr next;
-        for (auto component = components_.GetFirst(); component; component = next)
+        if (!components_.empty())
         {
-            next = component->GetNext();
-
-            if (component->IsEnable())
+            for (auto& p : components_)
             {
-                component->HandleEvent(evt);
+                if (p.second->IsEnable())
+                {
+                    p.second->HandleEvent(evt);
+                }
             }
         }
     }

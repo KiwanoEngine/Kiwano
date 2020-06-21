@@ -113,10 +113,8 @@ public:
     MouseWheelEvent();
 };
 
-/** @} */
-
 template <>
-struct IsEventType<MouseEvent>
+struct IsSameEventType<MouseEvent>
 {
     inline bool operator()(const Event* evt) const
     {
@@ -126,5 +124,7 @@ struct IsEventType<MouseEvent>
                || evt->GetType() == KGE_EVENT(MouseWheelEvent);
     }
 };
+
+/** @} */
 
 }  // namespace kiwano

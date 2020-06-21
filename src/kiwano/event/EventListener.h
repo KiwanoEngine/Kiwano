@@ -67,7 +67,7 @@ public:
     template <typename _EventTy>
     static inline EventListenerPtr Create(const Callback& callback)
     {
-        static_assert(kiwano::IsEvent<_EventTy>::value, "_EventTy is not an event type.");
+        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
         return EventListener::Create(KGE_EVENT(_EventTy), callback);
     }
 
@@ -79,7 +79,7 @@ public:
     template <typename _EventTy>
     static inline EventListenerPtr Create(const String& name, const Callback& callback)
     {
-        static_assert(kiwano::IsEvent<_EventTy>::value, "_EventTy is not an event type.");
+        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
         return EventListener::Create(name, KGE_EVENT(_EventTy), callback);
     }
 
@@ -133,11 +133,16 @@ public:
     void SetEventType(const EventType& type);
 
     /// \~chinese
+    /// @brief 判断是否处理事件
+    virtual bool ShouldHandle(Event* evt) const;
+
+    /// \~chinese
     /// @brief 设置监听的事件类型
     /// @tparam _EventTy 事件类型
-    template <typename _EventTy, typename = typename std::enable_if<IsEvent<_EventTy>::value, int>::type>
+    template <typename _EventTy>
     inline void SetEventType()
     {
+        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
         SetEventType(KGE_EVENT(_EventTy));
     }
 
@@ -208,13 +213,13 @@ inline void EventListener::SetEventType(const EventType& type)
     type_ = type;
 }
 
-inline void EventListener::Receive(Event* evt)
+inline bool EventListener::ShouldHandle(Event* evt) const
 {
-    KGE_ASSERT(evt != nullptr);
-
-    if (type_ == evt->GetType() && callback_)
+    if (evt)
     {
-        callback_(evt);
+        return evt->GetType() == type_;
     }
+    return false;
 }
+
 }  // namespace kiwano

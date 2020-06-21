@@ -17,11 +17,13 @@
     <ClInclude Include="..\..\src\kiwano\base\Director.h" />
     <ClInclude Include="..\..\src\kiwano\base\Module.h" />
     <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h" />
+    <ClInclude Include="..\..\src\kiwano\base\ObjectPool.h" />
     <ClInclude Include="..\..\src\kiwano\base\RefCounter.h" />
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Defer.h" />
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
@@ -132,6 +134,7 @@
     <ClCompile Include="..\..\src\kiwano\base\Director.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp" />
+    <ClCompile Include="..\..\src\kiwano\base\ObjectPool.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\RefCounter.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Exception.cpp" />

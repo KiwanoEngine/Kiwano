@@ -68,7 +68,7 @@ inline bool SdkLayersAvailable()
 struct D3D10DeviceResources : public ID3D10DeviceResources
 {
 public:
-    HRESULT Initialize(HWND hwnd) override;
+    HRESULT Initialize(HWND hwnd, Size logical_size) override;
 
     HRESULT Present(bool vsync) override;
 
@@ -138,14 +138,10 @@ D3D10DeviceResources::~D3D10DeviceResources()
     DiscardResources();
 }
 
-HRESULT D3D10DeviceResources::Initialize(HWND hwnd)
+HRESULT D3D10DeviceResources::Initialize(HWND hwnd, Size logical_size)
 {
-    RECT rc;
-    ::GetClientRect(hwnd, &rc);
-
     this->hwnd_           = hwnd;
-    this->logical_size_.x = float(rc.right - rc.left);
-    this->logical_size_.y = float(rc.bottom - rc.top);
+    this->logical_size_ = logical_size;
 
     HRESULT hr = this->CreateDeviceResources();
 

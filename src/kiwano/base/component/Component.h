@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano/core/Time.h>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/core/IntrusiveList.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
@@ -49,10 +48,8 @@ KGE_DECLARE_SMART_PTR(Component);
  */
 class KGE_API Component
     : public ObjectBase
-    , protected IntrusiveListValue<ComponentPtr>
 {
     friend class ComponentManager;
-    friend IntrusiveList<ComponentPtr>;
 
 public:
     /// \~chinese

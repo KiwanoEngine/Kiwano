@@ -21,6 +21,8 @@
 #include <kiwano-physics/PhysicBody.h>
 #include <kiwano-physics/PhysicWorld.h>
 
+#define KGE_PHYSIC_COMP_NAME "__KGE_PHYSIC_BODY__"
+
 namespace kiwano
 {
 namespace physics
@@ -48,6 +50,25 @@ PhysicBodyPtr PhysicBody::Create(PhysicWorld* world, Type type)
     return nullptr;
 }
 
+PhysicBody* PhysicBody::Get(Actor* actor)
+{
+    if (actor)
+    {
+        static size_t physic_comp_name_hash = 0;
+        if (physic_comp_name_hash == 0)
+        {
+            physic_comp_name_hash = std::hash<String>{}(KGE_PHYSIC_COMP_NAME);
+        }
+        return (PhysicBody*)actor->GetComponent(physic_comp_name_hash);
+    }
+    return nullptr;
+}
+
+PhysicBody* PhysicBody::Get(ActorPtr actor)
+{
+    return PhysicBody::Get(actor.Get());
+}
+
 PhysicBody::PhysicBody()
     : body_(nullptr)
     , world_(nullptr)
@@ -56,7 +77,7 @@ PhysicBody::PhysicBody()
     , mask_bits_(0xFFFF)
     , group_index_(0)
 {
-    SetName("KGE_PHYSIC_BODY");
+    SetName(KGE_PHYSIC_COMP_NAME);
 }
 
 PhysicBody::~PhysicBody() {}
@@ -64,8 +85,6 @@ PhysicBody::~PhysicBody() {}
 void PhysicBody::InitComponent(Actor* actor)
 {
     Component::InitComponent(actor);
-
-    actor->SetPhysicBody(this);
 
     UpdateFromActor(actor);
 }

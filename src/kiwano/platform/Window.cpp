@@ -71,6 +71,11 @@ uint32_t Window::GetHeight() const
     return height_;
 }
 
+Resolution Window::GetCurrentResolution() const
+{
+    return resolution_;
+}
+
 WindowHandle Window::GetHandle() const
 {
     return handle_;

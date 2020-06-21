@@ -19,51 +19,54 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/event/EventListener.h>
+#include <kiwano/base/ObjectBase.h>
+#include <mutex>
 
 namespace kiwano
 {
-
-EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
+/**
+ * \~chinese
+ * @brief 对象池
+ */
+class KGE_API ObjectPool
+    : public Noncopyable
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
-    {
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
-}
+public:
+    static ObjectPool& GetInstance();
 
-EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
-{
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
-    {
-        ptr->SetName(name);
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
-}
+    ObjectPool();
 
-EventListener::EventListener()
-    : type_()
-    , callback_()
-    , running_(true)
-    , removeable_(false)
-    , swallow_(false)
-{
-}
+    virtual ~ObjectPool();
 
-EventListener::~EventListener() {}
+    /**
+     * \~chinese
+     * @brief 添加对象到内存池
+     * @param[in] obj 基础对象
+     */
+    void AddObject(ObjectBase* obj);
 
-void EventListener::Receive(Event* evt)
-{
-    if (ShouldHandle(evt) && callback_)
-    {
-        callback_(evt);
-    }
-}
+    /**
+     * \~chinese
+     * @brief 判断对象是否在对象池中
+     * @param[in] obj 基础对象
+     */
+    bool Contains(ObjectBase* obj) const;
 
+    /**
+     * \~chinese
+     * @brief 清空所有对象
+     */
+    void Clear();
+
+private:
+    ObjectPool(const ObjectPool&) = delete;
+
+    ObjectPool& operator=(const ObjectPool&) = delete;
+
+private:
+    std::mutex          mutex_;
+    Vector<ObjectBase*> objects_;
+
+    static List<ObjectPool*> pools_;
+};
 }  // namespace kiwano

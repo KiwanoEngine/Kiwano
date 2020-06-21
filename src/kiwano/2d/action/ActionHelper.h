@@ -36,11 +36,9 @@ namespace kiwano
 /// @brief 动画辅助类
 struct ActionHelper
 {
-    using DoneCallback = Action::DoneCallback;
-
     /// \~chinese
     /// @brief 设置循环次数
-    inline ActionHelper& SetLoops(int loops)
+    inline ActionHelper& Loops(int loops)
     {
         ptr->SetLoops(loops);
         return (*this);
@@ -48,7 +46,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置动画延迟
-    inline ActionHelper& SetDelay(Duration delay)
+    inline ActionHelper& Delay(Duration delay)
     {
         ptr->SetDelay(delay);
         return (*this);
@@ -56,7 +54,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置动画结束回调函数
-    inline ActionHelper& SetDoneCallback(const DoneCallback& cb)
+    inline ActionHelper& DoneCallback(const Action::DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
         return (*this);
@@ -64,7 +62,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    inline ActionHelper& SetLoopDoneCallback(const DoneCallback& cb)
+    inline ActionHelper& LoopDoneCallback(const Action::DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
         return (*this);
@@ -80,7 +78,7 @@ struct ActionHelper
 
     /// \~chinese
     /// @brief 设置名称
-    inline ActionHelper& SetName(const String& name)
+    inline ActionHelper& Name(const String& name)
     {
         ptr->SetName(name);
         return (*this);
@@ -116,11 +114,9 @@ private:
 /// @brief 补间动画辅助类
 struct TweenHelper
 {
-    using DoneCallback = Action::DoneCallback;
-
     /// \~chinese
     /// @brief 设置动画持续时长
-    inline TweenHelper& SetDuration(Duration dur)
+    inline TweenHelper& Dur(Duration dur)
     {
         ptr->SetDuration(dur);
         return (*this);
@@ -128,7 +124,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置循环次数
-    inline TweenHelper& SetLoops(int loops)
+    inline TweenHelper& Loops(int loops)
     {
         ptr->SetLoops(loops);
         return (*this);
@@ -136,7 +132,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置缓动函数
-    inline TweenHelper& SetEaseFunc(EaseFunc ease)
+    inline TweenHelper& EaseFunc(EaseFunc ease)
     {
         ptr->SetEaseFunc(ease);
         return (*this);
@@ -144,7 +140,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置动画延迟
-    inline TweenHelper& SetDelay(Duration delay)
+    inline TweenHelper& Delay(Duration delay)
     {
         ptr->SetDelay(delay);
         return (*this);
@@ -152,7 +148,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置动画结束回调函数
-    inline TweenHelper& SetDoneCallback(const DoneCallback& cb)
+    inline TweenHelper& DoneCallback(const Action::DoneCallback& cb)
     {
         ptr->SetDoneCallback(cb);
         return (*this);
@@ -160,7 +156,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    inline TweenHelper& SetLoopDoneCallback(const DoneCallback& cb)
+    inline TweenHelper& LoopDoneCallback(const Action::DoneCallback& cb)
     {
         ptr->SetLoopDoneCallback(cb);
         return (*this);
@@ -176,7 +172,7 @@ struct TweenHelper
 
     /// \~chinese
     /// @brief 设置名称
-    inline TweenHelper& SetName(const String& name)
+    inline TweenHelper& Name(const String& name)
     {
         ptr->SetName(name);
         return (*this);
@@ -220,7 +216,7 @@ struct Tween
 public:
     /// \~chinese
     /// @brief 构造相对位移动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param vector 移动向量
     static inline TweenHelper MoveBy(Duration dur, const Point& vector)
     {
@@ -229,7 +225,7 @@ public:
 
     /// \~chinese
     /// @brief 构造位移动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param pos 目的坐标
     static inline TweenHelper MoveTo(Duration dur, const Point& pos)
     {
@@ -238,29 +234,29 @@ public:
 
     /// \~chinese
     /// @brief 构造相对跳跃动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param vec 跳跃位移向量
     /// @param height 跳跃高度
     /// @param jumps 跳跃次数
-    static inline TweenHelper JumpBy(Duration duration, const Vec2& vec, float height, int jumps = 1)
+    static inline TweenHelper JumpBy(Duration dur, const Vec2& vec, float height, int jumps = 1)
     {
-        return TweenHelper(ActionJumpBy::Create(duration, vec, height, jumps));
+        return TweenHelper(ActionJumpBy::Create(dur, vec, height, jumps));
     }
 
     /// \~chinese
     /// @brief 构造跳跃动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param pos 目的坐标
     /// @param height 跳跃高度
     /// @param jumps 跳跃次数
-    static inline TweenHelper JumpTo(Duration duration, const Point& pos, float height, int jumps = 1)
+    static inline TweenHelper JumpTo(Duration dur, const Point& pos, float height, int jumps = 1)
     {
-        return TweenHelper(ActionJumpTo::Create(duration, pos, height, jumps));
+        return TweenHelper(ActionJumpTo::Create(dur, pos, height, jumps));
     }
 
     /// \~chinese
     /// @brief 构造相对缩放动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param scale_x 横向缩放相对变化值
     /// @param scale_y 纵向缩放相对变化值
     static inline TweenHelper ScaleBy(Duration dur, float scale_x, float scale_y)
@@ -270,7 +266,7 @@ public:
 
     /// \~chinese
     /// @brief 构造缩放动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param scale_x 横向缩放目标值
     /// @param scale_y 纵向缩放目标值
     static inline TweenHelper ScaleTo(Duration dur, float scale_x, float scale_y)
@@ -280,7 +276,7 @@ public:
 
     /// \~chinese
     /// @brief 构造透明度渐变动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param opacity 目标透明度
     static inline TweenHelper FadeTo(Duration dur, float opacity)
     {
@@ -289,7 +285,7 @@ public:
 
     /// \~chinese
     /// @brief 构造淡入动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     static inline TweenHelper FadeIn(Duration dur)
     {
         return TweenHelper(ActionFadeIn::Create(dur));
@@ -297,7 +293,7 @@ public:
 
     /// \~chinese
     /// @brief 构造淡出动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     static inline TweenHelper FadeOut(Duration dur)
     {
         return TweenHelper(ActionFadeOut::Create(dur));
@@ -305,7 +301,7 @@ public:
 
     /// \~chinese
     /// @brief 构造相对旋转动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param rotation 角度相对变化值
     static inline TweenHelper RotateBy(Duration dur, float rotation)
     {
@@ -314,7 +310,7 @@ public:
 
     /// \~chinese
     /// @brief 构造旋转动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param rotation 目标角度
     static inline TweenHelper RotateTo(Duration dur, float rotation)
     {
@@ -323,20 +319,20 @@ public:
 
     /// \~chinese
     /// @brief 构造路径行走动画
-    /// @param duration 持续时长
+    /// @param dur 持续时长
     /// @param path 路径形状
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    static inline TweenHelper Walk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
+    static inline TweenHelper Walk(Duration dur, ShapePtr path, bool rotating = false, float start = 0.f,
                                    float end = 1.f)
     {
-        return TweenHelper(ActionWalk::Create(duration, path, rotating, start, end));
+        return TweenHelper(ActionWalk::Create(dur, path, rotating, start, end));
     }
 
     /// \~chinese
     /// @brief 构建帧动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param[in] frame_seq 序列帧
     static inline TweenHelper Animation(Duration dur, FrameSequencePtr frames)
     {
@@ -345,7 +341,7 @@ public:
 
     /// \~chinese
     /// @brief 构造自定义动画
-    /// @param duration 动画时长
+    /// @param dur 动画时长
     /// @param tween_func 动画回调函数
     static inline TweenHelper Custom(Duration dur, ActionCustom::TweenFunc tween_func)
     {

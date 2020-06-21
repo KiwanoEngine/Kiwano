@@ -351,6 +351,12 @@
     <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\ObjectPool.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Defer.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -574,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\ObjectPool.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

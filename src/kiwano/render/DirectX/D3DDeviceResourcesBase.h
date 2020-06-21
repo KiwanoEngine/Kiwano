@@ -32,7 +32,7 @@ MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
 ID3DDeviceResourcesBase : public IUnknown
 {
 public:
-    virtual HRESULT Initialize(HWND hwnd) = 0;
+    virtual HRESULT Initialize(HWND hwnd, Size logical_size) = 0;
 
     virtual HRESULT Present(bool vsync) = 0;
 

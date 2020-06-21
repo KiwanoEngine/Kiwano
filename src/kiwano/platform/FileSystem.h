@@ -102,10 +102,10 @@ public:
      */
     bool ExtractResourceToFile(const Resource& res, const String& dest_file_name) const;
 
+    ~FileSystem();
+
 private:
     FileSystem();
-
-    ~FileSystem();
 
 private:
     Vector<String>                       search_paths_;

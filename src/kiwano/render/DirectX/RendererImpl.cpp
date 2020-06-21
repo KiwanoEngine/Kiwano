@@ -55,17 +55,18 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
 
     KGE_THROW_IF_FAILED(::CoInitialize(nullptr), "CoInitialize failed");
 
-    HWND target_window = window->GetHandle();
-    output_size_       = window->GetSize();
+    HWND       target_window = window->GetHandle();
+    Resolution resolution    = window->GetCurrentResolution();
+    HRESULT    hr            = target_window ? S_OK : E_FAIL;
 
-    HRESULT hr = target_window ? S_OK : E_FAIL;
+    output_size_ = Size{ float(resolution.width), float(resolution.height) };
 
     // Initialize Direct3D resources
     if (SUCCEEDED(hr))
     {
         auto d3d_res = graphics::directx::GetD3DDeviceResources();
 
-        hr = d3d_res->Initialize(target_window);
+        hr = d3d_res->Initialize(target_window, output_size_);
         if (FAILED(hr))
         {
             d3d_res->DiscardResources();

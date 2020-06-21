@@ -413,7 +413,7 @@ void PhysicWorld::BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_wor
     {
         Matrix3x2 child_to_world = child->GetTransformMatrixToParent() * parent_to_world;
 
-        PhysicBody* body = child->GetPhysicBody();
+        PhysicBody* body = PhysicBody::Get(child);
         if (body)
         {
             body->BeforeSimulation(child.Get(), parent_to_world, child_to_world, parent_rotation);
@@ -428,7 +428,7 @@ void PhysicWorld::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_worl
 {
     for (auto child : parent->GetAllChildren())
     {
-        PhysicBody* body = child->GetPhysicBody();
+        PhysicBody* body = PhysicBody::Get(child);
         if (body)
         {
             body->AfterSimulation(child.Get(), parent_to_world, parent_rotation);

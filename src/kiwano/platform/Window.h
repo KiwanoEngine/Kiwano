@@ -80,7 +80,7 @@ public:
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
     static WindowPtr Create(const String& title, uint32_t width, uint32_t height, uint32_t icon = 0,
-                            bool resizable = false);
+                            bool resizable = false, bool fullscreen = false);
 
     /**
      * \~chinese
@@ -109,6 +109,12 @@ public:
      * @return 窗口高度
      */
     uint32_t GetHeight() const;
+
+    /**
+     * \~chinese
+     * @brief 获取当前分辨率
+     */
+    Resolution GetCurrentResolution() const;
 
     /**
      * \~chinese
@@ -214,6 +220,7 @@ protected:
     uint32_t             min_height_;
     uint32_t             max_width_;
     uint32_t             max_height_;
+    Resolution           resolution_;
     WindowHandle         handle_;
     String               title_;
     std::queue<EventPtr> event_queue_;

@@ -31,8 +31,8 @@ namespace kiwano
  */
 
 /// \~chinese
-/// @brief 组件列表
-typedef IntrusiveList<ComponentPtr> ComponentList;
+/// @brief 组件映射
+typedef UnorderedMap<size_t, ComponentPtr> ComponentMap;
 
 /**
  * \~chinese
@@ -47,12 +47,26 @@ public:
     Component* AddComponent(ComponentPtr component);
 
     /// \~chinese
-    /// @brief 获取所有组件
-    ComponentList& GetAllComponents();
+    /// @brief 添加组件
+    /// @param index 索引值
+    /// @param component 组件
+    Component* AddComponent(size_t index, ComponentPtr component);
+
+    /// \~chinese
+    /// @brief 获取组件
+    Component* GetComponent(const String& name);
+
+    /// \~chinese
+    /// @brief 获取组件
+    Component* GetComponent(size_t name_hash);
 
     /// \~chinese
     /// @brief 获取所有组件
-    const ComponentList& GetAllComponents() const;
+    ComponentMap& GetAllComponents();
+
+    /// \~chinese
+    /// @brief 获取所有组件
+    const ComponentMap& GetAllComponents() const;
 
     /// \~chinese
     /// @brief 移除组件
@@ -61,7 +75,12 @@ public:
     /// \~chinese
     /// @brief 移除组件
     /// @param name 组件名称
-    void RemoveComponents(const String& name);
+    void RemoveComponent(const String& name);
+
+    /// \~chinese
+    /// @brief 移除组件
+    /// @param name_hash 组件名称hash值
+    void RemoveComponent(size_t name_hash);
 
     /// \~chinese
     /// @brief 移除所有组件
@@ -83,8 +102,8 @@ protected:
     ComponentManager(Actor* target);
 
 private:
-    Actor*        target_;
-    ComponentList components_;
+    Actor*       target_;
+    ComponentMap components_;
 };
 
 /** @} */

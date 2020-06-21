@@ -18,52 +18,69 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/event/EventListener.h>
+#include <kiwano/base/ObjectPool.h>
 
 namespace kiwano
 {
 
-EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
+List<ObjectPool*> ObjectPool::pools_;
+
+ObjectPool& ObjectPool::GetInstance()
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
-    {
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
+    static ObjectPool instance;
+    return *pools_.back();
 }
 
-EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
+ObjectPool::ObjectPool()
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
-    {
-        ptr->SetName(name);
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
+    pools_.push_back(this);
 }
 
-EventListener::EventListener()
-    : type_()
-    , callback_()
-    , running_(true)
-    , removeable_(false)
-    , swallow_(false)
+ObjectPool::~ObjectPool()
 {
+    Clear();
+
+    auto iter = std::find(pools_.begin(), pools_.end(), this);
+    if (iter != pools_.end())
+        pools_.erase(iter);
 }
 
-EventListener::~EventListener() {}
-
-void EventListener::Receive(Event* evt)
+void ObjectPool::AddObject(ObjectBase* obj)
 {
-    if (ShouldHandle(evt) && callback_)
+    if (obj)
     {
-        callback_(evt);
+        if (!Contains(obj))
+        {
+            obj->Retain();
+
+            std::lock_guard<std::mutex> lock(mutex_);
+            objects_.push_back(obj);
+        }
     }
+}
+
+bool ObjectPool::Contains(ObjectBase* obj) const
+{
+    std::lock_guard<std::mutex> lock(const_cast<std::mutex&>(mutex_));
+
+    for (auto iter = pools_.rbegin(); iter != pools_.rend(); iter++)
+        for (const auto o : (*iter)->objects_)
+            if (obj == o)
+                return true;
+    return false;
+}
+
+void ObjectPool::Clear()
+{
+    Vector<ObjectBase*> copied;
+
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        copied = std::move(objects_);
+    }
+
+    for (auto obj : copied)
+        obj->Release();
 }
 
 }  // namespace kiwano

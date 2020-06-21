@@ -45,6 +45,10 @@ public:
     virtual ~ObjectBase();
 
     /// \~chinese
+    /// @brief 自动释放
+    void AutoRelease();
+
+    /// \~chinese
     /// @brief 设置对象名
     void SetName(const String& name);
 

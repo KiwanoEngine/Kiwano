@@ -19,11 +19,12 @@
 // THE SOFTWARE.
 
 #include <kiwano/platform/Application.h>
-#include <kiwano/utils/Logger.h>
+#include <kiwano/core/Defer.h>
 #include <kiwano/base/Director.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
@@ -42,15 +43,15 @@ Application::Application()
 
 Application::~Application()
 {
-    this->Destroy();
 }
 
 void Application::Run(RunnerPtr runner)
 {
     KGE_ASSERT(runner);
-    runner_ = runner;
-    running_ = true;
+    running_   = true;
     is_paused_ = false;
+    runner_    = runner;
+    timer_     = Timer::Create();
 
     // Initialize runner
     runner->InitSettings();
@@ -61,56 +62,54 @@ void Application::Run(RunnerPtr runner)
         c->SetupModule();
     }
 
+    // Ensure resources are destroyed before exiting
+    KGE_DEFER[=]()
+    {
+        this->Destroy();
+    };
+
     // Everything is ready
     runner->OnReady();
 
+    // Update everything
+    this->Update(0);
+
+    // Start the loop
     while (running_)
     {
-        if (!frame_ticker_)
-        {
-            frame_ticker_ = Ticker::Create(0);
-        }
+        timer_->Tick();
 
-        if (frame_ticker_->Tick())
-        {
-            // Execute main loop
-            if (!runner->MainLoop(frame_ticker_->GetDeltaTime()))
-                running_ = false;
-        }
-        else
-        {
-            // Releases CPU
-            Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
-            Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
-            if (sleep_dt.Milliseconds() > 1LL)
-            {
-                sleep_dt.Sleep();
-            }
-        }
+        // Execute main loop
+        if (!runner->MainLoop(timer_->GetDeltaTime()))
+            running_ = false;
     }
-
-    this->Destroy();
 }
 
 void Application::Pause()
 {
     is_paused_ = true;
 
-    if (frame_ticker_)
-        frame_ticker_->Pause();
+    if (timer_)
+        timer_->Pause();
 }
 
 void Application::Resume()
 {
     is_paused_ = false;
 
-    if (frame_ticker_)
-        frame_ticker_->Resume();
+    if (timer_)
+        timer_->Resume();
 }
 
 void Application::Quit()
 {
     running_ = false;
+}
+
+void Application::UpdateFrame(Duration dt)
+{
+    this->Render();
+    this->Update(dt);
 }
 
 void Application::Destroy()

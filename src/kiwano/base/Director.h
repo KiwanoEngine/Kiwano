@@ -102,10 +102,10 @@ public:
 
     void HandleEvent(Event* evt) override;
 
+    virtual ~Director();
+
 private:
     Director();
-
-    virtual ~Director();
 
 private:
     bool            render_border_enabled_;

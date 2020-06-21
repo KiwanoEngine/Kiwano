@@ -24,6 +24,8 @@
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/utils/Ticker.h>
+
 
 namespace kiwano
 {
@@ -38,14 +40,16 @@ KGE_DECLARE_SMART_PTR(Runner);
  */
 struct Settings
 {
-    uint32_t width;          ///< 窗口宽度
-    uint32_t height;         ///< 窗口高度
-    String   title;          ///< 窗口标题
-    uint32_t icon;           ///< 窗口图标
-    bool     resizable;      ///< 窗口大小可调整
-    Color    bg_color;       ///< 窗口背景色
-    bool     vsync_enabled;  ///< 垂直同步
-    bool     debug_mode;     ///< 调试模式
+    uint32_t width;           ///< 窗口宽度
+    uint32_t height;          ///< 窗口高度
+    String   title;           ///< 窗口标题
+    uint32_t icon;            ///< 窗口图标
+    bool     resizable;       ///< 窗口大小可调整
+    bool     fullscreen;      ///< 窗口全屏
+    Color    bg_color;        ///< 窗口背景色
+    Duration frame_interval;  ///< 帧间隔
+    bool     vsync_enabled;   ///< 垂直同步
+    bool     debug_mode;      ///< 调试模式
 
     Settings()
         : width(800)
@@ -53,8 +57,10 @@ struct Settings
         , title("Kiwano")
         , icon()
         , resizable(false)
+        , fullscreen(false)
         , bg_color(Color::Black)
-        , vsync_enabled(true)
+        , frame_interval(16)
+        , vsync_enabled(false)
         , debug_mode(false)
     {
     }
@@ -118,6 +124,14 @@ public:
     /// @brief 获取设置
     Settings GetSettings() const;
 
+    /// \~chinese
+    /// @brief 获取帧报时器
+    TickerPtr GetFrameTicker() const;
+
+    /// \~chinese
+    /// @brief 设置帧报时器
+    void SetFrameTicker(TickerPtr ticker);
+
 protected:
     /// \~chinese
     /// @brief 修改设置
@@ -131,6 +145,7 @@ private:
 private:
     Settings  settings_;
     WindowPtr main_window_;
+    TickerPtr frame_ticker_;
 };
 
 inline void Runner::OnReady() {}
@@ -160,6 +175,16 @@ inline Settings Runner::GetSettings() const
 inline void Runner::SetSettings(Settings settings)
 {
     settings_ = settings;
+}
+
+inline TickerPtr Runner::GetFrameTicker() const
+{
+    return frame_ticker_;
+}
+
+inline void Runner::SetFrameTicker(TickerPtr ticker)
+{
+    frame_ticker_ = ticker;
 }
 
 }  // namespace kiwano

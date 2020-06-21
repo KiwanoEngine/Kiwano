@@ -19,51 +19,51 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/event/EventListener.h>
+#include <kiwano/core/Function.h>
 
 namespace kiwano
 {
 
-EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
+class Defer
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
+public:
+    Defer() = default;
+
+    Defer(const Function<void()>& func)
+        : func_(func)
     {
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
     }
-    return ptr;
-}
 
-EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
-{
-    EventListenerPtr ptr = memory::New<EventListener>();
-    if (ptr)
+    Defer(Defer&& other) noexcept
+        : func_(other.func_)
     {
-        ptr->SetName(name);
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
+        other.func_ = nullptr;
     }
-    return ptr;
-}
 
-EventListener::EventListener()
-    : type_()
-    , callback_()
-    , running_(true)
-    , removeable_(false)
-    , swallow_(false)
-{
-}
-
-EventListener::~EventListener() {}
-
-void EventListener::Receive(Event* evt)
-{
-    if (ShouldHandle(evt) && callback_)
+    ~Defer()
     {
-        callback_(evt);
+        if (func_)
+            func_();
     }
-}
+
+private:
+    Defer(const Defer&) = delete;
+    Defer& operator=(const Defer&) = delete;
+
+    Function<void()> func_;
+};
+
+class __DeferHelper
+{
+public:
+    Defer operator-(const Function<void()>& func) const
+    {
+        return Defer{ func };
+    }
+};
+
+#define KGE_DEFER auto __KGE_DEFER_VAR(__defer_line_, __LINE__, __) = ::kiwano::__DeferHelper() -
+#define __KGE_DEFER_VAR(a, b, c) __KGE_DEFER_TOKEN_CONNECT(a, b, c)
+#define __KGE_DEFER_TOKEN_CONNECT(a, b, c) a##b##c
 
 }  // namespace kiwano
