@@ -106,6 +106,10 @@ public:
     bool IsCascadeOpacityEnabled() const;
 
     /// \~chinese
+    /// @brief 是否启用事件分发
+    bool IsEventDispatchEnabled() const;
+
+    /// \~chinese
     /// @brief 获取名称的 Hash 值
     size_t GetHashName() const;
 
@@ -409,6 +413,11 @@ public:
     virtual bool DispatchEvent(Event* evt);
 
     /// \~chinese
+    /// @brief 开启或关闭事件分发功能
+    /// @param enabled 是否开启
+    void SetEventDispatchEnabled(bool enabled);
+
+    /// \~chinese
     /// @brief 序列化
     void DoSerialize(Serializer* serializer) const override;
 
@@ -469,6 +478,7 @@ private:
     bool           hover_;
     bool           pressed_;
     bool           responsible_;
+    bool           evt_dispatch_enabled_;
     int            z_order_;
     float          opacity_;
     float          displayed_opacity_;
@@ -516,6 +526,11 @@ inline bool Actor::IsResponsible() const
 inline bool Actor::IsCascadeOpacityEnabled() const
 {
     return cascade_opacity_;
+}
+
+inline bool Actor::IsEventDispatchEnabled() const
+{
+    return evt_dispatch_enabled_;
 }
 
 inline size_t Actor::GetHashName() const

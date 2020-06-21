@@ -59,6 +59,7 @@ Actor::Actor()
     , cascade_opacity_(false)
     , show_border_(false)
     , is_fast_transform_(true)
+    , evt_dispatch_enabled_(true)
     , parent_(nullptr)
     , stage_(nullptr)
     , hash_name_(0)
@@ -191,7 +192,7 @@ bool Actor::CheckVisibility(RenderContext& ctx) const
 
 bool Actor::DispatchEvent(Event* evt)
 {
-    if (!visible_)
+    if (!visible_ || !evt_dispatch_enabled_)
         return true;
 
     // Dispatch to children those are greater than 0 in Z-Order
@@ -218,6 +219,11 @@ bool Actor::DispatchEvent(Event* evt)
         child = child->GetPrev();
     }
     return true;
+}
+
+void Actor::SetEventDispatchEnabled(bool enabled)
+{
+    evt_dispatch_enabled_ = enabled;
 }
 
 void Actor::DoSerialize(Serializer* serializer) const
