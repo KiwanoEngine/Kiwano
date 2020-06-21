@@ -35,10 +35,21 @@ Component* ComponentManager::AddComponent(ComponentPtr component)
 
     if (component)
     {
+        size_t hash = std::hash<String>{}(component->GetName());
+        AddComponent(hash, component);
+    }
+    return component.Get();
+}
+
+Component* ComponentManager::AddComponent(size_t index, ComponentPtr component)
+{
+    KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
+
+    if (component)
+    {
         component->InitComponent(target_);
 
-        size_t hash = std::hash<String>{}(component->GetName());
-        components_.insert(std::make_pair(hash, component));
+        components_.insert(std::make_pair(index, component));
     }
     return component.Get();
 }

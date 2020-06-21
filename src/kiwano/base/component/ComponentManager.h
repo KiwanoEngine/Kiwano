@@ -47,6 +47,12 @@ public:
     Component* AddComponent(ComponentPtr component);
 
     /// \~chinese
+    /// @brief 添加组件
+    /// @param index 索引值
+    /// @param component 组件
+    Component* AddComponent(size_t index, ComponentPtr component);
+
+    /// \~chinese
     /// @brief 获取组件
     Component* GetComponent(const String& name);
 
