@@ -93,10 +93,8 @@ public:
     WindowClosedEvent();
 };
 
-/** @} */
-
 template <>
-struct IsEventType<WindowEvent>
+struct IsSameEventType<WindowEvent>
 {
     inline bool operator()(const Event* evt) const
     {
@@ -106,5 +104,7 @@ struct IsEventType<WindowEvent>
                || evt->GetType() == KGE_EVENT(WindowClosedEvent);
     }
 };
+
+/** @} */
 
 }  // namespace kiwano

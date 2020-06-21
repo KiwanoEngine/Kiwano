@@ -54,7 +54,7 @@ public:
 
     /// \~chinese
     /// @brief 判断事件类型
-    /// @return 是否是指定事件类型
+    /// @return 事件类型相同返回true，否则返回false
     template <typename _Ty>
     bool IsType() const;
 
@@ -75,19 +75,20 @@ private:
 };
 
 /// \~chinese
-/// @brief 事件特性：判断指定类型是否是事件
+/// @brief 事件特性：判断是否是事件
 template <typename _Ty>
-struct IsEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value>
+struct IsBaseOfEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value>
 {
 };
 
 /// \~chinese
-/// @brief 事件特性：判断一个事件能否安全转换到另一事件类型
-template <typename _Ty, typename = typename std::enable_if<IsEvent<_Ty>::value, int>::type>
-struct IsEventType
+/// @brief 事件特性：判断事件类型是否相同
+template <typename _Ty>
+struct IsSameEventType
 {
     inline bool operator()(const Event* evt) const
     {
+        static_assert(kiwano::IsBaseOfEvent<_Ty>::value, "_Ty is not an event type.");
         return evt->GetType() == KGE_EVENT(_Ty);
     }
 };
@@ -102,8 +103,8 @@ inline const EventType& Event::GetType() const
 template <typename _Ty>
 inline bool Event::IsType() const
 {
-    static_assert(kiwano::IsEvent<_Ty>::value, "_Ty is not an event type.");
-    return kiwano::IsEventType<_Ty>()(this);
+    static_assert(kiwano::IsBaseOfEvent<_Ty>::value, "_Ty is not an event type.");
+    return IsSameEventType<_Ty>()(this);
 }
 
 template <typename _Ty>

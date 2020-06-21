@@ -72,10 +72,8 @@ public:
     KeyCharEvent();
 };
 
-/** @} */
-
 template <>
-struct IsEventType<KeyEvent>
+struct IsSameEventType<KeyEvent>
 {
     inline bool operator()(const Event* evt) const
     {
@@ -83,5 +81,7 @@ struct IsEventType<KeyEvent>
                || evt->GetType() == KGE_EVENT(KeyCharEvent);
     }
 };
+
+/** @} */
 
 }  // namespace kiwano

@@ -58,4 +58,12 @@ EventListener::EventListener()
 
 EventListener::~EventListener() {}
 
+void EventListener::Receive(Event* evt)
+{
+    if (ShouldHandle(evt) && callback_)
+    {
+        callback_(evt);
+    }
+}
+
 }  // namespace kiwano
