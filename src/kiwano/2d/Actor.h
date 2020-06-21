@@ -33,6 +33,11 @@ class Stage;
 class Director;
 class RenderContext;
 
+namespace physics
+{
+class PhysicBody;
+}
+
 KGE_DECLARE_SMART_PTR(Actor);
 
 /// \~chinese
@@ -418,6 +423,10 @@ public:
     void SetEventDispatchEnabled(bool enabled);
 
     /// \~chinese
+    /// @brief 获取物理身体
+    physics::PhysicBody* GetPhysicBody() const;
+
+    /// \~chinese
     /// @brief 序列化
     void DoSerialize(Serializer* serializer) const override;
 
@@ -470,6 +479,12 @@ protected:
     /// @brief 处理事件
     bool HandleEvent(Event* evt);
 
+    /// \~chinese
+    /// @brief 设置物理身体
+    void SetPhysicBody(physics::PhysicBody* body);
+
+    friend physics::PhysicBody;
+
 private:
     bool           visible_;
     bool           update_pausing_;
@@ -490,6 +505,8 @@ private:
     ActorList      children_;
     UpdateCallback cb_update_;
     Transform      transform_;
+
+    physics::PhysicBody* physic_body_;
 
     bool              is_fast_transform_;
     mutable bool      visible_in_rt_;
@@ -746,6 +763,16 @@ inline void Actor::SetHeight(float height)
 inline void Actor::SetSkew(float skewx, float skewy)
 {
     this->SetSkew(Vec2(skewx, skewy));
+}
+
+inline physics::PhysicBody* Actor::GetPhysicBody() const
+{
+    return physic_body_;
+}
+
+inline void Actor::SetPhysicBody(physics::PhysicBody* body)
+{
+    physic_body_ = body;
 }
 
 }  // namespace kiwano

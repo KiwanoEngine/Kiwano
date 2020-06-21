@@ -62,16 +62,6 @@ public:
     /// @param type 物体类型
     static PhysicBodyPtr Create(PhysicWorld* world, Type type);
 
-    /// \~chinese
-    /// @brief 获取角色的物理身体
-    /// @param actor 角色
-    static PhysicBody* Get(Actor* actor);
-
-    /// \~chinese
-    /// @brief 获取角色的物理身体
-    /// @param actor 角色
-    static PhysicBody* Get(ActorPtr actor);
-
     PhysicBody();
 
     virtual ~PhysicBody();

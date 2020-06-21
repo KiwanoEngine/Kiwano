@@ -50,25 +50,6 @@ PhysicBodyPtr PhysicBody::Create(PhysicWorld* world, Type type)
     return nullptr;
 }
 
-PhysicBody* PhysicBody::Get(Actor* actor)
-{
-    if (actor)
-    {
-        static size_t physic_comp_name_hash = 0;
-        if (physic_comp_name_hash == 0)
-        {
-            physic_comp_name_hash = std::hash<String>{}(KGE_PHYSIC_COMP_NAME);
-        }
-        return (PhysicBody*)actor->GetComponent(physic_comp_name_hash);
-    }
-    return nullptr;
-}
-
-PhysicBody* PhysicBody::Get(ActorPtr actor)
-{
-    return PhysicBody::Get(actor.Get());
-}
-
 PhysicBody::PhysicBody()
     : body_(nullptr)
     , world_(nullptr)
@@ -86,11 +67,15 @@ void PhysicBody::InitComponent(Actor* actor)
 {
     Component::InitComponent(actor);
 
+    actor->SetPhysicBody(this);
+
     UpdateFromActor(actor);
 }
 
 void PhysicBody::DestroyComponent()
 {
+    GetBoundActor()->SetPhysicBody(nullptr);
+
     // Detach from actor first
     Component::DestroyComponent();
 
