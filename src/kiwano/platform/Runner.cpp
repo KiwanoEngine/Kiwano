@@ -103,7 +103,10 @@ void Runner::InitSettings()
     }
 
     // Create frame ticker
-    frame_ticker_ = Ticker::Create(settings_.frame_interval, -1);
+    if (!settings_.frame_interval.IsZero())
+    {
+        frame_ticker_ = Ticker::Create(settings_.frame_interval, -1);
+    }
 }
 
 bool Runner::MainLoop(Duration dt)

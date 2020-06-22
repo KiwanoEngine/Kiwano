@@ -56,6 +56,31 @@ struct Resolution
     uint32_t refresh_rate;  ///< 刷新率
 };
 
+/**
+ * \~chinese
+ * @brief 图标
+ */
+struct Icon
+{
+    Icon() = default;
+
+    Icon(const String& file_path)
+        : file_path(file_path)
+    {
+    }
+
+    String file_path;  ///< 文件路径
+
+#if defined(KGE_PLATFORM_WINDOWS)
+    uint32_t resource_id = 0;  ///< 资源ID，仅在windows上生效
+
+    Icon(uint32_t resource_id)
+        : resource_id(resource_id)
+    {
+    }
+#endif
+};
+
 
 #if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
@@ -79,7 +104,7 @@ public:
      * @param resizable 窗口大小可拉伸
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
-    static WindowPtr Create(const String& title, uint32_t width, uint32_t height, uint32_t icon = 0,
+    static WindowPtr Create(const String& title, uint32_t width, uint32_t height, Icon icon = Icon(),
                             bool resizable = false, bool fullscreen = false);
 
     /**
@@ -138,9 +163,9 @@ public:
     /**
      * \~chinese
      * @brief 设置窗口图标
-     * @param icon_resource 图标资源ID
+     * @param icon 图标
      */
-    virtual void SetIcon(uint32_t icon_resource) = 0;
+    virtual void SetIcon(Icon icon) = 0;
 
     /**
      * \~chinese
