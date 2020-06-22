@@ -163,9 +163,9 @@ public:
     /**
      * \~chinese
      * @brief 设置窗口图标
-     * @param icon_resource 图标资源ID
+     * @param icon 图标
      */
-    virtual void SetIcon(uint32_t icon_resource) = 0;
+    virtual void SetIcon(Icon icon) = 0;
 
     /**
      * \~chinese

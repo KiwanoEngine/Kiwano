@@ -53,7 +53,7 @@ public:
 
     void SetTitle(const String& title) override;
 
-    void SetIcon(uint32_t icon_resource) override;
+    void SetIcon(Icon icon) override;
 
     void SetMinimumSize(uint32_t width, uint32_t height) override;
 
@@ -317,16 +317,30 @@ void WindowWin32Impl::SetTitle(const String& title)
     ::SetWindowTextA(handle_, title.c_str());
 }
 
-void WindowWin32Impl::SetIcon(uint32_t icon_resource)
+void WindowWin32Impl::SetIcon(Icon icon)
 {
     KGE_ASSERT(handle_);
 
-    HINSTANCE hinstance = ::GetModuleHandle(nullptr);
-    HICON     icon      = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon_resource), IMAGE_ICON, 0, 0,
-                                    LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+    HICON hicon = NULL;
+    if (icon.resource_id != 0 && IS_INTRESOURCE(icon.resource_id))
+    {
+        HINSTANCE hinstance = ::GetModuleHandle(nullptr);
 
-    ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)icon);
-    ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+        hicon = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
+                                   LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+    }
+    else
+    {
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(icon.file_path);
+        if (!full_path.empty())
+        {
+            hicon = (HICON)::LoadImageA(NULL, full_path.c_str(), IMAGE_ICON, 0, 0,
+                                        LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
+        }
+    }
+
+    ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)hicon);
+    ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)hicon);
 }
 
 void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
