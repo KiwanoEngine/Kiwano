@@ -48,7 +48,7 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable, bool fullscreen);
+    void Init(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable, bool fullscreen);
 
     void SetTitle(const String& title) override;
 
@@ -87,7 +87,7 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable,
                          bool fullscreen)
 {
     WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
@@ -205,7 +205,7 @@ WindowWin32Impl::~WindowWin32Impl()
     ::timeEndPeriod(0);
 }
 
-void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, uint32_t icon, bool resizable,
+void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable,
                            bool fullscreen)
 {
     HINSTANCE  hinst   = GetModuleHandle(nullptr);
@@ -222,10 +222,15 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     wcex.lpszMenuName  = nullptr;
     wcex.hCursor       = ::LoadCursor(hinst, IDC_ARROW);
 
-    if (icon)
+    if (icon.resource_id != 0 && IS_INTRESOURCE(icon.resource_id))
     {
-        wcex.hIcon = (HICON)::LoadImage(hinst, MAKEINTRESOURCE(icon), IMAGE_ICON, 0, 0,
+        wcex.hIcon = (HICON)::LoadImage(hinst, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
                                         LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+    }
+    else if (!icon.file_path.empty())
+    {
+        wcex.hIcon = (HICON)::LoadImageA(NULL, icon.file_path.c_str(), IMAGE_ICON, 0, 0,
+                                         LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
     }
 
     ::RegisterClassExA(&wcex);

@@ -43,7 +43,7 @@ struct Settings
     uint32_t width;           ///< 窗口宽度
     uint32_t height;          ///< 窗口高度
     String   title;           ///< 窗口标题
-    uint32_t icon;            ///< 窗口图标
+    Icon     icon;            ///< 窗口图标
     bool     resizable;       ///< 窗口大小可调整
     bool     fullscreen;      ///< 窗口全屏
     Color    bg_color;        ///< 窗口背景色
