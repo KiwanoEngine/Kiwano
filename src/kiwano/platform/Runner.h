@@ -59,8 +59,8 @@ struct Settings
         , resizable(false)
         , fullscreen(false)
         , bg_color(Color::Black)
-        , frame_interval(16)
-        , vsync_enabled(false)
+        , frame_interval(0)
+        , vsync_enabled(true)
         , debug_mode(false)
     {
     }
