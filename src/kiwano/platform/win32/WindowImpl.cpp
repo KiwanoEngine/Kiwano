@@ -29,6 +29,7 @@
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>
+#include <kiwano/platform/FileSystem.h>
 #include <kiwano/render/Renderer.h>
 #include <Windowsx.h>  // GET_X_LPARAM, GET_Y_LPARAM
 #include <imm.h>       // ImmAssociateContext
@@ -227,10 +228,14 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
         wcex.hIcon = (HICON)::LoadImage(hinst, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
                                         LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
     }
-    else if (!icon.file_path.empty())
+    else
     {
-        wcex.hIcon = (HICON)::LoadImageA(NULL, icon.file_path.c_str(), IMAGE_ICON, 0, 0,
-                                         LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(icon.file_path);
+        if (!full_path.empty())
+        {
+            wcex.hIcon = (HICON)::LoadImageA(NULL, full_path.c_str(), IMAGE_ICON, 0, 0,
+                                             LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
+        }
     }
 
     ::RegisterClassExA(&wcex);
