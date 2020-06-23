@@ -82,8 +82,7 @@ void Runner::InitSettings()
     }
 
     // Create game window
-    WindowPtr window = Window::Create(settings_.title, settings_.width, settings_.height, settings_.icon,
-                                      settings_.resizable, settings_.fullscreen);
+    WindowPtr window = Window::Create(settings_.window);
     SetWindow(window);
 
     // Update renderer settings
@@ -131,9 +130,9 @@ bool Runner::MainLoop(Duration dt)
         app.DispatchEvent(evt.Get());
     }
 
-    // Update frame ticker
     if (frame_ticker_)
     {
+        // Update frame ticker
         if (frame_ticker_->Tick(dt))
         {
             app.UpdateFrame(frame_ticker_->GetDeltaTime());

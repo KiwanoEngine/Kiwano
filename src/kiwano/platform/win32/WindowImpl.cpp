@@ -49,7 +49,7 @@ public:
 
     virtual ~WindowWin32Impl();
 
-    void Init(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable, bool fullscreen);
+    void Init(const WindowConfig& config);
 
     void SetTitle(const String& title) override;
 
@@ -88,13 +88,12 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable,
-                         bool fullscreen)
+WindowPtr Window::Create(const WindowConfig& config)
 {
     WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
     if (ptr)
     {
-        ptr->Init(title, width, height, icon, resizable, fullscreen);
+        ptr->Init(config);
     }
     return ptr;
 }
@@ -140,6 +139,28 @@ void AdjustWindow(uint32_t width, uint32_t height, DWORD style, uint32_t* win_wi
         *win_width = screenw;
     if (*win_height > screenh)
         *win_height = screenh;
+}
+
+HICON Icon2HIcon(const Icon& icon)
+{
+    HICON hicon = NULL;
+    if (icon.resource_id != 0 && IS_INTRESOURCE(icon.resource_id))
+    {
+        HINSTANCE hinstance = ::GetModuleHandle(nullptr);
+
+        hicon = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
+                                   LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
+    }
+    else
+    {
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(icon.file_path);
+        if (!full_path.empty())
+        {
+            hicon = (HICON)::LoadImageA(NULL, full_path.c_str(), IMAGE_ICON, 0, 0,
+                                        LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
+        }
+    }
+    return hicon;
 }
 
 }  // namespace
@@ -206,37 +227,21 @@ WindowWin32Impl::~WindowWin32Impl()
     ::timeEndPeriod(0);
 }
 
-void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height, Icon icon, bool resizable,
-                           bool fullscreen)
+void WindowWin32Impl::Init(const WindowConfig& config)
 {
-    HINSTANCE  hinst   = GetModuleHandle(nullptr);
+    HINSTANCE   hinst  = GetModuleHandle(nullptr);
     WNDCLASSEXA wcex   = { 0 };
     wcex.cbSize        = sizeof(WNDCLASSEX);
     wcex.lpszClassName = "KiwanoAppWnd";
     wcex.style         = CS_HREDRAW | CS_VREDRAW /* | CS_DBLCLKS */;
     wcex.lpfnWndProc   = WindowWin32Impl::StaticWndProc;
-    wcex.hIcon         = nullptr;
+    wcex.hIcon         = Icon2HIcon(config.icon);
     wcex.cbClsExtra    = 0;
     wcex.cbWndExtra    = sizeof(LONG_PTR);
     wcex.hInstance     = hinst;
     wcex.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
     wcex.lpszMenuName  = nullptr;
     wcex.hCursor       = ::LoadCursor(hinst, IDC_ARROW);
-
-    if (icon.resource_id != 0 && IS_INTRESOURCE(icon.resource_id))
-    {
-        wcex.hIcon = (HICON)::LoadImage(hinst, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
-                                        LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
-    }
-    else
-    {
-        String full_path = FileSystem::GetInstance().GetFullPathForFile(icon.file_path);
-        if (!full_path.empty())
-        {
-            wcex.hIcon = (HICON)::LoadImageA(NULL, full_path.c_str(), IMAGE_ICON, 0, 0,
-                                             LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
-        }
-    }
 
     ::RegisterClassExA(&wcex);
 
@@ -256,21 +261,19 @@ void WindowWin32Impl::Init(const String& title, uint32_t width, uint32_t height,
     uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
 
     uint32_t win_width, win_height;
-    AdjustWindow(width, height, GetStyle(), &win_width, &win_height);
+    AdjustWindow(config.width, config.height, GetStyle(), &win_width, &win_height);
 
     int left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
     int top  = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
-    width  = win_width;
-    height = win_height;
 
-    width_         = width;
-    height_        = height;
-    resizable_     = resizable;
-    is_fullscreen_ = fullscreen;
+    width_         = win_width;
+    height_        = win_height;
+    resizable_     = config.resizable;
+    is_fullscreen_ = config.fullscreen;
     resolution_    = Resolution{ width_, height_, 0 };
 
-    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", title.c_str(), GetStyle(), left, top, width, height, nullptr,
-                                nullptr, hinst, nullptr);
+    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", config.title.c_str(), GetStyle(), left, top, width_, height_,
+                                nullptr, nullptr, hinst, nullptr);
 
     if (handle_ == nullptr)
     {
@@ -321,24 +324,7 @@ void WindowWin32Impl::SetIcon(Icon icon)
 {
     KGE_ASSERT(handle_);
 
-    HICON hicon = NULL;
-    if (icon.resource_id != 0 && IS_INTRESOURCE(icon.resource_id))
-    {
-        HINSTANCE hinstance = ::GetModuleHandle(nullptr);
-
-        hicon = (HICON)::LoadImage(hinstance, MAKEINTRESOURCE(icon.resource_id), IMAGE_ICON, 0, 0,
-                                   LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
-    }
-    else
-    {
-        String full_path = FileSystem::GetInstance().GetFullPathForFile(icon.file_path);
-        if (!full_path.empty())
-        {
-            hicon = (HICON)::LoadImageA(NULL, full_path.c_str(), IMAGE_ICON, 0, 0,
-                                        LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);
-        }
-    }
-
+    HICON hicon = Icon2HIcon(icon);
     ::SendMessage(handle_, WM_SETICON, ICON_BIG, (LPARAM)hicon);
     ::SendMessage(handle_, WM_SETICON, ICON_SMALL, (LPARAM)hicon);
 }
