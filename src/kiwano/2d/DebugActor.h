@@ -24,6 +24,99 @@
 
 namespace kiwano
 {
+
+template <typename T>
+class SimpleRingBuffer
+{
+public:
+    SimpleRingBuffer(size_t capcity)
+    {
+        Reserve(capcity);
+    }
+
+    void PushBack(const T& val)
+    {
+        if (IsFull())
+            Reserve(Capacity() * 2);
+        buffer_[rear_] = val;
+        IncreaseRear();
+    }
+
+    void PopFront()
+    {
+        IncreaseFront();
+    }
+
+    const T& Front() const
+    {
+        return buffer_[front_];
+    }
+
+    T& Front()
+    {
+        return buffer_[front_];
+    }
+
+    const T& Back() const
+    {
+        return buffer_[ClampCursor(rear_, 1)];
+    }
+
+    T& Back()
+    {
+        return buffer_[ClampCursor(rear_, 1)];
+    }
+
+    bool IsEmpty() const noexcept
+    {
+        return front_ = rear_;
+    }
+
+    bool IsFull() const noexcept
+    {
+        return front_ == (rear_ + 1) % Capacity();
+    }
+
+    size_t Size() const
+    {
+        return ClampCursor(rear_, front_);
+    }
+
+    size_t Capacity() const
+    {
+        return buffer_.size();
+    }
+
+    void Reserve(size_t capacity)
+    {
+        buffer_.resize(capacity);
+    }
+
+private:
+    void IncreaseFront()
+    {
+        if (buffer_.empty())
+            return;
+        front_ = (front_ + 1) % Capacity();
+    }
+
+    void IncreaseRear()
+    {
+        rear_ = (rear_ + 1) % Capacity();
+    }
+
+    size_t ClampCursor(size_t cursor, size_t off) const
+    {
+        return (cursor + Capacity() - off) % Capacity();
+    }
+
+private:
+    Vector<T> buffer_;
+    size_t    front_ = 0;
+    size_t    rear_  = 0;
+};
+
+
 /**
  * \addtogroup Actors
  * @{
@@ -52,7 +145,8 @@ private:
     BrushPtr    background_brush_;
     TextStyle   debug_text_style_;
     TextLayout  debug_text_;
-    List<Time>  frame_time_;
+
+    SimpleRingBuffer<Time> frame_buffer_;
 };
 
 /** @} */
