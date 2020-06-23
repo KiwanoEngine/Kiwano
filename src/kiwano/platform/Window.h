@@ -82,6 +82,21 @@ struct Icon
 };
 
 
+/**
+ * \~chinese
+ * @brief 窗口设置
+ */
+struct WindowConfig
+{
+    uint32_t width  = 640;            ///< 窗口宽度
+    uint32_t height = 480;            ///< 窗口高度
+    String   title  = "Kiwano Game";  ///< 窗口标题
+    Icon     icon;                    ///< 窗口图标
+    bool     resizable  = false;      ///< 窗口大小可调整
+    bool     fullscreen = false;      ///< 窗口全屏
+};
+
+
 #if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
 #endif
@@ -97,15 +112,10 @@ public:
     /**
      * \~chinese
      * @brief 初始化窗口
-     * @param title 标题
-     * @param width 宽度
-     * @param height 高度
-     * @param icon 图标资源ID
-     * @param resizable 窗口大小可拉伸
+     * @param config 窗口设置
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
-    static WindowPtr Create(const String& title, uint32_t width, uint32_t height, Icon icon = Icon(),
-                            bool resizable = false, bool fullscreen = false);
+    static WindowPtr Create(const WindowConfig& config);
 
     /**
      * \~chinese

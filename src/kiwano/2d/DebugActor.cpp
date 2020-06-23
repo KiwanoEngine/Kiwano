@@ -45,6 +45,7 @@ private:
 }  // namespace
 
 DebugActor::DebugActor()
+    : frame_buffer_(70 /* pre-alloc for 70 frames */)
 {
     SetName("kiwano-debug-actor");
     SetPosition(Point{ 10, 10 });
@@ -77,10 +78,10 @@ void DebugActor::OnRender(RenderContext& ctx)
     ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
     ctx.DrawTextLayout(debug_text_, Point(10, 10));
 
-    frame_time_.push_back(Time::Now());
-    while (frame_time_.back() - frame_time_.front() >= Duration::Second)
+    frame_buffer_.PushBack(Time::Now());
+    while (frame_buffer_.Back() - frame_buffer_.Front() >= Duration::Second)
     {
-        frame_time_.erase(frame_time_.begin());
+        frame_buffer_.PopFront();
     }
 }
 
@@ -93,7 +94,7 @@ void DebugActor::OnUpdate(Duration dt)
     // For formatting integers with commas
     (void)ss.imbue(comma_locale_);
 
-    ss << "Fps: " << frame_time_.size() << std::endl;
+    ss << "Fps: " << frame_buffer_.Size() << std::endl;
 
 #if defined(KGE_DEBUG)
     if (ObjectBase::IsTracingLeaks())
@@ -106,7 +107,7 @@ void DebugActor::OnUpdate(Duration dt)
 
     ss << "Render: " << status.duration.Milliseconds() << "ms" << std::endl;
 
-    ss << "Primitives / sec: " << std::fixed << status.primitives * frame_time_.size() << std::endl;
+    ss << "Primitives / sec: " << std::fixed << status.primitives * frame_buffer_.Size() << std::endl;
 
     ss << "Memory: ";
     {

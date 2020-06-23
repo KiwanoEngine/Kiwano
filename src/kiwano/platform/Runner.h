@@ -40,25 +40,14 @@ KGE_DECLARE_SMART_PTR(Runner);
  */
 struct Settings
 {
-    uint32_t width;           ///< 窗口宽度
-    uint32_t height;          ///< 窗口高度
-    String   title;           ///< 窗口标题
-    Icon     icon;            ///< 窗口图标
-    bool     resizable;       ///< 窗口大小可调整
-    bool     fullscreen;      ///< 窗口全屏
-    Color    bg_color;        ///< 窗口背景色
-    Duration frame_interval;  ///< 帧间隔
-    bool     vsync_enabled;   ///< 垂直同步
-    bool     debug_mode;      ///< 调试模式
+    WindowConfig window;          ///< 窗口设置
+    Color        bg_color;        ///< 背景色
+    Duration     frame_interval;  ///< 帧间隔
+    bool         vsync_enabled;   ///< 垂直同步
+    bool         debug_mode;      ///< 调试模式
 
     Settings()
-        : width(800)
-        , height(600)
-        , title("Kiwano")
-        , icon()
-        , resizable(false)
-        , fullscreen(false)
-        , bg_color(Color::Black)
+        : bg_color(Color::Black)
         , frame_interval(0)
         , vsync_enabled(true)
         , debug_mode(false)
