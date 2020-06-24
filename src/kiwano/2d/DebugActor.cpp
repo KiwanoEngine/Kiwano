@@ -55,7 +55,7 @@ DebugActor::DebugActor()
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 
     background_brush_ = memory::New<Brush>();
-    background_brush_->SetColor(Color(0.0f, 0.0f, 0.0f, 0.7f));
+    background_brush_->SetColor(Color::Rgba(0x000000, 0.7f));
 
     BrushPtr fill_brush = memory::New<Brush>();
     fill_brush->SetColor(Color::White);
