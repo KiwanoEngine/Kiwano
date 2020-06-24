@@ -48,11 +48,19 @@ public:
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
+    /// @param r 红色值，范围 0 - 1
+    /// @param g 绿色值，范围 0 - 1
+    /// @param b 蓝色值，范围 0 - 1
+    /// @param alpha Alpha值，范围 0.0 - 1.0
+    Color(float r, float g, float b, float alpha = 1.0f);
+
+    /// \~chinese
+    /// @brief 构造 RGBA 颜色
     /// @param r 红色值，范围 0 - 255
     /// @param g 绿色值，范围 0 - 255
     /// @param b 蓝色值，范围 0 - 255
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    Color(uint32_t r, uint32_t g, uint32_t b, float alpha = 1.0f);
+    Color(int r, int g, int b, float alpha = 1.0f);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
@@ -62,10 +70,17 @@ public:
 
     /// \~chinese
     /// @brief 构造 RGB 颜色
+    /// @param r 红色值，范围 0 - 1
+    /// @param g 绿色值，范围 0 - 1
+    /// @param b 蓝色值，范围 0 - 1
+    static Color Rgb(float r, float g, float b);
+
+    /// \~chinese
+    /// @brief 构造 RGB 颜色
     /// @param r 红色值，范围 0 - 255
     /// @param g 绿色值，范围 0 - 255
     /// @param b 蓝色值，范围 0 - 255
-    static Color Rgb(uint32_t r, uint32_t g, uint32_t b);
+    static Color Rgb(int r, int g, int b);
 
     /// \~chinese
     /// @brief 构造 RGB 颜色
@@ -73,12 +88,19 @@ public:
     static Color Rgb(uint32_t rgb);
 
     /// \~chinese
+    /// @brief 构造 RGB 颜色
+    /// @param r 红色值，范围 0 - 1
+    /// @param g 绿色值，范围 0 - 1
+    /// @param b 蓝色值，范围 0 - 1
+    static Color Rgba(float r, float g, float b, float alpha);
+
+    /// \~chinese
     /// @brief 构造 RGBA 颜色
     /// @param r 红色值，范围 0 - 255
     /// @param g 绿色值，范围 0 - 255
     /// @param b 蓝色值，范围 0 - 255
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    static Color Rgba(uint32_t r, uint32_t g, uint32_t b, float alpha);
+    static Color Rgba(int r, int g, int b, float alpha);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
