@@ -33,7 +33,7 @@ const uint32_t GREEN_MASK = 0xff << GREEN_SHIFT;
 const uint32_t BLUE_MASK  = 0xff << BLUE_SHIFT;
 }  // namespace
 
-const Color Color::Transparent = Color(0.f, 0.f, 0.f, 0.f);
+const Color Color::Transparent = Color(0, 0, 0, 0.f);
 
 Color::Color()
     : r(0)
@@ -43,27 +43,11 @@ Color::Color()
 {
 }
 
-Color::Color(float r, float g, float b)
-    : r(r)
-    , g(g)
-    , b(b)
-    , a(1.f)
-{
-}
-
-Color::Color(float r, float g, float b, float alpha)
-    : r(r)
-    , g(g)
-    , b(b)
+Color::Color(uint32_t r, uint32_t g, uint32_t b, float alpha)
+    : r(r / 255.0f)
+    , g(g / 255.0f)
+    , b(b / 255.0f)
     , a(alpha)
-{
-}
-
-Color::Color(uint32_t rgb)
-    : r(((rgb & RED_MASK) >> RED_SHIFT) / 255.f)
-    , g(((rgb & GREEN_MASK) >> GREEN_SHIFT) / 255.f)
-    , b(((rgb & BLUE_MASK) >> BLUE_SHIFT) / 255.f)
-    , a(1.f)
 {
 }
 
@@ -75,7 +59,7 @@ Color::Color(uint32_t rgb, float alpha)
 {
 }
 
-Color Color::Rgb(float r, float g, float b)
+Color Color::Rgb(uint32_t r, uint32_t g, uint32_t b)
 {
     return Color::Rgba(r, g, b, 1.0f);
 }
@@ -85,7 +69,7 @@ Color Color::Rgb(uint32_t rgb)
     return Color::Rgba(rgb, 1.0f);
 }
 
-Color Color::Rgba(float r, float g, float b, float alpha)
+Color Color::Rgba(uint32_t r, uint32_t g, uint32_t b, float alpha)
 {
     return Color(r, g, b, alpha);
 }

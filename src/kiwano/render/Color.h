@@ -34,9 +34,8 @@ namespace kiwano
  * @brief 颜色
  * @details
  * 使用枚举表示颜色: @code Color blue = Color::Blue; @endcode
- * 使用 RGB 表示一个颜色: @code Color red = Color(1.0f, 0.0f, 0.0f); @endcode
- * 使用 RGBA 表示一个带透明度的颜色: @code Color not_white = Color(1.0f, 1.0f,
- * 1.0f, 0.5f); @endcode
+ * 使用 RGB 表示一个颜色: @code Color red = Color(255, 0, 0); @endcode
+ * 使用 RGBA 表示一个带透明度的颜色: @code Color not_white = Color(255, 255, 255, 0.5f); @endcode
  * 使用一个16进制整型值表示 RGB 颜色: @code Color black(0x000000); @endcode
  */
 class KGE_API Color
@@ -44,41 +43,29 @@ class KGE_API Color
 public:
     /// \~chinese
     /// @brief 构造颜色
-    /// @details 默认颜色为 R: 0.0, G: 0.0, B: 0.0, A: 1.0
+    /// @details 默认颜色为 R: 0, G: 0, B: 0, A: 1.0
     Color();
 
     /// \~chinese
-    /// @brief 构造 RGB 颜色
-    /// @param r 红色值，范围 0.0 - 1.0
-    /// @param g 绿色值，范围 0.0 - 1.0
-    /// @param b 蓝色值，范围 0.0 - 1.0
-    Color(float r, float g, float b);
-
-    /// \~chinese
     /// @brief 构造 RGBA 颜色
-    /// @param r 红色值，范围 0.0 - 1.0
-    /// @param g 绿色值，范围 0.0 - 1.0
-    /// @param b 蓝色值，范围 0.0 - 1.0
+    /// @param r 红色值，范围 0 - 255
+    /// @param g 绿色值，范围 0 - 255
+    /// @param b 蓝色值，范围 0 - 255
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    Color(float r, float g, float b, float alpha);
-
-    /// \~chinese
-    /// @brief 构造 RGB 颜色
-    /// @param rgb 使用16进制整形值表示 RGB颜色
-    Color(uint32_t rgb);
+    Color(uint32_t r, uint32_t g, uint32_t b, float alpha = 1.0f);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
     /// @param rgb 使用16进制整形值表示 RGB 颜色
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    Color(uint32_t rgb, float alpha);
+    Color(uint32_t rgb, float alpha = 1.0f);
 
     /// \~chinese
     /// @brief 构造 RGB 颜色
-    /// @param r 红色值，范围 0.0 - 1.0
-    /// @param g 绿色值，范围 0.0 - 1.0
-    /// @param b 蓝色值，范围 0.0 - 1.0
-    static Color Rgb(float r, float g, float b);
+    /// @param r 红色值，范围 0 - 255
+    /// @param g 绿色值，范围 0 - 255
+    /// @param b 蓝色值，范围 0 - 255
+    static Color Rgb(uint32_t r, uint32_t g, uint32_t b);
 
     /// \~chinese
     /// @brief 构造 RGB 颜色
@@ -87,11 +74,11 @@ public:
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色
-    /// @param r 红色值，范围 0.0 - 1.0
-    /// @param g 绿色值，范围 0.0 - 1.0
-    /// @param b 蓝色值，范围 0.0 - 1.0
+    /// @param r 红色值，范围 0 - 255
+    /// @param g 绿色值，范围 0 - 255
+    /// @param b 蓝色值，范围 0 - 255
     /// @param alpha Alpha值，范围 0.0 - 1.0
-    static Color Rgba(float r, float g, float b, float alpha);
+    static Color Rgba(uint32_t r, uint32_t g, uint32_t b, float alpha);
 
     /// \~chinese
     /// @brief 构造 RGBA 颜色

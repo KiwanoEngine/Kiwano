@@ -51,9 +51,9 @@ enum class CursorType
  */
 struct Resolution
 {
-    uint32_t width;         ///< 分辨率宽度
-    uint32_t height;        ///< 分辨率高度
-    uint32_t refresh_rate;  ///< 刷新率
+    uint32_t width = 0;         ///< 分辨率宽度
+    uint32_t height = 0;        ///< 分辨率高度
+    uint32_t refresh_rate = 0;  ///< 刷新率
 };
 
 /**

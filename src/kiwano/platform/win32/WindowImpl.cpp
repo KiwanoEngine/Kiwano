@@ -249,28 +249,27 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     HMONITOR monitor = ::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
 
     // Get the target monitor info
-    MONITORINFOEXA monitor_info_ex;
-    memset(&monitor_info_ex, 0, sizeof(MONITORINFOEXA));
-    monitor_info_ex.cbSize = sizeof(MONITORINFOEXA);
-    ::GetMonitorInfoA(monitor, &monitor_info_ex);
+    MONITORINFOEXA monitor_info;
+    memset(&monitor_info, 0, sizeof(MONITORINFOEXA));
+    monitor_info.cbSize = sizeof(MONITORINFOEXA);
+    ::GetMonitorInfoA(monitor, &monitor_info);
 
     // Save the device name
-    device_name_ = monitor_info_ex.szDevice;
+    device_name_ = monitor_info.szDevice;
 
-    uint32_t screenw = monitor_info_ex.rcWork.right - monitor_info_ex.rcWork.left;
-    uint32_t screenh = monitor_info_ex.rcWork.bottom - monitor_info_ex.rcWork.top;
+    uint32_t screenw = monitor_info.rcWork.right - monitor_info.rcWork.left;
+    uint32_t screenh = monitor_info.rcWork.bottom - monitor_info.rcWork.top;
 
     uint32_t win_width, win_height;
     AdjustWindow(config.width, config.height, GetStyle(), &win_width, &win_height);
 
-    int left = monitor_info_ex.rcWork.left + (screenw - win_width) / 2;
-    int top  = monitor_info_ex.rcWork.top + (screenh - win_height) / 2;
+    int left = monitor_info.rcWork.left + (screenw - win_width) / 2;
+    int top  = monitor_info.rcWork.top + (screenh - win_height) / 2;
 
     width_         = win_width;
     height_        = win_height;
     resizable_     = config.resizable;
     is_fullscreen_ = config.fullscreen;
-    resolution_    = Resolution{ width_, height_, 0 };
 
     handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", config.title.c_str(), GetStyle(), left, top, width_, height_,
                                 nullptr, nullptr, hinst, nullptr);
@@ -293,14 +292,25 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     if (is_fullscreen_)
     {
         MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-        int            x    = (int)info.rcMonitor.left;
-        int            y    = (int)info.rcMonitor.top;
-        int            cx   = (int)(info.rcMonitor.right - info.rcMonitor.left);
-        int            cy   = (int)(info.rcMonitor.bottom - info.rcMonitor.top);
+
+        int x  = (int)info.rcMonitor.left;
+        int y  = (int)info.rcMonitor.top;
+        int cx = (int)(info.rcMonitor.right - info.rcMonitor.left);
+        int cy = (int)(info.rcMonitor.bottom - info.rcMonitor.top);
 
         // Top the window
         ::SetWindowPos(handle_, HWND_TOPMOST, x, y, cx, cy, SWP_NOACTIVATE);
         ::ShowWindow(handle_, SW_SHOWNORMAL);
+
+        resolution_.width = config.width;
+        resolution_.height = config.height;
+    }
+    else
+    {
+        RECT client_area;
+        ::GetClientRect(handle_, &client_area);
+        resolution_.width  = uint32_t(client_area.right - client_area.left);
+        resolution_.height = uint32_t(client_area.bottom - client_area.top);
     }
 }
 
