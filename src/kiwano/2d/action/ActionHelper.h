@@ -359,10 +359,10 @@ public:
     /// \~chinese
     /// @brief 动画组合
     /// @param actions 动画集合
-    /// @param sync 同步执行
-    static inline ActionHelper Group(const Vector<ActionPtr>& actions, bool sync = false)
+    /// @param parallel 同步执行
+    static inline ActionHelper Group(const Vector<ActionPtr>& actions, bool parallel = false)
     {
-        return ActionHelper(ActionGroup::Create(actions, sync));
+        return ActionHelper(ActionGroup::Create(actions, parallel));
     }
 };
 

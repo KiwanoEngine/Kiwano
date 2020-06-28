@@ -25,24 +25,24 @@
 namespace kiwano
 {
 
-ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool sync)
+ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool parallel)
 {
     ActionGroupPtr ptr = memory::New<ActionGroup>();
     if (ptr)
     {
-        ptr->sync_ = sync;
+        ptr->parallel_ = parallel;
         ptr->AddActions(actions);
     }
     return ptr;
 }
 
 ActionGroup::ActionGroup()
-    : sync_(false)
+    : parallel_(false)
 {
 }
 
-ActionGroup::ActionGroup(bool sync)
-    : sync_(sync)
+ActionGroup::ActionGroup(bool parallel)
+    : parallel_(parallel)
 {
 }
 
@@ -56,7 +56,7 @@ void ActionGroup::Init(Actor* target)
         return;
     }
 
-    if (sync_)
+    if (parallel_)
     {
         // init all actions
         for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
@@ -73,7 +73,7 @@ void ActionGroup::Init(Actor* target)
 
 void ActionGroup::Update(Actor* target, Duration dt)
 {
-    if (!sync_)
+    if (!parallel_)
     {
         if (current_)
         {
@@ -133,7 +133,7 @@ ActionPtr ActionGroup::Clone() const
             actions.push_back(action->Clone());
         }
     }
-    return DoClone(ActionGroup::Create(actions, sync_));
+    return DoClone(ActionGroup::Create(actions, parallel_));
 }
 
 ActionPtr ActionGroup::Reverse() const
@@ -146,7 +146,7 @@ ActionPtr ActionGroup::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    return DoClone(ActionGroup::Create(actions, sync_));
+    return DoClone(ActionGroup::Create(actions, parallel_));
 }
 
 }  // namespace kiwano
