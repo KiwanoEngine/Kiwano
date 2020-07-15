@@ -31,38 +31,52 @@ namespace strings
 
 String Format(const char* format, ...)
 {
+    va_list args = nullptr;
+    va_start(args, format);
+
+    String result = FormatArgs(format, args);
+
+    va_end(args);
+    return result;
+}
+
+WideString Format(const wchar_t* format, ...)
+{
+    va_list args = nullptr;
+    va_start(args, format);
+
+    WideString result = FormatArgs(format, args);
+
+    va_end(args);
+    return result;
+}
+
+String FormatArgs(const char* format, va_list args)
+{
     String result;
     if (format)
     {
-        va_list args = nullptr;
-        va_start(args, format);
-
         const auto len = static_cast<size_t>(::_vscprintf(format, args) + 1);
         if (len)
         {
             result.resize(len - 1);
             ::_vsnprintf_s(&result[0], len, len, format, args);
         }
-        va_end(args);
     }
     return result;
 }
 
-WideString Format(const wchar_t* format, ...)
+WideString FormatArgs(const wchar_t* format, va_list args)
 {
     WideString result;
     if (format)
     {
-        va_list args = nullptr;
-        va_start(args, format);
-
         const auto len = static_cast<size_t>(::_vscwprintf(format, args) + 1);
         if (len)
         {
             result.resize(len - 1);
             ::_vsnwprintf_s(&result[0], len, len, format, args);
         }
-        va_end(args);
     }
     return result;
 }

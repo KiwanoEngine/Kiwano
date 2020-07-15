@@ -51,6 +51,14 @@ String Format(const char* format, ...);
 WideString Format(const wchar_t* format, ...);
 
 /// \~chinese
+/// @brief ¸ñÊ½»¯×Ö·û´®
+String FormatArgs(const char* format, va_list args);
+
+/// \~chinese
+/// @brief ¸ñÊ½»¯×Ö·û´®
+WideString FormatArgs(const wchar_t* format, va_list args);
+
+/// \~chinese
 /// @brief ¿í×Ö·û´®×ªÕ­×Ö·û´®
 String WideToNarrow(const WideString& str);
 
