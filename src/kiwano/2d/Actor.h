@@ -263,12 +263,20 @@ public:
     void SetPositionY(float y);
 
     /// \~chinese
-    /// @brief 移动坐标
-    void Move(const Vec2& v);
+    /// @brief 移动至坐标
+    void MoveTo(const Point& p);
 
     /// \~chinese
-    /// @brief 移动坐标
-    void Move(float vx, float vy);
+    /// @brief 移动至坐标
+    void MoveTo(float x, float y);
+
+    /// \~chinese
+    /// @brief 移动相对坐标
+    void MoveBy(const Vec2& trans);
+
+    /// \~chinese
+    /// @brief 移动相对坐标
+    void MoveBy(float trans_x, float trans_y);
 
     /// \~chinese
     /// @brief 设置缩放比例，默认为 (1.0, 1.0)
@@ -725,14 +733,24 @@ inline void Actor::SetPositionY(float y)
     this->SetPosition(Point(transform_.position.x, y));
 }
 
-inline void Actor::Move(const Vec2& v)
+inline void Actor::MoveTo(const Point& p)
 {
-    this->SetPosition(transform_.position.x + v.x, transform_.position.y + v.y);
+    this->SetPosition(p);
 }
 
-inline void Actor::Move(float vx, float vy)
+inline void Actor::MoveTo(float x, float y)
 {
-    this->Move(Vec2(vx, vy));
+    this->SetPosition(Point(x, y));
+}
+
+inline void Actor::MoveBy(const Vec2& trans)
+{
+    this->SetPosition(transform_.position.x + trans.x, transform_.position.y + trans.y);
+}
+
+inline void Actor::MoveBy(float trans_x, float trans_y)
+{
+    this->MoveBy(Vec2(trans_x, trans_y));
 }
 
 inline void Actor::SetScale(float scalex, float scaley)
