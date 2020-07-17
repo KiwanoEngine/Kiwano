@@ -113,9 +113,17 @@ public:
 class LogBuffer : public std::streambuf
 {
 public:
-    LogBuffer(Vector<char_type>& buf);
+    LogBuffer(size_t buffer_size);
+
+    void Resize(size_t size);
+
+    void Reset();
 
     const char* GetRaw() const;
+
+    LogBuffer(const LogBuffer&) = delete;
+
+    LogBuffer& operator=(const LogBuffer&) = delete;
 
 protected:
     int_type overflow(int_type ch) override;
@@ -127,11 +135,9 @@ protected:
     pos_type seekoff(off_type off, std::ios_base::seekdir dir,
                      std::ios_base::openmode which = std::ios_base::in) override;
 
-    std::streambuf* setbuf(char_type* s, std::streamsize n) override;
-
 private:
-    Vector<char_type>& buf_;
-    char_type*         seek_high_;
+    Vector<char_type> buf_;
+    char_type*        seek_high_;
 };
 
 /**
@@ -166,6 +172,11 @@ public:
     void WriteMessage(LogLevel level, LogBuffer* msg) override;
 
     void Flush() override;
+
+private:
+    typedef std::ostream&(*ConsoleColor)(std::ostream&);
+
+    ConsoleColor GetColor(LogLevel level);
 };
 
 /**
@@ -253,11 +264,9 @@ public:
     /// @param raw_msg 日志内容
     void Write(LogLevel level, std::streambuf* raw_msg);
 
-#if defined(KGE_PLATFORM_WINDOWS)
     /// \~chinese
     /// @brief 显示或关闭控制台
     void ShowConsole(bool show);
-#endif
 
     virtual ~Logger();
 
@@ -268,8 +277,8 @@ private:
     bool                   enabled_;
     LogLevel               level_;
     LogFormaterPtr         formater_;
+    LogBuffer              buffer_;
     Vector<LogProviderPtr> providers_;
-    Vector<char>           buffer_;
     std::mutex             mutex_;
 };
 
