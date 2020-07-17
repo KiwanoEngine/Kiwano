@@ -149,11 +149,21 @@ class KGE_API LogProvider : public ObjectBase
 public:
     virtual ~LogProvider();
 
-    virtual void Init() = 0;
+    virtual void Init();
+
+    virtual void Flush();
+
+    void Write(LogLevel level, LogBuffer* msg);
+
+    void SetLevel(LogLevel level);
+
+protected:
+    LogProvider();
 
     virtual void WriteMessage(LogLevel level, LogBuffer* msg) = 0;
 
-    virtual void Flush() = 0;
+protected:
+    LogLevel level_;
 };
 
 /**
@@ -169,9 +179,10 @@ public:
 
     void Init() override;
 
-    void WriteMessage(LogLevel level, LogBuffer* msg) override;
-
     void Flush() override;
+
+protected:
+    void WriteMessage(LogLevel level, LogBuffer* msg) override;
 
 private:
     typedef std::ostream&(*ConsoleColor)(std::ostream&);
@@ -192,9 +203,10 @@ public:
 
     void Init() override;
 
-    void WriteMessage(LogLevel level, LogBuffer* msg) override;
-
     void Flush() override;
+
+protected:
+    void WriteMessage(LogLevel level, LogBuffer* msg) override;
 
 private:
     std::ofstream ofs_;

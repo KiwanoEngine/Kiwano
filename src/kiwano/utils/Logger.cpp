@@ -74,7 +74,29 @@ public:
 //
 // LogProvider
 //
+LogProvider::LogProvider()
+    : level_(LogLevel::Debug)
+{
+}
+
 LogProvider::~LogProvider() {}
+
+void LogProvider::Init() {}
+
+void LogProvider::Flush() {}
+
+void LogProvider::Write(LogLevel level, LogBuffer* msg)
+{
+    if (level < level_)
+        return;
+
+    this->WriteMessage(level, msg);
+}
+
+void LogProvider::SetLevel(LogLevel level)
+{
+    level_ = level;
+}
 
 #if defined(KGE_PLATFORM_WINDOWS)
 void SetWindowConsoleColor(std::ostream& os, int foreground, int background)
@@ -566,7 +588,7 @@ void Logger::Write(LogLevel level, std::streambuf* raw_msg)
     for (auto provider : providers_)
     {
         buffer_.pubseekpos(0, std::ios_base::in);
-        provider->WriteMessage(level, &buffer_);
+        provider->Write(level, &buffer_);
     }
 }
 
