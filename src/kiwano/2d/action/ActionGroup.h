@@ -40,12 +40,12 @@ public:
     /// \~chinese
     /// @brief 创建动画组合
     /// @param actions 动画集合
-    /// @param sync 同步执行
-    static ActionGroupPtr Create(const Vector<ActionPtr>& actions, bool sync = false);
+    /// @param parallel 同步执行
+    static ActionGroupPtr Create(const Vector<ActionPtr>& actions, bool parallel = false);
 
     ActionGroup();
 
-    ActionGroup(bool sync);
+    ActionGroup(bool parallel);
 
     virtual ~ActionGroup();
 
@@ -77,7 +77,7 @@ protected:
     void Update(Actor* target, Duration dt) override;
 
 private:
-    bool       sync_;
+    bool       parallel_;
     ActionPtr  current_;
     ActionList actions_;
 };

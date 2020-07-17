@@ -606,7 +606,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
-            KGE_SYS_LOG("Window minimized");
+            KGE_DEBUG_LOGF("Window minimized");
 
             is_minimized_ = true;
             // Pause game when window is minimized
@@ -614,7 +614,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         }
         else if (SIZE_MAXIMIZED == wparam)
         {
-            KGE_SYS_LOG("Window maximized");
+            KGE_DEBUG_LOGF("Window maximized");
 
             if (is_minimized_)
             {
@@ -626,7 +626,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         {
             if (is_minimized_)
             {
-                KGE_SYS_LOG("Window restored");
+                KGE_DEBUG_LOGF("Window restored");
 
                 // the window was restored and was previously minimized
                 is_minimized_ = false;
@@ -646,7 +646,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 evt->height               = this->GetHeight();
                 this->PushEvent(evt);
 
-                KGE_SYS_LOG("Window resized to (%d, %d)", this->width_, this->height_);
+                KGE_DEBUG_LOGF("Window resized to (%d, %d)", this->width_, this->height_);
             }
         }
     }
@@ -672,7 +672,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         uint32_t client_height = uint32_t(client_rect.bottom - client_rect.top);
         if (client_width != this->GetWidth() || client_height != this->GetHeight())
         {
-            KGE_SYS_LOG("Window resized to (%d, %d)", client_width, client_height);
+            KGE_DEBUG_LOGF("Window resized to (%d, %d)", client_width, client_height);
 
             this->width_  = client_width;
             this->height_ = client_height;
@@ -744,7 +744,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETTEXT:
     {
-        KGE_SYS_LOG("Window title changed");
+        KGE_DEBUG_LOGF("Window title changed");
 
         this->title_ = strings::WideToNarrow(reinterpret_cast<LPCWSTR>(lparam));
 
@@ -756,13 +756,13 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SETICON:
     {
-        KGE_SYS_LOG("Window icon changed");
+        KGE_DEBUG_LOGF("Window icon changed");
     }
     break;
 
     case WM_DISPLAYCHANGE:
     {
-        KGE_SYS_LOG("The display resolution has changed");
+        KGE_DEBUG_LOGF("The display resolution has changed");
     }
     break;
 
@@ -774,7 +774,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_CLOSE:
     {
-        KGE_SYS_LOG("Window is closing");
+        KGE_DEBUG_LOGF("Window is closing");
 
         WindowClosedEventPtr evt = new WindowClosedEvent;
         this->PushEvent(evt);
@@ -785,7 +785,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_DESTROY:
     {
-        KGE_SYS_LOG("Window was destroyed");
+        KGE_DEBUG_LOGF("Window was destroyed");
 
         ::PostQuitMessage(0);
         return 0;

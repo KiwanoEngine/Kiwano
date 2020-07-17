@@ -535,7 +535,7 @@ void Actor::AddChild(ActorPtr child, int zorder)
         {
             if (parent == child)
             {
-                KGE_ERROR("A actor cannot be its own parent");
+                KGE_ERRORF("A actor cannot be its own parent");
                 return;
             }
         }

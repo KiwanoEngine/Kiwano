@@ -60,7 +60,7 @@ bool ResourceCache::LoadFromJsonFile(const String& file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_ERROR("%s failed: File not found.", __FUNCTION__);
+        KGE_ERRORF("%s failed: File not found.", __FUNCTION__);
         return false;
     }
 
@@ -78,12 +78,12 @@ bool ResourceCache::LoadFromJsonFile(const String& file_path)
     }
     catch (std::wifstream::failure& e)
     {
-        KGE_ERROR("%s failed: Cannot open file. (%s)", __FUNCTION__, e.what());
+        KGE_ERRORF("%s failed: Cannot open file. (%s)", __FUNCTION__, e.what());
         return false;
     }
     catch (Json::exception& e)
     {
-        KGE_ERROR("%s failed: Cannot parse to JSON. (%s)", __FUNCTION__, e.what());
+        KGE_ERRORF("%s failed: Cannot parse to JSON. (%s)", __FUNCTION__, e.what());
         return false;
     }
     return LoadFromJson(json_data);
@@ -106,12 +106,12 @@ bool ResourceCache::LoadFromJson(const Json& json_data)
         }
         else
         {
-            KGE_ERROR("%s failed: unknown resource data version", __FUNCTION__);
+            KGE_ERRORF("%s failed: unknown resource data version", __FUNCTION__);
         }
     }
     catch (Json::exception& e)
     {
-        KGE_ERROR("%s failed: JSON data is invalid. (%s)", __FUNCTION__, e.what());
+        KGE_ERRORF("%s failed: JSON data is invalid. (%s)", __FUNCTION__, e.what());
         return false;
     }
     return false;
@@ -121,7 +121,7 @@ bool ResourceCache::LoadFromXmlFile(const String& file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_ERROR("%s failed: File not found.", __FUNCTION__);
+        KGE_ERRORF("%s failed: File not found.", __FUNCTION__);
         return false;
     }
 
@@ -136,7 +136,7 @@ bool ResourceCache::LoadFromXmlFile(const String& file_path)
     }
     else
     {
-        KGE_ERROR("%s failed: XML [%s] parsed with errors: %s", __FUNCTION__, full_path.c_str(), result.description());
+        KGE_ERRORF("%s failed: XML [%s] parsed with errors: %s", __FUNCTION__, full_path.c_str(), result.description());
         return false;
     }
 }
@@ -160,7 +160,7 @@ bool ResourceCache::LoadFromXml(const XmlDocument& doc)
         }
         else
         {
-            KGE_ERROR("%s failed: unknown resource data version", __FUNCTION__);
+            KGE_ERRORF("%s failed: unknown resource data version", __FUNCTION__);
         }
     }
     return false;

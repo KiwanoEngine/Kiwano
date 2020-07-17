@@ -181,7 +181,7 @@ DbgHelp g_DbgHelp;
 
 void PrintErrorCode(LPCSTR lpszFunction)
 {
-    KGE_ERROR("%s failed with HRESULT of %08X", lpszFunction, HRESULT_FROM_WIN32(GetLastError()));
+    KGE_ERRORF("%s failed with HRESULT of %08X", lpszFunction, HRESULT_FROM_WIN32(GetLastError()));
 }
 
 void PrintCallStackOnContext(PCONTEXT pContext)
@@ -227,7 +227,7 @@ void PrintCallStackOnContext(PCONTEXT pContext)
     constexpr int STACKWALK_MAX_NAMELEN = 1024;
     BYTE          symbolBuffer[sizeof(IMAGEHLP_SYMBOL64) + STACKWALK_MAX_NAMELEN];
 
-    KGE_ERROR("==========  Stack trace  ==========");
+    KGE_ERRORF("==========  Stack trace  ==========");
 
     while (true)
     {
@@ -263,11 +263,11 @@ void PrintCallStackOnContext(PCONTEXT pContext)
         DWORD dwLineDisplacement;
         if (g_DbgHelp.SymGetLineFromAddr64(hProcess, sf.AddrPC.Offset, &dwLineDisplacement, &lineInfo))
         {
-            KGE_ERROR("%s (%d): %s", lineInfo.FileName, lineInfo.LineNumber, pSymbol->Name);
+            KGE_ERRORF("%s (%d): %s", lineInfo.FileName, lineInfo.LineNumber, pSymbol->Name);
         }
         else
         {
-            KGE_ERROR("(filename not available): %s", pSymbol->Name);
+            KGE_ERRORF("(filename not available): %s", pSymbol->Name);
         }
 
         if (sf.AddrReturn.Offset == 0)
