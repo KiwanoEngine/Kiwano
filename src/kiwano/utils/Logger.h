@@ -19,48 +19,179 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Common.h>
+#include <kiwano/core/Time.h>
+#include <kiwano/base/ObjectBase.h>
+#include <mutex>
 #include <iomanip>
 #include <streambuf>
+#include <fstream>
 
-#ifndef KGE_SYS_LOG
+#ifndef KGE_DEBUG_LOG
 #ifdef KGE_DEBUG
-#define KGE_SYS_LOG(FORMAT, ...) \
-    ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::System, FORMAT, __VA_ARGS__)
+#define KGE_DEBUG_LOG(...) ::kiwano::Logger::GetInstance().Log(::kiwano::LogLevel::Debug, __VA_ARGS__)
 #else
-#define KGE_SYS_LOG __noop
+#define KGE_DEBUG_LOG __noop
 #endif
-#endif
-
-#ifndef KGE_WARN
-#define KGE_WARN(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Warning, FORMAT, __VA_ARGS__)
-#endif
-
-#ifndef KGE_ERROR
-#define KGE_ERROR(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Error, FORMAT, __VA_ARGS__)
 #endif
 
 #ifndef KGE_LOG
-#define KGE_LOG(...) ::kiwano::Logger::GetInstance().Println(::kiwano::Logger::Level::Info, __VA_ARGS__)
+#define KGE_LOG(...) ::kiwano::Logger::GetInstance().Log(::kiwano::LogLevel::Info, __VA_ARGS__)
+#endif
+
+#ifndef KGE_NOTICE
+#define KGE_NOTICE(...) ::kiwano::Logger::GetInstance().Log(::kiwano::LogLevel::Notice, __VA_ARGS__)
+#endif
+
+#ifndef KGE_WARN
+#define KGE_WARN(...) ::kiwano::Logger::GetInstance().Log(::kiwano::LogLevel::Warning, __VA_ARGS__)
+#endif
+
+#ifndef KGE_ERROR
+#define KGE_ERROR(...) ::kiwano::Logger::GetInstance().Log(::kiwano::LogLevel::Error, __VA_ARGS__)
+#endif
+
+#ifndef KGE_DEBUG_LOGF
+#ifdef KGE_DEBUG
+#define KGE_DEBUG_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Debug, FORMAT, __VA_ARGS__)
+#else
+#define KGE_DEBUG_LOGF __noop
+#endif
 #endif
 
 #ifndef KGE_LOGF
-#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Printf(::kiwano::Logger::Level::Info, FORMAT, __VA_ARGS__)
+#define KGE_LOGF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Info, FORMAT, __VA_ARGS__)
 #endif
 
-#ifndef KGE_LOG_STREAM
-#define KGE_LOG_STREAM() ::kiwano::Logger::GetInstance().GetOutputStream()
+#ifndef KGE_NOTICEF
+#define KGE_NOTICEF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Notice, FORMAT, __VA_ARGS__)
 #endif
 
-#ifndef KGE_ERROR_STREAM
-#define KGE_ERROR_STREAM() ::kiwano::Logger::GetInstance().GetErrorStream()
+#ifndef KGE_WARNF
+#define KGE_WARNF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Warning, FORMAT, __VA_ARGS__)
+#endif
+
+#ifndef KGE_ERRORF
+#define KGE_ERRORF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Error, FORMAT, __VA_ARGS__)
 #endif
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(LogFormater);
+KGE_DECLARE_SMART_PTR(LogProvider);
+KGE_DECLARE_SMART_PTR(Logger);
+
 /**
  * \~chinese
- * @brief 日志
+ * @brief 日志等级
+ */
+enum class LogLevel
+{
+    Debug,    ///< 调试
+    Info,     ///< 信息
+    Notice,   ///< 注意
+    Warning,  ///< 警告
+    Error,    ///< 错误
+};
+
+/**
+ * \~chinese
+ * @brief 日志格式化
+ */
+class KGE_API LogFormater : public ObjectBase
+{
+public:
+    virtual void Format(std::iostream& out, LogLevel level, Time time, std::streambuf* raw_msg) = 0;
+
+    String GetLevelLabel(LogLevel level) const;
+};
+
+/**
+ * \~chinese
+ * @brief 日志流缓冲
+ */
+class LogBuffer : public std::streambuf
+{
+public:
+    LogBuffer(Vector<char_type>& buf);
+
+    const char* GetRaw() const;
+
+protected:
+    int_type overflow(int_type ch) override;
+
+    int_type underflow() override;
+
+    pos_type seekpos(pos_type sp, std::ios_base::openmode which) override;
+
+    pos_type seekoff(off_type off, std::ios_base::seekdir dir,
+                     std::ios_base::openmode which = std::ios_base::in) override;
+
+    std::streambuf* setbuf(char_type* s, std::streamsize n) override;
+
+private:
+    Vector<char_type>& buf_;
+    char_type*         seek_high_;
+};
+
+/**
+ * \~chinese
+ * @brief 日志提供者
+ */
+class KGE_API LogProvider : public ObjectBase
+{
+public:
+    virtual ~LogProvider();
+
+    virtual void Init() = 0;
+
+    virtual void WriteMessage(LogLevel level, LogBuffer* msg) = 0;
+
+    virtual void Flush() = 0;
+};
+
+/**
+ * \~chinese
+ * @brief 控制台日志提供者
+ */
+class KGE_API ConsoleLogProvider : public LogProvider
+{
+public:
+    static LogProviderPtr Create();
+
+    virtual ~ConsoleLogProvider();
+
+    void Init() override;
+
+    void WriteMessage(LogLevel level, LogBuffer* msg) override;
+
+    void Flush() override;
+};
+
+/**
+ * \~chinese
+ * @brief 文件日志提供者
+ */
+class KGE_API FileLogProvider : public LogProvider
+{
+public:
+    static LogProviderPtr Create(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
+
+   virtual ~FileLogProvider();
+
+    void Init() override;
+
+    void WriteMessage(LogLevel level, LogBuffer* msg) override;
+
+    void Flush() override;
+
+private:
+    std::ofstream ofs_;
+};
+
+/**
+ * \~chinese
+ * @brief 日志记录器
  */
 class KGE_API Logger : public Singleton<Logger>
 {
@@ -68,34 +199,21 @@ class KGE_API Logger : public Singleton<Logger>
 
 public:
     /// \~chinese
-    /// @brief 日志级别
-    enum class Level
-    {
-        Info,     ///< 信息
-        System,   ///< 系统
-        Warning,  ///< 警告
-        Error     ///< 错误
-    };
-
-    /// \~chinese
     /// @brief 打印日志
     /// @param level 日志级别
     /// @param format 格式字符串
-    void Printf(Level level, const char* format, ...);
+    void Logf(LogLevel level, const char* format, ...);
 
     /// \~chinese
     /// @brief 打印日志
     /// @param level 日志级别
     /// @param args 参数
     template <typename... _Args>
-    void Print(Level level, _Args&&... args);
+    void Log(LogLevel level, _Args&&... args);
 
     /// \~chinese
-    /// @brief 打印一行日志
-    /// @param level 日志级别
-    /// @param args 参数
-    template <typename... _Args>
-    void Println(Level level, _Args&&... args);
+    /// @brief 刷新日志缓冲
+    void Flush();
 
     /// \~chinese
     /// @brief 启用日志
@@ -106,48 +224,53 @@ public:
     void Disable();
 
     /// \~chinese
-    /// @brief 获取输出流
-    OutputStream& GetOutputStream();
+    /// @brief 设置日志等级
+    void SetLevel(LogLevel level);
 
     /// \~chinese
-    /// @brief 获取错误输出流
-    OutputStream& GetErrorStream();
+    /// @brief 添加日志提供者
+    /// @param provider 日志提供者
+    void AddProvider(LogProviderPtr provider);
 
     /// \~chinese
-    /// @brief 重定向输出流
-    std::streambuf* RedirectOutputStream(std::streambuf* buf);
+    /// @brief 设置日志格式
+    /// @param formater 日志格式化
+    void SetFormater(LogFormaterPtr formater);
 
     /// \~chinese
-    /// @brief 重定向错误输出流
-    std::streambuf* RedirectErrorStream(std::streambuf* buf);
+    /// @brief 获取日志格式
+    /// @return 日志格式
+    LogFormaterPtr GetFormater();
 
+    /// \~chinese
+    /// @brief 重设缓冲区大小
+    /// @param buffer_size 缓冲区大小
+    void ResizeBuffer(size_t buffer_size);
+
+    /// \~chinese
+    /// @brief 写入缓冲区
+    /// @param level 日志等级
+    /// @param raw_msg 日志内容
+    void Write(LogLevel level, std::streambuf* raw_msg);
+
+#if defined(KGE_PLATFORM_WINDOWS)
     /// \~chinese
     /// @brief 显示或关闭控制台
-    /// @note 此操作会重定向输出流到标准输出流
     void ShowConsole(bool show);
+#endif
 
-    ~Logger();
+    virtual ~Logger();
 
 private:
     Logger();
 
-    void Prepare(Level level, StringStream& sstream);
-
-    void Output(Level level, StringStream& sstream);
-
-    void ResetStreamToStdStream();
-
-    void ResetConsoleColor() const;
-
-    OutputStream& DefaultOutputColor(OutputStream& out);
-
 private:
-    bool enabled_;
-    WORD default_stdout_color_;
-    WORD default_stderr_color_;
-
-    OutputStream output_stream_;
-    OutputStream error_stream_;
+    bool                   enabled_;
+    LogLevel               level_;
+    LogFormaterPtr         formater_;
+    Vector<LogProviderPtr> providers_;
+    Vector<char>           buffer_;
+    std::mutex             mutex_;
 };
 
 inline void Logger::Enable()
@@ -160,57 +283,26 @@ inline void Logger::Disable()
     enabled_ = false;
 }
 
+inline void Logger::SetFormater(LogFormaterPtr formater)
+{
+    formater_ = formater;
+}
+
 template <typename... _Args>
-void Logger::Print(Level level, _Args&&... args)
+inline void Logger::Log(LogLevel level, _Args&&... args)
 {
     if (!enabled_)
         return;
 
-    StringStream sstream;
-    Prepare(level, sstream);
-
-    // Format message
-    (void)std::initializer_list<int>{ ((sstream << ' ' << args), 0)... };
-
-    Output(level, sstream);
-}
-
-template <typename... _Args>
-void Logger::Println(Level level, _Args&&... args)
-{
-    if (!enabled_)
+    if (level < level_)
         return;
 
+    // build message
     StringStream sstream;
-    Prepare(level, sstream);
-
-    // Format message
     (void)std::initializer_list<int>{ ((sstream << ' ' << args), 0)... };
 
-    sstream << "\r\n";
-
-    Output(level, sstream);
+    // write message
+    this->Write(level, sstream.rdbuf());
 }
 
-inline void Logger::ResetConsoleColor() const
-{
-    ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
-    ::SetConsoleTextAttribute(::GetStdHandle(STD_ERROR_HANDLE), default_stderr_color_);
-}
-
-inline OutputStream& Logger::DefaultOutputColor(OutputStream& out)
-{
-    ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), default_stdout_color_);
-    return out;
-}
-
-inline OutputStream& Logger::GetOutputStream()
-{
-    return output_stream_;
-}
-
-inline OutputStream& Logger::GetErrorStream()
-{
-    return error_stream_;
-}
 }  // namespace kiwano

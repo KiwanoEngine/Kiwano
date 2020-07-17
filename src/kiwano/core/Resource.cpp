@@ -48,28 +48,28 @@ Resource::Data Resource::GetData() const
         HRSRC res_info = FindResourceA(nullptr, MAKEINTRESOURCEA(id_), type_.data());
         if (res_info == nullptr)
         {
-            KGE_ERROR("FindResource failed");
+            KGE_ERRORF("FindResource failed");
             break;
         }
 
         HGLOBAL res_data = LoadResource(nullptr, res_info);
         if (res_data == nullptr)
         {
-            KGE_ERROR("LoadResource failed");
+            KGE_ERRORF("LoadResource failed");
             break;
         }
 
         DWORD size = SizeofResource(nullptr, res_info);
         if (size == 0)
         {
-            KGE_ERROR("SizeofResource failed");
+            KGE_ERRORF("SizeofResource failed");
             break;
         }
 
         LPVOID buffer = LockResource(res_data);
         if (buffer == nullptr)
         {
-            KGE_ERROR("LockResource failed");
+            KGE_ERRORF("LockResource failed");
             break;
         }
 

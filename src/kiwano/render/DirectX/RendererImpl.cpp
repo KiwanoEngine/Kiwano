@@ -51,7 +51,7 @@ RendererImpl::RendererImpl()
 
 void RendererImpl::MakeContextForWindow(WindowPtr window)
 {
-    KGE_SYS_LOG("Creating device resources");
+    KGE_DEBUG_LOGF("Creating device resources");
 
     KGE_THROW_IF_FAILED(::CoInitialize(nullptr), "CoInitialize failed");
 
@@ -143,7 +143,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
 
 void RendererImpl::Destroy()
 {
-    KGE_SYS_LOG("Destroying device resources");
+    KGE_DEBUG_LOGF("Destroying device resources");
 
     if (d2d_res_)
     {
@@ -194,7 +194,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARN("Texture file '%s' not found!", file_path.c_str());
+        KGE_WARNF("Texture file '%s' not found!", file_path.c_str());
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
     }
 
@@ -291,7 +291,7 @@ void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
 
     if (FAILED(hr))
     {
-        KGE_WARN("Load texture failed with HRESULT of %08X!", hr);
+        KGE_WARNF("Load texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -305,7 +305,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARN("Gif texture file '%s' not found!", file_path.c_str());
+        KGE_WARNF("Gif texture file '%s' not found!", file_path.c_str());
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
     }
 
@@ -324,7 +324,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
     if (FAILED(hr))
     {
-        KGE_WARN("Load GIF texture failed with HRESULT of %08X!", hr);
+        KGE_WARNF("Load GIF texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -356,7 +356,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
 
     if (FAILED(hr))
     {
-        KGE_WARN("Load GIF texture failed with HRESULT of %08X!", hr);
+        KGE_WARNF("Load GIF texture failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -520,7 +520,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
 
     if (FAILED(hr))
     {
-        KGE_WARN("Load GIF frame failed with HRESULT of %08X!", hr);
+        KGE_WARNF("Load GIF frame failed with HRESULT of %08X!", hr);
     }
 }
 
@@ -536,7 +536,7 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
     {
         if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
-            KGE_WARN("Font file '%s' not found!", file_path.c_str());
+            KGE_WARNF("Font file '%s' not found!", file_path.c_str());
             hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
         }
     }

@@ -298,7 +298,7 @@ void HttpModule::Perform(HttpRequestPtr request, HttpResponsePtr response)
         ok = Curl::DeleteRequest(this, headers, url, &response_code, &response_data, &response_header, error_message);
         break;
     default:
-        KGE_ERROR("HttpModule: unknown request type, only GET, POST, PUT or DELETE is supported");
+        KGE_ERRORF("HttpModule: unknown request type, only GET, POST, PUT or DELETE is supported");
         return;
     }
 

@@ -195,7 +195,7 @@ public:
     /// @brief 获取该动画的倒转
     virtual ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionMoveTo");
+        KGE_ERRORF("Reverse() not supported in ActionMoveTo");
         return nullptr;
     }
 
@@ -299,7 +299,7 @@ public:
     /// @brief 获取该动画的倒转
     virtual ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionJumpTo");
+        KGE_ERRORF("Reverse() not supported in ActionJumpTo");
         return nullptr;
     }
 
@@ -398,7 +398,7 @@ public:
     /// @brief 获取该动画的倒转
     virtual ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionScaleTo");
+        KGE_ERRORF("Reverse() not supported in ActionScaleTo");
         return nullptr;
     }
 
@@ -439,7 +439,7 @@ public:
     /// @brief 获取该动画的倒转
     virtual ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionFadeTo");
+        KGE_ERRORF("Reverse() not supported in ActionFadeTo");
         return nullptr;
     }
 
@@ -544,7 +544,7 @@ public:
     /// @brief 获取该动画的倒转
     virtual ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionRotateTo");
+        KGE_ERRORF("Reverse() not supported in ActionRotateTo");
         return nullptr;
     }
 
@@ -589,7 +589,7 @@ public:
     /// @brief 获取该动画的倒转
     ActionPtr Reverse() const override
     {
-        KGE_ERROR("Reverse() not supported in ActionCustom");
+        KGE_ERRORF("Reverse() not supported in ActionCustom");
         return nullptr;
     }
 

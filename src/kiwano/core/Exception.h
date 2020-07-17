@@ -27,7 +27,7 @@
 #define KGE_THROW(MESSAGE)                               \
     do                                                   \
     {                                                    \
-        KGE_ERROR("An exception occurred: %s", MESSAGE); \
+        KGE_ERRORF("An exception occurred: %s", MESSAGE); \
         kiwano::StackTracer().Print();                   \
         throw kiwano::RuntimeError(MESSAGE);             \
     } while (0)
@@ -35,7 +35,7 @@
 #define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
     do                                                                                    \
     {                                                                                     \
-        KGE_ERROR("An exception occurred (%#x): %s", ERRCODE, MESSAGE);                   \
+        KGE_ERRORF("An exception occurred (%#x): %s", ERRCODE, MESSAGE);                   \
         kiwano::StackTracer().Print();                                                    \
         throw kiwano::SystemError(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
     } while (0)

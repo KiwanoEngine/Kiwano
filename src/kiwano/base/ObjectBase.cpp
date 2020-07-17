@@ -122,13 +122,13 @@ void ObjectBase::StopTracingLeaks()
 
 void ObjectBase::DumpTracingObjects()
 {
-    KGE_SYS_LOG("-------------------------- All Objects --------------------------");
+    KGE_DEBUG_LOGF("-------------------------- All Objects --------------------------");
     for (const auto object : tracing_objects)
     {
-        KGE_SYS_LOG("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*object).name(), object->GetObjectID(),
+        KGE_DEBUG_LOGF("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*object).name(), object->GetObjectID(),
                     object->GetRefCount(), object->GetName().c_str());
     }
-    KGE_SYS_LOG("------------------------- Total size: %d -------------------------", tracing_objects.size());
+    KGE_DEBUG_LOGF("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }
 
 Vector<ObjectBase*>& ObjectBase::GetTracingObjects()

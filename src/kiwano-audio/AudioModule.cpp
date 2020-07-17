@@ -37,7 +37,7 @@ AudioModule::~AudioModule() {}
 
 void AudioModule::SetupModule()
 {
-    KGE_SYS_LOG("Creating audio resources");
+    KGE_DEBUG_LOGF("Creating audio resources");
 
     HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
 
@@ -56,7 +56,7 @@ void AudioModule::SetupModule()
 
 void AudioModule::DestroyModule()
 {
-    KGE_SYS_LOG("Destroying audio resources");
+    KGE_DEBUG_LOGF("Destroying audio resources");
 
     if (mastering_voice_)
     {
@@ -103,7 +103,7 @@ bool AudioModule::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
 
     if (FAILED(hr))
     {
-        KGE_ERROR("Create IXAudio2SourceVoice failed with HRESULT of %08X", hr);
+        KGE_ERRORF("Create IXAudio2SourceVoice failed with HRESULT of %08X", hr);
         return false;
     }
     return true;

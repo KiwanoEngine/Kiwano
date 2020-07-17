@@ -105,7 +105,7 @@ HRESULT Transcoder::LoadMediaResource(const Resource& res)
 
     if (stream == nullptr)
     {
-        KGE_ERROR("SHCreateMemStream failed");
+        KGE_ERRORF("SHCreateMemStream failed");
         return E_OUTOFMEMORY;
     }
 
@@ -198,7 +198,7 @@ HRESULT Transcoder::ReadSource(IMFSourceReader* reader)
 
         if (data == nullptr)
         {
-            KGE_ERROR("Low memory");
+            KGE_ERRORF("Low memory");
             hr = E_OUTOFMEMORY;
         }
         else

@@ -155,7 +155,7 @@ void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& of
         }
         else
         {
-            KGE_ERROR("Failed to draw text layout with HRESULT of %08X", hr);
+            KGE_ERRORF("Failed to draw text layout with HRESULT of %08X", hr);
         }
     }
 }
