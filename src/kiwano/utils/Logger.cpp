@@ -53,7 +53,7 @@ String LogFormater::GetLevelLabel(LogLevel level) const
 class TextFormater : public LogFormater
 {
 public:
-    void Format(std::iostream& out, LogLevel level, Time time, std::streambuf* raw_msg) override
+    void FormatHeader(std::ostream& out, LogLevel level, Time time) override
     {
         // get timestamp
         time_t  unix = std::time(nullptr);
@@ -62,10 +62,10 @@ public:
 
         // build message
         out << GetLevelLabel(level) << std::put_time(&tmbuf, " %H:%M:%S ");
+    }
 
-        if (raw_msg->sgetc() != std::char_traits<char>::eof())
-            out << raw_msg;
-
+    void FormatFooter(std::ostream& out, LogLevel level, Time time) override
+    {
         out << "\n";
     }
 };
@@ -498,12 +498,30 @@ Logger::Logger()
     : enabled_(true)
     , level_(LogLevel::Debug)
     , buffer_(1024)
+    , stream_(&buffer_)
 {
     LogFormaterPtr formater = new TextFormater;
     SetFormater(formater);
 
     LogProviderPtr provider = ConsoleLogProvider::Create();
     AddProvider(provider);
+}
+
+std::iostream& Logger::GetFormatedStream(LogLevel level, LogBuffer* buffer)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    // reset buffer
+    buffer->Reset();
+
+    stream_.rdbuf(buffer);
+    stream_.clear();
+
+    if (formater_)
+    {
+        formater_->FormatHeader(stream_, level, Time::Now());
+    }
+    return stream_;
 }
 
 Logger::~Logger()
@@ -518,17 +536,17 @@ void Logger::Logf(LogLevel level, const char* format, ...)
     if (level < level_)
         return;
 
-    // build message
     va_list args = nullptr;
     va_start(args, format);
 
-    StringStream sstream;
-    sstream << strings::FormatArgs(format, args);
+    // build message
+    auto& stream = this->GetFormatedStream(level, &buffer_);
+    stream << strings::FormatArgs(format, args);
 
     va_end(args);
 
     // write message
-    Write(level, sstream.rdbuf());
+    WriteToProviders(level, &buffer_);
 }
 
 void Logger::Flush()
@@ -566,29 +584,21 @@ void Logger::ResizeBuffer(size_t buffer_size)
     buffer_.Resize(buffer_size);
 }
 
-void Logger::Write(LogLevel level, std::streambuf* raw_msg)
+void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    // reset buffer
-    buffer_.Reset();
-
-    // format message
-    std::iostream stream(&buffer_);
+    // format footer
     if (formater_)
     {
-        formater_->Format(stream, level, Time::Now(), raw_msg);
-    }
-    else
-    {
-        stream << raw_msg << "\n";
+        formater_->FormatFooter(stream_, level, Time::Now());
     }
 
     // write message
     for (auto provider : providers_)
     {
-        buffer_.pubseekpos(0, std::ios_base::in);
-        provider->Write(level, &buffer_);
+        buffer->pubseekpos(0, std::ios_base::in);
+        provider->Write(level, buffer);
     }
 }
 

@@ -101,7 +101,9 @@ enum class LogLevel
 class KGE_API LogFormater : public ObjectBase
 {
 public:
-    virtual void Format(std::iostream& out, LogLevel level, Time time, std::streambuf* raw_msg) = 0;
+    virtual void FormatHeader(std::ostream& out, LogLevel level, Time time) = 0;
+
+    virtual void FormatFooter(std::ostream& out, LogLevel level, Time time) = 0;
 
     String GetLevelLabel(LogLevel level) const;
 };
@@ -271,12 +273,6 @@ public:
     void ResizeBuffer(size_t buffer_size);
 
     /// \~chinese
-    /// @brief 写入缓冲区
-    /// @param level 日志等级
-    /// @param raw_msg 日志内容
-    void Write(LogLevel level, std::streambuf* raw_msg);
-
-    /// \~chinese
     /// @brief 显示或关闭控制台
     void ShowConsole(bool show);
 
@@ -285,11 +281,16 @@ public:
 private:
     Logger();
 
+    std::iostream& GetFormatedStream(LogLevel level, LogBuffer* buffer);
+
+    void WriteToProviders(LogLevel level, LogBuffer* buffer);
+
 private:
     bool                   enabled_;
     LogLevel               level_;
     LogFormaterPtr         formater_;
     LogBuffer              buffer_;
+    std::iostream          stream_;
     Vector<LogProviderPtr> providers_;
     std::mutex             mutex_;
 };
@@ -319,11 +320,11 @@ inline void Logger::Log(LogLevel level, _Args&&... args)
         return;
 
     // build message
-    StringStream sstream;
-    (void)std::initializer_list<int>{ ((sstream << ' ' << args), 0)... };
+    auto& stream = this->GetFormatedStream(level, &this->buffer_);
+    (void)std::initializer_list<int>{ ((stream << ' ' << args), 0)... };
 
     // write message
-    this->Write(level, sstream.rdbuf());
+    this->WriteToProviders(level, &this->buffer_);
 }
 
 }  // namespace kiwano
