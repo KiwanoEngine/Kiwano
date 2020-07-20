@@ -126,32 +126,44 @@ private:
 
 /// \~chinese
 /// @brief 补间动画
-struct ActionTween : Action
+class ActionTween : public Action
 {
-    /// \~chinese
-    /// @brief 设置缓动函数
-    inline ActionTween& Ease(EaseFunc ease)
-    {
-        tween_ptr->SetEaseFunc(ease);
-        return (*this);
-    }
-
-protected:
+public:
     ActionTween() = default;
 
     inline ActionTween(ActionTweenEntityPtr ptr)
         : Action(ptr.Get())
-        , tween_ptr(ptr)
     {
     }
 
-    inline void SetEntity(ActionEntityPtr tween_ptr)
+    /// \~chinese
+    /// @brief 设置缓动函数
+    inline ActionTween& Ease(EaseFunc ease)
     {
-        this->ptr       = tween_ptr;
-        this->tween_ptr = (ActionTweenEntity*)tween_ptr.Get();
+        auto tween_ptr = Get();
+        if (tween_ptr)
+            tween_ptr->SetEaseFunc(ease);
+        return (*this);
     }
 
-    ActionTweenEntityPtr tween_ptr;
+    /// \~chinese
+    /// @brief 获取指针
+    inline ActionTweenEntity* Get() const
+    {
+        return const_cast<ActionTweenEntity*>(static_cast<const ActionTweenEntity*>(ptr.Get()));
+    }
+
+    /// \~chinese
+    /// @brief 设置动画实体
+    inline void SetEntity(ActionTweenEntityPtr tween_ptr)
+    {
+        this->ptr = static_cast<ActionEntity*>(tween_ptr.Get());
+    }
+
+    inline ActionTweenEntity* operator->() const
+    {
+        return Get();
+    }
 };
 
 /// \~chinese

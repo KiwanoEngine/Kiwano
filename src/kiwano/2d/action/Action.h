@@ -181,7 +181,8 @@ protected:
     /// @brief 是否可移除
     bool IsRemoveable() const;
 
-protected:
+    /// \~chinese
+    /// @brief 执行克隆
     ActionEntityPtr DoClone(ActionEntityPtr to) const;
 
 private:
@@ -201,11 +202,19 @@ private:
 class KGE_API Action
 {
 public:
+    Action() = default;
+
+    inline Action(ActionEntityPtr ptr)
+        : ptr(ptr)
+    {
+    }
+
     /// \~chinese
     /// @brief 设置循环次数
     inline Action& Loops(int loops)
     {
-        ptr->SetLoops(loops);
+        if (ptr)
+            ptr->SetLoops(loops);
         return (*this);
     }
 
@@ -213,7 +222,8 @@ public:
     /// @brief 设置动画延迟
     inline Action& Delay(Duration delay)
     {
-        ptr->SetDelay(delay);
+        if (ptr)
+            ptr->SetDelay(delay);
         return (*this);
     }
 
@@ -221,7 +231,8 @@ public:
     /// @brief 设置动画结束回调函数
     inline Action& DoneCallback(const ActionDoneCallback& cb)
     {
-        ptr->SetDoneCallback(cb);
+        if (ptr)
+            ptr->SetDoneCallback(cb);
         return (*this);
     }
 
@@ -229,7 +240,8 @@ public:
     /// @brief 设置动画循环结束时的回调函数
     inline Action& LoopDoneCallback(const ActionDoneCallback& cb)
     {
-        ptr->SetLoopDoneCallback(cb);
+        if (ptr)
+            ptr->SetLoopDoneCallback(cb);
         return (*this);
     }
 
@@ -237,7 +249,8 @@ public:
     /// @brief 动画结束时移除目标角色
     inline Action& RemoveTargetWhenDone()
     {
-        ptr->RemoveTargetWhenDone();
+        if (ptr)
+            ptr->RemoveTargetWhenDone();
         return (*this);
     }
 
@@ -245,7 +258,8 @@ public:
     /// @brief 设置名称
     inline Action& Name(const String& name)
     {
-        ptr->SetName(name);
+        if (ptr)
+            ptr->SetName(name);
         return (*this);
     }
 
@@ -253,14 +267,18 @@ public:
     /// @brief 克隆动画
     inline Action Clone() const
     {
-        return Action(ptr->Clone());
+        if (ptr)
+            return Action(ptr->Clone());
+        return Action();
     }
 
     /// \~chinese
     /// @brief 获取反向动画
     inline Action Reverse() const
     {
-        return Action(ptr->Reverse());
+        if (ptr)
+            return Action(ptr->Reverse());
+        return Action();
     }
 
     /// \~chinese
@@ -270,24 +288,29 @@ public:
         return const_cast<ActionEntity*>(ptr.Get());
     }
 
-    inline operator ActionEntityPtr() const
-    {
-        return ptr;
-    }
-
-protected:
-    Action() = default;
-
-    inline Action(ActionEntityPtr ptr)
-        : ptr(ptr)
-    {
-    }
-
+    /// \~chinese
+    /// @brief 设置动画实体
     inline void SetEntity(ActionEntityPtr ptr)
     {
         this->ptr = ptr;
     }
 
+    inline ActionEntity* operator->() const
+    {
+        return Get();
+    }
+
+    inline operator ActionEntityPtr() const
+    {
+        return ptr;
+    }
+
+    inline operator bool() const
+    {
+        return ptr != nullptr;
+    }
+
+protected:
     ActionEntityPtr ptr;
 };
 
