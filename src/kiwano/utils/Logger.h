@@ -155,14 +155,14 @@ public:
 
     virtual void Flush();
 
-    void Write(LogLevel level, LogBuffer* msg);
+    void Write(LogLevel level, const char* msg);
 
     void SetLevel(LogLevel level);
 
 protected:
     LogProvider();
 
-    virtual void WriteMessage(LogLevel level, LogBuffer* msg) = 0;
+    virtual void WriteMessage(LogLevel level, const char* msg) = 0;
 
 protected:
     LogLevel level_;
@@ -184,7 +184,7 @@ public:
     void Flush() override;
 
 protected:
-    void WriteMessage(LogLevel level, LogBuffer* msg) override;
+    void WriteMessage(LogLevel level, const char* msg) override;
 
 private:
     typedef std::ostream&(*ConsoleColor)(std::ostream&);
@@ -208,7 +208,7 @@ public:
     void Flush() override;
 
 protected:
-    void WriteMessage(LogLevel level, LogBuffer* msg) override;
+    void WriteMessage(LogLevel level, const char* msg) override;
 
 private:
     std::ofstream ofs_;
@@ -318,6 +318,8 @@ inline void Logger::Log(LogLevel level, _Args&&... args)
 
     if (level < level_)
         return;
+
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // build message
     auto& stream = this->GetFormatedStream(level, &this->buffer_);

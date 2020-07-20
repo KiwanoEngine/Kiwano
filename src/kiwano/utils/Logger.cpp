@@ -85,7 +85,7 @@ void LogProvider::Init() {}
 
 void LogProvider::Flush() {}
 
-void LogProvider::Write(LogLevel level, LogBuffer* msg)
+void LogProvider::Write(LogLevel level, const char* msg)
 {
     if (level < level_)
         return;
@@ -209,7 +209,7 @@ void ConsoleLogProvider::Init()
 {
 }
 
-void ConsoleLogProvider::WriteMessage(LogLevel level, LogBuffer* msg)
+void ConsoleLogProvider::WriteMessage(LogLevel level, const char* msg)
 {
     if (level != LogLevel::Error)
         std::cout << GetColor(level) << msg << std::flush << ConsoleColorBrush<-1>;
@@ -217,7 +217,7 @@ void ConsoleLogProvider::WriteMessage(LogLevel level, LogBuffer* msg)
         std::cerr << GetColor(level) << msg << ConsoleColorBrush<-1>;
 
 #if defined(KGE_PLATFORM_WINDOWS)
-    ::OutputDebugStringA(msg->GetRaw());
+    ::OutputDebugStringA(msg);
 #endif
 }
 
@@ -260,7 +260,7 @@ FileLogProvider::~FileLogProvider()
 
 void FileLogProvider::Init() {}
 
-void FileLogProvider::WriteMessage(LogLevel level, LogBuffer* msg)
+void FileLogProvider::WriteMessage(LogLevel level, const char* msg)
 {
     if (ofs_)
     {
@@ -509,8 +509,6 @@ Logger::Logger()
 
 std::iostream& Logger::GetFormatedStream(LogLevel level, LogBuffer* buffer)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-
     // reset buffer
     buffer->Reset();
 
@@ -535,6 +533,8 @@ void Logger::Logf(LogLevel level, const char* format, ...)
 
     if (level < level_)
         return;
+
+    std::lock_guard<std::mutex> lock(mutex_);
 
     va_list args = nullptr;
     va_start(args, format);
@@ -586,8 +586,6 @@ void Logger::ResizeBuffer(size_t buffer_size)
 
 void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-
     // format footer
     if (formater_)
     {
@@ -598,7 +596,7 @@ void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
     for (auto provider : providers_)
     {
         buffer->pubseekpos(0, std::ios_base::in);
-        provider->Write(level, buffer);
+        provider->Write(level, buffer->GetRaw());
     }
 }
 
