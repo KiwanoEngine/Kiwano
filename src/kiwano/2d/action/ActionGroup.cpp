@@ -25,9 +25,14 @@
 namespace kiwano
 {
 
-ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool parallel)
+ActionGroup::ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel)
 {
-    ActionGroupPtr ptr = memory::New<ActionGroup>();
+    SetEntity(ActionGroupEntity::Create(actions, parallel));
+}
+
+ActionGroupEntityPtr ActionGroupEntity::Create(const Vector<ActionEntityPtr>& actions, bool parallel)
+{
+    ActionGroupEntityPtr ptr = memory::New<ActionGroupEntity>();
     if (ptr)
     {
         ptr->parallel_ = parallel;
@@ -36,19 +41,19 @@ ActionGroupPtr ActionGroup::Create(const Vector<ActionPtr>& actions, bool parall
     return ptr;
 }
 
-ActionGroup::ActionGroup()
+ActionGroupEntity::ActionGroupEntity()
     : parallel_(false)
 {
 }
 
-ActionGroup::ActionGroup(bool parallel)
+ActionGroupEntity::ActionGroupEntity(bool parallel)
     : parallel_(parallel)
 {
 }
 
-ActionGroup::~ActionGroup() {}
+ActionGroupEntity::~ActionGroupEntity() {}
 
-void ActionGroup::Init(Actor* target)
+void ActionGroupEntity::Init(Actor* target)
 {
     if (actions_.IsEmpty())
     {
@@ -56,22 +61,19 @@ void ActionGroup::Init(Actor* target)
         return;
     }
 
-    if (parallel_)
+    // reset all actions
+    for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
     {
-        // init all actions
-        for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
-        {
-            current_->Restart(target);
-        }
+        current_->Reset();
     }
-    else
+
+    if (!parallel_)
     {
         current_ = actions_.GetFirst();
-        current_->Restart(target);  // init first action
     }
 }
 
-void ActionGroup::Update(Actor* target, Duration dt)
+void ActionGroupEntity::Update(Actor* target, Duration dt)
 {
     if (!parallel_)
     {
@@ -83,9 +85,7 @@ void ActionGroup::Update(Actor* target, Duration dt)
             {
                 current_ = current_->GetNext();
 
-                if (current_)
-                    current_->Restart(target);  // init next action
-                else
+                if (!current_)
                     Complete(target);
             }
         }
@@ -109,7 +109,7 @@ void ActionGroup::Update(Actor* target, Duration dt)
     }
 }
 
-void ActionGroup::AddAction(ActionPtr action)
+void ActionGroupEntity::AddAction(ActionEntityPtr action)
 {
     if (action)
     {
@@ -117,28 +117,28 @@ void ActionGroup::AddAction(ActionPtr action)
     }
 }
 
-void ActionGroup::AddActions(const Vector<ActionPtr>& actions)
+void ActionGroupEntity::AddActions(const Vector<ActionEntityPtr>& actions)
 {
     for (const auto& action : actions)
         AddAction(action);
 }
 
-ActionPtr ActionGroup::Clone() const
+ActionEntityPtr ActionGroupEntity::Clone() const
 {
-    Vector<ActionPtr> actions;
+    Vector<ActionEntityPtr> actions;
     if (!actions_.IsEmpty())
     {
-        for (auto action = actions_.GetLast(); action; action = action->GetPrev())
+        for (auto action = actions_.GetFirst(); action; action = action->GetNext())
         {
             actions.push_back(action->Clone());
         }
     }
-    return DoClone(ActionGroup::Create(actions, parallel_));
+    return DoClone(ActionGroupEntity::Create(actions, parallel_));
 }
 
-ActionPtr ActionGroup::Reverse() const
+ActionEntityPtr ActionGroupEntity::Reverse() const
 {
-    Vector<ActionPtr> actions;
+    Vector<ActionEntityPtr> actions;
     if (!actions_.IsEmpty())
     {
         for (auto action = actions_.GetLast(); action; action = action->GetPrev())
@@ -146,7 +146,7 @@ ActionPtr ActionGroup::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    return DoClone(ActionGroup::Create(actions, parallel_));
+    return DoClone(ActionGroupEntity::Create(actions, parallel_));
 }
 
 }  // namespace kiwano

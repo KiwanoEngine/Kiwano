@@ -25,37 +25,42 @@
 namespace kiwano
 {
 
-AnimationPtr Animation::Create(Duration duration, FrameSequencePtr frame_seq)
+Animation::Animation(Duration dur, FrameSequencePtr frame_seq)
 {
-    AnimationPtr ptr = memory::New<Animation>();
+    SetEntity(AnimationEntity::Create(dur, frame_seq));
+}
+
+AnimationEntityPtr AnimationEntity::Create(Duration dur, FrameSequencePtr frame_seq)
+{
+    AnimationEntityPtr ptr = memory::New<AnimationEntity>();
     if (ptr)
     {
-        ptr->SetDuration(duration);
+        ptr->SetDuration(dur);
         ptr->SetFrameSequence(frame_seq);
     }
     return ptr;
 }
 
-Animation::Animation()
+AnimationEntity::AnimationEntity()
     : frame_seq_(nullptr)
 {
 }
 
-Animation::~Animation() {}
+AnimationEntity::~AnimationEntity() {}
 
-FrameSequencePtr Animation::GetFrameSequence() const
+FrameSequencePtr AnimationEntity::GetFrameSequence() const
 {
     return frame_seq_;
 }
 
-void Animation::SetFrameSequence(FrameSequencePtr frame_seq)
+void AnimationEntity::SetFrameSequence(FrameSequencePtr frame_seq)
 {
     frame_seq_ = frame_seq;
 }
 
-void Animation::Init(Actor* target)
+void AnimationEntity::Init(Actor* target)
 {
-    KGE_ASSERT(frame_seq_ && "Animation::Init() failed: FrameSequence is NULL!");
+    KGE_ASSERT(frame_seq_ && "AnimationEntity::Init() failed: FrameSequence is NULL!");
     if (!frame_seq_ || frame_seq_->GetFrames().empty())
     {
         Done();
@@ -63,7 +68,7 @@ void Animation::Init(Actor* target)
     }
 
     auto sprite_target = dynamic_cast<Sprite*>(target);
-    KGE_ASSERT(sprite_target && "Animation only supports Sprites!");
+    KGE_ASSERT(sprite_target && "AnimationEntity only supports Sprites!");
 
     if (sprite_target && frame_seq_)
     {
@@ -71,7 +76,7 @@ void Animation::Init(Actor* target)
     }
 }
 
-void Animation::UpdateTween(Actor* target, float percent)
+void AnimationEntity::UpdateTween(Actor* target, float percent)
 {
     auto sprite_target = dynamic_cast<Sprite*>(target);
 
@@ -85,23 +90,23 @@ void Animation::UpdateTween(Actor* target, float percent)
     }
 }
 
-ActionPtr Animation::Clone() const
+ActionEntityPtr AnimationEntity::Clone() const
 {
     if (frame_seq_)
     {
-        return DoClone(Animation::Create(GetDuration(), frame_seq_));
+        return DoClone(AnimationEntity::Create(GetDuration(), frame_seq_));
     }
     return nullptr;
 }
 
-ActionPtr Animation::Reverse() const
+ActionEntityPtr AnimationEntity::Reverse() const
 {
     if (frame_seq_)
     {
         FrameSequencePtr frames = frame_seq_->Reverse();
         if (frames)
         {
-            return DoClone(Animation::Create(GetDuration(), frames));
+            return DoClone(AnimationEntity::Create(GetDuration(), frames));
         }
     }
     return nullptr;

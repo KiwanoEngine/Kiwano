@@ -25,7 +25,7 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(ActionWalk);
+KGE_DECLARE_SMART_PTR(ActionWalkEntity);
 
 /**
  * \addtogroup Actions
@@ -44,10 +44,25 @@ public:
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    static ActionWalkPtr Create(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
-                                float end = 1.f);
+    ActionWalk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
+};
 
-    ActionWalk();
+/// \~chinese
+/// @brief 路径行走动画实体
+class KGE_API ActionWalkEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建路径行走动画
+    /// @param duration 持续时长
+    /// @param path 路径形状
+    /// @param rotating 是否沿路径切线方向旋转
+    /// @param start 路径起点（百分比）
+    /// @param end 路径终点（百分比）
+    static ActionWalkEntityPtr Create(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
+                                      float end = 1.f);
+
+    ActionWalkEntity();
 
     /// \~chinese
     /// @brief 获取路线
@@ -83,11 +98,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -105,42 +120,42 @@ private:
 
 /** @} */
 
-inline ShapePtr ActionWalk::GetPath() const
+inline ShapePtr ActionWalkEntity::GetPath() const
 {
     return path_;
 }
 
-inline bool ActionWalk::IsRotating() const
+inline bool ActionWalkEntity::IsRotating() const
 {
     return rotating_;
 }
 
-inline float ActionWalk::GetStartValue() const
+inline float ActionWalkEntity::GetStartValue() const
 {
     return start_;
 }
 
-inline float ActionWalk::GetEndValue() const
+inline float ActionWalkEntity::GetEndValue() const
 {
     return end_;
 }
 
-inline void ActionWalk::SetPath(ShapePtr path)
+inline void ActionWalkEntity::SetPath(ShapePtr path)
 {
     path_ = path;
 }
 
-inline void ActionWalk::SetRotating(bool rotating)
+inline void ActionWalkEntity::SetRotating(bool rotating)
 {
     rotating_ = rotating;
 }
 
-inline void ActionWalk::SetStartValue(float start)
+inline void ActionWalkEntity::SetStartValue(float start)
 {
     start_ = start;
 }
 
-inline void ActionWalk::SetEndValue(float end)
+inline void ActionWalkEntity::SetEndValue(float end)
 {
     end_ = end;
 }

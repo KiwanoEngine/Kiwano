@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ActionDelay);
+KGE_DECLARE_SMART_PTR(ActionDelayEntity);
 
 /**
  * \addtogroup Actions
@@ -39,15 +39,26 @@ public:
     /// \~chinese
     /// @brief 创建延时动画
     /// @param delay 延时时长
-    static ActionDelayPtr Create(Duration delay);
+    ActionDelay(Duration delay);
+};
+
+/// \~chinese
+/// @brief 延时动画实体
+class KGE_API ActionDelayEntity : public ActionEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建延时动画
+    /// @param delay 延时时长
+    static ActionDelayEntityPtr Create(Duration delay);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 };
 
 /** @} */

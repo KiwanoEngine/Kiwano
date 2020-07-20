@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(ActionGroup);
+KGE_DECLARE_SMART_PTR(ActionGroupEntity);
 
 /**
  * \addtogroup Actions
@@ -35,29 +35,39 @@ KGE_DECLARE_SMART_PTR(ActionGroup);
 class KGE_API ActionGroup : public Action
 {
 public:
-    using ActionList = IntrusiveList<ActionPtr>;
-
     /// \~chinese
     /// @brief 创建动画组合
     /// @param actions 动画集合
     /// @param parallel 同步执行
-    static ActionGroupPtr Create(const Vector<ActionPtr>& actions, bool parallel = false);
+    ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel = false);
+};
 
-    ActionGroup();
+/// \~chinese
+/// @brief 动画组合实体
+class KGE_API ActionGroupEntity : public ActionEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建动画组合
+    /// @param actions 动画集合
+    /// @param parallel 同步执行
+    static ActionGroupEntityPtr Create(const Vector<ActionEntityPtr>& actions, bool parallel = false);
 
-    ActionGroup(bool parallel);
+    ActionGroupEntity();
 
-    virtual ~ActionGroup();
+    ActionGroupEntity(bool parallel);
+
+    virtual ~ActionGroupEntity();
 
     /// \~chinese
     /// @brief 添加动画
     /// @param action 动画
-    void AddAction(ActionPtr action);
+    void AddAction(ActionEntityPtr action);
 
     /// \~chinese
     /// @brief 添加多个动画
     /// @param actions 动画集合
-    void AddActions(const Vector<ActionPtr>& actions);
+    void AddActions(const Vector<ActionEntityPtr>& actions);
 
     /// \~chinese
     /// @brief 获取所有动画
@@ -65,11 +75,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -77,14 +87,14 @@ protected:
     void Update(Actor* target, Duration dt) override;
 
 private:
-    bool       parallel_;
-    ActionPtr  current_;
-    ActionList actions_;
+    bool            parallel_;
+    ActionEntityPtr current_;
+    ActionList      actions_;
 };
 
 /** @} */
 
-inline const ActionGroup::ActionList& ActionGroup::GetActions() const
+inline const ActionList& ActionGroupEntity::GetActions() const
 {
     return actions_;
 }
