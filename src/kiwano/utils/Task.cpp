@@ -62,8 +62,31 @@ Task::Task()
 {
 }
 
+void Task::Start()
+{
+    if (!running_)
+    {
+        running_ = true;
+        if (ticker_)
+            ticker_->Resume();
+    }
+}
+
+void Task::Stop()
+{
+    if (running_)
+    {
+        running_ = false;
+        if (ticker_)
+            ticker_->Pause();
+    }
+}
+
 void Task::Update(Duration dt)
 {
+    if (!running_ || removeable_)
+        return;
+
     if (!ticker_ || ticker_->GetTotalTickCount() == 0)
     {
         Remove();

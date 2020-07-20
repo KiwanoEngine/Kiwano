@@ -4,7 +4,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\action\Action.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionDelay.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionHelper.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h" />
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h" />

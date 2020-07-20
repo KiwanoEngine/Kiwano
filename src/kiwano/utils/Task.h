@@ -129,16 +129,6 @@ private:
     Callback  callback_;
 };
 
-inline void Task::Start()
-{
-    running_ = true;
-}
-
-inline void Task::Stop()
-{
-    running_ = false;
-}
-
 inline void Task::Remove()
 {
     removeable_ = true;
@@ -162,6 +152,13 @@ inline TickerPtr Task::GetTicker() const
 inline void Task::SetTicker(TickerPtr ticker)
 {
     ticker_ = ticker;
+    if (ticker_)
+    {
+        if (running_)
+            ticker_->Resume();
+        else
+            ticker_->Pause();
+    }
 }
 
 inline Task::Callback Task::GetCallback() const

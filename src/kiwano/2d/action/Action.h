@@ -32,7 +32,7 @@ namespace kiwano
 class Actor;
 class ActionScheduler;
 
-KGE_DECLARE_SMART_PTR(Action);
+KGE_DECLARE_SMART_PTR(ActionEntity);
 
 /**
  * \~chinese
@@ -45,24 +45,28 @@ KGE_DECLARE_SMART_PTR(Action);
  */
 
 /// \~chinese
-/// @brief 动画
-class KGE_API Action
+/// @brief 动画列表
+typedef IntrusiveList<ActionEntityPtr> ActionList;
+
+/// \~chinese
+/// @brief 动画结束时的回调函数
+typedef Function<void(Actor* /* target */)> ActionDoneCallback;
+
+/// \~chinese
+/// @brief 动画实体
+class KGE_API ActionEntity
     : public ObjectBase
-    , public Cloneable<Action>
-    , protected IntrusiveListValue<ActionPtr>
+    , public Cloneable<ActionEntity>
+    , protected IntrusiveListValue<ActionEntityPtr>
 {
     friend class ActionScheduler;
-    friend class ActionGroup;
-    friend IntrusiveList<ActionPtr>;
+    friend class ActionGroupEntity;
+    friend IntrusiveList<ActionEntityPtr>;
 
 public:
-    /// \~chinese
-    /// @brief 动画结束时的回调函数
-    using DoneCallback = Function<void(Actor* /* target */)>;
+    ActionEntity();
 
-    Action();
-
-    virtual ~Action();
+    virtual ~ActionEntity();
 
     /// \~chinese
     /// @brief 继续动画
@@ -91,15 +95,15 @@ public:
 
     /// \~chinese
     /// @brief 设置动画结束时的回调函数
-    void SetDoneCallback(const DoneCallback& cb);
+    void SetDoneCallback(const ActionDoneCallback& cb);
 
     /// \~chinese
     /// @brief 设置动画循环结束时的回调函数
-    void SetLoopDoneCallback(const DoneCallback& cb);
+    void SetLoopDoneCallback(const ActionDoneCallback& cb);
 
     /// \~chinese
     /// @brief 获取动画的倒转
-    virtual ActionPtr Reverse() const = 0;
+    virtual ActionEntityPtr Reverse() const = 0;
 
     /// \~chinese
     /// @brief 获取动画的运行状态
@@ -115,11 +119,11 @@ public:
 
     /// \~chinese
     /// @brief 获取动画结束时的回调函数
-    DoneCallback GetDoneCallback() const;
+    ActionDoneCallback GetDoneCallback() const;
 
     /// \~chinese
     /// @brief 获取动画循环结束时的回调函数
-    DoneCallback GetLoopDoneCallback() const;
+    ActionDoneCallback GetLoopDoneCallback() const;
 
 protected:
     /// \~chinese
@@ -139,8 +143,8 @@ protected:
     void Complete(Actor* target);
 
     /// \~chinese
-    /// @brief 重新开始动画
-    void Restart(Actor* target);
+    /// @brief 重置动画
+    void Reset();
 
     /// \~chinese
     /// @brief 动画状态
@@ -178,113 +182,208 @@ protected:
     bool IsRemoveable() const;
 
 protected:
-    ActionPtr DoClone(ActionPtr to) const;
+    ActionEntityPtr DoClone(ActionEntityPtr to) const;
 
 private:
-    Status       status_;
-    bool         running_;
-    bool         detach_target_;
-    int          loops_;
-    int          loops_done_;
-    Duration     delay_;
-    Duration     elapsed_;
-    DoneCallback cb_done_;
-    DoneCallback cb_loop_done_;
+    Status             status_;
+    bool               running_;
+    bool               detach_target_;
+    int                loops_;
+    int                loops_done_;
+    Duration           delay_;
+    Duration           elapsed_;
+    ActionDoneCallback cb_done_;
+    ActionDoneCallback cb_loop_done_;
+};
+
+/// \~chinese
+/// @brief 动画
+class KGE_API Action
+{
+public:
+    /// \~chinese
+    /// @brief 设置循环次数
+    inline Action& Loops(int loops)
+    {
+        ptr->SetLoops(loops);
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 设置动画延迟
+    inline Action& Delay(Duration delay)
+    {
+        ptr->SetDelay(delay);
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 设置动画结束回调函数
+    inline Action& DoneCallback(const ActionDoneCallback& cb)
+    {
+        ptr->SetDoneCallback(cb);
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 设置动画循环结束时的回调函数
+    inline Action& LoopDoneCallback(const ActionDoneCallback& cb)
+    {
+        ptr->SetLoopDoneCallback(cb);
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 动画结束时移除目标角色
+    inline Action& RemoveTargetWhenDone()
+    {
+        ptr->RemoveTargetWhenDone();
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 设置名称
+    inline Action& Name(const String& name)
+    {
+        ptr->SetName(name);
+        return (*this);
+    }
+
+    /// \~chinese
+    /// @brief 克隆动画
+    inline Action Clone() const
+    {
+        return Action(ptr->Clone());
+    }
+
+    /// \~chinese
+    /// @brief 获取反向动画
+    inline Action Reverse() const
+    {
+        return Action(ptr->Reverse());
+    }
+
+    /// \~chinese
+    /// @brief 获取指针
+    inline ActionEntity* Get() const
+    {
+        return const_cast<ActionEntity*>(ptr.Get());
+    }
+
+    inline operator ActionEntityPtr() const
+    {
+        return ptr;
+    }
+
+protected:
+    Action() = default;
+
+    inline Action(ActionEntityPtr ptr)
+        : ptr(ptr)
+    {
+    }
+
+    inline void SetEntity(ActionEntityPtr ptr)
+    {
+        this->ptr = ptr;
+    }
+
+    ActionEntityPtr ptr;
 };
 
 /** @} */
 
-inline void Action::Resume()
+inline void ActionEntity::Resume()
 {
     running_ = true;
 }
 
-inline void Action::Pause()
+inline void ActionEntity::Pause()
 {
     running_ = false;
 }
 
-inline void Action::Stop()
+inline void ActionEntity::Stop()
 {
     Done();
 }
 
-inline void Action::SetDelay(Duration delay)
+inline void ActionEntity::SetDelay(Duration delay)
 {
     delay_ = delay;
 }
 
-inline void Action::SetLoops(int loops)
+inline void ActionEntity::SetLoops(int loops)
 {
     loops_ = loops;
 }
 
-inline void Action::RemoveTargetWhenDone()
+inline void ActionEntity::RemoveTargetWhenDone()
 {
     detach_target_ = true;
 }
 
-inline void Action::SetDoneCallback(const DoneCallback& cb)
+inline void ActionEntity::SetDoneCallback(const ActionDoneCallback& cb)
 {
     cb_done_ = cb;
 }
 
-inline void Action::SetLoopDoneCallback(const DoneCallback& cb)
+inline void ActionEntity::SetLoopDoneCallback(const ActionDoneCallback& cb)
 {
     cb_loop_done_ = cb;
 }
 
-inline void Action::Done()
+inline void ActionEntity::Done()
 {
     status_ = Status::Done;
 }
 
-inline Action::Status Action::GetStatus() const
+inline ActionEntity::Status ActionEntity::GetStatus() const
 {
     return status_;
 }
 
-inline bool Action::IsRunning() const
+inline bool ActionEntity::IsRunning() const
 {
     return running_;
 }
 
-inline bool Action::IsDone() const
+inline bool ActionEntity::IsDone() const
 {
     return status_ == Status::Done || status_ == Status::Removeable;
 }
 
-inline bool Action::IsRemoveable() const
+inline bool ActionEntity::IsRemoveable() const
 {
     return status_ == Status::Removeable;
 }
 
-inline int Action::GetLoops() const
+inline int ActionEntity::GetLoops() const
 {
     return loops_;
 }
 
-inline Duration Action::GetDelay() const
+inline Duration ActionEntity::GetDelay() const
 {
     return delay_;
 }
 
-inline Duration Action::GetElapsed() const
+inline Duration ActionEntity::GetElapsed() const
 {
     return elapsed_;
 }
 
-inline int Action::GetLoopsDone() const
+inline int ActionEntity::GetLoopsDone() const
 {
     return loops_done_;
 }
 
-inline Action::DoneCallback Action::GetDoneCallback() const
+inline ActionDoneCallback ActionEntity::GetDoneCallback() const
 {
     return cb_done_;
 }
 
-inline Action::DoneCallback Action::GetLoopDoneCallback() const
+inline ActionDoneCallback ActionEntity::GetLoopDoneCallback() const
 {
     return cb_loop_done_;
 }

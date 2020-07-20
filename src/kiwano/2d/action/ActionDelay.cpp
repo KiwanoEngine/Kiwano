@@ -23,9 +23,14 @@
 namespace kiwano
 {
 
-ActionDelayPtr ActionDelay::Create(Duration delay)
+ActionDelay::ActionDelay(Duration delay)
 {
-    ActionDelayPtr ptr = memory::New<ActionDelay>();
+    SetEntity(ActionDelayEntity::Create(delay));
+}
+
+ActionDelayEntityPtr ActionDelayEntity::Create(Duration delay)
+{
+    ActionDelayEntityPtr ptr = memory::New<ActionDelayEntity>();
     if (ptr)
     {
         ptr->SetDelay(delay);
@@ -33,14 +38,14 @@ ActionDelayPtr ActionDelay::Create(Duration delay)
     return ptr;
 }
 
-ActionPtr ActionDelay::Clone() const
+ActionEntityPtr ActionDelayEntity::Clone() const
 {
-    return DoClone(ActionDelay::Create(GetDelay()));
+    return DoClone(ActionDelayEntity::Create(GetDelay()));
 }
 
-ActionPtr ActionDelay::Reverse() const
+ActionEntityPtr ActionDelayEntity::Reverse() const
 {
-    return DoClone(ActionDelay::Create(GetDelay()));
+    return DoClone(ActionDelayEntity::Create(GetDelay()));
 }
 
 }  // namespace kiwano

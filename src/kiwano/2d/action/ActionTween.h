@@ -66,19 +66,17 @@ struct Ease
     static KGE_API EaseFunc SineInOut;
 };
 
-KGE_DECLARE_SMART_PTR(ActionTween);
-KGE_DECLARE_SMART_PTR(ActionMoveBy);
-KGE_DECLARE_SMART_PTR(ActionMoveTo);
-KGE_DECLARE_SMART_PTR(ActionJumpBy);
-KGE_DECLARE_SMART_PTR(ActionJumpTo);
-KGE_DECLARE_SMART_PTR(ActionScaleBy);
-KGE_DECLARE_SMART_PTR(ActionScaleTo);
-KGE_DECLARE_SMART_PTR(ActionFadeTo);
-KGE_DECLARE_SMART_PTR(ActionFadeIn);
-KGE_DECLARE_SMART_PTR(ActionFadeOut);
-KGE_DECLARE_SMART_PTR(ActionRotateBy);
-KGE_DECLARE_SMART_PTR(ActionRotateTo);
-KGE_DECLARE_SMART_PTR(ActionCustom);
+KGE_DECLARE_SMART_PTR(ActionTweenEntity);
+KGE_DECLARE_SMART_PTR(ActionMoveByEntity);
+KGE_DECLARE_SMART_PTR(ActionMoveToEntity);
+KGE_DECLARE_SMART_PTR(ActionJumpByEntity);
+KGE_DECLARE_SMART_PTR(ActionJumpToEntity);
+KGE_DECLARE_SMART_PTR(ActionScaleByEntity);
+KGE_DECLARE_SMART_PTR(ActionScaleToEntity);
+KGE_DECLARE_SMART_PTR(ActionFadeToEntity);
+KGE_DECLARE_SMART_PTR(ActionRotateByEntity);
+KGE_DECLARE_SMART_PTR(ActionRotateToEntity);
+KGE_DECLARE_SMART_PTR(ActionCustomEntity);
 
 /**
  * \addtogroup Actions
@@ -86,17 +84,17 @@ KGE_DECLARE_SMART_PTR(ActionCustom);
  */
 
 /// \~chinese
-/// @brief 补间动画
-class KGE_API ActionTween : public Action
+/// @brief 补间动画实体
+class KGE_API ActionTweenEntity : public ActionEntity
 {
 public:
-    ActionTween();
+    ActionTweenEntity();
 
     /// \~chinese
     /// @brief 补间动画
     /// @param duration 动画时长
     /// @param func 动画速度缓动函数
-    ActionTween(Duration duration, EaseFunc ease);
+    ActionTweenEntity(Duration duration, EaseFunc ease);
 
     /// \~chinese
     /// @brief 获取动画时长
@@ -119,11 +117,41 @@ protected:
 
     virtual void UpdateTween(Actor* target, float percent) = 0;
 
-    ActionPtr DoClone(ActionTweenPtr to) const;
+    ActionEntityPtr DoClone(ActionTweenEntityPtr to) const;
 
 private:
     Duration dur_;
     EaseFunc ease_func_;
+};
+
+/// \~chinese
+/// @brief 补间动画
+struct ActionTween : Action
+{
+    /// \~chinese
+    /// @brief 设置缓动函数
+    inline ActionTween& Ease(EaseFunc ease)
+    {
+        tween_ptr->SetEaseFunc(ease);
+        return (*this);
+    }
+
+protected:
+    ActionTween() = default;
+
+    inline ActionTween(ActionTweenEntityPtr ptr)
+        : Action(ptr.Get())
+        , tween_ptr(ptr)
+    {
+    }
+
+    inline void SetEntity(ActionEntityPtr tween_ptr)
+    {
+        this->ptr       = tween_ptr;
+        this->tween_ptr = (ActionTweenEntity*)tween_ptr.Get();
+    }
+
+    ActionTweenEntityPtr tween_ptr;
 };
 
 /// \~chinese
@@ -135,9 +163,21 @@ public:
     /// @brief 创建相对位移动画
     /// @param duration 动画时长
     /// @param displacement 位移向量
-    static ActionMoveByPtr Create(Duration duration, const Vec2& displacement);
+    ActionMoveBy(Duration duration, const Vec2& displacement);
+};
 
-    ActionMoveBy();
+/// \~chinese
+/// @brief 相对位移动画实体
+class KGE_API ActionMoveByEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建相对位移动画
+    /// @param duration 动画时长
+    /// @param displacement 位移向量
+    static ActionMoveByEntityPtr Create(Duration duration, const Vec2& displacement);
+
+    ActionMoveByEntity();
 
     /// \~chinese
     /// @brief 获取位移向量
@@ -149,11 +189,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -168,16 +208,28 @@ protected:
 
 /// \~chinese
 /// @brief 位移动画
-class KGE_API ActionMoveTo : public ActionMoveBy
+class KGE_API ActionMoveTo : public ActionTween
 {
 public:
     /// \~chinese
     /// @brief 创建位移动画
     /// @param duration 动画时长
     /// @param distination 目的坐标
-    static ActionMoveToPtr Create(Duration duration, const Point& distination);
+    ActionMoveTo(Duration duration, const Point& distination);
+};
 
-    ActionMoveTo();
+/// \~chinese
+/// @brief 位移动画实体
+class KGE_API ActionMoveToEntity : public ActionMoveByEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建位移动画
+    /// @param duration 动画时长
+    /// @param distination 目的坐标
+    static ActionMoveToEntityPtr Create(Duration duration, const Point& distination);
+
+    ActionMoveToEntity();
 
     /// \~chinese
     /// @brief 获取目的坐标
@@ -189,13 +241,13 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    virtual ActionPtr Reverse() const override
+    virtual ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionMoveTo");
+        KGE_ERRORF("Reverse() not supported in ActionMoveToEntity");
         return nullptr;
     }
 
@@ -217,10 +269,23 @@ public:
     /// @param displacement 跳跃位移向量
     /// @param height 跳跃高度
     /// @param count 跳跃次数
-    static ActionJumpByPtr Create(Duration duration, const Vec2& displacement, float height, int count = 1,
-                                  EaseFunc ease = nullptr);
+    ActionJumpBy(Duration duration, const Vec2& displacement, float height, int count = 1);
+};
 
-    ActionJumpBy();
+/// \~chinese
+/// @brief 相对跳跃动画实体
+class KGE_API ActionJumpByEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建相对跳跃动画
+    /// @param duration 动画时长
+    /// @param displacement 跳跃位移向量
+    /// @param height 跳跃高度
+    /// @param count 跳跃次数
+    static ActionJumpByEntityPtr Create(Duration duration, const Vec2& displacement, float height, int count = 1);
+
+    ActionJumpByEntity();
 
     /// \~chinese
     /// @brief 获取跳跃位移
@@ -248,11 +313,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -269,7 +334,7 @@ protected:
 
 /// \~chinese
 /// @brief 跳跃动画
-class KGE_API ActionJumpTo : public ActionJumpBy
+class KGE_API ActionJumpTo : public ActionTween
 {
 public:
     /// \~chinese
@@ -278,10 +343,23 @@ public:
     /// @param distination 目的坐标
     /// @param height 跳跃高度
     /// @param count 跳跃次数
-    static ActionJumpToPtr Create(Duration duration, const Point& distination, float height, int count = 1,
-                                  EaseFunc ease = nullptr);
+    ActionJumpTo(Duration duration, const Point& distination, float height, int count = 1);
+};
 
-    ActionJumpTo();
+/// \~chinese
+/// @brief 跳跃动画实体
+class KGE_API ActionJumpToEntity : public ActionJumpByEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建跳跃动画
+    /// @param duration 动画时长
+    /// @param distination 目的坐标
+    /// @param height 跳跃高度
+    /// @param count 跳跃次数
+    static ActionJumpToEntityPtr Create(Duration duration, const Point& distination, float height, int count = 1);
+
+    ActionJumpToEntity();
 
     /// \~chinese
     /// @brief 获取目的坐标
@@ -293,13 +371,13 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    virtual ActionPtr Reverse() const override
+    virtual ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionJumpTo");
+        KGE_ERRORF("Reverse() not supported in ActionJumpToEntity");
         return nullptr;
     }
 
@@ -320,9 +398,28 @@ public:
     /// @param duration 动画时长
     /// @param scale_x 横向缩放相对变化值
     /// @param scale_y 纵向缩放相对变化值
-    static ActionScaleByPtr Create(Duration duration, float scale_x, float scale_y);
+    ActionScaleBy(Duration duration, float scale_x, float scale_y);
 
-    ActionScaleBy();
+    /// \~chinese
+    /// @brief 创建相对缩放动画
+    /// @param duration 动画时长
+    /// @param scale 缩放相对变化值
+    ActionScaleBy(Duration duration, Vec2 scale);
+};
+
+/// \~chinese
+/// @brief 相对缩放动画实体
+class KGE_API ActionScaleByEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建相对缩放动画
+    /// @param duration 动画时长
+    /// @param scale_x 横向缩放相对变化值
+    /// @param scale_y 纵向缩放相对变化值
+    static ActionScaleByEntityPtr Create(Duration duration, float scale_x, float scale_y);
+
+    ActionScaleByEntity();
 
     /// \~chinese
     /// @brief 获取横向缩放相对变化值
@@ -342,11 +439,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -362,7 +459,7 @@ protected:
 
 /// \~chinese
 /// @brief 缩放动画
-class KGE_API ActionScaleTo : public ActionScaleBy
+class KGE_API ActionScaleTo : public ActionTween
 {
 public:
     /// \~chinese
@@ -370,9 +467,28 @@ public:
     /// @param duration 动画时长
     /// @param scale_x 横向缩放目标值
     /// @param scale_y 纵向缩放目标值
-    static ActionScaleToPtr Create(Duration duration, float scale_x, float scale_y);
+    ActionScaleTo(Duration duration, float scale_x, float scale_y);
 
-    ActionScaleTo();
+    /// \~chinese
+    /// @brief 创建缩放动画
+    /// @param duration 动画时长
+    /// @param scale 缩放目标值
+    ActionScaleTo(Duration duration, Vec2 scale);
+};
+
+/// \~chinese
+/// @brief 缩放动画实体
+class KGE_API ActionScaleToEntity : public ActionScaleByEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建缩放动画
+    /// @param duration 动画时长
+    /// @param scale_x 横向缩放目标值
+    /// @param scale_y 纵向缩放目标值
+    static ActionScaleToEntityPtr Create(Duration duration, float scale_x, float scale_y);
+
+    ActionScaleToEntity();
 
     /// \~chinese
     /// @brief 获取横向缩放目标值
@@ -392,13 +508,13 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    virtual ActionPtr Reverse() const override
+    virtual ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionScaleTo");
+        KGE_ERRORF("Reverse() not supported in ActionScaleToEntity");
         return nullptr;
     }
 
@@ -419,9 +535,43 @@ public:
     /// @brief 创建透明度渐变动画
     /// @param duration 动画时长
     /// @param opacity 目标透明度
-    static ActionFadeToPtr Create(Duration duration, float opacity);
+    ActionFadeTo(Duration duration, float opacity);
+};
 
-    ActionFadeTo();
+/// \~chinese
+/// @brief 淡入动画
+class KGE_API ActionFadeIn : public ActionTween
+{
+public:
+    /// \~chinese
+    /// @brief 创建淡入动画
+    /// @param duration 动画时长
+    ActionFadeIn(Duration duration);
+};
+
+/// \~chinese
+/// @brief 淡出动画
+class KGE_API ActionFadeOut : public ActionTween
+{
+public:
+    /// \~chinese
+    /// @brief 创建淡出动画
+    /// @param duration 动画时长
+    ActionFadeOut(Duration duration);
+};
+
+/// \~chinese
+/// @brief 透明度渐变动画实体
+class KGE_API ActionFadeToEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建透明度渐变动画
+    /// @param duration 动画时长
+    /// @param opacity 目标透明度
+    static ActionFadeToEntityPtr Create(Duration duration, float opacity);
+
+    ActionFadeToEntity();
 
     /// \~chinese
     /// @brief 获取目标透明度
@@ -433,13 +583,13 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    virtual ActionPtr Reverse() const override
+    virtual ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionFadeTo");
+        KGE_ERRORF("Reverse() not supported in ActionFadeToEntity");
         return nullptr;
     }
 
@@ -455,28 +605,6 @@ private:
 };
 
 /// \~chinese
-/// @brief 淡入动画
-class KGE_API ActionFadeIn : public ActionFadeTo
-{
-public:
-    /// \~chinese
-    /// @brief 创建淡入动画
-    /// @param duration 动画时长
-    static ActionFadeInPtr Create(Duration duration);
-};
-
-/// \~chinese
-/// @brief 淡出动画
-class KGE_API ActionFadeOut : public ActionFadeTo
-{
-public:
-    /// \~chinese
-    /// @brief 创建淡出动画
-    /// @param duration 动画时长
-    static ActionFadeOutPtr Create(Duration duration);
-};
-
-/// \~chinese
 /// @brief 相对旋转动画
 class KGE_API ActionRotateBy : public ActionTween
 {
@@ -485,9 +613,21 @@ public:
     /// @brief 创建相对旋转动画
     /// @param duration 动画时长
     /// @param rotation 角度相对变化值
-    static ActionRotateByPtr Create(Duration duration, float rotation);
+    ActionRotateBy(Duration duration, float rotation);
+};
 
-    ActionRotateBy();
+/// \~chinese
+/// @brief 相对旋转动画实体
+class KGE_API ActionRotateByEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建相对旋转动画
+    /// @param duration 动画时长
+    /// @param rotation 角度相对变化值
+    static ActionRotateByEntityPtr Create(Duration duration, float rotation);
+
+    ActionRotateByEntity();
 
     /// \~chinese
     /// @brief 获取角度相对变化值
@@ -499,11 +639,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -517,16 +657,28 @@ protected:
 
 /// \~chinese
 /// @brief 旋转动画
-class KGE_API ActionRotateTo : public ActionRotateBy
+class KGE_API ActionRotateTo : public ActionTween
 {
 public:
     /// \~chinese
     /// @brief 创建旋转动画
     /// @param duration 动画时长
     /// @param rotation 目标角度
-    static ActionRotateToPtr Create(Duration duration, float rotation);
+    ActionRotateTo(Duration duration, float rotation);
+};
 
-    ActionRotateTo();
+/// \~chinese
+/// @brief 旋转动画实体
+class KGE_API ActionRotateToEntity : public ActionRotateByEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建旋转动画
+    /// @param duration 动画时长
+    /// @param rotation 目标角度
+    static ActionRotateToEntityPtr Create(Duration duration, float rotation);
+
+    ActionRotateToEntity();
 
     /// \~chinese
     /// @brief 获取目标角度
@@ -538,13 +690,13 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    virtual ActionPtr Reverse() const override
+    virtual ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionRotateTo");
+        KGE_ERRORF("Reverse() not supported in ActionRotateToEntity");
         return nullptr;
     }
 
@@ -569,27 +721,39 @@ public:
     /// @brief 创建自定义动画
     /// @param duration 动画时长
     /// @param tween_func 动画回调函数
-    static ActionCustomPtr Create(Duration duration, TweenFunc tween_func);
+    ActionCustom(Duration duration, TweenFunc tween_func);
+};
 
-    ActionCustom();
+/// \~chinese
+/// @brief 自定义动画实体
+class KGE_API ActionCustomEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建自定义动画
+    /// @param duration 动画时长
+    /// @param tween_func 动画回调函数
+    static ActionCustomEntityPtr Create(Duration duration, ActionCustom::TweenFunc tween_func);
+
+    ActionCustomEntity();
 
     /// \~chinese
     /// @brief 获取动画回调函数
-    TweenFunc GetTweenFunc() const;
+    ActionCustom::TweenFunc GetTweenFunc() const;
 
     /// \~chinese
     /// @brief 设置动画回调函数
-    void SetTweenFunc(const TweenFunc& tween_func);
+    void SetTweenFunc(const ActionCustom::TweenFunc& tween_func);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override
+    ActionEntityPtr Reverse() const override
     {
-        KGE_ERRORF("Reverse() not supported in ActionCustom");
+        KGE_ERRORF("Reverse() not supported in ActionCustomEntity");
         return nullptr;
     }
 
@@ -599,167 +763,167 @@ protected:
     void UpdateTween(Actor* target, float percent) override;
 
 private:
-    TweenFunc tween_func_;
+    ActionCustom::TweenFunc tween_func_;
 };
 
 /** @} */
 
-inline const EaseFunc& ActionTween::GetEaseFunc() const
+inline const EaseFunc& ActionTweenEntity::GetEaseFunc() const
 {
     return ease_func_;
 }
 
-inline Duration ActionTween::GetDuration() const
+inline Duration ActionTweenEntity::GetDuration() const
 {
     return dur_;
 }
 
-inline void ActionTween::SetDuration(Duration duration)
+inline void ActionTweenEntity::SetDuration(Duration duration)
 {
     dur_ = duration;
 }
 
-inline void ActionTween::SetEaseFunc(const EaseFunc& func)
+inline void ActionTweenEntity::SetEaseFunc(const EaseFunc& func)
 {
     ease_func_ = func;
 }
 
-inline Vec2 ActionMoveBy::GetDisplacement() const
+inline Vec2 ActionMoveByEntity::GetDisplacement() const
 {
     return displacement_;
 }
 
-inline void ActionMoveBy::SetDisplacement(const Vec2& displacement)
+inline void ActionMoveByEntity::SetDisplacement(const Vec2& displacement)
 {
     displacement_ = displacement;
 }
 
-inline Point ActionMoveTo::GetDistination() const
+inline Point ActionMoveToEntity::GetDistination() const
 {
     return distination_;
 }
 
-inline void ActionMoveTo::SetDistination(const Point& distination)
+inline void ActionMoveToEntity::SetDistination(const Point& distination)
 {
     distination_ = distination;
 }
 
-inline Vec2 ActionJumpBy::GetDisplacement() const
+inline Vec2 ActionJumpByEntity::GetDisplacement() const
 {
     return displacement_;
 }
 
-inline float ActionJumpBy::GetJumpHeight() const
+inline float ActionJumpByEntity::GetJumpHeight() const
 {
     return height_;
 }
 
-inline int ActionJumpBy::GetJumpCount() const
+inline int ActionJumpByEntity::GetJumpCount() const
 {
     return jump_count_;
 }
 
-inline void ActionJumpBy::SetDisplacement(const Vec2& displacement)
+inline void ActionJumpByEntity::SetDisplacement(const Vec2& displacement)
 {
     displacement_ = displacement;
 }
 
-inline void ActionJumpBy::SetJumpHeight(float height)
+inline void ActionJumpByEntity::SetJumpHeight(float height)
 {
     height_ = height;
 }
 
-inline void ActionJumpBy::SetJumpCount(int count)
+inline void ActionJumpByEntity::SetJumpCount(int count)
 {
     jump_count_ = count;
 }
 
-inline Point ActionJumpTo::GetDistination() const
+inline Point ActionJumpToEntity::GetDistination() const
 {
     return distination_;
 }
 
-inline void ActionJumpTo::SetDistination(const Point& distination)
+inline void ActionJumpToEntity::SetDistination(const Point& distination)
 {
     distination_ = distination;
 }
 
-inline float ActionScaleBy::GetScaleX() const
+inline float ActionScaleByEntity::GetScaleX() const
 {
     return delta_x_;
 }
 
-inline float ActionScaleBy::GetScaleY() const
+inline float ActionScaleByEntity::GetScaleY() const
 {
     return delta_y_;
 }
 
-inline void ActionScaleBy::SetScaleX(float scale_x)
+inline void ActionScaleByEntity::SetScaleX(float scale_x)
 {
     delta_x_ = scale_x;
 }
 
-inline void ActionScaleBy::SetScaleY(float scale_y)
+inline void ActionScaleByEntity::SetScaleY(float scale_y)
 {
     delta_y_ = scale_y;
 }
 
-inline float ActionScaleTo::GetTargetScaleX() const
+inline float ActionScaleToEntity::GetTargetScaleX() const
 {
     return end_scale_x_;
 }
 
-inline float ActionScaleTo::GetTargetScaleY() const
+inline float ActionScaleToEntity::GetTargetScaleY() const
 {
     return end_scale_y_;
 }
 
-inline void ActionScaleTo::SetTargetScaleX(float scale_x)
+inline void ActionScaleToEntity::SetTargetScaleX(float scale_x)
 {
     end_scale_x_ = scale_x;
 }
 
-inline void ActionScaleTo::SetTargetScaleY(float scale_y)
+inline void ActionScaleToEntity::SetTargetScaleY(float scale_y)
 {
     end_scale_y_ = scale_y;
 }
 
-inline float ActionFadeTo::GetTargetOpacity() const
+inline float ActionFadeToEntity::GetTargetOpacity() const
 {
     return end_val_;
 }
 
-inline void ActionFadeTo::SetTargetOpacity(float opacity)
+inline void ActionFadeToEntity::SetTargetOpacity(float opacity)
 {
     end_val_ = opacity;
 }
 
-inline float ActionRotateBy::GetRotation() const
+inline float ActionRotateByEntity::GetRotation() const
 {
     return delta_val_;
 }
 
-inline void ActionRotateBy::SetRotation(float rotation)
+inline void ActionRotateByEntity::SetRotation(float rotation)
 {
     delta_val_ = rotation;
 }
 
-inline float ActionRotateTo::GetTargetRotation() const
+inline float ActionRotateToEntity::GetTargetRotation() const
 {
     return end_val_;
 }
 
-inline void ActionRotateTo::SetTargetRotation(float rotation)
+inline void ActionRotateToEntity::SetTargetRotation(float rotation)
 {
     end_val_ = rotation;
 }
 
-inline ActionCustom::TweenFunc ActionCustom::GetTweenFunc() const
+inline ActionCustom::TweenFunc ActionCustomEntity::GetTweenFunc() const
 {
     return tween_func_;
 }
 
-inline void ActionCustom::SetTweenFunc(const TweenFunc& tween_func)
+inline void ActionCustomEntity::SetTweenFunc(const ActionCustom::TweenFunc& tween_func)
 {
     tween_func_ = tween_func;
 }

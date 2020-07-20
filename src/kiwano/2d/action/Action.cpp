@@ -23,7 +23,7 @@
 
 namespace kiwano
 {
-Action::Action()
+ActionEntity::ActionEntity()
     : running_(true)
     , detach_target_(false)
     , loops_done_(0)
@@ -32,18 +32,18 @@ Action::Action()
 {
 }
 
-Action::~Action() {}
+ActionEntity::~ActionEntity() {}
 
-void Action::Init(Actor* target) {}
+void ActionEntity::Init(Actor* target) {}
 
-void Action::Update(Actor* target, Duration dt)
+void ActionEntity::Update(Actor* target, Duration dt)
 {
     Complete(target);
 }
 
-void Action::UpdateStep(Actor* target, Duration dt)
+void ActionEntity::UpdateStep(Actor* target, Duration dt)
 {
-    KGE_ASSERT(target != nullptr && "Action target should NOT be nullptr!");
+    KGE_ASSERT(target != nullptr && "ActionEntity target should NOT be nullptr!");
 
     elapsed_ += dt;
 
@@ -82,7 +82,7 @@ void Action::UpdateStep(Actor* target, Duration dt)
     }
 }
 
-void Action::Complete(Actor* target)
+void ActionEntity::Complete(Actor* target)
 {
     if (cb_loop_done_)
         cb_loop_done_(target);
@@ -99,16 +99,14 @@ void Action::Complete(Actor* target)
     ++loops_done_;
 }
 
-void Action::Restart(Actor* target)
+void ActionEntity::Reset()
 {
     status_     = Status::NotStarted;
     elapsed_    = 0;
     loops_done_ = 0;
-
-    Init(target);
 }
 
-ActionPtr Action::DoClone(ActionPtr to) const
+ActionEntityPtr ActionEntity::DoClone(ActionEntityPtr to) const
 {
     if (to)
     {

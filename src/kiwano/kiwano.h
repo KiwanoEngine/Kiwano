@@ -107,11 +107,10 @@
 #include <kiwano/2d/action/Action.h>
 #include <kiwano/2d/action/ActionDelay.h>
 #include <kiwano/2d/action/ActionGroup.h>
-#include <kiwano/2d/action/ActionHelper.h>
-#include <kiwano/2d/action/ActionScheduler.h>
 #include <kiwano/2d/action/ActionTween.h>
 #include <kiwano/2d/action/ActionWalk.h>
 #include <kiwano/2d/action/Animation.h>
+#include <kiwano/2d/action/ActionScheduler.h>
 
 //
 // platform

@@ -24,9 +24,14 @@
 namespace kiwano
 {
 
-ActionWalkPtr ActionWalk::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
+ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float start, float end)
 {
-    ActionWalkPtr ptr = memory::New<ActionWalk>();
+    SetEntity(ActionWalkEntity::Create(duration, path, rotating, start, end));
+}
+
+ActionWalkEntityPtr ActionWalkEntity::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
+{
+    ActionWalkEntityPtr ptr = memory::New<ActionWalkEntity>();
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -38,7 +43,7 @@ ActionWalkPtr ActionWalk::Create(Duration duration, ShapePtr path, bool rotating
     return ptr;
 }
 
-ActionWalk::ActionWalk()
+ActionWalkEntity::ActionWalkEntity()
     : start_(0.0f)
     , end_(1.0f)
     , rotating_(false)
@@ -46,17 +51,17 @@ ActionWalk::ActionWalk()
 {
 }
 
-ActionPtr ActionWalk::Clone() const
+ActionEntityPtr ActionWalkEntity::Clone() const
 {
-    return DoClone(ActionWalk::Create(GetDuration(), path_, rotating_, start_, end_));
+    return DoClone(ActionWalkEntity::Create(GetDuration(), path_, rotating_, start_, end_));
 }
 
-ActionPtr ActionWalk::Reverse() const
+ActionEntityPtr ActionWalkEntity::Reverse() const
 {
-    return DoClone(ActionWalk::Create(GetDuration(), path_, rotating_, end_, start_));
+    return DoClone(ActionWalkEntity::Create(GetDuration(), path_, rotating_, end_, start_));
 }
 
-void ActionWalk::Init(Actor* target)
+void ActionWalkEntity::Init(Actor* target)
 {
     if (!path_ || !path_->IsValid())
     {
@@ -68,7 +73,7 @@ void ActionWalk::Init(Actor* target)
     length_    = path_->GetLength();
 }
 
-void ActionWalk::UpdateTween(Actor* target, float percent)
+void ActionWalkEntity::UpdateTween(Actor* target, float percent)
 {
     float distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 

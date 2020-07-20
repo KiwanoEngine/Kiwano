@@ -30,7 +30,7 @@ void ActionScheduler::Update(Actor* target, Duration dt)
     if (actions_.IsEmpty() || !target)
         return;
 
-    ActionPtr next;
+    ActionEntityPtr next;
     for (auto action = actions_.GetFirst(); action; action = next)
     {
         next = action->GetNext();
@@ -43,7 +43,7 @@ void ActionScheduler::Update(Actor* target, Duration dt)
     }
 }
 
-Action* ActionScheduler::AddAction(ActionPtr action)
+ActionEntity* ActionScheduler::AddAction(ActionEntityPtr action)
 {
     KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
 
@@ -87,7 +87,7 @@ void ActionScheduler::StopAllActions()
     }
 }
 
-ActionPtr ActionScheduler::GetAction(const String& name)
+ActionEntityPtr ActionScheduler::GetAction(const String& name)
 {
     if (actions_.IsEmpty())
         return nullptr;

@@ -250,11 +250,12 @@ String Duration::ToString() const
         return String("0s");
     }
 
-    String   result;
+    StringStream stream;
+
     int64_t total_ms = milliseconds_;
     if (total_ms < 0)
     {
-        result.append("-");
+        stream << "-";
         total_ms = -total_ms;
     }
 
@@ -265,23 +266,22 @@ String Duration::ToString() const
 
     if (hour)
     {
-        result.append(std::to_string(hour)).append("h");
-        result.append(std::to_string(min)).append("m");
+        stream << hour << 'h' << min << 'm';
     }
     else if (min)
     {
-        result.append(std::to_string(min)).append("m");
+        stream << min << 'm';
     }
 
     if (ms != 0)
     {
-        result.append(std::to_string(static_cast<float>(sec + ms) / 1000.f)).append("s");
+        stream << float(sec) + float(ms) / 1000.f << 's';
     }
     else if (sec != 0)
     {
-        result.append(std::to_string(sec)).append("s");
+        stream << sec << 's';
     }
-    return result;
+    return stream.str();
 }
 
 bool Duration::operator==(const Duration& other) const

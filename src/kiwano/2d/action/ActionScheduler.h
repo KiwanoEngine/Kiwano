@@ -29,10 +29,6 @@ namespace kiwano
  * @{
  */
 
-/// \~chinese
-/// @brief 动画列表
-typedef IntrusiveList<ActionPtr> ActionList;
-
 /**
  * \~chinese
  * @brief 动画调度器
@@ -42,7 +38,7 @@ class KGE_API ActionScheduler
 public:
     /// \~chinese
     /// @brief 添加动画
-    Action* AddAction(ActionPtr action);
+    ActionEntity* AddAction(ActionEntityPtr action);
 
     /// \~chinese
     /// @brief 继续所有暂停动画
@@ -59,7 +55,7 @@ public:
     /// \~chinese
     /// @brief 获取指定名称的动画
     /// @param name 动画名称
-    ActionPtr GetAction(const String& name);
+    ActionEntityPtr GetAction(const String& name);
 
     /// \~chinese
     /// @brief 获取所有动画

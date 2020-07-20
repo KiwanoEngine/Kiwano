@@ -24,7 +24,8 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Animation);
+
+KGE_DECLARE_SMART_PTR(AnimationEntity);
 
 /**
  * \addtogroup Actions
@@ -38,13 +39,25 @@ class KGE_API Animation : public ActionTween
 public:
     /// \~chinese
     /// @brief 创建帧动画
-    /// @param duration 动画时长
-    /// @param[in] frame_seq 序列帧
-    static AnimationPtr Create(Duration duration, FrameSequencePtr frame_seq);
+    /// @param dur 动画时长
+    /// @param frame_seq 序列帧
+    Animation(Duration dur, FrameSequencePtr frame_seq);
+};
 
-    Animation();
+/// \~chinese
+/// @brief 帧动画实体
+class KGE_API AnimationEntity : public ActionTweenEntity
+{
+public:
+    /// \~chinese
+    /// @brief 创建帧动画
+    /// @param dur 动画时长
+    /// @param frame_seq 序列帧
+    static AnimationEntityPtr Create(Duration dur, FrameSequencePtr frame_seq);
 
-    virtual ~Animation();
+    AnimationEntity();
+
+    virtual ~AnimationEntity();
 
     /// \~chinese
     /// @brief 获取序列帧
@@ -57,11 +70,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionPtr Clone() const override;
+    ActionEntityPtr Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionPtr Reverse() const override;
+    ActionEntityPtr Reverse() const override;
 
 protected:
     void Init(Actor* target) override;

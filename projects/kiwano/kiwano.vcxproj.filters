@@ -75,13 +75,7 @@
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\action\Action.h">
-      <Filter>2d\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h">
-      <Filter>2d\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionHelper.h">
       <Filter>2d\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h">
@@ -357,6 +351,9 @@
     <ClInclude Include="..\..\src\kiwano\core\Defer.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\action\Action.h">
+      <Filter>2d\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -379,9 +376,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp">
-      <Filter>2d\action</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\ActionGroup.cpp">
       <Filter>2d\action</Filter>
@@ -583,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\ObjectPool.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp">
+      <Filter>2d\action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
