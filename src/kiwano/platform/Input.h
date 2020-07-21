@@ -35,8 +35,7 @@ namespace kiwano
  */
 class KGE_API Input
     : public Singleton<Input>
-    , public UpdateModule
-    , public EventModule
+    , public Module
 {
     friend Singleton<Input>;
 
@@ -104,13 +103,9 @@ public:
     Point GetMousePos() const;
 
 public:
-    void SetupModule() override {}
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
-    void DestroyModule() override {}
-
-    void AfterUpdate() override;
-
-    void HandleEvent(Event* evt) override;
+    void HandleEvent(EventModuleContext& ctx) override;
 
     ~Input();
 

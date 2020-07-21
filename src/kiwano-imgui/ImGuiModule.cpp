@@ -65,12 +65,12 @@ void ImGuiModule::DestroyModule()
     ImGui::DestroyContext();
 }
 
-void ImGuiModule::OnUpdate(Duration dt)
+void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
 {
     ImGuiIO& io = ImGui::GetIO();
 
     // Setup time step
-    io.DeltaTime = dt.Seconds();
+    io.DeltaTime = ctx.dt.Seconds();
 
     // Read keyboard modifiers inputs
     io.KeyCtrl  = Input::GetInstance().IsDown(KeyCode::Ctrl);
@@ -84,86 +84,97 @@ void ImGuiModule::OnUpdate(Duration dt)
 
     // Update OS mouse cursor with the cursor requested by imgui
     UpdateMouseCursor();
+
+    ctx.Next();
 }
 
-void ImGuiModule::BeforeRender()
+void ImGuiModule::OnRender(RenderModuleContext& ctx)
 {
-    ImGui_Impl_NewFrame();
-
-    ImGuiIO& io = ImGui::GetIO();
-    KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
-
-    // Setup display size (every frame to accommodate for window resizing)
-    Size display_size = Renderer::GetInstance().GetOutputSize();
-    io.DisplaySize    = ImVec2(display_size.x, display_size.y);
-
-    ImGui::NewFrame();
-}
-
-void ImGuiModule::AfterRender()
-{
-    ImGui::Render();
-
-    ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-}
-
-void ImGuiModule::HandleEvent(Event* evt)
-{
-    if (ImGui::GetCurrentContext() == NULL)
-        return;
-
-    ImGuiIO& io = ImGui::GetIO();
-    if (evt->IsType<MouseEvent>())
+    // Before render
     {
-        if (evt->IsType<MouseDownEvent>())
+        ImGui_Impl_NewFrame();
+
+        ImGuiIO& io = ImGui::GetIO();
+        KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
+
+        // Setup display size (every frame to accommodate for window resizing)
+        Size display_size = Renderer::GetInstance().GetOutputSize();
+        io.DisplaySize    = ImVec2(display_size.x, display_size.y);
+
+        ImGui::NewFrame();
+    }
+
+    ctx.Next();
+
+    // After render
+    {
+        ImGui::Render();
+
+        ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
+    }
+}
+
+void ImGuiModule::HandleEvent(EventModuleContext& ctx)
+{
+    if (ImGui::GetCurrentContext() != NULL)
+    {
+        Event* evt = ctx.evt;
+
+        ImGuiIO& io = ImGui::GetIO();
+        if (evt->IsType<MouseEvent>())
         {
-            MouseButton button = dynamic_cast<MouseDownEvent*>(evt)->button;
-            int         index  = 0;
-            if (button == MouseButton::Left)
-                index = 0;
-            else if (button == MouseButton::Right)
-                index = 1;
-            else if (button == MouseButton::Middle)
-                index = 2;
-            io.MouseDown[index] = true;
+            if (evt->IsType<MouseDownEvent>())
+            {
+                MouseButton button = dynamic_cast<MouseDownEvent*>(evt)->button;
+                int         index  = 0;
+                if (button == MouseButton::Left)
+                    index = 0;
+                else if (button == MouseButton::Right)
+                    index = 1;
+                else if (button == MouseButton::Middle)
+                    index = 2;
+                io.MouseDown[index] = true;
+            }
+            else if (evt->IsType<MouseUpEvent>())
+            {
+                MouseButton button = dynamic_cast<MouseUpEvent*>(evt)->button;
+                int         index  = 0;
+                if (button == MouseButton::Left)
+                    index = 0;
+                else if (button == MouseButton::Right)
+                    index = 1;
+                else if (button == MouseButton::Middle)
+                    index = 2;
+                io.MouseDown[index] = false;
+            }
+            else if (evt->IsType<MouseWheelEvent>())
+            {
+                float wheel = dynamic_cast<MouseWheelEvent*>(evt)->wheel;
+                io.MouseWheel += wheel;
+            }
         }
-        else if (evt->IsType<MouseUpEvent>())
+        else if (evt->IsType<KeyEvent>())
         {
-            MouseButton button = dynamic_cast<MouseUpEvent*>(evt)->button;
-            int         index  = 0;
-            if (button == MouseButton::Left)
-                index = 0;
-            else if (button == MouseButton::Right)
-                index = 1;
-            else if (button == MouseButton::Middle)
-                index = 2;
-            io.MouseDown[index] = false;
-        }
-        else if (evt->IsType<MouseWheelEvent>())
-        {
-            float wheel = dynamic_cast<MouseWheelEvent*>(evt)->wheel;
-            io.MouseWheel += wheel;
+            if (evt->IsType<KeyDownEvent>())
+            {
+                KeyCode key           = dynamic_cast<KeyDownEvent*>(evt)->code;
+                io.KeysDown[(int)key] = true;
+            }
+            else if (evt->IsType<KeyUpEvent>())
+            {
+                KeyCode key           = dynamic_cast<KeyUpEvent*>(evt)->code;
+                io.KeysDown[(int)key] = false;
+            }
+            else if (evt->IsType<KeyCharEvent>())
+            {
+                // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
+                char ch = dynamic_cast<KeyCharEvent*>(evt)->value;
+                io.AddInputCharacter(static_cast<ImWchar>(ch));
+            }
         }
     }
-    else if (evt->IsType<KeyEvent>())
-    {
-        if (evt->IsType<KeyDownEvent>())
-        {
-            KeyCode key           = dynamic_cast<KeyDownEvent*>(evt)->code;
-            io.KeysDown[(int)key] = true;
-        }
-        else if (evt->IsType<KeyUpEvent>())
-        {
-            KeyCode key           = dynamic_cast<KeyUpEvent*>(evt)->code;
-            io.KeysDown[(int)key] = false;
-        }
-        else if (evt->IsType<KeyCharEvent>())
-        {
-            // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
-            char ch = dynamic_cast<KeyCharEvent*>(evt)->value;
-            io.AddInputCharacter(static_cast<ImWchar>(ch));
-        }
-    }
+
+    ctx.Next();
 }
 
 void ImGuiModule::UpdateMousePos()

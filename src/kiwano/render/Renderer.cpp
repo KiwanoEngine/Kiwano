@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
-#include <kiwano/event/WindowEvent.h>
-#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -29,20 +27,6 @@ Renderer::Renderer()
     : vsync_(true)
     , clear_color_(Color::Black)
 {
-}
-
-void Renderer::BeginDraw()
-{
-    KGE_ASSERT(render_ctx_);
-
-    render_ctx_->BeginDraw();
-}
-
-void Renderer::EndDraw()
-{
-    KGE_ASSERT(render_ctx_);
-
-    render_ctx_->EndDraw();
 }
 
 }  // namespace kiwano

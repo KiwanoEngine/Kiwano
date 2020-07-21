@@ -44,7 +44,7 @@ namespace kiwano
  * \~chinese
  * @brief 渲染器
  */
-class KGE_API Renderer : public Noncopyable
+class KGE_API Renderer : public Module
 {
 public:
     /// \~chinese
@@ -218,14 +218,6 @@ public:
     virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
 
 public:
-    /// \~chinese
-    /// @brief 开始渲染
-    virtual void BeginDraw();
-
-    /// \~chinese
-    /// @brief 结束渲染
-    virtual void EndDraw();
-
     /// \~chinese
     /// @brief 清除绘制内容
     virtual void Clear() = 0;

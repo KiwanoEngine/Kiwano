@@ -19,28 +19,86 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/Module.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
 
-Module::Module()
-    : flag_(0)
+ModuleContext::ModuleContext(ModuleList& modules)
+    : index_(-1)
+    , modules_(modules)
 {
 }
 
-RenderModule::RenderModule()
+ModuleContext::~ModuleContext() {}
+
+void ModuleContext::Next()
 {
-    flag_ |= ModuleFlag<RenderModule>::value;
+    index_++;
+    for (; index_ < (int)modules_.size(); index_++)
+    {
+        this->Handle(modules_.at(index_));
+    }
 }
 
-UpdateModule::UpdateModule()
+RenderModuleContext::RenderModuleContext(ModuleList& modules, RenderContext& ctx)
+    : ModuleContext(modules)
+    , render_ctx(ctx)
 {
-    flag_ |= ModuleFlag<UpdateModule>::value;
+    render_ctx.BeginDraw();
 }
 
-EventModule::EventModule()
+RenderModuleContext::~RenderModuleContext()
 {
-    flag_ |= ModuleFlag<EventModule>::value;
+    render_ctx.EndDraw();
+}
+
+void RenderModuleContext::Handle(Module* m)
+{
+    m->OnRender(*this);
+}
+
+UpdateModuleContext::UpdateModuleContext(ModuleList& modules, Duration dt)
+    : ModuleContext(modules)
+    , dt(dt)
+{
+}
+
+void UpdateModuleContext::Handle(Module* m)
+{
+    m->OnUpdate(*this);
+}
+
+EventModuleContext::EventModuleContext(ModuleList& modules, Event* evt)
+    : ModuleContext(modules)
+    , evt(evt)
+{
+}
+
+void EventModuleContext::Handle(Module* m)
+{
+    m->HandleEvent(*this);
+}
+
+Module::Module() {}
+
+void Module::SetupModule() {}
+
+void Module::DestroyModule() {}
+
+void Module::OnRender(RenderModuleContext& ctx)
+{
+    ctx.Next();
+}
+
+void Module::OnUpdate(UpdateModuleContext& ctx)
+{
+    ctx.Next();
+}
+
+void Module::HandleEvent(EventModuleContext& ctx)
+{
+    ctx.Next();
 }
 
 }  // namespace kiwano

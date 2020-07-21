@@ -91,6 +91,7 @@ void Runner::InitSettings()
     Renderer::GetInstance().SetVSyncEnabled(settings_.vsync_enabled);
 
     // Use defaut modules
+    Application::GetInstance().Use(Renderer::GetInstance());
     Application::GetInstance().Use(Input::GetInstance());
     Application::GetInstance().Use(Director::GetInstance());
 

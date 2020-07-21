@@ -20,7 +20,6 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/DirectX/D3D11DeviceResources.h>
-#include <memory>
 
 KGE_SUPPRESS_WARNING_PUSH
 KGE_SUPPRESS_WARNING(4800)   // Implicit conversion from 'type' to bool

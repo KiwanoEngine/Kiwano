@@ -166,6 +166,15 @@ void RendererImpl::Destroy()
     ::CoUninitialize();
 }
 
+void RendererImpl::HandleEvent(EventModuleContext& ctx)
+{
+    if (ctx.evt->IsType<WindowResizedEvent>())
+    {
+        auto evt = ctx.evt->SafeCast<WindowResizedEvent>();
+        Resize(evt->width, evt->height);
+    }
+}
+
 void RendererImpl::Clear()
 {
     KGE_ASSERT(d3d_res_);

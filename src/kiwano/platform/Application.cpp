@@ -162,13 +162,8 @@ void Application::DispatchEvent(Event* evt)
     if (!running_ /* Dispatch events even if application is paused */)
         return;
 
-    for (auto comp : modules_)
-    {
-        if (auto event_comp = comp->Cast<EventModule>())
-        {
-            event_comp->HandleEvent(evt);
-        }
-    }
+    auto ctx = EventModuleContext(modules_, evt);
+    ctx.Next();
 }
 
 void Application::Update(Duration dt)
@@ -176,51 +171,24 @@ void Application::Update(Duration dt)
     if (!running_ || is_paused_)
         return;
 
-    // Before update
-    for (auto comp : modules_)
-    {
-        if (auto update_comp = comp->Cast<UpdateModule>())
-        {
-            update_comp->BeforeUpdate();
-        }
-    }
+    auto ctx = UpdateModuleContext(modules_, dt);
+    ctx.Next();
 
     // perform functions
+    if (!functions_to_perform_.empty())
     {
-        if (!functions_to_perform_.empty())
-        {
-            perform_mutex_.lock();
-            auto functions = std::move(functions_to_perform_);
-            perform_mutex_.unlock();
+        perform_mutex_.lock();
+        auto functions = std::move(functions_to_perform_);
+        perform_mutex_.unlock();
 
-            while (!functions.empty())
+        while (!functions.empty())
+        {
+            auto& func = functions.front();
+            if (func)
             {
-                auto& func = functions.front();
-                if (func)
-                {
-                    func();
-                }
-                functions.pop();
+                func();
             }
-        }
-    }
-
-    // Updating
-    Duration scaled_dt = dt * time_scale_;
-    for (auto comp : modules_)
-    {
-        if (auto update_comp = comp->Cast<UpdateModule>())
-        {
-            update_comp->OnUpdate(scaled_dt);
-        }
-    }
-
-    // After update
-    for (auto rit = modules_.rbegin(); rit != modules_.rend(); ++rit)
-    {
-        if (auto update_comp = (*rit)->Cast<UpdateModule>())
-        {
-            update_comp->AfterUpdate();
+            functions.pop();
         }
     }
 }
@@ -233,33 +201,9 @@ void Application::Render()
     Renderer& renderer = Renderer::GetInstance();
     renderer.Clear();
 
-    // Before render
-    for (auto comp : modules_)
     {
-        if (auto render_comp = comp->Cast<RenderModule>())
-        {
-            render_comp->BeforeRender();
-        }
-    }
-
-    // Rendering
-    renderer.BeginDraw();
-    for (auto comp : modules_)
-    {
-        if (auto render_comp = comp->Cast<RenderModule>())
-        {
-            render_comp->OnRender(renderer.GetContext());
-        }
-    }
-    renderer.EndDraw();
-
-    // After render
-    for (auto rit = modules_.rbegin(); rit != modules_.rend(); ++rit)
-    {
-        if (auto render_comp = (*rit)->Cast<RenderModule>())
-        {
-            render_comp->AfterRender();
-        }
+        auto ctx = RenderModuleContext(modules_, renderer.GetContext());
+        ctx.Next();
     }
 
     renderer.Present();

@@ -23,7 +23,6 @@
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/Transition.h>
 #include <kiwano/base/Director.h>
-#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -119,11 +118,11 @@ void Director::ClearStages()
     debug_actor_.Reset();
 }
 
-void Director::OnUpdate(Duration dt)
+void Director::OnUpdate(UpdateModuleContext& ctx)
 {
     if (transition_)
     {
-        transition_->Update(dt);
+        transition_->Update(ctx.dt);
 
         if (transition_->IsDone())
             transition_ = nullptr;
@@ -143,47 +142,53 @@ void Director::OnUpdate(Duration dt)
     }
 
     if (current_stage_)
-        current_stage_->Update(dt);
+        current_stage_->Update(ctx.dt);
 
     if (next_stage_)
-        next_stage_->Update(dt);
+        next_stage_->Update(ctx.dt);
 
     if (debug_actor_)
-        debug_actor_->Update(dt);
+        debug_actor_->Update(ctx.dt);
+
+    ctx.Next();
 }
 
-void Director::OnRender(RenderContext& ctx)
+void Director::OnRender(RenderModuleContext& ctx)
 {
     if (transition_)
     {
-        transition_->Render(ctx);
+        transition_->Render(ctx.render_ctx);
     }
     else if (current_stage_)
     {
-        current_stage_->Render(ctx);
+        current_stage_->Render(ctx.render_ctx);
 
         if (render_border_enabled_)
         {
-            current_stage_->RenderBorder(ctx);
+            current_stage_->RenderBorder(ctx.render_ctx);
         }
     }
 
     if (debug_actor_)
     {
-        debug_actor_->Render(ctx);
+        debug_actor_->Render(ctx.render_ctx);
     }
+
+    ctx.Next();
 }
 
-void Director::HandleEvent(Event* evt)
+void Director::HandleEvent(EventModuleContext& ctx)
 {
     if (current_stage_)
-        current_stage_->DispatchEvent(evt);
+        current_stage_->DispatchEvent(ctx.evt);
 
     if (next_stage_)
-        next_stage_->DispatchEvent(evt);
+        next_stage_->DispatchEvent(ctx.evt);
 
     if (debug_actor_)
-        debug_actor_->DispatchEvent(evt);
+        debug_actor_->DispatchEvent(ctx.evt);
+
+    ctx.Next();
 }
 
 }  // namespace kiwano
