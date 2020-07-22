@@ -24,12 +24,6 @@
 namespace kiwano
 {
 
-TimerPtr Timer::Create()
-{
-    TimerPtr ptr = new (autogc) Timer;
-    return ptr;
-}
-
 Timer::Timer()
     : is_paused_(false)
 {

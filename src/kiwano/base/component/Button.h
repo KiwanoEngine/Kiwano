@@ -45,7 +45,7 @@ public:
     /// \~chinese
     /// @brief 创建按钮
     /// @param click 按钮点击回调函数
-    static ButtonPtr Create(const Callback& click);
+    Button(const Callback& click);
 
     /// \~chinese
     /// @brief 创建按钮
@@ -53,8 +53,7 @@ public:
     /// @param pressed 按钮按下回调函数
     /// @param mouse_over 按钮移入回调函数
     /// @param mouse_out 按钮移出回调函数
-    static ButtonPtr Create(const Callback& click, const Callback& pressed, const Callback& mouse_over,
-                            const Callback& mouse_out);
+    Button(const Callback& click, const Callback& pressed, const Callback& mouse_over, const Callback& mouse_out);
 
     Button();
 

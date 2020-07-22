@@ -97,7 +97,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     // Initialize other device resources
     if (SUCCEEDED(hr))
     {
-        RenderContextImplPtr ctx = new (autogc) RenderContextImpl;
+        RenderContextImplPtr ctx = MakePtr<RenderContextImpl>();
 
         hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
         if (SUCCEEDED(hr))
@@ -403,7 +403,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
 
                 if (SUCCEEDED(hr))
                 {
-                    frame.texture = new (autogc) Texture;
+                    frame.texture = MakePtr<Texture>();
                     NativePtr::Set(frame.texture, bitmap);
 
                     frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
@@ -769,7 +769,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
 
         if (SUCCEEDED(hr))
         {
-            ShapePtr shape = new (autogc) Shape;
+            ShapePtr shape = MakePtr<Shape>();
             NativePtr::Set(shape, geometry);
 
             maker.SetShape(shape);
@@ -945,7 +945,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
 
 RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, const Size* desired_size)
 {
-    RenderContextImplPtr ptr = new (autogc) RenderContextImpl;
+    RenderContextImplPtr ptr = MakePtr<RenderContextImpl>();
 
     HRESULT hr = S_OK;
     if (!d2d_res_)

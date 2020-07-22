@@ -46,7 +46,7 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Defer.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/core/RefPtr.hpp>
+#include <kiwano/core/RefBasePtr.hpp>
 #include <kiwano/core/Time.h>
 
 //

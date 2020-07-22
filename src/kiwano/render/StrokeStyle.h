@@ -74,8 +74,7 @@ public:
     /// @param width 线条宽度
     /// @param cap 线条端点样式
     /// @param line_join 线条交点样式
-    static StrokeStylePtr Create(float width, CapStyle cap = CapStyle::Flat,
-                                 LineJoinStyle line_join = LineJoinStyle::Miter);
+    StrokeStyle(float width, CapStyle cap = CapStyle::Flat, LineJoinStyle line_join = LineJoinStyle::Miter);
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -84,8 +83,7 @@ public:
     /// @param line_join 线条交点样式
     /// @param dash 线条虚线样式
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash,
-                                 float dash_offset = 0.0f);
+    StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -95,8 +93,8 @@ public:
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_size 线条虚线数组大小
     /// @param dash_offset 线条虚线偏移量
-    static StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
-                                 size_t dash_size, float dash_offset = 0.0f);
+    StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size,
+                float dash_offset = 0.0f);
 
     /// \~chinese
     /// @brief 创建线条样式
@@ -107,10 +105,10 @@ public:
     /// @param dash_array 线条虚线的长度与间隙数组
     /// @param dash_offset 线条虚线偏移量
     template <size_t _DashSize>
-    static inline StrokeStylePtr Create(float width, CapStyle cap, LineJoinStyle line_join,
-                                        float (&dash_array)[_DashSize], float dash_offset = 0.0f)
+    StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, float (&dash_array)[_DashSize],
+                float dash_offset = 0.0f)
+        : StrokeStyle(width, cap, line_join, dash_array, _DashSize, dash_offset)
     {
-        return StrokeStyle::Create(width, cap, line_join, dash_array, _DashSize, dash_offset);
     }
 
     StrokeStyle();

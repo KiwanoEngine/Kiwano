@@ -26,6 +26,7 @@
 
 namespace kiwano
 {
+
 Director::Director()
     : render_border_enabled_(false)
 {
@@ -49,7 +50,7 @@ void Director::EnterStage(StagePtr stage, TransitionPtr transition)
             transition_->Stop();
         }
         transition_ = transition;
-        transition_->Init(current_stage_, next_stage_);
+        transition_->Init(current_stage_.Get(), next_stage_.Get());
     }
 }
 
@@ -80,7 +81,7 @@ void Director::PopStage(TransitionPtr transition)
             transition_->Stop();
         }
         transition_ = transition;
-        transition_->Init(current_stage_, next_stage_);
+        transition_->Init(current_stage_.Get(), next_stage_.Get());
     }
 }
 
@@ -99,7 +100,7 @@ void Director::ShowDebugInfo(bool show)
     if (show)
     {
         if (!debug_actor_)
-            debug_actor_ = new (autogc) DebugActor;
+            debug_actor_ = MakePtr<DebugActor>();
     }
     else
     {

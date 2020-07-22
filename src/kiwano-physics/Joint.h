@@ -161,9 +161,7 @@ public:
     /// \~chinese
     /// @brief 创建固定距离关节
     /// @param param 关节参数
-    static DistanceJointPtr Create(const Param& param);
-
-    DistanceJoint();
+    DistanceJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -226,9 +224,7 @@ public:
     /// \~chinese
     /// @brief 创建摩擦关节
     /// @param param 关节参数
-    static FrictionJointPtr Create(const Param& param);
-
-    FrictionJoint();
+    FrictionJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -285,9 +281,7 @@ public:
     /// \~chinese
     /// @brief 创建齿轮关节
     /// @param param 关节参数
-    static GearJointPtr Create(const Param& param);
-
-    GearJoint();
+    GearJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -336,9 +330,7 @@ public:
     /// \~chinese
     /// @brief 创建马达关节
     /// @param param 关节参数
-    static MotorJointPtr Create(const Param& param);
-
-    MotorJoint();
+    MotorJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -405,9 +397,7 @@ public:
     /// \~chinese
     /// @brief 创建平移关节
     /// @param param 关节参数
-    static PrismaticJointPtr Create(const Param& param);
-
-    PrismaticJoint();
+    PrismaticJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -509,9 +499,7 @@ public:
     /// \~chinese
     /// @brief 创建滑轮关节
     /// @param param 关节参数
-    static PulleyJointPtr Create(const Param& param);
-
-    PulleyJoint();
+    PulleyJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -588,9 +576,7 @@ public:
     /// \~chinese
     /// @brief 创建旋转关节
     /// @param param 关节参数
-    static RevoluteJointPtr Create(const Param& param);
-
-    RevoluteJoint();
+    RevoluteJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -687,9 +673,7 @@ public:
     /// \~chinese
     /// @brief 创建绳关节
     /// @param param 关节参数
-    static RopeJointPtr Create(const Param& param);
-
-    RopeJoint();
+    RopeJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -738,9 +722,7 @@ public:
     /// \~chinese
     /// @brief 创建焊接关节
     /// @param param 关节参数
-    static WeldJointPtr Create(const Param& param);
-
-    WeldJoint();
+    WeldJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -809,9 +791,7 @@ public:
     /// \~chinese
     /// @brief 创建轮关节
     /// @param param 关节参数
-    static WheelJointPtr Create(const Param& param);
-
-    WheelJoint();
+    WheelJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节
@@ -911,9 +891,7 @@ public:
     /// \~chinese
     /// @brief 创建鼠标关节
     /// @param param 关节参数
-    static MouseJointPtr Create(const Param& param);
-
-    MouseJoint();
+    MouseJoint(const Param& param);
 
     /// \~chinese
     /// @brief 初始化关节

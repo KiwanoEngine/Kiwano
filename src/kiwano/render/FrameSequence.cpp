@@ -24,31 +24,15 @@
 namespace kiwano
 {
 
-FrameSequencePtr FrameSequence::Create()
+FrameSequence::FrameSequence(const Vector<FramePtr>& frames)
 {
-    FrameSequencePtr ptr = new (autogc) FrameSequence;
-    return ptr;
+    AddFrames(frames);
 }
 
-FrameSequencePtr FrameSequence::Create(const Vector<FramePtr>& frames)
-{
-    FrameSequencePtr ptr = new (autogc) FrameSequence;
-    if (ptr)
-    {
-        ptr->AddFrames(frames);
-    }
-    return ptr;
-}
-
-FrameSequencePtr FrameSequence::Create(FramePtr frame, int cols, int rows, int max_num, float padding_x,
+FrameSequence::FrameSequence(FramePtr frame, int cols, int rows, int max_num, float padding_x,
                                        float padding_y)
 {
-    FrameSequencePtr ptr = new (autogc) FrameSequence;
-    if (ptr)
-    {
-        ptr->AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
-    }
-    return ptr;
+    AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
 }
 
 FrameSequence::FrameSequence() {}
@@ -103,7 +87,7 @@ void FrameSequence::AddFrames(FramePtr frame, int cols, int rows, int max_num, f
 
         for (int j = 0; j < cols; j++)
         {
-            FramePtr ptr = new (autogc) Frame;
+            FramePtr ptr = MakePtr<Frame>();
             if (ptr)
             {
                 ptr->SetTexture(frame->GetTexture());
@@ -140,7 +124,7 @@ size_t FrameSequence::GetFramesCount() const
 
 FrameSequencePtr FrameSequence::Clone() const
 {
-    auto frame_seq = new (autogc) FrameSequence;
+    auto frame_seq = MakePtr<FrameSequence>();
     if (frame_seq)
     {
         frame_seq->AddFrames(frames_);
@@ -150,7 +134,7 @@ FrameSequencePtr FrameSequence::Clone() const
 
 FrameSequencePtr FrameSequence::Reverse() const
 {
-    auto frame_seq = new (autogc) FrameSequence;
+    auto frame_seq = MakePtr<FrameSequence>();
     if (!frames_.empty())
     {
         for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)

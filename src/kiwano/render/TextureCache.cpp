@@ -33,7 +33,7 @@ RefPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash)
         return iter->second;
     }
 
-    RefPtr<_Ty> texture = new (autogc) _Ty;
+    RefPtr<_Ty> texture = MakePtr<_Ty>();
     if (texture->Load(path))
     {
         cache.insert(std::make_pair(hash, texture));

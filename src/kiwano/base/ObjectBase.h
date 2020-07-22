@@ -22,8 +22,8 @@
 #include <kiwano/macros.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Serializable.h>
-#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/base/RefObject.h>
+#include <kiwano/base/RefPtr.h>
 
 namespace kiwano
 {

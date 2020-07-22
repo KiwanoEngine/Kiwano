@@ -59,10 +59,7 @@ public:
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    static ActionWalkEntityPtr Create(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
-                                      float end = 1.f);
-
-    ActionWalkEntity();
+    ActionWalkEntity(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
 
     /// \~chinese
     /// @brief 获取路线
@@ -98,11 +95,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionEntityPtr Clone() const override;
+    ActionWalkEntity* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionEntityPtr Reverse() const override;
+    ActionWalkEntity* Reverse() const override;
 
 protected:
     void Init(Actor* target) override;

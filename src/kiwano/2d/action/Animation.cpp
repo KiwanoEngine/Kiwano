@@ -27,22 +27,17 @@ namespace kiwano
 
 Animation::Animation(Duration dur, FrameSequencePtr frame_seq)
 {
-    SetEntity(AnimationEntity::Create(dur, frame_seq));
-}
-
-AnimationEntityPtr AnimationEntity::Create(Duration dur, FrameSequencePtr frame_seq)
-{
-    AnimationEntityPtr ptr = new (autogc) AnimationEntity;
-    if (ptr)
-    {
-        ptr->SetDuration(dur);
-        ptr->SetFrameSequence(frame_seq);
-    }
-    return ptr;
+    SetEntity(MakePtr<AnimationEntity>(dur, frame_seq));
 }
 
 AnimationEntity::AnimationEntity()
     : frame_seq_(nullptr)
+{
+}
+
+AnimationEntity::AnimationEntity(Duration dur, FrameSequencePtr frame_seq)
+    : ActionTweenEntity(dur)
+    , frame_seq_(frame_seq)
 {
 }
 
@@ -90,26 +85,24 @@ void AnimationEntity::UpdateTween(Actor* target, float percent)
     }
 }
 
-ActionEntityPtr AnimationEntity::Clone() const
+AnimationEntity* AnimationEntity::Clone() const
 {
-    if (frame_seq_)
-    {
-        return DoClone(AnimationEntity::Create(GetDuration(), frame_seq_));
-    }
-    return nullptr;
+    auto ptr = new (autogc) AnimationEntity(GetDuration(), frame_seq_);
+    DoClone(ptr);
+    return ptr;
 }
 
-ActionEntityPtr AnimationEntity::Reverse() const
+AnimationEntity* AnimationEntity::Reverse() const
 {
+    auto ptr = new (autogc) AnimationEntity(GetDuration(), nullptr);
+    DoClone(ptr);
+
     if (frame_seq_)
     {
         FrameSequencePtr frames = frame_seq_->Reverse();
-        if (frames)
-        {
-            return DoClone(AnimationEntity::Create(GetDuration(), frames));
-        }
+        ptr->SetFrameSequence(frames);
     }
-    return nullptr;
+    return ptr;
 }
 
 }  // namespace kiwano

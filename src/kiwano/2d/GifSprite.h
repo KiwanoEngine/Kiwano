@@ -48,22 +48,22 @@ public:
     /// @brief GIF播放结束回调
     using DoneCallback = Function<void()>;
 
+    GifSprite();
+
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param file_path GIF图片路径
-    static GifSpritePtr Create(const String& file_path);
+    GifSprite(const String& file_path);
 
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param res GIF图片资源
-    static GifSpritePtr Create(const Resource& res);
+    GifSprite(const Resource& res);
 
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param gif GIF图片
-    static GifSpritePtr Create(GifImagePtr gif);
-
-    GifSprite();
+    GifSprite(GifImagePtr gif);
 
     /// \~chinese
     /// @brief 加载GIF图片

@@ -51,7 +51,7 @@ bool Transition::IsDone()
     return done_;
 }
 
-void Transition::Init(StagePtr prev, StagePtr next)
+void Transition::Init(Stage* prev, Stage* next)
 {
     process_ = 0;
     delta_   = Duration{};
@@ -126,19 +126,14 @@ void Transition::Stop()
 // BoxTransition
 //-------------------------------------------------------
 
-BoxTransitionPtr BoxTransition::Create(Duration duration)
+BoxTransition::BoxTransition(Duration duration)
 {
-    BoxTransitionPtr ptr = new (autogc) BoxTransition;
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-    }
-    return ptr;
+    SetDuration(duration);
 }
 
 BoxTransition::BoxTransition() {}
 
-void BoxTransition::Init(StagePtr prev, StagePtr next)
+void BoxTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 
@@ -167,19 +162,14 @@ void BoxTransition::Update(Duration dt)
 // EmergeTransition
 //-------------------------------------------------------
 
-EmergeTransitionPtr EmergeTransition::Create(Duration duration)
+EmergeTransition::EmergeTransition(Duration duration)
 {
-    EmergeTransitionPtr ptr = new (autogc) EmergeTransition;
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-    }
-    return ptr;
+    SetDuration(duration);
 }
 
 EmergeTransition::EmergeTransition() {}
 
-void EmergeTransition::Init(StagePtr prev, StagePtr next)
+void EmergeTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 
@@ -199,19 +189,14 @@ void EmergeTransition::Update(Duration dt)
 // FadeTransition
 //-------------------------------------------------------
 
-FadeTransitionPtr FadeTransition::Create(Duration duration)
+FadeTransition::FadeTransition(Duration duration)
 {
-    FadeTransitionPtr ptr = new (autogc) FadeTransition;
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-    }
-    return ptr;
+    SetDuration(duration);
 }
 
 FadeTransition::FadeTransition() {}
 
-void FadeTransition::Init(StagePtr prev, StagePtr next)
+void FadeTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 
@@ -239,15 +224,10 @@ void FadeTransition::Update(Duration dt)
 // MoveTransition
 //-------------------------------------------------------
 
-MoveTransitionPtr MoveTransition::Create(Duration duration, Type type)
+MoveTransition::MoveTransition(Duration duration, Type type)
+    : type_(type)
 {
-    MoveTransitionPtr ptr = new (autogc) MoveTransition;
-    if (ptr)
-    {
-        ptr->type_ = type;
-        ptr->SetDuration(duration);
-    }
-    return ptr;
+    SetDuration(duration);
 }
 
 MoveTransition::MoveTransition()
@@ -255,7 +235,7 @@ MoveTransition::MoveTransition()
 {
 }
 
-void MoveTransition::Init(StagePtr prev, StagePtr next)
+void MoveTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 
@@ -328,15 +308,10 @@ void MoveTransition::Reset()
 // RotationTransition
 //-------------------------------------------------------
 
-RotationTransitionPtr RotationTransition::Create(Duration duration, float rotation)
+RotationTransition::RotationTransition(Duration duration, float rotation)
+    : rotation_(rotation)
 {
-    RotationTransitionPtr ptr = new (autogc) RotationTransition;
-    if (ptr)
-    {
-        ptr->rotation_ = rotation;
-        ptr->SetDuration(duration);
-    }
-    return ptr;
+    SetDuration(duration);
 }
 
 RotationTransition::RotationTransition()
@@ -344,7 +319,7 @@ RotationTransition::RotationTransition()
 {
 }
 
-void RotationTransition::Init(StagePtr prev, StagePtr next)
+void RotationTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 

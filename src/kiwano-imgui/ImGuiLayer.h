@@ -38,17 +38,13 @@ using ImGuiPipeline = Function<void()>;
 class ImGuiLayer : public LayerActor
 {
 public:
-    /// \~chinese
-    /// @brief 创建ImGui图层
-    static ImGuiLayerPtr Create();
+    ImGuiLayer();
 
     /// \~chinese
     /// @brief 创建ImGui图层
     /// @param name 元素名称
     /// @param item 管道
-    static ImGuiLayerPtr Create(const String& name, const ImGuiPipeline& item);
-
-    ImGuiLayer();
+    ImGuiLayer(const String& name, const ImGuiPipeline& item);
 
     virtual ~ImGuiLayer();
 

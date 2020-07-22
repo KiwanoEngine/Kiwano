@@ -27,11 +27,6 @@ ObjectPool::ObjectPool()
 {
 }
 
-ObjectPool::~ObjectPool()
-{
-    Clear();
-}
-
 void ObjectPool::AddObject(RefObject* obj)
 {
     if (obj)

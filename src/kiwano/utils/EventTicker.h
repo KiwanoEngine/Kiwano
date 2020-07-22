@@ -57,11 +57,13 @@ class KGE_API EventTicker
     , public EventDispatcher
 {
 public:
+    EventTicker();
+
     /// \~chinese
     /// @brief 创建事件报时器
     /// @param interval 报时间隔
-    /// @param times 报时次数（设 -1 为永久）
-    static EventTickerPtr Create(Duration interval, int times = -1);
+    /// @param tick_count 报时次数（设 -1 为永久）
+    EventTicker(Duration interval, int tick_count = -1);
 
     using Ticker::Tick;
 

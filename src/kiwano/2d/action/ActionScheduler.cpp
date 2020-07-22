@@ -87,14 +87,14 @@ void ActionScheduler::StopAllActions()
     }
 }
 
-ActionEntityPtr ActionScheduler::GetAction(const String& name)
+ActionEntity* ActionScheduler::GetAction(const String& name)
 {
     if (actions_.IsEmpty())
         return nullptr;
 
     for (auto& action : actions_)
         if (action->IsName(name))
-            return action;
+            return action.Get();
     return nullptr;
 }
 

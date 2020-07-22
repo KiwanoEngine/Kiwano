@@ -39,12 +39,6 @@ void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
     default_anchor_y = anchor_y;
 }
 
-ActorPtr Actor::Create()
-{
-    ActorPtr ptr = new (autogc) Actor;
-    return ptr;
-}
-
 Actor::Actor()
     : ComponentManager(this)
     , visible_(true)
@@ -264,18 +258,18 @@ bool Actor::HandleEvent(Event* evt)
             {
                 hover_ = true;
 
-                MouseHoverEventPtr hover = new (autogc) MouseHoverEvent;
-                hover->pos               = mouse_evt->pos;
-                HandleEvent(hover.Get());
+                auto hover = new (autogc) MouseHoverEvent;
+                hover->pos = mouse_evt->pos;
+                HandleEvent(hover);
             }
             else if (hover_ && !contains)
             {
                 hover_   = false;
                 pressed_ = false;
 
-                MouseOutEventPtr out = new (autogc) MouseOutEvent;
-                out->pos             = mouse_evt->pos;
-                HandleEvent(out.Get());
+                auto out = new (autogc) MouseOutEvent;
+                out->pos = mouse_evt->pos;
+                HandleEvent(out);
             }
         }
 
@@ -290,10 +284,10 @@ bool Actor::HandleEvent(Event* evt)
 
             auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
 
-            MouseClickEventPtr click = new (autogc) MouseClickEvent;
-            click->pos               = mouse_up_evt->pos;
-            click->button            = mouse_up_evt->button;
-            HandleEvent(click.Get());
+            auto click    = new (autogc) MouseClickEvent;
+            click->pos    = mouse_up_evt->pos;
+            click->button = mouse_up_evt->button;
+            HandleEvent(click);
         }
     }
     return true;

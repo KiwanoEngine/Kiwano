@@ -24,65 +24,40 @@
 namespace kiwano
 {
 
-SpritePtr Sprite::Create(const String& file_path)
-{
-    SpritePtr ptr = new (autogc) Sprite;
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-            return nullptr;
-    }
-    return ptr;
-}
-
-SpritePtr Sprite::Create(const Resource& res)
-{
-    SpritePtr ptr = new (autogc) Sprite;
-    if (ptr)
-    {
-        if (!ptr->Load(res))
-            return nullptr;
-    }
-    return ptr;
-}
-
-SpritePtr Sprite::Create(FramePtr frame)
-{
-    SpritePtr ptr = new (autogc) Sprite;
-    if (ptr)
-    {
-        ptr->SetFrame(frame);
-    }
-    return ptr;
-}
-
-SpritePtr Sprite::Create(const String& file_path, const Rect& crop_rect)
-{
-    SpritePtr ptr = Sprite::Create(file_path);
-    if (ptr)
-    {
-        ptr->SetCropRect(crop_rect);
-    }
-    return ptr;
-}
-
-SpritePtr Sprite::Create(const Resource& res, const Rect& crop_rect)
-{
-    SpritePtr ptr = Sprite::Create(res);
-    if (ptr)
-    {
-        ptr->SetCropRect(crop_rect);
-    }
-    return ptr;
-}
-
 Sprite::Sprite() {}
+
+Sprite::Sprite(const String& file_path)
+{
+    Load(file_path);
+}
+
+Sprite::Sprite(const Resource& res)
+{
+    Load(res);
+}
+
+Sprite::Sprite(FramePtr frame)
+{
+    SetFrame(frame);
+}
+
+Sprite::Sprite(const String& file_path, const Rect& crop_rect)
+    : Sprite(file_path)
+{
+    SetCropRect(crop_rect);
+}
+
+Sprite::Sprite(const Resource& res, const Rect& crop_rect)
+    : Sprite(res)
+{
+    SetCropRect(crop_rect);
+}
 
 Sprite::~Sprite() {}
 
 bool Sprite::Load(const String& file_path, bool autoresize)
 {
-    FramePtr frame = Frame::Create(file_path);
+    FramePtr frame = MakePtr<Frame>(file_path);
     if (frame)
     {
         SetFrame(frame, autoresize);
@@ -93,7 +68,7 @@ bool Sprite::Load(const String& file_path, bool autoresize)
 
 bool Sprite::Load(const Resource& res, bool autoresize)
 {
-    FramePtr frame = Frame::Create(res);
+    FramePtr frame = MakePtr<Frame>(res);
     if (frame)
     {
         SetFrame(frame, autoresize);

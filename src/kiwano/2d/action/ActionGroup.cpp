@@ -27,18 +27,7 @@ namespace kiwano
 
 ActionGroup::ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel)
 {
-    SetEntity(ActionGroupEntity::Create(actions, parallel));
-}
-
-ActionGroupEntityPtr ActionGroupEntity::Create(const Vector<ActionEntityPtr>& actions, bool parallel)
-{
-    ActionGroupEntityPtr ptr = new (autogc) ActionGroupEntity;
-    if (ptr)
-    {
-        ptr->parallel_ = parallel;
-        ptr->AddActions(actions);
-    }
-    return ptr;
+    SetEntity(MakePtr<ActionGroupEntity>(actions, parallel));
 }
 
 ActionGroupEntity::ActionGroupEntity()
@@ -46,9 +35,10 @@ ActionGroupEntity::ActionGroupEntity()
 {
 }
 
-ActionGroupEntity::ActionGroupEntity(bool parallel)
+ActionGroupEntity::ActionGroupEntity(const Vector<ActionEntityPtr>& actions, bool parallel)
     : parallel_(parallel)
 {
+    AddActions(actions);
 }
 
 ActionGroupEntity::~ActionGroupEntity() {}
@@ -123,7 +113,7 @@ void ActionGroupEntity::AddActions(const Vector<ActionEntityPtr>& actions)
         AddAction(action);
 }
 
-ActionEntityPtr ActionGroupEntity::Clone() const
+ActionGroupEntity* ActionGroupEntity::Clone() const
 {
     Vector<ActionEntityPtr> actions;
     if (!actions_.IsEmpty())
@@ -133,10 +123,12 @@ ActionEntityPtr ActionGroupEntity::Clone() const
             actions.push_back(action->Clone());
         }
     }
-    return DoClone(ActionGroupEntity::Create(actions, parallel_));
+    auto ptr = new (autogc) ActionGroupEntity(actions, parallel_);
+    DoClone(ptr);
+    return ptr;
 }
 
-ActionEntityPtr ActionGroupEntity::Reverse() const
+ActionGroupEntity* ActionGroupEntity::Reverse() const
 {
     Vector<ActionEntityPtr> actions;
     if (!actions_.IsEmpty())
@@ -146,7 +138,9 @@ ActionEntityPtr ActionGroupEntity::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    return DoClone(ActionGroupEntity::Create(actions, parallel_));
+    auto ptr = new (autogc) ActionGroupEntity(actions, parallel_);
+    DoClone(ptr);
+    return ptr;
 }
 
 }  // namespace kiwano

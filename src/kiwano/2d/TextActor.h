@@ -39,18 +39,18 @@ KGE_DECLARE_SMART_PTR(TextActor);
 class KGE_API TextActor : public Actor
 {
 public:
+    TextActor();
+
     /// \~chinese
     /// @brief 创建文本角色
     /// @param text 文字内容
-    static TextActorPtr Create(const String& text);
+    TextActor(const String& text);
 
     /// \~chinese
     /// @brief 创建文本角色
     /// @param text 文字内容
     /// @param style 文本样式
-    static TextActorPtr Create(const String& text, const TextStyle& style);
-
-    TextActor();
+    TextActor(const String& text, const TextStyle& style);
 
     virtual ~TextActor();
 

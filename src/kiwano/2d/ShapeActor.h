@@ -48,28 +48,26 @@ KGE_DECLARE_SMART_PTR(PolygonActor);
 class KGE_API ShapeActor : public Actor
 {
 public:
+    ShapeActor();
+
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
-    static ShapeActorPtr Create(ShapePtr shape);
+    ShapeActor(ShapePtr shape);
 
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
     /// @param fill_color 填充颜色
     /// @param stroke_color 轮廓颜色
-    static ShapeActorPtr Create(ShapePtr shape, const Color& fill_color, const Color& stroke_color);
+    ShapeActor(ShapePtr shape, const Color& fill_color, const Color& stroke_color);
 
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
     /// @param fill_brush 填充画刷
     /// @param stroke_brush 轮廓画刷
-    static ShapeActorPtr Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush);
-
-    /// \~chinese
-    /// @brief 构造形状角色
-    ShapeActor();
+    ShapeActor(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush);
 
     virtual ~ShapeActor();
 
@@ -147,13 +145,13 @@ private:
 class KGE_API LineActor : public ShapeActor
 {
 public:
+    LineActor();
+
     /// \~chinese
     /// @brief 创建线段角色
     /// @param begin 线段起点
     /// @param end 线段终点
-    static LineActorPtr Create(const Point& begin, const Point& end);
-
-    LineActor();
+    LineActor(const Point& begin, const Point& end);
 
     virtual ~LineActor();
 
@@ -191,12 +189,12 @@ private:
 class KGE_API RectActor : public ShapeActor
 {
 public:
+    RectActor();
+
     /// \~chinese
     /// @brief 创建矩形角色
     /// @param size 矩形大小
-    static RectActorPtr Create(const Size& size);
-
-    RectActor();
+    RectActor(const Size& size);
 
     virtual ~RectActor();
 
@@ -218,13 +216,13 @@ private:
 class KGE_API RoundedRectActor : public ShapeActor
 {
 public:
+    RoundedRectActor();
+
     /// \~chinese
     /// @brief 创建圆角矩形角色
     /// @param size 圆角矩形大小
     /// @param radius 圆角半径
-    static RoundedRectActorPtr Create(const Size& size, const Vec2& radius);
-
-    RoundedRectActor();
+    RoundedRectActor(const Size& size, const Vec2& radius);
 
     virtual ~RoundedRectActor();
 
@@ -262,12 +260,12 @@ private:
 class KGE_API CircleActor : public ShapeActor
 {
 public:
+    CircleActor();
+
     /// \~chinese
     /// @brief 创建圆形角色
     /// @param radius 圆形半径
-    static CircleActorPtr Create(float radius);
-
-    CircleActor();
+    CircleActor(float radius);
 
     virtual ~CircleActor();
 
@@ -289,12 +287,12 @@ private:
 class KGE_API EllipseActor : public ShapeActor
 {
 public:
+    EllipseActor();
+
     /// \~chinese
     /// @brief 创建椭圆角色
     /// @param radius 椭圆半径
-    static EllipseActorPtr Create(const Vec2& radius);
-
-    EllipseActor();
+    EllipseActor(const Vec2& radius);
 
     virtual ~EllipseActor();
 
@@ -316,12 +314,12 @@ private:
 class KGE_API PolygonActor : public ShapeActor
 {
 public:
+    PolygonActor();
+
     /// \~chinese
     /// @brief 创建多边形角色
     /// @param points 多边形端点集合
-    static PolygonActorPtr Create(const Vector<Point>& points);
-
-    PolygonActor();
+    PolygonActor(const Vector<Point>& points);
 
     virtual ~PolygonActor();
 
@@ -338,7 +336,7 @@ inline void ShapeActor::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ = new (autogc) Brush;
+        stroke_brush_ = MakePtr<Brush>();
     }
     stroke_brush_->SetColor(color);
 }
@@ -347,7 +345,7 @@ inline void ShapeActor::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ = new (autogc) Brush;
+        fill_brush_ = MakePtr<Brush>();
     }
     fill_brush_->SetColor(color);
 }

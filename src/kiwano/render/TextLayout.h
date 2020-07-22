@@ -38,19 +38,13 @@ KGE_DECLARE_SMART_PTR(TextLayout);
 class KGE_API TextLayout : public NativeObject
 {
 public:
-    /// \~chinese
-    /// @brief 创建文本布局
-    static TextLayoutPtr Create();
+    TextLayout();
 
     /// \~chinese
     /// @brief 创建文本布局
     /// @param content 文字内容
     /// @param style 文本样式
-    static TextLayoutPtr Create(const String& content, const TextStyle& style);
-
-    /// \~chinese
-    /// @brief 构造空的文本布局
-    TextLayout();
+    TextLayout(const String& content, const TextStyle& style);
 
     /// \~chinese
     /// @brief 文本布局是否陈旧

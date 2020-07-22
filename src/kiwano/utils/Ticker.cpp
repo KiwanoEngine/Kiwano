@@ -23,15 +23,11 @@
 namespace kiwano
 {
 
-TickerPtr Ticker::Create(Duration interval, int times)
+Ticker::Ticker(Duration interval, int times)
+    : Ticker()
 {
-    TickerPtr ptr = new (autogc) Ticker;
-    if (ptr)
-    {
-        ptr->SetInterval(interval);
-        ptr->SetTotalTickCount(times);
-    }
-    return ptr;
+    SetInterval(interval);
+    SetTotalTickCount(times);
 }
 
 Ticker::Ticker()
@@ -47,7 +43,7 @@ bool Ticker::Tick()
         return false;
 
     if (!timer_)
-        timer_ = Timer::Create();
+        timer_ = MakePtr<Timer>();
 
     if (timer_->IsPausing())
         return false;

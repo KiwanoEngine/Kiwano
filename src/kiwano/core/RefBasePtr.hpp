@@ -22,36 +22,16 @@
 #include <utility>
 #include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/base/RefObject.h>
 
 namespace kiwano
 {
 
 /**
  * \~chinese
- * @brief 默认的智能指针引用计数代理
- */
-struct DefaultRefPtrRefProxy
-{
-    static inline void Retain(RefObject* ptr)
-    {
-        if (ptr)
-            ptr->Retain();
-    }
-
-    static inline void Release(RefObject* ptr)
-    {
-        if (ptr)
-            ptr->Release();
-    }
-};
-
-/**
- * \~chinese
  * @brief 引用计数智能指针
  */
-template <typename _Ty, typename _ProxyTy = DefaultRefPtrRefProxy>
-class RefPtr
+template <typename _Ty, typename _ProxyTy>
+class RefBasePtr
 {
 public:
     using value_type           = _Ty;
@@ -60,41 +40,41 @@ public:
     using reference_type       = _Ty&;
     using const_reference_type = const _Ty&;
 
-    RefPtr() noexcept
+    RefBasePtr() noexcept
         : ptr_(nullptr)
     {
     }
 
-    RefPtr(std::nullptr_t) noexcept
+    RefBasePtr(std::nullptr_t) noexcept
         : ptr_(nullptr)
     {
     }
 
-    RefPtr(pointer_type p)
+    RefBasePtr(pointer_type p)
         : ptr_(p)
     {
         _ProxyTy::Retain(ptr_);
     }
 
-    RefPtr(const RefPtr& other)
+    RefBasePtr(const RefBasePtr& other)
         : ptr_(other.ptr_)
     {
         _ProxyTy::Retain(ptr_);
     }
 
-    RefPtr(RefPtr&& other) noexcept
+    RefBasePtr(RefBasePtr&& other) noexcept
         : ptr_(nullptr)
     {
         Swap(other);
     }
 
-    ~RefPtr()
+    ~RefBasePtr()
     {
         Tidy();
     }
 
     template <typename _UTy, typename std::enable_if<std::is_convertible<_UTy*, _Ty*>::value, int>::type = 0>
-    RefPtr(const RefPtr<_UTy, _ProxyTy>& other)
+    RefBasePtr(const RefBasePtr<_UTy, _ProxyTy>& other)
     {
         ptr_ = dynamic_cast<pointer_type>(other.Get());
         _ProxyTy::Retain(ptr_);
@@ -114,12 +94,12 @@ public:
     inline void Reset(pointer_type ptr = nullptr)
     {
         if (ptr)
-            RefPtr(ptr).Swap(*this);
+            RefBasePtr(ptr).Swap(*this);
         else
             Tidy();
     }
 
-    inline void Swap(RefPtr& other) noexcept
+    inline void Swap(RefBasePtr& other) noexcept
     {
         std::swap(ptr_, other.ptr_);
     }
@@ -163,36 +143,36 @@ public:
         return ptr_ == 0;
     }
 
-    inline RefPtr& operator=(const RefPtr& other)
+    inline RefBasePtr& operator=(const RefBasePtr& other)
     {
         if (other.ptr_ != ptr_)
-            RefPtr(other).Swap(*this);
+            RefBasePtr(other).Swap(*this);
         return (*this);
     }
 
-    inline RefPtr& operator=(RefPtr&& other) noexcept
+    inline RefBasePtr& operator=(RefBasePtr&& other) noexcept
     {
         if (other.ptr_ != ptr_)
             other.Swap(*this);
         return (*this);
     }
 
-    inline RefPtr& operator=(pointer_type p)
+    inline RefBasePtr& operator=(pointer_type p)
     {
         if (p != ptr_)
-            RefPtr(p).Swap(*this);
+            RefBasePtr(p).Swap(*this);
         return (*this);
     }
 
     template <typename _UTy, typename std::enable_if<std::is_convertible<_UTy*, _Ty*>::value, int>::type = 0>
-    inline RefPtr& operator=(const RefPtr<_UTy, _ProxyTy>& other)
+    inline RefBasePtr& operator=(const RefBasePtr<_UTy, _ProxyTy>& other)
     {
         if (other.Get() != ptr_)
-            RefPtr(dynamic_cast<pointer_type>(other.Get())).Swap(*this);
+            RefBasePtr(dynamic_cast<pointer_type>(other.Get())).Swap(*this);
         return (*this);
     }
 
-    inline RefPtr& operator=(std::nullptr_t)
+    inline RefBasePtr& operator=(std::nullptr_t)
     {
         Tidy();
         return *this;
@@ -210,67 +190,67 @@ private:
 };
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator==(const RefPtr<_Ty, _ProxyTy>& lhs, const RefPtr<_UTy, _ProxyTy>& rhs) noexcept
+inline bool operator==(const RefBasePtr<_Ty, _ProxyTy>& lhs, const RefBasePtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return lhs.Get() == rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(const RefPtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
+inline bool operator==(const RefBasePtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
 {
     return lhs.Get() == rhs;
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(_Ty* lhs, const RefPtr<_Ty, _ProxyTy>& rhs) noexcept
+inline bool operator==(_Ty* lhs, const RefBasePtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return lhs == rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(const RefPtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
+inline bool operator==(const RefBasePtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
 {
     return !static_cast<bool>(lhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator==(std::nullptr_t, const RefPtr<_Ty, _ProxyTy>& rhs) noexcept
+inline bool operator==(std::nullptr_t, const RefBasePtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return !static_cast<bool>(rhs);
 }
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator!=(const RefPtr<_Ty, _ProxyTy>& lhs, const RefPtr<_UTy, _ProxyTy>& rhs) noexcept
+inline bool operator!=(const RefBasePtr<_Ty, _ProxyTy>& lhs, const RefBasePtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(const RefPtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
+inline bool operator!=(const RefBasePtr<_Ty, _ProxyTy>& lhs, _Ty* rhs) noexcept
 {
     return lhs.Get() != rhs;
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(_Ty* lhs, const RefPtr<_Ty, _ProxyTy>& rhs) noexcept
+inline bool operator!=(_Ty* lhs, const RefBasePtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return lhs != rhs.Get();
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(const RefPtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
+inline bool operator!=(const RefBasePtr<_Ty, _ProxyTy>& lhs, std::nullptr_t) noexcept
 {
     return static_cast<bool>(lhs);
 }
 
 template <class _Ty, class _ProxyTy>
-inline bool operator!=(std::nullptr_t, const RefPtr<_Ty, _ProxyTy>& rhs) noexcept
+inline bool operator!=(std::nullptr_t, const RefBasePtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     return static_cast<bool>(rhs);
 }
 
 template <class _Ty, class _UTy, class _ProxyTy>
-inline bool operator<(const RefPtr<_Ty, _ProxyTy>& lhs, const RefPtr<_UTy, _ProxyTy>& rhs) noexcept
+inline bool operator<(const RefBasePtr<_Ty, _ProxyTy>& lhs, const RefBasePtr<_UTy, _ProxyTy>& rhs) noexcept
 {
     return lhs.Get() < rhs.Get();
 }
@@ -278,27 +258,9 @@ inline bool operator<(const RefPtr<_Ty, _ProxyTy>& lhs, const RefPtr<_UTy, _Prox
 // template class cannot specialize std::swap,
 // so implement a swap function in kiwano namespace
 template <class _Ty, class _ProxyTy>
-inline void swap(RefPtr<_Ty, _ProxyTy>& lhs, RefPtr<_Ty, _ProxyTy>& rhs) noexcept
+inline void swap(RefBasePtr<_Ty, _ProxyTy>& lhs, RefBasePtr<_Ty, _ProxyTy>& rhs) noexcept
 {
     lhs.Swap(rhs);
 }
 
-template <typename _Ty, typename... _Args>
-inline RefPtr<_Ty> MakePtr(_Args&&... args)
-{
-    static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
-
-    RefPtr<_Ty> ptr;
-
-    _Ty** pptr = ptr.GetAddressOfAndRelease();
-    (*pptr)    = new _Ty(std::forward<_Args>(args)...);
-    return ptr;
-}
-
 }  // namespace kiwano
-
-#ifndef KGE_DECLARE_SMART_PTR
-#define KGE_DECLARE_SMART_PTR(CLASS) \
-    class CLASS;                     \
-    typedef ::kiwano::RefPtr<CLASS> CLASS##Ptr;
-#endif

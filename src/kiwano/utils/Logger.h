@@ -175,7 +175,7 @@ protected:
 class KGE_API ConsoleLogProvider : public LogProvider
 {
 public:
-    static LogProviderPtr Create();
+    ConsoleLogProvider();
 
     virtual ~ConsoleLogProvider();
 
@@ -199,7 +199,7 @@ private:
 class KGE_API FileLogProvider : public LogProvider
 {
 public:
-    static LogProviderPtr Create(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
+    FileLogProvider(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
 
    virtual ~FileLogProvider();
 

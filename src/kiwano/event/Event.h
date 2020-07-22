@@ -19,7 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/RefPtr.hpp>
+#include <kiwano/base/RefObject.h>
+#include <kiwano/base/RefPtr.h>
 #include <kiwano/event/EventType.h>
 #include <kiwano/math/Math.h>
 
@@ -75,20 +76,13 @@ private:
 };
 
 /// \~chinese
-/// @brief 事件特性：判断是否是事件
-template <typename _Ty>
-struct IsBaseOfEvent : public std::bool_constant<std::is_base_of<Event, _Ty>::value || std::is_same<Event, _Ty>::value>
-{
-};
-
-/// \~chinese
 /// @brief 事件特性：判断事件类型是否相同
 template <typename _Ty>
 struct IsSameEventType
 {
     inline bool operator()(const Event* evt) const
     {
-        static_assert(kiwano::IsBaseOfEvent<_Ty>::value, "_Ty is not an event type.");
+        static_assert(std::is_base_of<Event, _Ty>::value, "_Ty is not an event type.");
         return evt->GetType() == KGE_EVENT(_Ty);
     }
 };
@@ -103,7 +97,7 @@ inline const EventType& Event::GetType() const
 template <typename _Ty>
 inline bool Event::IsType() const
 {
-    static_assert(kiwano::IsBaseOfEvent<_Ty>::value, "_Ty is not an event type.");
+    static_assert(std::is_base_of<Event, _Ty>::value, "_Ty is not an event type.");
     return IsSameEventType<_Ty>()(this);
 }
 

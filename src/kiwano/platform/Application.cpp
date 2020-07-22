@@ -52,7 +52,7 @@ void Application::Run(RunnerPtr runner)
     running_   = true;
     is_paused_ = false;
     runner_    = runner;
-    timer_     = Timer::Create();
+    timer_     = MakePtr<Timer>();
 
     // Initialize runner
     runner->InitSettings();

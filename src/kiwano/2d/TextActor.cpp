@@ -25,24 +25,17 @@
 namespace kiwano
 {
 
-TextActorPtr TextActor::Create(const String& text)
+TextActor::TextActor() {}
+
+TextActor::TextActor(const String& text)
+    : TextActor(text, TextStyle())
 {
-    return TextActor::Create(text, TextStyle());
 }
 
-TextActorPtr TextActor::Create(const String& text, const TextStyle& style)
+TextActor::TextActor(const String& text, const TextStyle& style)
 {
-    TextActorPtr ptr = new (autogc) TextActor;
-    if (ptr)
-    {
-        ptr->SetStyle(style);
-        ptr->SetText(text);
-    }
-    return ptr;
-}
-
-TextActor::TextActor()
-{
+    SetStyle(style);
+    SetText(text);
 }
 
 TextActor::~TextActor() {}
@@ -65,7 +58,7 @@ void TextActor::SetText(const String& text)
 {
     if (!layout_)
     {
-        layout_ = TextLayout::Create();
+        layout_ = MakePtr<TextLayout>();
     }
     layout_->Reset(text, style_);
 }
@@ -215,7 +208,7 @@ void TextActor::SetFillColor(const Color& color)
     }
     else
     {
-        SetFillBrush(Brush::Create(color));
+        SetFillBrush(MakePtr<Brush>(color));
     }
 }
 
@@ -227,7 +220,7 @@ void TextActor::SetOutlineColor(const Color& outline_color)
     }
     else
     {
-        SetFillBrush(Brush::Create(outline_color));
+        SetFillBrush(MakePtr<Brush>(outline_color));
     }
 }
 

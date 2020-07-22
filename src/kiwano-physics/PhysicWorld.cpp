@@ -31,11 +31,11 @@ class PhysicWorld::DebugDrawer : public b2Draw
 public:
     DebugDrawer(const Size& size)
     {
-        canvas_ = Canvas::Create(size);
+        canvas_ = MakePtr<Canvas>(size);
         ctx_    = canvas_->GetContext2D();
 
-        fill_brush_ = Brush::Create(Color::White);
-        line_brush_ = Brush::Create(Color::White);
+        fill_brush_ = MakePtr<Brush>(Color::White);
+        line_brush_ = MakePtr<Brush>(Color::White);
 
         b2Draw::SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
     }
@@ -211,20 +211,10 @@ public:
     }
 };
 
-PhysicWorldPtr PhysicWorld::Create()
+PhysicWorld::PhysicWorld(const Vec2& gravity)
+    : PhysicWorld()
 {
-    PhysicWorldPtr ptr = new (autogc) PhysicWorld;
-    return ptr;
-}
-
-PhysicWorldPtr PhysicWorld::Create(const Vec2& gravity)
-{
-    PhysicWorldPtr ptr = new (autogc) PhysicWorld;
-    if (ptr)
-    {
-        ptr->SetGravity(gravity);
-    }
-    return ptr;
+    SetGravity(gravity);
 }
 
 PhysicWorld::PhysicWorld()

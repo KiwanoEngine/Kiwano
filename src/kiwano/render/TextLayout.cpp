@@ -28,26 +28,16 @@
 namespace kiwano
 {
 
-TextLayoutPtr TextLayout::Create()
-{
-    TextLayoutPtr ptr = new (autogc) TextLayout;
-    return ptr;
-}
-
-TextLayoutPtr TextLayout::Create(const String& content, const TextStyle& style)
-{
-    TextLayoutPtr ptr = new (autogc) TextLayout;
-    if (ptr)
-    {
-        ptr->Reset(content, style);
-    }
-    return ptr;
-}
-
 TextLayout::TextLayout()
     : dirty_flag_(DirtyFlag::Clean)
     , line_count_(0)
 {
+}
+
+TextLayout::TextLayout(const String& content, const TextStyle& style)
+    : TextLayout()
+{
+    Reset(content, style);
 }
 
 void TextLayout::Reset(const String& content, const TextStyle& style)

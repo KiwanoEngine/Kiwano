@@ -24,29 +24,6 @@
 namespace kiwano
 {
 
-EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
-{
-    EventListenerPtr ptr = new (autogc) EventListener;
-    if (ptr)
-    {
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
-}
-
-EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
-{
-    EventListenerPtr ptr = new (autogc) EventListener;
-    if (ptr)
-    {
-        ptr->SetName(name);
-        ptr->SetEventType(type);
-        ptr->SetCallback(callback);
-    }
-    return ptr;
-}
-
 EventListener::EventListener()
     : type_()
     , callback_()
@@ -54,6 +31,19 @@ EventListener::EventListener()
     , removeable_(false)
     , swallow_(false)
 {
+}
+
+EventListener::EventListener(EventType type, const Callback& callback)
+    : EventListener()
+{
+    this->SetEventType(type);
+    this->SetCallback(callback);
+}
+
+EventListener::EventListener(const String& name, EventType type, const Callback& callback)
+    : EventListener(type, callback)
+{
+    this->SetName(name);
 }
 
 EventListener::~EventListener() {}

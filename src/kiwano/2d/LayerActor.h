@@ -39,10 +39,6 @@ KGE_DECLARE_SMART_PTR(LayerActor);
 class KGE_API LayerActor : public Actor
 {
 public:
-    /// \~chinese
-    /// @brief ´´½¨Í¼²ã
-    static LayerActorPtr Create();
-
     LayerActor();
 
     virtual ~LayerActor();

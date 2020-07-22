@@ -94,17 +94,11 @@ public:
     }
 };
 
-ConfigIniPtr ConfigIni::Create(const String& file_path)
+ConfigIni::ConfigIni() {}
+
+ConfigIni::ConfigIni(const String& file_path)
 {
-    ConfigIniPtr ptr = new (autogc) ConfigIni;
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-        {
-            return nullptr;
-        }
-    }
-    return ptr;
+    Load(file_path);
 }
 
 bool ConfigIni::Load(const String& file_path)

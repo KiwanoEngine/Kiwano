@@ -194,10 +194,8 @@ std::ostream& ConsoleColorBrush(std::ostream& os)
     return os;
 }
 
-LogProviderPtr ConsoleLogProvider::Create()
+ConsoleLogProvider::ConsoleLogProvider()
 {
-    LogProviderPtr ptr = new ConsoleLogProvider;
-    return ptr;
 }
 
 ConsoleLogProvider::~ConsoleLogProvider()
@@ -242,14 +240,9 @@ ConsoleLogProvider::ConsoleColor ConsoleLogProvider::GetColor(LogLevel level)
     return ConsoleColorBrush<0>;
 }
 
-LogProviderPtr FileLogProvider::Create(const String& filepath, std::ios_base::openmode mode)
+FileLogProvider::FileLogProvider(const String& filepath, std::ios_base::openmode mode)
 {
-    RefPtr<FileLogProvider> ptr = new FileLogProvider;
-    if (ptr)
-    {
-        ptr->ofs_.open(filepath, mode);
-    }
-    return ptr;
+    ofs_.open(filepath, mode);
 }
 
 FileLogProvider::~FileLogProvider()
@@ -500,10 +493,10 @@ Logger::Logger()
     , buffer_(1024)
     , stream_(&buffer_)
 {
-    LogFormaterPtr formater = new TextFormater;
+    LogFormaterPtr formater = MakePtr<TextFormater>();
     SetFormater(formater);
 
-    LogProviderPtr provider = ConsoleLogProvider::Create();
+    LogProviderPtr provider = MakePtr<ConsoleLogProvider>();
     AddProvider(provider);
 }
 

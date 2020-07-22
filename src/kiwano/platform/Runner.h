@@ -62,19 +62,12 @@ struct Settings
 class KGE_API Runner : public ObjectBase
 {
 public:
-    /// \~chinese
-    /// @brief 创建程序运行器
-    /// @param main_window 主窗口
-    static RunnerPtr Create(Settings settings);
-
-    /// \~chinese
-    /// @brief 创建程序运行器
-    /// @param main_window 主窗口
-    /// @param on_ready 应用程序初始化完成后执行的回调函数
-    /// @param on_destroy 应用程序销毁时执行的回调函数
-    static RunnerPtr Create(Settings settings, Function<void()> on_ready, Function<void()> on_destroy = nullptr);
-
     Runner();
+
+    /// \~chinese
+    /// @brief 创建程序运行器
+    /// @param main_window 主窗口
+    Runner(Settings settings);
 
     virtual ~Runner();
 

@@ -26,39 +26,31 @@ namespace kiwano
 
 ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float start, float end)
 {
-    SetEntity(ActionWalkEntity::Create(duration, path, rotating, start, end));
+    SetEntity(MakePtr<ActionWalkEntity>(duration, path, rotating, start, end));
 }
 
-ActionWalkEntityPtr ActionWalkEntity::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
+ActionWalkEntity::ActionWalkEntity(Duration duration, ShapePtr path, bool rotating, float start, float end)
+    : ActionTweenEntity(duration)
+    , start_(start)
+    , end_(end)
+    , rotating_(rotating)
+    , length_(0.f)
+    , path_(path)
 {
-    ActionWalkEntityPtr ptr = new (autogc) ActionWalkEntity;
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetPath(path);
-        ptr->SetRotating(rotating);
-        ptr->SetStartValue(start);
-        ptr->SetEndValue(end);
-    }
+}
+
+ActionWalkEntity* ActionWalkEntity::Clone() const
+{
+    auto ptr = new (autogc) ActionWalkEntity(GetDuration(), path_, rotating_, start_, end_);
+    DoClone(ptr);
     return ptr;
 }
 
-ActionWalkEntity::ActionWalkEntity()
-    : start_(0.0f)
-    , end_(1.0f)
-    , rotating_(false)
-    , length_(0.f)
+ActionWalkEntity* ActionWalkEntity::Reverse() const
 {
-}
-
-ActionEntityPtr ActionWalkEntity::Clone() const
-{
-    return DoClone(ActionWalkEntity::Create(GetDuration(), path_, rotating_, start_, end_));
-}
-
-ActionEntityPtr ActionWalkEntity::Reverse() const
-{
-    return DoClone(ActionWalkEntity::Create(GetDuration(), path_, rotating_, end_, start_));
+    auto ptr = new (autogc) ActionWalkEntity(GetDuration(), path_, rotating_, end_, start_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionWalkEntity::Init(Actor* target)

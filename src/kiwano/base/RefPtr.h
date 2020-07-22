@@ -19,30 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <type_traits>
-#include <kiwano/core/Common.h>
+#include <kiwano/base/RefObject.h>
 #include <kiwano/core/RefBasePtr.hpp>
-#include <Unknwnbase.h>
 
 namespace kiwano
 {
-struct ComPtrProxy
+
+/// \~chinese
+/// @brief 默认的智能指针引用计数代理
+struct DefaultRefPtrRefProxy
 {
-    static inline void Retain(IUnknown* ptr)
+    static inline void Retain(RefObject* ptr)
     {
         if (ptr)
-            ptr->AddRef();
+            ptr->Retain();
     }
 
-    static inline void Release(IUnknown* ptr)
+    static inline void Release(RefObject* ptr)
     {
         if (ptr)
             ptr->Release();
     }
 };
 
-// ComPtr<> is a smart pointer for COM
-template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = RefBasePtr<_Ty, ComPtrProxy>;
+/// \~chinese
+/// @brief 引用计数对象智能指针
+template <typename _Ty>
+using RefPtr = RefBasePtr<_Ty, DefaultRefPtrRefProxy>;
+
+/// \~chinese
+/// @brief 构造引用计数对象智能指针
+template <typename _Ty, typename... _Args>
+inline RefPtr<_Ty> MakePtr(_Args&&... args)
+{
+    static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
+
+    RefPtr<_Ty> ptr;
+
+    _Ty** pptr = ptr.GetAddressOfAndRelease();
+    (*pptr)    = new _Ty(std::forward<_Args>(args)...);
+    return ptr;
+}
+
+/// \~chinese
+/// @brief 构造引用计数对象智能指针
+template <typename _Ty>
+inline RefPtr<_Ty> MakePtr(_Ty* ptr)
+{
+    static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
+    return RefPtr<_Ty>(ptr);
+}
 
 }  // namespace kiwano
+
+#ifndef KGE_DECLARE_SMART_PTR
+#define KGE_DECLARE_SMART_PTR(CLASS) \
+    class CLASS;                     \
+    typedef ::kiwano::RefPtr<CLASS> CLASS##Ptr;
+#endif

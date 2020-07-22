@@ -29,7 +29,7 @@ namespace physics
 
 FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& offset)
 {
-    FixturePtr ptr = new (autogc) Fixture;
+    FixturePtr ptr = MakePtr<Fixture>();
     if (ptr)
     {
         auto shape      = std::make_unique<b2CircleShape>();
@@ -44,7 +44,7 @@ FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& 
 
 FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point& offset, float rotation)
 {
-    FixturePtr ptr = new (autogc) Fixture;
+    FixturePtr ptr = MakePtr<Fixture>();
     if (ptr)
     {
         b2Vec2 b2size   = global::LocalToWorld(size);
@@ -61,7 +61,7 @@ FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point
 
 FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& vertexs)
 {
-    FixturePtr ptr = new (autogc) Fixture;
+    FixturePtr ptr = MakePtr<Fixture>();
     if (ptr)
     {
         Vector<b2Vec2> b2vertexs;
@@ -82,7 +82,7 @@ FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& verte
 
 FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point& p2)
 {
-    FixturePtr ptr = new (autogc) Fixture;
+    FixturePtr ptr = MakePtr<Fixture>();
     if (ptr)
     {
         b2Vec2 start = global::LocalToWorld(p1);
@@ -99,7 +99,7 @@ FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point&
 
 FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertices, bool loop)
 {
-    FixturePtr ptr = new (autogc) Fixture;
+    FixturePtr ptr = MakePtr<Fixture>();
     if (ptr)
     {
         Vector<b2Vec2> b2vertices;

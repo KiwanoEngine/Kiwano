@@ -33,10 +33,6 @@ class KGE_API Timer
     : public ObjectBase
 {
 public:
-    /// \~chinese
-    /// @brief 创建计时器
-    static TimerPtr Create();
-
     Timer();
 
     virtual ~Timer();

@@ -20,9 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/core/IntrusiveList.h>
+#include <kiwano/base/ObjectBase.h>
 #include <kiwano/event/Events.h>
 
 namespace kiwano
@@ -47,43 +46,20 @@ public:
     /// @brief 监听器回调函数
     using Callback = Function<void(Event*)>;
 
-    /// \~chinese
-    /// @brief 创建监听器
-    /// @param type 监听的事件类型
-    /// @param callback 回调函数
-    static EventListenerPtr Create(EventType type, const Callback& callback);
-
-    /// \~chinese
-    /// @brief 创建监听器
-    /// @param name 监听器名称
-    /// @param type 监听的事件类型
-    /// @param callback 回调函数
-    static EventListenerPtr Create(const String& name, EventType type, const Callback& callback);
-
-    /// \~chinese
-    /// @brief 创建监听器
-    /// @tparam _EventTy 事件类型
-    /// @param callback 回调函数
-    template <typename _EventTy>
-    static inline EventListenerPtr Create(const Callback& callback)
-    {
-        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
-        return EventListener::Create(KGE_EVENT(_EventTy), callback);
-    }
-
-    /// \~chinese
-    /// @brief 创建监听器
-    /// @tparam _EventTy 事件类型
-    /// @param name 监听器名称
-    /// @param callback 回调函数
-    template <typename _EventTy>
-    static inline EventListenerPtr Create(const String& name, const Callback& callback)
-    {
-        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
-        return EventListener::Create(name, KGE_EVENT(_EventTy), callback);
-    }
-
     EventListener();
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    EventListener(EventType type, const Callback& callback);
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @param name 监听器名称
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    EventListener(const String& name, EventType type, const Callback& callback);
 
     virtual ~EventListener();
 
@@ -142,7 +118,7 @@ public:
     template <typename _EventTy>
     inline void SetEventType()
     {
-        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
+        static_assert(std::is_base_of<Event, _EventTy>::value, "_EventTy is not an event type.");
         SetEventType(KGE_EVENT(_EventTy));
     }
 

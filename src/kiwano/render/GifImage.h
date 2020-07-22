@@ -40,11 +40,11 @@ class KGE_API GifImage : public NativeObject
 public:
     /// \~chinese
     /// @brief 创建GIF图片
-    static GifImagePtr Create(const String& file_path);
+    GifImage(const String& file_path);
 
     /// \~chinese
     /// @brief 创建GIF图片
-    static GifImagePtr Create(const Resource& res);
+    GifImage(const Resource& res);
 
     GifImage();
 

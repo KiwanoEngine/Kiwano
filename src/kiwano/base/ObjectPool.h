@@ -37,8 +37,6 @@ class KGE_API ObjectPool : public Singleton<ObjectPool>
 public:
     ObjectPool();
 
-    virtual ~ObjectPool();
-
     /**
      * \~chinese
      * @brief 添加对象到内存池

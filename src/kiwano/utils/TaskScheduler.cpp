@@ -50,8 +50,31 @@ Task* TaskScheduler::AddTask(TaskPtr task)
         task->Reset();
         tasks_.PushBack(task);
     }
-
     return task.Get();
+}
+
+Task* TaskScheduler::AddTask(const Task::Callback& cb, TickerPtr ticker)
+{
+    auto task = MakePtr<Task>(cb, ticker);
+    return AddTask(task);
+}
+
+Task* TaskScheduler::AddTask(const String& name, const Task::Callback& cb, TickerPtr ticker)
+{
+    auto task = MakePtr<Task>(name, cb, ticker);
+    return AddTask(task);
+}
+
+Task* TaskScheduler::AddTask(const Task::Callback& cb, Duration interval, int times)
+{
+    auto task = MakePtr<Task>(cb, interval, times);
+    return AddTask(task);
+}
+
+Task* TaskScheduler::AddTask(const String& name, const Task::Callback& cb, Duration interval, int times)
+{
+    auto task = MakePtr<Task>(name, cb, interval, times);
+    return AddTask(task);
 }
 
 void TaskScheduler::StopTasks(const String& name)

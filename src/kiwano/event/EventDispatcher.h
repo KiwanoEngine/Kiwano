@@ -59,7 +59,7 @@ public:
     template <typename _EventTy>
     EventListener* AddListener(EventListener::Callback callback)
     {
-        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
+        static_assert(std::is_base_of<Event, _EventTy>::value, "_EventTy is not an event type.");
         return AddListener(KGE_EVENT(_EventTy), callback);
     }
 
@@ -71,7 +71,7 @@ public:
     template <typename _EventTy>
     EventListener* AddListener(const String& name, EventListener::Callback callback)
     {
-        static_assert(kiwano::IsBaseOfEvent<_EventTy>::value, "_EventTy is not an event type.");
+        static_assert(std::is_base_of<Event, _EventTy>::value, "_EventTy is not an event type.");
         return AddListener(name, KGE_EVENT(_EventTy), callback);
     }
 

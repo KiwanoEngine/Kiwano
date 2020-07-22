@@ -25,26 +25,16 @@
 namespace kiwano
 {
 
-GifImagePtr GifImage::Create(const String& file_path)
+GifImage::GifImage(const String& file_path)
+    : GifImage()
 {
-    GifImagePtr ptr = new (autogc) GifImage;
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-            return nullptr;
-    }
-    return ptr;
+    Load(file_path);
 }
 
-GifImagePtr GifImage::Create(const Resource& res)
+GifImage::GifImage(const Resource& res)
+    : GifImage()
 {
-    GifImagePtr ptr = new (autogc) GifImage;
-    if (ptr)
-    {
-        if (!ptr->Load(res))
-            return nullptr;
-    }
-    return ptr;
+    Load(res);
 }
 
 GifImage::GifImage()

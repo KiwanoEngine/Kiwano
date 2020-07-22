@@ -25,27 +25,24 @@ namespace kiwano
 
 ActionDelay::ActionDelay(Duration delay)
 {
-    SetEntity(ActionDelayEntity::Create(delay));
+    SetEntity(MakePtr<ActionDelayEntity>(delay));
 }
 
-ActionDelayEntityPtr ActionDelayEntity::Create(Duration delay)
+ActionDelayEntity::ActionDelayEntity(Duration delay)
 {
-    ActionDelayEntityPtr ptr = new (autogc) ActionDelayEntity;
-    if (ptr)
-    {
-        ptr->SetDelay(delay);
-    }
+    this->SetDelay(delay);
+}
+
+ActionDelayEntity* ActionDelayEntity::Clone() const
+{
+    auto ptr = new (autogc) ActionDelayEntity(GetDelay());
+    DoClone(ptr);
     return ptr;
 }
 
-ActionEntityPtr ActionDelayEntity::Clone() const
+ActionDelayEntity* ActionDelayEntity::Reverse() const
 {
-    return DoClone(ActionDelayEntity::Create(GetDelay()));
-}
-
-ActionEntityPtr ActionDelayEntity::Reverse() const
-{
-    return DoClone(ActionDelayEntity::Create(GetDelay()));
+    return Clone();
 }
 
 }  // namespace kiwano

@@ -25,12 +25,6 @@ namespace kiwano
 namespace audio
 {
 
-SoundPlayerPtr SoundPlayer::Create()
-{
-    SoundPlayerPtr ptr = new (autogc) SoundPlayer;
-    return ptr;
-}
-
 SoundPlayer::SoundPlayer()
     : volume_(1.f)
 {
@@ -47,7 +41,7 @@ size_t SoundPlayer::Load(const String& file_path)
     if (sound_cache_.end() != sound_cache_.find(hash))
         return hash;
 
-    SoundPtr sound = new (autogc) Sound;
+    SoundPtr sound = MakePtr<Sound>();
     if (sound)
     {
         if (sound->Load(file_path))
@@ -66,7 +60,7 @@ size_t SoundPlayer::Load(const Resource& res)
     if (sound_cache_.end() != sound_cache_.find(hash_code))
         return hash_code;
 
-    SoundPtr sound = new (autogc) Sound;
+    SoundPtr sound = MakePtr<Sound>();
 
     if (sound)
     {

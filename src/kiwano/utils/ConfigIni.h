@@ -33,17 +33,19 @@ class KGE_API ConfigIni : public ObjectBase
 {
 public:
     /// \~chinese
-    /// @brief 加载 ini 文件
-    /// @param file_path 文件路径
-    static ConfigIniPtr Create(const String& file_path);
-
-    /// \~chinese
     /// @brief 键值字典
     typedef UnorderedMap<String, String> ValueMap;
 
     /// \~chinese
     /// @brief Section字典
     typedef UnorderedMap<String, ValueMap> SectionMap;
+
+    ConfigIni();
+
+    /// \~chinese
+    /// @brief 加载 ini 文件
+    /// @param file_path 文件路径
+    ConfigIni(const String& file_path);
 
     /// \~chinese
     /// @brief 加载 ini 文件
