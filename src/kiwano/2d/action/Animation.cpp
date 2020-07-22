@@ -32,7 +32,7 @@ Animation::Animation(Duration dur, FrameSequencePtr frame_seq)
 
 AnimationEntityPtr AnimationEntity::Create(Duration dur, FrameSequencePtr frame_seq)
 {
-    AnimationEntityPtr ptr = memory::New<AnimationEntity>();
+    AnimationEntityPtr ptr = new (autogc) AnimationEntity;
     if (ptr)
     {
         ptr->SetDuration(dur);

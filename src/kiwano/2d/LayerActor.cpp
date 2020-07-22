@@ -27,7 +27,7 @@ namespace kiwano
 
 LayerActorPtr LayerActor::Create()
 {
-    LayerActorPtr ptr = memory::New<LayerActor>();
+    LayerActorPtr ptr = new (autogc) LayerActor;
     return ptr;
 }
 

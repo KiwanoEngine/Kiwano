@@ -24,17 +24,21 @@
 
 namespace kiwano
 {
+
+struct autogc_t
+{
+    autogc_t() = default;
+};
+
+extern autogc_t const autogc;
+
 /**
  * \~chinese
  * @brief 引用计数器
  */
-class KGE_API RefCounter : protected Noncopyable
+class KGE_API RefObject : protected Noncopyable
 {
 public:
-    RefCounter();
-
-    virtual ~RefCounter();
-
     /// \~chinese
     /// @brief 增加引用计数
     void Retain();
@@ -44,16 +48,33 @@ public:
     void Release();
 
     /// \~chinese
+    /// @brief 自动释放
+    void AutoRelease();
+
+    /// \~chinese
     /// @brief 获取引用计数
     uint32_t GetRefCount() const;
+
+    void* operator new(std::size_t size);
+
+    void* operator new(std::size_t size, autogc_t const&);
+
+    void operator delete(void* ptr);
+
+    void operator delete(void* ptr, autogc_t const&);
+
+protected:
+    RefObject();
+
+    virtual ~RefObject();
 
 private:
     std::atomic<uint32_t> ref_count_;
 };
 
-inline uint32_t RefCounter::GetRefCount() const
+inline uint32_t RefObject::GetRefCount() const
 {
-    return ref_count_;
+    return ref_count_.load();
 }
 
 }  // namespace kiwano

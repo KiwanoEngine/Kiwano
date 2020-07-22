@@ -18,29 +18,63 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/RefCounter.h>
+#include <kiwano/base/RefObject.h>
+#include <kiwano/base/ObjectPool.h>
 
 namespace kiwano
 {
-RefCounter::RefCounter()
-    : ref_count_(0)
+
+autogc_t const autogc;
+
+RefObject::RefObject()
+    : ref_count_(1)
 {
 }
 
-RefCounter::~RefCounter() {}
+RefObject::~RefObject() {}
 
-void RefCounter::Retain()
+void RefObject::Retain()
 {
     ++ref_count_;
 }
 
-void RefCounter::Release()
+void RefObject::Release()
 {
     --ref_count_;
     if (ref_count_ == 0)
     {
-        memory::Delete(this);
+        delete this;
     }
+}
+
+void RefObject::AutoRelease()
+{
+    ObjectPool::GetInstance().AddObject(this);
+}
+
+void* RefObject::operator new(std::size_t size)
+{
+    return memory::Alloc(size);
+}
+
+void* RefObject::operator new(std::size_t size, autogc_t const&)
+{
+    void* ptr = memory::Alloc(size);
+    if (ptr)
+    {
+        ObjectPool::GetInstance().AddObject((ObjectBase*)ptr);
+    }
+    return ptr;
+}
+
+void RefObject::operator delete(void* ptr)
+{
+    memory::Free(ptr);
+}
+
+void RefObject::operator delete(void* ptr, autogc_t const&)
+{
+    memory::Free(ptr);
 }
 
 }  // namespace kiwano

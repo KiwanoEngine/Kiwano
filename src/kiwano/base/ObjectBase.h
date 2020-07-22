@@ -22,8 +22,8 @@
 #include <kiwano/macros.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Serializable.h>
-#include <kiwano/core/SmartPtr.hpp>
-#include <kiwano/base/RefCounter.h>
+#include <kiwano/core/RefPtr.hpp>
+#include <kiwano/base/RefObject.h>
 
 namespace kiwano
 {
@@ -34,7 +34,7 @@ KGE_DECLARE_SMART_PTR(ObjectBase);
  * @brief 基础对象
  */
 class KGE_API ObjectBase
-    : public RefCounter
+    : public RefObject
     , public Serializable
 {
 public:
@@ -43,10 +43,6 @@ public:
     ObjectBase();
 
     virtual ~ObjectBase();
-
-    /// \~chinese
-    /// @brief 自动释放
-    void AutoRelease();
 
     /// \~chinese
     /// @brief 设置对象名

@@ -21,6 +21,7 @@
 #include <kiwano/platform/Application.h>
 #include <kiwano/core/Defer.h>
 #include <kiwano/base/Director.h>
+#include <kiwano/base/ObjectPool.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/ResourceCache.h>
@@ -82,6 +83,9 @@ void Application::Run(RunnerPtr runner)
         // Execute main loop
         if (!runner->MainLoop(timer_->GetDeltaTime()))
             running_ = false;
+
+        // Clear objects
+        ObjectPool::GetInstance().Clear();
     }
 }
 
@@ -133,6 +137,9 @@ void Application::Destroy()
     // Clear device resources
     TextureCache::GetInstance().Clear();
     Renderer::GetInstance().Destroy();
+
+    // Clear objects
+    ObjectPool::GetInstance().Clear();
 }
 
 void Application::Use(Module& module)

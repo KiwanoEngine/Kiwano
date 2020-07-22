@@ -26,8 +26,7 @@ namespace kiwano
 
 CanvasPtr Canvas::Create(const Size& size)
 {
-    void*     mem = memory::Alloc(sizeof(Canvas));
-    CanvasPtr ptr = ::new (mem) Canvas;
+    CanvasPtr ptr = new (autogc) Canvas;
     if (ptr)
     {
         try
@@ -59,7 +58,7 @@ void Canvas::OnRender(RenderContext& ctx)
 
 void Canvas::ResizeAndClear(Size size)
 {
-    texture_cached_ = memory::New<Texture>();
+    texture_cached_ = new (autogc) Texture;
     render_ctx_     = RenderContext::Create(*texture_cached_, size);
 
     SetSize(render_ctx_->GetSize());

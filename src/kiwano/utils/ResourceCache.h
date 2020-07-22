@@ -68,7 +68,7 @@ public:
     /// @param id 对象ID
     /// @return 指定对象类型的指针
     template <typename _Ty>
-    SmartPtr<_Ty> Get(const String& id) const
+    RefPtr<_Ty> Get(const String& id) const
     {
         return dynamic_cast<_Ty*>(Get(id).Get());
     }

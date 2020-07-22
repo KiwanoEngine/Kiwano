@@ -30,7 +30,7 @@ ActionDelay::ActionDelay(Duration delay)
 
 ActionDelayEntityPtr ActionDelayEntity::Create(Duration delay)
 {
-    ActionDelayEntityPtr ptr = memory::New<ActionDelayEntity>();
+    ActionDelayEntityPtr ptr = new (autogc) ActionDelayEntity;
     if (ptr)
     {
         ptr->SetDelay(delay);

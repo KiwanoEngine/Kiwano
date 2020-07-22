@@ -65,9 +65,6 @@
     <ClInclude Include="..\..\src\kiwano\math\Vec2.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\SmartPtr.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
       <Filter>2d</Filter>
@@ -303,9 +300,6 @@
     <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\RefCounter.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\event\Event.h">
       <Filter>event</Filter>
     </ClInclude>
@@ -353,6 +347,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\action\Action.h">
       <Filter>2d\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RefPtr.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\base\RefObject.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +539,6 @@
     <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\RefCounter.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\Event.cpp">
       <Filter>event</Filter>
     </ClCompile>
@@ -580,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp">
       <Filter>2d\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\base\RefObject.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

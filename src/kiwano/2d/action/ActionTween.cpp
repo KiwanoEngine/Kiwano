@@ -145,7 +145,7 @@ ActionEntityPtr ActionTweenEntity::DoClone(ActionTweenEntityPtr to) const
 
 ActionMoveByEntityPtr ActionMoveByEntity::Create(Duration duration, const Vec2& displacement)
 {
-    ActionMoveByEntityPtr ptr = memory::New<ActionMoveByEntity>();
+    ActionMoveByEntityPtr ptr = new (autogc) ActionMoveByEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -187,7 +187,7 @@ ActionEntityPtr ActionMoveByEntity::Reverse() const
 
 ActionMoveToEntityPtr ActionMoveToEntity::Create(Duration duration, const Point& distination)
 {
-    ActionMoveToEntityPtr ptr = memory::New<ActionMoveToEntity>();
+    ActionMoveToEntityPtr ptr = new (autogc) ActionMoveToEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -215,7 +215,7 @@ void ActionMoveToEntity::Init(Actor* target)
 
 ActionJumpByEntityPtr ActionJumpByEntity::Create(Duration duration, const Vec2& displacement, float height, int count)
 {
-    ActionJumpByEntityPtr ptr = memory::New<ActionJumpByEntity>();
+    ActionJumpByEntityPtr ptr = new (autogc) ActionJumpByEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -268,7 +268,7 @@ void ActionJumpByEntity::UpdateTween(Actor* target, float percent)
 
 ActionJumpToEntityPtr ActionJumpToEntity::Create(Duration duration, const Point& distination, float height, int count)
 {
-    ActionJumpToEntityPtr ptr = memory::New<ActionJumpToEntity>();
+    ActionJumpToEntityPtr ptr = new (autogc) ActionJumpToEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -298,7 +298,7 @@ void ActionJumpToEntity::Init(Actor* target)
 
 ActionScaleByEntityPtr ActionScaleByEntity::Create(Duration duration, float scale_x, float scale_y)
 {
-    ActionScaleByEntityPtr ptr = memory::New<ActionScaleByEntity>();
+    ActionScaleByEntityPtr ptr = new (autogc) ActionScaleByEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -342,7 +342,7 @@ ActionEntityPtr ActionScaleByEntity::Reverse() const
 
 ActionScaleToEntityPtr ActionScaleToEntity::Create(Duration duration, float scale_x, float scale_y)
 {
-    ActionScaleToEntityPtr ptr = memory::New<ActionScaleToEntity>();
+    ActionScaleToEntityPtr ptr = new (autogc) ActionScaleToEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -376,7 +376,7 @@ void ActionScaleToEntity::Init(Actor* target)
 
 ActionFadeToEntityPtr ActionFadeToEntity::Create(Duration duration, float opacity)
 {
-    ActionFadeToEntityPtr ptr = memory::New<ActionFadeToEntity>();
+    ActionFadeToEntityPtr ptr = new (autogc) ActionFadeToEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -417,7 +417,7 @@ ActionEntityPtr ActionFadeToEntity::Clone() const
 
 ActionRotateByEntityPtr ActionRotateByEntity::Create(Duration duration, float rotation)
 {
-    ActionRotateByEntityPtr ptr = memory::New<ActionRotateByEntity>();
+    ActionRotateByEntityPtr ptr = new (autogc) ActionRotateByEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -461,7 +461,7 @@ ActionEntityPtr ActionRotateByEntity::Reverse() const
 
 ActionRotateToEntityPtr ActionRotateToEntity::Create(Duration duration, float rotation)
 {
-    ActionRotateToEntityPtr ptr = memory::New<ActionRotateToEntity>();
+    ActionRotateToEntityPtr ptr = new (autogc) ActionRotateToEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);
@@ -492,7 +492,7 @@ void ActionRotateToEntity::Init(Actor* target)
 
 ActionCustomEntityPtr ActionCustomEntity::Create(Duration duration, ActionCustom::TweenFunc tween_func)
 {
-    ActionCustomEntityPtr ptr = memory::New<ActionCustomEntity>();
+    ActionCustomEntityPtr ptr = new (autogc) ActionCustomEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);

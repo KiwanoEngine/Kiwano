@@ -32,7 +32,7 @@ ActionGroup::ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel)
 
 ActionGroupEntityPtr ActionGroupEntity::Create(const Vector<ActionEntityPtr>& actions, bool parallel)
 {
-    ActionGroupEntityPtr ptr = memory::New<ActionGroupEntity>();
+    ActionGroupEntityPtr ptr = new (autogc) ActionGroupEntity;
     if (ptr)
     {
         ptr->parallel_ = parallel;

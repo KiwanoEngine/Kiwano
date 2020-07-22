@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/core/IntrusiveList.h>
 #include <kiwano/event/Events.h>
 

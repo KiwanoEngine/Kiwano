@@ -26,7 +26,7 @@ namespace kiwano
 
 TimerPtr Timer::Create()
 {
-    TimerPtr ptr = memory::New<Timer>();
+    TimerPtr ptr = new (autogc) Timer;
     return ptr;
 }
 

@@ -32,7 +32,7 @@ TextActorPtr TextActor::Create(const String& text)
 
 TextActorPtr TextActor::Create(const String& text, const TextStyle& style)
 {
-    TextActorPtr ptr = memory::New<TextActor>();
+    TextActorPtr ptr = new (autogc) TextActor;
     if (ptr)
     {
         ptr->SetStyle(style);

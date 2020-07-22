@@ -26,7 +26,7 @@ namespace kiwano
 
 EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
+    EventListenerPtr ptr = new (autogc) EventListener;
     if (ptr)
     {
         ptr->SetEventType(type);
@@ -37,7 +37,7 @@ EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
 
 EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
 {
-    EventListenerPtr ptr = memory::New<EventListener>();
+    EventListenerPtr ptr = new (autogc) EventListener;
     if (ptr)
     {
         ptr->SetName(name);

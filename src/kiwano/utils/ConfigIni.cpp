@@ -96,7 +96,7 @@ public:
 
 ConfigIniPtr ConfigIni::Create(const String& file_path)
 {
-    ConfigIniPtr ptr = memory::New<ConfigIni>();
+    ConfigIniPtr ptr = new (autogc) ConfigIni;
     if (ptr)
     {
         if (!ptr->Load(file_path))

@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/ObjectPool.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
 #include <typeinfo>
@@ -28,9 +27,11 @@ namespace kiwano
 {
 namespace
 {
+
 bool                tracing_leaks = false;
 Vector<ObjectBase*> tracing_objects;
 uint32_t            last_object_id = 0;
+
 }  // namespace
 
 ObjectBase::ObjectBase()
@@ -55,11 +56,6 @@ ObjectBase::~ObjectBase()
 #ifdef KGE_DEBUG
     ObjectBase::RemoveObjectFromTracingList(this);
 #endif
-}
-
-void ObjectBase::AutoRelease()
-{
-    ObjectPool::GetInstance().AddObject(this);
 }
 
 const Any& ObjectBase::GetUserData() const

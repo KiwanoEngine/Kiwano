@@ -30,8 +30,8 @@ namespace kiwano
 
 ShapeMakerPtr ShapeMaker::Create()
 {
-    ShapeMakerPtr maker = memory::New<ShapeMaker>();
-    return maker;
+    ShapeMakerPtr ptr = new (autogc) ShapeMaker;
+    return ptr;
 }
 
 ShapeMaker::ShapeMaker() {}

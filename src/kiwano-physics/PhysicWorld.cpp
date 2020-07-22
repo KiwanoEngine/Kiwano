@@ -213,13 +213,13 @@ public:
 
 PhysicWorldPtr PhysicWorld::Create()
 {
-    PhysicWorldPtr ptr = new (std::nothrow) PhysicWorld;
+    PhysicWorldPtr ptr = new (autogc) PhysicWorld;
     return ptr;
 }
 
 PhysicWorldPtr PhysicWorld::Create(const Vec2& gravity)
 {
-    PhysicWorldPtr ptr = new (std::nothrow) PhysicWorld;
+    PhysicWorldPtr ptr = new (autogc) PhysicWorld;
     if (ptr)
     {
         ptr->SetGravity(gravity);

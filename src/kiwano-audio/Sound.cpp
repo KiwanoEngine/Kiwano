@@ -29,7 +29,7 @@ namespace audio
 {
 SoundPtr Sound::Create(const String& file_path)
 {
-    SoundPtr ptr = new (std::nothrow) Sound;
+    SoundPtr ptr = new (autogc) Sound;
     if (ptr)
     {
         if (!ptr->Load(file_path))
@@ -40,7 +40,7 @@ SoundPtr Sound::Create(const String& file_path)
 
 SoundPtr Sound::Create(const Resource& res)
 {
-    SoundPtr ptr = new (std::nothrow) Sound;
+    SoundPtr ptr = new (autogc) Sound;
     if (ptr)
     {
         if (!ptr->Load(res))

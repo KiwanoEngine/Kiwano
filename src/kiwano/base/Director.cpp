@@ -99,7 +99,7 @@ void Director::ShowDebugInfo(bool show)
     if (show)
     {
         if (!debug_actor_)
-            debug_actor_ = memory::New<DebugActor>();
+            debug_actor_ = new (autogc) DebugActor;
     }
     else
     {

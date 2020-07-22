@@ -27,7 +27,7 @@ namespace kiwano
 
 ShapeActorPtr ShapeActor::Create(ShapePtr shape)
 {
-    ShapeActorPtr ptr = memory::New<ShapeActor>();
+    ShapeActorPtr ptr = new (autogc) ShapeActor;
     if (ptr)
     {
         ptr->SetShape(shape);
@@ -129,7 +129,7 @@ bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 
 LineActorPtr LineActor::Create(const Point& begin, const Point& end)
 {
-    LineActorPtr ptr = memory::New<LineActor>();
+    LineActorPtr ptr = new (autogc) LineActor;
     if (ptr)
     {
         ptr->SetLine(begin, end);
@@ -157,7 +157,7 @@ void LineActor::SetLine(const Point& begin, const Point& end)
 
 RectActorPtr RectActor::Create(const Size& size)
 {
-    RectActorPtr ptr = memory::New<RectActor>();
+    RectActorPtr ptr = new (autogc) RectActor;
     if (ptr)
     {
         ptr->SetRectSize(size);
@@ -184,7 +184,7 @@ void RectActor::SetRectSize(const Size& size)
 
 RoundedRectActorPtr RoundedRectActor::Create(const Size& size, const Vec2& radius)
 {
-    RoundedRectActorPtr ptr = memory::New<RoundedRectActor>();
+    RoundedRectActorPtr ptr = new (autogc) RoundedRectActor;
     if (ptr)
     {
         ptr->SetRoundedRect(size, radius);
@@ -222,7 +222,7 @@ void RoundedRectActor::SetRoundedRect(const Size& size, const Vec2& radius)
 
 CircleActorPtr CircleActor::Create(float radius)
 {
-    CircleActorPtr ptr = memory::New<CircleActor>();
+    CircleActorPtr ptr = new (autogc) CircleActor;
     if (ptr)
     {
         ptr->SetRadius(radius);
@@ -252,7 +252,7 @@ void CircleActor::SetRadius(float radius)
 
 EllipseActorPtr EllipseActor::Create(const Vec2& radius)
 {
-    EllipseActorPtr ptr = memory::New<EllipseActor>();
+    EllipseActorPtr ptr = new (autogc) EllipseActor;
     if (ptr)
     {
         ptr->SetRadius(radius);
@@ -279,7 +279,7 @@ void EllipseActor::SetRadius(const Vec2& radius)
 
 PolygonActorPtr PolygonActor::Create(const Vector<Point>& points)
 {
-    PolygonActorPtr ptr = memory::New<PolygonActor>();
+    PolygonActorPtr ptr = new (autogc) PolygonActor;
     if (ptr)
     {
         ptr->SetVertices(points);

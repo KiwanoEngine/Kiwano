@@ -27,7 +27,7 @@ namespace audio
 
 SoundPlayerPtr SoundPlayer::Create()
 {
-    SoundPlayerPtr ptr = new (std::nothrow) SoundPlayer;
+    SoundPlayerPtr ptr = new (autogc) SoundPlayer;
     return ptr;
 }
 
@@ -47,8 +47,7 @@ size_t SoundPlayer::Load(const String& file_path)
     if (sound_cache_.end() != sound_cache_.find(hash))
         return hash;
 
-    SoundPtr sound = new (std::nothrow) Sound;
-
+    SoundPtr sound = new (autogc) Sound;
     if (sound)
     {
         if (sound->Load(file_path))
@@ -67,7 +66,7 @@ size_t SoundPlayer::Load(const Resource& res)
     if (sound_cache_.end() != sound_cache_.find(hash_code))
         return hash_code;
 
-    SoundPtr sound = new (std::nothrow) Sound;
+    SoundPtr sound = new (autogc) Sound;
 
     if (sound)
     {

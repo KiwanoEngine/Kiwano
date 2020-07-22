@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/event/EventType.h>
 #include <kiwano/math/Math.h>
 
@@ -39,7 +39,7 @@ KGE_DECLARE_SMART_PTR(Event);
 
 /// \~chinese
 /// @brief ÊÂ¼þ
-class KGE_API Event : public RefCounter
+class KGE_API Event : public RefObject
 {
 public:
     /// \~chinese

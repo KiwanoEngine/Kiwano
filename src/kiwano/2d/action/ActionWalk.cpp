@@ -31,7 +31,7 @@ ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float st
 
 ActionWalkEntityPtr ActionWalkEntity::Create(Duration duration, ShapePtr path, bool rotating, float start, float end)
 {
-    ActionWalkEntityPtr ptr = memory::New<ActionWalkEntity>();
+    ActionWalkEntityPtr ptr = new (autogc) ActionWalkEntity;
     if (ptr)
     {
         ptr->SetDuration(duration);

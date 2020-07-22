@@ -27,13 +27,13 @@ namespace imgui
 
 ImGuiLayerPtr ImGuiLayer::Create()
 {
-    ImGuiLayerPtr ptr = new (std::nothrow) ImGuiLayer;
+    ImGuiLayerPtr ptr = new (autogc) ImGuiLayer;
     return ptr;
 }
 
 ImGuiLayerPtr ImGuiLayer::Create(const String& name, const ImGuiPipeline& item)
 {
-    ImGuiLayerPtr ptr = new (std::nothrow) ImGuiLayer;
+    ImGuiLayerPtr ptr = new (autogc) ImGuiLayer;
     if (ptr)
     {
         ptr->AddItem(name, item);

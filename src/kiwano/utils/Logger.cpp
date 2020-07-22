@@ -244,7 +244,7 @@ ConsoleLogProvider::ConsoleColor ConsoleLogProvider::GetColor(LogLevel level)
 
 LogProviderPtr FileLogProvider::Create(const String& filepath, std::ios_base::openmode mode)
 {
-    SmartPtr<FileLogProvider> ptr = new FileLogProvider;
+    RefPtr<FileLogProvider> ptr = new FileLogProvider;
     if (ptr)
     {
         ptr->ofs_.open(filepath, mode);

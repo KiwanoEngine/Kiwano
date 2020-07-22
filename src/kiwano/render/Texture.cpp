@@ -32,7 +32,7 @@ InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Line
 
 TexturePtr Texture::Create(const String& file_path)
 {
-    TexturePtr ptr = memory::New<Texture>();
+    TexturePtr ptr = new (autogc) Texture;
     if (ptr)
     {
         if (!ptr->Load(file_path))
@@ -43,7 +43,7 @@ TexturePtr Texture::Create(const String& file_path)
 
 TexturePtr Texture::Create(const Resource& res)
 {
-    TexturePtr ptr = memory::New<Texture>();
+    TexturePtr ptr = new (autogc) Texture;
     if (ptr)
     {
         if (!ptr->Load(res))

@@ -37,7 +37,7 @@ PhysicBodyPtr PhysicBody::Create(PhysicWorld* world, Type type)
 {
     KGE_ASSERT(world);
 
-    PhysicBodyPtr ptr = new (std::nothrow) PhysicBody;
+    PhysicBodyPtr ptr = new (autogc) PhysicBody;
     if (ptr)
     {
         ptr->SetType(type);

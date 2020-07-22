@@ -23,56 +23,35 @@
 namespace kiwano
 {
 
-List<ObjectPool*> ObjectPool::pools_;
-
-ObjectPool& ObjectPool::GetInstance()
-{
-    static ObjectPool instance;
-    return *pools_.back();
-}
-
 ObjectPool::ObjectPool()
 {
-    pools_.push_back(this);
 }
 
 ObjectPool::~ObjectPool()
 {
     Clear();
-
-    auto iter = std::find(pools_.begin(), pools_.end(), this);
-    if (iter != pools_.end())
-        pools_.erase(iter);
 }
 
-void ObjectPool::AddObject(ObjectBase* obj)
+void ObjectPool::AddObject(RefObject* obj)
 {
     if (obj)
     {
+        std::lock_guard<std::mutex> lock(mutex_);
         if (!Contains(obj))
         {
-            obj->Retain();
-
-            std::lock_guard<std::mutex> lock(mutex_);
             objects_.push_back(obj);
         }
     }
 }
 
-bool ObjectPool::Contains(ObjectBase* obj) const
+bool ObjectPool::Contains(RefObject* obj) const
 {
-    std::lock_guard<std::mutex> lock(const_cast<std::mutex&>(mutex_));
-
-    for (auto iter = pools_.rbegin(); iter != pools_.rend(); iter++)
-        for (const auto o : (*iter)->objects_)
-            if (obj == o)
-                return true;
-    return false;
+    return std::find(objects_.begin(), objects_.end(), obj) != objects_.end();
 }
 
 void ObjectPool::Clear()
 {
-    Vector<ObjectBase*> copied;
+    Vector<RefObject*> copied;
 
     {
         std::lock_guard<std::mutex> lock(mutex_);

@@ -27,7 +27,7 @@ namespace kiwano
 
 GifSpritePtr GifSprite::Create(const String& file_path)
 {
-    GifSpritePtr ptr = memory::New<GifSprite>();
+    GifSpritePtr ptr = new (autogc) GifSprite;
     if (ptr)
     {
         if (!ptr->Load(file_path))
@@ -38,7 +38,7 @@ GifSpritePtr GifSprite::Create(const String& file_path)
 
 GifSpritePtr GifSprite::Create(const Resource& res)
 {
-    GifSpritePtr ptr = memory::New<GifSprite>();
+    GifSpritePtr ptr = new (autogc) GifSprite;
     if (ptr)
     {
         if (!ptr->Load(res))
@@ -49,7 +49,7 @@ GifSpritePtr GifSprite::Create(const Resource& res)
 
 GifSpritePtr GifSprite::Create(GifImagePtr gif)
 {
-    GifSpritePtr ptr = memory::New<GifSprite>();
+    GifSpritePtr ptr = new (autogc) GifSprite;
     if (ptr)
     {
         ptr->SetGifImage(gif);
@@ -92,7 +92,7 @@ bool GifSprite::Load(GifImagePtr gif)
         frame_rt_.Reset();
 
         Size frame_size  = Size(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
-        frame_to_render_ = memory::New<Texture>();
+        frame_to_render_ = new (autogc) Texture;
         frame_rt_        = RenderContext::Create(*frame_to_render_, frame_size);
 
         SetSize(frame_rt_->GetSize());
@@ -229,7 +229,7 @@ void GifSprite::SaveComposedFrame()
 
     if (!saved_frame_)
     {
-        saved_frame_ = memory::New<Texture>();
+        saved_frame_ = new (autogc) Texture;
         frame_rt_->CreateTexture(*saved_frame_, frame_to_render_->GetSizeInPixels());
     }
     saved_frame_->CopyFrom(frame_to_render_);

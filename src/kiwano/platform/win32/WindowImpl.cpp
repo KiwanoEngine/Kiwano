@@ -90,7 +90,7 @@ private:
 
 WindowPtr Window::Create(const WindowConfig& config)
 {
-    WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
+    WindowWin32ImplPtr ptr = new (autogc) WindowWin32Impl;
     if (ptr)
     {
         ptr->Init(config);

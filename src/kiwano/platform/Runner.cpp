@@ -30,7 +30,7 @@ namespace kiwano
 
 RunnerPtr Runner::Create(Settings settings)
 {
-    RunnerPtr ptr = memory::New<Runner>();
+    RunnerPtr ptr = new (autogc) Runner;
     if (ptr)
     {
         ptr->SetSettings(settings);
@@ -59,7 +59,7 @@ RunnerPtr Runner::Create(Settings settings, Function<void()> on_ready, Function<
         Function<void()> on_destroy;
     };
 
-    SmartPtr<CallbackRunner> ptr = memory::New<CallbackRunner>();
+    RefPtr<CallbackRunner> ptr = new (autogc) CallbackRunner;
     if (ptr)
     {
         ptr->on_ready   = on_ready;

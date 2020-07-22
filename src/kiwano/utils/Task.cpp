@@ -24,7 +24,7 @@ namespace kiwano
 {
 TaskPtr Task::Create(const Callback& cb, TickerPtr ticker)
 {
-    TaskPtr ptr = memory::New<Task>();
+    TaskPtr ptr = new (autogc) Task;
     if (ptr)
     {
         ptr->SetCallback(cb);

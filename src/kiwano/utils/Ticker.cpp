@@ -25,7 +25,7 @@ namespace kiwano
 
 TickerPtr Ticker::Create(Duration interval, int times)
 {
-    TickerPtr ptr = memory::New<Ticker>();
+    TickerPtr ptr = new (autogc) Ticker;
     if (ptr)
     {
         ptr->SetInterval(interval);

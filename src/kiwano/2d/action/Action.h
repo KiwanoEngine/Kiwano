@@ -22,7 +22,7 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Cloneable.h>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/IntrusiveList.h>
 #include <kiwano/math/Math.h>

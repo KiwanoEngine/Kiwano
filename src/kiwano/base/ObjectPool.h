@@ -19,21 +19,22 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/Singleton.h>
 #include <kiwano/base/ObjectBase.h>
 #include <mutex>
 
 namespace kiwano
 {
+
 /**
  * \~chinese
  * @brief 对象池
  */
-class KGE_API ObjectPool
-    : public Noncopyable
+class KGE_API ObjectPool : public Singleton<ObjectPool>
 {
-public:
-    static ObjectPool& GetInstance();
+    friend Singleton<ObjectPool>;
 
+public:
     ObjectPool();
 
     virtual ~ObjectPool();
@@ -41,16 +42,16 @@ public:
     /**
      * \~chinese
      * @brief 添加对象到内存池
-     * @param[in] obj 基础对象
+     * @param[in] obj 引用计数对象
      */
-    void AddObject(ObjectBase* obj);
+    void AddObject(RefObject* obj);
 
     /**
      * \~chinese
      * @brief 判断对象是否在对象池中
-     * @param[in] obj 基础对象
+     * @param[in] obj 引用计数对象
      */
-    bool Contains(ObjectBase* obj) const;
+    bool Contains(RefObject* obj) const;
 
     /**
      * \~chinese
@@ -65,8 +66,7 @@ private:
 
 private:
     std::mutex          mutex_;
-    Vector<ObjectBase*> objects_;
-
-    static List<ObjectPool*> pools_;
+    Vector<RefObject*> objects_;
 };
+
 }  // namespace kiwano

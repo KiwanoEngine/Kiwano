@@ -54,10 +54,10 @@ DebugActor::DebugActor()
 
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 
-    background_brush_ = memory::New<Brush>();
+    background_brush_ = new (autogc) Brush;
     background_brush_->SetColor(Color::Rgba(0x000000, 0.7f));
 
-    BrushPtr fill_brush = memory::New<Brush>();
+    BrushPtr fill_brush = new (autogc) Brush;
     fill_brush->SetColor(Color::White);
 
     debug_text_style_.font_family  = "Arial";

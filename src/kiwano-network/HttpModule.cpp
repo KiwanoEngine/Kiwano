@@ -253,7 +253,7 @@ void HttpModule::NetworkThread()
             return;
         }
 
-        HttpResponsePtr response = new (std::nothrow) HttpResponse(request);
+        HttpResponsePtr response = new (autogc) HttpResponse(request);
         Perform(request, response);
 
         response_mutex_.lock();

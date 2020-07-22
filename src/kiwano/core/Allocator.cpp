@@ -37,9 +37,9 @@ MemoryAllocator* GetGlobalAllocator()
             return ::operator new(size);
         }
 
-        virtual void Free(void* ptr, size_t size) override
+        virtual void Free(void* ptr, size_t) override
         {
-            ::operator delete(ptr, size);
+            ::operator delete(ptr);
         }
     };
 

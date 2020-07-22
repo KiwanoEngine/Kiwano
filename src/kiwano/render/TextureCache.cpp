@@ -25,7 +25,7 @@
 namespace kiwano
 {
 template <typename _Ty, typename _PathTy, typename _CacheTy>
-SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash)
+RefPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash)
 {
     auto iter = cache.find(hash);
     if (iter != cache.end())
@@ -33,7 +33,7 @@ SmartPtr<_Ty> CreateOrGetCache(_CacheTy& cache, const _PathTy& path, size_t hash
         return iter->second;
     }
 
-    SmartPtr<_Ty> texture = memory::New<_Ty>();
+    RefPtr<_Ty> texture = new (autogc) _Ty;
     if (texture->Load(path))
     {
         cache.insert(std::make_pair(hash, texture));

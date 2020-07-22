@@ -28,7 +28,7 @@ namespace network
 
 HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const ResponseCallback& callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    HttpRequestPtr ptr = new (autogc) HttpRequest;
     if (ptr)
     {
         ptr->SetUrl(url);
@@ -40,7 +40,7 @@ HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const Respo
 
 HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    HttpRequestPtr ptr = new (autogc) HttpRequest;
     if (ptr)
     {
         ptr->SetUrl(url);
@@ -53,7 +53,7 @@ HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const Strin
 
 HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
+    HttpRequestPtr ptr = new (autogc) HttpRequest;
     if (ptr)
     {
         ptr->SetUrl(url);

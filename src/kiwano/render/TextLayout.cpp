@@ -30,13 +30,13 @@ namespace kiwano
 
 TextLayoutPtr TextLayout::Create()
 {
-    TextLayoutPtr ptr = memory::New<TextLayout>();
+    TextLayoutPtr ptr = new (autogc) TextLayout;
     return ptr;
 }
 
 TextLayoutPtr TextLayout::Create(const String& content, const TextStyle& style)
 {
-    TextLayoutPtr ptr = memory::New<TextLayout>();
+    TextLayoutPtr ptr = new (autogc) TextLayout;
     if (ptr)
     {
         ptr->Reset(content, style);

@@ -31,7 +31,7 @@ TickEvent::TickEvent()
 
 EventTickerPtr EventTicker::Create(Duration interval, int times)
 {
-    EventTickerPtr ptr = memory::New<EventTicker>();
+    EventTickerPtr ptr = new (autogc) EventTicker;
     if (ptr)
     {
         ptr->SetInterval(interval);
