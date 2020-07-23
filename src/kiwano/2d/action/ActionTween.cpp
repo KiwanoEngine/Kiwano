@@ -170,14 +170,14 @@ void ActionMoveByEntity::UpdateTween(Actor* target, float percent)
 
 ActionMoveByEntity* ActionMoveByEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionMoveByEntity(GetDuration(), displacement_);
+    ActionMoveByEntity* ptr = new ActionMoveByEntity(GetDuration(), displacement_);
     DoClone(ptr);
     return ptr;
 }
 
 ActionMoveByEntity* ActionMoveByEntity::Reverse() const
 {
-    auto ptr = new (autogc) ActionMoveByEntity(GetDuration(), -displacement_);
+    ActionMoveByEntity* ptr = new ActionMoveByEntity(GetDuration(), -displacement_);
     DoClone(ptr);
     return ptr;
 }
@@ -190,7 +190,7 @@ ActionMoveToEntity::ActionMoveToEntity(Duration duration, const Point& distinati
 
 ActionMoveToEntity* ActionMoveToEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionMoveToEntity(GetDuration(), distination_);
+    ActionMoveToEntity* ptr = new ActionMoveToEntity(GetDuration(), distination_);
     DoClone(ptr);
     return ptr;
 }
@@ -215,14 +215,14 @@ ActionJumpByEntity::ActionJumpByEntity(Duration duration, const Vec2& displaceme
 
 ActionJumpByEntity* ActionJumpByEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionJumpByEntity(GetDuration(), displacement_, height_, jump_count_);
+    ActionJumpByEntity* ptr = new ActionJumpByEntity(GetDuration(), displacement_, height_, jump_count_);
     DoClone(ptr);
     return ptr;
 }
 
 ActionJumpByEntity* ActionJumpByEntity::Reverse() const
 {
-    auto ptr = new (autogc) ActionJumpByEntity(GetDuration(), -displacement_, height_, jump_count_);
+    ActionJumpByEntity* ptr = new ActionJumpByEntity(GetDuration(), -displacement_, height_, jump_count_);
     DoClone(ptr);
     return ptr;
 }
@@ -259,7 +259,7 @@ ActionJumpToEntity::ActionJumpToEntity(Duration duration, const Point& distinati
 
 ActionJumpToEntity* ActionJumpToEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionJumpToEntity(GetDuration(), distination_, height_, jump_count_);
+    ActionJumpToEntity* ptr = new ActionJumpToEntity(GetDuration(), distination_, height_, jump_count_);
     DoClone(ptr);
     return ptr;
 }
@@ -299,14 +299,14 @@ void ActionScaleByEntity::UpdateTween(Actor* target, float percent)
 
 ActionScaleByEntity* ActionScaleByEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionScaleByEntity(GetDuration(), delta_x_, delta_y_);
+    ActionScaleByEntity* ptr = new ActionScaleByEntity(GetDuration(), delta_x_, delta_y_);
     DoClone(ptr);
     return ptr;
 }
 
 ActionScaleByEntity* ActionScaleByEntity::Reverse() const
 {
-    auto ptr = new (autogc) ActionScaleByEntity(GetDuration(), -delta_x_, -delta_y_);
+    ActionScaleByEntity* ptr = new ActionScaleByEntity(GetDuration(), -delta_x_, -delta_y_);
     DoClone(ptr);
     return ptr;
 }
@@ -320,7 +320,7 @@ ActionScaleToEntity::ActionScaleToEntity(Duration duration, float scale_x, float
 
 ActionScaleToEntity* ActionScaleToEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionScaleToEntity(GetDuration(), end_scale_x_, end_scale_y_);
+    ActionScaleToEntity* ptr = new ActionScaleToEntity(GetDuration(), end_scale_x_, end_scale_y_);
     DoClone(ptr);
     return ptr;
 }
@@ -360,7 +360,7 @@ void ActionFadeToEntity::UpdateTween(Actor* target, float percent)
 
 ActionFadeToEntity* ActionFadeToEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionFadeToEntity(GetDuration(), end_val_);
+    ActionFadeToEntity* ptr = new ActionFadeToEntity(GetDuration(), end_val_);
     DoClone(ptr);
     return ptr;
 }
@@ -395,14 +395,14 @@ void ActionRotateByEntity::UpdateTween(Actor* target, float percent)
 
 ActionRotateByEntity* ActionRotateByEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionRotateByEntity(GetDuration(), delta_val_);
+    ActionRotateByEntity* ptr = new ActionRotateByEntity(GetDuration(), delta_val_);
     DoClone(ptr);
     return ptr;
 }
 
 ActionRotateByEntity* ActionRotateByEntity::Reverse() const
 {
-    auto ptr = new (autogc) ActionRotateByEntity(GetDuration(), -delta_val_);
+    ActionRotateByEntity* ptr = new ActionRotateByEntity(GetDuration(), -delta_val_);
     DoClone(ptr);
     return ptr;
 }
@@ -415,7 +415,7 @@ ActionRotateToEntity::ActionRotateToEntity(Duration duration, float rotation)
 
 ActionRotateToEntity* ActionRotateToEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionRotateToEntity(GetDuration(), end_val_);
+    ActionRotateToEntity* ptr = new ActionRotateToEntity(GetDuration(), end_val_);
     DoClone(ptr);
     return ptr;
 }
@@ -438,7 +438,7 @@ ActionCustomEntity::ActionCustomEntity(Duration duration, ActionCustom::TweenFun
 
 ActionCustomEntity* ActionCustomEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionCustomEntity(GetDuration(), tween_func_);
+    ActionCustomEntity* ptr = new ActionCustomEntity(GetDuration(), tween_func_);
     DoClone(ptr);
     return ptr;
 }

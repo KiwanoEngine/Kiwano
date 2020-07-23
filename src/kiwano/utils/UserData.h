@@ -27,7 +27,7 @@ namespace kiwano
 /// @brief 用户数据
 /// @details
 /// UserData是一个简易的运行时数据库，存放（字符串-值）的键值对，无持久化
-class KGE_API UserData : public Singleton<UserData>
+class KGE_API UserData final : public Singleton<UserData>
 {
     friend Singleton<UserData>;
 

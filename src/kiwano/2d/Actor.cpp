@@ -258,18 +258,18 @@ bool Actor::HandleEvent(Event* evt)
             {
                 hover_ = true;
 
-                auto hover = new (autogc) MouseHoverEvent;
+                MouseHoverEventPtr hover = new MouseHoverEvent;
                 hover->pos = mouse_evt->pos;
-                HandleEvent(hover);
+                HandleEvent(hover.Get());
             }
             else if (hover_ && !contains)
             {
                 hover_   = false;
                 pressed_ = false;
 
-                auto out = new (autogc) MouseOutEvent;
+                MouseOutEventPtr out = new MouseOutEvent;
                 out->pos = mouse_evt->pos;
-                HandleEvent(out);
+                HandleEvent(out.Get());
             }
         }
 
@@ -284,10 +284,10 @@ bool Actor::HandleEvent(Event* evt)
 
             auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
 
-            auto click    = new (autogc) MouseClickEvent;
-            click->pos    = mouse_up_evt->pos;
-            click->button = mouse_up_evt->button;
-            HandleEvent(click);
+            MouseClickEventPtr click = new MouseClickEvent;
+            click->pos               = mouse_up_evt->pos;
+            click->button            = mouse_up_evt->button;
+            HandleEvent(click.Get());
         }
     }
     return true;

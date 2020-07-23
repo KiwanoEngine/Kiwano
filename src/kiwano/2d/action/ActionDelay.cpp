@@ -35,7 +35,7 @@ ActionDelayEntity::ActionDelayEntity(Duration delay)
 
 ActionDelayEntity* ActionDelayEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionDelayEntity(GetDelay());
+    ActionDelayEntity* ptr = new ActionDelayEntity(GetDelay());
     DoClone(ptr);
     return ptr;
 }

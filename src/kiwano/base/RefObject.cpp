@@ -19,15 +19,12 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/RefObject.h>
-#include <kiwano/base/ObjectPool.h>
 
 namespace kiwano
 {
 
-autogc_t const autogc;
-
 RefObject::RefObject()
-    : ref_count_(1)
+    : ref_count_(0)
 {
 }
 
@@ -47,22 +44,17 @@ void RefObject::Release()
     }
 }
 
-void RefObject::AutoRelease()
+uint32_t RefObject::GetRefCount() const
 {
-    ObjectPool::GetInstance().AddObject(this);
+    return ref_count_.load();
 }
 
-void* RefObject::operator new(std::size_t size)
-{
-    return memory::Alloc(size);
-}
-
-void* RefObject::operator new(std::size_t size, autogc_t const&)
+void* RefObject::operator new(size_t size)
 {
     void* ptr = memory::Alloc(size);
-    if (ptr)
+    if (!ptr)
     {
-        ObjectPool::GetInstance().AddObject((ObjectBase*)ptr);
+        throw std::bad_alloc();
     }
     return ptr;
 }
@@ -72,9 +64,38 @@ void RefObject::operator delete(void* ptr)
     memory::Free(ptr);
 }
 
-void RefObject::operator delete(void* ptr, autogc_t const&)
+void* RefObject::operator new(size_t size, std::nothrow_t const&)
 {
-    memory::Free(ptr);
+    try
+    {
+        void* ptr = memory::Alloc(size);
+        return ptr;
+    }
+    catch (...)
+    {
+    }
+    return nullptr;
+}
+
+void RefObject::operator delete(void* ptr, std::nothrow_t const&)
+{
+    try
+    {
+        memory::Free(ptr);
+    }
+    catch (...)
+    {
+    }
+}
+
+void* RefObject::operator new(size_t size, void* ptr)
+{
+    return ::operator new(size, ptr);
+}
+
+void RefObject::operator delete(void* ptr, void* place) noexcept
+{
+    ::operator delete(ptr, place);
 }
 
 }  // namespace kiwano

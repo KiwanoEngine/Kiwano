@@ -53,12 +53,7 @@ template <typename _Ty, typename... _Args>
 inline RefPtr<_Ty> MakePtr(_Args&&... args)
 {
     static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
-
-    RefPtr<_Ty> ptr;
-
-    _Ty** pptr = ptr.GetAddressOfAndRelease();
-    (*pptr)    = new _Ty(std::forward<_Args>(args)...);
-    return ptr;
+    return RefPtr<_Ty>(new _Ty(std::forward<_Args>(args)...));
 }
 
 /// \~chinese

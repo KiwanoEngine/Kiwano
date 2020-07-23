@@ -40,7 +40,7 @@ public:
 
     /// \~chinese
     /// @brief 释放内存
-    virtual void Free(void* ptr, size_t size = 0) = 0;
+    virtual void Free(void* ptr) = 0;
 };
 
 /// \~chinese
@@ -63,13 +63,6 @@ inline void* Alloc(size_t size)
 inline void Free(void* ptr)
 {
     memory::GetAllocator()->Free(ptr);
-}
-
-/// \~chinese
-/// @brief 使用当前内存分配器释放内存
-inline void Free(void* ptr, size_t size)
-{
-    memory::GetAllocator()->Free(ptr, size);
 }
 
 }  // namespace memory
@@ -120,13 +113,13 @@ public:
 
     inline void deallocate(void* ptr, size_t count)
     {
-        memory::Free(ptr, sizeof(_Ty) * count);
+        memory::Free(ptr /*, sizeof(_Ty) * count */);
     }
 
     template <typename _UTy, typename... _Args>
-    inline void construct(_UTy* ptr, _Args&&... args)
+    inline void construct(_UTy* const ptr, _Args&&... args)
     {
-        ::new (ptr) _Ty(std::forward<_Args>(args)...);
+        ::new (const_cast<void*>(static_cast<const volatile void*>(ptr))) _Ty(std::forward<_Args>(args)...);
     }
 
     template <typename _UTy>

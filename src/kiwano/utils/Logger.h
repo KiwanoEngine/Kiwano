@@ -218,7 +218,7 @@ private:
  * \~chinese
  * @brief ÈÕÖ¾¼ÇÂ¼Æ÷
  */
-class KGE_API Logger : public Singleton<Logger>
+class KGE_API Logger final : public Singleton<Logger>
 {
     friend Singleton<Logger>;
 

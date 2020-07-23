@@ -32,7 +32,7 @@ namespace kiwano
 /// \~chinese
 /// @brief 资源缓存
 /// @details 资源缓存
-class KGE_API ResourceCache : public Singleton<ResourceCache>
+class KGE_API ResourceCache final : public Singleton<ResourceCache>
 {
     friend Singleton<ResourceCache>;
 

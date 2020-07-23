@@ -33,7 +33,7 @@ namespace kiwano
  * \~chinese
  * @brief 输入设备实例，可获取鼠标和键盘的按键状态
  */
-class KGE_API Input
+class KGE_API Input final
     : public Singleton<Input>
     , public Module
 {

@@ -87,14 +87,14 @@ void AnimationEntity::UpdateTween(Actor* target, float percent)
 
 AnimationEntity* AnimationEntity::Clone() const
 {
-    auto ptr = new (autogc) AnimationEntity(GetDuration(), frame_seq_);
+    AnimationEntity* ptr = new AnimationEntity(GetDuration(), frame_seq_);
     DoClone(ptr);
     return ptr;
 }
 
 AnimationEntity* AnimationEntity::Reverse() const
 {
-    auto ptr = new (autogc) AnimationEntity(GetDuration(), nullptr);
+    AnimationEntity* ptr = new AnimationEntity(GetDuration(), nullptr);
     DoClone(ptr);
 
     if (frame_seq_)

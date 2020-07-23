@@ -123,7 +123,7 @@ ActionGroupEntity* ActionGroupEntity::Clone() const
             actions.push_back(action->Clone());
         }
     }
-    auto ptr = new (autogc) ActionGroupEntity(actions, parallel_);
+    ActionGroupEntity* ptr = new ActionGroupEntity(actions, parallel_);
     DoClone(ptr);
     return ptr;
 }
@@ -138,7 +138,7 @@ ActionGroupEntity* ActionGroupEntity::Reverse() const
             actions.push_back(action->Reverse());
         }
     }
-    auto ptr = new (autogc) ActionGroupEntity(actions, parallel_);
+    ActionGroupEntity* ptr = new ActionGroupEntity(actions, parallel_);
     DoClone(ptr);
     return ptr;
 }

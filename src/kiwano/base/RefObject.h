@@ -25,13 +25,6 @@
 namespace kiwano
 {
 
-struct autogc_t
-{
-    autogc_t() = default;
-};
-
-extern autogc_t const autogc;
-
 /**
  * \~chinese
  * @brief 引用计数器
@@ -48,33 +41,28 @@ public:
     void Release();
 
     /// \~chinese
-    /// @brief 自动释放
-    void AutoRelease();
-
-    /// \~chinese
     /// @brief 获取引用计数
     uint32_t GetRefCount() const;
 
-    void* operator new(std::size_t size);
+    static void* operator new(size_t size);
 
-    void* operator new(std::size_t size, autogc_t const&);
+    static void operator delete(void* ptr);
 
-    void operator delete(void* ptr);
+    static void* operator new(size_t size, std::nothrow_t const&) noexcept;
 
-    void operator delete(void* ptr, autogc_t const&);
+    static void operator delete(void* ptr, std::nothrow_t const&) noexcept;
+
+    static void* operator new(size_t size, void* ptr) noexcept;
+
+    static void operator delete(void* ptr, void* place) noexcept;
+
+    virtual ~RefObject();
 
 protected:
     RefObject();
 
-    virtual ~RefObject();
-
 private:
     std::atomic<uint32_t> ref_count_;
 };
-
-inline uint32_t RefObject::GetRefCount() const
-{
-    return ref_count_.load();
-}
 
 }  // namespace kiwano

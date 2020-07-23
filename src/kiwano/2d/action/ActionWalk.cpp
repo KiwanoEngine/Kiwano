@@ -41,14 +41,14 @@ ActionWalkEntity::ActionWalkEntity(Duration duration, ShapePtr path, bool rotati
 
 ActionWalkEntity* ActionWalkEntity::Clone() const
 {
-    auto ptr = new (autogc) ActionWalkEntity(GetDuration(), path_, rotating_, start_, end_);
+    ActionWalkEntity* ptr = new ActionWalkEntity(GetDuration(), path_, rotating_, start_, end_);
     DoClone(ptr);
     return ptr;
 }
 
 ActionWalkEntity* ActionWalkEntity::Reverse() const
 {
-    auto ptr = new (autogc) ActionWalkEntity(GetDuration(), path_, rotating_, end_, start_);
+    ActionWalkEntity* ptr = new ActionWalkEntity(GetDuration(), path_, rotating_, end_, start_);
     DoClone(ptr);
     return ptr;
 }

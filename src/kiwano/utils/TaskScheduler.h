@@ -32,7 +32,7 @@ typedef IntrusiveList<TaskPtr> TaskList;
  * \~chinese
  * @brief 任务调度器
  */
-class KGE_API TaskScheduler
+class KGE_API TaskScheduler : Noncopyable
 {
 public:
     /// \~chinese

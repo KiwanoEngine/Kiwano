@@ -33,7 +33,7 @@ namespace kiwano
  * \~chinese
  * @brief Œ∆¿Ìª∫¥Ê
  */
-class KGE_API TextureCache : public Singleton<TextureCache>
+class KGE_API TextureCache final : public Singleton<TextureCache>
 {
     friend Singleton<TextureCache>;
 
