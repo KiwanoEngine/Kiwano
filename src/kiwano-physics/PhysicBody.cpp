@@ -31,7 +31,7 @@ namespace physics
 PhysicBody::PhysicBody(PhysicWorld* world, Type type)
     : body_(nullptr)
     , world_(world)
-    , type_(Type::Static)
+    , type_(type)
     , category_bits_(0x0001)
     , mask_bits_(0xFFFF)
     , group_index_(0)
@@ -42,6 +42,11 @@ PhysicBody::PhysicBody(PhysicWorld* world, Type type)
     {
         world->AddBody(this);
     }
+}
+
+PhysicBody::PhysicBody(PhysicWorldPtr world, Type type)
+    : PhysicBody(world.Get(), type)
+{
 }
 
 PhysicBody::~PhysicBody() {}

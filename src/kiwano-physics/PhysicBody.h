@@ -56,6 +56,12 @@ public:
     /// @param type 物体类型
     PhysicBody(PhysicWorld* world, Type type);
 
+    /// \~chinese
+    /// @brief 初始化物体
+    /// @param world 物理世界
+    /// @param type 物体类型
+    PhysicBody(PhysicWorldPtr world, Type type);
+
     virtual ~PhysicBody();
 
     /// \~chinese
