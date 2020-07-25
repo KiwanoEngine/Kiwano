@@ -81,14 +81,24 @@ bool GifSprite::Load(GifImagePtr gif)
         frame_to_render_ = MakePtr<Texture>();
         frame_rt_        = RenderContext::Create(*frame_to_render_, frame_size);
 
-        SetSize(frame_rt_->GetSize());
-
-        if (gif_->GetFramesCount() > 0)
+        if (frame_rt_)
         {
-            ComposeNextFrame();
+            SetSize(frame_rt_->GetSize());
+
+            if (gif_->GetFramesCount() > 0)
+            {
+                ComposeNextFrame();
+            }
+            return true;
         }
-        return true;
+        else
+        {
+            Fail("GifSprite::Load failed: RenderContext::Create returns null");
+            return false;
+        }
     }
+
+    Fail("GifSprite::Load failed: GifImage is invalid");
     return false;
 }
 

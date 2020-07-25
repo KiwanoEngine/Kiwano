@@ -28,13 +28,13 @@ namespace kiwano
 {
 struct ComPtrPolicy
 {
-    static inline void Retain(IUnknown* ptr)
+    inline void Retain(IUnknown* ptr)
     {
         if (ptr)
             ptr->AddRef();
     }
 
-    static inline void Release(IUnknown* ptr)
+    inline void Release(IUnknown* ptr)
     {
         if (ptr)
             ptr->Release();

@@ -517,8 +517,6 @@ void Actor::SetRotation(float angle)
 
 void Actor::AddChild(ActorPtr child, int zorder)
 {
-    KGE_ASSERT(child && "Actor::AddChild failed, NULL pointer exception");
-
     if (child)
     {
         KGE_ASSERT(!child->parent_ && "Actor::AddChild failed, the actor to be added already has a parent");
@@ -544,6 +542,10 @@ void Actor::AddChild(ActorPtr child, int zorder)
         child->z_order_         = zorder;
         child->Reorder();
         child->UpdateOpacity();
+    }
+    else
+    {
+        Fail("Actor::AddChild failed, NULL pointer exception");
     }
 }
 
@@ -614,8 +616,6 @@ void Actor::RemoveFromParent()
 
 void Actor::RemoveChild(ActorPtr child)
 {
-    KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
-
     if (children_.IsEmpty())
         return;
 
@@ -625,6 +625,10 @@ void Actor::RemoveChild(ActorPtr child)
         if (child->stage_)
             child->SetStage(nullptr);
         children_.Remove(child);
+    }
+    else
+    {
+        Fail("Actor::RemoveChild failed, NULL pointer exception");
     }
 }
 

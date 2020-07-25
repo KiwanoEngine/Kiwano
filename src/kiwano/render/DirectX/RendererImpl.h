@@ -21,9 +21,7 @@
 #pragma once
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/DirectX/D3DDeviceResources.h>
-#include <kiwano/render/DirectX/FontCollectionLoader.h>
 #include <kiwano/render/DirectX/RenderContextImpl.h>
-
 
 namespace kiwano
 {
@@ -94,9 +92,6 @@ private:
 
     ComPtr<ID2DDeviceResources>           d2d_res_;
     ComPtr<ID3DDeviceResources>           d3d_res_;
-    ComPtr<IFontCollectionLoader>         font_collection_loader_;
-    ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
-    ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
 };
 
 

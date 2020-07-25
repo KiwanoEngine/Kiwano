@@ -60,7 +60,15 @@ void TextActor::SetText(const String& text)
     {
         layout_ = MakePtr<TextLayout>();
     }
-    layout_->Reset(text, style_);
+
+    try
+    {
+        layout_->Reset(text, style_);
+    }
+    catch (SystemError& e)
+    {
+        Fail(String("TextActor::SetText failed: ") + e.what());
+    }
 }
 
 void TextActor::SetStyle(const TextStyle& style)

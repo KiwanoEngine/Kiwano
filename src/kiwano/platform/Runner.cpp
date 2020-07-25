@@ -28,7 +28,7 @@
 namespace kiwano
 {
 
-Runner::Runner(Settings settings)
+Runner::Runner(const Settings& settings)
     : settings_(settings)
 {
 }

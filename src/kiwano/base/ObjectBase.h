@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/macros.h>
 #include <kiwano/core/Common.h>
+#include <kiwano/core/Exception.h>
 #include <kiwano/core/Serializable.h>
 #include <kiwano/base/RefObject.h>
 #include <kiwano/base/RefPtr.h>
@@ -28,6 +29,89 @@
 namespace kiwano
 {
 KGE_DECLARE_SMART_PTR(ObjectBase);
+
+/**
+ * \~chinese
+ * @brief 对象状态
+ */
+struct ObjectStatus
+{
+    int    code = 0;  ///< 状态码，等于 0 时为成功状态，否则为失败状态
+    String msg;       ///< 状态信息
+
+    /// \~chinese
+    /// @brief 对象状态是否成功
+    inline bool Success() const
+    {
+        return this->code == 0;
+    }
+
+    /// \~chinese
+    /// @brief 对象失败状态
+    static const int fail = -1;
+};
+
+/**
+ * \~chinese
+ * @brief 对象失败状态异常
+ */
+class ObjectFailException : public Exception
+{
+public:
+    ObjectFailException(ObjectBase* obj, const ObjectStatus& status);
+
+    /// \~chinese
+    /// @brief 获取失败的对象指针
+    inline ObjectBase* GetObj() const
+    {
+        return obj_;
+    }
+
+    /// \~chinese
+    /// @brief 获取对象状态
+    inline ObjectStatus GetStatus() const
+    {
+        return status_;
+    }
+
+    virtual char const* what() const override;
+
+private:
+    ObjectBase*  obj_;
+    ObjectStatus status_;
+};
+
+/**
+ * \~chinese
+ * @brief 对象处理策略方法
+ */
+typedef Function<void(ObjectBase*, const ObjectStatus&)> ObjectPolicyFunc;
+
+/**
+ * \~chinese
+ * @brief 对象处理策略
+ */
+struct ObjectPolicy
+{
+    /// \~chinese
+    /// @brief 忽略对象失败状态
+    static inline ObjectPolicyFunc Ignore()
+    {
+        return nullptr;
+    }
+
+    /// \~chinese
+    /// @brief 在对象状态变为失败时打印警告日志
+    static ObjectPolicyFunc WarnLog();
+
+    /// \~chinese
+    /// @brief 在对象状态变为失败时打印错误日志（默认策略）
+    static ObjectPolicyFunc ErrorLog();
+
+    /// \~chinese
+    /// @brief 在对象状态变为失败时抛出 ObjectFailException
+    static ObjectPolicyFunc Exception();
+};
 
 /**
  * \~chinese
@@ -59,15 +143,15 @@ public:
 
     /// \~chinese
     /// @brief 获取用户数据
-    const Any& GetUserData() const;
+    void* GetUserData() const;
 
     /// \~chinese
     /// @brief 设置用户数据
-    void SetUserData(const Any& data);
+    void SetUserData(void* data);
 
     /// \~chinese
     /// @brief 获取对象ID
-    uint32_t GetObjectID() const;
+    uint64_t GetObjectID() const;
 
     /// \~chinese
     /// @brief 序列化
@@ -76,6 +160,30 @@ public:
     /// \~chinese
     /// @brief 反序列化
     void DoDeserialize(Deserializer* deserializer) override;
+
+    /// \~chinese
+    /// @brief 判断对象是否有效
+    virtual bool IsValid() const;
+
+    /// \~chinese
+    /// @brief 获取对象状态
+    ObjectStatus GetStatus() const;
+
+    /// \~chinese
+    /// @brief 设置对象状态
+    void SetStatus(const ObjectStatus& status);
+
+    /// \~chinese
+    /// @brief 将对象标记为失败状态
+    void Fail(const String& msg, int code = ObjectStatus::fail);
+
+    /// \~chinese
+    /// @brief 清除对象状态
+    void ClearStatus();
+
+    /// \~chinese
+    /// @brief 设置对象处理策略
+    static void SetObjectPolicy(const ObjectPolicyFunc& policy);
 
 public:
     /// \~chinese
@@ -104,11 +212,13 @@ private:
     static void RemoveObjectFromTracingList(ObjectBase*);
 
 private:
-    const uint32_t id_;
+    const uint64_t id_;
 
     bool    tracing_leak_;
     String* name_;
-    Any     user_data_;
+    void*   user_data_;
+
+    ObjectStatus status_;
 };
 
 inline String ObjectBase::GetName() const
@@ -123,7 +233,7 @@ inline bool ObjectBase::IsName(const String& name) const
     return name_ ? (*name_ == name) : name.empty();
 }
 
-inline uint32_t ObjectBase::GetObjectID() const
+inline uint64_t ObjectBase::GetObjectID() const
 {
     return id_;
 }

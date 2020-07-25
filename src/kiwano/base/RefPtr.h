@@ -29,13 +29,13 @@ namespace kiwano
 /// @brief 默认的智能指针引用计数策略
 struct DefaultRefPtrPolicy
 {
-    static inline void Retain(RefObject* ptr)
+    inline void Retain(RefObject* ptr)
     {
         if (ptr)
             ptr->Retain();
     }
 
-    static inline void Release(RefObject* ptr)
+    inline void Release(RefObject* ptr)
     {
         if (ptr)
             ptr->Release();

@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 #include <fstream>
-#include <kiwano/utils/Logger.h>
-#include <kiwano/core/Exception.h>
 #include <kiwano/platform/FileSystem.h>
+#include <kiwano/utils/Logger.h>
 #include <kiwano/utils/ResourceCache.h>
 
 namespace kiwano
@@ -76,14 +75,14 @@ bool ResourceCache::LoadFromJsonFile(const String& file_path)
         ifs >> json_data;
         ifs.close();
     }
-    catch (std::wifstream::failure& e)
+    catch (std::ios_base::failure& e)
     {
-        KGE_ERRORF("%s failed: Cannot open file. (%s)", __FUNCTION__, e.what());
+        KGE_ERRORF("%s failed: cannot open file. (%s)", __FUNCTION__, e.what());
         return false;
     }
     catch (Json::exception& e)
     {
-        KGE_ERRORF("%s failed: Cannot parse to JSON. (%s)", __FUNCTION__, e.what());
+        KGE_ERRORF("%s failed: cannot parse JSON. (%s)", __FUNCTION__, e.what());
         return false;
     }
     return LoadFromJson(json_data);

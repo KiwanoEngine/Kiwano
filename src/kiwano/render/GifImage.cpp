@@ -53,6 +53,7 @@ bool GifImage::Load(const String& file_path)
 
         // Clear data
         ResetNativePointer();
+        Fail("GifImage::Load failed");
     }
     return false;
 }
@@ -68,6 +69,7 @@ bool GifImage::Load(const Resource& res)
 
         // Clear data
         ResetNativePointer();
+        Fail("GifImage::Load failed");
     }
     return false;
 }

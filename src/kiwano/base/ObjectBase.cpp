@@ -18,26 +18,74 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <typeinfo>
+#include <atomic>
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
-#include <typeinfo>
 
 namespace kiwano
 {
 namespace
 {
 
-bool                tracing_leaks = false;
-Vector<ObjectBase*> tracing_objects;
-uint32_t            last_object_id = 0;
+bool                  tracing_leaks = false;
+Vector<ObjectBase*>   tracing_objects;
+std::atomic<uint64_t> last_object_id = 0;
+ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
 
 }  // namespace
+
+
+
+ObjectFailException::ObjectFailException(ObjectBase* obj, const ObjectStatus& status)
+    : obj_(obj)
+    , status_(status)
+{
+}
+
+char const* ObjectFailException::what() const
+{
+    return status_.msg.empty() ? "Object operation failed" : status_.msg.c_str();
+}
+
+ObjectPolicyFunc ObjectPolicy::WarnLog()
+{
+    return [](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid())
+        {
+            KGE_WARNF("Object operation failed: obj(%p), code(%d), msg(%s)", obj, status.code, status.msg.c_str());
+        }
+    };
+}
+
+ObjectPolicyFunc ObjectPolicy::ErrorLog()
+{
+    return [](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid())
+        {
+            KGE_ERRORF("Object operation failed: obj(%p), code(%d), msg(%s)", obj, status.code, status.msg.c_str());
+        }
+    };
+}
+
+ObjectPolicyFunc ObjectPolicy::Exception()
+{
+    return [](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid())
+        {
+            throw ObjectFailException(obj, status);
+        }
+    };
+}
 
 ObjectBase::ObjectBase()
     : tracing_leak_(false)
     , name_(nullptr)
-    , user_data_()
+    , user_data_(nullptr)
     , id_(++last_object_id)
 {
 #ifdef KGE_DEBUG
@@ -58,12 +106,12 @@ ObjectBase::~ObjectBase()
 #endif
 }
 
-const Any& ObjectBase::GetUserData() const
+void* ObjectBase::GetUserData() const
 {
     return user_data_;
 }
 
-void ObjectBase::SetUserData(const Any& data)
+void ObjectBase::SetUserData(void* data)
 {
     user_data_ = data;
 }
@@ -99,6 +147,45 @@ void ObjectBase::DoDeserialize(Deserializer* deserializer)
     String name;
     (*deserializer) >> name;
     SetName(name);
+}
+
+bool ObjectBase::IsValid() const
+{
+    return status_.Success();
+}
+
+ObjectStatus ObjectBase::GetStatus() const
+{
+    return status_;
+}
+
+void ObjectBase::SetStatus(const ObjectStatus& status)
+{
+    status_.msg = status.msg;
+    if (status_.code != status.code)
+    {
+        status_.code = status.code;
+
+        if (object_policy_)
+        {
+            object_policy_(this, status_);
+        }
+    }
+}
+
+void ObjectBase::Fail(const String& msg, int code)
+{
+    SetStatus(ObjectStatus{ code, msg });
+}
+
+void ObjectBase::ClearStatus()
+{
+    status_ = ObjectStatus{};
+}
+
+void ObjectBase::SetObjectPolicy(const ObjectPolicyFunc& policy)
+{
+    object_policy_ = policy;
 }
 
 bool ObjectBase::IsTracingLeaks()

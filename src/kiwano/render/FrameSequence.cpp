@@ -41,11 +41,13 @@ FrameSequence::~FrameSequence() {}
 
 void FrameSequence::AddFrame(FramePtr frame)
 {
-    KGE_ASSERT(frame && "FrameSequence::Add failed, NULL pointer exception");
-
     if (frame)
     {
         frames_.push_back(frame);
+    }
+    else
+    {
+        Fail("FrameSequence::Add failed, NULL pointer exception");
     }
 }
 

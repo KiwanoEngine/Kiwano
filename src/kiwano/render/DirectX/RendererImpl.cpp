@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
@@ -27,7 +26,11 @@
 #include <kiwano/render/DirectX/RendererImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 
-#include <memory>
+#define KGE_SET_STATUS_IF_FAILED(ERRCODE, OBJ, MESSAGE)                                 \
+    if (FAILED(ERRCODE))                                                                \
+    {                                                                                   \
+        OBJ.Fail(strings::Format("An exception occurred (%#x): %s", ERRCODE, MESSAGE)); \
+    }
 
 namespace kiwano
 {
@@ -93,7 +96,6 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
         }
     }
 
-
     // Initialize other device resources
     if (SUCCEEDED(hr))
     {
@@ -106,38 +108,6 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
         }
     }
 
-    // FontFileLoader and FontCollectionLoader
-    if (SUCCEEDED(hr))
-    {
-        hr = IFontCollectionLoader::Create(&font_collection_loader_);
-
-        if (SUCCEEDED(hr))
-        {
-            hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(font_collection_loader_.Get());
-        }
-    }
-
-    // ResourceFontFileLoader and ResourceFontCollectionLoader
-    if (SUCCEEDED(hr))
-    {
-        hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
-
-        if (SUCCEEDED(hr))
-        {
-            hr = d2d_res_->GetDWriteFactory()->RegisterFontFileLoader(res_font_file_loader_.Get());
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.Get());
-
-            if (SUCCEEDED(hr))
-            {
-                hr = d2d_res_->GetDWriteFactory()->RegisterFontCollectionLoader(res_font_collection_loader_.Get());
-            }
-        }
-    }
-
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
 
@@ -147,14 +117,9 @@ void RendererImpl::Destroy()
 
     if (d2d_res_)
     {
-        d2d_res_->GetDWriteFactory()->UnregisterFontFileLoader(res_font_file_loader_.Get());
-        res_font_file_loader_.Reset();
-
-        d2d_res_->GetDWriteFactory()->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
-        res_font_collection_loader_.Reset();
-
         render_ctx_.Reset();
         d2d_res_->DiscardResources();
+        d2d_res_.Reset();
     }
 
     if (d3d_res_)
@@ -243,10 +208,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
         }
     }
 
-    if (FAILED(hr))
-    {
-        KGE_THROW_IF_FAILED(hr, "Load texture failed");
-    }
+    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture failed");
 }
 
 void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
@@ -298,10 +260,7 @@ void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
         }
     }
 
-    if (FAILED(hr))
-    {
-        KGE_WARNF("Load texture failed with HRESULT of %08X!", hr);
-    }
+    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture failed");
 }
 
 void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
@@ -331,10 +290,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
         }
     }
 
-    if (FAILED(hr))
-    {
-        KGE_WARNF("Load GIF texture failed with HRESULT of %08X!", hr);
-    }
+    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF texture failed");
 }
 
 void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
@@ -363,10 +319,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
         }
     }
 
-    if (FAILED(hr))
-    {
-        KGE_WARNF("Load GIF texture failed with HRESULT of %08X!", hr);
-    }
+    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF texture failed");
 }
 
 void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index)
@@ -527,10 +480,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
         }
     }
 
-    if (FAILED(hr))
-    {
-        KGE_WARNF("Load GIF frame failed with HRESULT of %08X!", hr);
-    }
+    KGE_SET_STATUS_IF_FAILED(hr, const_cast<GifImage&>(gif), "Load GIF frame failed");
 }
 
 void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
@@ -552,26 +502,18 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
 
     if (SUCCEEDED(hr))
     {
-        LPVOID   key       = nullptr;
-        uint32_t key_size  = 0;
-        String   full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
+        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
 
-        hr = font_collection_loader_->AddFilePaths({ full_path }, &key, &key_size);
+        ComPtr<IDWriteFontCollection> font_collection;
+        hr = d2d_res_->CreateFontCollectionFromFiles(font_collection, { full_path });
 
         if (SUCCEEDED(hr))
         {
-            ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(font_collection_loader_.Get(), key, key_size,
-                                                                          &font_collection);
-
-            if (SUCCEEDED(hr))
-            {
-                NativePtr::Set(font, font_collection);
-            }
+            NativePtr::Set(font, font_collection);
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create font collection failed");
+    KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
 }
 
 void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
@@ -584,25 +526,16 @@ void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
 
     if (SUCCEEDED(hr))
     {
-        LPVOID   key      = nullptr;
-        uint32_t key_size = 0;
-
-        hr = res_font_collection_loader_->AddResources(Vector<Resource>{ res }, &key, &key_size);
+        ComPtr<IDWriteFontCollection> font_collection;
+        hr = d2d_res_->CreateFontCollectionFromResources(font_collection, Vector<Resource>{ res });
 
         if (SUCCEEDED(hr))
         {
-            ComPtr<IDWriteFontCollection> font_collection;
-            hr = d2d_res_->GetDWriteFactory()->CreateCustomFontCollection(res_font_collection_loader_.Get(), key,
-                                                                          key_size, &font_collection);
-
-            if (SUCCEEDED(hr))
-            {
-                NativePtr::Set(font, font_collection);
-            }
+            NativePtr::Set(font, font_collection);
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create font collection failed");
+    KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
 }
 
 void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style)
@@ -646,7 +579,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create text layout failed");
+    KGE_SET_STATUS_IF_FAILED(hr, layout, "Create text layout failed");
 }
 
 void RendererImpl::CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos)
@@ -682,7 +615,7 @@ void RendererImpl::CreateLineShape(Shape& shape, const Point& begin_pos, const P
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
+    KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateRectShape(Shape& shape, const Rect& rect)
@@ -704,7 +637,7 @@ void RendererImpl::CreateRectShape(Shape& shape, const Rect& rect)
         NativePtr::Set(shape, output);
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1RectangleGeometry failed");
+    KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RectangleGeometry failed");
 }
 
 void RendererImpl::CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius)
@@ -727,7 +660,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, const Rect& rect, const 
         NativePtr::Set(shape, output);
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1RoundedRectangleGeometry failed");
+    KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RoundedRectangleGeometry failed");
 }
 
 void RendererImpl::CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius)
@@ -750,7 +683,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, const Point& center, const V
         NativePtr::Set(shape, output);
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1EllipseGeometry failed");
+    KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1EllipseGeometry failed");
 }
 
 void RendererImpl::CreateShapeSink(ShapeMaker& maker)
@@ -775,7 +708,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
             maker.SetShape(shape);
         }
     }
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1PathGeometry failed");
+    KGE_SET_STATUS_IF_FAILED(hr, maker, "Create ID2D1PathGeometry failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, const Color& color)
@@ -809,7 +742,7 @@ void RendererImpl::CreateBrush(Brush& brush, const Color& color)
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1SolidBrush failed");
+    KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1SolidBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, const LinearGradientStyle& style)
@@ -841,7 +774,7 @@ void RendererImpl::CreateBrush(Brush& brush, const LinearGradientStyle& style)
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1LinearGradientBrush failed");
+    KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1LinearGradientBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
@@ -874,7 +807,7 @@ void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
+    KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1RadialGradientBrush failed");
 }
 
 void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
@@ -901,7 +834,7 @@ void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1RadialGradientBrush failed");
+    KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1RadialGradientBrush failed");
 }
 
 void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
@@ -940,7 +873,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
         }
     }
 
-    KGE_THROW_IF_FAILED(hr, "Create ID2D1StrokeStyle failed");
+    KGE_SET_STATUS_IF_FAILED(hr, stroke_style, "Create ID2D1StrokeStyle failed");
 }
 
 RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, const Size* desired_size)

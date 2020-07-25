@@ -25,7 +25,6 @@
 #include <memory>
 #include <array>
 #include <kiwano/core/Keys.h>
-#include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>

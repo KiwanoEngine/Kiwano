@@ -58,11 +58,12 @@ Sprite::~Sprite() {}
 bool Sprite::Load(const String& file_path, bool autoresize)
 {
     FramePtr frame = MakePtr<Frame>(file_path);
-    if (frame)
+    if (frame && frame->IsValid())
     {
         SetFrame(frame, autoresize);
         return true;
     }
+    Fail("Sprite::Load failed");
     return false;
 }
 
@@ -74,6 +75,7 @@ bool Sprite::Load(const Resource& res, bool autoresize)
         SetFrame(frame, autoresize);
         return true;
     }
+    Fail("Sprite::Load failed");
     return false;
 }
 

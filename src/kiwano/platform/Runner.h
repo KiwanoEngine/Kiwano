@@ -67,7 +67,7 @@ public:
     /// \~chinese
     /// @brief 创建程序运行器
     /// @param main_window 主窗口
-    Runner(Settings settings);
+    Runner(const Settings& settings);
 
     virtual ~Runner();
 
@@ -92,15 +92,11 @@ public:
     /// @param dt 时间间隔
     /// @details 重载该函数以控制程序主循环
     /// @return 返回false退出主循环，否则继续运行主循环
-    virtual bool MainLoop(Duration dt);
+    bool MainLoop(Duration dt);
 
     /// \~chinese
     /// @brief 获取窗口
     WindowPtr GetWindow() const;
-
-    /// \~chinese
-    /// @brief 设置窗口
-    void SetWindow(WindowPtr window);
 
     /// \~chinese
     /// @brief 获取设置
@@ -118,6 +114,10 @@ protected:
     /// \~chinese
     /// @brief 修改设置
     void SetSettings(Settings settings);
+
+    /// \~chinese
+    /// @brief 设置窗口
+    void SetWindow(WindowPtr window);
 
 private:
     friend class Application;

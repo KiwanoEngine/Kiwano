@@ -20,25 +20,8 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/utils/Logger.h>
 #include <stdexcept>
 #include <system_error>
-
-#define KGE_THROW(MESSAGE)                               \
-    do                                                   \
-    {                                                    \
-        KGE_ERRORF("An exception occurred: %s", MESSAGE); \
-        kiwano::StackTracer().Print();                   \
-        throw kiwano::RuntimeError(MESSAGE);             \
-    } while (0)
-
-#define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
-    do                                                                                    \
-    {                                                                                     \
-        KGE_ERRORF("An exception occurred (%#x): %s", ERRCODE, MESSAGE);                   \
-        kiwano::StackTracer().Print();                                                    \
-        throw kiwano::SystemError(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
-    } while (0)
 
 namespace kiwano
 {
@@ -103,12 +86,6 @@ inline std::error_condition make_error_condition(kiwano::error_enum errc) noexce
 {
     return std::error_condition(static_cast<int>(errc), kiwano::com_category());
 }
-
-#define KGE_THROW_IF_FAILED(HR, MESSAGE)     \
-    if (FAILED(HR))                          \
-    {                                        \
-        KGE_THROW_SYSTEM_ERROR(HR, MESSAGE); \
-    }
 
 }  // namespace kiwano
 

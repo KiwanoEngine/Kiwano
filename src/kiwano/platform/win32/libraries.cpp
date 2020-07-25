@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/platform/win32/libraries.h>
 
