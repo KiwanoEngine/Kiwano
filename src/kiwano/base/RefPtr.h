@@ -26,8 +26,8 @@ namespace kiwano
 {
 
 /// \~chinese
-/// @brief 默认的智能指针引用计数代理
-struct DefaultRefPtrRefProxy
+/// @brief 默认的智能指针引用计数策略
+struct DefaultRefPtrPolicy
 {
     static inline void Retain(RefObject* ptr)
     {
@@ -45,7 +45,7 @@ struct DefaultRefPtrRefProxy
 /// \~chinese
 /// @brief 引用计数对象智能指针
 template <typename _Ty>
-using RefPtr = RefBasePtr<_Ty, DefaultRefPtrRefProxy>;
+using RefPtr = RefBasePtr<_Ty, DefaultRefPtrPolicy>;
 
 /// \~chinese
 /// @brief 构造引用计数对象智能指针

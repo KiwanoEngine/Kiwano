@@ -112,7 +112,7 @@ public:
  * \~chinese
  * @brief ÈÕÖ¾Á÷»º³å
  */
-class LogBuffer : public std::streambuf
+class KGE_API LogBuffer : public std::streambuf
 {
 public:
     LogBuffer(size_t buffer_size);
