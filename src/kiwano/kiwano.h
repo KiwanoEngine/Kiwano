@@ -128,6 +128,7 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/ResourceLoader.h>
 #include <kiwano/utils/UserData.h>
 #include <kiwano/utils/Timer.h>
 #include <kiwano/utils/Ticker.h>

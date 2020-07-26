@@ -183,7 +183,7 @@ void ObjectBase::SetStatus(const ObjectStatus& status)
 
 void ObjectBase::Fail(const String& msg, int code)
 {
-    SetStatus(ObjectStatus{ code, msg });
+    SetStatus(ObjectStatus(code, msg));
 }
 
 void ObjectBase::ClearStatus()

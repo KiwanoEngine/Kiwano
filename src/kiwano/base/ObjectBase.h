@@ -39,6 +39,14 @@ struct ObjectStatus
     int    code = 0;  ///< 状态码，等于 0 时为成功状态，否则为失败状态
     String msg;       ///< 状态信息
 
+    ObjectStatus() = default;
+
+    ObjectStatus(int code, const String& msg)
+        : code(code)
+        , msg(msg)
+    {
+    }
+
     /// \~chinese
     /// @brief 对象状态是否成功
     inline bool Success() const

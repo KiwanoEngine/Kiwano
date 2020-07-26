@@ -23,7 +23,6 @@
 #include <kiwano/base/Director.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextureCache.h>
-#include <kiwano/utils/ResourceCache.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
@@ -122,7 +121,6 @@ void Application::Destroy()
 
     // Clear user resources
     Director::GetInstance().ClearStages();
-    ResourceCache::GetInstance().Clear();
 
     for (auto iter = modules_.rbegin(); iter != modules_.rend(); ++iter)
     {

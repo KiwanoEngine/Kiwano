@@ -168,8 +168,10 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARNF("Texture file '%s' not found!", file_path.c_str());
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+        KGE_SET_STATUS_IF_FAILED(hr, texture,
+                                 strings::Format("Texture file '%s' not found!", file_path.c_str()).c_str());
+        return;
     }
 
     if (SUCCEEDED(hr))
@@ -273,8 +275,10 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARNF("Gif texture file '%s' not found!", file_path.c_str());
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+        KGE_SET_STATUS_IF_FAILED(hr, gif,
+                                 strings::Format("Gif texture file '%s' not found!", file_path.c_str()).c_str());
+        return;
     }
 
     if (SUCCEEDED(hr))
@@ -495,8 +499,9 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
     {
         if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
-            KGE_WARNF("Font file '%s' not found!", file_path.c_str());
             hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+            KGE_SET_STATUS_IF_FAILED(hr, font, strings::Format("Font file '%s' not found!", file_path.c_str()).c_str());
+            return;
         }
     }
 
