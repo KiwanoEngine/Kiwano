@@ -102,15 +102,21 @@ struct ObjectPolicy
 
     /// \~chinese
     /// @brief 在对象状态变为失败时打印警告日志
-    static ObjectPolicyFunc WarnLog();
+    /// @param threshold 触发阈值
+    /// @return 对象处理策略方法
+    static ObjectPolicyFunc WarnLog(int threshold = ObjectStatus::fail);
 
     /// \~chinese
-    /// @brief 在对象状态变为失败时打印错误日志（默认策略）
-    static ObjectPolicyFunc ErrorLog();
+    /// @brief 在对象状态变为失败时打印错误日志
+    /// @param threshold 触发阈值
+    /// @return 对象处理策略方法
+    static ObjectPolicyFunc ErrorLog(int threshold = ObjectStatus::fail);
 
     /// \~chinese
-    /// @brief 在对象状态变为失败时抛出 ObjectFailException
-    static ObjectPolicyFunc Exception();
+    /// @brief 在对象状态变为失败时抛出 ObjectFailException（默认策略）
+    /// @param threshold 触发阈值
+    /// @return 对象处理策略方法
+    static ObjectPolicyFunc Exception(int threshold = ObjectStatus::fail);
 };
 
 /**
@@ -167,7 +173,7 @@ public:
 
     /// \~chinese
     /// @brief 获取对象状态
-    ObjectStatus GetStatus() const;
+    ObjectStatus* GetStatus() const;
 
     /// \~chinese
     /// @brief 设置对象状态
@@ -218,7 +224,7 @@ private:
     String* name_;
     void*   user_data_;
 
-    ObjectStatus status_;
+    ObjectStatus* status_;
 };
 
 inline String ObjectBase::GetName() const
