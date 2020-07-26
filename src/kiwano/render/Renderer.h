@@ -69,11 +69,15 @@ public:
 
     /// \~chinese
     /// @brief 设置清屏颜色
-    virtual void SetClearColor(const Color& clear_color);
+    void SetClearColor(const Color& clear_color);
 
     /// \~chinese
     /// @brief 开启或关闭垂直同步
-    virtual void SetVSyncEnabled(bool enabled);
+    void SetVSyncEnabled(bool enabled);
+
+    /// \~chinese
+    /// @brief 窗口大小变化时自动调整分辨率
+    void ResetResolutionWhenWindowResized(bool enabled);
 
     /// \~chinese
     /// @brief 创建纹理内部资源
@@ -235,11 +239,14 @@ public:
     /// @brief 销毁渲染器资源
     virtual void Destroy() = 0;
 
+    void HandleEvent(EventModuleContext& ctx) override;
+
 protected:
     Renderer();
 
 protected:
     bool             vsync_;
+    bool             auto_reset_resolution_;
     Color            clear_color_;
     Size             output_size_;
     RenderContextPtr render_ctx_;
@@ -260,16 +267,6 @@ inline Size Renderer::GetOutputSize() const
 inline Color Renderer::GetClearColor() const
 {
     return clear_color_;
-}
-
-inline void Renderer::SetVSyncEnabled(bool enabled)
-{
-    vsync_ = enabled;
-}
-
-inline void Renderer::SetClearColor(const Color& color)
-{
-    clear_color_ = color;
 }
 
 }  // namespace kiwano

@@ -19,14 +19,43 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
+#include <kiwano/event/WindowEvent.h>
 
 namespace kiwano
 {
 
 Renderer::Renderer()
     : vsync_(true)
+    , auto_reset_resolution_(false)
     , clear_color_(Color::Black)
 {
+}
+
+void Renderer::SetClearColor(const Color& color)
+{
+    clear_color_ = color;
+}
+
+void Renderer::SetVSyncEnabled(bool enabled)
+{
+    vsync_ = enabled;
+}
+
+void Renderer::ResetResolutionWhenWindowResized(bool enabled)
+{
+    auto_reset_resolution_ = enabled;
+}
+
+void Renderer::HandleEvent(EventModuleContext& ctx)
+{
+    if (auto_reset_resolution_)
+    {
+        if (ctx.evt->IsType<WindowResizedEvent>())
+        {
+            auto evt = ctx.evt->SafeCast<WindowResizedEvent>();
+            Resize(evt->width, evt->height);
+        }
+    }
 }
 
 }  // namespace kiwano

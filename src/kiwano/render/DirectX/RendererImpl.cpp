@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/utils/Logger.h>
-#include <kiwano/event/WindowEvent.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
@@ -129,15 +128,6 @@ void RendererImpl::Destroy()
     }
 
     ::CoUninitialize();
-}
-
-void RendererImpl::HandleEvent(EventModuleContext& ctx)
-{
-    if (ctx.evt->IsType<WindowResizedEvent>())
-    {
-        auto evt = ctx.evt->SafeCast<WindowResizedEvent>();
-        Resize(evt->width, evt->height);
-    }
 }
 
 void RendererImpl::Clear()

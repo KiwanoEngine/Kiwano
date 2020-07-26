@@ -81,8 +81,6 @@ public:
 
     void Destroy() override;
 
-    void HandleEvent(EventModuleContext& ctx) override;
-
 protected:
     RendererImpl();
 

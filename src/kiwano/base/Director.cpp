@@ -150,8 +150,6 @@ void Director::OnUpdate(UpdateModuleContext& ctx)
 
     if (debug_actor_)
         debug_actor_->Update(ctx.dt);
-
-    ctx.Next();
 }
 
 void Director::OnRender(RenderModuleContext& ctx)
@@ -174,8 +172,6 @@ void Director::OnRender(RenderModuleContext& ctx)
     {
         debug_actor_->Render(ctx.render_ctx);
     }
-
-    ctx.Next();
 }
 
 void Director::HandleEvent(EventModuleContext& ctx)
@@ -188,8 +184,6 @@ void Director::HandleEvent(EventModuleContext& ctx)
 
     if (debug_actor_)
         debug_actor_->DispatchEvent(ctx.evt);
-
-    ctx.Next();
 }
 
 }  // namespace kiwano

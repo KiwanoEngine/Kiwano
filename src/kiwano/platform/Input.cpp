@@ -161,8 +161,6 @@ void Input::HandleEvent(EventModuleContext& ctx)
             UpdateKey(dynamic_cast<KeyUpEvent*>(evt)->code, false);
         }
     }
-
-    ctx.Next();
 }
 
 }  // namespace kiwano
