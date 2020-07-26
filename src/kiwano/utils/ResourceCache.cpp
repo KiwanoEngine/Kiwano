@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/ResourceLoader.h>
 
 namespace kiwano
 {
@@ -28,6 +29,20 @@ ResourceCache::ResourceCache() {}
 ResourceCache::~ResourceCache()
 {
     Clear();
+}
+
+bool ResourceCache::LoadFromJsonFile(const String& file_path)
+{
+    ResourceLoader loader(*this);
+    loader.LoadFromJsonFile(file_path);
+    return IsValid();
+}
+
+bool ResourceCache::LoadFromXmlFile(const String& file_path)
+{
+    ResourceLoader loader(*this);
+    loader.LoadFromXmlFile(file_path);
+    return IsValid();
 }
 
 void ResourceCache::AddObject(const String& id, ObjectBasePtr obj)

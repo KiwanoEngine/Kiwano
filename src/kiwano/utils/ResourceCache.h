@@ -37,6 +37,18 @@ class KGE_API ResourceCache final : public ObjectBase
 public:
     ResourceCache();
 
+    virtual ~ResourceCache();
+
+    /// \~chinese
+    /// @brief 从 JSON 文件加载资源信息
+    /// @param file_path JSON文件路径
+    bool LoadFromJsonFile(const String& file_path);
+
+    /// \~chinese
+    /// @brief 从 XML 文件加载资源信息
+    /// @param file_path XML文件路径
+    bool LoadFromXmlFile(const String& file_path);
+
     /// \~chinese
     /// @brief 获取资源
     /// @param id 对象ID
@@ -67,8 +79,6 @@ public:
     /// \~chinese
     /// @brief 清空所有资源
     void Clear();
-
-    virtual ~ResourceCache();
 
 private:
     UnorderedMap<String, ObjectBasePtr> object_cache_;

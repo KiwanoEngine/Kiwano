@@ -26,10 +26,10 @@
 #include <kiwano/render/DirectX/RendererImpl.h>
 #include <kiwano/render/DirectX/NativePtr.h>
 
-#define KGE_SET_STATUS_IF_FAILED(ERRCODE, OBJ, MESSAGE)                                 \
-    if (FAILED(ERRCODE))                                                                \
-    {                                                                                   \
-        OBJ.Fail(strings::Format("An exception occurred (%#x): %s", ERRCODE, MESSAGE)); \
+#define KGE_SET_STATUS_IF_FAILED(ERRCODE, OBJ, MESSAGE)                                   \
+    if (FAILED(ERRCODE))                                                                  \
+    {                                                                                     \
+        OBJ.Fail(strings::Format("%s failed (%#x): %s", __FUNCTION__, ERRCODE, MESSAGE)); \
     }
 
 namespace kiwano

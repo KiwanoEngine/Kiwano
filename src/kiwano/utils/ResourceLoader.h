@@ -19,37 +19,44 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/utils/ResourceCache.h>
+#include <kiwano/core/Common.h>
 #include <kiwano/utils/Json.h>
 #include <kiwano/utils/Xml.h>
 
 namespace kiwano
 {
 
+class ResourceCache;
+
 /// \~chinese
 /// @brief 资源加载器
-class KGE_API ResourceLoader final : Noncopyable
+class KGE_API ResourceLoader final
 {
 public:
+    ResourceLoader(ResourceCache& cache);
+
     /// \~chinese
     /// @brief 从 JSON 文件加载资源信息
     /// @param file_path JSON文件路径
-    static bool LoadFromJsonFile(ResourceCachePtr cache, const String& file_path);
+    void LoadFromJsonFile(const String& file_path);
 
     /// \~chinese
     /// @brief 从 JSON 加载资源信息
     /// @param json_data JSON对象
-    static bool LoadFromJson(ResourceCachePtr cache, const Json& json_data);
+    void LoadFromJson(const Json& json_data);
 
     /// \~chinese
     /// @brief 从 XML 文件加载资源信息
     /// @param file_path XML文件路径
-    static bool LoadFromXmlFile(ResourceCachePtr cache, const String& file_path);
+    void LoadFromXmlFile(const String& file_path);
 
     /// \~chinese
     /// @brief 从 XML 文档对象加载资源信息
     /// @param doc XML文档对象
-    static bool LoadFromXml(ResourceCachePtr cache, const XmlDocument& doc);
+    void LoadFromXml(const XmlDocument& doc);
+
+private:
+    ResourceCache& cache_;
 };
 
 }  // namespace kiwano

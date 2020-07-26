@@ -22,6 +22,7 @@
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/ResourceLoader.h>
+#include <kiwano/utils/ResourceCache.h>
 
 namespace kiwano
 {
@@ -48,19 +49,17 @@ Map<String, Function<void(ResourceCache*, const XmlNode&)>> load_xml_funcs = {
 
 }  // namespace
 
-bool ResourceLoader::LoadFromJsonFile(ResourceCachePtr cache, const String& file_path)
+ResourceLoader::ResourceLoader(ResourceCache& cache)
+    : cache_(cache)
 {
-    if (!cache)
-    {
-        KGE_ERROR("ResourceLoader::LoadFromJsonFile failed, cache is nullptr");
-        return false;
-    }
+}
 
+void ResourceLoader::LoadFromJsonFile(const String& file_path)
+{
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        cache->Fail(
-            strings::Format("ResourceLoader::LoadFromJsonFile failed: [%s] file not found.", file_path.c_str()));
-        return false;
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: [%s] file not found.", file_path.c_str()));
+        return;
     }
 
     Json json_data;
@@ -77,27 +76,22 @@ bool ResourceLoader::LoadFromJsonFile(ResourceCachePtr cache, const String& file
     }
     catch (std::ios_base::failure& e)
     {
-        cache->Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: cannot open file [%s]. %s",
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: cannot open file [%s]. %s",
                                     file_path.c_str(), e.what()));
-        return false;
+        return;
     }
     catch (Json::exception& e)
     {
-        cache->Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: Json file [%s] parsed with errors: %s",
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: Json file [%s] parsed with errors: %s",
                                     file_path.c_str(), e.what()));
-        return false;
+        return;
     }
-    return LoadFromJson(cache, json_data);
+
+    LoadFromJson(json_data);
 }
 
-bool ResourceLoader::LoadFromJson(ResourceCachePtr cache, const Json& json_data)
+void ResourceLoader::LoadFromJson(const Json& json_data)
 {
-    if (!cache)
-    {
-        KGE_ERROR("ResourceLoader::LoadFromJson failed, cache is nullptr");
-        return false;
-    }
-
     try
     {
         String version = json_data["version"];
@@ -105,36 +99,29 @@ bool ResourceLoader::LoadFromJson(ResourceCachePtr cache, const Json& json_data)
         auto load = load_json_funcs.find(version);
         if (load != load_json_funcs.end())
         {
-            load->second(cache.Get(), json_data);
+            load->second(&cache_, json_data);
         }
         else if (version.empty())
         {
-            load_json_funcs["latest"](cache.Get(), json_data);
+            load_json_funcs["latest"](&cache_, json_data);
         }
         else
         {
-            cache->Fail("ResourceLoader::LoadFromJson failed: unknown resource data version");
+            cache_.Fail("ResourceLoader::LoadFromJson failed: unknown resource data version");
         }
     }
     catch (Json::exception& e)
     {
-        cache->Fail(String("ResourceLoader::LoadFromJson failed: ") + e.what());
+        cache_.Fail(String("ResourceLoader::LoadFromJson failed: ") + e.what());
     }
-    return cache->IsValid();
 }
 
-bool ResourceLoader::LoadFromXmlFile(ResourceCachePtr cache, const String& file_path)
+void ResourceLoader::LoadFromXmlFile(const String& file_path)
 {
-    if (!cache)
-    {
-        KGE_ERROR("ResourceLoader::LoadFromXmlFile failed, cache is nullptr");
-        return false;
-    }
-
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        cache->Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: [%s] file not found.", file_path.c_str()));
-        return false;
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: [%s] file not found.", file_path.c_str()));
+        return;
     }
 
     String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
@@ -144,24 +131,17 @@ bool ResourceLoader::LoadFromXmlFile(ResourceCachePtr cache, const String& file_
     auto result = doc.load_file(full_path.c_str());
     if (result)
     {
-        return LoadFromXml(cache, doc);
+        LoadFromXml(doc);
     }
     else
     {
-        cache->Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: XML file [%s] parsed with errors: %s",
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: XML file [%s] parsed with errors: %s",
                                     file_path.c_str(), result.description()));
-        return false;
     }
 }
 
-bool ResourceLoader::LoadFromXml(ResourceCachePtr cache, const XmlDocument& doc)
+void ResourceLoader::LoadFromXml(const XmlDocument& doc)
 {
-    if (!cache)
-    {
-        KGE_ERROR("ResourceLoader::LoadFromXml failed, cache is nullptr");
-        return false;
-    }
-
     if (XmlNode root = doc.child("resources"))
     {
         String version;
@@ -171,22 +151,21 @@ bool ResourceLoader::LoadFromXml(ResourceCachePtr cache, const XmlDocument& doc)
         auto load = load_xml_funcs.find(version);
         if (load != load_xml_funcs.end())
         {
-            load->second(cache.Get(), root);
+            load->second(&cache_, root);
         }
         else if (version.empty())
         {
-            load_xml_funcs["latest"](cache.Get(), root);
+            load_xml_funcs["latest"](&cache_, root);
         }
         else
         {
-            cache->Fail("ResourceLoader::LoadFromXml failed: unknown resource data version");
+            cache_.Fail("ResourceLoader::LoadFromXml failed: unknown resource data version");
         }
     }
     else
     {
-        cache->Fail("ResourceLoader::LoadFromXml failed: unknown file format");
+        cache_.Fail("ResourceLoader::LoadFromXml failed: unknown file format");
     }
-    return cache->IsValid();
 }
 
 }  // namespace kiwano
