@@ -19,54 +19,56 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/ObjectBase.h>
-#include <mutex>
+#include <kiwano/base/RefObject.h>
+#include <kiwano/core/RefBasePtr.hpp>
 
 namespace kiwano
 {
-/**
- * \~chinese
- * @brief 对象池
- */
-class KGE_API ObjectPool
-    : public Noncopyable
+
+/// \~chinese
+/// @brief 默认的智能指针引用计数策略
+struct DefaultRefPtrPolicy
 {
-public:
-    static ObjectPool& GetInstance();
+    inline void Retain(RefObject* ptr)
+    {
+        if (ptr)
+            ptr->Retain();
+    }
 
-    ObjectPool();
-
-    virtual ~ObjectPool();
-
-    /**
-     * \~chinese
-     * @brief 添加对象到内存池
-     * @param[in] obj 基础对象
-     */
-    void AddObject(ObjectBase* obj);
-
-    /**
-     * \~chinese
-     * @brief 判断对象是否在对象池中
-     * @param[in] obj 基础对象
-     */
-    bool Contains(ObjectBase* obj) const;
-
-    /**
-     * \~chinese
-     * @brief 清空所有对象
-     */
-    void Clear();
-
-private:
-    ObjectPool(const ObjectPool&) = delete;
-
-    ObjectPool& operator=(const ObjectPool&) = delete;
-
-private:
-    std::mutex          mutex_;
-    Vector<ObjectBase*> objects_;
-
-    static List<ObjectPool*> pools_;
+    inline void Release(RefObject* ptr)
+    {
+        if (ptr)
+            ptr->Release();
+    }
 };
+
+/// \~chinese
+/// @brief 引用计数对象智能指针
+template <typename _Ty>
+using RefPtr = RefBasePtr<_Ty, DefaultRefPtrPolicy>;
+
+/// \~chinese
+/// @brief 构造引用计数对象智能指针
+template <typename _Ty, typename... _Args>
+inline RefPtr<_Ty> MakePtr(_Args&&... args)
+{
+    static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
+    return RefPtr<_Ty>(new _Ty(std::forward<_Args>(args)...));
+}
+
+/// \~chinese
+/// @brief 构造引用计数对象智能指针
+template <typename _Ty>
+inline RefPtr<_Ty> MakePtr(_Ty* ptr)
+{
+    static_assert(std::is_base_of<RefObject, _Ty>::value, "_Ty must be derived from RefObject");
+    return RefPtr<_Ty>(ptr);
+}
+
 }  // namespace kiwano
+
+#ifndef KGE_DECLARE_SMART_PTR
+#define KGE_DECLARE_SMART_PTR(CLASS) \
+    class CLASS;                     \
+    typedef ::kiwano::RefPtr<CLASS> CLASS##Ptr;
+#endif

@@ -21,20 +21,20 @@
 #pragma once
 #include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/RefBasePtr.hpp>
 #include <Unknwnbase.h>
 
 namespace kiwano
 {
-struct ComPtrProxy
+struct ComPtrPolicy
 {
-    static inline void Retain(IUnknown* ptr)
+    inline void Retain(IUnknown* ptr)
     {
         if (ptr)
             ptr->AddRef();
     }
 
-    static inline void Release(IUnknown* ptr)
+    inline void Release(IUnknown* ptr)
     {
         if (ptr)
             ptr->Release();
@@ -43,6 +43,6 @@ struct ComPtrProxy
 
 // ComPtr<> is a smart pointer for COM
 template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = SmartPtr<_Ty, ComPtrProxy>;
+using ComPtr = RefBasePtr<_Ty, ComPtrPolicy>;
 
 }  // namespace kiwano

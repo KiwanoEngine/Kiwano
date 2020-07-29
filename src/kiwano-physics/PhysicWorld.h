@@ -47,16 +47,12 @@ class KGE_API PhysicWorld : public Component
     friend class Joint;
 
 public:
-    /// \~chinese
-    /// @brief 创建物理世界
-    static PhysicWorldPtr Create();
+    PhysicWorld();
 
     /// \~chinese
     /// @brief 创建物理世界
     /// @param gravity 重力
-    static PhysicWorldPtr Create(const Vec2& gravity);
-
-    PhysicWorld();
+    PhysicWorld(const Vec2& gravity);
 
     virtual ~PhysicWorld();
 

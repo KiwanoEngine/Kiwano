@@ -49,21 +49,21 @@ public:
     /// @brief 创建任务
     /// @param cb 回调函数
     /// @param 报时器
-    static TaskPtr Create(const Callback& cb, TickerPtr ticker);
+    Task(const Callback& cb, TickerPtr ticker);
 
     /// \~chinese
     /// @brief 创建任务
     /// @param name 名称
     /// @param cb 回调函数
     /// @param 报时器
-    static TaskPtr Create(const String& name, const Callback& cb, TickerPtr ticker);
+    Task(const String& name, const Callback& cb, TickerPtr ticker);
 
     /// \~chinese
     /// @brief 创建任务
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TaskPtr Create(const Callback& cb, Duration interval, int times = -1);
+    Task(const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 创建任务
@@ -71,7 +71,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    static TaskPtr Create(const String& name, const Callback& cb, Duration interval, int times = -1);
+    Task(const String& name, const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 构造空任务

@@ -94,17 +94,11 @@ public:
     }
 };
 
-ConfigIniPtr ConfigIni::Create(const String& file_path)
+ConfigIni::ConfigIni() {}
+
+ConfigIni::ConfigIni(const String& file_path)
 {
-    ConfigIniPtr ptr = memory::New<ConfigIni>();
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-        {
-            return nullptr;
-        }
-    }
-    return ptr;
+    Load(file_path);
 }
 
 bool ConfigIni::Load(const String& file_path)
@@ -115,6 +109,8 @@ bool ConfigIni::Load(const String& file_path)
     {
         return Load(ifs);
     }
+
+    Fail("ConfigIni::Load failed");
     return false;
 }
 
@@ -127,13 +123,13 @@ bool ConfigIni::Load(std::istream& istream)
         {
             ParseLine(line, &section);
         }
-        return true;
     }
-    catch (Exception)
+    catch (RuntimeError& e)
     {
+        Fail(String("ConfigIni::Load failed: ") + e.what());
         return false;
     }
-    return false;
+    return true;
 }
 
 bool ConfigIni::Save(const String& file_path)
@@ -144,6 +140,7 @@ bool ConfigIni::Save(const String& file_path)
     {
         return Save(ofs);
     }
+    Fail("ConfigIni::Save failed");
     return false;
 }
 
@@ -171,7 +168,12 @@ bool ConfigIni::Save(std::ostream& os)
             os << std::endl;
         }
     }
-    return !os.fail();
+    if (os.fail())
+    {
+        Fail("ConfigIni::Save failed");
+        return false;
+    }
+    return true;
 }
 
 ConfigIni::SectionMap ConfigIni::GetSectionMap() const
@@ -373,7 +375,7 @@ void ConfigIni::ParseLine(StringView line, String* section)
     {
         auto name = parser.GetSectionName();
         if (name.IsEmpty())
-            throw Exception("Empty section name");
+            throw RuntimeError("Empty section name");
         *section = name;
         return;
     }
@@ -381,7 +383,7 @@ void ConfigIni::ParseLine(StringView line, String* section)
     StringView key, value;
     if (!parser.GetKeyValue(&key, &value))
     {
-        throw Exception("Parse key-value failed");
+        throw RuntimeError("Parse key-value failed");
     }
     SetString(*section, key, value);
 }

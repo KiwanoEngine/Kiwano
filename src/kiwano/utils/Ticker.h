@@ -36,7 +36,7 @@ public:
     /// @brief 创建报时器
     /// @param interval 报时间隔
     /// @param tick_count 报时次数（设 -1 为永久）
-    static TickerPtr Create(Duration interval, int tick_count = -1);
+    Ticker(Duration interval, int tick_count = -1);
 
     Ticker();
 

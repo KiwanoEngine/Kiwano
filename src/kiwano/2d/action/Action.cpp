@@ -106,7 +106,7 @@ void ActionEntity::Reset()
     loops_done_ = 0;
 }
 
-ActionEntityPtr ActionEntity::DoClone(ActionEntityPtr to) const
+void ActionEntity::DoClone(ActionEntity* to) const
 {
     if (to)
     {
@@ -116,7 +116,6 @@ ActionEntityPtr ActionEntity::DoClone(ActionEntityPtr to) const
         to->SetLoops(this->GetLoops());
         to->SetName(this->GetName());
     }
-    return to;
 }
 
 }  // namespace kiwano

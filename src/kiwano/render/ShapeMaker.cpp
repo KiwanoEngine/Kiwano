@@ -28,12 +28,6 @@
 namespace kiwano
 {
 
-ShapeMakerPtr ShapeMaker::Create()
-{
-    ShapeMakerPtr maker = memory::New<ShapeMaker>();
-    return maker;
-}
-
 ShapeMaker::ShapeMaker() {}
 
 ShapeMaker::~ShapeMaker()
@@ -151,8 +145,8 @@ void ShapeMaker::AddArc(const Point& point, const Size& radius, float rotation, 
 
 ShapePtr ShapeMaker::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix)
 {
-    ShapeMakerPtr maker = ShapeMaker::Create();
-    maker->OpenStream();
+    ShapeMaker maker;
+    maker.OpenStream();
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (shape_a && shape_b)
@@ -170,8 +164,8 @@ ShapePtr ShapeMaker::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mod
     // not supported
 #endif
 
-    maker->CloseStream();
-    return maker->GetShape();
+    maker.CloseStream();
+    return maker.GetShape();
 }
 
 void ShapeMaker::OpenStream()

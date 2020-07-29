@@ -28,37 +28,25 @@ namespace kiwano
 namespace physics
 {
 
-PhysicBodyPtr PhysicBody::Create(PhysicWorldPtr world, Type type)
-{
-    return PhysicBody::Create(world.Get(), type);
-}
-
-PhysicBodyPtr PhysicBody::Create(PhysicWorld* world, Type type)
-{
-    KGE_ASSERT(world);
-
-    PhysicBodyPtr ptr = new (std::nothrow) PhysicBody;
-    if (ptr)
-    {
-        ptr->SetType(type);
-        if (ptr->Init(world))
-        {
-            world->AddBody(ptr);
-            return ptr;
-        }
-    }
-    return nullptr;
-}
-
-PhysicBody::PhysicBody()
+PhysicBody::PhysicBody(PhysicWorld* world, Type type)
     : body_(nullptr)
-    , world_(nullptr)
-    , type_(Type::Static)
+    , world_(world)
+    , type_(type)
     , category_bits_(0x0001)
     , mask_bits_(0xFFFF)
     , group_index_(0)
 {
     SetName(KGE_PHYSIC_COMP_NAME);
+
+    if (Init(world))
+    {
+        world->AddBody(this);
+    }
+}
+
+PhysicBody::PhysicBody(PhysicWorldPtr world, Type type)
+    : PhysicBody(world.Get(), type)
+{
 }
 
 PhysicBody::~PhysicBody() {}
@@ -86,11 +74,6 @@ void PhysicBody::DestroyComponent()
     {
         world_->RemoveBody(this);
     }
-}
-
-bool PhysicBody::Init(PhysicWorldPtr world)
-{
-    return Init(world.Get());
 }
 
 bool PhysicBody::Init(PhysicWorld* world)

@@ -50,15 +50,15 @@ public:
     /// \~chinese
     /// @brief 创建延时动画
     /// @param delay 延时时长
-    static ActionDelayEntityPtr Create(Duration delay);
+    ActionDelayEntity(Duration delay);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionEntityPtr Clone() const override;
+    ActionDelayEntity* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionEntityPtr Reverse() const override;
+    ActionDelayEntity* Reverse() const override;
 };
 
 /** @} */

@@ -24,25 +24,17 @@
 namespace kiwano
 {
 
-CanvasPtr Canvas::Create(const Size& size)
+Canvas::Canvas(const Size& size)
 {
-    void*     mem = memory::Alloc(sizeof(Canvas));
-    CanvasPtr ptr = ::new (mem) Canvas;
-    if (ptr)
+    try
     {
-        try
-        {
-            ptr->ResizeAndClear(size);
-        }
-        catch (std::exception)
-        {
-            return nullptr;
-        }
+        ResizeAndClear(size);
     }
-    return ptr;
+    catch (Exception& e)
+    {
+        Fail(String("Canvas::ResizeAndClear failed: ") + e.what());
+    }
 }
-
-Canvas::Canvas() {}
 
 RenderContextPtr Canvas::GetContext2D() const
 {
@@ -59,10 +51,17 @@ void Canvas::OnRender(RenderContext& ctx)
 
 void Canvas::ResizeAndClear(Size size)
 {
-    texture_cached_ = memory::New<Texture>();
+    texture_cached_ = MakePtr<Texture>();
     render_ctx_     = RenderContext::Create(*texture_cached_, size);
 
-    SetSize(render_ctx_->GetSize());
+    if (render_ctx_)
+    {
+        SetSize(render_ctx_->GetSize());
+    }
+    else
+    {
+        Fail("Canvas::ResizeAndClear failed");
+    }
 }
 
 TexturePtr Canvas::ExportToTexture() const

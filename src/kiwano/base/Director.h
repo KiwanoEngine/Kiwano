@@ -34,9 +34,7 @@ namespace kiwano
  */
 class KGE_API Director
     : public Singleton<Director>
-    , public UpdateModule
-    , public RenderModule
-    , public EventModule
+    , public Module
 {
     friend Singleton<Director>;
 
@@ -92,15 +90,11 @@ public:
     void ClearStages();
 
 public:
-    void SetupModule() override {}
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
-    void DestroyModule() override {}
+    void OnRender(RenderModuleContext& ctx) override;
 
-    void OnUpdate(Duration dt) override;
-
-    void OnRender(RenderContext& ctx) override;
-
-    void HandleEvent(Event* evt) override;
+    void HandleEvent(EventModuleContext& ctx) override;
 
     virtual ~Director();
 

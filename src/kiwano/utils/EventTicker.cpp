@@ -29,15 +29,11 @@ TickEvent::TickEvent()
 {
 }
 
-EventTickerPtr EventTicker::Create(Duration interval, int times)
+EventTicker::EventTicker() {}
+
+EventTicker::EventTicker(Duration interval, int tick_count)
+    : Ticker(interval, tick_count)
 {
-    EventTickerPtr ptr = memory::New<EventTicker>();
-    if (ptr)
-    {
-        ptr->SetInterval(interval);
-        ptr->SetTotalTickCount(times);
-    }
-    return ptr;
 }
 
 bool EventTicker::Tick(Duration dt)

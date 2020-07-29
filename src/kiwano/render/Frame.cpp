@@ -24,36 +24,19 @@
 namespace kiwano
 {
 
-FramePtr Frame::Create(const String& file_path)
+Frame::Frame(const String& file_path)
 {
-    FramePtr ptr = memory::New<Frame>();
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-            return nullptr;
-    }
-    return ptr;
+    Load(file_path);
 }
 
-FramePtr Frame::Create(const Resource& res)
+Frame::Frame(const Resource& res)
 {
-    FramePtr ptr = memory::New<Frame>();
-    if (ptr)
-    {
-        if (!ptr->Load(res))
-            return nullptr;
-    }
-    return ptr;
+    Load(res);
 }
 
-FramePtr Frame::Create(TexturePtr texture)
+Frame::Frame(TexturePtr texture)
 {
-    FramePtr ptr = memory::New<Frame>();
-    if (ptr)
-    {
-        ptr->SetTexture(texture);
-    }
-    return ptr;
+    SetTexture(texture);
 }
 
 Frame::Frame() {}

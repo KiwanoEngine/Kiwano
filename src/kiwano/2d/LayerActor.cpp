@@ -25,12 +25,6 @@
 namespace kiwano
 {
 
-LayerActorPtr LayerActor::Create()
-{
-    LayerActorPtr ptr = memory::New<LayerActor>();
-    return ptr;
-}
-
 LayerActor::LayerActor()
     : swallow_(false)
 {

@@ -34,9 +34,7 @@ namespace imgui
  */
 class ImGuiModule
     : public Singleton<ImGuiModule>
-    , public RenderModule
-    , public UpdateModule
-    , public EventModule
+    , public Module
 {
     friend Singleton<ImGuiModule>;
 
@@ -47,13 +45,13 @@ public:
 
     void DestroyModule() override;
 
-    void BeforeRender() override;
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
-    void AfterRender() override;
+    void BeforeRender(RenderModuleContext& ctx) override;
 
-    void HandleEvent(Event* evt) override;
+    void AfterRender(RenderModuleContext& ctx) override;
 
-    void OnUpdate(Duration dt) override;
+    void HandleEvent(EventModuleContext& ctx) override;
 
 private:
     void UpdateMousePos();

@@ -26,42 +26,23 @@ namespace kiwano
 namespace network
 {
 
-HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const ResponseCallback& callback)
+HttpRequest::HttpRequest(const String& url, HttpType type, const ResponseCallback& callback)
+    : type_(type)
+    , url_(url)
+    , response_cb_(callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
-    if (ptr)
-    {
-        ptr->SetUrl(url);
-        ptr->SetType(type);
-        ptr->SetResponseCallback(callback);
-    }
-    return ptr;
 }
 
-HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback)
+HttpRequest::HttpRequest(const String& url, HttpType type, const String& data, const ResponseCallback& callback)
+    : HttpRequest(url, type, callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
-    if (ptr)
-    {
-        ptr->SetUrl(url);
-        ptr->SetType(type);
-        ptr->SetData(data);
-        ptr->SetResponseCallback(callback);
-    }
-    return ptr;
+    SetData(data);
 }
 
-HttpRequestPtr HttpRequest::Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback)
+HttpRequest::HttpRequest(const String& url, HttpType type, const Json& json, const ResponseCallback& callback)
+    : HttpRequest(url, type, callback)
 {
-    HttpRequestPtr ptr = new (std::nothrow) HttpRequest;
-    if (ptr)
-    {
-        ptr->SetUrl(url);
-        ptr->SetType(type);
-        ptr->SetJsonData(json);
-        ptr->SetResponseCallback(callback);
-    }
-    return ptr;
+    SetJsonData(json);
 }
 
 void HttpRequest::SetJsonData(const Json& json)

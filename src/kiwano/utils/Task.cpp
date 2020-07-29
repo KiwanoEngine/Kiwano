@@ -22,37 +22,32 @@
 
 namespace kiwano
 {
-TaskPtr Task::Create(const Callback& cb, TickerPtr ticker)
+Task::Task(const Callback& cb, TickerPtr ticker)
+    : running_(true)
+    , removeable_(false)
+    , callback_(cb)
+    , ticker_(ticker)
 {
-    TaskPtr ptr = memory::New<Task>();
-    if (ptr)
-    {
-        ptr->SetCallback(cb);
-        ptr->SetTicker(ticker);
-    }
-    return ptr;
 }
 
-TaskPtr Task::Create(const String& name, const Callback& cb, TickerPtr ticker)
+Task::Task(const String& name, const Callback& cb, TickerPtr ticker)
+    : Task(cb, ticker)
 {
-    TaskPtr ptr = Task::Create(cb, ticker);
-    if (ptr)
-    {
-        ptr->SetName(name);
-    }
-    return ptr;
+    SetName(name);
 }
 
-TaskPtr Task::Create(const Callback& cb, Duration interval, int times)
+Task::Task(const Callback& cb, Duration interval, int times)
+    : running_(true)
+    , removeable_(false)
+    , callback_(cb)
 {
-    TickerPtr ticker = Ticker::Create(interval, times);
-    return Task::Create(cb, ticker);
+    ticker_ = MakePtr<Ticker>(interval, times);
 }
 
-TaskPtr Task::Create(const String& name, const Callback& cb, Duration interval, int times)
+Task::Task(const String& name, const Callback& cb, Duration interval, int times)
+    : Task(cb, interval, times)
 {
-    TickerPtr ticker = Ticker::Create(interval, times);
-    return Task::Create(name, cb, ticker);
+    SetName(name);
 }
 
 Task::Task()

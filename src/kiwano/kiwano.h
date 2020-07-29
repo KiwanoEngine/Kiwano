@@ -46,14 +46,14 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Defer.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/core/SmartPtr.hpp>
+#include <kiwano/core/RefBasePtr.hpp>
 #include <kiwano/core/Time.h>
 
 //
 // base
 //
 
-#include <kiwano/base/RefCounter.h>
+#include <kiwano/base/RefObject.h>
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/base/Director.h>
 #include <kiwano/base/Module.h>
@@ -128,6 +128,7 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/utils/ResourceLoader.h>
 #include <kiwano/utils/UserData.h>
 #include <kiwano/utils/Timer.h>
 #include <kiwano/utils/Ticker.h>

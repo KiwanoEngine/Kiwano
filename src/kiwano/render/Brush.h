@@ -92,17 +92,17 @@ public:
     /// \~chinese
     /// @brief 创建纯色画刷
     /// @param color 画刷颜色
-    static BrushPtr Create(const Color& color);
+    Brush(const Color& color);
 
     /// \~chinese
     /// @brief 创建线性渐变样式
     /// @param style 线性渐变样式
-    static BrushPtr Create(const LinearGradientStyle& style);
+    Brush(const LinearGradientStyle& style);
 
     /// \~chinese
     /// @brief 创建径向渐变样式
     /// @param style 径向渐变样式
-    static BrushPtr Create(const RadialGradientStyle& style);
+    Brush(const RadialGradientStyle& style);
 
     Brush();
 

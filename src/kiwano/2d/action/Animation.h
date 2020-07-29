@@ -49,13 +49,13 @@ public:
 class KGE_API AnimationEntity : public ActionTweenEntity
 {
 public:
+    AnimationEntity();
+
     /// \~chinese
     /// @brief 创建帧动画
     /// @param dur 动画时长
     /// @param frame_seq 序列帧
-    static AnimationEntityPtr Create(Duration dur, FrameSequencePtr frame_seq);
-
-    AnimationEntity();
+    AnimationEntity(Duration dur, FrameSequencePtr frame_seq);
 
     virtual ~AnimationEntity();
 
@@ -70,11 +70,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionEntityPtr Clone() const override;
+    AnimationEntity* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionEntityPtr Reverse() const override;
+    AnimationEntity* Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -86,4 +86,5 @@ private:
 };
 
 /** @} */
+
 }  // namespace kiwano

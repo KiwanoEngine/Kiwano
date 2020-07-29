@@ -18,69 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/ObjectPool.h>
+#pragma once
+#include <atomic>
+#include <kiwano/core/Common.h>
 
 namespace kiwano
 {
 
-List<ObjectPool*> ObjectPool::pools_;
-
-ObjectPool& ObjectPool::GetInstance()
+/**
+ * \~chinese
+ * @brief 引用计数器
+ */
+class KGE_API RefObject : protected Noncopyable
 {
-    static ObjectPool instance;
-    return *pools_.back();
-}
+public:
+    /// \~chinese
+    /// @brief 增加引用计数
+    void Retain();
 
-ObjectPool::ObjectPool()
-{
-    pools_.push_back(this);
-}
+    /// \~chinese
+    /// @brief 减少引用计数
+    void Release();
 
-ObjectPool::~ObjectPool()
-{
-    Clear();
+    /// \~chinese
+    /// @brief 获取引用计数
+    uint32_t GetRefCount() const;
 
-    auto iter = std::find(pools_.begin(), pools_.end(), this);
-    if (iter != pools_.end())
-        pools_.erase(iter);
-}
+    static void* operator new(size_t size);
 
-void ObjectPool::AddObject(ObjectBase* obj)
-{
-    if (obj)
-    {
-        if (!Contains(obj))
-        {
-            obj->Retain();
+    static void operator delete(void* ptr);
 
-            std::lock_guard<std::mutex> lock(mutex_);
-            objects_.push_back(obj);
-        }
-    }
-}
+    static void* operator new(size_t size, std::nothrow_t const&) noexcept;
 
-bool ObjectPool::Contains(ObjectBase* obj) const
-{
-    std::lock_guard<std::mutex> lock(const_cast<std::mutex&>(mutex_));
+    static void operator delete(void* ptr, std::nothrow_t const&) noexcept;
 
-    for (auto iter = pools_.rbegin(); iter != pools_.rend(); iter++)
-        for (const auto o : (*iter)->objects_)
-            if (obj == o)
-                return true;
-    return false;
-}
+    static void* operator new(size_t size, void* ptr) noexcept;
 
-void ObjectPool::Clear()
-{
-    Vector<ObjectBase*> copied;
+    static void operator delete(void* ptr, void* place) noexcept;
 
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        copied = std::move(objects_);
-    }
+    virtual ~RefObject();
 
-    for (auto obj : copied)
-        obj->Release();
-}
+protected:
+    RefObject();
+
+private:
+    std::atomic<uint32_t> ref_count_;
+};
 
 }  // namespace kiwano

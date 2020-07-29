@@ -25,40 +25,25 @@
 namespace kiwano
 {
 
-ShapeActorPtr ShapeActor::Create(ShapePtr shape)
+ShapeActor::ShapeActor() {}
+
+ShapeActor::ShapeActor(ShapePtr shape)
 {
-    ShapeActorPtr ptr = memory::New<ShapeActor>();
-    if (ptr)
-    {
-        ptr->SetShape(shape);
-    }
-    return ptr;
+    SetShape(shape);
 }
 
-ShapeActorPtr ShapeActor::Create(ShapePtr shape, const Color& fill_color, const Color& stroke_color)
+ShapeActor::ShapeActor(ShapePtr shape, const Color& fill_color, const Color& stroke_color)
+    : ShapeActor(shape)
 {
-    ShapeActorPtr ptr = ShapeActor::Create(shape);
-    if (ptr)
-    {
-        ptr->SetFillColor(fill_color);
-        ptr->SetStrokeColor(stroke_color);
-    }
-    return ptr;
+    SetFillColor(fill_color);
+    SetStrokeColor(stroke_color);
 }
 
-ShapeActorPtr ShapeActor::Create(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush)
+ShapeActor::ShapeActor(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush)
+    : ShapeActor(shape)
 {
-    ShapeActorPtr ptr = ShapeActor::Create(shape);
-    if (ptr)
-    {
-        ptr->SetFillBrush(fill_brush);
-        ptr->SetStrokeBrush(stroke_brush);
-    }
-    return ptr;
-}
-
-ShapeActor::ShapeActor()
-{
+    SetFillBrush(fill_brush);
+    SetStrokeBrush(stroke_brush);
 }
 
 ShapeActor::~ShapeActor() {}
@@ -127,17 +112,12 @@ bool ShapeActor::CheckVisibility(RenderContext& ctx) const
 // LineActor
 //-------------------------------------------------------
 
-LineActorPtr LineActor::Create(const Point& begin, const Point& end)
-{
-    LineActorPtr ptr = memory::New<LineActor>();
-    if (ptr)
-    {
-        ptr->SetLine(begin, end);
-    }
-    return ptr;
-}
-
 LineActor::LineActor() {}
+
+LineActor::LineActor(const Point& begin, const Point& end)
+{
+    SetLine(begin, end);
+}
 
 LineActor::~LineActor() {}
 
@@ -155,17 +135,12 @@ void LineActor::SetLine(const Point& begin, const Point& end)
 // RectActor
 //-------------------------------------------------------
 
-RectActorPtr RectActor::Create(const Size& size)
-{
-    RectActorPtr ptr = memory::New<RectActor>();
-    if (ptr)
-    {
-        ptr->SetRectSize(size);
-    }
-    return ptr;
-}
-
 RectActor::RectActor() {}
+
+RectActor::RectActor(const Size& size)
+{
+    SetRectSize(size);
+}
 
 RectActor::~RectActor() {}
 
@@ -182,17 +157,12 @@ void RectActor::SetRectSize(const Size& size)
 // RoundedRectActor
 //-------------------------------------------------------
 
-RoundedRectActorPtr RoundedRectActor::Create(const Size& size, const Vec2& radius)
-{
-    RoundedRectActorPtr ptr = memory::New<RoundedRectActor>();
-    if (ptr)
-    {
-        ptr->SetRoundedRect(size, radius);
-    }
-    return ptr;
-}
-
 RoundedRectActor::RoundedRectActor() {}
+
+RoundedRectActor::RoundedRectActor(const Size& size, const Vec2& radius)
+{
+    SetRoundedRect(size, radius);
+}
 
 RoundedRectActor::~RoundedRectActor() {}
 
@@ -220,19 +190,15 @@ void RoundedRectActor::SetRoundedRect(const Size& size, const Vec2& radius)
 // CircleActor
 //-------------------------------------------------------
 
-CircleActorPtr CircleActor::Create(float radius)
-{
-    CircleActorPtr ptr = memory::New<CircleActor>();
-    if (ptr)
-    {
-        ptr->SetRadius(radius);
-    }
-    return ptr;
-}
-
 CircleActor::CircleActor()
     : radius_(0.f)
 {
+}
+
+CircleActor::CircleActor(float radius)
+    : radius_(0.f)
+{
+    SetRadius(radius);
 }
 
 CircleActor::~CircleActor() {}
@@ -250,17 +216,12 @@ void CircleActor::SetRadius(float radius)
 // EllipseActor
 //-------------------------------------------------------
 
-EllipseActorPtr EllipseActor::Create(const Vec2& radius)
-{
-    EllipseActorPtr ptr = memory::New<EllipseActor>();
-    if (ptr)
-    {
-        ptr->SetRadius(radius);
-    }
-    return ptr;
-}
-
 EllipseActor::EllipseActor() {}
+
+EllipseActor::EllipseActor(const Vec2& radius)
+{
+    SetRadius(radius);
+}
 
 EllipseActor::~EllipseActor() {}
 
@@ -277,17 +238,12 @@ void EllipseActor::SetRadius(const Vec2& radius)
 // PolygonActor
 //-------------------------------------------------------
 
-PolygonActorPtr PolygonActor::Create(const Vector<Point>& points)
-{
-    PolygonActorPtr ptr = memory::New<PolygonActor>();
-    if (ptr)
-    {
-        ptr->SetVertices(points);
-    }
-    return ptr;
-}
-
 PolygonActor::PolygonActor() {}
+
+PolygonActor::PolygonActor(const Vector<Point>& points)
+{
+    SetVertices(points);
+}
 
 PolygonActor::~PolygonActor() {}
 
@@ -295,12 +251,12 @@ void PolygonActor::SetVertices(const Vector<Point>& points)
 {
     if (points.size() > 1)
     {
-        ShapeMakerPtr maker = ShapeMaker::Create();
-        maker->BeginPath(points[0]);
-        maker->AddLines(&points[1], points.size() - 1);
-        maker->EndPath(true);
+        ShapeMaker maker;
+        maker.BeginPath(points[0]);
+        maker.AddLines(&points[1], points.size() - 1);
+        maker.EndPath(true);
 
-        SetShape(maker->GetShape());
+        SetShape(maker.GetShape());
     }
 }
 

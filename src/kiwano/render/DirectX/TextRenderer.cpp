@@ -82,7 +82,7 @@ HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1Re
 
     if (ppTextRenderer)
     {
-        TextRenderer* pTextRenderer = memory::New<TextRenderer>();
+        TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer;
         if (pTextRenderer)
         {
             hr = pTextRenderer->CreateDeviceResources(pRT);

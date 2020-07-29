@@ -66,7 +66,7 @@ protected:
      * @param[in] prev 转出场景
      * @param[in] next 转入场景
      */
-    virtual void Init(StagePtr prev, StagePtr next);
+    virtual void Init(Stage* prev, Stage* next);
 
     /**
      * \~chinese
@@ -95,15 +95,15 @@ protected:
     virtual void Reset() {}
 
 protected:
-    bool      done_;
-    float     process_;
-    Duration  duration_;
-    Duration  delta_;
-    Size      window_size_;
-    StagePtr  out_stage_;
-    StagePtr  in_stage_;
-    Layer out_layer_;
-    Layer in_layer_;
+    bool     done_;
+    float    process_;
+    Duration duration_;
+    Duration delta_;
+    Size     window_size_;
+    StagePtr out_stage_;
+    StagePtr in_stage_;
+    Layer    out_layer_;
+    Layer    in_layer_;
 };
 
 /**
@@ -119,14 +119,14 @@ public:
      * @brief 创建淡入淡出过渡动画
      * @param duration 动画时长
      */
-    static FadeTransitionPtr Create(Duration duration);
+    FadeTransition(Duration duration);
 
     FadeTransition();
 
 protected:
     void Update(Duration dt) override;
 
-    virtual void Init(StagePtr prev, StagePtr next) override;
+    virtual void Init(Stage* prev, Stage* next) override;
 };
 
 /**
@@ -142,14 +142,14 @@ public:
      * @brief 创建渐变过渡动画
      * @param duration 动画时长
      */
-    static EmergeTransitionPtr Create(Duration duration);
+    EmergeTransition(Duration duration);
 
     EmergeTransition();
 
 protected:
     void Update(Duration dt) override;
 
-    virtual void Init(StagePtr prev, StagePtr next) override;
+    virtual void Init(Stage* prev, Stage* next) override;
 };
 
 /**
@@ -165,14 +165,14 @@ public:
      * @brief 创建盒状过渡动画
      * @param duration 动画时长
      */
-    static BoxTransitionPtr Create(Duration duration);
+    BoxTransition(Duration duration);
 
     BoxTransition();
 
 protected:
     void Update(Duration dt) override;
 
-    virtual void Init(StagePtr prev, StagePtr next) override;
+    virtual void Init(Stage* prev, Stage* next) override;
 };
 
 /**
@@ -201,14 +201,14 @@ public:
      * @param duration 动画时长
      * @param type 位移方式
      */
-    static MoveTransitionPtr Create(Duration duration, Type type);
+    MoveTransition(Duration duration, Type type);
 
     MoveTransition();
 
 protected:
     void Update(Duration dt) override;
 
-    virtual void Init(StagePtr prev, StagePtr next) override;
+    virtual void Init(Stage* prev, Stage* next) override;
 
     void Reset() override;
 
@@ -232,14 +232,14 @@ public:
      * @param duration 动画时长
      * @param rotation 旋转度数
      */
-    static RotationTransitionPtr Create(Duration duration, float rotation = 360.0f);
+    RotationTransition(Duration duration, float rotation = 360.0f);
 
     RotationTransition();
 
 protected:
     void Update(Duration dt) override;
 
-    virtual void Init(StagePtr prev, StagePtr next) override;
+    virtual void Init(Stage* prev, Stage* next) override;
 
     void Reset() override;
 

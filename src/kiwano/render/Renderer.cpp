@@ -20,29 +20,42 @@
 
 #include <kiwano/render/Renderer.h>
 #include <kiwano/event/WindowEvent.h>
-#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
 
 Renderer::Renderer()
     : vsync_(true)
+    , auto_reset_resolution_(false)
     , clear_color_(Color::Black)
 {
 }
 
-void Renderer::BeginDraw()
+void Renderer::SetClearColor(const Color& color)
 {
-    KGE_ASSERT(render_ctx_);
-
-    render_ctx_->BeginDraw();
+    clear_color_ = color;
 }
 
-void Renderer::EndDraw()
+void Renderer::SetVSyncEnabled(bool enabled)
 {
-    KGE_ASSERT(render_ctx_);
+    vsync_ = enabled;
+}
 
-    render_ctx_->EndDraw();
+void Renderer::ResetResolutionWhenWindowResized(bool enabled)
+{
+    auto_reset_resolution_ = enabled;
+}
+
+void Renderer::HandleEvent(EventModuleContext& ctx)
+{
+    if (auto_reset_resolution_)
+    {
+        if (ctx.evt->IsType<WindowResizedEvent>())
+        {
+            auto evt = ctx.evt->SafeCast<WindowResizedEvent>();
+            Resize(evt->width, evt->height);
+        }
+    }
 }
 
 }  // namespace kiwano

@@ -136,35 +136,35 @@ bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
 
 ShapePtr Shape::CreateLine(const Point& begin, const Point& end)
 {
-    ShapePtr output = memory::New<Shape>();
+    ShapePtr output = MakePtr<Shape>();
     Renderer::GetInstance().CreateLineShape(*output, begin, end);
     return output;
 }
 
 ShapePtr Shape::CreateRect(const Rect& rect)
 {
-    ShapePtr output = memory::New<Shape>();
+    ShapePtr output = MakePtr<Shape>();
     Renderer::GetInstance().CreateRectShape(*output, rect);
     return output;
 }
 
 ShapePtr Shape::CreateRoundedRect(const Rect& rect, const Vec2& radius)
 {
-    ShapePtr output = memory::New<Shape>();
+    ShapePtr output = MakePtr<Shape>();
     Renderer::GetInstance().CreateRoundedRectShape(*output, rect, radius);
     return output;
 }
 
 ShapePtr Shape::CreateCircle(const Point& center, float radius)
 {
-    ShapePtr output = memory::New<Shape>();
+    ShapePtr output = MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, Vec2{ radius, radius });
     return output;
 }
 
 ShapePtr Shape::CreateEllipse(const Point& center, const Vec2& radius)
 {
-    ShapePtr output = memory::New<Shape>();
+    ShapePtr output = MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, radius);
     return output;
 }

@@ -18,13 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/core/Exception.h>
-#include <kiwano/utils/Logger.h>
-#include <kiwano/core/Time.h>
 #include <regex>
 #include <unordered_map>
 #include <chrono>
 #include <thread>
+#include <kiwano/core/Time.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {

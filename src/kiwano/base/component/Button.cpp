@@ -25,23 +25,19 @@
 namespace kiwano
 {
 
-ButtonPtr Button::Create(const Callback& click)
+Button::Button(const Callback& click)
+    : Button(click, nullptr, nullptr, nullptr)
 {
-    return Button::Create(click, nullptr, nullptr, nullptr);
 }
 
-ButtonPtr Button::Create(const Callback& click, const Callback& pressed, const Callback& mouse_over,
-                         const Callback& mouse_out)
+Button::Button(const Callback& click, const Callback& pressed, const Callback& mouse_over, const Callback& mouse_out)
+    : status_(Status::Normal)
+    , click_callback_(click)
+    , pressed_callback_(pressed)
+    , mouse_over_callback_(mouse_over)
+    , mouse_out_callback_(mouse_out)
 {
-    ButtonPtr ptr = memory::New<Button>();
-    if (ptr)
-    {
-        ptr->SetClickCallback(click);
-        ptr->SetPressedCallback(pressed);
-        ptr->SetMouseOverCallback(mouse_over);
-        ptr->SetMouseOutCallback(mouse_out);
-    }
-    return ptr;
+    SetName("__KGE_BUTTON__");
 }
 
 Button::Button()

@@ -18,42 +18,84 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <atomic>
-#include <kiwano/core/Common.h>
+#include <kiwano/base/RefObject.h>
 
 namespace kiwano
 {
-/**
- * \~chinese
- * @brief 引用计数器
- */
-class KGE_API RefCounter : protected Noncopyable
+
+RefObject::RefObject()
+    : ref_count_(0)
 {
-public:
-    RefCounter();
+}
 
-    virtual ~RefCounter();
+RefObject::~RefObject() {}
 
-    /// \~chinese
-    /// @brief 增加引用计数
-    void Retain();
-
-    /// \~chinese
-    /// @brief 减少引用计数
-    void Release();
-
-    /// \~chinese
-    /// @brief 获取引用计数
-    uint32_t GetRefCount() const;
-
-private:
-    std::atomic<uint32_t> ref_count_;
-};
-
-inline uint32_t RefCounter::GetRefCount() const
+void RefObject::Retain()
 {
-    return ref_count_;
+    ++ref_count_;
+}
+
+void RefObject::Release()
+{
+    --ref_count_;
+    if (ref_count_ == 0)
+    {
+        delete this;
+    }
+}
+
+uint32_t RefObject::GetRefCount() const
+{
+    return ref_count_.load();
+}
+
+void* RefObject::operator new(size_t size)
+{
+    void* ptr = memory::Alloc(size);
+    if (!ptr)
+    {
+        throw std::bad_alloc();
+    }
+    return ptr;
+}
+
+void RefObject::operator delete(void* ptr)
+{
+    memory::Free(ptr);
+}
+
+void* RefObject::operator new(size_t size, std::nothrow_t const&)
+{
+    try
+    {
+        void* ptr = memory::Alloc(size);
+        return ptr;
+    }
+    catch (...)
+    {
+    }
+    return nullptr;
+}
+
+void RefObject::operator delete(void* ptr, std::nothrow_t const&)
+{
+    try
+    {
+        memory::Free(ptr);
+    }
+    catch (...)
+    {
+    }
+}
+
+void* RefObject::operator new(size_t size, void* ptr)
+{
+    return ::operator new(size, ptr);
+}
+
+void RefObject::operator delete(void* ptr, void* place) noexcept
+{
+    ::operator delete(ptr, place);
 }
 
 }  // namespace kiwano

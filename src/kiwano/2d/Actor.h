@@ -77,10 +77,6 @@ public:
     /// @brief 角色更新回调函数
     typedef Function<void(Duration)> UpdateCallback;
 
-    /// \~chinese
-    /// @brief 创建角色
-    static ActorPtr Create();
-
     Actor();
 
     virtual ~Actor();

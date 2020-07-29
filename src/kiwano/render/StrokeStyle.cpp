@@ -24,39 +24,30 @@
 namespace kiwano
 {
 
-StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line_join)
+StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join)
+    : StrokeStyle(width, cap, line_join, DashStyle::Solid)
 {
-    return StrokeStyle::Create(width, cap, line_join, DashStyle::Solid);
 }
 
-StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash,
-                                   float dash_offset)
+StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset)
+    : StrokeStyle()
 {
-    StrokeStylePtr ptr = memory::New<StrokeStyle>();
-    if (ptr)
-    {
-        ptr->SetStrokeWidth(width);
-        ptr->SetCapStyle(cap);
-        ptr->SetLineJoinStyle(line_join);
-        ptr->SetDashStyle(dash);
-        ptr->SetDashOffset(dash_offset);
-    }
-    return ptr;
+    SetStrokeWidth(width);
+    SetCapStyle(cap);
+    SetLineJoinStyle(line_join);
+    SetDashStyle(dash);
+    SetDashOffset(dash_offset);
 }
 
-StrokeStylePtr StrokeStyle::Create(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array,
-                                   size_t dash_size, float dash_offset)
+StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, const float* dash_array, size_t dash_size,
+                         float dash_offset)
+    : StrokeStyle()
 {
-    StrokeStylePtr ptr = memory::New<StrokeStyle>();
-    if (ptr)
-    {
-        ptr->SetStrokeWidth(width);
-        ptr->SetCapStyle(cap);
-        ptr->SetLineJoinStyle(line_join);
-        ptr->SetDashStyle(dash_array, dash_size);
-        ptr->SetDashOffset(dash_offset);
-    }
-    return ptr;
+    SetStrokeWidth(width);
+    SetCapStyle(cap);
+    SetLineJoinStyle(line_join);
+    SetDashStyle(dash_array, dash_size);
+    SetDashOffset(dash_offset);
 }
 
 StrokeStyle::StrokeStyle()

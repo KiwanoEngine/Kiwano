@@ -24,12 +24,6 @@
 namespace kiwano
 {
 
-TimerPtr Timer::Create()
-{
-    TimerPtr ptr = memory::New<Timer>();
-    return ptr;
-}
-
 Timer::Timer()
     : is_paused_(false)
 {

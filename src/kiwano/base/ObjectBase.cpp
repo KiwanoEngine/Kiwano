@@ -18,25 +18,75 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <typeinfo>
+#include <atomic>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/ObjectPool.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
-#include <typeinfo>
 
 namespace kiwano
 {
 namespace
 {
-bool                tracing_leaks = false;
-Vector<ObjectBase*> tracing_objects;
-uint32_t            last_object_id = 0;
+
+bool                  tracing_leaks = false;
+Vector<ObjectBase*>   tracing_objects;
+std::atomic<uint64_t> last_object_id = 0;
+ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
+
 }  // namespace
+
+
+
+ObjectFailException::ObjectFailException(ObjectBase* obj, const ObjectStatus& status)
+    : obj_(obj)
+    , status_(status)
+{
+}
+
+char const* ObjectFailException::what() const
+{
+    return status_.msg.empty() ? "Object operation failed" : status_.msg.c_str();
+}
+
+ObjectPolicyFunc ObjectPolicy::WarnLog(int threshold)
+{
+    return [=](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid() || status.code <= threshold)
+        {
+            KGE_WARNF("Object operation failed: obj(%p), code(%d), msg(%s)", obj, status.code, status.msg.c_str());
+        }
+    };
+}
+
+ObjectPolicyFunc ObjectPolicy::ErrorLog(int threshold)
+{
+    return [=](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid() || status.code <= threshold)
+        {
+            KGE_ERRORF("Object operation failed: obj(%p), code(%d), msg(%s)", obj, status.code, status.msg.c_str());
+        }
+    };
+}
+
+ObjectPolicyFunc ObjectPolicy::Exception(int threshold)
+{
+    return [=](ObjectBase* obj, const ObjectStatus& status)
+    {
+        if (!obj->IsValid() || status.code <= threshold)
+        {
+            throw ObjectFailException(obj, status);
+        }
+    };
+}
 
 ObjectBase::ObjectBase()
     : tracing_leak_(false)
     , name_(nullptr)
-    , user_data_()
+    , user_data_(nullptr)
+    , status_(nullptr)
     , id_(++last_object_id)
 {
 #ifdef KGE_DEBUG
@@ -52,22 +102,19 @@ ObjectBase::~ObjectBase()
         name_ = nullptr;
     }
 
+    ClearStatus();
+
 #ifdef KGE_DEBUG
     ObjectBase::RemoveObjectFromTracingList(this);
 #endif
 }
 
-void ObjectBase::AutoRelease()
-{
-    ObjectPool::GetInstance().AddObject(this);
-}
-
-const Any& ObjectBase::GetUserData() const
+void* ObjectBase::GetUserData() const
 {
     return user_data_;
 }
 
-void ObjectBase::SetUserData(const Any& data)
+void ObjectBase::SetUserData(void* data)
 {
     user_data_ = data;
 }
@@ -103,6 +150,54 @@ void ObjectBase::DoDeserialize(Deserializer* deserializer)
     String name;
     (*deserializer) >> name;
     SetName(name);
+}
+
+bool ObjectBase::IsValid() const
+{
+    return status_ ? status_->Success() : true;
+}
+
+ObjectStatus* ObjectBase::GetStatus() const
+{
+    return status_;
+}
+
+void ObjectBase::SetStatus(const ObjectStatus& status)
+{
+    if (!status_)
+    {
+        status_ = new ObjectStatus;
+    }
+
+    status_->msg = status.msg;
+    if (status_->code != status.code)
+    {
+        status_->code = status.code;
+
+        if (object_policy_)
+        {
+            object_policy_(this, *status_);
+        }
+    }
+}
+
+void ObjectBase::Fail(const String& msg, int code)
+{
+    SetStatus(ObjectStatus(code, msg));
+}
+
+void ObjectBase::ClearStatus()
+{
+    if (status_)
+    {
+        delete status_;
+        status_ = nullptr;
+    }
+}
+
+void ObjectBase::SetObjectPolicy(const ObjectPolicyFunc& policy)
+{
+    object_policy_ = policy;
 }
 
 bool ObjectBase::IsTracingLeaks()

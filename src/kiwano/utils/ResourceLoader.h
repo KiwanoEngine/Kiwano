@@ -18,29 +18,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/RefCounter.h>
+#pragma once
+#include <kiwano/core/Common.h>
+#include <kiwano/utils/Json.h>
+#include <kiwano/utils/Xml.h>
 
 namespace kiwano
 {
-RefCounter::RefCounter()
-    : ref_count_(0)
-{
-}
 
-RefCounter::~RefCounter() {}
+class ResourceCache;
 
-void RefCounter::Retain()
+/// \~chinese
+/// @brief 资源加载器
+class KGE_API ResourceLoader final
 {
-    ++ref_count_;
-}
+public:
+    ResourceLoader(ResourceCache& cache);
 
-void RefCounter::Release()
-{
-    --ref_count_;
-    if (ref_count_ == 0)
-    {
-        memory::Delete(this);
-    }
-}
+    /// \~chinese
+    /// @brief 从 JSON 文件加载资源信息
+    /// @param file_path JSON文件路径
+    void LoadFromJsonFile(const String& file_path);
+
+    /// \~chinese
+    /// @brief 从 JSON 加载资源信息
+    /// @param json_data JSON对象
+    void LoadFromJson(const Json& json_data);
+
+    /// \~chinese
+    /// @brief 从 XML 文件加载资源信息
+    /// @param file_path XML文件路径
+    void LoadFromXmlFile(const String& file_path);
+
+    /// \~chinese
+    /// @brief 从 XML 文档对象加载资源信息
+    /// @param doc XML文档对象
+    void LoadFromXml(const XmlDocument& doc);
+
+private:
+    ResourceCache& cache_;
+};
 
 }  // namespace kiwano

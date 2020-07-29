@@ -43,10 +43,6 @@ class KGE_API Stage : public Actor
     friend class Director;
 
 public:
-    /// \~chinese
-    /// @brief 进入舞台时
-    static StagePtr Create();
-
     Stage();
 
     virtual ~Stage();

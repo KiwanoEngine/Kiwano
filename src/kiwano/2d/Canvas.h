@@ -45,7 +45,7 @@ public:
     /// \~chinese
     /// @brief 创建画布
     /// @param size 画布大小
-    static CanvasPtr Create(const Size& size);
+    Canvas(const Size& size);
 
     /// \~chinese
     /// @brief 获取2D绘图上下文
@@ -61,9 +61,6 @@ public:
     TexturePtr ExportToTexture() const;
 
     void OnRender(RenderContext& ctx) override;
-
-private:
-    Canvas();
 
 private:
     TexturePtr       texture_cached_;

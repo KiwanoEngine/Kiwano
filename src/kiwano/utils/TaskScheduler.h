@@ -32,12 +32,40 @@ typedef IntrusiveList<TaskPtr> TaskList;
  * \~chinese
  * @brief 任务调度器
  */
-class KGE_API TaskScheduler
+class KGE_API TaskScheduler : Noncopyable
 {
 public:
     /// \~chinese
     /// @brief 添加任务
     Task* AddTask(TaskPtr task);
+
+    /// \~chinese
+    /// @brief 添加任务
+    /// @param cb 回调函数
+    /// @param 报时器
+    Task* AddTask(const Task::Callback& cb, TickerPtr ticker);
+
+    /// \~chinese
+    /// @brief 添加任务
+    /// @param name 名称
+    /// @param cb 回调函数
+    /// @param 报时器
+    Task* AddTask(const String& name, const Task::Callback& cb, TickerPtr ticker);
+
+    /// \~chinese
+    /// @brief 添加任务
+    /// @param cb 回调函数
+    /// @param interval 时间间隔
+    /// @param times 执行次数（设 -1 为永久执行）
+    Task* AddTask(const Task::Callback& cb, Duration interval, int times = -1);
+
+    /// \~chinese
+    /// @brief 添加任务
+    /// @param name 名称
+    /// @param cb 回调函数
+    /// @param interval 时间间隔
+    /// @param times 执行次数（设 -1 为永久执行）
+    Task* AddTask(const String& name, const Task::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 启动任务

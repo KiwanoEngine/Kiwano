@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/SmartPtr.hpp>
 
 namespace kiwano
 {
@@ -28,7 +27,7 @@ template <typename _Ty>
 class Cloneable
 {
 public:
-    virtual SmartPtr<_Ty> Clone() const = 0;
+    virtual _Ty* Clone() const = 0;
 
 protected:
     Cloneable() = default;

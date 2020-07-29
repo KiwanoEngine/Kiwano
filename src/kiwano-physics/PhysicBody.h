@@ -54,22 +54,15 @@ public:
     /// @brief 初始化物体
     /// @param world 物理世界
     /// @param type 物体类型
-    static PhysicBodyPtr Create(PhysicWorldPtr world, Type type);
+    PhysicBody(PhysicWorld* world, Type type);
 
     /// \~chinese
     /// @brief 初始化物体
     /// @param world 物理世界
     /// @param type 物体类型
-    static PhysicBodyPtr Create(PhysicWorld* world, Type type);
-
-    PhysicBody();
+    PhysicBody(PhysicWorldPtr world, Type type);
 
     virtual ~PhysicBody();
-
-    /// \~chinese
-    /// @brief 初始化物体
-    /// @param[in] world 物理世界
-    bool Init(PhysicWorldPtr world);
 
     /// \~chinese
     /// @brief 初始化物体

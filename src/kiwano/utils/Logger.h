@@ -19,12 +19,13 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
 #include <mutex>
 #include <iomanip>
 #include <streambuf>
 #include <fstream>
+#include <kiwano/core/Common.h>
+#include <kiwano/core/Time.h>
+#include <kiwano/base/ObjectBase.h>
 
 #ifndef KGE_DEBUG_LOG
 #ifdef KGE_DEBUG
@@ -74,12 +75,42 @@
 #define KGE_ERRORF(FORMAT, ...) ::kiwano::Logger::GetInstance().Logf(::kiwano::LogLevel::Error, FORMAT, __VA_ARGS__)
 #endif
 
+#ifndef KGE_THROW
+#define KGE_THROW(MESSAGE)                                \
+    do                                                    \
+    {                                                     \
+        KGE_ERRORF("An exception occurred: %s", MESSAGE); \
+        kiwano::StackTracer().Print();                    \
+        throw kiwano::RuntimeError(MESSAGE);              \
+    } while (0)
+#endif
+
+#ifndef KGE_THROW_SYSTEM_ERROR
+#define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
+    do                                                                                    \
+    {                                                                                     \
+        KGE_ERRORF("An exception occurred (%#x): %s", ERRCODE, MESSAGE);                  \
+        kiwano::StackTracer().Print();                                                    \
+        throw kiwano::SystemError(std::error_code(kiwano::error_enum(ERRCODE)), MESSAGE); \
+    } while (0)
+#endif
+
+#ifdef KGE_PLATFORM_WINDOWS
+#ifndef KGE_THROW_IF_FAILED
+#define KGE_THROW_IF_FAILED(HR, MESSAGE)     \
+    if (FAILED(HR))                          \
+    {                                        \
+        KGE_THROW_SYSTEM_ERROR(HR, MESSAGE); \
+    }
+#endif
+#endif  // KGE_PLATFORM_WINDOWS
+
+
 namespace kiwano
 {
 
 KGE_DECLARE_SMART_PTR(LogFormater);
 KGE_DECLARE_SMART_PTR(LogProvider);
-KGE_DECLARE_SMART_PTR(Logger);
 
 /**
  * \~chinese
@@ -112,7 +143,7 @@ public:
  * \~chinese
  * @brief 日志流缓冲
  */
-class LogBuffer : public std::streambuf
+class KGE_API LogBuffer : public std::streambuf
 {
 public:
     LogBuffer(size_t buffer_size);
@@ -144,7 +175,7 @@ private:
 
 /**
  * \~chinese
- * @brief 日志提供者
+ * @brief 日志生产者
  */
 class KGE_API LogProvider : public ObjectBase
 {
@@ -170,12 +201,12 @@ protected:
 
 /**
  * \~chinese
- * @brief 控制台日志提供者
+ * @brief 控制台日志生产者
  */
 class KGE_API ConsoleLogProvider : public LogProvider
 {
 public:
-    static LogProviderPtr Create();
+    ConsoleLogProvider();
 
     virtual ~ConsoleLogProvider();
 
@@ -194,12 +225,12 @@ private:
 
 /**
  * \~chinese
- * @brief 文件日志提供者
+ * @brief 文件日志生产者
  */
 class KGE_API FileLogProvider : public LogProvider
 {
 public:
-    static LogProviderPtr Create(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
+    FileLogProvider(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
 
    virtual ~FileLogProvider();
 
@@ -218,7 +249,7 @@ private:
  * \~chinese
  * @brief 日志记录器
  */
-class KGE_API Logger : public Singleton<Logger>
+class KGE_API Logger final : public Singleton<Logger>
 {
     friend Singleton<Logger>;
 
@@ -253,8 +284,8 @@ public:
     void SetLevel(LogLevel level);
 
     /// \~chinese
-    /// @brief 添加日志提供者
-    /// @param provider 日志提供者
+    /// @brief 添加日志生产者
+    /// @param provider 日志生产者
     void AddProvider(LogProviderPtr provider);
 
     /// \~chinese

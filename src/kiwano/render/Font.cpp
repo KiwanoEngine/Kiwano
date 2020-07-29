@@ -24,26 +24,14 @@
 namespace kiwano
 {
 
-FontPtr Font::Create(const String& file)
+Font::Font(const String& file)
 {
-    FontPtr ptr = memory::New<Font>();
-    if (ptr)
-    {
-        if (!ptr->Load(file))
-            return nullptr;
-    }
-    return ptr;
+    Load(file);
 }
 
-FontPtr Font::Create(const Resource& resource)
+Font::Font(const Resource& resource)
 {
-    FontPtr ptr = memory::New<Font>();
-    if (ptr)
-    {
-        if (!ptr->Load(resource))
-            return nullptr;
-    }
-    return ptr;
+    Load(resource);
 }
 
 Font::Font() {}

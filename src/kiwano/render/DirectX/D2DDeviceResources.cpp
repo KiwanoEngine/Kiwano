@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
-#include <kiwano/utils/Logger.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -70,6 +69,12 @@ public:
     HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& text_layout, _In_ LPCWSTR text, UINT32 length,
                              _In_ ComPtr<IDWriteTextFormat> text_format) override;
 
+    HRESULT CreateFontCollectionFromFiles(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
+                                          const Vector<String>& file_paths) override;
+
+    HRESULT CreateFontCollectionFromResources(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
+                                              const Vector<Resource>& resources) override;
+
     HRESULT SetDpi(float dpi) override;
 
     HRESULT SetLogicalSize(float width, float height) override;
@@ -93,6 +98,10 @@ private:
     float         dpi_;
 
     ComPtr<IDXGISwapChain> dxgi_swap_chain_;
+
+    ComPtr<IFontCollectionLoader>         font_collection_loader_;
+    ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
+    ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
 };
 
 
@@ -173,13 +182,34 @@ STDMETHODIMP D2DDeviceResources::QueryInterface(const IID& riid, void** object)
 
 void D2DDeviceResources::DiscardResources()
 {
-    factory_.Reset();
-    device_.Reset();
-    device_context_.Reset();
-    target_bitmap_.Reset();
+    if (dwrite_factory_)
+    {
+        if (font_collection_loader_)
+        {
+            dwrite_factory_->UnregisterFontCollectionLoader(font_collection_loader_.Get());
+            font_collection_loader_.Reset();
+        }
 
-    imaging_factory_.Reset();
+        if (res_font_file_loader_)
+        {
+            dwrite_factory_->UnregisterFontFileLoader(res_font_file_loader_.Get());
+            res_font_file_loader_.Reset();
+        }
+
+        if (res_font_collection_loader_)
+        {
+            dwrite_factory_->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
+            res_font_collection_loader_.Reset();
+        }
+    }
+
+    target_bitmap_.Reset();
+    device_context_.Reset();
+    device_.Reset();
+
     dwrite_factory_.Reset();
+    imaging_factory_.Reset();
+    factory_.Reset();
 }
 
 HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
@@ -223,6 +253,38 @@ HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
         if (SUCCEEDED(hr))
         {
             dwrite_factory_ = dwrite_factory;
+        }
+    }
+
+    // FontFileLoader and FontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IFontCollectionLoader::Create(&font_collection_loader_);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = dwrite_factory->RegisterFontCollectionLoader(font_collection_loader_.Get());
+        }
+    }
+
+    // ResourceFontFileLoader and ResourceFontCollectionLoader
+    if (SUCCEEDED(hr))
+    {
+        hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = dwrite_factory->RegisterFontFileLoader(res_font_file_loader_.Get());
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.Get());
+
+            if (SUCCEEDED(hr))
+            {
+                hr = dwrite_factory->RegisterFontCollectionLoader(res_font_collection_loader_.Get());
+            }
         }
     }
     return hr;
@@ -446,6 +508,43 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
     if (SUCCEEDED(hr))
     {
         text_layout = output;
+    }
+    return hr;
+}
+
+HRESULT D2DDeviceResources::CreateFontCollectionFromFiles(ComPtr<IDWriteFontCollection>& font_collection,
+                                                          const Vector<String>&          file_paths)
+{
+    if (!dwrite_factory_ || !font_collection_loader_)
+        return E_UNEXPECTED;
+
+    LPVOID   key      = nullptr;
+    uint32_t key_size = 0;
+
+    HRESULT hr = font_collection_loader_->AddFilePaths(file_paths, &key, &key_size);
+
+    if (SUCCEEDED(hr))
+    {
+        hr =
+            dwrite_factory_->CreateCustomFontCollection(font_collection_loader_.Get(), key, key_size, &font_collection);
+    }
+    return hr;
+}
+
+HRESULT D2DDeviceResources::CreateFontCollectionFromResources(ComPtr<IDWriteFontCollection>& font_collection,
+                                                              const Vector<Resource>&        resources)
+{
+    if (!dwrite_factory_ || !res_font_collection_loader_)
+        return E_UNEXPECTED;
+
+    LPVOID   key      = nullptr;
+    uint32_t key_size = 0;
+
+    HRESULT hr = res_font_collection_loader_->AddResources(resources, &key, &key_size);
+
+    if (SUCCEEDED(hr))
+    {
+        hr = dwrite_factory_->CreateCustomFontCollection(res_font_collection_loader_.Get(), key, key_size, &font_collection);
     }
     return hr;
 }

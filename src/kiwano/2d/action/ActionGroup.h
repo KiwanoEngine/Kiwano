@@ -47,15 +47,13 @@ public:
 class KGE_API ActionGroupEntity : public ActionEntity
 {
 public:
+    ActionGroupEntity();
+
     /// \~chinese
     /// @brief 创建动画组合
     /// @param actions 动画集合
     /// @param parallel 同步执行
-    static ActionGroupEntityPtr Create(const Vector<ActionEntityPtr>& actions, bool parallel = false);
-
-    ActionGroupEntity();
-
-    ActionGroupEntity(bool parallel);
+    ActionGroupEntity(const Vector<ActionEntityPtr>& actions, bool parallel = false);
 
     virtual ~ActionGroupEntity();
 
@@ -75,11 +73,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionEntityPtr Clone() const override;
+    ActionGroupEntity* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionEntityPtr Reverse() const override;
+    ActionGroupEntity* Reverse() const override;
 
 protected:
     void Init(Actor* target) override;

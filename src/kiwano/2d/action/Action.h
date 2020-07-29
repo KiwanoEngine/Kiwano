@@ -22,7 +22,6 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Cloneable.h>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/core/SmartPtr.hpp>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/IntrusiveList.h>
 #include <kiwano/math/Math.h>
@@ -103,7 +102,7 @@ public:
 
     /// \~chinese
     /// @brief 获取动画的倒转
-    virtual ActionEntityPtr Reverse() const = 0;
+    virtual ActionEntity* Reverse() const = 0;
 
     /// \~chinese
     /// @brief 获取动画的运行状态
@@ -183,7 +182,7 @@ protected:
 
     /// \~chinese
     /// @brief 执行克隆
-    ActionEntityPtr DoClone(ActionEntityPtr to) const;
+    void DoClone(ActionEntity* to) const;
 
 private:
     Status             status_;
@@ -296,6 +295,11 @@ public:
     }
 
     inline ActionEntity* operator->() const
+    {
+        return Get();
+    }
+
+    inline operator ActionEntity*() const
     {
         return Get();
     }

@@ -58,14 +58,14 @@ EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 
 EventListener* EventDispatcher::AddListener(const String& name, EventType type, EventListener::Callback callback)
 {
-    EventListenerPtr listener = EventListener::Create(name, type, callback);
-    return AddListener(listener);
+    auto lis = MakePtr<EventListener>(name, type, callback);
+    return AddListener(lis);
 }
 
 EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback)
 {
-    EventListenerPtr listener = EventListener::Create(type, callback);
-    return AddListener(listener);
+    auto lis = MakePtr<EventListener>(type, callback);
+    return AddListener(lis);
 }
 
 void EventDispatcher::StartListeners(const String& name)

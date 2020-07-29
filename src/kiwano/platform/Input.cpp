@@ -34,21 +34,6 @@ Input::Input()
 
 Input::~Input() {}
 
-void Input::AfterUpdate()
-{
-    if (want_update_keys_)
-    {
-        want_update_keys_ = false;
-        ::memcpy(keys_[Prev].data(), keys_[Current].data(), KEY_NUM * sizeof(bool));
-    }
-
-    if (want_update_buttons_)
-    {
-        want_update_buttons_ = false;
-        buttons_[Prev]       = buttons_[Current];
-    }
-}
-
 bool Input::IsDown(KeyCode key) const
 {
     if (key == KeyCode::Unknown || key == KeyCode::Last)
@@ -129,8 +114,27 @@ void Input::UpdateMousePos(const Point& pos)
     mouse_pos_ = pos;
 }
 
-void Input::HandleEvent(Event* evt)
+void Input::OnUpdate(UpdateModuleContext& ctx)
 {
+    ctx.Next();
+
+    if (want_update_keys_)
+    {
+        want_update_keys_ = false;
+        ::memcpy(keys_[Prev].data(), keys_[Current].data(), KEY_NUM * sizeof(bool));
+    }
+
+    if (want_update_buttons_)
+    {
+        want_update_buttons_ = false;
+        buttons_[Prev]       = buttons_[Current];
+    }
+}
+
+void Input::HandleEvent(EventModuleContext& ctx)
+{
+    Event* evt = ctx.evt;
+
     if (evt->IsType<MouseEvent>())
     {
         if (evt->IsType<MouseMoveEvent>())
@@ -158,4 +162,5 @@ void Input::HandleEvent(Event* evt)
         }
     }
 }
+
 }  // namespace kiwano

@@ -40,7 +40,7 @@ public:
 
     /// \~chinese
     /// @brief 释放内存
-    virtual void Free(void* ptr, size_t size) = 0;
+    virtual void Free(void* ptr) = 0;
 };
 
 /// \~chinese
@@ -60,52 +60,12 @@ inline void* Alloc(size_t size)
 
 /// \~chinese
 /// @brief 使用当前内存分配器释放内存
-inline void Free(void* ptr, size_t size)
+inline void Free(void* ptr)
 {
-    memory::GetAllocator()->Free(ptr, size);
+    memory::GetAllocator()->Free(ptr);
 }
 
-/// \~chinese
-/// @brief 构造对象
-template <typename _Ty, typename... _Args>
-inline _Ty* Construct(void* ptr, _Args&&... args)
-{
-    return ::new (ptr) _Ty(std::forward<_Args>(args)...);
-}
-
-/// \~chinese
-/// @brief 销毁对象
-template <typename _Ty, typename... _Args>
-inline void Destroy(_Ty* ptr)
-{
-    ptr->~_Ty();
-}
-
-/// \~chinese
-/// @brief 使用当前内存分配器创建对象
-template <typename _Ty, typename... _Args>
-inline _Ty* New(_Args&&... args)
-{
-    void* ptr = memory::Alloc(sizeof(_Ty));
-    if (ptr)
-    {
-        return memory::Construct<_Ty>(ptr, std::forward<_Args>(args)...);
-    }
-    return nullptr;
-}
-
-/// \~chinese
-/// @brief 使用当前内存分配器销毁对象
-template <typename _Ty>
-inline void Delete(_Ty* ptr)
-{
-    if (ptr)
-    {
-        memory::Destroy<_Ty>(ptr);
-        memory::Free(ptr, sizeof(_Ty));
-    }
-}
-
+}  // namespace memory
 
 /// \~chinese
 /// @brief 分配器
@@ -153,19 +113,19 @@ public:
 
     inline void deallocate(void* ptr, size_t count)
     {
-        memory::Free(ptr, sizeof(_Ty) * count);
+        memory::Free(ptr /*, sizeof(_Ty) * count */);
     }
 
     template <typename _UTy, typename... _Args>
-    inline void construct(_UTy* ptr, _Args&&... args)
+    inline void construct(_UTy* const ptr, _Args&&... args)
     {
-        memory::Construct<_UTy>(ptr, std::forward<_Args>(args)...);
+        ::new (const_cast<void*>(static_cast<const volatile void*>(ptr))) _Ty(std::forward<_Args>(args)...);
     }
 
     template <typename _UTy>
     inline void destroy(_UTy* ptr)
     {
-        memory::Destroy<_UTy>(ptr);
+        ptr->~_UTy();
     }
 
     size_t max_size() const noexcept
@@ -215,5 +175,4 @@ bool operator!=(const Allocator<_Ty>&, const Allocator<_Other>&) noexcept
     return false;
 }
 
-}  // namespace memory
 }  // namespace kiwano

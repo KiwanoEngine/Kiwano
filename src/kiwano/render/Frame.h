@@ -36,17 +36,17 @@ public:
     /// \~chinese
     /// @brief 创建图像帧
     /// @param file_path 图像路径
-    static FramePtr Create(const String& file_path);
+    Frame(const String& file_path);
 
     /// \~chinese
     /// @brief 创建图像帧
     /// @param res 图像资源
-    static FramePtr Create(const Resource& res);
+    Frame(const Resource& res);
 
     /// \~chinese
     /// @brief 创建图像帧
     /// @param texture 纹理
-    static FramePtr Create(TexturePtr texture);
+    Frame(TexturePtr texture);
 
     /// \~chinese
     /// @brief 构建空图像帧

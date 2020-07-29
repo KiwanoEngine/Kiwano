@@ -27,26 +27,16 @@ namespace kiwano
 {
 namespace audio
 {
-SoundPtr Sound::Create(const String& file_path)
+Sound::Sound(const String& file_path)
+    : Sound()
 {
-    SoundPtr ptr = new (std::nothrow) Sound;
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-            return nullptr;
-    }
-    return ptr;
+    Load(file_path);
 }
 
-SoundPtr Sound::Create(const Resource& res)
+Sound::Sound(const Resource& res)
+    : Sound()
 {
-    SoundPtr ptr = new (std::nothrow) Sound;
-    if (ptr)
-    {
-        if (!ptr->Load(res))
-            return nullptr;
-    }
-    return ptr;
+    Load(res);
 }
 
 Sound::Sound()

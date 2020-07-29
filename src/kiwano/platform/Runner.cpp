@@ -28,45 +28,9 @@
 namespace kiwano
 {
 
-RunnerPtr Runner::Create(Settings settings)
+Runner::Runner(const Settings& settings)
+    : settings_(settings)
 {
-    RunnerPtr ptr = memory::New<Runner>();
-    if (ptr)
-    {
-        ptr->SetSettings(settings);
-    }
-    return ptr;
-}
-
-RunnerPtr Runner::Create(Settings settings, Function<void()> on_ready, Function<void()> on_destroy)
-{
-    class CallbackRunner : public Runner
-    {
-    public:
-        void OnReady() override
-        {
-            if (on_ready)
-                on_ready();
-        }
-
-        void OnDestroy() override
-        {
-            if (on_destroy)
-                on_destroy();
-        }
-
-        Function<void()> on_ready;
-        Function<void()> on_destroy;
-    };
-
-    SmartPtr<CallbackRunner> ptr = memory::New<CallbackRunner>();
-    if (ptr)
-    {
-        ptr->on_ready   = on_ready;
-        ptr->on_destroy = on_destroy;
-        ptr->SetSettings(settings);
-    }
-    return ptr;
 }
 
 Runner::Runner() {}
@@ -91,6 +55,7 @@ void Runner::InitSettings()
     Renderer::GetInstance().SetVSyncEnabled(settings_.vsync_enabled);
 
     // Use defaut modules
+    Application::GetInstance().Use(Renderer::GetInstance());
     Application::GetInstance().Use(Input::GetInstance());
     Application::GetInstance().Use(Director::GetInstance());
 
@@ -104,7 +69,7 @@ void Runner::InitSettings()
     // Create frame ticker
     if (!settings_.frame_interval.IsZero())
     {
-        frame_ticker_ = Ticker::Create(settings_.frame_interval, -1);
+        frame_ticker_ = MakePtr<Ticker>(settings_.frame_interval, -1);
     }
 }
 

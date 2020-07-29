@@ -39,12 +39,6 @@ void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
     default_anchor_y = anchor_y;
 }
 
-ActorPtr Actor::Create()
-{
-    ActorPtr ptr = memory::New<Actor>();
-    return ptr;
-}
-
 Actor::Actor()
     : ComponentManager(this)
     , visible_(true)
@@ -264,8 +258,8 @@ bool Actor::HandleEvent(Event* evt)
             {
                 hover_ = true;
 
-                MouseHoverEventPtr hover = memory::New<MouseHoverEvent>();
-                hover->pos               = mouse_evt->pos;
+                MouseHoverEventPtr hover = new MouseHoverEvent;
+                hover->pos = mouse_evt->pos;
                 HandleEvent(hover.Get());
             }
             else if (hover_ && !contains)
@@ -273,8 +267,8 @@ bool Actor::HandleEvent(Event* evt)
                 hover_   = false;
                 pressed_ = false;
 
-                MouseOutEventPtr out = memory::New<MouseOutEvent>();
-                out->pos             = mouse_evt->pos;
+                MouseOutEventPtr out = new MouseOutEvent;
+                out->pos = mouse_evt->pos;
                 HandleEvent(out.Get());
             }
         }
@@ -290,7 +284,7 @@ bool Actor::HandleEvent(Event* evt)
 
             auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
 
-            MouseClickEventPtr click = memory::New<MouseClickEvent>();
+            MouseClickEventPtr click = new MouseClickEvent;
             click->pos               = mouse_up_evt->pos;
             click->button            = mouse_up_evt->button;
             HandleEvent(click.Get());
@@ -523,8 +517,6 @@ void Actor::SetRotation(float angle)
 
 void Actor::AddChild(ActorPtr child, int zorder)
 {
-    KGE_ASSERT(child && "Actor::AddChild failed, NULL pointer exception");
-
     if (child)
     {
         KGE_ASSERT(!child->parent_ && "Actor::AddChild failed, the actor to be added already has a parent");
@@ -550,6 +542,10 @@ void Actor::AddChild(ActorPtr child, int zorder)
         child->z_order_         = zorder;
         child->Reorder();
         child->UpdateOpacity();
+    }
+    else
+    {
+        Fail("Actor::AddChild failed, NULL pointer exception");
     }
 }
 
@@ -620,8 +616,6 @@ void Actor::RemoveFromParent()
 
 void Actor::RemoveChild(ActorPtr child)
 {
-    KGE_ASSERT(child && "Actor::RemoveChild failed, NULL pointer exception");
-
     if (children_.IsEmpty())
         return;
 
@@ -631,6 +625,10 @@ void Actor::RemoveChild(ActorPtr child)
         if (child->stage_)
             child->SetStage(nullptr);
         children_.Remove(child);
+    }
+    else
+    {
+        Fail("Actor::RemoveChild failed, NULL pointer exception");
     }
 }
 

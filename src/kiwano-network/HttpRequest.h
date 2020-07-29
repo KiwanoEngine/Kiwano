@@ -63,7 +63,7 @@ public:
     /// @param url 请求地址
     /// @param type 请求类型
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(const String& url, HttpType type, const ResponseCallback& callback);
+    HttpRequest(const String& url, HttpType type, const ResponseCallback& callback);
 
     /// \~chinese
     /// @brief 创建HTTP请求
@@ -71,7 +71,7 @@ public:
     /// @param type 请求类型
     /// @param data 请求数据
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(const String& url, HttpType type, const String& data, const ResponseCallback& callback);
+    HttpRequest(const String& url, HttpType type, const String& data, const ResponseCallback& callback);
 
     /// \~chinese
     /// @brief 创建HTTP请求
@@ -79,11 +79,9 @@ public:
     /// @param type 请求类型
     /// @param json 请求的JSON数据
     /// @param callback 响应回调函数
-    static HttpRequestPtr Create(const String& url, HttpType type, const Json& json, const ResponseCallback& callback);
+    HttpRequest(const String& url, HttpType type, const Json& json, const ResponseCallback& callback);
 
     HttpRequest();
-
-    HttpRequest(HttpType type);
 
     /// \~chinese
     /// @brief 设置请求地址
@@ -149,11 +147,6 @@ private:
 
 inline HttpRequest::HttpRequest()
     : type_(HttpType::Unknown)
-{
-}
-
-inline HttpRequest::HttpRequest(HttpType type)
-    : type_(type)
 {
 }
 

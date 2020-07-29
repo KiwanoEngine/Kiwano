@@ -20,9 +20,7 @@
 
 #pragma once
 #include <kiwano/render/DirectX/helper.h>
-#include <d2d1.h>
-#include <d2d1_1.h>
-#include <dwrite.h>
+#include <kiwano/render/DirectX/FontCollectionLoader.h>
 
 namespace kiwano
 {
@@ -57,6 +55,12 @@ public:
 
     virtual HRESULT CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout> & text_layout, _In_ LPCWSTR text, UINT32 length,
                                      _In_ ComPtr<IDWriteTextFormat> text_format) = 0;
+
+   virtual HRESULT CreateFontCollectionFromFiles(_Out_ ComPtr<IDWriteFontCollection> & font_collection,
+                                                  const Vector<String>& file_paths) = 0;
+
+    virtual HRESULT CreateFontCollectionFromResources(_Out_ ComPtr<IDWriteFontCollection> & font_collection,
+                                                      const Vector<Resource>& resources) = 0; 
 
     virtual HRESULT SetDpi(float dpi) = 0;
 

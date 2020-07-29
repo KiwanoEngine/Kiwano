@@ -38,34 +38,34 @@ KGE_DECLARE_SMART_PTR(Sprite);
 class KGE_API Sprite : public Actor
 {
 public:
+    Sprite();
+
     /// \~chinese
     /// @brief 创建精灵
     /// @param file_path 本地图片路径
-    static SpritePtr Create(const String& file_path);
+    Sprite(const String& file_path);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param res 图片资源
-    static SpritePtr Create(const Resource& res);
+    Sprite(const Resource& res);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param frame 图像帧
-    static SpritePtr Create(FramePtr frame);
+    Sprite(FramePtr frame);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param file_path 本地图片路径
     /// @param crop_rect 裁剪矩形
-    static SpritePtr Create(const String& file_path, const Rect& crop_rect);
+    Sprite(const String& file_path, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 创建精灵
     /// @param res 图片资源
     /// @param crop_rect 裁剪矩形
-    static SpritePtr Create(const Resource& res, const Rect& crop_rect);
-
-    Sprite();
+    Sprite(const Resource& res, const Rect& crop_rect);
 
     virtual ~Sprite();
 

@@ -50,12 +50,12 @@ public:
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 本地音频文件路径
-    static SoundPtr Create(const String& file_path);
+    Sound(const String& file_path);
 
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 音频资源
-    static SoundPtr Create(const Resource& res);
+    Sound(const Resource& res);
 
     Sound();
 

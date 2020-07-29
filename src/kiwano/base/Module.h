@@ -25,124 +25,126 @@ namespace kiwano
 {
 class RenderContext;
 class Event;
+class Module;
 
-template <typename _CompTy>
-struct ModuleFlag;
+/// \~chinese
+/// @brief 模块列表
+typedef Vector<Module*> ModuleList;
+
+/// \~chinese
+/// @brief 模块上下文
+class KGE_API ModuleContext
+{
+public:
+    void Next();
+
+protected:
+    ModuleContext(ModuleList& modules);
+
+    virtual ~ModuleContext();
+
+    virtual void Handle(Module* m) = 0;
+
+    void ResetIndex();
+
+private:
+    int         index_;
+    ModuleList& modules_;
+};
+
+/// \~chinese
+/// @brief 渲染模块上下文
+class KGE_API RenderModuleContext : public ModuleContext
+{
+public:
+    RenderContext& render_ctx;
+
+    RenderModuleContext(ModuleList& modules, RenderContext& ctx);
+
+    virtual ~RenderModuleContext();
+
+protected:
+    void Handle(Module* m) override;
+
+private:
+    enum class Step
+    {
+        Before,
+        Rendering,
+        After,
+    };
+
+    Step step_;
+};
+
+/// \~chinese
+/// @brief 更新模块上下文
+class KGE_API UpdateModuleContext : public ModuleContext
+{
+public:
+    Duration dt;
+
+    UpdateModuleContext(ModuleList& modules, Duration dt);
+
+protected:
+    void Handle(Module* m) override;
+};
+
+/// \~chinese
+/// @brief 时间模块上下文
+class KGE_API EventModuleContext : public ModuleContext
+{
+public:
+    Event* evt;
+
+    EventModuleContext(ModuleList& modules, Event* evt);
+
+protected:
+    void Handle(Module* m) override;
+};
 
 /**
  * \~chinese
  * @brief 基础模块
  */
-class KGE_API Module
+class KGE_API Module : Noncopyable
 {
 public:
     /// \~chinese
     /// @brief 启动模块
-    virtual void SetupModule() {}
+    virtual void SetupModule();
 
     /// \~chinese
     /// @brief 销毁模块
-    virtual void DestroyModule() {}
+    virtual void DestroyModule();
 
-    template <typename _CompTy>
-    _CompTy* Cast()
-    {
-        if (flag_ & ModuleFlag<_CompTy>::value)
-            return dynamic_cast<_CompTy*>(this);
-        return nullptr;
-    }
+    /// \~chinese
+    /// @brief 更新时
+    /// @param ctx 更新上下文
+    virtual void OnUpdate(UpdateModuleContext& ctx);
 
-protected:
-    Module();
+    /// \~chinese
+    /// @brief 事件处理
+    /// @param ctx 事件上下文
+    virtual void HandleEvent(EventModuleContext& ctx);
 
-protected:
-    int flag_;
-};
-
-/**
- * \~chinese
- * @brief 渲染模块
- */
-class KGE_API RenderModule : public virtual Module
-{
-public:
     /// \~chinese
     /// @brief 渲染前
-    virtual void BeforeRender() {}
+    /// @param ctx 渲染上下文
+    virtual void BeforeRender(RenderModuleContext& ctx);
 
     /// \~chinese
     /// @brief 渲染时
     /// @param ctx 渲染上下文
-    virtual void OnRender(RenderContext& ctx) {}
+    virtual void OnRender(RenderModuleContext& ctx);
 
     /// \~chinese
     /// @brief 渲染后
-    virtual void AfterRender() {}
+    /// @param ctx 渲染上下文
+    virtual void AfterRender(RenderModuleContext& ctx);
 
-public:
-    RenderModule();
+protected:
+    Module();
 };
-
-/**
- * \~chinese
- * @brief 更新模块
- */
-class KGE_API UpdateModule : public virtual Module
-{
-public:
-    /// \~chinese
-    /// @brief 更新前
-    virtual void BeforeUpdate() {}
-
-    /// \~chinese
-    /// @brief 更新时
-    /// @param dt 间隔时间
-    virtual void OnUpdate(Duration dt) {}
-
-    /// \~chinese
-    /// @brief 更新后
-    virtual void AfterUpdate() {}
-
-public:
-    UpdateModule();
-};
-
-/**
- * \~chinese
- * @brief 事件模块
- */
-class KGE_API EventModule : public virtual Module
-{
-public:
-    /// \~chinese
-    /// @brief 事件处理
-    /// @param evt 事件
-    virtual void HandleEvent(Event* evt) {}
-
-public:
-    EventModule();
-};
-
-#define KGE_DEFINE_COMPONENT_FLAG(OFFSET) (0x01 << (OFFSET % 32))
-
-template <>
-struct ModuleFlag<RenderModule>
-{
-    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(0);
-};
-
-template <>
-struct ModuleFlag<UpdateModule>
-{
-    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(1);
-};
-
-template <>
-struct ModuleFlag<EventModule>
-{
-    static constexpr int value = KGE_DEFINE_COMPONENT_FLAG(2);
-};
-
-#undef KGE_DEFINE_COMPONENT_FLAG
 
 }  // namespace kiwano

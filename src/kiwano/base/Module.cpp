@@ -19,28 +19,118 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/Module.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
 
-Module::Module()
-    : flag_(0)
+ModuleContext::ModuleContext(ModuleList& modules)
+    : index_(-1)
+    , modules_(modules)
 {
 }
 
-RenderModule::RenderModule()
+ModuleContext::~ModuleContext() {}
+
+void ModuleContext::ResetIndex()
 {
-    flag_ |= ModuleFlag<RenderModule>::value;
+    index_ = -1;
 }
 
-UpdateModule::UpdateModule()
+void ModuleContext::Next()
 {
-    flag_ |= ModuleFlag<UpdateModule>::value;
+    index_++;
+    for (; index_ < (int)modules_.size(); index_++)
+    {
+        this->Handle(modules_.at(index_));
+    }
 }
 
-EventModule::EventModule()
+RenderModuleContext::RenderModuleContext(ModuleList& modules, RenderContext& ctx)
+    : ModuleContext(modules)
+    , step_(Step::Before)
+    , render_ctx(ctx)
 {
-    flag_ |= ModuleFlag<EventModule>::value;
+    this->Next();
+    this->ResetIndex();
+
+    render_ctx.BeginDraw();
+    step_ = Step::Rendering;
+}
+
+RenderModuleContext::~RenderModuleContext()
+{
+    render_ctx.EndDraw();
+    step_ = Step::After;
+
+    this->ResetIndex();
+    this->Next();
+}
+
+void RenderModuleContext::Handle(Module* m)
+{
+    switch (step_)
+    {
+    case RenderModuleContext::Step::Before:
+        m->BeforeRender(*this);
+        break;
+    case RenderModuleContext::Step::Rendering:
+        m->OnRender(*this);
+        break;
+    case RenderModuleContext::Step::After:
+        m->AfterRender(*this);
+        break;
+    default:
+        break;
+    }
+}
+
+UpdateModuleContext::UpdateModuleContext(ModuleList& modules, Duration dt)
+    : ModuleContext(modules)
+    , dt(dt)
+{
+}
+
+void UpdateModuleContext::Handle(Module* m)
+{
+    m->OnUpdate(*this);
+}
+
+EventModuleContext::EventModuleContext(ModuleList& modules, Event* evt)
+    : ModuleContext(modules)
+    , evt(evt)
+{
+}
+
+void EventModuleContext::Handle(Module* m)
+{
+    m->HandleEvent(*this);
+}
+
+Module::Module() {}
+
+void Module::SetupModule() {}
+
+void Module::DestroyModule() {}
+
+void Module::OnRender(RenderModuleContext& ctx)
+{
+}
+
+void Module::OnUpdate(UpdateModuleContext& ctx)
+{
+}
+
+void Module::HandleEvent(EventModuleContext& ctx)
+{
+}
+
+void Module::BeforeRender(RenderModuleContext& ctx)
+{
+}
+
+void Module::AfterRender(RenderModuleContext& ctx)
+{
 }
 
 }  // namespace kiwano

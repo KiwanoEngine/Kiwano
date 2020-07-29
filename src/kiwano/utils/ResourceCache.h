@@ -20,8 +20,6 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/utils/Json.h>
-#include <kiwano/utils/Xml.h>
 #include <kiwano/render/Frame.h>
 #include <kiwano/render/FrameSequence.h>
 #include <kiwano/render/Font.h>
@@ -29,33 +27,27 @@
 
 namespace kiwano
 {
+
+KGE_DECLARE_SMART_PTR(ResourceCache);
+
 /// \~chinese
 /// @brief 资源缓存
-/// @details 资源缓存
-class KGE_API ResourceCache : public Singleton<ResourceCache>
+class KGE_API ResourceCache final : public ObjectBase
 {
-    friend Singleton<ResourceCache>;
-
 public:
+    ResourceCache();
+
+    virtual ~ResourceCache();
+
     /// \~chinese
     /// @brief 从 JSON 文件加载资源信息
     /// @param file_path JSON文件路径
     bool LoadFromJsonFile(const String& file_path);
 
     /// \~chinese
-    /// @brief 从 JSON 加载资源信息
-    /// @param json_data JSON对象
-    bool LoadFromJson(const Json& json_data);
-
-    /// \~chinese
     /// @brief 从 XML 文件加载资源信息
     /// @param file_path XML文件路径
     bool LoadFromXmlFile(const String& file_path);
-
-    /// \~chinese
-    /// @brief 从 XML 文档对象加载资源信息
-    /// @param doc XML文档对象
-    bool LoadFromXml(const XmlDocument& doc);
 
     /// \~chinese
     /// @brief 获取资源
@@ -68,7 +60,7 @@ public:
     /// @param id 对象ID
     /// @return 指定对象类型的指针
     template <typename _Ty>
-    SmartPtr<_Ty> Get(const String& id) const
+    RefPtr<_Ty> Get(const String& id) const
     {
         return dynamic_cast<_Ty*>(Get(id).Get());
     }
@@ -77,7 +69,7 @@ public:
     /// @brief 将对象放入缓存
     /// @param id 对象ID
     /// @param obj 对象
-    bool AddObject(const String& id, ObjectBasePtr obj);
+    void AddObject(const String& id, ObjectBasePtr obj);
 
     /// \~chinese
     /// @brief 删除指定资源
@@ -88,12 +80,8 @@ public:
     /// @brief 清空所有资源
     void Clear();
 
-    virtual ~ResourceCache();
-
-private:
-    ResourceCache();
-
 private:
     UnorderedMap<String, ObjectBasePtr> object_cache_;
 };
+
 }  // namespace kiwano

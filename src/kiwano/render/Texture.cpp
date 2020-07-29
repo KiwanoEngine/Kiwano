@@ -30,26 +30,16 @@ namespace kiwano
 
 InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
 
-TexturePtr Texture::Create(const String& file_path)
+Texture::Texture(const String& file_path)
+    : Texture()
 {
-    TexturePtr ptr = memory::New<Texture>();
-    if (ptr)
-    {
-        if (!ptr->Load(file_path))
-            return nullptr;
-    }
-    return ptr;
+    Load(file_path);
 }
 
-TexturePtr Texture::Create(const Resource& res)
+Texture::Texture(const Resource& res)
+    : Texture()
 {
-    TexturePtr ptr = memory::New<Texture>();
-    if (ptr)
-    {
-        if (!ptr->Load(res))
-            return nullptr;
-    }
-    return ptr;
+    Load(res);
 }
 
 Texture::Texture()

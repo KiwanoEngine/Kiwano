@@ -95,9 +95,9 @@ ActionTweenEntity::ActionTweenEntity()
 {
 }
 
-ActionTweenEntity::ActionTweenEntity(Duration duration, EaseFunc func)
+ActionTweenEntity::ActionTweenEntity(Duration duration)
     : dur_(duration)
-    , ease_func_(func)
+    , ease_func_(nullptr)
 {
 }
 
@@ -129,32 +129,25 @@ void ActionTweenEntity::Update(Actor* target, Duration dt)
     UpdateTween(target, percent);
 }
 
-ActionEntityPtr ActionTweenEntity::DoClone(ActionTweenEntityPtr to) const
+void ActionTweenEntity::DoClone(ActionTweenEntity* to) const
 {
     if (to)
     {
+        ActionEntity::DoClone(to);
         to->SetDuration(this->GetDuration());
         to->SetEaseFunc(this->GetEaseFunc());
     }
-    return ActionEntity::DoClone(to);
 }
 
 //-------------------------------------------------------
 // Move Action
 //-------------------------------------------------------
 
-ActionMoveByEntityPtr ActionMoveByEntity::Create(Duration duration, const Vec2& displacement)
+ActionMoveByEntity::ActionMoveByEntity(Duration duration, const Vec2& displacement)
+    : ActionTweenEntity(duration)
+    , displacement_(displacement)
 {
-    ActionMoveByEntityPtr ptr = memory::New<ActionMoveByEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetDisplacement(displacement);
-    }
-    return ptr;
 }
-
-ActionMoveByEntity::ActionMoveByEntity() {}
 
 void ActionMoveByEntity::Init(Actor* target)
 {
@@ -175,32 +168,31 @@ void ActionMoveByEntity::UpdateTween(Actor* target, float percent)
     prev_pos_ = new_pos;
 }
 
-ActionEntityPtr ActionMoveByEntity::Clone() const
+ActionMoveByEntity* ActionMoveByEntity::Clone() const
 {
-    return DoClone(ActionMoveByEntity::Create(GetDuration(), displacement_));
-}
-
-ActionEntityPtr ActionMoveByEntity::Reverse() const
-{
-    return DoClone(ActionMoveByEntity::Create(GetDuration(), -displacement_));
-}
-
-ActionMoveToEntityPtr ActionMoveToEntity::Create(Duration duration, const Point& distination)
-{
-    ActionMoveToEntityPtr ptr = memory::New<ActionMoveToEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetDistination(distination);
-    }
+    ActionMoveByEntity* ptr = new ActionMoveByEntity(GetDuration(), displacement_);
+    DoClone(ptr);
     return ptr;
 }
 
-ActionMoveToEntity::ActionMoveToEntity() {}
-
-ActionEntityPtr ActionMoveToEntity::Clone() const
+ActionMoveByEntity* ActionMoveByEntity::Reverse() const
 {
-    return DoClone(ActionMoveToEntity::Create(GetDuration(), distination_));
+    ActionMoveByEntity* ptr = new ActionMoveByEntity(GetDuration(), -displacement_);
+    DoClone(ptr);
+    return ptr;
+}
+
+ActionMoveToEntity::ActionMoveToEntity(Duration duration, const Point& distination)
+    : ActionMoveByEntity(duration, Vec2())
+    , distination_(distination)
+{
+}
+
+ActionMoveToEntity* ActionMoveToEntity::Clone() const
+{
+    ActionMoveToEntity* ptr = new ActionMoveToEntity(GetDuration(), distination_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionMoveToEntity::Init(Actor* target)
@@ -213,33 +205,26 @@ void ActionMoveToEntity::Init(Actor* target)
 // Jump Action
 //-------------------------------------------------------
 
-ActionJumpByEntityPtr ActionJumpByEntity::Create(Duration duration, const Vec2& displacement, float height, int count)
+ActionJumpByEntity::ActionJumpByEntity(Duration duration, const Vec2& displacement, float height, int count)
+    : ActionTweenEntity(duration)
+    , height_(height)
+    , jump_count_(count)
+    , displacement_(displacement)
 {
-    ActionJumpByEntityPtr ptr = memory::New<ActionJumpByEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetJumpHeight(height);
-        ptr->SetJumpCount(count);
-        ptr->SetDisplacement(displacement);
-    }
+}
+
+ActionJumpByEntity* ActionJumpByEntity::Clone() const
+{
+    ActionJumpByEntity* ptr = new ActionJumpByEntity(GetDuration(), displacement_, height_, jump_count_);
+    DoClone(ptr);
     return ptr;
 }
 
-ActionJumpByEntity::ActionJumpByEntity()
-    : height_(0.0f)
-    , jump_count_(0)
+ActionJumpByEntity* ActionJumpByEntity::Reverse() const
 {
-}
-
-ActionEntityPtr ActionJumpByEntity::Clone() const
-{
-    return DoClone(ActionJumpByEntity::Create(GetDuration(), displacement_, height_, jump_count_));
-}
-
-ActionEntityPtr ActionJumpByEntity::Reverse() const
-{
-    return DoClone(ActionJumpByEntity::Create(GetDuration(), -displacement_, height_, jump_count_));
+    ActionJumpByEntity* ptr = new ActionJumpByEntity(GetDuration(), -displacement_, height_, jump_count_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionJumpByEntity::Init(Actor* target)
@@ -266,24 +251,17 @@ void ActionJumpByEntity::UpdateTween(Actor* target, float percent)
     prev_pos_ = new_pos;
 }
 
-ActionJumpToEntityPtr ActionJumpToEntity::Create(Duration duration, const Point& distination, float height, int count)
+ActionJumpToEntity::ActionJumpToEntity(Duration duration, const Point& distination, float height, int count)
+    : ActionJumpByEntity(duration, Vec2(), height, count)
+    , distination_(distination)
 {
-    ActionJumpToEntityPtr ptr = memory::New<ActionJumpToEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetJumpHeight(height);
-        ptr->SetJumpCount(count);
-        ptr->SetDistination(distination);
-    }
-    return ptr;
 }
 
-ActionJumpToEntity::ActionJumpToEntity() {}
-
-ActionEntityPtr ActionJumpToEntity::Clone() const
+ActionJumpToEntity* ActionJumpToEntity::Clone() const
 {
-    return DoClone(ActionJumpToEntity::Create(GetDuration(), distination_, height_, jump_count_));
+    ActionJumpToEntity* ptr = new ActionJumpToEntity(GetDuration(), distination_, height_, jump_count_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionJumpToEntity::Init(Actor* target)
@@ -296,21 +274,10 @@ void ActionJumpToEntity::Init(Actor* target)
 // Scale Action
 //-------------------------------------------------------
 
-ActionScaleByEntityPtr ActionScaleByEntity::Create(Duration duration, float scale_x, float scale_y)
-{
-    ActionScaleByEntityPtr ptr = memory::New<ActionScaleByEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetScaleX(scale_x);
-        ptr->SetScaleY(scale_y);
-    }
-    return ptr;
-}
-
-ActionScaleByEntity::ActionScaleByEntity()
-    : delta_x_(0.0f)
-    , delta_y_(0.0f)
+ActionScaleByEntity::ActionScaleByEntity(Duration duration, float scale_x, float scale_y)
+    : ActionTweenEntity(duration)
+    , delta_x_(scale_x)
+    , delta_y_(scale_y)
     , start_scale_x_(0.f)
     , start_scale_y_(0.f)
 {
@@ -330,37 +297,32 @@ void ActionScaleByEntity::UpdateTween(Actor* target, float percent)
     target->SetScale(Vec2{ start_scale_x_ + delta_x_ * percent, start_scale_y_ + delta_y_ * percent });
 }
 
-ActionEntityPtr ActionScaleByEntity::Clone() const
+ActionScaleByEntity* ActionScaleByEntity::Clone() const
 {
-    return DoClone(ActionScaleByEntity::Create(GetDuration(), delta_x_, delta_y_));
-}
-
-ActionEntityPtr ActionScaleByEntity::Reverse() const
-{
-    return DoClone(ActionScaleByEntity::Create(GetDuration(), -delta_x_, -delta_y_));
-}
-
-ActionScaleToEntityPtr ActionScaleToEntity::Create(Duration duration, float scale_x, float scale_y)
-{
-    ActionScaleToEntityPtr ptr = memory::New<ActionScaleToEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetTargetScaleX(scale_x);
-        ptr->SetTargetScaleY(scale_y);
-    }
+    ActionScaleByEntity* ptr = new ActionScaleByEntity(GetDuration(), delta_x_, delta_y_);
+    DoClone(ptr);
     return ptr;
 }
 
-ActionScaleToEntity::ActionScaleToEntity()
-    : end_scale_x_(0.0f)
-    , end_scale_y_(0.0f)
+ActionScaleByEntity* ActionScaleByEntity::Reverse() const
+{
+    ActionScaleByEntity* ptr = new ActionScaleByEntity(GetDuration(), -delta_x_, -delta_y_);
+    DoClone(ptr);
+    return ptr;
+}
+
+ActionScaleToEntity::ActionScaleToEntity(Duration duration, float scale_x, float scale_y)
+    : ActionScaleByEntity(duration, 0, 0)
+    , end_scale_x_(scale_x)
+    , end_scale_y_(scale_y)
 {
 }
 
-ActionEntityPtr ActionScaleToEntity::Clone() const
+ActionScaleToEntity* ActionScaleToEntity::Clone() const
 {
-    return DoClone(ActionScaleToEntity::Create(GetDuration(), end_scale_x_, end_scale_y_));
+    ActionScaleToEntity* ptr = new ActionScaleToEntity(GetDuration(), end_scale_x_, end_scale_y_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionScaleToEntity::Init(Actor* target)
@@ -374,21 +336,11 @@ void ActionScaleToEntity::Init(Actor* target)
 // Opacity Action
 //-------------------------------------------------------
 
-ActionFadeToEntityPtr ActionFadeToEntity::Create(Duration duration, float opacity)
-{
-    ActionFadeToEntityPtr ptr = memory::New<ActionFadeToEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetTargetOpacity(opacity);
-    }
-    return ptr;
-}
-
-ActionFadeToEntity::ActionFadeToEntity()
-    : delta_val_(0.0f)
+ActionFadeToEntity::ActionFadeToEntity(Duration duration, float opacity)
+    : ActionTweenEntity(duration)
+    , delta_val_(0.0f)
     , start_val_(0.f)
-    , end_val_(0.0f)
+    , end_val_(opacity)
 {
 }
 
@@ -406,29 +358,21 @@ void ActionFadeToEntity::UpdateTween(Actor* target, float percent)
     target->SetOpacity(start_val_ + delta_val_ * percent);
 }
 
-ActionEntityPtr ActionFadeToEntity::Clone() const
+ActionFadeToEntity* ActionFadeToEntity::Clone() const
 {
-    return DoClone(ActionFadeToEntity::Create(GetDuration(), end_val_));
+    ActionFadeToEntity* ptr = new ActionFadeToEntity(GetDuration(), end_val_);
+    DoClone(ptr);
+    return ptr;
 }
 
 //-------------------------------------------------------
 // Rotate Action
 //-------------------------------------------------------
 
-ActionRotateByEntityPtr ActionRotateByEntity::Create(Duration duration, float rotation)
-{
-    ActionRotateByEntityPtr ptr = memory::New<ActionRotateByEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetRotation(rotation);
-    }
-    return ptr;
-}
-
-ActionRotateByEntity::ActionRotateByEntity()
-    : start_val_(0.0f)
-    , delta_val_(0.0f)
+ActionRotateByEntity::ActionRotateByEntity(Duration duration, float rotation)
+    : ActionTweenEntity(duration)
+    , delta_val_(rotation)
+    , start_val_(0.0f)
 {
 }
 
@@ -449,35 +393,31 @@ void ActionRotateByEntity::UpdateTween(Actor* target, float percent)
     target->SetRotation(rotation);
 }
 
-ActionEntityPtr ActionRotateByEntity::Clone() const
+ActionRotateByEntity* ActionRotateByEntity::Clone() const
 {
-    return DoClone(ActionRotateByEntity::Create(GetDuration(), delta_val_));
-}
-
-ActionEntityPtr ActionRotateByEntity::Reverse() const
-{
-    return DoClone(ActionRotateByEntity::Create(GetDuration(), -delta_val_));
-}
-
-ActionRotateToEntityPtr ActionRotateToEntity::Create(Duration duration, float rotation)
-{
-    ActionRotateToEntityPtr ptr = memory::New<ActionRotateToEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetTargetRotation(rotation);
-    }
+    ActionRotateByEntity* ptr = new ActionRotateByEntity(GetDuration(), delta_val_);
+    DoClone(ptr);
     return ptr;
 }
 
-ActionRotateToEntity::ActionRotateToEntity()
-    : end_val_(0.0f)
+ActionRotateByEntity* ActionRotateByEntity::Reverse() const
+{
+    ActionRotateByEntity* ptr = new ActionRotateByEntity(GetDuration(), -delta_val_);
+    DoClone(ptr);
+    return ptr;
+}
+
+ActionRotateToEntity::ActionRotateToEntity(Duration duration, float rotation)
+    : ActionRotateByEntity(duration, 0)
+    , end_val_(rotation)
 {
 }
 
-ActionEntityPtr ActionRotateToEntity::Clone() const
+ActionRotateToEntity* ActionRotateToEntity::Clone() const
 {
-    return DoClone(ActionRotateToEntity::Create(GetDuration(), end_val_));
+    ActionRotateToEntity* ptr = new ActionRotateToEntity(GetDuration(), end_val_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionRotateToEntity::Init(Actor* target)
@@ -490,22 +430,17 @@ void ActionRotateToEntity::Init(Actor* target)
 // ActionCustomEntity
 //-------------------------------------------------------
 
-ActionCustomEntityPtr ActionCustomEntity::Create(Duration duration, ActionCustom::TweenFunc tween_func)
+ActionCustomEntity::ActionCustomEntity(Duration duration, ActionCustom::TweenFunc tween_func)
+    : ActionTweenEntity(duration)
+    , tween_func_(tween_func)
 {
-    ActionCustomEntityPtr ptr = memory::New<ActionCustomEntity>();
-    if (ptr)
-    {
-        ptr->SetDuration(duration);
-        ptr->SetTweenFunc(tween_func);
-    }
-    return ptr;
 }
 
-ActionCustomEntity::ActionCustomEntity() {}
-
-ActionEntityPtr ActionCustomEntity::Clone() const
+ActionCustomEntity* ActionCustomEntity::Clone() const
 {
-    return DoClone(ActionCustomEntity::Create(GetDuration(), tween_func_));
+    ActionCustomEntity* ptr = new ActionCustomEntity(GetDuration(), tween_func_);
+    DoClone(ptr);
+    return ptr;
 }
 
 void ActionCustomEntity::Init(Actor* target)
@@ -522,72 +457,72 @@ void ActionCustomEntity::UpdateTween(Actor* target, float percent)
 
 ActionMoveBy::ActionMoveBy(Duration duration, const Vec2& displacement)
 {
-    SetEntity(ActionMoveByEntity::Create(duration, displacement));
+    SetEntity(MakePtr<ActionMoveByEntity>(duration, displacement));
 }
 
 ActionMoveTo::ActionMoveTo(Duration duration, const Point& distination)
 {
-    SetEntity(ActionMoveToEntity::Create(duration, distination));
+    SetEntity(MakePtr<ActionMoveToEntity>(duration, distination));
 }
 
 ActionJumpBy::ActionJumpBy(Duration duration, const Vec2& displacement, float height, int count)
 {
-    SetEntity(ActionJumpByEntity::Create(duration, displacement, height, count));
+    SetEntity(MakePtr<ActionJumpByEntity>(duration, displacement, height, count));
 }
 
 ActionJumpTo::ActionJumpTo(Duration duration, const Point& distination, float height, int count)
 {
-    SetEntity(ActionJumpToEntity::Create(duration, distination, height, count));
+    SetEntity(MakePtr<ActionJumpToEntity>(duration, distination, height, count));
 }
 
 ActionScaleBy::ActionScaleBy(Duration duration, float scale_x, float scale_y)
 {
-    SetEntity(ActionScaleByEntity::Create(duration, scale_x, scale_y));
+    SetEntity(MakePtr<ActionScaleByEntity>(duration, scale_x, scale_y));
 }
 
 ActionScaleBy::ActionScaleBy(Duration duration, Vec2 scale)
 {
-    SetEntity(ActionScaleByEntity::Create(duration, scale.x, scale.y));
+    SetEntity(MakePtr<ActionScaleByEntity>(duration, scale.x, scale.y));
 }
 
 ActionScaleTo::ActionScaleTo(Duration duration, float scale_x, float scale_y)
 {
-    SetEntity(ActionScaleToEntity::Create(duration, scale_x, scale_y));
+    SetEntity(MakePtr<ActionScaleToEntity>(duration, scale_x, scale_y));
 }
 
 ActionScaleTo::ActionScaleTo(Duration duration, Vec2 scale)
 {
-    SetEntity(ActionScaleToEntity::Create(duration, scale.x, scale.y));
+    SetEntity(MakePtr<ActionScaleToEntity>(duration, scale.x, scale.y));
 }
 
 ActionFadeTo::ActionFadeTo(Duration duration, float opacity)
 {
-    SetEntity(ActionFadeToEntity::Create(duration, opacity));
+    SetEntity(MakePtr<ActionFadeToEntity>(duration, opacity));
 }
 
 ActionFadeIn::ActionFadeIn(Duration duration)
 {
-    SetEntity(ActionFadeToEntity::Create(duration, 1.0f));
+    SetEntity(MakePtr<ActionFadeToEntity>(duration, 1.0f));
 }
 
 ActionFadeOut::ActionFadeOut(Duration duration)
 {
-    SetEntity(ActionFadeToEntity::Create(duration, 0.0f));
+    SetEntity(MakePtr<ActionFadeToEntity>(duration, 0.0f));
 }
 
 ActionRotateBy::ActionRotateBy(Duration duration, float rotation)
 {
-    SetEntity(ActionRotateByEntity::Create(duration, rotation));
+    SetEntity(MakePtr<ActionRotateByEntity>(duration, rotation));
 }
 
 ActionRotateTo::ActionRotateTo(Duration duration, float rotation)
 {
-    SetEntity(ActionRotateToEntity::Create(duration, rotation));
+    SetEntity(MakePtr<ActionRotateToEntity>(duration, rotation));
 }
 
 ActionCustom::ActionCustom(Duration duration, TweenFunc tween_func)
 {
-    SetEntity(ActionCustomEntity::Create(duration, tween_func));
+    SetEntity(MakePtr<ActionCustomEntity>(duration, tween_func));
 }
 
 }  // namespace kiwano

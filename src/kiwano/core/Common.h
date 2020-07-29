@@ -56,23 +56,28 @@ using WideStringStream = std::wstringstream;
 
 /// \~chinese
 /// @brief 线性数组容器
-template <typename _Ty, typename... _Args>
-using Vector = std::vector<_Ty, _Args...>;
+template <typename _Ty, typename _Alloc = std::allocator<_Ty>>
+using Vector = std::vector<_Ty, _Alloc>;
 
 /// \~chinese
 /// @brief 链表容器
-template <typename _Ty, typename... _Args>
-using List = std::list<_Ty, _Args...>;
+template <typename _Ty, typename _Alloc = std::allocator<_Ty>>
+using List = std::list<_Ty, _Alloc>;
+
+/// \~chinese
+/// @brief 双端队列容器
+template <typename _Ty, typename _Alloc = std::allocator<_Ty>>
+using Deque = std::deque<_Ty, _Alloc>;
 
 /// \~chinese
 /// @brief 队列容器
-template <typename _Ty, typename... _Args>
-using Queue = std::queue<_Ty, _Args...>;
+template <typename _Ty, typename _Container = Deque<_Ty>>
+using Queue = std::queue<_Ty, _Container>;
 
 /// \~chinese
 /// @brief 集合容器
-template <typename _Ty, typename... _Args>
-using Set = std::set<_Ty, _Args...>;
+template <typename _Kty, typename _Compare = std::less<_Kty>, typename _Alloc = std::allocator<_Kty>>
+using Set = std::set<_Kty, _Compare, _Alloc>;
 
 /// \~chinese
 /// @brief 对容器
@@ -81,23 +86,25 @@ using Pair = std::pair<_Ty1, _Ty2>;
 
 /// \~chinese
 /// @brief 无序集合容器
-template <typename _Ty, typename... _Args>
-using UnorderedSet = std::unordered_set<_Ty, _Args...>;
+template <typename _Kty, typename _Hash = std::hash<_Kty>, typename _Keq = std::equal_to<_Kty>,
+          typename _Alloc = std::allocator<_Kty>>
+using UnorderedSet = std::unordered_set<_Kty, _Hash, _Keq, _Alloc>;
 
 /// \~chinese
 /// @brief 栈容器
-template <typename _Ty, typename... _Args>
-using Stack = std::stack<_Ty, _Args...>;
+template <typename _Ty, typename _Container = Deque<_Ty>>
+using Stack = std::stack<_Ty, _Container>;
 
 /// \~chinese
-/// @brief 字符串容器
-template <typename _Kty, typename _Ty, typename... _Args>
-using Map = std::map<_Kty, _Ty, _Args...>;
+/// @brief 排序关联容器
+template <typename _Kty, typename _Ty, typename _Compare = std::less<_Kty>, typename _Alloc = std::allocator<Pair<const _Kty, _Ty>>>
+using Map = std::map<_Kty, _Ty, _Compare, _Alloc>;
 
 /// \~chinese
-/// @brief 字符串容器
-template <typename _Kty, typename _Ty, typename... _Args>
-using UnorderedMap = std::unordered_map<_Kty, _Ty, _Args...>;
+/// @brief 非排序关联容器
+template <typename _Kty, typename _Ty, typename _Hash = std::hash<_Kty>, typename _Keq = std::equal_to<_Kty>,
+          typename _Alloc = std::allocator<Pair<const _Kty, _Ty>>>
+using UnorderedMap = std::unordered_map<_Kty, _Ty, _Hash, _Keq, _Alloc>;
 
 /// \~chinese
 /// @brief 不可拷贝对象

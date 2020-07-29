@@ -46,10 +46,6 @@ enum class CombineMode
 class KGE_API ShapeMaker : public NativeObject
 {
 public:
-    /// \~chinese
-    /// @brief 创建形状生成器
-    static ShapeMakerPtr Create();
-
     ShapeMaker();
 
     ~ShapeMaker();

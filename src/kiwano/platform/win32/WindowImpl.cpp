@@ -25,7 +25,6 @@
 #include <memory>
 #include <array>
 #include <kiwano/core/Keys.h>
-#include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>
@@ -90,7 +89,7 @@ private:
 
 WindowPtr Window::Create(const WindowConfig& config)
 {
-    WindowWin32ImplPtr ptr = memory::New<WindowWin32Impl>();
+    WindowWin32ImplPtr ptr = MakePtr<WindowWin32Impl>();
     if (ptr)
     {
         ptr->Init(config);

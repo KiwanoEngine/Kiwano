@@ -42,7 +42,8 @@ extern KGE_API int GetVersion();
  * \~chinese
  * @brief 应用程序，控制游戏的整个生命周期，包括初始化、启动、结束以及事件分发等
  */
-class KGE_API Application : public Singleton<Application>
+class KGE_API Application
+    : public Singleton<Application>
 {
     friend Singleton<Application>;
 
@@ -169,7 +170,7 @@ private:
     float                   time_scale_;
     RunnerPtr               runner_;
     TimerPtr                timer_;
-    List<Module*>           modules_;
+    ModuleList              modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
 };
