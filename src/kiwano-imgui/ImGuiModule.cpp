@@ -88,30 +88,25 @@ void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
     ctx.Next();
 }
 
-void ImGuiModule::OnRender(RenderModuleContext& ctx)
+void ImGuiModule::BeforeRender(RenderModuleContext& ctx)
 {
-    // Before render
-    {
-        ImGui_Impl_NewFrame();
+    ImGui_Impl_NewFrame();
 
-        ImGuiIO& io = ImGui::GetIO();
-        KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
+    ImGuiIO& io = ImGui::GetIO();
+    KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
 
-        // Setup display size (every frame to accommodate for window resizing)
-        Size display_size = Renderer::GetInstance().GetOutputSize();
-        io.DisplaySize    = ImVec2(display_size.x, display_size.y);
+    // Setup display size (every frame to accommodate for window resizing)
+    Size display_size = Renderer::GetInstance().GetOutputSize();
+    io.DisplaySize    = ImVec2(display_size.x, display_size.y);
 
-        ImGui::NewFrame();
-    }
+    ImGui::NewFrame();
+}
 
-    ctx.Next();
+void ImGuiModule::AfterRender(RenderModuleContext& ctx)
+{
+    ImGui::Render();
 
-    // After render
-    {
-        ImGui::Render();
-
-        ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-    }
+    ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImGuiModule::HandleEvent(EventModuleContext& ctx)

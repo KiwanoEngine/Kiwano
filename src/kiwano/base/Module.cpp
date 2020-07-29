@@ -32,6 +32,11 @@ ModuleContext::ModuleContext(ModuleList& modules)
 
 ModuleContext::~ModuleContext() {}
 
+void ModuleContext::ResetIndex()
+{
+    index_ = -1;
+}
+
 void ModuleContext::Next()
 {
     index_++;
@@ -43,19 +48,41 @@ void ModuleContext::Next()
 
 RenderModuleContext::RenderModuleContext(ModuleList& modules, RenderContext& ctx)
     : ModuleContext(modules)
+    , step_(Step::Before)
     , render_ctx(ctx)
 {
+    this->Next();
+    this->ResetIndex();
+
     render_ctx.BeginDraw();
+    step_ = Step::Rendering;
 }
 
 RenderModuleContext::~RenderModuleContext()
 {
     render_ctx.EndDraw();
+    step_ = Step::After;
+
+    this->ResetIndex();
+    this->Next();
 }
 
 void RenderModuleContext::Handle(Module* m)
 {
-    m->OnRender(*this);
+    switch (step_)
+    {
+    case RenderModuleContext::Step::Before:
+        m->BeforeRender(*this);
+        break;
+    case RenderModuleContext::Step::Rendering:
+        m->OnRender(*this);
+        break;
+    case RenderModuleContext::Step::After:
+        m->AfterRender(*this);
+        break;
+    default:
+        break;
+    }
 }
 
 UpdateModuleContext::UpdateModuleContext(ModuleList& modules, Duration dt)
@@ -88,17 +115,22 @@ void Module::DestroyModule() {}
 
 void Module::OnRender(RenderModuleContext& ctx)
 {
-    ctx.Next();
 }
 
 void Module::OnUpdate(UpdateModuleContext& ctx)
 {
-    ctx.Next();
 }
 
 void Module::HandleEvent(EventModuleContext& ctx)
 {
-    ctx.Next();
+}
+
+void Module::BeforeRender(RenderModuleContext& ctx)
+{
+}
+
+void Module::AfterRender(RenderModuleContext& ctx)
+{
 }
 
 }  // namespace kiwano

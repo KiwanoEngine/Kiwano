@@ -45,6 +45,8 @@ protected:
 
     virtual void Handle(Module* m) = 0;
 
+    void ResetIndex();
+
 private:
     int         index_;
     ModuleList& modules_;
@@ -63,6 +65,16 @@ public:
 
 protected:
     void Handle(Module* m) override;
+
+private:
+    enum class Step
+    {
+        Before,
+        Rendering,
+        After,
+    };
+
+    Step step_;
 };
 
 /// \~chinese
@@ -107,11 +119,6 @@ public:
     virtual void DestroyModule();
 
     /// \~chinese
-    /// @brief 渲染时
-    /// @param ctx 渲染上下文
-    virtual void OnRender(RenderModuleContext& ctx);
-
-    /// \~chinese
     /// @brief 更新时
     /// @param ctx 更新上下文
     virtual void OnUpdate(UpdateModuleContext& ctx);
@@ -120,6 +127,21 @@ public:
     /// @brief 事件处理
     /// @param ctx 事件上下文
     virtual void HandleEvent(EventModuleContext& ctx);
+
+    /// \~chinese
+    /// @brief 渲染前
+    /// @param ctx 渲染上下文
+    virtual void BeforeRender(RenderModuleContext& ctx);
+
+    /// \~chinese
+    /// @brief 渲染时
+    /// @param ctx 渲染上下文
+    virtual void OnRender(RenderModuleContext& ctx);
+
+    /// \~chinese
+    /// @brief 渲染后
+    /// @param ctx 渲染上下文
+    virtual void AfterRender(RenderModuleContext& ctx);
 
 protected:
     Module();

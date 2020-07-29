@@ -32,7 +32,7 @@ namespace
 bool                  tracing_leaks = false;
 Vector<ObjectBase*>   tracing_objects;
 std::atomic<uint64_t> last_object_id = 0;
-ObjectPolicyFunc      object_policy_ = ObjectPolicy::Exception();
+ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
 
 }  // namespace
 

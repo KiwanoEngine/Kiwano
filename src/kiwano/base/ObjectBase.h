@@ -115,13 +115,13 @@ struct ObjectPolicy
     static ObjectPolicyFunc WarnLog(int threshold = ObjectStatus::fail);
 
     /// \~chinese
-    /// @brief 在对象状态变为失败时打印错误日志
+    /// @brief 在对象状态变为失败时打印错误日志（默认策略）
     /// @param threshold 触发阈值
     /// @return 对象处理策略方法
     static ObjectPolicyFunc ErrorLog(int threshold = ObjectStatus::fail);
 
     /// \~chinese
-    /// @brief 在对象状态变为失败时抛出 ObjectFailException（默认策略）
+    /// @brief 在对象状态变为失败时抛出 ObjectFailException
     /// @param threshold 触发阈值
     /// @return 对象处理策略方法
     static ObjectPolicyFunc Exception(int threshold = ObjectStatus::fail);

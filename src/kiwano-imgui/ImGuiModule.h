@@ -47,7 +47,9 @@ public:
 
     void OnUpdate(UpdateModuleContext& ctx) override;
 
-    void OnRender(RenderModuleContext& ctx) override;
+    void BeforeRender(RenderModuleContext& ctx) override;
+
+    void AfterRender(RenderModuleContext& ctx) override;
 
     void HandleEvent(EventModuleContext& ctx) override;
 
