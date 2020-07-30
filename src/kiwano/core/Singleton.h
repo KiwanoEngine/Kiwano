@@ -20,6 +20,7 @@
 
 #pragma once
 #include <memory>
+#include <mutex>
 
 namespace kiwano
 {
@@ -27,23 +28,6 @@ namespace kiwano
 template <typename _Ty>
 class Singleton
 {
-protected:
-    Singleton()                 = default;
-    Singleton(const Singleton&) = delete;
-    Singleton& operator=(const Singleton&) = delete;
-
-private:
-    struct InstanceCreator
-    {
-        InstanceCreator()
-        {
-            (void)Singleton<_Ty>::GetInstancePtr();
-        }
-
-        inline void Dummy() const {}
-    };
-    static InstanceCreator creator_;
-
 public:
     using object_type = _Ty;
 
@@ -56,11 +40,7 @@ public:
 
     static inline object_type* GetInstancePtr()
     {
-        creator_.Dummy();
-        if (!instance_ptr_)
-        {
-            instance_ptr_.reset(new object_type);
-        }
+        std::call_once(once_, Singleton::Init);
         return instance_ptr_.get();
     }
 
@@ -68,10 +48,26 @@ public:
     {
         instance_ptr_.reset();
     }
+
+protected:
+    Singleton()                 = default;
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+
+private:
+    static inline void Init()
+    {
+        if (!instance_ptr_)
+        {
+            instance_ptr_.reset(new object_type);
+        }
+    }
+
+    static std::once_flag once_;
 };
 
 template <typename _Ty>
-typename Singleton<_Ty>::InstanceCreator Singleton<_Ty>::creator_;
+std::once_flag Singleton<_Ty>::once_;
 
 template <typename _Ty>
 typename std::unique_ptr<_Ty> Singleton<_Ty>::instance_ptr_;
