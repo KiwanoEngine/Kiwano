@@ -52,19 +52,80 @@ String LogFormater::GetLevelLabel(LogLevel level) const
 
 class TextFormater : public LogFormater
 {
-public:
-    void FormatHeader(std::ostream& out, LogLevel level, Time time) override
+private:
+    struct TimeFormater
     {
-        // get timestamp
-        time_t  unix = std::time(nullptr);
-        std::tm tmbuf;
-        localtime_s(&tmbuf, &unix);
+        TimeFormater()
+        {
+            time_t ctime = std::time(nullptr);
+            prev_sec_    = ctime;
+            prev_min_    = ctime / 60;
 
+            RefreshLocalTime(&ctime);
+            ResetFormat();
+        }
+
+        const char* Format(ClockTime* current_time)
+        {
+            time_t ctime = current_time->GetCTime();
+            if (ctime != prev_sec_)
+            {
+                prev_sec_        = ctime;
+                tmbuf_.tm_sec    = static_cast<int>(ctime % 60);
+                time_t ctime_min = ctime / 60;
+                if (ctime_min != prev_min_)
+                {
+                    prev_min_ = ctime_min;
+
+                    RefreshLocalTime(&ctime);
+                    ResetFormat();
+                }
+                else
+                {
+                    ResetFormatSec();
+                }
+            }
+            return time_format_;
+        }
+
+    private:
+        void ResetFormat()
+        {
+            std::snprintf(time_format_, 20, "%d-%02d-%02d %02d:%02d:%02d", tmbuf_.tm_year + 1900, tmbuf_.tm_mon + 1,
+                          tmbuf_.tm_mday, tmbuf_.tm_hour, tmbuf_.tm_min, tmbuf_.tm_sec);
+        }
+
+        void ResetFormatSec()
+        {
+            std::snprintf(time_format_ + 17, 3, "%02d", tmbuf_.tm_sec);
+        }
+
+        void RefreshLocalTime(const time_t* ptime)
+        {
+#if defined(KGE_PLATFORM_WINDOWS)
+            ::localtime_s(&tmbuf_, ptime);
+#else
+            std::tm* ptm = std::localtime(ptime);
+            ::memcpy(&tmbuf_, ptm, sizeof(std::tm));
+#endif
+        }
+
+        time_t  prev_sec_        = 0;
+        time_t  prev_min_        = 0;
+        std::tm tmbuf_           = {};
+        char    time_format_[20] = {};
+    };
+
+    TimeFormater tf_;
+
+public:
+    void FormatHeader(std::ostream& out, LogLevel level, ClockTime time) override
+    {
         // build message
-        out << GetLevelLabel(level) << std::put_time(&tmbuf, " %H:%M:%S ");
+        out << GetLevelLabel(level) << ' ' << tf_.Format(&time);
     }
 
-    void FormatFooter(std::ostream& out, LogLevel level, Time time) override
+    void FormatFooter(std::ostream& out, LogLevel level) override
     {
         out << "\n";
     }
@@ -510,7 +571,7 @@ std::iostream& Logger::GetFormatedStream(LogLevel level, LogBuffer* buffer)
 
     if (formater_)
     {
-        formater_->FormatHeader(stream_, level, Time::Now());
+        formater_->FormatHeader(stream_, level, ClockTime::Now());
     }
     return stream_;
 }
@@ -534,7 +595,7 @@ void Logger::Logf(LogLevel level, const char* format, ...)
 
     // build message
     auto& stream = this->GetFormatedStream(level, &buffer_);
-    stream << strings::FormatArgs(format, args);
+    stream << ' ' << strings::FormatArgs(format, args);
 
     va_end(args);
 
@@ -582,7 +643,7 @@ void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
     // format footer
     if (formater_)
     {
-        formater_->FormatFooter(stream_, level, Time::Now());
+        formater_->FormatFooter(stream_, level);
     }
 
     // write message
