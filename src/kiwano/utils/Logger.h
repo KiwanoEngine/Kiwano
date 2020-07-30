@@ -132,9 +132,9 @@ enum class LogLevel
 class KGE_API LogFormater : public ObjectBase
 {
 public:
-    virtual void FormatHeader(std::ostream& out, LogLevel level, Time time) = 0;
+    virtual void FormatHeader(std::ostream& out, LogLevel level, ClockTime time) = 0;
 
-    virtual void FormatFooter(std::ostream& out, LogLevel level, Time time) = 0;
+    virtual void FormatFooter(std::ostream& out, LogLevel level) = 0;
 
     String GetLevelLabel(LogLevel level) const;
 };
