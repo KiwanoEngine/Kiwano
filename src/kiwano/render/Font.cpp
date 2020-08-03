@@ -21,6 +21,7 @@
 #include <kiwano/render/Font.h>
 #include <kiwano/render/Renderer.h>
 #include <functional>  // std::hash
+#include <cctype>  // std::tolower
 
 namespace kiwano
 {
@@ -158,7 +159,7 @@ void FontCache::Clear()
 
 String FontCache::TransformFamily(String family) const
 {
-    std::transform(family.begin(), family.end(), family.begin(), std::tolower);
+    std::transform(family.begin(), family.end(), family.begin(), [](unsigned char c) { return std::tolower(c); });
     return family;
 }
 
