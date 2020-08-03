@@ -502,8 +502,36 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
         ComPtr<IDWriteFontCollection> font_collection;
         hr = d2d_res_->CreateFontCollectionFromFiles(font_collection, { full_path });
 
+        Vector<String> family_names;
         if (SUCCEEDED(hr))
         {
+            UINT32 count = font_collection->GetFontFamilyCount();
+            for (UINT32 i = 0; i < count; i++)
+            {
+                ComPtr<IDWriteFontFamily> family;
+                if (SUCCEEDED(font_collection->GetFontFamily(i, &family)))
+                {
+                    ComPtr<IDWriteLocalizedStrings> str;
+                    if (SUCCEEDED(family->GetFamilyNames(&str)))
+                    {
+                        UINT32 length = 0;
+                        if (SUCCEEDED(str->GetStringLength(0, &length)))
+                        {
+                            WideString name;
+                            name.resize(length + 1);
+                            if (SUCCEEDED(str->GetString(0, &name[0], UINT32(name.size()))))
+                            {
+                                family_names.emplace_back(strings::WideToNarrow(name));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            font.SetFamilyNames(family_names);
             NativePtr::Set(font, font_collection);
         }
     }
@@ -524,8 +552,36 @@ void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
         ComPtr<IDWriteFontCollection> font_collection;
         hr = d2d_res_->CreateFontCollectionFromResources(font_collection, Vector<Resource>{ res });
 
+        Vector<String> family_names;
         if (SUCCEEDED(hr))
         {
+            UINT32 count = font_collection->GetFontFamilyCount();
+            for (UINT32 i = 0; i < count; i++)
+            {
+                ComPtr<IDWriteFontFamily> family;
+                if (SUCCEEDED(font_collection->GetFontFamily(i, &family)))
+                {
+                    ComPtr<IDWriteLocalizedStrings> str;
+                    if (SUCCEEDED(family->GetFamilyNames(&str)))
+                    {
+                        UINT32 length = 0;
+                        if (SUCCEEDED(str->GetStringLength(0, &length)))
+                        {
+                            WideString name;
+                            name.resize(length + 1);
+                            if (SUCCEEDED(str->GetString(0, &name[0], UINT32(name.size()))))
+                            {
+                                family_names.emplace_back(strings::WideToNarrow(name));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            font.SetFamilyNames(family_names);
             NativePtr::Set(font, font_collection);
         }
     }

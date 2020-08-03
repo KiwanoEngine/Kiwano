@@ -59,8 +59,29 @@ public:
     /// \~chinese
     /// @brief 加载字体资源
     bool Load(const Resource& resource);
+
+    /// \~chinese
+    /// @brief 获取字体族名称
+    Vector<String> GetFamilyNames() const;
+
+    /// \~chinese
+    /// @brief 设置字体族名称
+    void SetFamilyNames(const Vector<String>& names);
+
+protected:
+    Vector<String> family_names_;
 };
 
 /** @} */
+
+inline Vector<String> Font::GetFamilyNames() const
+{
+    return family_names_;
+}
+
+inline void Font::SetFamilyNames(const Vector<String>& names)
+{
+    family_names_ = names;
+}
 
 }  // namespace kiwano
