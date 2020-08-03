@@ -30,6 +30,8 @@ KGE_DECLARE_SMART_PTR(WindowFocusChangedEvent);
 KGE_DECLARE_SMART_PTR(WindowTitleChangedEvent);
 KGE_DECLARE_SMART_PTR(WindowClosedEvent);
 
+class Window;
+
 /**
  * \addtogroup Events
  * @{
@@ -40,6 +42,8 @@ KGE_DECLARE_SMART_PTR(WindowClosedEvent);
 class KGE_API WindowEvent : public Event
 {
 public:
+    Window* window;  ///< ´°¿Ú
+
     WindowEvent(const EventType& type);
 };
 

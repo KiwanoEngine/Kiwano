@@ -135,6 +135,20 @@ public:
 
     /**
      * \~chinese
+     * @brief 获取窗口横向位置
+     * @return 横向位置
+     */
+    int GetPosX() const;
+
+    /**
+     * \~chinese
+     * @brief 获取窗口纵向位置
+     * @return 纵向位置
+     */
+    int GetPosY() const;
+
+    /**
+     * \~chinese
      * @brief 获取窗口大小
      * @return 窗口大小
      */
@@ -258,6 +272,8 @@ protected:
 protected:
     bool                 should_close_;
     bool                 is_fullscreen_;
+    int                  pos_x_;
+    int                  pos_y_;
     uint32_t             width_;
     uint32_t             height_;
     uint32_t             min_width_;

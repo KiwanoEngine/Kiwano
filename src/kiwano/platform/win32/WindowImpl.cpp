@@ -78,7 +78,7 @@ public:
 
 private:
     bool       resizable_;
-    bool       is_resizing_;
+    bool       is_moving_or_resizing_;
     bool       is_minimized_;
     CursorType mouse_cursor_;
     String     device_name_;
@@ -166,7 +166,7 @@ HICON Icon2HIcon(const Icon& icon)
 
 WindowWin32Impl::WindowWin32Impl()
     : resizable_(false)
-    , is_resizing_(false)
+    , is_moving_or_resizing_(false)
     , is_minimized_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
@@ -631,7 +631,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 is_minimized_ = false;
                 Application::GetInstance().Resume();
             }
-            else if (is_resizing_)
+            else if (is_moving_or_resizing_)
             {
                 // DO NOTHING until the dragging / resizing has stopped.
             }
@@ -641,6 +641,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 this->height_ = ((uint32_t)(short)HIWORD(lparam));
 
                 WindowResizedEventPtr evt = new WindowResizedEvent;
+                evt->window               = this;
                 evt->width                = this->GetWidth();
                 evt->height               = this->GetHeight();
                 this->PushEvent(evt);
@@ -653,14 +654,14 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_ENTERSIZEMOVE:
     {
-        is_resizing_ = true;
+        is_moving_or_resizing_ = true;
         Application::GetInstance().Pause();
         return 0;
     }
 
     case WM_EXITSIZEMOVE:
     {
-        is_resizing_ = false;
+        is_moving_or_resizing_ = false;
         Application::GetInstance().Resume();
 
         // Send window resized event when client size changed
@@ -677,8 +678,28 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             this->height_ = client_height;
 
             WindowResizedEventPtr evt = new WindowResizedEvent;
-            evt->width                = this->GetWidth();
-            evt->height               = this->GetHeight();
+            evt->window               = this;
+            evt->width                = client_width;
+            evt->height               = client_height;
+            this->PushEvent(evt);
+        }
+
+        RECT window_rect = { 0 };
+        ::GetWindowRect(hwnd, &window_rect);
+
+        int window_x = int(window_rect.left);
+        int window_y = int(window_rect.top);
+        if (window_x != this->GetPosX() || window_y != this->GetPosY())
+        {
+            KGE_DEBUG_LOGF("Window moved to (%d, %d)", window_x, window_y);
+
+            this->pos_x_ = window_x;
+            this->pos_y_ = window_y;
+
+            WindowMovedEventPtr evt = new WindowMovedEvent;
+            evt->window             = this;
+            evt->x                  = window_x;
+            evt->y                  = window_y;
             this->PushEvent(evt);
         }
         return 0;
@@ -699,10 +720,26 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_MOVE:
     {
-        WindowMovedEventPtr evt = new WindowMovedEvent;
-        evt->x                  = GET_X_LPARAM(lparam);
-        evt->y                  = GET_Y_LPARAM(lparam);
-        this->PushEvent(evt);
+        if (is_moving_or_resizing_)
+        {
+            // DO NOTHING until the dragging / resizing has stopped.
+        }
+        else
+        {
+            int window_x = GET_X_LPARAM(lparam);
+            int window_y = GET_Y_LPARAM(lparam);
+
+            KGE_DEBUG_LOGF("Window moved to (%d, %d)", window_x, window_y);
+
+            this->pos_x_ = window_x;
+            this->pos_y_ = window_y;
+
+            WindowMovedEventPtr evt = new WindowMovedEvent;
+            evt->window             = this;
+            evt->x                  = window_x;
+            evt->y                  = window_y;
+            this->PushEvent(evt);
+        }
     }
     break;
 
@@ -718,6 +755,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         bool active = (LOWORD(wparam) != WA_INACTIVE);
 
         WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
+        evt->window                    = this;
         evt->focus                     = active;
         this->PushEvent(evt);
     }
@@ -748,6 +786,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         this->title_ = strings::WideToNarrow(reinterpret_cast<LPCWSTR>(lparam));
 
         WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
+        evt->window                    = this;
         evt->title                     = this->title_;
         this->PushEvent(evt);
     }
@@ -776,6 +815,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         KGE_DEBUG_LOGF("Window is closing");
 
         WindowClosedEventPtr evt = new WindowClosedEvent;
+        evt->window              = this;
         this->PushEvent(evt);
         this->SetShouldClose(true);
         return 0;

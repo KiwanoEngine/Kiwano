@@ -27,6 +27,8 @@ Window::Window()
     : handle_(nullptr)
     , should_close_(false)
     , is_fullscreen_(false)
+    , pos_x_(0)
+    , pos_y_(0)
     , width_(0)
     , height_(0)
     , min_width_(0)
@@ -54,6 +56,16 @@ EventPtr Window::PollEvent()
 String Window::GetTitle() const
 {
     return title_;
+}
+
+int Window::GetPosX() const
+{
+    return pos_x_;
+}
+
+int Window::GetPosY() const
+{
+    return pos_y_;
 }
 
 Size Window::GetSize() const

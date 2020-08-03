@@ -5,6 +5,7 @@ namespace kiwano
 
 WindowEvent::WindowEvent(const EventType& type)
     : Event(type)
+    , window(nullptr)
 {
 }
 
