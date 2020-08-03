@@ -39,49 +39,46 @@ class Renderer;
  */
 class Font : public NativeObject
 {
-    friend class Renderer;
-
 public:
     /// \~chinese
     /// @brief 创建字体
-    Font(const String& file);
+    /// @param file 字体文件
+    static FontPtr Preload(const String& file);
 
     /// \~chinese
     /// @brief 创建字体
-    Font(const Resource& resource);
+    /// @param resource 字体资源
+    static FontPtr Preload(const Resource& resource);
 
     Font();
 
     /// \~chinese
-    /// @brief 加载字体文件
-    bool Load(const String& file);
+    /// @brief 创建字体
+    /// @param family_name 字体族
+    Font(const String& family_name);
 
     /// \~chinese
-    /// @brief 加载字体资源
-    bool Load(const Resource& resource);
+    /// @brief 获取字体族
+    String GetFamilyName() const;
 
     /// \~chinese
-    /// @brief 获取字体族名称
-    Vector<String> GetFamilyNames() const;
-
-    /// \~chinese
-    /// @brief 设置字体族名称
-    void SetFamilyNames(const Vector<String>& names);
+    /// @brief 获取字体族
+    void SetFamilyName(const String& name);
 
 protected:
-    Vector<String> family_names_;
+    String family_name_;
 };
 
 /** @} */
 
-inline Vector<String> Font::GetFamilyNames() const
+inline String Font::GetFamilyName() const
 {
-    return family_names_;
+    return family_name_;
 }
 
-inline void Font::SetFamilyNames(const Vector<String>& names)
+inline void Font::SetFamilyName(const String& name)
 {
-    family_names_ = names;
+    family_name_ = name;
 }
 
 }  // namespace kiwano

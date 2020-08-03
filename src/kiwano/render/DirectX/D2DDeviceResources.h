@@ -60,7 +60,10 @@ public:
                                                   const Vector<String>& file_paths) = 0;
 
     virtual HRESULT CreateFontCollectionFromResources(_Out_ ComPtr<IDWriteFontCollection> & font_collection,
-                                                      const Vector<Resource>& resources) = 0; 
+                                                      const Vector<Resource>& resources) = 0;
+
+    virtual HRESULT GetFontFamilyNames(_Out_ Vector<String> & family_names,
+                                       _In_ ComPtr<IDWriteFontCollection> font_collection) = 0;
 
     virtual HRESULT SetDpi(float dpi) = 0;
 

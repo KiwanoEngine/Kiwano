@@ -24,42 +24,39 @@
 namespace kiwano
 {
 
-Font::Font(const String& file)
+FontPtr Font::Preload(const String& file)
 {
-    Load(file);
+    FontPtr ptr = MakePtr<Font>();
+    try
+    {
+        Renderer::GetInstance().CreateFontCollection(*ptr, file);
+    }
+    catch (Exception&)
+    {
+        return nullptr;
+    }
+    return ptr;
 }
 
-Font::Font(const Resource& resource)
+FontPtr Font::Preload(const Resource& resource)
 {
-    Load(resource);
+    FontPtr ptr = MakePtr<Font>();
+    try
+    {
+        Renderer::GetInstance().CreateFontCollection(*ptr, resource);
+    }
+    catch (Exception&)
+    {
+        return nullptr;
+    }
+    return ptr;
 }
 
 Font::Font() {}
 
-bool Font::Load(const String& file)
+Font::Font(const String& family_name)
+    : family_name_(family_name)
 {
-    try
-    {
-        Renderer::GetInstance().CreateFontCollection(*this, file);
-    }
-    catch (RuntimeError&)
-    {
-        return false;
-    }
-    return true;
-}
-
-bool Font::Load(const Resource& resource)
-{
-    try
-    {
-        Renderer::GetInstance().CreateFontCollection(*this, resource);
-    }
-    catch (RuntimeError&)
-    {
-        return false;
-    }
-    return true;
 }
 
 }  // namespace kiwano

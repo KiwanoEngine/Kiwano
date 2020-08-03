@@ -22,7 +22,6 @@
 #include <kiwano/core/Defer.h>
 #include <kiwano/base/Director.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
@@ -129,7 +128,6 @@ void Application::Destroy()
     modules_.clear();
 
     // Clear device resources
-    TextureCache::GetInstance().Clear();
     Renderer::GetInstance().Destroy();
 }
 

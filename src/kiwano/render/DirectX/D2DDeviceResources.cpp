@@ -75,6 +75,9 @@ public:
     HRESULT CreateFontCollectionFromResources(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
                                               const Vector<Resource>& resources) override;
 
+    HRESULT GetFontFamilyNames(_Out_ Vector<String>& family_names,
+                               _In_ ComPtr<IDWriteFontCollection> font_collection) override;
+
     HRESULT SetDpi(float dpi) override;
 
     HRESULT SetLogicalSize(float width, float height) override;
@@ -545,6 +548,50 @@ HRESULT D2DDeviceResources::CreateFontCollectionFromResources(ComPtr<IDWriteFont
     if (SUCCEEDED(hr))
     {
         hr = dwrite_factory_->CreateCustomFontCollection(res_font_collection_loader_.Get(), key, key_size, &font_collection);
+    }
+    return hr;
+}
+
+HRESULT D2DDeviceResources::GetFontFamilyNames(Vector<String>&               family_names,
+                                               ComPtr<IDWriteFontCollection> font_collection)
+{
+    HRESULT hr = S_OK;
+
+    if (!font_collection)
+        hr = E_FAIL;
+
+    if (SUCCEEDED(hr))
+    {
+        UINT32 count = font_collection->GetFontFamilyCount();
+        for (UINT32 i = 0; i < count; i++)
+        {
+            ComPtr<IDWriteFontFamily> family;
+            hr = font_collection->GetFontFamily(i, &family);
+
+            if (SUCCEEDED(hr))
+            {
+                ComPtr<IDWriteLocalizedStrings> str;
+                hr = family->GetFamilyNames(&str);
+
+                if (SUCCEEDED(hr))
+                {
+                    UINT32 length;
+                    hr = str->GetStringLength(0, &length);
+
+                    if (SUCCEEDED(hr))
+                    {
+                        WideString name;
+                        name.resize(length + 1);
+                        str->GetString(0, &name[0], UINT32(name.size()));
+
+                        if (SUCCEEDED(hr))
+                        {
+                            family_names.emplace_back(strings::WideToNarrow(name));
+                        }
+                    }
+                }
+            }
+        }
     }
     return hr;
 }

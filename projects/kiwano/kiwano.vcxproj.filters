@@ -156,9 +156,6 @@
     <ClInclude Include="..\..\src\kiwano\render\TextLayout.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\TextStyle.hpp">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\Texture.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -356,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ResourceLoader.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\TextStyle.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ResourceLoader.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\TextStyle.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

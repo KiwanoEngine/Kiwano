@@ -25,6 +25,18 @@
 namespace kiwano
 {
 
+GifImagePtr GifImage::Preload(const String& file_path)
+{
+    GifImagePtr image = Renderer::GetInstance().CreateGifImage(file_path);
+    return image;
+}
+
+GifImagePtr GifImage::Preload(const Resource& res)
+{
+    GifImagePtr image = Renderer::GetInstance().CreateGifImage(res);
+    return image;
+}
+
 GifImage::GifImage(const String& file_path)
     : GifImage()
 {

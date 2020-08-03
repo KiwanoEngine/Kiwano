@@ -60,7 +60,7 @@ DebugActor::DebugActor()
     BrushPtr fill_brush = MakePtr<Brush>();
     fill_brush->SetColor(Color::White);
 
-    debug_text_style_.font_family  = "Arial";
+    debug_text_style_.font         = new Font("Arial");
     debug_text_style_.font_size    = 16.f;
     debug_text_style_.font_weight  = FontWeight::Normal;
     debug_text_style_.line_spacing = 20.f;

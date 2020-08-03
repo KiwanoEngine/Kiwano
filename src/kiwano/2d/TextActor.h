@@ -99,10 +99,6 @@ public:
     void SetFont(FontPtr font);
 
     /// \~chinese
-    /// @brief 设置字体族
-    void SetFontFamily(const String& family);
-
-    /// \~chinese
     /// @brief 设置字号（默认值为 18）
     void SetFontSize(float size);
 

@@ -114,6 +114,8 @@ void RendererImpl::Destroy()
 {
     KGE_DEBUG_LOGF("Destroying device resources");
 
+    Renderer::Destroy();
+
     if (d2d_res_)
     {
         render_ctx_.Reset();
@@ -502,36 +504,14 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
         ComPtr<IDWriteFontCollection> font_collection;
         hr = d2d_res_->CreateFontCollectionFromFiles(font_collection, { full_path });
 
-        Vector<String> family_names;
         if (SUCCEEDED(hr))
         {
-            UINT32 count = font_collection->GetFontFamilyCount();
-            for (UINT32 i = 0; i < count; i++)
-            {
-                ComPtr<IDWriteFontFamily> family;
-                if (SUCCEEDED(font_collection->GetFontFamily(i, &family)))
-                {
-                    ComPtr<IDWriteLocalizedStrings> str;
-                    if (SUCCEEDED(family->GetFamilyNames(&str)))
-                    {
-                        UINT32 length = 0;
-                        if (SUCCEEDED(str->GetStringLength(0, &length)))
-                        {
-                            WideString name;
-                            name.resize(length + 1);
-                            if (SUCCEEDED(str->GetString(0, &name[0], UINT32(name.size()))))
-                            {
-                                family_names.emplace_back(strings::WideToNarrow(name));
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            Vector<String> family_names;
+            d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
 
-        if (SUCCEEDED(hr))
-        {
-            font.SetFamilyNames(family_names);
+            if (!family_names.empty())
+                font.SetFamilyName(family_names[0]);
+
             NativePtr::Set(font, font_collection);
         }
     }
@@ -552,36 +532,14 @@ void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
         ComPtr<IDWriteFontCollection> font_collection;
         hr = d2d_res_->CreateFontCollectionFromResources(font_collection, Vector<Resource>{ res });
 
-        Vector<String> family_names;
         if (SUCCEEDED(hr))
         {
-            UINT32 count = font_collection->GetFontFamilyCount();
-            for (UINT32 i = 0; i < count; i++)
-            {
-                ComPtr<IDWriteFontFamily> family;
-                if (SUCCEEDED(font_collection->GetFontFamily(i, &family)))
-                {
-                    ComPtr<IDWriteLocalizedStrings> str;
-                    if (SUCCEEDED(family->GetFamilyNames(&str)))
-                    {
-                        UINT32 length = 0;
-                        if (SUCCEEDED(str->GetStringLength(0, &length)))
-                        {
-                            WideString name;
-                            name.resize(length + 1);
-                            if (SUCCEEDED(str->GetString(0, &name[0], UINT32(name.size()))))
-                            {
-                                family_names.emplace_back(strings::WideToNarrow(name));
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            Vector<String> family_names;
+            d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
 
-        if (SUCCEEDED(hr))
-        {
-            font.SetFamilyNames(family_names);
+            if (!family_names.empty())
+                font.SetFamilyName(family_names[0]);
+
             NativePtr::Set(font, font_collection);
         }
     }
@@ -606,10 +564,19 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
     if (SUCCEEDED(hr))
     {
-        WideString         font_family = style.font_family.empty() ? L"" : strings::NarrowToWide(style.font_family);
         DWRITE_FONT_WEIGHT font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
         DWRITE_FONT_STYLE  font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
         auto               collection  = NativePtr::Get<IDWriteFontCollection>(style.font);
+
+        WideString font_family;
+        if (style.font)
+        {
+            String name = style.font->GetFamilyName();
+            if (!name.empty())
+            {
+                font_family = strings::NarrowToWide(name);
+            }
+        }
 
         ComPtr<IDWriteTextFormat> format;
         hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style,

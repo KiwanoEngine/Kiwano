@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Kiwano - Nomango
+// Copyright (c) 2016-2018 Kiwano - Nomango
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,60 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/TextStyle.h>
 
 namespace kiwano
 {
 
-TextureCache::TextureCache() {}
-
-TextureCache::~TextureCache()
+TextStyle::TextStyle()
+    : TextStyle(String(), 18, FontWeight::Normal)
 {
-    Clear();
 }
 
-void TextureCache::AddTexture(size_t key, TexturePtr texture)
+TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight)
+    : font_size(font_size)
+    , font_weight(font_weight)
+    , italic(false)
+    , alignment(TextAlign::Left)
+    , wrap_width(0)
+    , line_spacing(0)
+    , show_underline(false)
+    , show_strikethrough(false)
 {
-    texture_cache_.insert(std::make_pair(key, texture));
+    font = MakePtr<Font>(font_family);
 }
 
-void TextureCache::AddGifImage(size_t key, GifImagePtr gif)
+TextStyle::TextStyle(FontPtr font, float font_size, uint32_t font_weight)
+    : font(font)
+    , font_size(font_size)
+    , font_weight(font_weight)
+    , italic(false)
+    , alignment(TextAlign::Left)
+    , wrap_width(0)
+    , line_spacing(0)
+    , show_underline(false)
+    , show_strikethrough(false)
 {
-    gif_texture_cache_.insert(std::make_pair(key, gif));
-}
-
-TexturePtr TextureCache::GetTexture(size_t key) const
-{
-    if (texture_cache_.count(key))
-    {
-        return texture_cache_.at(key);
-    }
-    return TexturePtr();
-}
-
-GifImagePtr TextureCache::GetGifImage(size_t key) const
-{
-    if (gif_texture_cache_.count(key))
-    {
-        return gif_texture_cache_.at(key);
-    }
-    return GifImagePtr();
-}
-
-void TextureCache::RemoveTexture(size_t key)
-{
-    texture_cache_.erase(key);
-}
-
-void TextureCache::RemoveGifImage(size_t key)
-{
-    gif_texture_cache_.erase(key);
-}
-
-void TextureCache::Clear()
-{
-    texture_cache_.clear();
-    gif_texture_cache_.clear();
 }
 
 }  // namespace kiwano

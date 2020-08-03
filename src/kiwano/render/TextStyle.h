@@ -71,7 +71,6 @@ class KGE_API TextStyle
 {
 public:
     FontPtr        font;                ///< 字体
-    String         font_family;         ///< 字体族
     float          font_size;           ///< 字号
     uint32_t       font_weight;         ///< 粗细值
     bool           italic;              ///< 是否斜体
@@ -99,27 +98,17 @@ public:
      * @param font_weight 字体粗细
      */
     TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
+
+    /**
+     * \~chinese
+     * @brief 构建文本样式
+     * @param font 字体
+     * @param font_size 字体大小
+     * @param font_weight 字体粗细
+     */
+    TextStyle(FontPtr font, float font_size, uint32_t font_weight = FontWeight::Normal);
 };
 
 /** @} */
-
-inline TextStyle::TextStyle()
-    : TextStyle(String(), 18, FontWeight::Normal)
-{
-}
-
-inline TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight)
-    : font(nullptr)
-    , font_family(font_family)
-    , font_size(font_size)
-    , font_weight(font_weight)
-    , italic(false)
-    , alignment(TextAlign::Left)
-    , wrap_width(0)
-    , line_spacing(0)
-    , show_underline(false)
-    , show_strikethrough(false)
-{
-}
 
 }  // namespace kiwano

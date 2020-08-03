@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/GifSprite.h>
-#include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -53,13 +52,13 @@ GifSprite::GifSprite(GifImagePtr gif)
 
 bool GifSprite::Load(const String& file_path)
 {
-    GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(file_path);
+    GifImagePtr image = GifImage::Preload(file_path);
     return Load(image);
 }
 
 bool GifSprite::Load(const Resource& res)
 {
-    GifImagePtr image = TextureCache::GetInstance().AddOrGetGifImage(res);
+    GifImagePtr image = GifImage::Preload(res);
     return Load(image);
 }
 

@@ -88,8 +88,8 @@ private:
     using ID2DDeviceResources = kiwano::graphics::directx::ID2DDeviceResources;
     using ID3DDeviceResources = kiwano::graphics::directx::ID3DDeviceResources;
 
-    ComPtr<ID2DDeviceResources>           d2d_res_;
-    ComPtr<ID3DDeviceResources>           d3d_res_;
+    ComPtr<ID2DDeviceResources> d2d_res_;
+    ComPtr<ID3DDeviceResources> d3d_res_;
 };
 
 

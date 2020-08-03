@@ -22,8 +22,9 @@
 #include <kiwano/base/Module.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/TextStyle.hpp>
+#include <kiwano/render/TextStyle.h>
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/render/TextureCache.h>
 #include <kiwano/platform/Window.h>
 
 namespace kiwano
@@ -78,6 +79,26 @@ public:
     /// \~chinese
     /// @brief 窗口大小变化时自动调整分辨率
     void ResetResolutionWhenWindowResized(bool enabled);
+
+    /// \~chinese
+    /// @brief 创建纹理
+    /// @param[in] file_path 图片路径
+    TexturePtr CreateTexture(const String& file_path);
+
+    /// \~chinese
+    /// @brief 创建纹理
+    /// @param[in] resource 图片资源
+    TexturePtr CreateTexture(const Resource& resource);
+
+    /// \~chinese
+    /// @brief 创建GIF图像
+    /// @param[in] file_path 图片路径
+    GifImagePtr CreateGifImage(const String& file_path);
+
+    /// \~chinese
+    /// @brief 创建GIF图像
+    /// @param[in] resource 图片资源
+    GifImagePtr CreateGifImage(const Resource& resource);
 
     /// \~chinese
     /// @brief 创建纹理内部资源
@@ -221,6 +242,10 @@ public:
     /// @throw kiwano::SystemError 创建失败时抛出
     virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
 
+    /// \~chinese
+    /// @brief 创建纹理渲染上下文
+    TextureCache& GetTextureCache();
+
 public:
     /// \~chinese
     /// @brief 清除绘制内容
@@ -237,7 +262,7 @@ public:
 
     /// \~chinese
     /// @brief 销毁渲染器资源
-    virtual void Destroy() = 0;
+    virtual void Destroy();
 
     void HandleEvent(EventModuleContext& ctx) override;
 
@@ -250,6 +275,8 @@ protected:
     Color            clear_color_;
     Size             output_size_;
     RenderContextPtr render_ctx_;
+
+    TextureCache texture_cache_;
 };
 
 /** @} */

@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/math/Math.h>
 #include <kiwano/render/NativeObject.h>
-#include <kiwano/render/TextStyle.hpp>
+#include <kiwano/render/TextStyle.h>
 
 namespace kiwano
 {

@@ -55,14 +55,22 @@ class KGE_API Texture : public NativeObject
 {
 public:
     /// \~chinese
+    /// @brief 预加载本地图片
+    static TexturePtr Preload(const String& file_path);
+
+    /// \~chinese
+    /// @brief 预加载图片资源
+    static TexturePtr Preload(const Resource& res);
+
+    Texture();
+
+    /// \~chinese
     /// @brief 从本地文件创建纹理
     Texture(const String& file_path);
 
     /// \~chinese
     /// @brief 从资源创建纹理
     Texture(const Resource& res);
-
-    Texture();
 
     virtual ~Texture();
 

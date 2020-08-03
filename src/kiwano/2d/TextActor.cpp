@@ -88,16 +88,6 @@ void TextActor::SetFont(FontPtr font)
     }
 }
 
-void TextActor::SetFontFamily(const String& family)
-{
-    if (style_.font_family != family)
-    {
-        style_.font_family = family;
-        if (layout_)
-            layout_->SetFontFamily(family, { 0, layout_->GetContentLength() });
-    }
-}
-
 void TextActor::SetFontSize(float size)
 {
     if (style_.font_size != size)

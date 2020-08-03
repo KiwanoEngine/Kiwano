@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Frame.h>
-#include <kiwano/render/TextureCache.h>
 
 namespace kiwano
 {
@@ -43,7 +42,7 @@ Frame::Frame() {}
 
 bool Frame::Load(const String& file_path)
 {
-    TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(file_path);
+    TexturePtr texture = Texture::Preload(file_path);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -54,7 +53,7 @@ bool Frame::Load(const String& file_path)
 
 bool Frame::Load(const Resource& res)
 {
-    TexturePtr texture = TextureCache::GetInstance().AddOrGetTexture(res);
+    TexturePtr texture = Texture::Preload(res);
     if (texture->IsValid())
     {
         SetTexture(texture);

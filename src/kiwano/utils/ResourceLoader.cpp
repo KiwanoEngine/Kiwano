@@ -185,8 +185,8 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     if (type == "gif")
     {
         // GIF image
-        GifImagePtr gif = MakePtr<GifImage>();
-        if (gif && gif->Load(gdata->path + file))
+        GifImagePtr gif = GifImage::Preload(gdata->path + file);
+        if (gif)
         {
             cache->AddObject(id, gif);
             return;
@@ -273,8 +273,8 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
 
 void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, const String& id, const String& file)
 {
-    FontPtr font = MakePtr<Font>();
-    if (font && font->Load(gdata->path + file))
+    FontPtr font = Font::Preload(gdata->path + file);
+    if (font)
     {
         cache->AddObject(id, font);
         return;
