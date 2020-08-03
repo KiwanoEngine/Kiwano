@@ -34,7 +34,7 @@ public:
     {
         if (object)
         {
-            ComPtr<IUnknown> ptr = object->GetNativePointer<ComPtr<IUnknown>>();
+            ComPtr<IUnknown> ptr = object->GetNativePointer<IUnknown>();
             if (ptr)
             {
                 ComPtr<_Ty> native;
@@ -61,7 +61,7 @@ public:
     {
         if (object)
         {
-            object->SetNativePointer(com_ptr);
+            object->ResetNativePointer(com_ptr.Get());
         }
     }
 

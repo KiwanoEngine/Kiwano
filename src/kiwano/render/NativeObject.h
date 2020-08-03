@@ -39,54 +39,55 @@ KGE_DECLARE_SMART_PTR(NativeObject);
  * \~chinese
  * @brief 含有本机指针的对象
  */
-class KGE_API NativeObject : public ObjectBase
+class KGE_API NativeObjectBase : public ObjectBase
 {
 public:
-    virtual bool IsValid() const;
+    NativeObjectBase();
 
-    Any GetNativePointer() const;
+    bool IsValid() const override;
+
+    void* GetNativePointer() const;
 
     template <typename _NativeTy>
-    _NativeTy GetNativePointer() const;
+    _NativeTy* GetNativePointer() const;
 
-    void SetNativePointer(const Any& native_pointer);
+    virtual void ResetNativePointer(void* native_pointer = nullptr);
 
-    void ResetNativePointer();
-
-private:
-    Any native_pointer_;
+protected:
+    void* native_pointer_;
 };
+
+#if defined(KGE_PLATFORM_WINDOWS)
+
+class KGE_API NativeObject : public NativeObjectBase
+{
+public:
+    virtual ~NativeObject();
+
+    void ResetNativePointer(void* native_pointer = nullptr) override;
+};
+
+#else
+
+typedef NativeObjectBase NativeObject;
+
+#endif
 
 /** @} */
 
-inline bool NativeObject::IsValid() const
-{
-    return native_pointer_.HasValue();
-}
-
-inline Any NativeObject::GetNativePointer() const
+inline void* NativeObjectBase::GetNativePointer() const
 {
     return native_pointer_;
 }
 
 template <typename _NativeTy>
-inline _NativeTy NativeObject::GetNativePointer() const
+inline _NativeTy* NativeObjectBase::GetNativePointer() const
 {
-    if (native_pointer_.HasValue())
+    if (native_pointer_ != nullptr)
     {
-        return native_pointer_.Cast<_NativeTy>();
+        return static_cast<_NativeTy*>(native_pointer_);
     }
-    return _NativeTy();
-}
-
-inline void NativeObject::SetNativePointer(const Any& native_pointer)
-{
-    native_pointer_ = native_pointer;
-}
-
-inline void NativeObject::ResetNativePointer()
-{
-    native_pointer_.Clear();
+    return nullptr;
 }
 
 }  // namespace kiwano

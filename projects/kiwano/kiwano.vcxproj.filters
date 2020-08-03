@@ -587,6 +587,9 @@
     <ClCompile Include="..\..\src\kiwano\render\TextStyle.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="suppress_warning.ruleset" />

@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Frame.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
