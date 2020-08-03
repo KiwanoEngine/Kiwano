@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/utils/Logger.h>
+#include <kiwano/event/Events.h>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
@@ -48,6 +49,7 @@ RendererImpl& RendererImpl::GetInstance()
 }
 
 RendererImpl::RendererImpl()
+    : monitor_(nullptr)
 {
 }
 
@@ -62,6 +64,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HRESULT    hr            = target_window ? S_OK : E_FAIL;
 
     output_size_ = Size{ float(resolution.width), float(resolution.height) };
+    monitor_     = ::MonitorFromWindow(target_window, MONITOR_DEFAULTTONULL);
 
     // Initialize Direct3D resources
     if (SUCCEEDED(hr))
@@ -107,6 +110,28 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
         }
     }
 
+    if (SUCCEEDED(hr))
+    {
+        IDWriteFactory* dwrite = d2d_res_->GetDWriteFactory();
+        if (dwrite)
+        {
+            ComPtr<IDWriteFontCollection> system_collection;
+            if (SUCCEEDED(dwrite->GetSystemFontCollection(&system_collection, FALSE)))
+            {
+                Vector<String> family_names;
+                if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
+                {
+                    // dummy font
+                    FontPtr font = MakePtr<Font>();
+                    for (const auto& name : family_names)
+                    {
+                        FontCache::GetInstance().AddFontByFamily(name, font);
+                    }
+                }
+            }
+        }
+    }
+
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
 
@@ -130,6 +155,26 @@ void RendererImpl::Destroy()
     }
 
     ::CoUninitialize();
+}
+
+void RendererImpl::HandleEvent(EventModuleContext& ctx)
+{
+    Renderer::HandleEvent(ctx);
+
+    if (ctx.evt->IsType<WindowMovedEvent>())
+    {
+        auto evt = ctx.evt->SafeCast<WindowMovedEvent>();
+        HMONITOR monitor = ::MonitorFromWindow(evt->window->GetHandle(), MONITOR_DEFAULTTONULL);
+        if (monitor_ != monitor)
+        {
+            monitor_ = monitor;
+
+            if (d2d_res_)
+            {
+                d2d_res_->ResetTextRenderingParams(monitor);
+            }
+        }
+    }
 }
 
 void RendererImpl::Clear()
@@ -479,7 +524,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
     KGE_SET_STATUS_IF_FAILED(hr, const_cast<GifImage&>(gif), "Load GIF frame failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
+void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -506,12 +551,7 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
 
         if (SUCCEEDED(hr))
         {
-            Vector<String> family_names;
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-
-            if (!family_names.empty())
-                font.SetFamilyName(family_names[0]);
-
             NativePtr::Set(font, font_collection);
         }
     }
@@ -519,7 +559,7 @@ void RendererImpl::CreateFontCollection(Font& font, const String& file_path)
     KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
+void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -534,12 +574,7 @@ void RendererImpl::CreateFontCollection(Font& font, const Resource& res)
 
         if (SUCCEEDED(hr))
         {
-            Vector<String> family_names;
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-
-            if (!family_names.empty())
-                font.SetFamilyName(family_names[0]);
-
             NativePtr::Set(font, font_collection);
         }
     }
@@ -564,9 +599,9 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
     if (SUCCEEDED(hr))
     {
-        DWRITE_FONT_WEIGHT font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
-        DWRITE_FONT_STYLE  font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
-        auto               collection  = NativePtr::Get<IDWriteFontCollection>(style.font);
+        auto font_weight = DWRITE_FONT_WEIGHT(style.font_weight);
+        auto font_style  = style.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+        auto collection  = NativePtr::Get<IDWriteFontCollection>(style.font);
 
         WideString font_family;
         if (style.font)

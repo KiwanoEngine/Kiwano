@@ -20,34 +20,65 @@
 
 #include <kiwano/render/Font.h>
 #include <kiwano/render/Renderer.h>
+#include <functional>  // std::hash
 
 namespace kiwano
 {
 
 FontPtr Font::Preload(const String& file)
 {
-    FontPtr ptr = MakePtr<Font>();
-    try
+    size_t hash_code = std::hash<String>{}(file);
+    if (FontPtr ptr = FontCache::GetInstance().GetFont(hash_code))
     {
-        Renderer::GetInstance().CreateFontCollection(*ptr, file);
+        return ptr;
     }
-    catch (Exception&)
+
+    FontPtr ptr = MakePtr<Font>();
+    if (ptr)
     {
-        return nullptr;
+        Vector<String> family_names;
+        Renderer::GetInstance().CreateFontCollection(*ptr, family_names, file);
+        if (ptr->IsValid())
+        {
+            FontCache::GetInstance().AddFont(hash_code, ptr);
+            if (!family_names.empty())
+            {
+                ptr->SetFamilyName(family_names[0]);
+            }
+            for (const auto& name : family_names)
+            {
+                FontCache::GetInstance().AddFontByFamily(name, ptr);
+            }
+        }
     }
     return ptr;
 }
 
 FontPtr Font::Preload(const Resource& resource)
 {
-    FontPtr ptr = MakePtr<Font>();
-    try
+    size_t hash_code = resource.GetId();
+    if (FontPtr ptr = FontCache::GetInstance().GetFont(hash_code))
     {
-        Renderer::GetInstance().CreateFontCollection(*ptr, resource);
+        return ptr;
     }
-    catch (Exception&)
+
+    FontPtr ptr = MakePtr<Font>();
+    if (ptr)
     {
-        return nullptr;
+        Vector<String> family_names;
+        Renderer::GetInstance().CreateFontCollection(*ptr, family_names, resource);
+        if (ptr->IsValid())
+        {
+            FontCache::GetInstance().AddFont(hash_code, ptr);
+            if (!family_names.empty())
+            {
+                ptr->SetFamilyName(family_names[0]);
+            }
+            for (const auto& name : family_names)
+            {
+                FontCache::GetInstance().AddFontByFamily(name, ptr);
+            }
+        }
     }
     return ptr;
 }
@@ -55,8 +86,80 @@ FontPtr Font::Preload(const Resource& resource)
 Font::Font() {}
 
 Font::Font(const String& family_name)
-    : family_name_(family_name)
 {
+    Load(family_name);
+}
+
+bool Font::Load(const String& family_name)
+{
+    if (family_name.empty())
+        return true;
+
+    if (FontPtr font = FontCache::GetInstance().GetFontByFamily(family_name))
+    {
+        ResetNativePointer(font->GetNativePointer());
+        SetFamilyName(family_name);
+        return true;
+    }
+    Fail(strings::Format("Font::Load failed: cannot find family name \"%s\"", family_name.c_str()));
+    return false;
+}
+
+FontCache::FontCache() {}
+
+FontCache::~FontCache() {}
+
+void FontCache::AddFont(size_t key, FontPtr font)
+{
+    font_cache_.insert(std::make_pair(key, font));
+}
+
+void FontCache::AddFontByFamily(const String& font_family, FontPtr font)
+{
+    String family = TransformFamily(font_family);
+    font_family_cache_.insert(std::make_pair(family, font));
+}
+
+FontPtr FontCache::GetFont(size_t key) const
+{
+    if (font_cache_.count(key))
+    {
+        return font_cache_.at(key);
+    }
+    return FontPtr();
+}
+
+FontPtr FontCache::GetFontByFamily(const String& font_family) const
+{
+    String family = TransformFamily(font_family);
+    if (font_family_cache_.count(family))
+    {
+        return font_family_cache_.at(family);
+    }
+    return FontPtr();
+}
+
+void FontCache::RemoveFont(size_t key)
+{
+    font_cache_.erase(key);
+}
+
+void FontCache::RemoveFontByFamily(const String& font_family)
+{
+    String family = TransformFamily(font_family);
+    font_family_cache_.erase(family);
+}
+
+void FontCache::Clear()
+{
+    font_cache_.clear();
+    font_family_cache_.clear();
+}
+
+String FontCache::TransformFamily(String family) const
+{
+    std::transform(family.begin(), family.end(), family.begin(), std::tolower);
+    return family;
 }
 
 }  // namespace kiwano

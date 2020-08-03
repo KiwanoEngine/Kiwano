@@ -42,9 +42,9 @@ public:
 
     void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) override;
 
-    void CreateFontCollection(Font& font, const String& file_path) override;
+    void CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path) override;
 
-    void CreateFontCollection(Font& font, const Resource& res) override;
+    void CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res) override;
 
     void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) override;
 
@@ -81,6 +81,8 @@ public:
 
     void Destroy() override;
 
+    void HandleEvent(EventModuleContext& ctx) override;
+
 protected:
     RendererImpl();
 
@@ -90,6 +92,8 @@ private:
 
     ComPtr<ID2DDeviceResources> d2d_res_;
     ComPtr<ID3DDeviceResources> d3d_res_;
+
+    HMONITOR monitor_;
 };
 
 

@@ -46,6 +46,8 @@ public:
     /// @brief 预加载GIF图片资源
     static GifImagePtr Preload(const Resource& res);
 
+    GifImage();
+
     /// \~chinese
     /// @brief 创建GIF图片
     GifImage(const String& file_path);
@@ -53,8 +55,6 @@ public:
     /// \~chinese
     /// @brief 创建GIF图片
     GifImage(const Resource& res);
-
-    GifImage();
 
     /// \~chinese
     /// @brief 加载本地GIF图片

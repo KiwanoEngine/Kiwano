@@ -39,15 +39,15 @@ public:
     STDMETHOD(AddFilePaths)
     (const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
-
     // IDWriteFontCollectionLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(IDWriteFactory* pFactory, void const* collectionKey,
                                                               uint32_t collectionKeySize,
                                                               _Out_ IDWriteFontFileEnumerator** fontFileEnumerator);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG refCount_;
@@ -108,35 +108,6 @@ STDMETHODIMP FontCollectionLoader::AddFilePaths(const Vector<String>& filePaths,
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE FontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
-{
-    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontCollectionLoader))
-    {
-        *ppvObject = this;
-        AddRef();
-        return S_OK;
-    }
-    else
-    {
-        *ppvObject = NULL;
-        return E_NOINTERFACE;
-    }
-}
-
-ULONG STDMETHODCALLTYPE FontCollectionLoader::AddRef()
-{
-    return InterlockedIncrement(&refCount_);
-}
-
-ULONG STDMETHODCALLTYPE FontCollectionLoader::Release()
-{
-    ULONG newCount = InterlockedDecrement(&refCount_);
-    if (newCount == 0)
-        delete this;
-
-    return newCount;
-}
-
 HRESULT STDMETHODCALLTYPE FontCollectionLoader::CreateEnumeratorFromKey(
     IDWriteFactory* pFactory, void const* collectionKey, uint32_t collectionKeySize,
     _Out_ IDWriteFontFileEnumerator** fontFileEnumerator)
@@ -166,6 +137,35 @@ HRESULT STDMETHODCALLTYPE FontCollectionLoader::CreateEnumeratorFromKey(
     return hr;
 }
 
+HRESULT STDMETHODCALLTYPE FontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
+{
+    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontCollectionLoader))
+    {
+        *ppvObject = this;
+        AddRef();
+        return S_OK;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+ULONG STDMETHODCALLTYPE FontCollectionLoader::AddRef()
+{
+    return InterlockedIncrement(&refCount_);
+}
+
+ULONG STDMETHODCALLTYPE FontCollectionLoader::Release()
+{
+    ULONG newCount = InterlockedDecrement(&refCount_);
+    if (newCount == 0)
+        delete this;
+
+    return newCount;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // FontFileEnumerator
@@ -177,24 +177,24 @@ class FontFileEnumerator : public IFontFileEnumerator
 public:
     FontFileEnumerator();
 
-    STDMETHOD(Initialize)(IDWriteFactory* pFactory);
-
-    STDMETHOD(SetFilePaths)(const Vector<String>& filePaths);
-
     ~FontFileEnumerator()
     {
         DX::SafeRelease(currentFile_);
         DX::SafeRelease(pFactory_);
     }
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, _Out_ void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
+    STDMETHOD(Initialize)(IDWriteFactory* pFactory);
+
+    STDMETHOD(SetFilePaths)(const Vector<String>& filePaths);
 
     // IDWriteFontFileEnumerator methods
     virtual HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile);
     virtual HRESULT STDMETHODCALLTYPE GetCurrentFontFile(_Out_ IDWriteFontFile** fontFile);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, _Out_ void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG refCount_;
@@ -268,35 +268,6 @@ STDMETHODIMP FontFileEnumerator::SetFilePaths(const Vector<String>& filePaths)
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE FontFileEnumerator::QueryInterface(REFIID iid, _Out_ void** ppvObject)
-{
-    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileEnumerator))
-    {
-        *ppvObject = this;
-        AddRef();
-        return S_OK;
-    }
-    else
-    {
-        *ppvObject = NULL;
-        return E_NOINTERFACE;
-    }
-}
-
-ULONG STDMETHODCALLTYPE FontFileEnumerator::AddRef()
-{
-    return InterlockedIncrement(&refCount_);
-}
-
-ULONG STDMETHODCALLTYPE FontFileEnumerator::Release()
-{
-    ULONG newCount = InterlockedDecrement(&refCount_);
-    if (newCount == 0)
-        delete this;
-
-    return newCount;
-}
-
 HRESULT STDMETHODCALLTYPE FontFileEnumerator::MoveNext(_Out_ BOOL* hasCurrentFile)
 {
     HRESULT hr = S_OK;
@@ -328,6 +299,35 @@ HRESULT STDMETHODCALLTYPE FontFileEnumerator::GetCurrentFontFile(_Out_ IDWriteFo
     return (currentFile_ != NULL) ? S_OK : E_FAIL;
 }
 
+HRESULT STDMETHODCALLTYPE FontFileEnumerator::QueryInterface(REFIID iid, _Out_ void** ppvObject)
+{
+    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileEnumerator))
+    {
+        *ppvObject = this;
+        AddRef();
+        return S_OK;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+ULONG STDMETHODCALLTYPE FontFileEnumerator::AddRef()
+{
+    return InterlockedIncrement(&refCount_);
+}
+
+ULONG STDMETHODCALLTYPE FontFileEnumerator::Release()
+{
+    ULONG newCount = InterlockedDecrement(&refCount_);
+    if (newCount == 0)
+        delete this;
+
+    return newCount;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // ResourceFontCollectionLoader
@@ -346,15 +346,15 @@ public:
     STDMETHOD(AddResources)
     (const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
-
     // IDWriteFontCollectionLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(IDWriteFactory* pFactory, void const* collectionKey,
                                                               uint32_t collectionKeySize,
                                                               _Out_ IDWriteFontFileEnumerator** fontFileEnumerator);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG                  refCount_;
@@ -417,35 +417,6 @@ STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<Resource>& 
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
-{
-    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontCollectionLoader))
-    {
-        *ppvObject = this;
-        AddRef();
-        return S_OK;
-    }
-    else
-    {
-        *ppvObject = NULL;
-        return E_NOINTERFACE;
-    }
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontCollectionLoader::AddRef()
-{
-    return InterlockedIncrement(&refCount_);
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontCollectionLoader::Release()
-{
-    ULONG newCount = InterlockedDecrement(&refCount_);
-    if (newCount == 0)
-        delete this;
-
-    return newCount;
-}
-
 HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::CreateEnumeratorFromKey(
     IDWriteFactory* pFactory, void const* collectionKey, uint32_t collectionKeySize,
     _Out_ IDWriteFontFileEnumerator** fontFileEnumerator)
@@ -476,6 +447,35 @@ HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::CreateEnumeratorFromKey(
     return hr;
 }
 
+HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
+{
+    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontCollectionLoader))
+    {
+        *ppvObject = this;
+        AddRef();
+        return S_OK;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontCollectionLoader::AddRef()
+{
+    return InterlockedIncrement(&refCount_);
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontCollectionLoader::Release()
+{
+    ULONG newCount = InterlockedDecrement(&refCount_);
+    if (newCount == 0)
+        delete this;
+
+    return newCount;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // ResourceFontFileLoader
@@ -490,15 +490,15 @@ public:
     {
     }
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
-
     // IDWriteFontFileLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateStreamFromKey(void const* fontFileReferenceKey,
                                                           uint32_t    fontFileReferenceKeySize,
                                                           _Out_ IDWriteFontFileStream** fontFileStream);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG refCount_;
@@ -521,6 +521,33 @@ HRESULT IResourceFontFileLoader::Create(_Out_ IResourceFontFileLoader** ppFileLo
         if (SUCCEEDED(hr))
         {
             (*ppFileLoader) = DX::SafeAcquire(pFileLoader);
+        }
+    }
+    return hr;
+}
+
+HRESULT STDMETHODCALLTYPE ResourceFontFileLoader::CreateStreamFromKey(void const* fontFileReferenceKey,
+                                                                      uint32_t    fontFileReferenceKeySize,
+                                                                      _Out_ IDWriteFontFileStream** fontFileStream)
+{
+    HRESULT hr = S_OK;
+
+    // Make sure the key is the right size.
+    if (fontFileReferenceKeySize != sizeof(Resource))
+        hr = E_INVALIDARG;
+
+    if (SUCCEEDED(hr))
+    {
+        // Create the pFileStream object.
+        IResourceFontFileStream* pFileStream = NULL;
+        Resource                 resource    = *static_cast<Resource const*>(fontFileReferenceKey);
+
+        hr = IResourceFontFileStream::Create(&pFileStream, resource);
+
+        if (SUCCEEDED(hr))
+        {
+            DX::SafeRelease(*fontFileStream);
+            (*fontFileStream) = pFileStream;
         }
     }
     return hr;
@@ -555,33 +582,6 @@ ULONG STDMETHODCALLTYPE ResourceFontFileLoader::Release()
     return newCount;
 }
 
-HRESULT STDMETHODCALLTYPE ResourceFontFileLoader::CreateStreamFromKey(void const* fontFileReferenceKey,
-                                                                      uint32_t    fontFileReferenceKeySize,
-                                                                      _Out_ IDWriteFontFileStream** fontFileStream)
-{
-    HRESULT hr = S_OK;
-
-    // Make sure the key is the right size.
-    if (fontFileReferenceKeySize != sizeof(Resource))
-        hr = E_INVALIDARG;
-
-    if (SUCCEEDED(hr))
-    {
-        // Create the pFileStream object.
-        IResourceFontFileStream* pFileStream = NULL;
-        Resource                 resource    = *static_cast<Resource const*>(fontFileReferenceKey);
-
-        hr = IResourceFontFileStream::Create(&pFileStream, resource);
-
-        if (SUCCEEDED(hr))
-        {
-            DX::SafeRelease(*fontFileStream);
-            (*fontFileStream) = pFileStream;
-        }
-    }
-    return hr;
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // ResourceFontFileEnumerator
@@ -593,24 +593,24 @@ class ResourceFontFileEnumerator : public IResourceFontFileEnumerator
 public:
     ResourceFontFileEnumerator();
 
-    STDMETHOD(Initialize)(IDWriteFactory* pFactory, IDWriteFontFileLoader* pLoader);
-
-    STDMETHOD(SetResources)(const Vector<Resource>& resources);
-
     ~ResourceFontFileEnumerator()
     {
         DX::SafeRelease(currentFile_);
         DX::SafeRelease(pFactory_);
     }
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, _Out_ void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
+    STDMETHOD(Initialize)(IDWriteFactory* pFactory, IDWriteFontFileLoader* pLoader);
+
+    STDMETHOD(SetResources)(const Vector<Resource>& resources);
 
     // IDWriteFontFileEnumerator methods
     virtual HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile);
     virtual HRESULT STDMETHODCALLTYPE GetCurrentFontFile(_Out_ IDWriteFontFile** fontFile);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, _Out_ void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG refCount_;
@@ -688,35 +688,6 @@ STDMETHODIMP ResourceFontFileEnumerator::SetResources(const Vector<Resource>& re
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE ResourceFontFileEnumerator::QueryInterface(REFIID iid, _Out_ void** ppvObject)
-{
-    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileEnumerator))
-    {
-        *ppvObject = this;
-        AddRef();
-        return S_OK;
-    }
-    else
-    {
-        *ppvObject = NULL;
-        return E_NOINTERFACE;
-    }
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontFileEnumerator::AddRef()
-{
-    return InterlockedIncrement(&refCount_);
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontFileEnumerator::Release()
-{
-    ULONG newCount = InterlockedDecrement(&refCount_);
-    if (newCount == 0)
-        delete this;
-
-    return newCount;
-}
-
 HRESULT STDMETHODCALLTYPE ResourceFontFileEnumerator::MoveNext(_Out_ BOOL* hasCurrentFile)
 {
     HRESULT hr = S_OK;
@@ -747,6 +718,35 @@ HRESULT STDMETHODCALLTYPE ResourceFontFileEnumerator::GetCurrentFontFile(_Out_ I
     return (currentFile_ != NULL) ? S_OK : E_FAIL;
 }
 
+HRESULT STDMETHODCALLTYPE ResourceFontFileEnumerator::QueryInterface(REFIID iid, _Out_ void** ppvObject)
+{
+    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileEnumerator))
+    {
+        *ppvObject = this;
+        AddRef();
+        return S_OK;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontFileEnumerator::AddRef()
+{
+    return InterlockedIncrement(&refCount_);
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontFileEnumerator::Release()
+{
+    ULONG newCount = InterlockedDecrement(&refCount_);
+    if (newCount == 0)
+        delete this;
+
+    return newCount;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // ResourceFontFileStream
@@ -760,11 +760,6 @@ public:
 
     STDMETHOD(Initialize)(Resource const resources);
 
-    // IUnknown methods
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
-    virtual ULONG STDMETHODCALLTYPE   AddRef();
-    virtual ULONG STDMETHODCALLTYPE   Release();
-
     // IDWriteFontFileStream methods
     virtual HRESULT STDMETHODCALLTYPE ReadFileFragment(void const** fragmentStart, UINT64 fileOffset,
                                                        UINT64 fragmentSize, _Out_ void** fragmentContext);
@@ -775,10 +770,10 @@ public:
 
     virtual HRESULT STDMETHODCALLTYPE GetLastWriteTime(_Out_ UINT64* lastWriteTime);
 
-    bool IsInitialized()
-    {
-        return resourcePtr_ != NULL;
-    }
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
     ULONG  refCount_;
@@ -834,36 +829,6 @@ STDMETHODIMP ResourceFontFileStream::Initialize(const Resource resource)
     return hr;
 }
 
-// IUnknown methods
-HRESULT STDMETHODCALLTYPE ResourceFontFileStream::QueryInterface(REFIID iid, void** ppvObject)
-{
-    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileStream))
-    {
-        *ppvObject = this;
-        AddRef();
-        return S_OK;
-    }
-    else
-    {
-        *ppvObject = NULL;
-        return E_NOINTERFACE;
-    }
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontFileStream::AddRef()
-{
-    return InterlockedIncrement(&refCount_);
-}
-
-ULONG STDMETHODCALLTYPE ResourceFontFileStream::Release()
-{
-    ULONG newCount = InterlockedDecrement(&refCount_);
-    if (newCount == 0)
-        delete this;
-
-    return newCount;
-}
-
 HRESULT STDMETHODCALLTYPE ResourceFontFileStream::ReadFileFragment(void const** fragmentStart, UINT64 fileOffset,
                                                                    UINT64 fragmentSize, _Out_ void** fragmentContext)
 {
@@ -894,6 +859,36 @@ HRESULT STDMETHODCALLTYPE ResourceFontFileStream::GetLastWriteTime(_Out_ UINT64*
 {
     *lastWriteTime = 0;
     return E_NOTIMPL;
+}
+
+// IUnknown methods
+HRESULT STDMETHODCALLTYPE ResourceFontFileStream::QueryInterface(REFIID iid, void** ppvObject)
+{
+    if (iid == IID_IUnknown || iid == __uuidof(IDWriteFontFileStream))
+    {
+        *ppvObject = this;
+        AddRef();
+        return S_OK;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontFileStream::AddRef()
+{
+    return InterlockedIncrement(&refCount_);
+}
+
+ULONG STDMETHODCALLTYPE ResourceFontFileStream::Release()
+{
+    ULONG newCount = InterlockedDecrement(&refCount_);
+    if (newCount == 0)
+        delete this;
+
+    return newCount;
 }
 
 }  // namespace kiwano

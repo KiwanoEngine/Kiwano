@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <functional>  // std::hash
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/TextureCache.h>
 #include <kiwano/event/WindowEvent.h>
 
 namespace kiwano
@@ -47,69 +47,10 @@ void Renderer::ResetResolutionWhenWindowResized(bool enabled)
     auto_reset_resolution_ = enabled;
 }
 
-TexturePtr Renderer::CreateTexture(const String& file_path)
-{
-    size_t hash_code = std::hash<String>{}(file_path);
-    if (TexturePtr ptr = texture_cache_.GetTexture(hash_code))
-    {
-        return ptr;
-    }
-    TexturePtr ptr = MakePtr<Texture>();
-    if (ptr && ptr->Load(file_path))
-    {
-        texture_cache_.AddTexture(hash_code, ptr);
-    }
-    return ptr;
-}
-
-TexturePtr Renderer::CreateTexture(const Resource& resource)
-{
-    size_t hash_code = resource.GetId();
-    if (TexturePtr ptr = texture_cache_.GetTexture(hash_code))
-    {
-        return ptr;
-    }
-    TexturePtr ptr = MakePtr<Texture>();
-    if (ptr && ptr->Load(resource))
-    {
-        texture_cache_.AddTexture(hash_code, ptr);
-    }
-    return ptr;
-}
-
-GifImagePtr Renderer::CreateGifImage(const String& file_path)
-{
-    size_t hash_code = std::hash<String>{}(file_path);
-    if (GifImagePtr ptr = texture_cache_.GetGifImage(hash_code))
-    {
-        return ptr;
-    }
-    GifImagePtr ptr = MakePtr<GifImage>();
-    if (ptr && ptr->Load(file_path))
-    {
-        texture_cache_.AddGifImage(hash_code, ptr);
-    }
-    return ptr;
-}
-
-GifImagePtr Renderer::CreateGifImage(const Resource& resource)
-{
-    size_t hash_code = resource.GetId();
-    if (GifImagePtr ptr = texture_cache_.GetGifImage(hash_code))
-    {
-        return ptr;
-    }
-    GifImagePtr ptr = MakePtr<GifImage>();
-    if (ptr && ptr->Load(resource))
-    {
-        texture_cache_.AddGifImage(hash_code, ptr);
-    }
-    return ptr;
-}
-
 void Renderer::Destroy()
 {
-    texture_cache_.Clear();
+    TextureCache::GetInstance().Clear();
+    FontCache::GetInstance().Clear();
 }
 
 void Renderer::HandleEvent(EventModuleContext& ctx)
@@ -122,11 +63,6 @@ void Renderer::HandleEvent(EventModuleContext& ctx)
             Resize(evt->width, evt->height);
         }
     }
-}
-
-TextureCache& Renderer::GetTextureCache()
-{
-    return texture_cache_;
 }
 
 }  // namespace kiwano

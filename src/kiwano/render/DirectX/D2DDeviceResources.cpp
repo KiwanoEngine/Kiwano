@@ -89,6 +89,8 @@ public:
 
     void SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target) override;
 
+    void ResetTextRenderingParams(_In_ HMONITOR monitor) override;
+
 public:
     unsigned long STDMETHODCALLTYPE AddRef();
 
@@ -386,6 +388,18 @@ void D2DDeviceResources::SetTargetBitmap(ComPtr<ID2D1Bitmap1> target)
     }
 }
 
+void D2DDeviceResources::ResetTextRenderingParams(HMONITOR monitor)
+{
+    if (!dwrite_factory_ || device_context_)
+        return;
+
+    ComPtr<IDWriteRenderingParams> params;
+    if (SUCCEEDED(dwrite_factory_->CreateMonitorRenderingParams(monitor, &params)))
+    {
+        device_context_->SetTextRenderingParams(params.Get());
+    }
+}
+
 HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter,
                                                   _In_opt_ ComPtr<IWICBitmapSource> source,
                                                   _In_ REFWICPixelFormatGUID format, WICBitmapDitherType dither,
@@ -488,9 +502,9 @@ HRESULT D2DDeviceResources::CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& te
         return E_UNEXPECTED;
 
     ComPtr<IDWriteTextFormat> output;
-    HRESULT                   hr =
-        dwrite_factory_->CreateTextFormat(family, collection.Get(), weight, style, stretch, font_size, L"", &output);
 
+    HRESULT hr =
+        dwrite_factory_->CreateTextFormat(family, collection.Get(), weight, style, stretch, font_size, L"", &output);
     if (SUCCEEDED(hr))
     {
         text_format = output;

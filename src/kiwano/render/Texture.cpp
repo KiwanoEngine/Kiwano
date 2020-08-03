@@ -20,6 +20,8 @@
 
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/render/TextureCache.h>
+#include <functional>  // std::hash
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 #include <kiwano/render/DirectX/NativePtr.h>
@@ -32,14 +34,32 @@ InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Line
 
 TexturePtr Texture::Preload(const String& file_path)
 {
-    TexturePtr image = Renderer::GetInstance().CreateTexture(file_path);
-    return image;
+    size_t hash_code = std::hash<String>{}(file_path);
+    if (TexturePtr ptr = TextureCache::GetInstance().GetTexture(hash_code))
+    {
+        return ptr;
+    }
+    TexturePtr ptr = MakePtr<Texture>();
+    if (ptr && ptr->Load(file_path))
+    {
+        TextureCache::GetInstance().AddTexture(hash_code, ptr);
+    }
+    return ptr;
 }
 
 TexturePtr Texture::Preload(const Resource& res)
 {
-    TexturePtr image = Renderer::GetInstance().CreateTexture(res);
-    return image;
+    size_t hash_code = res.GetId();
+    if (TexturePtr ptr = TextureCache::GetInstance().GetTexture(hash_code))
+    {
+        return ptr;
+    }
+    TexturePtr ptr = MakePtr<Texture>();
+    if (ptr && ptr->Load(res))
+    {
+        TextureCache::GetInstance().AddTexture(hash_code, ptr);
+    }
+    return ptr;
 }
 
 Texture::Texture(const String& file_path)

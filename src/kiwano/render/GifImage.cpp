@@ -21,20 +21,40 @@
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/TextureCache.h>
+#include <functional>  // std::hash
 
 namespace kiwano
 {
 
 GifImagePtr GifImage::Preload(const String& file_path)
 {
-    GifImagePtr image = Renderer::GetInstance().CreateGifImage(file_path);
-    return image;
+    size_t hash_code = std::hash<String>{}(file_path);
+    if (GifImagePtr ptr = TextureCache::GetInstance().GetGifImage(hash_code))
+    {
+        return ptr;
+    }
+    GifImagePtr ptr = MakePtr<GifImage>();
+    if (ptr && ptr->Load(file_path))
+    {
+        TextureCache::GetInstance().AddGifImage(hash_code, ptr);
+    }
+    return ptr;
 }
 
 GifImagePtr GifImage::Preload(const Resource& res)
 {
-    GifImagePtr image = Renderer::GetInstance().CreateGifImage(res);
-    return image;
+    size_t hash_code = res.GetId();
+    if (GifImagePtr ptr = TextureCache::GetInstance().GetGifImage(hash_code))
+    {
+        return ptr;
+    }
+    GifImagePtr ptr = MakePtr<GifImage>();
+    if (ptr && ptr->Load(res))
+    {
+        TextureCache::GetInstance().AddGifImage(hash_code, ptr);
+    }
+    return ptr;
 }
 
 GifImage::GifImage(const String& file_path)

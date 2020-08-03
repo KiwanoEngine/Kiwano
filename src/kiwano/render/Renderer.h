@@ -24,7 +24,6 @@
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.h>
 #include <kiwano/render/RenderContext.h>
-#include <kiwano/render/TextureCache.h>
 #include <kiwano/platform/Window.h>
 
 namespace kiwano
@@ -81,51 +80,27 @@ public:
     void ResetResolutionWhenWindowResized(bool enabled);
 
     /// \~chinese
-    /// @brief 创建纹理
-    /// @param[in] file_path 图片路径
-    TexturePtr CreateTexture(const String& file_path);
-
-    /// \~chinese
-    /// @brief 创建纹理
-    /// @param[in] resource 图片资源
-    TexturePtr CreateTexture(const Resource& resource);
-
-    /// \~chinese
-    /// @brief 创建GIF图像
-    /// @param[in] file_path 图片路径
-    GifImagePtr CreateGifImage(const String& file_path);
-
-    /// \~chinese
-    /// @brief 创建GIF图像
-    /// @param[in] resource 图片资源
-    GifImagePtr CreateGifImage(const Resource& resource);
-
-    /// \~chinese
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] file_path 图片路径
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTexture(Texture& texture, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] resource 图片资源
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTexture(Texture& texture, const Resource& resource) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImage(GifImage& gif, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] resource 图片资源
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImage(GifImage& gif, const Resource& resource) = 0;
 
     /// \~chinese
@@ -133,29 +108,27 @@ public:
     /// @param[out] frame GIF图像帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
+    /// @param[out] family_names 字体包含的字体族
     /// @param[in] file_paths 字体文件路径
-    /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateFontCollection(Font& font, const String& file_path) = 0;
+    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
+    /// @param[out] family_names 字体包含的字体族
     /// @param[in] res_arr 字体资源
-    /// @throw kiwano::SystemError 创建失败时抛出
-    virtual void CreateFontCollection(Font& font, const Resource& res) = 0;
+    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局内部资源
     /// @param[out] layout 字体布局
     /// @param text 文字内容
     /// @param style 文本样式
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) = 0;
 
     /// \~chinese
@@ -163,14 +136,12 @@ public:
     /// @param[out] shape 形状
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) = 0;
 
     /// \~chinese
     /// @brief 创建矩形形状内部资源
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateRectShape(Shape& shape, const Rect& rect) = 0;
 
     /// \~chinese
@@ -178,7 +149,6 @@ public:
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
@@ -186,41 +156,35 @@ public:
     /// @param[out] shape 形状
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
     /// @brief 创建几何图形生成器内部资源
     /// @param[out] maker 形状生成器
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateShapeSink(ShapeMaker& maker) = 0;
 
     /// \~chinese
     /// @brief 创建纯色画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, const Color& color) = 0;
 
     /// \~chinese
     /// @brief 创建线性渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, const LinearGradientStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建径向渐变画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, const RadialGradientStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建纹理画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] texture 纹理
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateBrush(Brush& brush, TexturePtr texture) = 0;
 
     /// \~chinese
@@ -231,7 +195,6 @@ public:
     /// @param[in] dash_array 虚线长度与间隙数组
     /// @param[in] dash_size 虚线数组大小
     /// @param[in] dash_offset 虚线偏移量
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
 
     /// \~chinese
@@ -239,12 +202,7 @@ public:
     /// @param[in,out] texture 渲染输出的纹理
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
-    /// @throw kiwano::SystemError 创建失败时抛出
     virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
-
-    /// \~chinese
-    /// @brief 创建纹理渲染上下文
-    TextureCache& GetTextureCache();
 
 public:
     /// \~chinese
@@ -258,12 +216,15 @@ public:
 
     /// \~chinese
     /// @brief 为窗口创建渲染上下文
+    /// @throw kiwano::SystemError 创建上下文失败时抛出
     virtual void MakeContextForWindow(WindowPtr window) = 0;
 
     /// \~chinese
     /// @brief 销毁渲染器资源
     virtual void Destroy();
 
+    /// \~chinese
+    /// @brief 处理事件
     void HandleEvent(EventModuleContext& ctx) override;
 
 protected:
@@ -275,8 +236,6 @@ protected:
     Color            clear_color_;
     Size             output_size_;
     RenderContextPtr render_ctx_;
-
-    TextureCache texture_cache_;
 };
 
 /** @} */

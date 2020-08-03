@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/core/Singleton.h>
 
 namespace kiwano
 {
@@ -33,19 +34,17 @@ namespace kiwano
  * \~chinese
  * @brief 纹理缓存
  */
-class KGE_API TextureCache final : Noncopyable
+class KGE_API TextureCache final : public Singleton<TextureCache>
 {
+    friend Singleton<TextureCache>;
+
 public:
-    TextureCache();
-
-    ~TextureCache();
-
     /// \~chinese
-    /// @brief 添加或获取纹理
+    /// @brief 添加纹理缓存
     void AddTexture(size_t key, TexturePtr texture);
 
     /// \~chinese
-    /// @brief 添加或获取GIF图像
+    /// @brief 添加GIF图像缓存
     void AddGifImage(size_t key, GifImagePtr gif);
 
     /// \~chinese
@@ -67,6 +66,11 @@ public:
     /// \~chinese
     /// @brief 清空缓存
     void Clear();
+
+    ~TextureCache();
+
+private:
+    TextureCache();
 
 private:
     using TextureMap = UnorderedMap<size_t, TexturePtr>;

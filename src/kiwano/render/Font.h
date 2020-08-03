@@ -41,32 +41,90 @@ class Font : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief 创建字体
+    /// @brief 预加载字体
     /// @param file 字体文件
     static FontPtr Preload(const String& file);
 
     /// \~chinese
-    /// @brief 创建字体
+    /// @brief 预加载字体
     /// @param resource 字体资源
     static FontPtr Preload(const Resource& resource);
 
     Font();
 
     /// \~chinese
-    /// @brief 创建字体
+    /// @brief 通过字体族创建字体
     /// @param family_name 字体族
     Font(const String& family_name);
+
+    /// \~chinese
+    /// @brief 加载字体族
+    /// @param family_name 字体族
+    bool Load(const String& family_name);
 
     /// \~chinese
     /// @brief 获取字体族
     String GetFamilyName() const;
 
+protected:
     /// \~chinese
     /// @brief 获取字体族
     void SetFamilyName(const String& name);
 
 protected:
     String family_name_;
+};
+
+/**
+ * \~chinese
+ * @brief 纹理缓存
+ */
+class KGE_API FontCache final : public Singleton<FontCache>
+{
+    friend Singleton<FontCache>;
+
+public:
+    /// \~chinese
+    /// @brief 添加字体缓存
+    void AddFont(size_t key, FontPtr font);
+
+    /// \~chinese
+    /// @brief 添加字体族映射字体缓存
+    void AddFontByFamily(const String& font_family, FontPtr font);
+
+    /// \~chinese
+    /// @brief 获取字体缓存
+    FontPtr GetFont(size_t key) const;
+
+    /// \~chinese
+    /// @brief 获取字体族映射字体缓存
+    FontPtr GetFontByFamily(const String& font_family) const;
+
+    /// \~chinese
+    /// @brief 移除字体缓存
+    void RemoveFont(size_t key);
+
+    /// \~chinese
+    /// @brief 移除字体族映射字体缓存
+    void RemoveFontByFamily(const String& font_family);
+
+    /// \~chinese
+    /// @brief 清空缓存
+    void Clear();
+
+    ~FontCache();
+
+private:
+    FontCache();
+
+    String TransformFamily(String family) const;
+
+private:
+    using FontMap = UnorderedMap<size_t, FontPtr>;
+    FontMap font_cache_;
+
+    using FontFamilyMap = UnorderedMap<String, FontPtr>;
+    FontFamilyMap font_family_cache_;
 };
 
 /** @} */
