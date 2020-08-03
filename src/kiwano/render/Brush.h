@@ -64,6 +64,8 @@ struct LinearGradientStyle
     Vector<GradientStop> stops;        ///< 渐变转换点集合
     GradientExtendMode   extend_mode;  ///< 渐变扩充模式
 
+    LinearGradientStyle();
+
     LinearGradientStyle(const Point& begin, const Point& end, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);
 };
@@ -77,6 +79,8 @@ struct RadialGradientStyle
     Vec2                 radius;       ///< 径向渐变半径
     Vector<GradientStop> stops;        ///< 渐变转换点集合
     GradientExtendMode   extend_mode;  ///< 渐变扩充模式
+
+    RadialGradientStyle();
 
     RadialGradientStyle(const Point& center, const Vec2& offset, const Vec2& radius, const Vector<GradientStop>& stops,
                         GradientExtendMode extend_mode = GradientExtendMode::Clamp);

@@ -40,12 +40,22 @@ GradientStop::GradientStop(float offset, Color color)
 {
 }
 
+LinearGradientStyle::LinearGradientStyle()
+    : extend_mode(GradientExtendMode::Clamp)
+{
+}
+
 LinearGradientStyle::LinearGradientStyle(const Point& begin, const Point& end, const Vector<GradientStop>& stops,
                                          GradientExtendMode extend_mode)
     : begin(begin)
     , end(end)
     , stops(stops)
     , extend_mode(extend_mode)
+{
+}
+
+RadialGradientStyle::RadialGradientStyle() 
+    : extend_mode(GradientExtendMode::Clamp)
 {
 }
 
