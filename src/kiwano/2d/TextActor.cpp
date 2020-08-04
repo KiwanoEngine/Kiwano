@@ -189,7 +189,7 @@ void TextActor::SetOutlineColor(const Color& outline_color)
     }
     else
     {
-        SetFillBrush(MakePtr<Brush>(outline_color));
+        SetOutlineBrush(MakePtr<Brush>(outline_color));
     }
 }
 
