@@ -131,7 +131,6 @@ public:
     }
 };
 
-
 //
 // LogProvider
 //
@@ -162,37 +161,40 @@ void LogProvider::SetLevel(LogLevel level)
 #if defined(KGE_PLATFORM_WINDOWS)
 void SetWindowConsoleColor(std::ostream& os, int foreground, int background)
 {
-    static WORD defaultAttributes = 0;
+    static WORD default_attributes = 0;
+
+    if (::GetConsoleWindow() == nullptr)
+        return;
 
     // get terminal handle
-    HANDLE hTerminal = INVALID_HANDLE_VALUE;
+    HANDLE handle = INVALID_HANDLE_VALUE;
     if (&os == &std::cout)
-        hTerminal = GetStdHandle(STD_OUTPUT_HANDLE);
+        handle = ::GetStdHandle(STD_OUTPUT_HANDLE);
     else if (&os == &std::cerr)
-        hTerminal = GetStdHandle(STD_ERROR_HANDLE);
+        handle = ::GetStdHandle(STD_ERROR_HANDLE);
 
-    if (hTerminal == INVALID_HANDLE_VALUE)
+    if (handle == INVALID_HANDLE_VALUE)
         return;
 
     // save default terminal attributes if it unsaved
-    if (!defaultAttributes)
+    if (!default_attributes)
     {
         CONSOLE_SCREEN_BUFFER_INFO info;
-        if (!GetConsoleScreenBufferInfo(hTerminal, &info))
+        if (!::GetConsoleScreenBufferInfo(handle, &info))
             return;
-        defaultAttributes = info.wAttributes;
+        default_attributes = info.wAttributes;
     }
 
     // restore all default settings
     if (foreground == -1 && background == -1)
     {
-        SetConsoleTextAttribute(hTerminal, defaultAttributes);
+        ::SetConsoleTextAttribute(handle, default_attributes);
         return;
     }
 
     // get current settings
     CONSOLE_SCREEN_BUFFER_INFO info;
-    if (!GetConsoleScreenBufferInfo(hTerminal, &info))
+    if (!::GetConsoleScreenBufferInfo(handle, &info))
         return;
 
     if (foreground != -1)
@@ -207,7 +209,7 @@ void SetWindowConsoleColor(std::ostream& os, int foreground, int background)
         info.wAttributes |= static_cast<WORD>(background);
     }
 
-    SetConsoleTextAttribute(hTerminal, info.wAttributes);
+    ::SetConsoleTextAttribute(handle, info.wAttributes);
 }
 #endif
 
@@ -219,19 +221,19 @@ std::ostream& ConsoleColorBrush(std::ostream& os)
     {
         switch (color)
         {
-        case 31:    // red
+        case 31:  // red
             SetWindowConsoleColor(os, FOREGROUND_RED | FOREGROUND_INTENSITY, -1);
             break;
-        case 32:    // green
+        case 32:  // green
             SetWindowConsoleColor(os, FOREGROUND_GREEN | FOREGROUND_INTENSITY, -1);
             break;
-        case 33:    // yellow
+        case 33:  // yellow
             SetWindowConsoleColor(os, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, -1);
             break;
-        case 34:    // blue
+        case 34:  // blue
             SetWindowConsoleColor(os, FOREGROUND_BLUE | FOREGROUND_INTENSITY, -1);
             break;
-        case 36:    // cyan
+        case 36:  // cyan
             SetWindowConsoleColor(os, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY, -1);
             break;
         default:
@@ -255,18 +257,14 @@ std::ostream& ConsoleColorBrush(std::ostream& os)
     return os;
 }
 
-ConsoleLogProvider::ConsoleLogProvider()
-{
-}
+ConsoleLogProvider::ConsoleLogProvider() {}
 
 ConsoleLogProvider::~ConsoleLogProvider()
 {
     Flush();
 }
 
-void ConsoleLogProvider::Init()
-{
-}
+void ConsoleLogProvider::Init() {}
 
 void ConsoleLogProvider::WriteMessage(LogLevel level, const char* msg)
 {
@@ -330,7 +328,6 @@ void FileLogProvider::Flush()
         ofs_.clear();
     }
 }
-
 
 //
 // LogBuffer
@@ -442,7 +439,7 @@ LogBuffer::int_type LogBuffer::underflow()
 
 LogBuffer::pos_type LogBuffer::seekpos(pos_type pos, std::ios_base::openmode mode)
 {
-    const auto offset      = static_cast<std::streamoff>(pos);
+    const auto offset   = static_cast<std::streamoff>(pos);
     const auto old_gptr = this->gptr();
     const auto olg_pptr = this->pptr();
     if (olg_pptr && seek_high_ < olg_pptr)
@@ -576,9 +573,7 @@ std::iostream& Logger::GetFormatedStream(LogLevel level, LogBuffer* buffer)
     return stream_;
 }
 
-Logger::~Logger()
-{
-}
+Logger::~Logger() {}
 
 void Logger::Logf(LogLevel level, const char* format, ...)
 {
@@ -654,12 +649,17 @@ void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
     }
 }
 
+}  // namespace kiwano
+
 
 #if defined(KGE_PLATFORM_WINDOWS)
 
 //
 // Console log
 //
+#include <io.h>
+#include <cstdio>
+
 namespace
 {
 std::streambuf *cin_buffer, *cout_buffer, *cerr_buffer;
@@ -667,6 +667,9 @@ std::fstream    console_input, console_output, console_error;
 
 std::wstreambuf *wcin_buffer, *wcout_buffer, *wcerr_buffer;
 std::wfstream    wconsole_input, wconsole_output, wconsole_error;
+
+FILE *outfile = nullptr, *infile = nullptr, *errfile = nullptr;
+int   stdout_dupfd = 0, stdin_dupfd = 0, stderr_dupfd = 0;
 
 void RedirectStdIO()
 {
@@ -684,18 +687,24 @@ void RedirectStdIO()
     wconsole_output.open("CONOUT$", std::ios::out);
     wconsole_error.open("CONOUT$", std::ios::out);
 
-    FILE* dummy;
-    freopen_s(&dummy, "CONOUT$", "w+t", stdout);
-    freopen_s(&dummy, "CONIN$", "r+t", stdin);
-    freopen_s(&dummy, "CONOUT$", "w+t", stderr);
-    (void)dummy;
-
     std::cin.rdbuf(console_input.rdbuf());
     std::cout.rdbuf(console_output.rdbuf());
     std::cerr.rdbuf(console_error.rdbuf());
     std::wcin.rdbuf(wconsole_input.rdbuf());
     std::wcout.rdbuf(wconsole_output.rdbuf());
     std::wcerr.rdbuf(wconsole_error.rdbuf());
+
+    stdout_dupfd = _dup(1);
+    stdin_dupfd  = _dup(0);
+    stderr_dupfd = _dup(2);
+
+    fopen_s(&outfile, "CONOUT$", "w+t");
+    fopen_s(&infile, "CONIN$", "r+t");
+    fopen_s(&errfile, "CONOUT$", "w+t");
+
+    _dup2(_fileno(outfile), 1);
+    _dup2(_fileno(infile), 0);
+    _dup2(_fileno(errfile), 2);
 }
 
 void ResetStdIO()
@@ -714,16 +723,36 @@ void ResetStdIO()
     std::wcout.rdbuf(wcout_buffer);
     std::wcerr.rdbuf(wcerr_buffer);
 
-    fclose(stdout);
-    fclose(stdin);
-    fclose(stderr);
-
     cin_buffer   = nullptr;
     cout_buffer  = nullptr;
     cerr_buffer  = nullptr;
     wcin_buffer  = nullptr;
     wcout_buffer = nullptr;
     wcerr_buffer = nullptr;
+
+    ::fflush(stdout);
+    ::fflush(stdin);
+    ::fflush(stderr);
+
+    ::fclose(outfile);
+    ::fclose(infile);
+    ::fclose(errfile);
+
+    outfile = nullptr;
+    infile  = nullptr;
+    errfile = nullptr;
+
+    _dup2(stdout_dupfd, 1);
+    _dup2(stdin_dupfd, 0);
+    _dup2(stderr_dupfd, 2);
+
+    _close(stdout_dupfd);
+    _close(stdin_dupfd);
+    _close(stderr_dupfd);
+
+    stdout_dupfd = 0;
+    stdin_dupfd = 0;
+    stderr_dupfd = 0;
 }
 
 HWND allocated_console = nullptr;
@@ -759,6 +788,9 @@ HWND GetAllocatedConsole()
 }  // namespace
 
 #endif
+
+namespace kiwano
+{
 
 void Logger::ShowConsole(bool show)
 {
@@ -804,6 +836,5 @@ void Logger::ShowConsole(bool show)
     // NOT IMPLEMENT
 #endif
 }
-
 
 }  // namespace kiwano
