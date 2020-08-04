@@ -56,22 +56,9 @@ public:
 
     /// \~chinese
     /// @brief 重设文本布局
-    /// @param style 文本样式
-    void Reset(const TextStyle& style);
-
-    /// \~chinese
-    /// @brief 重设文本布局
     /// @param content 文字内容
     /// @param style 文本样式
     void Reset(const String& content, const TextStyle& style);
-
-    /// \~chinese
-    /// @brief 获取文字内容
-    String GetContent() const;
-
-    /// \~chinese
-    /// @brief 获取文字内容的长度
-    uint32_t GetContentLength() const;
 
     /// \~chinese
     /// @brief 获取文本布局大小
@@ -83,83 +70,45 @@ public:
 
     /// \~chinese
     /// @brief 获取默认填充画刷
-    BrushPtr GetDefaultFillBrush() const;
+    BrushPtr GetFillBrush() const;
 
     /// \~chinese
     /// @brief 获取默认描边画刷
-    BrushPtr GetDefaultOutlineBrush() const;
+    BrushPtr GetOutlineBrush() const;
 
     /// \~chinese
     /// @brief 获取默认描边线条样式
-    StrokeStylePtr GetDefaultOutlineStrokeStyle() const;
-
-    /// \~chinese
-    /// @brief 文字范围
-    struct TextRange
-    {
-        uint32_t start;   ///< 起始位置
-        uint32_t length;  ///< 长度
-    };
+    StrokeStylePtr GetOutlineStrokeStyle() const;
 
     /// \~chinese
     /// @brief 设置字体
     /// @param font 字体
-    /// @param range 文字范围
-    void SetFont(FontPtr font, TextRange range);
-
-    /// \~chinese
-    /// @brief 设置字体族
-    /// @param family 字体族
-    /// @param range 文字范围
-    void SetFontFamily(const String& family, TextRange range);
-
-    /// \~chinese
-    /// @brief 设置字号（默认值为 18）
-    /// @param size 字号
-    /// @param range 文字范围
-    void SetFontSize(float size, TextRange range);
-
-    /// \~chinese
-    /// @brief 设置字体粗细值（默认值为 FontWeight::Normal）
-    /// @param weight 粗细值
-    /// @param range 文字范围
-    void SetFontWeight(uint32_t weight, TextRange range);
-
-    /// \~chinese
-    /// @brief 设置文字斜体（默认值为 false）
-    /// @param italic 是否是斜体
-    /// @param range 文字范围
-    void SetItalic(bool italic, TextRange range);
+    void SetFont(FontPtr font);
 
     /// \~chinese
     /// @brief 设置下划线
     /// @param enable 是否显示下划线
-    /// @param range 文字范围
-    void SetUnderline(bool enable, TextRange range);
+    void SetUnderline(bool enable);
 
     /// \~chinese
     /// @brief 设置删除线
     /// @param enable 是否显示删除线
-    /// @param range 文字范围
-    void SetStrikethrough(bool enable, TextRange range);
+    void SetStrikethrough(bool enable);
 
     /// \~chinese
     /// @brief 设置文字填充画刷，描边画刷和描边线宽
     /// @param brush 画刷
-    /// @param range 文字范围
-    void SetFillBrush(BrushPtr brush, TextRange range);
+    void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
     /// @brief 设置文字描边画刷
     /// @param brush 画刷
-    /// @param range 文字范围
-    void SetOutlineBrush(BrushPtr brush, TextRange range);
+    void SetOutlineBrush(BrushPtr brush);
 
     /// \~chinese
     /// @brief 设置描边线条样式
     /// @param stroke 线条样式
-    /// @param range 文字范围
-    void SetOutlineStrokeStyle(StrokeStylePtr stroke, TextRange range);
+    void SetOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
     /// @brief 设置对齐方式
@@ -173,21 +122,6 @@ public:
     /// \~chinese
     /// @brief 设置行间距（默认为 0）
     void SetLineSpacing(float line_spacing);
-
-    /// \~chinese
-    /// @brief 设置默认文字填充画刷
-    /// @param brush 画刷
-    void SetDefaultFillBrush(BrushPtr brush);
-
-    /// \~chinese
-    /// @brief 设置默认文字描边画刷
-    /// @param brush 画刷
-    void SetDefaultOutlineBrush(BrushPtr brush);
-
-    /// \~chinese
-    /// @brief 设置默认描边线条样式
-    /// @param stroke 线条样式
-    void SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
     /// @brief 脏布局标志
@@ -208,16 +142,16 @@ public:
     /// \~chinese
     /// @brief 更新脏布局
     /// @return 是否需要更新
-    bool UpdateWhenDirty();
+    bool UpdateIfDirty();
 
 private:
     DirtyFlag      dirty_flag_;
     uint32_t       line_count_;
+    uint32_t       content_length_;
     Size           size_;
-    BrushPtr       default_fill_brush_;
-    BrushPtr       default_outline_brush_;
-    StrokeStylePtr default_outline_stroke_;
-    String         content_;
+    BrushPtr       fill_brush_;
+    BrushPtr       outline_brush_;
+    StrokeStylePtr outline_stroke_;
 };
 
 /** @} */
@@ -232,21 +166,6 @@ inline void TextLayout::Clear()
     ResetNativePointer();
 }
 
-inline void TextLayout::Reset(const TextStyle& style)
-{
-    this->Reset(content_, style);
-}
-
-inline String TextLayout::GetContent() const
-{
-    return content_;
-}
-
-inline uint32_t TextLayout::GetContentLength() const
-{
-    return uint32_t(content_.size());
-}
-
 inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const
 {
     return dirty_flag_;
@@ -257,34 +176,34 @@ inline void TextLayout::SetDirtyFlag(TextLayout::DirtyFlag flag)
     dirty_flag_ = flag;
 }
 
-inline BrushPtr TextLayout::GetDefaultFillBrush() const
+inline BrushPtr TextLayout::GetFillBrush() const
 {
-    return default_fill_brush_;
+    return fill_brush_;
 }
 
-inline BrushPtr TextLayout::GetDefaultOutlineBrush() const
+inline BrushPtr TextLayout::GetOutlineBrush() const
 {
-    return default_outline_brush_;
+    return outline_brush_;
 }
 
-inline StrokeStylePtr TextLayout::GetDefaultOutlineStrokeStyle() const
+inline StrokeStylePtr TextLayout::GetOutlineStrokeStyle() const
 {
-    return default_outline_stroke_;
+    return outline_stroke_;
 }
 
-inline void TextLayout::SetDefaultFillBrush(BrushPtr brush)
+inline void TextLayout::SetFillBrush(BrushPtr brush)
 {
-    default_fill_brush_ = brush;
+    fill_brush_ = brush;
 }
 
-inline void TextLayout::SetDefaultOutlineBrush(BrushPtr brush)
+inline void TextLayout::SetOutlineBrush(BrushPtr brush)
 {
-    default_outline_brush_ = brush;
+    outline_brush_ = brush;
 }
 
-inline void TextLayout::SetDefaultOutlineStrokeStyle(StrokeStylePtr stroke)
+inline void TextLayout::SetOutlineStrokeStyle(StrokeStylePtr stroke)
 {
-    default_outline_stroke_ = stroke;
+    outline_stroke_ = stroke;
 }
 
 }  // namespace kiwano

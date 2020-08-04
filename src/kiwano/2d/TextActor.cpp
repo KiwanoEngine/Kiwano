@@ -64,6 +64,7 @@ void TextActor::SetText(const String& text)
     try
     {
         layout_->Reset(text, style_);
+        content_ = text;
     }
     catch (SystemError& e)
     {
@@ -75,7 +76,7 @@ void TextActor::SetStyle(const TextStyle& style)
 {
     style_ = style;
     if (layout_)
-        layout_->Reset(style);
+        layout_->Reset(content_, style);
 }
 
 void TextActor::SetFont(FontPtr font)
@@ -84,37 +85,7 @@ void TextActor::SetFont(FontPtr font)
     {
         style_.font = font;
         if (layout_)
-            layout_->SetFont(font, { 0, layout_->GetContentLength() });
-    }
-}
-
-void TextActor::SetFontSize(float size)
-{
-    if (style_.font_size != size)
-    {
-        style_.font_size = size;
-        if (layout_)
-            layout_->SetFontSize(size, { 0, layout_->GetContentLength() });
-    }
-}
-
-void TextActor::SetFontWeight(uint32_t weight)
-{
-    if (style_.font_weight != weight)
-    {
-        style_.font_weight = weight;
-        if (layout_)
-            layout_->SetFontWeight(weight, { 0, layout_->GetContentLength() });
-    }
-}
-
-void TextActor::SetItalic(bool italic)
-{
-    if (style_.italic != italic)
-    {
-        style_.italic = italic;
-        if (layout_)
-            layout_->SetItalic(italic, { 0, layout_->GetContentLength() });
+            layout_->SetFont(font);
     }
 }
 
@@ -124,7 +95,7 @@ void TextActor::SetUnderline(bool enable)
     {
         style_.show_underline = enable;
         if (layout_)
-            layout_->SetUnderline(enable, { 0, layout_->GetContentLength() });
+            layout_->SetUnderline(enable);
     }
 }
 
@@ -134,7 +105,7 @@ void TextActor::SetStrikethrough(bool enable)
     {
         style_.show_strikethrough = enable;
         if (layout_)
-            layout_->SetStrikethrough(enable, { 0, layout_->GetContentLength() });
+            layout_->SetStrikethrough(enable);
     }
 }
 
@@ -174,7 +145,7 @@ void TextActor::SetFillBrush(BrushPtr brush)
     {
         style_.fill_brush = brush;
         if (layout_)
-            layout_->SetDefaultFillBrush(brush);
+            layout_->SetFillBrush(brush);
     }
 }
 
@@ -184,7 +155,7 @@ void TextActor::SetOutlineBrush(BrushPtr brush)
     {
         style_.outline_brush = brush;
         if (layout_)
-            layout_->SetDefaultOutlineBrush(brush);
+            layout_->SetOutlineBrush(brush);
     }
 }
 
@@ -194,7 +165,7 @@ void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
     {
         style_.outline_stroke = stroke;
         if (layout_)
-            layout_->SetDefaultOutlineStrokeStyle(stroke);
+            layout_->SetOutlineStrokeStyle(stroke);
     }
 }
 
@@ -244,7 +215,7 @@ bool TextActor::CheckVisibility(RenderContext& ctx) const
 
 void TextActor::UpdateDirtyLayout()
 {
-    if (layout_ && layout_->UpdateWhenDirty())
+    if (layout_ && layout_->UpdateIfDirty())
     {
         ForceUpdateLayout();
     }
@@ -254,7 +225,7 @@ void TextActor::ForceUpdateLayout()
 {
     if (layout_)
     {
-        layout_->UpdateWhenDirty();
+        layout_->UpdateIfDirty();
         SetSize(layout_->GetSize());
     }
     else

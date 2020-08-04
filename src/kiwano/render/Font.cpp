@@ -84,26 +84,31 @@ FontPtr Font::Preload(const Resource& resource)
     return ptr;
 }
 
-Font::Font() {}
-
-Font::Font(const String& family_name)
+Font::Font()
+    : size_(18.0f)
+    , weight_(FontWeight::Normal)
+    , posture_(FontPosture::Regular)
 {
-    Load(family_name);
 }
 
-bool Font::Load(const String& family_name)
+Font::Font(const String& family_name, float size, uint32_t weight, FontPosture posture)
+    : size_(size)
+    , weight_(weight)
+    , posture_(posture)
 {
     if (family_name.empty())
-        return true;
+        return;
 
-    if (FontPtr font = FontCache::GetInstance().GetFontByFamily(family_name))
+    FontPtr found = FontCache::GetInstance().GetFontByFamily(family_name);
+    if (found)
     {
-        ResetNativePointer(font->GetNativePointer());
-        SetFamilyName(family_name);
-        return true;
+        this->ResetNativePointer(found->GetNativePointer());
+        this->SetFamilyName(family_name);
     }
-    Fail(strings::Format("Font::Load failed: cannot find family name \"%s\"", family_name.c_str()));
-    return false;
+    else
+    {
+        this->Fail(strings::Format("Font::Load failed: cannot find family name \"%s\"", family_name.c_str()));
+    }
 }
 
 FontCache::FontCache() {}

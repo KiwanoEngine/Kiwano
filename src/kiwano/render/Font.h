@@ -35,6 +35,36 @@ class Renderer;
 
 /**
  * \~chinese
+ * @brief 字体粗细值
+ */
+struct FontWeight
+{
+    enum Value : uint32_t
+    {
+        Thin       = 100U,
+        ExtraLight = 200U,
+        Light      = 300U,
+        Normal     = 400U,  ///< 正常
+        Medium     = 500U,
+        Bold       = 700U,
+        ExtraBold  = 800U,
+        Black      = 900U,
+        ExtraBlack = 950U
+    };
+};
+
+/**
+ * \~chinese
+ * @brief 字体形态
+ */
+enum class FontPosture
+{
+    Regular,  ///< 正常
+    Italic,   ///< 斜体
+};
+
+/**
+ * \~chinese
  * @brief 字体
  */
 class Font : public NativeObject
@@ -50,21 +80,34 @@ public:
     /// @param resource 字体资源
     static FontPtr Preload(const Resource& resource);
 
+    /// \~chinese
+    /// @brief 创建系统默认字体
     Font();
 
     /// \~chinese
     /// @brief 通过字体族创建字体
     /// @param family_name 字体族
-    Font(const String& family_name);
-
-    /// \~chinese
-    /// @brief 加载字体族
-    /// @param family_name 字体族
-    bool Load(const String& family_name);
+    /// @param size 字号
+    /// @param weight 字体粗细
+    /// @param posture 字体形态
+    Font(const String& family_name, float size, uint32_t weight = FontWeight::Normal,
+         FontPosture posture = FontPosture::Regular);
 
     /// \~chinese
     /// @brief 获取字体族
     String GetFamilyName() const;
+
+    /// \~chinese
+    /// @brief 获取字号
+    float GetSize() const;
+
+    /// \~chinese
+    /// @brief 获取字体粗细值
+    uint32_t GetWeight() const;
+
+    /// \~chinese
+    /// @brief 获取字体形态
+    FontPosture GetPosture() const;
 
 protected:
     /// \~chinese
@@ -72,7 +115,10 @@ protected:
     void SetFamilyName(const String& name);
 
 protected:
-    String family_name_;
+    float       size_;
+    uint32_t    weight_;
+    FontPosture posture_;
+    String      family_name_;
 };
 
 /**
@@ -132,6 +178,21 @@ private:
 inline String Font::GetFamilyName() const
 {
     return family_name_;
+}
+
+inline float Font::GetSize() const
+{
+    return size_;
+}
+
+inline uint32_t Font::GetWeight() const
+{
+    return weight_;
+}
+
+inline FontPosture Font::GetPosture() const
+{
+    return posture_;
 }
 
 inline void Font::SetFamilyName(const String& name)

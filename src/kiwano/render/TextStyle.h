@@ -45,35 +45,12 @@ enum class TextAlign
 
 /**
  * \~chinese
- * @brief 字体粗细值
- */
-struct FontWeight
-{
-    enum Value : uint32_t
-    {
-        Thin       = 100U,
-        ExtraLight = 200U,
-        Light      = 300U,
-        Normal     = 400U,  ///< 正常
-        Medium     = 500U,
-        Bold       = 700U,
-        ExtraBold  = 800U,
-        Black      = 900U,
-        ExtraBlack = 950U
-    };
-};
-
-/**
- * \~chinese
  * @brief 文本样式
  */
 class KGE_API TextStyle
 {
 public:
     FontPtr        font;                ///< 字体
-    float          font_size;           ///< 字号
-    uint32_t       font_weight;         ///< 粗细值
-    bool           italic;              ///< 是否斜体
     TextAlign      alignment;           ///< 对齐方式
     BrushPtr       fill_brush;          ///< 填充画刷
     BrushPtr       outline_brush;       ///< 描边画刷
@@ -93,20 +70,18 @@ public:
     /**
      * \~chinese
      * @brief 构建文本样式
+     * @param font 字体
+     */
+    TextStyle(FontPtr font);
+
+    /**
+     * \~chinese
+     * @brief 构建文本样式
      * @param font_family 字体族
      * @param font_size 字体大小
      * @param font_weight 字体粗细
      */
     TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
-
-    /**
-     * \~chinese
-     * @brief 构建文本样式
-     * @param font 字体
-     * @param font_size 字体大小
-     * @param font_weight 字体粗细
-     */
-    TextStyle(FontPtr font, float font_size, uint32_t font_weight = FontWeight::Normal);
 };
 
 /** @} */

@@ -99,24 +99,12 @@ public:
     void SetFont(FontPtr font);
 
     /// \~chinese
-    /// @brief 设置字号（默认值为 18）
-    void SetFontSize(float size);
-
-    /// \~chinese
-    /// @brief 设置字体粗细值（默认值为 FontWeight::Normal）
-    void SetFontWeight(uint32_t weight);
-
-    /// \~chinese
     /// @brief 设置文字填充画刷
     void SetFillBrush(BrushPtr brush);
 
     /// \~chinese
     /// @brief 设置文字填充颜色（默认值为 Color::White）
     void SetFillColor(const Color& color);
-
-    /// \~chinese
-    /// @brief 设置文字斜体（默认值为 false）
-    void SetItalic(bool italic);
 
     /// \~chinese
     /// @brief 设置文本自动换行的宽度（默认为 0）
@@ -172,6 +160,7 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
+    String        content_;
     TextStyle     style_;
     TextLayoutPtr layout_;
 };
@@ -180,11 +169,7 @@ private:
 
 inline String TextActor::GetText() const
 {
-    if (layout_)
-    {
-        return layout_->GetContent();
-    }
-    return String();
+    return content_;
 }
 
 inline FontPtr TextActor::GetFont() const

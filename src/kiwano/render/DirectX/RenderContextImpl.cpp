@@ -126,9 +126,9 @@ void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& of
     if (layout.IsValid())
     {
         auto  native         = NativePtr::Get<IDWriteTextLayout>(layout);
-        auto  fill_brush     = NativePtr::Get<ID2D1Brush>(layout.GetDefaultFillBrush());
-        auto  outline_brush  = NativePtr::Get<ID2D1Brush>(layout.GetDefaultOutlineBrush());
-        auto  outline_stroke = NativePtr::Get<ID2D1StrokeStyle>(layout.GetDefaultOutlineStrokeStyle());
+        auto  fill_brush     = NativePtr::Get<ID2D1Brush>(layout.GetFillBrush());
+        auto  outline_brush  = NativePtr::Get<ID2D1Brush>(layout.GetOutlineBrush());
+        auto  outline_stroke = NativePtr::Get<ID2D1StrokeStyle>(layout.GetOutlineStrokeStyle());
         float outline_width  = 1.0f;
 
         if (fill_brush)
@@ -141,9 +141,9 @@ void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& of
             outline_brush->SetOpacity(brush_opacity_);
         }
 
-        if (layout.GetDefaultOutlineStrokeStyle())
+        if (layout.GetOutlineStrokeStyle())
         {
-            outline_width = layout.GetDefaultOutlineStrokeStyle()->GetStrokeWidth();
+            outline_width = layout.GetOutlineStrokeStyle()->GetStrokeWidth();
         }
 
         HRESULT hr = text_renderer_->DrawTextLayout(native.Get(), offset.x, offset.y, fill_brush.Get(),

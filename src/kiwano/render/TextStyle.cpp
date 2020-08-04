@@ -24,33 +24,22 @@ namespace kiwano
 {
 
 TextStyle::TextStyle()
-    : TextStyle(String(), 18, FontWeight::Normal)
+    : TextStyle(FontPtr(nullptr))
+{
+}
+
+TextStyle::TextStyle(FontPtr font)
+    : font(font)
+    , alignment(TextAlign::Left)
+    , wrap_width(0)
+    , line_spacing(0)
+    , show_underline(false)
+    , show_strikethrough(false)
 {
 }
 
 TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight)
-    : font_size(font_size)
-    , font_weight(font_weight)
-    , italic(false)
-    , alignment(TextAlign::Left)
-    , wrap_width(0)
-    , line_spacing(0)
-    , show_underline(false)
-    , show_strikethrough(false)
-{
-    font = MakePtr<Font>(font_family);
-}
-
-TextStyle::TextStyle(FontPtr font, float font_size, uint32_t font_weight)
-    : font(font)
-    , font_size(font_size)
-    , font_weight(font_weight)
-    , italic(false)
-    , alignment(TextAlign::Left)
-    , wrap_width(0)
-    , line_spacing(0)
-    , show_underline(false)
-    , show_strikethrough(false)
+    : TextStyle(MakePtr<Font>(font_family, font_size, font_weight))
 {
 }
 
