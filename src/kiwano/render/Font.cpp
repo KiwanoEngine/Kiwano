@@ -87,14 +87,16 @@ FontPtr Font::Preload(const Resource& resource)
 Font::Font()
     : size_(18.0f)
     , weight_(FontWeight::Normal)
-    , posture_(FontPosture::Regular)
+    , posture_(FontPosture::Normal)
+    , stretch_(FontStretch::Normal)
 {
 }
 
-Font::Font(const String& family_name, float size, uint32_t weight, FontPosture posture)
+Font::Font(const String& family_name, float size, uint32_t weight, FontPosture posture, FontStretch stretch)
     : size_(size)
     , weight_(weight)
     , posture_(posture)
+    , stretch_(stretch)
 {
     if (family_name.empty())
         return;

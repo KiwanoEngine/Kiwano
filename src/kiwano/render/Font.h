@@ -46,7 +46,7 @@ struct FontWeight
         Light      = 300U,
         Normal     = 400U,  ///< 正常
         Medium     = 500U,
-        Bold       = 700U,
+        Bold       = 700U,  ///< 加粗
         ExtraBold  = 800U,
         Black      = 900U,
         ExtraBlack = 950U
@@ -59,8 +59,27 @@ struct FontWeight
  */
 enum class FontPosture
 {
-    Regular,  ///< 正常
+    Normal,   ///< 正常
+    Oblique,  ///< 倾斜体
     Italic,   ///< 斜体
+};
+
+/**
+ * \~chinese
+ * @brief 字体拉伸
+ */
+enum class FontStretch
+{
+    Unknown,
+    UltraCondensed,
+    ExtraCondensed,
+    Condensed,       ///< 压缩
+    SemiCondensed,
+    Normal,          ///< 正常
+    SemiExpanded,
+    Expanded,        ///< 扩大
+    ExtraExpanded,
+    UltraExpanded,
 };
 
 /**
@@ -91,7 +110,7 @@ public:
     /// @param weight 字体粗细
     /// @param posture 字体形态
     Font(const String& family_name, float size, uint32_t weight = FontWeight::Normal,
-         FontPosture posture = FontPosture::Regular);
+         FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
 
     /// \~chinese
     /// @brief 获取字体族
@@ -109,6 +128,10 @@ public:
     /// @brief 获取字体形态
     FontPosture GetPosture() const;
 
+    /// \~chinese
+    /// @brief 获取字体拉伸
+    FontStretch GetStretch() const;
+
 protected:
     /// \~chinese
     /// @brief 获取字体族
@@ -118,6 +141,7 @@ protected:
     float       size_;
     uint32_t    weight_;
     FontPosture posture_;
+    FontStretch stretch_;
     String      family_name_;
 };
 
@@ -193,6 +217,11 @@ inline uint32_t Font::GetWeight() const
 inline FontPosture Font::GetPosture() const
 {
     return posture_;
+}
+
+inline FontStretch Font::GetStretch() const
+{
+    return stretch_;
 }
 
 inline void Font::SetFamilyName(const String& name)

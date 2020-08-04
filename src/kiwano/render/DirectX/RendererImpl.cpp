@@ -605,11 +605,11 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
             font = new Font;
         }
 
-        float font_size   = font->GetSize();
-        auto  font_weight = DWRITE_FONT_WEIGHT(font->GetWeight());
-        bool  is_italic   = (font->GetPosture() == FontPosture::Italic);
-        auto  font_style  = is_italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
-        auto  collection  = NativePtr::Get<IDWriteFontCollection>(font);
+        float font_size    = font->GetSize();
+        auto  font_weight  = DWRITE_FONT_WEIGHT(font->GetWeight());
+        auto  font_style   = DWRITE_FONT_STYLE(font->GetPosture());
+        auto  font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
+        auto  collection   = NativePtr::Get<IDWriteFontCollection>(font);
 
         WideString font_family;
 
@@ -620,8 +620,8 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
         }
 
         ComPtr<IDWriteTextFormat> format;
-        hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style,
-                                        DWRITE_FONT_STRETCH_NORMAL, font_size);
+        hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style, font_stretch,
+                                        font_size);
 
         if (SUCCEEDED(hr))
         {

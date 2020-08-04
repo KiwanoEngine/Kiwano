@@ -123,16 +123,23 @@ void TextLayout::SetFont(FontPtr font)
             auto font_weight = DWRITE_FONT_WEIGHT(font->GetWeight());
 
             hr = native->SetFontWeight(font_weight, { 0, content_length_ });
-            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontSize failed");
+            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontWeight failed");
         }
 
         // reset font style
         {
-            bool is_italic  = (font->GetPosture() == FontPosture::Italic);
-            auto font_style = is_italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+            auto font_style = DWRITE_FONT_STYLE(font->GetPosture());
 
             hr = native->SetFontStyle(font_style, { 0, content_length_ });
-            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontSize failed");
+            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStyle failed");
+        }
+
+        // reset font stretch
+        {
+            auto font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
+
+            hr = native->SetFontStretch(font_stretch, { 0, content_length_ });
+            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStretch failed");
         }
     }
 #else

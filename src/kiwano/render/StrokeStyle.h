@@ -115,8 +115,7 @@ public:
 
     /// \~chinese
     /// @brief 获取线条宽度
-    /// @param width 线条宽度
-    float GetStrokeWidth() const;
+    float GetWidth() const;
 
     /// \~chinese
     /// @brief 获取线条端点样式
@@ -137,7 +136,7 @@ public:
     /// \~chinese
     /// @brief 设置线条宽度
     /// @param width 线条宽度
-    void SetStrokeWidth(float width);
+    void SetWidth(float width);
 
     /// \~chinese
     /// @brief 设置线条端点样式
@@ -188,7 +187,7 @@ private:
 
 /** @} */
 
-inline float StrokeStyle::GetStrokeWidth() const
+inline float StrokeStyle::GetWidth() const
 {
     return stroke_width_;
 }
@@ -213,7 +212,7 @@ inline float StrokeStyle::GetDashOffset() const
     return dash_offset_;
 }
 
-inline void StrokeStyle::SetStrokeWidth(float width)
+inline void StrokeStyle::SetWidth(float width)
 {
     stroke_width_ = width;
 }

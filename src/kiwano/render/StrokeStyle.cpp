@@ -32,7 +32,7 @@ StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join)
 StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, DashStyle dash, float dash_offset)
     : StrokeStyle()
 {
-    SetStrokeWidth(width);
+    SetWidth(width);
     SetCapStyle(cap);
     SetLineJoinStyle(line_join);
     SetDashStyle(dash);
@@ -43,7 +43,7 @@ StrokeStyle::StrokeStyle(float width, CapStyle cap, LineJoinStyle line_join, con
                          float dash_offset)
     : StrokeStyle()
 {
-    SetStrokeWidth(width);
+    SetWidth(width);
     SetCapStyle(cap);
     SetLineJoinStyle(line_join);
     SetDashStyle(dash_array, dash_size);

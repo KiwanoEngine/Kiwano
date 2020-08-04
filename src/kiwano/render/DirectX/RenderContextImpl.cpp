@@ -143,7 +143,7 @@ void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& of
 
         if (layout.GetOutlineStrokeStyle())
         {
-            outline_width = layout.GetOutlineStrokeStyle()->GetStrokeWidth();
+            outline_width = layout.GetOutlineStrokeStyle()->GetWidth();
         }
 
         HRESULT hr = text_renderer_->DrawTextLayout(native.Get(), offset.x, offset.y, fill_brush.Get(),
@@ -170,7 +170,7 @@ void RenderContextImpl::DrawShape(const Shape& shape)
         auto  geometry     = NativePtr::Get<ID2D1Geometry>(shape);
         auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
         auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
-        float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+        float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
         render_target_->DrawGeometry(geometry.Get(), brush.Get(), stroke_width, stroke_style.Get());
 
@@ -185,7 +185,7 @@ void RenderContextImpl::DrawLine(const Point& point1, const Point& point2)
 
     auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
     auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
-    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+    float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_target_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), brush.Get(), stroke_width,
                              stroke_style.Get());
@@ -200,7 +200,7 @@ void RenderContextImpl::DrawRectangle(const Rect& rect)
 
     auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
     auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
-    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+    float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_target_->DrawRectangle(DX::ConvertToRectF(rect), brush.Get(), stroke_width, stroke_style.Get());
 
@@ -214,7 +214,7 @@ void RenderContextImpl::DrawRoundedRectangle(const Rect& rect, const Vec2& radiu
 
     auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
     auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
-    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+    float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_target_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get(),
                                          stroke_width, stroke_style.Get());
@@ -229,7 +229,7 @@ void RenderContextImpl::DrawEllipse(const Point& center, const Vec2& radius)
 
     auto  brush        = NativePtr::Get<ID2D1Brush>(current_brush_);
     auto  stroke_style = NativePtr::Get<ID2D1StrokeStyle>(current_stroke_);
-    float stroke_width = current_stroke_ ? current_stroke_->GetStrokeWidth() : 1.0f;
+    float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_target_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get(),
                                 stroke_width, stroke_style.Get());
