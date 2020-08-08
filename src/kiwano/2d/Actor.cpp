@@ -148,6 +148,9 @@ void Actor::PrepareToRender(RenderContext& ctx)
 
 void Actor::RenderBorder(RenderContext& ctx)
 {
+    if (!visible_)
+        return;
+
     if (show_border_ && !size_.IsOrigin())
     {
         Rect bounds = GetBounds();
@@ -373,7 +376,7 @@ void Actor::SetStage(Stage* stage)
         stage_ = stage;
         for (auto& child : children_)
         {
-            child->stage_ = stage;
+            child->SetStage(stage);
         }
     }
 }
