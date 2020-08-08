@@ -341,7 +341,11 @@ public:
 
     /// \~chinese
     /// @brief 添加子角色
-    void AddChild(ActorPtr child, int zorder = 0);
+    void AddChild(ActorPtr child);
+
+    /// \~chinese
+    /// @brief 添加子角色
+    void AddChild(ActorPtr child, int zorder);
 
     /// \~chinese
     /// @brief 添加多个子角色

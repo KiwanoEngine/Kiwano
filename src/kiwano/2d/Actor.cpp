@@ -50,7 +50,7 @@ Actor::Actor()
     , dirty_visibility_(true)
     , dirty_transform_(false)
     , dirty_transform_inverse_(false)
-    , cascade_opacity_(false)
+    , cascade_opacity_(true)
     , show_border_(false)
     , is_fast_transform_(true)
     , evt_dispatch_enabled_(true)
@@ -515,7 +515,7 @@ void Actor::SetRotation(float angle)
     is_fast_transform_  = false;
 }
 
-void Actor::AddChild(ActorPtr child, int zorder)
+void Actor::AddChild(ActorPtr child)
 {
     if (child)
     {
@@ -527,7 +527,7 @@ void Actor::AddChild(ActorPtr child, int zorder)
         {
             if (parent == child)
             {
-                KGE_ERRORF("A actor cannot be its own parent");
+                Fail("Actor::AddChild failed, A actor cannot be its own parent");
                 return;
             }
         }
@@ -539,7 +539,6 @@ void Actor::AddChild(ActorPtr child, int zorder)
         child->SetStage(this->stage_);
 
         child->dirty_transform_ = true;
-        child->z_order_         = zorder;
         child->Reorder();
         child->UpdateOpacity();
     }
@@ -547,6 +546,12 @@ void Actor::AddChild(ActorPtr child, int zorder)
     {
         Fail("Actor::AddChild failed, NULL pointer exception");
     }
+}
+
+void Actor::AddChild(ActorPtr child, int zorder)
+{
+    child->z_order_ = zorder;
+    this->AddChild(child);
 }
 
 void Actor::AddChildren(const Vector<ActorPtr>& children)
