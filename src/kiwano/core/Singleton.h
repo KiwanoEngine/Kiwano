@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <memory>
-#include <mutex>
 
 namespace kiwano
 {
@@ -31,22 +29,14 @@ class Singleton
 public:
     using object_type = _Ty;
 
-    static std::unique_ptr<object_type> instance_ptr_;
-
     static inline object_type& GetInstance()
     {
-        return *GetInstancePtr();
+        return instance_;
     }
 
     static inline object_type* GetInstancePtr()
     {
-        std::call_once(once_, Singleton::Init);
-        return instance_ptr_.get();
-    }
-
-    static inline void DestroyInstance()
-    {
-        instance_ptr_.reset();
+        return &instance_;
     }
 
 protected:
@@ -54,22 +44,10 @@ protected:
     Singleton(const Singleton&) = delete;
     Singleton& operator=(const Singleton&) = delete;
 
-private:
-    static inline void Init()
-    {
-        if (!instance_ptr_)
-        {
-            instance_ptr_.reset(new object_type);
-        }
-    }
-
-    static std::once_flag once_;
+    static _Ty instance_;
 };
 
 template <typename _Ty>
-std::once_flag Singleton<_Ty>::once_;
-
-template <typename _Ty>
-typename std::unique_ptr<_Ty> Singleton<_Ty>::instance_ptr_;
+_Ty Singleton<_Ty>::instance_;
 
 }  // namespace kiwano
