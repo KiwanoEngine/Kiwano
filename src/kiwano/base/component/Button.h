@@ -33,62 +33,43 @@ KGE_DECLARE_SMART_PTR(Button);
 
 /**
  * \~chinese
- * @brief 按钮
+ * @brief 基础按钮组件
  */
-class KGE_API Button : public Component
+class KGE_API ButtonBase : public Component
 {
 public:
     /// \~chinese
-    /// @brief 按钮回调函数
-    using Callback = Function<void(Button* /* self */, Actor* /* target */)>;
+    /// @brief 按钮事件
+    enum class Event
+    {
+        Click,      ///< 被点击
+        Pressed,    ///< 被按下
+        MouseOver,  ///< 鼠标浮于按钮上
+        MouseOut,   ///< 鼠标从按钮上移出
+    };
 
-    /// \~chinese
-    /// @brief 创建按钮
-    /// @param click 按钮点击回调函数
-    Button(const Callback& click);
-
-    /// \~chinese
-    /// @brief 创建按钮
-    /// @param click 按钮点击回调函数
-    /// @param pressed 按钮按下回调函数
-    /// @param mouse_over 按钮移入回调函数
-    /// @param mouse_out 按钮移出回调函数
-    Button(const Callback& click, const Callback& pressed, const Callback& mouse_over, const Callback& mouse_out);
-
-    Button();
-
-    virtual ~Button();
-
-    /// \~chinese
-    /// @brief 设置按钮点击后的回调函数
-    void SetClickCallback(const Callback& func);
-
-    /// \~chinese
-    /// @brief 设置按钮被按下时的回调函数
-    void SetPressedCallback(const Callback& func);
-
-    /// \~chinese
-    /// @brief 设置鼠标移入按钮时的回调函数
-    void SetMouseOverCallback(const Callback& func);
-
-    /// \~chinese
-    /// @brief 设置鼠标移出按钮时的回调函数
-    void SetMouseOutCallback(const Callback& func);
-
-protected:
     /// \~chinese
     /// @brief 按钮状态
     enum class Status
     {
-        Normal,  ///< 普通
-        Hover,   ///< 鼠标在按钮内
-        Pressed  ///< 被按下
+        Normal,   ///< 普通
+        Hover,    ///< 鼠标在按钮内
+        Pressed,  ///< 被按下
     };
+
+    ButtonBase();
+
+    virtual ~ButtonBase();
+
+    /// \~chinese
+    /// @brief 按钮事件发生时
+    virtual void OnEvent(Event evt) = 0;
 
     /// \~chinese
     /// @brief 获取按钮状态
     Status GetStatus() const;
 
+protected:
     /// \~chinese
     /// @brief 设置按钮状态
     void SetStatus(Status status);
@@ -103,39 +84,51 @@ protected:
 
     /// \~chinese
     /// @brief 处理角色事件
-    void HandleEvent(Event* evt) override;
+    void HandleEvent(kiwano::Event* evt) override;
 
 private:
-    Status   status_;
-    Callback click_callback_;
-    Callback pressed_callback_;
-    Callback mouse_over_callback_;
-    Callback mouse_out_callback_;
+    Status status_;
+};
+
+/**
+ * \~chinese
+ * @brief 按钮组件
+ */
+class KGE_API Button : public ButtonBase
+{
+public:
+    /// \~chinese
+    /// @brief 按钮回调函数
+    using Callback = Function<void(Button* /* self */, Event /* evt */)>;
+
+    Button();
+
+    /// \~chinese
+    /// @brief 创建按钮
+    /// @param cb 按钮回调函数
+    Button(const Callback& cb);
+
+    /// \~chinese
+    /// @brief 设置按钮回调函数
+    /// @param cb 按钮回调函数
+    void SetCallback(const Callback& cb);
+
+    /// \~chinese
+    /// @brief 按钮状态变化时
+    void OnEvent(Event evt) override;
+
+private:
+    Callback cb_;
 };
 
 /** @} */
 
-inline void Button::SetClickCallback(const Callback& func)
+inline void Button::SetCallback(const Callback& cb)
 {
-    click_callback_ = func;
+    cb_ = cb;
 }
 
-inline void Button::SetPressedCallback(const Callback& func)
-{
-    pressed_callback_ = func;
-}
-
-inline void Button::SetMouseOverCallback(const Callback& func)
-{
-    mouse_over_callback_ = func;
-}
-
-inline void Button::SetMouseOutCallback(const Callback& func)
-{
-    mouse_out_callback_ = func;
-}
-
-inline Button::Status Button::GetStatus() const
+inline ButtonBase::Status ButtonBase::GetStatus() const
 {
     return status_;
 }

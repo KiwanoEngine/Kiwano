@@ -25,32 +25,17 @@
 namespace kiwano
 {
 
-Button::Button(const Callback& click)
-    : Button(click, nullptr, nullptr, nullptr)
-{
-}
-
-Button::Button(const Callback& click, const Callback& pressed, const Callback& mouse_over, const Callback& mouse_out)
-    : status_(Status::Normal)
-    , click_callback_(click)
-    , pressed_callback_(pressed)
-    , mouse_over_callback_(mouse_over)
-    , mouse_out_callback_(mouse_out)
-{
-    SetName("__KGE_BUTTON__");
-}
-
-Button::Button()
+ButtonBase::ButtonBase()
     : status_(Status::Normal)
 {
     SetName("__KGE_BUTTON__");
 }
 
-Button::~Button()
+ButtonBase::~ButtonBase()
 {
 }
 
-void Button::SetStatus(Status status)
+void ButtonBase::SetStatus(Status status)
 {
     if (status_ != status)
     {
@@ -58,10 +43,8 @@ void Button::SetStatus(Status status)
 
         if (status == Status::Normal)
         {
+            OnEvent(Event::MouseOut);
             Application::GetInstance().GetWindow()->SetCursor(CursorType::Arrow);
-
-            if (mouse_out_callback_)
-                mouse_out_callback_(this, GetBoundActor());
         }
         else if (status == Status::Hover)
         {
@@ -69,21 +52,19 @@ void Button::SetStatus(Status status)
 
             if (old_status != Status::Pressed)
             {
-                if (mouse_over_callback_)
-                    mouse_over_callback_(this, GetBoundActor());
+                OnEvent(Event::MouseOver);
             }
         }
         else if (status == Status::Pressed)
         {
-            if (pressed_callback_)
-                pressed_callback_(this, GetBoundActor());
+            OnEvent(Event::Pressed);
         }
 
         status_ = status;
     }
 }
 
-void Button::InitComponent(Actor* actor)
+void ButtonBase::InitComponent(Actor* actor)
 {
     Component::InitComponent(actor);
     if (actor)
@@ -92,12 +73,12 @@ void Button::InitComponent(Actor* actor)
     }
 }
 
-void Button::DestroyComponent()
+void ButtonBase::DestroyComponent()
 {
     Component::DestroyComponent();
 }
 
-void Button::HandleEvent(Event* evt)
+void ButtonBase::HandleEvent(kiwano::Event* evt)
 {
     if (evt->IsType<MouseHoverEvent>())
     {
@@ -117,8 +98,22 @@ void Button::HandleEvent(Event* evt)
     }
     else if (evt->IsType<MouseClickEvent>())
     {
-        if (click_callback_)
-            click_callback_(this, GetBoundActor());
+        OnEvent(Event::Click);
+    }
+}
+
+Button::Button() {}
+
+Button::Button(const Callback& cb)
+{
+    SetCallback(cb);
+}
+
+void Button::OnEvent(Event evt)
+{
+    if (cb_)
+    {
+        cb_(this, evt);
     }
 }
 
