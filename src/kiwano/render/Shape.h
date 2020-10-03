@@ -70,6 +70,11 @@ public:
     /// @param radius 椭圆半径
     static ShapePtr CreateEllipse(const Point& center, const Vec2& radius);
 
+    /// \~chinese
+    /// @brief 创建多边形
+    /// @param vertices 多边形端点集合
+    static ShapePtr CreatePolygon(const Vector<Point>& vertices);
+
     Shape();
 
     /// \~chinese

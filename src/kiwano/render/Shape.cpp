@@ -169,4 +169,17 @@ ShapePtr Shape::CreateEllipse(const Point& center, const Vec2& radius)
     return output;
 }
 
+ShapePtr Shape::CreatePolygon(const Vector<Point>& vertices)
+{
+    if (vertices.size() > 1)
+    {
+        ShapeMaker maker;
+        maker.BeginPath(vertices[0]);
+        maker.AddLines(&vertices[1], vertices.size() - 1);
+        maker.EndPath(true);
+        return maker.GetShape();
+    }
+    return ShapePtr();
+}
+
 }  // namespace kiwano

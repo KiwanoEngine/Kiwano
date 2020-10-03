@@ -90,6 +90,10 @@ public:
     /// @brief 按钮回调函数
     using Callback = Function<void(Button* /* self */, Event /* evt */)>;
 
+    /// \~chinese
+    /// @brief 按钮点击回调函数
+    using ClickedCallback = Function<void(Button* /* self */)>;
+
     Button();
 
     /// \~chinese
@@ -105,15 +109,15 @@ public:
     /// \~chinese
     /// @brief 设置按钮回调函数
     /// @param cb 按钮回调函数
-    void SetCallbackOnClicked(const Function<void()>& cb);
+    void SetCallbackOnClicked(const ClickedCallback& cb);
 
     /// \~chinese
     /// @brief 按钮状态变化时
     void OnEvent(Event evt) override;
 
 private:
-    Callback cb_;
-    Function<void()> clicked_cb_;
+    Callback        cb_;
+    ClickedCallback clicked_cb_;
 };
 
 /** @} */
@@ -123,7 +127,7 @@ inline void Button::SetCallback(const Button::Callback& cb)
     cb_ = cb;
 }
 
-inline void Button::SetCallbackOnClicked(const Function<void()>& cb)
+inline void Button::SetCallbackOnClicked(const Button::ClickedCallback& cb)
 {
     clicked_cb_ = cb;
 }

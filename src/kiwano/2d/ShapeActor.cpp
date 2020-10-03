@@ -240,20 +240,20 @@ void EllipseActor::SetRadius(const Vec2& radius)
 
 PolygonActor::PolygonActor() {}
 
-PolygonActor::PolygonActor(const Vector<Point>& points)
+PolygonActor::PolygonActor(const Vector<Point>& vertices)
 {
-    SetVertices(points);
+    SetVertices(vertices);
 }
 
 PolygonActor::~PolygonActor() {}
 
-void PolygonActor::SetVertices(const Vector<Point>& points)
+void PolygonActor::SetVertices(const Vector<Point>& vertices)
 {
-    if (points.size() > 1)
+    if (vertices.size() > 1)
     {
         ShapeMaker maker;
-        maker.BeginPath(points[0]);
-        maker.AddLines(&points[1], points.size() - 1);
+        maker.BeginPath(vertices[0]);
+        maker.AddLines(&vertices[1], vertices.size() - 1);
         maker.EndPath(true);
 
         SetShape(maker.GetShape());

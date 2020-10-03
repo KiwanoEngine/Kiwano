@@ -318,15 +318,15 @@ public:
 
     /// \~chinese
     /// @brief 创建多边形角色
-    /// @param points 多边形端点集合
-    PolygonActor(const Vector<Point>& points);
+    /// @param vertices 多边形端点集合
+    PolygonActor(const Vector<Point>& vertices);
 
     virtual ~PolygonActor();
 
     /// \~chinese
     /// @brief 设置多边形端点
-    /// @param points 多边形端点集合
-    void SetVertices(const Vector<Point>& points);
+    /// @param vertices 多边形端点集合
+    void SetVertices(const Vector<Point>& vertices);
 };
 
 

@@ -91,7 +91,7 @@ void Button::OnEvent(Event evt)
 
     if (evt == Event::Clicked && clicked_cb_)
     {
-        clicked_cb_();
+        clicked_cb_(this);
     }
 }
 
