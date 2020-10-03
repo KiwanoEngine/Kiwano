@@ -85,6 +85,14 @@
     } while (0)
 #endif
 
+#ifndef KGE_THROW_IF
+#define KGE_THROW_IF(EXPRESSION, MESSAGE) \
+    if (EXPRESSION)                       \
+    {                                     \
+        KGE_THROW(MESSAGE);               \
+    }
+#endif
+
 #ifndef KGE_THROW_SYSTEM_ERROR
 #define KGE_THROW_SYSTEM_ERROR(ERRCODE, MESSAGE)                                          \
     do                                                                                    \

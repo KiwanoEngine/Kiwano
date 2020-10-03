@@ -76,19 +76,21 @@ void RenderContextImpl::DiscardDeviceResources()
 
 void RenderContextImpl::BeginDraw()
 {
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+
     SaveDrawingState();
 
     RenderContext::BeginDraw();
 
-    if (render_target_)
-    {
-        render_target_->BeginDraw();
-    }
+    render_target_->BeginDraw();
 }
 
 void RenderContextImpl::EndDraw()
 {
-    KGE_THROW_IF_FAILED(render_target_->EndDraw(), "ID2D1RenderTarget EndDraw failed");
+    KGE_ASSERT(render_target_ && "Render target has not been initialized!");
+
+    HRESULT hr = render_target_->EndDraw();
+    KGE_THROW_IF_FAILED(hr, "ID2D1RenderTarget EndDraw failed");
 
     RenderContext::EndDraw();
 
