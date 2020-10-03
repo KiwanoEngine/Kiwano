@@ -42,19 +42,11 @@ public:
     /// @brief 按钮事件
     enum class Event
     {
-        Click,      ///< 被点击
-        Pressed,    ///< 被按下
-        MouseOver,  ///< 鼠标浮于按钮上
-        MouseOut,   ///< 鼠标从按钮上移出
-    };
-
-    /// \~chinese
-    /// @brief 按钮状态
-    enum class Status
-    {
-        Normal,   ///< 普通
-        Hover,    ///< 鼠标在按钮内
-        Pressed,  ///< 被按下
+        MouseEntered,  ///< 鼠标浮于按钮上
+        MouseExited,   ///< 鼠标从按钮上移出
+        Pressed,       ///< 鼠标按下
+        Released,      ///< 鼠标抬起
+        Clicked,       ///< 鼠标点击
     };
 
     ButtonBase();
@@ -65,15 +57,7 @@ public:
     /// @brief 按钮事件发生时
     virtual void OnEvent(Event evt) = 0;
 
-    /// \~chinese
-    /// @brief 获取按钮状态
-    Status GetStatus() const;
-
 protected:
-    /// \~chinese
-    /// @brief 设置按钮状态
-    void SetStatus(Status status);
-
     /// \~chinese
     /// @brief 初始化组件
     void InitComponent(Actor* actor) override;
@@ -87,7 +71,12 @@ protected:
     void HandleEvent(kiwano::Event* evt) override;
 
 private:
-    Status status_;
+    enum class Status
+    {
+        Normal,
+        Hover,
+        Pressed
+    } status_;
 };
 
 /**
@@ -114,23 +103,29 @@ public:
     void SetCallback(const Callback& cb);
 
     /// \~chinese
+    /// @brief 设置按钮回调函数
+    /// @param cb 按钮回调函数
+    void SetCallbackOnClicked(const Function<void()>& cb);
+
+    /// \~chinese
     /// @brief 按钮状态变化时
     void OnEvent(Event evt) override;
 
 private:
     Callback cb_;
+    Function<void()> clicked_cb_;
 };
 
 /** @} */
 
-inline void Button::SetCallback(const Callback& cb)
+inline void Button::SetCallback(const Button::Callback& cb)
 {
     cb_ = cb;
 }
 
-inline ButtonBase::Status ButtonBase::GetStatus() const
+inline void Button::SetCallbackOnClicked(const Function<void()>& cb)
 {
-    return status_;
+    clicked_cb_ = cb;
 }
 
 }  // namespace kiwano

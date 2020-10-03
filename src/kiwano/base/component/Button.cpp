@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/base/component/Button.h>
-#include <kiwano/2d/Stage.h>
-#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -33,35 +31,6 @@ ButtonBase::ButtonBase()
 
 ButtonBase::~ButtonBase()
 {
-}
-
-void ButtonBase::SetStatus(Status status)
-{
-    if (status_ != status)
-    {
-        Status old_status = status_;
-
-        if (status == Status::Normal)
-        {
-            OnEvent(Event::MouseOut);
-            Application::GetInstance().GetWindow()->SetCursor(CursorType::Arrow);
-        }
-        else if (status == Status::Hover)
-        {
-            Application::GetInstance().GetWindow()->SetCursor(CursorType::Hand);
-
-            if (old_status != Status::Pressed)
-            {
-                OnEvent(Event::MouseOver);
-            }
-        }
-        else if (status == Status::Pressed)
-        {
-            OnEvent(Event::Pressed);
-        }
-
-        status_ = status;
-    }
 }
 
 void ButtonBase::InitComponent(Actor* actor)
@@ -82,23 +51,27 @@ void ButtonBase::HandleEvent(kiwano::Event* evt)
 {
     if (evt->IsType<MouseHoverEvent>())
     {
-        SetStatus(Status::Hover);
+        OnEvent(Event::MouseEntered);
+        status_ = Status::Hover;
     }
     else if (evt->IsType<MouseOutEvent>())
     {
-        SetStatus(Status::Normal);
+        OnEvent(Event::MouseExited);
+        status_ = Status::Normal;
     }
     else if (evt->IsType<MouseDownEvent>() && status_ == Status::Hover)
     {
-        SetStatus(Status::Pressed);
+        OnEvent(Event::Pressed);
+        status_ = Status::Pressed;
     }
     else if (evt->IsType<MouseUpEvent>() && status_ == Status::Pressed)
     {
-        SetStatus(Status::Hover);
+        OnEvent(Event::Released);
+        status_ = Status::Hover;
     }
     else if (evt->IsType<MouseClickEvent>())
     {
-        OnEvent(Event::Click);
+        OnEvent(Event::Clicked);
     }
 }
 
@@ -114,6 +87,11 @@ void Button::OnEvent(Event evt)
     if (cb_)
     {
         cb_(this, evt);
+    }
+
+    if (evt == Event::Clicked && clicked_cb_)
+    {
+        clicked_cb_();
     }
 }
 
