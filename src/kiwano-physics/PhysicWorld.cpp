@@ -34,9 +34,6 @@ public:
         canvas_ = MakePtr<Canvas>(size);
         ctx_    = canvas_->GetContext2D();
 
-        fill_brush_ = MakePtr<Brush>(Color::White);
-        line_brush_ = MakePtr<Brush>(Color::White);
-
         b2Draw::SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
     }
 
@@ -58,14 +55,12 @@ public:
 
     void SetFillColor(const b2Color& color)
     {
-        fill_brush_->SetColor(reinterpret_cast<const Color&>(color));
-        ctx_->SetCurrentBrush(fill_brush_);
+        ctx_->SetFillColor(reinterpret_cast<const Color&>(color));
     }
 
     void SetLineColor(const b2Color& color)
     {
-        line_brush_->SetColor(reinterpret_cast<const Color&>(color));
-        ctx_->SetCurrentBrush(line_brush_);
+        ctx_->SetStrokeColor(reinterpret_cast<const Color&>(color));
     }
 
     void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
@@ -83,16 +78,15 @@ public:
 
     void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override
     {
-        ShapeMaker maker;
-        maker.BeginPath(global::WorldToLocal(vertices[0]));
-        for (int32 i = 1; i < vertexCount; ++i)
+        Vector<Point> local_vertices;
+        for (int32 i = 0; i < vertexCount; ++i)
         {
-            maker.AddLine(global::WorldToLocal(vertices[i]));
+            local_vertices.push_back(global::WorldToLocal(vertices[i]));
         }
-        maker.EndPath(true);
+        ShapePtr polygon = Shape::CreatePolygon(local_vertices);
 
         SetFillColor(color);
-        ctx_->FillShape(*maker.GetShape());
+        ctx_->FillShape(polygon);
     }
 
     void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override
@@ -139,10 +133,8 @@ public:
     }
 
 private:
-    CanvasPtr        canvas_;
-    RenderContextPtr ctx_;
-    BrushPtr         fill_brush_;
-    BrushPtr         line_brush_;
+    CanvasPtr              canvas_;
+    CanvasRenderContextPtr ctx_;
 };
 
 class DestructionListener : public b2DestructionListener

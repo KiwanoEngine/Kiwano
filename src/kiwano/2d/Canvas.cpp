@@ -23,36 +23,39 @@
 
 namespace kiwano
 {
+Canvas::Canvas()
+{
+    RecreateContext(nullptr);
+}
 
 Canvas::Canvas(const Size& size)
 {
-    try
-    {
-        ResizeAndClear(size);
-    }
-    catch (Exception& e)
-    {
-        Fail(String("Canvas::ResizeAndClear failed: ") + e.what());
-    }
+    ResizeAndClear(size);
 }
 
-RenderContextPtr Canvas::GetContext2D() const
+CanvasRenderContextPtr Canvas::GetContext2D() const
 {
-    return render_ctx_;
-}
-
-void Canvas::OnRender(RenderContext& ctx)
-{
-    if (texture_cached_)
-    {
-        ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
-    }
+    CanvasRenderContextPtr ctx = new CanvasRenderContext(render_ctx_);
+    return ctx;
 }
 
 void Canvas::ResizeAndClear(Size size)
 {
+    RecreateContext(&size);
+}
+
+void Canvas::RecreateContext(Size* size)
+{
     texture_cached_ = MakePtr<Texture>();
-    render_ctx_     = RenderContext::Create(*texture_cached_, size);
+
+    if (size)
+    {
+        render_ctx_ = RenderContext::Create(*texture_cached_, *size);
+    }
+    else
+    {
+        render_ctx_ = RenderContext::Create(*texture_cached_);
+    }
 
     if (render_ctx_)
     {
@@ -67,6 +70,27 @@ void Canvas::ResizeAndClear(Size size)
 TexturePtr Canvas::ExportToTexture() const
 {
     return texture_cached_;
+}
+
+void Canvas::OnRender(RenderContext& ctx)
+{
+    if (texture_cached_)
+    {
+        ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
+    }
+}
+
+CanvasRenderContext::CanvasRenderContext(RenderContextPtr ctx)
+    : ctx_(ctx)
+{
+    if (!ctx_)
+    {
+        Fail("CanvasRenderContext constructor failed");
+    }
+}
+
+CanvasRenderContext::~CanvasRenderContext()
+{
 }
 
 }  // namespace kiwano
