@@ -43,23 +43,23 @@ Time::Time(int64_t dur)
 
 const Time Time::operator+(const Duration& dur) const
 {
-    return Time{ dur_ + dur.Milliseconds() };
+    return Time{ dur_ + dur.GetMilliseconds() };
 }
 
 const Time Time::operator-(const Duration& dur) const
 {
-    return Time{ dur_ - dur.Milliseconds() };
+    return Time{ dur_ - dur.GetMilliseconds() };
 }
 
 Time& Time::operator+=(const Duration& other)
 {
-    dur_ += other.Milliseconds();
+    dur_ += other.GetMilliseconds();
     return (*this);
 }
 
 Time& Time::operator-=(const Duration& other)
 {
-    dur_ -= other.Milliseconds();
+    dur_ -= other.GetMilliseconds();
     return (*this);
 }
 
@@ -160,23 +160,23 @@ const Duration ClockTime::operator-(const ClockTime& other) const
 
 const ClockTime ClockTime::operator+(const Duration& dur) const
 {
-    return ClockTime{ ms_since_epoch_ + dur.Milliseconds() };
+    return ClockTime{ ms_since_epoch_ + dur.GetMilliseconds() };
 }
 
 const ClockTime ClockTime::operator-(const Duration& dur) const
 {
-    return ClockTime{ ms_since_epoch_ - dur.Milliseconds() };
+    return ClockTime{ ms_since_epoch_ - dur.GetMilliseconds() };
 }
 
 ClockTime& ClockTime::operator+=(const Duration& other)
 {
-    ms_since_epoch_ += other.Milliseconds();
+    ms_since_epoch_ += other.GetMilliseconds();
     return (*this);
 }
 
 ClockTime& ClockTime::operator-=(const Duration& other)
 {
-    ms_since_epoch_ -= other.Milliseconds();
+    ms_since_epoch_ -= other.GetMilliseconds();
     return (*this);
 }
 
@@ -210,21 +210,21 @@ Duration::Duration(int64_t milliseconds)
 {
 }
 
-float Duration::Seconds() const
+float Duration::GetSeconds() const
 {
     auto sec = milliseconds_ / Second.milliseconds_;
     auto ms  = milliseconds_ % Second.milliseconds_;
     return static_cast<float>(sec + ms) / 1000.f;
 }
 
-float Duration::Minutes() const
+float Duration::GetMinutes() const
 {
     auto min = milliseconds_ / Minute.milliseconds_;
     auto ms  = milliseconds_ % Minute.milliseconds_;
     return static_cast<float>(min + ms) / (60 * 1000.f);
 }
 
-float Duration::Hours() const
+float Duration::GetHours() const
 {
     auto hour = milliseconds_ / Hour.milliseconds_;
     auto ms   = milliseconds_ % Hour.milliseconds_;

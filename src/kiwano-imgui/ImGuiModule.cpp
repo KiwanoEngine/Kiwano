@@ -70,7 +70,7 @@ void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
     ImGuiIO& io = ImGui::GetIO();
 
     // Setup time step
-    io.DeltaTime = ctx.dt.Seconds();
+    io.DeltaTime = ctx.dt.GetSeconds();
 
     // Read keyboard modifiers inputs
     io.KeyCtrl  = Input::GetInstance().IsDown(KeyCode::Ctrl);

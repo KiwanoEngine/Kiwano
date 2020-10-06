@@ -350,7 +350,7 @@ void PhysicWorld::OnUpdate(Duration dt)
     BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
 
     // Update physic world
-    world_.Step(dt.Seconds(), vel_iter_, pos_iter_);
+    world_.Step(dt.GetSeconds(), vel_iter_, pos_iter_);
 
     AfterSimulation(world_actor, Matrix3x2(), 0.0f);
 }

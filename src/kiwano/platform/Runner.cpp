@@ -107,7 +107,7 @@ bool Runner::MainLoop(Duration dt)
             // Releases CPU
             Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
             Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
-            if (sleep_dt.Milliseconds() > 1LL)
+            if (sleep_dt.GetMilliseconds() > 1LL)
             {
                 sleep_dt.Sleep();
             }

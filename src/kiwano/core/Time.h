@@ -31,14 +31,15 @@ namespace kiwano
  * @par
  *   时间段表示法:
  *   @code
- *     time::Second * 5  // 5 秒
- *     time::Hour * 1.5  // 1.5 小时
- *     time::Hour * 3 + time::Minute * 45 + time::Second * 15  // 3 小时 45 分 15
- * 秒
+ *     Duration::Ms * 50     // 50 毫秒
+ *     Duration::Second * 5  // 5 秒
+ *     Duration::Hour * 1.5  // 1.5 小时
+ *     Duration::Hour * 3 + Duration::Minute * 45 + Duration::Second * 15  // 3 小时 45 分 15秒
  *   @endcode
  *   在 VS2015 及更高版本可以使用 time literals:
  *   @code
  *     using namespace kiwano;
+ *     50_msec                   // 50 毫秒
  *     5_sec                     // 5 秒
  *     1.5_hour                  // 1.5 小时
  *     3_hour + 45_min + 15_sec  // 3 小时 45 分 15 秒
@@ -57,19 +58,19 @@ struct KGE_API Duration
 
     /// \~chinese
     /// @brief 获取毫秒数
-    int64_t Milliseconds() const;
+    int64_t GetMilliseconds() const;
 
     /// \~chinese
     /// @brief 获取秒数
-    float Seconds() const;
+    float GetSeconds() const;
 
     /// \~chinese
     /// @brief 获取分钟数
-    float Minutes() const;
+    float GetMinutes() const;
 
     /// \~chinese
     /// @brief 获取小时数
-    float Hours() const;
+    float GetHours() const;
 
     /// \~chinese
     /// @brief 时长是否是零
@@ -171,7 +172,7 @@ private:
  *   Time t1 = Time::Now();
  *   // 等待一段时间后
  *   Time t2 = Time::Now();
- *   int ms = (t2 - t1).Milliseconds();  // 获取两时间相差的毫秒数
+ *   int ms = (t2 - t1).GetMilliseconds();  // 获取两时间相差的毫秒数
  * @endcode
  * @note 时间点与系统时钟无关，因此不能将时间点转化为时分秒
  */
@@ -246,7 +247,7 @@ private:
     int64_t ms_since_epoch_;
 };
 
-inline int64_t Duration::Milliseconds() const
+inline int64_t Duration::GetMilliseconds() const
 {
     return milliseconds_;
 }
