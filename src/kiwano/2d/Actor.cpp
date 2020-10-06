@@ -47,13 +47,10 @@ Actor::Actor()
     , hover_(false)
     , pressed_(false)
     , responsible_(false)
-    , dirty_visibility_(true)
-    , dirty_transform_(false)
-    , dirty_transform_inverse_(false)
     , cascade_opacity_(true)
     , show_border_(false)
-    , is_fast_transform_(true)
     , evt_dispatch_enabled_(true)
+    , dirty_flag_(DirtyFlag::DirtyVisibility)
     , parent_(nullptr)
     , stage_(nullptr)
     , physic_body_(nullptr)
@@ -102,6 +99,7 @@ void Actor::Render(RenderContext& ctx)
         return;
 
     UpdateTransform();
+    UpdateOpacity();
 
     if (children_.IsEmpty())
     {
@@ -172,9 +170,9 @@ void Actor::RenderBorder(RenderContext& ctx)
 
 bool Actor::CheckVisibility(RenderContext& ctx) const
 {
-    if (dirty_visibility_)
+    if (dirty_flag_.Has(DirtyFlag::DirtyVisibility))
     {
-        dirty_visibility_ = false;
+        dirty_flag_.Unset(DirtyFlag::DirtyVisibility);
 
         if (size_.IsOrigin())
         {
@@ -305,10 +303,10 @@ const Matrix3x2& Actor::GetTransformMatrix() const
 const Matrix3x2& Actor::GetTransformInverseMatrix() const
 {
     UpdateTransform();
-    if (dirty_transform_inverse_)
+    if (dirty_flag_.Has(DirtyFlag::DirtyTransformInverse))
     {
+        dirty_flag_.Unset(DirtyFlag::DirtyTransformInverse);
         transform_matrix_inverse_ = transform_matrix_.Invert();
-        dirty_transform_inverse_  = false;
     }
     return transform_matrix_inverse_;
 }
@@ -321,14 +319,14 @@ const Matrix3x2& Actor::GetTransformMatrixToParent() const
 
 void Actor::UpdateTransform() const
 {
-    if (!dirty_transform_)
+    if (!dirty_flag_.Has(DirtyFlag::DirtyTransform))
         return;
 
-    dirty_transform_         = false;
-    dirty_transform_inverse_ = true;
-    dirty_visibility_        = true;
+    dirty_flag_.Unset(DirtyFlag::DirtyTransform);
+    dirty_flag_.Set(DirtyFlag::DirtyTransformInverse);
+    dirty_flag_.Set(DirtyFlag::DirtyVisibility);
 
-    if (is_fast_transform_)
+    if (transform_.IsFast())
     {
         transform_matrix_to_parent_ = Matrix3x2::Translation(transform_.position);
     }
@@ -349,11 +347,16 @@ void Actor::UpdateTransform() const
 
     // update children's transform
     for (const auto& child : children_)
-        child->dirty_transform_ = true;
+        child->dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::UpdateOpacity()
 {
+    if (!dirty_flag_.Has(DirtyFlag::DirtyOpacity))
+        return;
+
+    dirty_flag_.Unset(DirtyFlag::DirtyOpacity);
+
     if (parent_ && parent_->IsCascadeOpacityEnabled())
     {
         displayed_opacity_ = opacity_ * parent_->displayed_opacity_;
@@ -363,10 +366,8 @@ void Actor::UpdateOpacity()
         displayed_opacity_ = opacity_;
     }
 
-    for (auto& child : children_)
-    {
-        child->UpdateOpacity();
-    }
+    for (const auto& child : children_)
+        child->dirty_flag_.Set(DirtyFlag::DirtyOpacity);
 }
 
 void Actor::SetStage(Stage* stage)
@@ -428,7 +429,7 @@ void Actor::SetOpacity(float opacity)
         return;
 
     displayed_opacity_ = opacity_ = std::min(std::max(opacity, 0.f), 1.f);
-    UpdateOpacity();
+    dirty_flag_.Set(DirtyFlag::DirtyOpacity);
 }
 
 void Actor::SetCascadeOpacityEnabled(bool enabled)
@@ -437,7 +438,7 @@ void Actor::SetCascadeOpacityEnabled(bool enabled)
         return;
 
     cascade_opacity_ = enabled;
-    UpdateOpacity();
+    dirty_flag_.Set(DirtyFlag::DirtyOpacity);
 }
 
 void Actor::SetAnchor(const Vec2& anchor)
@@ -445,8 +446,8 @@ void Actor::SetAnchor(const Vec2& anchor)
     if (anchor_ == anchor)
         return;
 
-    anchor_          = anchor;
-    dirty_transform_ = true;
+    anchor_ = anchor;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetSize(const Size& size)
@@ -454,15 +455,14 @@ void Actor::SetSize(const Size& size)
     if (size_ == size)
         return;
 
-    size_            = size;
-    dirty_transform_ = true;
+    size_ = size;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetTransform(const Transform& transform)
 {
-    transform_         = transform;
-    dirty_transform_   = true;
-    is_fast_transform_ = false;
+    transform_ = transform;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetVisible(bool val)
@@ -472,11 +472,8 @@ void Actor::SetVisible(bool val)
 
 void Actor::SetName(const String& name)
 {
-    if (!IsName(name))
-    {
-        ObjectBase::SetName(name);
-        hash_name_ = std::hash<String>{}(name);
-    }
+    ObjectBase::SetName(name);
+    hash_name_ = std::hash<String>{}(name);
 }
 
 void Actor::SetPosition(const Point& pos)
@@ -485,7 +482,7 @@ void Actor::SetPosition(const Point& pos)
         return;
 
     transform_.position = pos;
-    dirty_transform_    = true;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetScale(const Vec2& scale)
@@ -493,9 +490,8 @@ void Actor::SetScale(const Vec2& scale)
     if (transform_.scale == scale)
         return;
 
-    transform_.scale   = scale;
-    dirty_transform_   = true;
-    is_fast_transform_ = false;
+    transform_.scale = scale;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetSkew(const Vec2& skew)
@@ -503,9 +499,8 @@ void Actor::SetSkew(const Vec2& skew)
     if (transform_.skew == skew)
         return;
 
-    transform_.skew    = skew;
-    dirty_transform_   = true;
-    is_fast_transform_ = false;
+    transform_.skew = skew;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::SetRotation(float angle)
@@ -514,8 +509,7 @@ void Actor::SetRotation(float angle)
         return;
 
     transform_.rotation = angle;
-    dirty_transform_    = true;
-    is_fast_transform_  = false;
+    dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
 void Actor::AddChild(ActorPtr child)
@@ -541,9 +535,9 @@ void Actor::AddChild(ActorPtr child)
         child->parent_ = this;
         child->SetStage(this->stage_);
 
-        child->dirty_transform_ = true;
+        child->dirty_flag_.Set(DirtyFlag::DirtyTransform);
+        child->dirty_flag_.Set(DirtyFlag::DirtyOpacity);
         child->Reorder();
-        child->UpdateOpacity();
     }
     else
     {

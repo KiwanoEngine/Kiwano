@@ -49,6 +49,8 @@ public:
     /// @brief 将二维放射变换转换为矩阵
     Matrix3x2T<ValueType> ToMatrix() const;
 
+    bool IsFast() const;
+
     bool operator==(const TransformT& rhs) const;
 };
 
@@ -69,6 +71,12 @@ Matrix3x2T<_Ty> TransformT<_Ty>::ToMatrix() const
         return Matrix3x2T<_Ty>::Skewing(skew) * Matrix3x2T<_Ty>::SRT(position, scale, rotation);
     }
     return Matrix3x2T<_Ty>::SRT(position, scale, rotation);
+}
+
+template <typename _Ty>
+inline bool TransformT<_Ty>::IsFast() const
+{
+    return skew.x == 0.f && skew.y == 0.f && scale.x == 1.f && scale.y == 1.f && rotation == 0.f;
 }
 
 template <typename _Ty>

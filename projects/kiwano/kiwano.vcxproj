@@ -20,10 +20,12 @@
     <ClInclude Include="..\..\src\kiwano\base\RefPtr.h" />
     <ClInclude Include="..\..\src\kiwano\core\Allocator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Any.h" />
+    <ClInclude Include="..\..\src\kiwano\core\BitOperator.h" />
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Defer.h" />
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Flag.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
     <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
@@ -32,6 +34,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
     <ClInclude Include="..\..\src\kiwano\core\String.h" />
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Property.h" />
     <ClInclude Include="..\..\src\kiwano\event\Event.h" />
     <ClInclude Include="..\..\src\kiwano\event\EventDispatcher.h" />
     <ClInclude Include="..\..\src\kiwano\event\EventListener.h" />

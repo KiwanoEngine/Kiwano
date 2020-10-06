@@ -446,6 +446,62 @@ public:
     /// @brief 设置默认锚点
     static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
+    /// \~chinese
+    /// @brief 获取可见性属性
+    inline Property<bool> VisibleProperty()
+    {
+        return Property<bool>(&visible_);
+    }
+
+    /// \~chinese
+    /// @brief 获取不透明度属性
+    inline Property<float, FlagUint8> OpacityProperty()
+    {
+        return Property<float, FlagUint8>(&opacity_, &dirty_flag_, DirtyFlag::DirtyOpacity);
+    }
+
+    /// \~chinese
+    /// @brief 获取锚点属性
+    inline Property<Point, FlagUint8> AnchorProperty()
+    {
+        return Property<Point, FlagUint8>(&anchor_, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
+    /// \~chinese
+    /// @brief 获取大小属性
+    inline Property<Size, FlagUint8> SizeProperty()
+    {
+        return Property<Size, FlagUint8>(&size_, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
+    /// \~chinese
+    /// @brief 获取位置属性
+    inline Property<Point, FlagUint8> PositionProperty()
+    {
+        return Property<Point, FlagUint8>(&transform_.position, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
+    /// \~chinese
+    /// @brief 获取旋转角度属性
+    inline Property<float, FlagUint8> RotationProperty()
+    {
+        return Property<float, FlagUint8>(&transform_.rotation, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
+    /// \~chinese
+    /// @brief 获取缩放属性
+    inline Property<Point, FlagUint8> ScaleProperty()
+    {
+        return Property<Point, FlagUint8>(&transform_.scale, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
+    /// \~chinese
+    /// @brief 获取错切角度属性
+    inline Property<Point, FlagUint8> SkewProperty()
+    {
+        return Property<Point, FlagUint8>(&transform_.skew, &dirty_flag_, DirtyFlag::DirtyTransform);
+    }
+
 protected:
     /// \~chinese
     /// @brief 更新自身和所有子角色
@@ -494,33 +550,39 @@ protected:
     friend physics::PhysicBody;
 
 private:
-    bool           visible_;
-    bool           update_pausing_;
-    bool           cascade_opacity_;
-    bool           show_border_;
-    bool           hover_;
-    bool           pressed_;
-    bool           responsible_;
-    bool           evt_dispatch_enabled_;
-    int            z_order_;
-    float          opacity_;
-    float          displayed_opacity_;
-    Actor*         parent_;
-    Stage*         stage_;
-    size_t         hash_name_;
-    Point          anchor_;
-    Size           size_;
-    ActorList      children_;
-    UpdateCallback cb_update_;
-    Transform      transform_;
+    bool         visible_;
+    bool         update_pausing_;
+    bool         cascade_opacity_;
+    bool         show_border_;
+    bool         hover_;
+    bool         pressed_;
+    bool         responsible_;
+    bool         evt_dispatch_enabled_;
+    mutable bool visible_in_rt_;
 
+    enum DirtyFlag : uint8_t
+    {
+        Clean                 = 0,
+        DirtyTransform        = 1,
+        DirtyTransformInverse = 1 << 1,
+        DirtyOpacity          = 1 << 2,
+        DirtyVisibility       = 1 << 3
+    };
+    mutable Flag<uint8_t> dirty_flag_;
+
+    int                  z_order_;
+    float                opacity_;
+    float                displayed_opacity_;
+    Actor*               parent_;
+    Stage*               stage_;
     physics::PhysicBody* physic_body_;
+    size_t               hash_name_;
+    Point                anchor_;
+    Size                 size_;
+    ActorList            children_;
+    UpdateCallback       cb_update_;
+    Transform            transform_;
 
-    bool              is_fast_transform_;
-    mutable bool      visible_in_rt_;
-    mutable bool      dirty_visibility_;
-    mutable bool      dirty_transform_;
-    mutable bool      dirty_transform_inverse_;
     mutable Matrix3x2 transform_matrix_;
     mutable Matrix3x2 transform_matrix_inverse_;
     mutable Matrix3x2 transform_matrix_to_parent_;

@@ -29,6 +29,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <kiwano/macros.h>
+#include <kiwano/core/Property.h>
+#include <kiwano/core/BitOperator.h>
+#include <kiwano/core/Flag.h>
 #include <kiwano/core/String.h>
 #include <kiwano/core/Function.h>
 #include <kiwano/core/Singleton.h>
