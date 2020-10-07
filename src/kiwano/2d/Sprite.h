@@ -24,6 +24,7 @@
 
 namespace kiwano
 {
+
 KGE_DECLARE_SMART_PTR(Sprite);
 
 /**
@@ -111,6 +112,17 @@ public:
     /// @param[in] frame 图像帧
     /// @param autoresize 是否自动调整自身大小为图像大小
     void SetFrame(FramePtr frame, bool autoresize = true);
+
+    /// \~chinese
+    /// @brief 重置精灵大小为图像帧大小
+    void ResetSize();
+
+    /// \~chinese
+    /// @brief 获取图像帧属性
+    inline Property<FramePtr, Function<void()>> FrameProperty()
+    {
+        return Property<FramePtr, Function<void()>>(std::addressof(frame_), Closure(this, &Sprite::ResetSize));
+    }
 
     void OnRender(RenderContext& ctx) override;
 

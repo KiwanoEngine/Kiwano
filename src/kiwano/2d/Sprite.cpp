@@ -128,10 +128,22 @@ void Sprite::SetFrame(FramePtr frame, bool autoresize)
     if (frame_ != frame)
     {
         frame_ = frame;
-        if (frame_ && autoresize)
+        if (autoresize)
         {
-            SetSize(frame_->GetSize());
+            ResetSize();
         }
+    }
+}
+
+void Sprite::ResetSize()
+{
+    if (frame_)
+    {
+        SetSize(frame_->GetSize());
+    }
+    else
+    {
+        SetSize(Size());
     }
 }
 

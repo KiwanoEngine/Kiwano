@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/core/BitOperator.h>
 #include <kiwano/core/Flag.h>
+#include <kiwano/core/Function.h>
 
 namespace kiwano
 {
@@ -33,7 +34,8 @@ template <typename _Ty>
 class Property<_Ty, void>
 {
 public:
-    typedef _Ty value_type;
+    typedef _Ty  value_type;
+    typedef void notifier_type;
 
     inline Property(_Ty* ptr)
         : ptr_(ptr)
@@ -55,19 +57,82 @@ private:
 };
 
 
+template <typename _Ty, typename _FlagTy>
+class Property<_Ty, Flag<_FlagTy>>
+{
+public:
+    typedef _Ty           value_type;
+    typedef Flag<_FlagTy> notifier_type;
+
+    inline Property(_Ty* ptr, Flag<_FlagTy>* flag, _FlagTy flag_value)
+        : ptr_(ptr)
+        , flag_(flag)
+        , flag_value_(flag_value)
+    {
+    }
+
+    inline _Ty Get() const
+    {
+        return *ptr_;
+    }
+
+    inline void Set(const _Ty& value)
+    {
+        *ptr_ = value;
+        if (flag_)
+        {
+            flag_->Set(flag_value_);
+        }
+    }
+
+private:
+    _Ty*           ptr_;
+    Flag<_FlagTy>* flag_;
+    _FlagTy        flag_value_;
+};
+
+
+template <typename _Ty>
+class Property<_Ty, Function<void()>>
+{
+public:
+    typedef _Ty              value_type;
+    typedef Function<void()> notifier_type;
+
+    inline Property(_Ty* ptr, const Function<void()>& notifier)
+        : ptr_(ptr)
+        , notifier_(notifier)
+    {
+    }
+
+    inline _Ty Get() const
+    {
+        return *ptr_;
+    }
+
+    inline void Set(const _Ty& value)
+    {
+        *ptr_ = value;
+        if (notifier_)
+        {
+            notifier_();
+        }
+    }
+
+private:
+    _Ty*             ptr_;
+    Function<void()> notifier_;
+};
+
+
 template <typename _Ty, typename _NotifierTy>
 class Property
 {
 public:
+    static_assert(std::is_arithmetic<_NotifierTy>::value, "_NotifierTy must be an arithmetic type");
+
     typedef _Ty         value_type;
     typedef _NotifierTy notifier_type;
-
-    inline Property(_Ty* ptr)
-        : ptr_(ptr)
-        , notifier_(nullptr)
-        , notify_value_()
-    {
-    }
 
     inline Property(_Ty* ptr, _NotifierTy* notifier, _NotifierTy notify_value)
         : ptr_(ptr)

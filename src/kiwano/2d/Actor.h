@@ -502,6 +502,13 @@ public:
         return Property<Point, FlagUint8>(&transform_.skew, &dirty_flag_, DirtyFlag::DirtyTransform);
     }
 
+    /// \~chinese
+    /// @brief 获取Z轴顺序属性
+    inline Property<int, Function<void()>> ZOrderProperty()
+    {
+        return Property<int, Function<void()>>(&z_order_, Closure(this, &Actor::Reorder));
+    }
+
 protected:
     /// \~chinese
     /// @brief 更新自身和所有子角色
