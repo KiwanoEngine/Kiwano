@@ -357,13 +357,13 @@
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\Property.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\BitOperator.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Flag.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Value.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

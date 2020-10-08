@@ -448,65 +448,65 @@ public:
 
     /// \~chinese
     /// @brief 获取可见性属性
-    inline Property<bool> VisibleProperty()
+    inline Value<bool> VisibleProperty()
     {
-        return Property<bool>(&visible_);
+        return Value<bool>(visible_);
     }
 
     /// \~chinese
     /// @brief 获取不透明度属性
-    inline Property<float, FlagUint8> OpacityProperty()
+    inline Value<float, FlagUint8> OpacityProperty()
     {
-        return Property<float, FlagUint8>(&opacity_, &dirty_flag_, DirtyFlag::DirtyOpacity);
+        return Value<float, FlagUint8>(opacity_, { dirty_flag_, DirtyFlag::DirtyOpacity });
     }
 
     /// \~chinese
     /// @brief 获取锚点属性
-    inline Property<Point, FlagUint8> AnchorProperty()
+    inline Value<Point, FlagUint8> AnchorProperty()
     {
-        return Property<Point, FlagUint8>(&anchor_, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<Point, FlagUint8>(anchor_, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取大小属性
-    inline Property<Size, FlagUint8> SizeProperty()
+    inline Value<Size, FlagUint8> SizeProperty()
     {
-        return Property<Size, FlagUint8>(&size_, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<Size, FlagUint8>(size_, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取位置属性
-    inline Property<Point, FlagUint8> PositionProperty()
+    inline Value<Point, FlagUint8> PositionProperty()
     {
-        return Property<Point, FlagUint8>(&transform_.position, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<Point, FlagUint8>(transform_.position, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取旋转角度属性
-    inline Property<float, FlagUint8> RotationProperty()
+    inline Value<float, FlagUint8> RotationProperty()
     {
-        return Property<float, FlagUint8>(&transform_.rotation, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<float, FlagUint8>(transform_.rotation, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取缩放属性
-    inline Property<Point, FlagUint8> ScaleProperty()
+    inline Value<Point, FlagUint8> ScaleProperty()
     {
-        return Property<Point, FlagUint8>(&transform_.scale, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<Point, FlagUint8>(transform_.scale, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取错切角度属性
-    inline Property<Point, FlagUint8> SkewProperty()
+    inline Value<Point, FlagUint8> SkewProperty()
     {
-        return Property<Point, FlagUint8>(&transform_.skew, &dirty_flag_, DirtyFlag::DirtyTransform);
+        return Value<Point, FlagUint8>(transform_.skew, { dirty_flag_, DirtyFlag::DirtyTransform });
     }
 
     /// \~chinese
     /// @brief 获取Z轴顺序属性
-    inline Property<int, Function<void()>> ZOrderProperty()
+    inline Value<int, Function<void()>> ZOrderProperty()
     {
-        return Property<int, Function<void()>>(&z_order_, Closure(this, &Actor::Reorder));
+        return Value<int, Function<void()>>(z_order_, Closure(this, &Actor::Reorder));
     }
 
 protected:

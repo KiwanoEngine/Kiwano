@@ -119,9 +119,9 @@ public:
 
     /// \~chinese
     /// @brief ªÒ»°ÕºœÒ÷° Ù–‘
-    inline Property<FramePtr, Function<void()>> FrameProperty()
+    inline Value<FramePtr, Function<void()>> FrameProperty()
     {
-        return Property<FramePtr, Function<void()>>(std::addressof(frame_), Closure(this, &Sprite::ResetSize));
+        return Value<FramePtr, Function<void()>>(frame_, Closure(this, &Sprite::ResetSize));
     }
 
     void OnRender(RenderContext& ctx) override;
