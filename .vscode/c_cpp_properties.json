@@ -3,7 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/src/**"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/3rd-party"
             ],
             "defines": [
                 "TARGET_OS_MAC"
@@ -19,7 +20,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/src/**"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/3rd-party"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

@@ -24,6 +24,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Cloneable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Common.h" />
     <ClInclude Include="..\..\src\kiwano\core\Defer.h" />
+    <ClInclude Include="..\..\src\kiwano\core\Duration.h" />
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Flag.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\RefObject.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Allocator.cpp" />
+    <ClCompile Include="..\..\src\kiwano\core\Duration.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Exception.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Library.cpp" />
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp" />

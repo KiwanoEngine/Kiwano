@@ -77,7 +77,7 @@ void DebugActor::OnRender(RenderContext& ctx)
     ctx.DrawTextLayout(debug_text_, Point(10, 10));
 
     frame_buffer_.PushBack(Time::Now());
-    while (frame_buffer_.Back() - frame_buffer_.Front() >= Duration::Second)
+    while (frame_buffer_.Back() - frame_buffer_.Front() >= time::Second)
     {
         frame_buffer_.PopFront();
     }

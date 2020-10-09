@@ -132,6 +132,9 @@
     <ClInclude Include="..\..\src\kiwano\core\Time.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Duration.h">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\Brush.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -598,6 +601,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\Duration.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
