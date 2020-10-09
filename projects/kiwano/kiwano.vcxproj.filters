@@ -37,6 +37,9 @@
     <Filter Include="base\component">
       <UniqueIdentifier>{d15f4de1-7c2c-40d6-a3ce-68860b95a61e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2d\animation">
+      <UniqueIdentifier>{254c8f6b-8a27-4241-bae1-39cee771ccde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
@@ -369,6 +372,24 @@
     <ClInclude Include="..\..\src\kiwano\core\Value.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\Animation.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\Interpolator.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\Key.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\TweenAnimation.h">
+      <Filter>2d\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -604,6 +625,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Duration.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\animation\Animation.cpp">
+      <Filter>2d\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\animation\EaseFunc.cpp">
+      <Filter>2d\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp">
+      <Filter>2d\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\animation\TweenAnimation.cpp">
+      <Filter>2d\animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
