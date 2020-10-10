@@ -34,7 +34,7 @@ bool EventDispatcher::DispatchEvent(Event* evt)
         next = listener->GetNext();
 
         if (listener->IsRunning())
-            listener->Receive(evt);
+            listener->Handle(evt);
 
         if (listener->IsRemoveable())
             listeners_.Remove(listener);
@@ -58,13 +58,13 @@ EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
 
 EventListener* EventDispatcher::AddListener(const String& name, EventType type, EventListener::Callback callback)
 {
-    auto lis = MakePtr<EventListener>(name, type, callback);
+    auto lis = EventListener::Create(name, type, callback);
     return AddListener(lis);
 }
 
 EventListener* EventDispatcher::AddListener(EventType type, EventListener::Callback callback)
 {
-    auto lis = MakePtr<EventListener>(type, callback);
+    auto lis = EventListener::Create(type, callback);
     return AddListener(lis);
 }
 
@@ -95,39 +95,6 @@ void EventDispatcher::RemoveListeners(const String& name)
     for (auto& listener : listeners_)
     {
         if (listener->IsName(name))
-        {
-            listener->Remove();
-        }
-    }
-}
-
-void EventDispatcher::StartListeners(const EventType& type)
-{
-    for (auto& listener : listeners_)
-    {
-        if (listener->GetEventType() == type)
-        {
-            listener->Start();
-        }
-    }
-}
-
-void EventDispatcher::StopListeners(const EventType& type)
-{
-    for (auto& listener : listeners_)
-    {
-        if (listener->GetEventType() == type)
-        {
-            listener->Stop();
-        }
-    }
-}
-
-void EventDispatcher::RemoveListeners(const EventType& type)
-{
-    for (auto& listener : listeners_)
-    {
-        if (listener->GetEventType() == type)
         {
             listener->Remove();
         }
