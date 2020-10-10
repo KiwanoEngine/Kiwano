@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/animation/KeyFrame.h>
+#include <kiwano/2d/SpriteFrame.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/RenderContext.h>
 
@@ -163,6 +163,19 @@ public:
     /// @param size 绘制的目标大小
     /// @param crop_rect 纹理裁剪矩形
     void DrawTexture(TexturePtr texture, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
+
+    /// \~chinese
+    /// @brief 绘制精灵帧
+    /// @param frame 精灵帧
+    /// @param pos 绘制的目标位置
+    void DrawSpriteFrame(const SpriteFrame& frame, const Point& pos);
+
+    /// \~chinese
+    /// @brief 绘制精灵帧
+    /// @param frame 精灵帧
+    /// @param pos 绘制的目标位置
+    /// @param size 绘制的目标大小
+    void DrawSpriteFrame(const SpriteFrame& frame, const Point& pos, const Size& size);
 
     /// \~chinese
     /// @brief 绘制文字布局
@@ -400,6 +413,16 @@ inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& po
     {
         ctx_->DrawTexture(*texture, crop_rect, &Rect(pos, size));
     }
+}
+
+inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const Point& pos)
+{
+    this->DrawSpriteFrame(frame, pos, frame.GetCropRect().GetSize());
+}
+
+inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const Point& pos, const Size& size)
+{
+    this->DrawTexture(frame.GetTexture(), pos, size, &frame.GetCropRect());
 }
 
 inline void CanvasRenderContext::DrawTextLayout(const String& text, const TextStyle& style, const Point& point)

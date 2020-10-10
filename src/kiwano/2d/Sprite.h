@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/animation/KeyFrame.h>
+#include <kiwano/2d/SpriteFrame.h>
 
 namespace kiwano
 {
@@ -74,6 +74,11 @@ public:
     /// @param crop_rect 裁剪矩形
     Sprite(TexturePtr texture, const Rect& crop_rect);
 
+    /// \~chinese
+    /// @brief 创建精灵
+    /// @param frame 精灵帧
+    Sprite(const SpriteFrame& frame);
+
     virtual ~Sprite();
 
     /// \~chinese
@@ -95,9 +100,8 @@ public:
     Rect GetCropRect() const;
 
     /// \~chinese
-    /// @brief 设置图像并重置裁剪矩形
-    /// @param[in] texture 图像
-    void SetTexture(TexturePtr texture);
+    /// @brief 获取精灵帧
+    SpriteFrame GetFrame() const;
 
     /// \~chinese
     /// @brief 使用矩形区域裁剪精灵
@@ -105,9 +109,9 @@ public:
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief 设置关键帧
-    /// @param[in] frame 关键帧
-    void SetKeyFrame(KeyFramePtr frame);
+    /// @brief 设置精灵帧
+    /// @param[in] frame 精灵帧
+    void SetFrame(const SpriteFrame& frame);
 
     void OnRender(RenderContext& ctx) override;
 
@@ -115,35 +119,29 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    TexturePtr texture_;
-    Rect       crop_rect_;
+    SpriteFrame frame_;
 };
 
 /** @} */
 
 inline TexturePtr Sprite::GetTexture() const
 {
-    return texture_;
+    return frame_.GetTexture();
 }
 
 inline Rect Sprite::GetCropRect() const
 {
-    return crop_rect_;
+    return frame_.GetCropRect();
+}
+
+inline SpriteFrame Sprite::GetFrame() const
+{
+    return frame_;
 }
 
 inline void Sprite::SetCropRect(const Rect& crop_rect)
 {
-    crop_rect_ = crop_rect;
-    SetSize(crop_rect.GetSize());
-}
-
-inline void Sprite::SetKeyFrame(KeyFramePtr frame)
-{
-    if (frame)
-    {
-        SetTexture(frame->GetTexture());
-        SetCropRect(frame->GetCropRect());
-    }
+    frame_.SetCropRect(crop_rect);
 }
 
 }  // namespace kiwano

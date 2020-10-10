@@ -19,53 +19,54 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/Common.h>
+#include <kiwano/math/Math.h>
 #include <kiwano/render/Texture.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(KeyFrame);
 
 /**
  * \~chinese
- * @brief 关键帧
+ * @brief 精灵帧
  */
-class KGE_API KeyFrame : public ObjectBase
+class KGE_API SpriteFrame
 {
 public:
-    KeyFrame();
+    SpriteFrame();
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param file_path 图像路径
-    KeyFrame(const String& file_path);
+    SpriteFrame(const String& file_path);
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param res 图像资源
-    KeyFrame(const Resource& res);
+    SpriteFrame(const Resource& res);
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param texture 纹理
-    KeyFrame(TexturePtr texture);
+    SpriteFrame(TexturePtr texture);
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param file_path 图像路径
     /// @param crop_rect 裁剪矩形
-    KeyFrame(const String& file_path, const Rect& crop_rect);
+    SpriteFrame(const String& file_path, const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param res 图像资源
     /// @param crop_rect 裁剪矩形
-    KeyFrame(const Resource& res, const Rect& crop_rect);
+    SpriteFrame(const Resource& res, const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief 创建关键帧
+    /// @brief 创建精灵帧
     /// @param texture 纹理
     /// @param crop_rect 裁剪矩形
-    KeyFrame(TexturePtr texture, const Rect& crop_rect);
+    SpriteFrame(TexturePtr texture, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 加载图像
@@ -82,16 +83,6 @@ public:
     bool IsValid() const;
 
     /// \~chinese
-    /// @brief 裁剪关键帧为矩形
-    /// @param crop_rect 裁剪矩形
-    void SetCropRect(const Rect& crop_rect);
-
-    /// \~chinese
-    /// @brief 设置纹理
-    /// @param texture 纹理
-    void SetTexture(TexturePtr texture);
-
-    /// \~chinese
     /// @brief 获取裁剪矩形
     const Rect& GetCropRect() const;
 
@@ -99,24 +90,52 @@ public:
     /// @brief 获取纹理
     TexturePtr GetTexture() const;
 
+    /// \~chinese
+    /// @brief 获取精灵帧大小
+    Size GetSize() const;
+
+    /// \~chinese
+    /// @brief 裁剪精灵帧为矩形
+    /// @param crop_rect 裁剪矩形
+    void SetCropRect(const Rect& crop_rect);
+
+    /// \~chinese
+    /// @brief 设置纹理并重置裁剪矩形
+    /// @param texture 纹理
+    void SetTexture(TexturePtr texture);
+
+    /// \~chinese
+    /// @brief 按行列分割精灵帧
+    /// @param cols 列数
+    /// @param rows 行数
+    /// @param max_num 最大帧数量，设-1为将分割后的图像全部作为序列帧
+    /// @param padding_x X方向间隔
+    /// @param padding_y Y方向间隔
+    Vector<SpriteFrame> Split(int cols, int rows, int max_num = -1, float padding_x = 0, float padding_y = 0);
+
 private:
     TexturePtr texture_;
     Rect       crop_rect_;
 };
 
-inline bool KeyFrame::IsValid() const
+inline bool SpriteFrame::IsValid() const
 {
     return texture_ && texture_->IsValid();
 }
 
-inline const Rect& KeyFrame::GetCropRect() const
+inline const Rect& SpriteFrame::GetCropRect() const
 {
     return crop_rect_;
 }
 
-inline TexturePtr KeyFrame::GetTexture() const
+inline TexturePtr SpriteFrame::GetTexture() const
 {
     return texture_;
+}
+
+inline Size SpriteFrame::GetSize() const
+{
+    return crop_rect_.GetSize();
 }
 
 }  // namespace kiwano

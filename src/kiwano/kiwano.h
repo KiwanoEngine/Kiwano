@@ -98,6 +98,7 @@
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>
+#include <kiwano/2d/SpriteFrame.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/TextActor.h>
@@ -112,7 +113,6 @@
 #include <kiwano/2d/animation/AnimationGroup.h>
 #include <kiwano/2d/animation/TweenAnimation.h>
 #include <kiwano/2d/animation/PathAnimation.h>
-#include <kiwano/2d/animation/KeyFrame.h>
 #include <kiwano/2d/animation/FrameSequence.h>
 #include <kiwano/2d/animation/FrameAnimation.h>
 #include <kiwano/2d/animation/Animator.h>

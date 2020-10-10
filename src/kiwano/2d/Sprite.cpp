@@ -38,35 +38,37 @@ Sprite::Sprite(const Resource& res)
 
 Sprite::Sprite(TexturePtr texture)
 {
-    SetTexture(texture);
+    SetFrame(SpriteFrame(texture));
 }
 
 Sprite::Sprite(const String& file_path, const Rect& crop_rect)
-    : Sprite(file_path)
 {
-    SetCropRect(crop_rect);
+    SetFrame(SpriteFrame(file_path, crop_rect));
 }
 
 Sprite::Sprite(const Resource& res, const Rect& crop_rect)
-    : Sprite(res)
 {
-    SetCropRect(crop_rect);
+    SetFrame(SpriteFrame(res, crop_rect));
 }
 
 Sprite::Sprite(TexturePtr texture, const Rect& crop_rect)
 {
-    SetTexture(texture);
-    SetCropRect(crop_rect);
+    SetFrame(SpriteFrame(texture, crop_rect));
+}
+
+Sprite::Sprite(const SpriteFrame& frame)
+{
+    SetFrame(frame);
 }
 
 Sprite::~Sprite() {}
 
 bool Sprite::Load(const String& file_path)
 {
-    TexturePtr texture = MakePtr<Texture>(file_path);
-    if (texture && texture->IsValid())
+    SpriteFrame frame(file_path);
+    if (frame.IsValid())
     {
-        SetTexture(texture);
+        SetFrame(frame);
         return true;
     }
     Fail("Sprite::Load failed");
@@ -75,39 +77,38 @@ bool Sprite::Load(const String& file_path)
 
 bool Sprite::Load(const Resource& res)
 {
-    TexturePtr texture = MakePtr<Texture>(res);
-    if (texture && texture->IsValid())
+    SpriteFrame frame(res);
+    if (frame.IsValid())
     {
-        SetTexture(texture);
+        SetFrame(frame);
         return true;
     }
     Fail("Sprite::Load failed");
     return false;
 }
 
-void Sprite::SetTexture(TexturePtr texture)
+void Sprite::SetFrame(const SpriteFrame& frame)
 {
-    texture_ = texture;
+    frame_ = frame;
+    SetSize(frame_.GetSize());
 
-    Size texture_size;
-    if (texture_)
+    if (!frame_.IsValid())
     {
-        texture_size = texture_->GetSize();
+        Fail("Sprite::SetFrame failed");
     }
-    // ÖØÖÃ²Ã¼ô¾ØÐÎ
-    SetCropRect(Rect(Point(), texture_size));
 }
 
 void Sprite::OnRender(RenderContext& ctx)
 {
-    if (texture_ && texture_->IsValid())
+    if (frame_.IsValid())
     {
-        ctx.DrawTexture(*texture_, &crop_rect_, &GetBounds());
+        ctx.DrawTexture(*frame_.GetTexture(), &frame_.GetCropRect(), &GetBounds());
     }
 }
 
 bool Sprite::CheckVisibility(RenderContext& ctx) const
 {
-    return texture_ && texture_->IsValid() && Actor::CheckVisibility(ctx);
+    return frame_.IsValid() && Actor::CheckVisibility(ctx);
 }
+
 }  // namespace kiwano

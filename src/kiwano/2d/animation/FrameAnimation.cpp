@@ -26,12 +26,14 @@ namespace kiwano
 
 FrameAnimation::FrameAnimation()
     : frame_seq_(nullptr)
+    , current_index_(0)
 {
 }
 
 FrameAnimation::FrameAnimation(Duration dur, FrameSequencePtr frame_seq)
     : TweenAnimation(dur)
     , frame_seq_(frame_seq)
+    , current_index_(0)
 {
 }
 
@@ -61,7 +63,7 @@ void FrameAnimation::Init(Actor* target)
 
     if (sprite_target && frame_seq_)
     {
-        sprite_target->SetKeyFrame(frame_seq_->GetFrames()[0]);
+        sprite_target->SetFrame(frame_seq_->GetFrames()[0]);
         current_index_ = 0;
     }
 }
@@ -79,7 +81,7 @@ void FrameAnimation::UpdateTween(Actor* target, float percent)
         if (index != current_index_)
         {
             current_index_ = index;
-            sprite_target->SetKeyFrame(frames[index]);
+            sprite_target->SetFrame(frames[index]);
         }
     }
 }

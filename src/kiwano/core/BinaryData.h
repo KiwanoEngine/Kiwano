@@ -19,65 +19,32 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/core/Common.h>
 
 namespace kiwano
 {
 
-/**
- * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
- */
-class KGE_API Resource
+/// \~chinese
+/// @brief 二进制数据
+struct KGE_API BinaryData
 {
-public:
+    void*    buffer;  ///< 数据
+    uint32_t size;    ///< 数据大小
 
-    /// \~chinese
-    /// @brief 构造资源
-    Resource();
+    BinaryData();
 
-    /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
-
-    /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
-
-    /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
-
-    /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
-
-private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
+    bool IsValid() const;
 };
 
-inline uint32_t Resource::GetId() const
+inline BinaryData::BinaryData()
+    : buffer(nullptr)
+    , size(0)
 {
-    return id_;
 }
 
-inline String Resource::GetType() const
+inline bool BinaryData::IsValid() const
 {
-    return type_;
+    return buffer != nullptr && size != 0;
 }
+
 }  // namespace kiwano

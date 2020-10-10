@@ -51,12 +51,11 @@ enum class AnimationEvent
     Started,   ///< 动画开始
     LoopDone,  ///< 动画一次循环结束
     Done,      ///< 动画结束
-    Removed,   ///< 动画被移除
 };
 
 /// \~chinese
 /// @brief 动画事件处理器
-class KGE_API AnimationEventHandler : public ObjectBase
+class KGE_API AnimationEventHandler : public RefObject
 {
 public:
     /// \~chinese
@@ -65,6 +64,32 @@ public:
     /// @param target 执行动画的对象
     /// @param evt 动画事件
     virtual void Handle(Animation* anim, Actor* target, AnimationEvent evt) = 0;
+
+    /// \~chinese
+    /// @brief 创建动画事件处理器
+    /// @param handler 处理动画事件回调函数
+    static AnimationEventHandlerPtr Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler);
+
+    /// \~chinese
+    /// @brief 创建动画事件处理器
+    /// @param evt 处理的动画事件
+    /// @param handler 处理动画事件回调函数
+    static AnimationEventHandlerPtr Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler);
+
+    /// \~chinese
+    /// @brief 创建Started动画事件处理器
+    /// @param handler 处理动画事件回调函数
+    static AnimationEventHandlerPtr HandleStarted(const Function<void(Animation*, Actor*)>& handler);
+
+    /// \~chinese
+    /// @brief 创建LoopDone动画事件处理器
+    /// @param handler 处理动画事件回调函数
+    static AnimationEventHandlerPtr HandleLoopDone(const Function<void(Animation*, Actor*)>& handler);
+
+    /// \~chinese
+    /// @brief 创建Done动画事件处理器
+    /// @param handler 处理动画事件回调函数
+    static AnimationEventHandlerPtr HandleDone(const Function<void(Animation*, Actor*)>& handler);
 };
 
 /// \~chinese

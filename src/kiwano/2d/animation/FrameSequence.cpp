@@ -28,24 +28,24 @@ FrameSequence::FrameSequence() {}
 
 FrameSequence::~FrameSequence() {}
 
-FrameSequence::FrameSequence(const Vector<KeyFramePtr>& frames)
+FrameSequence::FrameSequence(const Vector<SpriteFrame>& frames)
 {
     AddFrames(frames);
 }
 
-void FrameSequence::AddFrame(KeyFramePtr frame)
+void FrameSequence::AddFrame(const SpriteFrame& frame)
 {
-    if (frame)
+    if (frame.IsValid())
     {
         frames_.push_back(frame);
     }
     else
     {
-        Fail("FrameSequence::Add failed, NULL pointer exception");
+        Fail("FrameSequence::AddFrame failed, frame is invalid");
     }
 }
 
-void FrameSequence::AddFrames(const Vector<KeyFramePtr>& frames)
+void FrameSequence::AddFrames(const Vector<SpriteFrame>& frames)
 {
     if (frames_.empty())
         frames_ = frames;
@@ -57,13 +57,13 @@ void FrameSequence::AddFrames(const Vector<KeyFramePtr>& frames)
     }
 }
 
-KeyFramePtr FrameSequence::GetFrame(size_t index) const
+const SpriteFrame& FrameSequence::GetFrame(size_t index) const
 {
     KGE_ASSERT(index < frames_.size());
     return frames_[index];
 }
 
-const Vector<KeyFramePtr>& FrameSequence::GetFrames() const
+const Vector<SpriteFrame>& FrameSequence::GetFrames() const
 {
     return frames_;
 }
@@ -94,64 +94,6 @@ FrameSequencePtr FrameSequence::Reverse() const
         }
     }
     return frame_seq;
-}
-
-KeyFrameSpliter::KeyFrameSpliter(TexturePtr texture)
-    : texture(texture)
-{
-    if (texture)
-    {
-        crop_rect = Rect(Point(), texture->GetSize());
-    }
-}
-
-KeyFrameSpliter::KeyFrameSpliter(TexturePtr texture, const Rect& crop_rect)
-    : texture(texture)
-    , crop_rect(crop_rect)
-{
-}
-
-Vector<KeyFramePtr> KeyFrameSpliter::Split(int cols, int rows, int max_num, float padding_x, float padding_y)
-{
-    if (cols <= 0 || rows <= 0 || max_num == 0)
-        return {};
-
-    if (!texture)
-        return {};
-
-    float raw_width  = crop_rect.GetWidth();
-    float raw_height = crop_rect.GetHeight();
-    float width      = (raw_width - (cols - 1) * padding_x) / cols;
-    float height     = (raw_height - (rows - 1) * padding_y) / rows;
-
-    Vector<KeyFramePtr> frames;
-    frames.reserve((max_num > 0) ? max_num : (rows * cols));
-
-    int current_num = 0;
-
-    float dty = crop_rect.GetTop();
-    for (int i = 0; i < rows; i++)
-    {
-        float dtx = crop_rect.GetLeft();
-
-        for (int j = 0; j < cols; j++)
-        {
-            KeyFramePtr ptr = MakePtr<KeyFrame>();
-            if (ptr)
-            {
-                ptr->SetTexture(texture);
-                ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
-                frames.push_back(ptr);
-                ++current_num;
-            }
-            dtx += (width + padding_x);
-        }
-        dty += (height + padding_y);
-
-        if (max_num > 0 && current_num == max_num)
-            break;
-    }
-    return frames;
 }
 
 }  // namespace kiwano

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Resource.h>
+#include <kiwano/core/BinaryData.h>
 #include <kiwano/render/DirectX/helper.h>
 #include <dwrite.h>
 
@@ -52,7 +52,7 @@ public:
                           IDWriteFontFileLoader * pFileLoader);
 
     STDMETHOD(AddResources)
-    (const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
+    (const Vector<BinaryData>& data, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("08D21408-6FC1-4E36-A4EB-4DA16BE3399E") IResourceFontFileLoader
@@ -69,13 +69,14 @@ public:
     static HRESULT Create(_Out_ IResourceFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory,
                           IDWriteFontFileLoader * pFileLoader);
 
-    STDMETHOD(SetResources)(const Vector<Resource>& resources) PURE;
+    STDMETHOD(SetResources)(const Vector<BinaryData>& data) PURE;
 };
 
 interface DWRITE_DECLARE_INTERFACE("A6267450-27F3-4948-995F-FF8345A72F88") IResourceFontFileStream
     : public IDWriteFontFileStream
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileStream * *ppStream, const Resource resource);
+    static HRESULT Create(_Out_ IResourceFontFileStream * *ppStream, const BinaryData& data);
 };
+
 }  // namespace kiwano

@@ -344,7 +344,7 @@ public:
     }
 
     STDMETHOD(AddResources)
-    (const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
+    (const Vector<BinaryData>& data, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize);
 
     // IDWriteFontCollectionLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(IDWriteFactory* pFactory, void const* collectionKey,
@@ -360,7 +360,7 @@ private:
     ULONG                  refCount_;
     IDWriteFontFileLoader* pFileLoader_;
 
-    typedef Vector<Resource>   ResourceCollection;
+    typedef Vector<BinaryData> ResourceCollection;
     Vector<ResourceCollection> resources_;
     Vector<size_t>             collectionKeys_;
 };
@@ -389,7 +389,8 @@ HRESULT IResourceFontCollectionLoader::Create(_Out_ IResourceFontCollectionLoade
     return hr;
 }
 
-STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<Resource>& resources, _Out_ LPVOID* pCollectionKey,
+STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<BinaryData>& data,
+                                                        _Out_ LPVOID* pCollectionKey,
                                                         _Out_ uint32_t* pCollectionKeySize)
 {
     if (!pCollectionKey || !pCollectionKeySize)
@@ -401,7 +402,7 @@ STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<Resource>& 
     {
         size_t collectionKey = resources_.size();
         collectionKeys_.push_back(collectionKey);
-        resources_.push_back(resources);
+        resources_.push_back(data);
 
         *pCollectionKey     = reinterpret_cast<LPVOID>(&collectionKeys_.back());
         *pCollectionKeySize = sizeof(collectionKey);
@@ -423,7 +424,7 @@ HRESULT STDMETHODCALLTYPE ResourceFontCollectionLoader::CreateEnumeratorFromKey(
 {
     HRESULT hr = S_OK;
 
-    if (collectionKey == NULL || collectionKeySize % sizeof(Resource*) != 0)
+    if (collectionKey == NULL || collectionKeySize % sizeof(BinaryData*) != 0)
         hr = E_INVALIDARG;
 
     if (SUCCEEDED(hr))
@@ -533,14 +534,14 @@ HRESULT STDMETHODCALLTYPE ResourceFontFileLoader::CreateStreamFromKey(void const
     HRESULT hr = S_OK;
 
     // Make sure the key is the right size.
-    if (fontFileReferenceKeySize != sizeof(Resource))
+    if (fontFileReferenceKeySize != sizeof(BinaryData))
         hr = E_INVALIDARG;
 
     if (SUCCEEDED(hr))
     {
         // Create the pFileStream object.
         IResourceFontFileStream* pFileStream = NULL;
-        Resource                 resource    = *static_cast<Resource const*>(fontFileReferenceKey);
+        BinaryData               resource    = *static_cast<BinaryData const*>(fontFileReferenceKey);
 
         hr = IResourceFontFileStream::Create(&pFileStream, resource);
 
@@ -601,7 +602,7 @@ public:
 
     STDMETHOD(Initialize)(IDWriteFactory* pFactory, IDWriteFontFileLoader* pLoader);
 
-    STDMETHOD(SetResources)(const Vector<Resource>& resources);
+    STDMETHOD(SetResources)(const Vector<BinaryData>& data);
 
     // IDWriteFontFileEnumerator methods
     virtual HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile);
@@ -618,7 +619,7 @@ private:
     IDWriteFactory*        pFactory_;
     IDWriteFontFile*       currentFile_;
     IDWriteFontFileLoader* pLoader_;
-    Vector<Resource>       resources_;
+    Vector<BinaryData>     resources_;
     uint32_t               nextIndex_;
 };
 
@@ -671,11 +672,11 @@ STDMETHODIMP ResourceFontFileEnumerator::Initialize(IDWriteFactory* pFactory, ID
     return E_INVALIDARG;
 }
 
-STDMETHODIMP ResourceFontFileEnumerator::SetResources(const Vector<Resource>& resources)
+STDMETHODIMP ResourceFontFileEnumerator::SetResources(const Vector<BinaryData>& data)
 {
     try
     {
-        resources_.assign(resources.begin(), resources.end());
+        resources_.assign(data.begin(), data.end());
     }
     catch (std::bad_alloc&)
     {
@@ -697,7 +698,7 @@ HRESULT STDMETHODCALLTYPE ResourceFontFileEnumerator::MoveNext(_Out_ BOOL* hasCu
 
     if (nextIndex_ < resources_.size())
     {
-        hr = pFactory_->CreateCustomFontFileReference(&resources_[nextIndex_], sizeof(Resource), pLoader_,
+        hr = pFactory_->CreateCustomFontFileReference(&resources_[nextIndex_], sizeof(BinaryData), pLoader_,
                                                       &currentFile_);
 
         if (SUCCEEDED(hr))
@@ -758,7 +759,7 @@ class ResourceFontFileStream : public IResourceFontFileStream
 public:
     ResourceFontFileStream();
 
-    STDMETHOD(Initialize)(Resource const resources);
+    STDMETHOD(Initialize)(const BinaryData& data);
 
     // IDWriteFontFileStream methods
     virtual HRESULT STDMETHODCALLTYPE ReadFileFragment(void const** fragmentStart, UINT64 fileOffset,
@@ -781,7 +782,7 @@ private:
     DWORD  resourceSize_;
 };
 
-HRESULT IResourceFontFileStream::Create(_Out_ IResourceFontFileStream** ppStream, const Resource resource)
+HRESULT IResourceFontFileStream::Create(_Out_ IResourceFontFileStream** ppStream, const BinaryData& data)
 {
     HRESULT hr = S_OK;
 
@@ -797,7 +798,7 @@ HRESULT IResourceFontFileStream::Create(_Out_ IResourceFontFileStream** ppStream
 
         if (SUCCEEDED(hr))
         {
-            hr = pFileStream->Initialize(resource);
+            hr = pFileStream->Initialize(data);
         }
 
         if (SUCCEEDED(hr))
@@ -816,10 +817,9 @@ ResourceFontFileStream::ResourceFontFileStream()
 {
 }
 
-STDMETHODIMP ResourceFontFileStream::Initialize(const Resource resource)
+STDMETHODIMP ResourceFontFileStream::Initialize(const BinaryData& data)
 {
-    Resource::Data data = resource.GetData();
-    HRESULT        hr   = data.IsValid() ? S_OK : E_FAIL;
+    HRESULT hr = data.IsValid() ? S_OK : E_FAIL;
 
     if (SUCCEEDED(hr))
     {

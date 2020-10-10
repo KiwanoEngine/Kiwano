@@ -124,4 +124,71 @@ void Animation::DoClone(Animation* to) const
     }
 }
 
+AnimationEventHandlerPtr AnimationEventHandler::Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler)
+{
+    class CallbackAnimationEventHandler : public AnimationEventHandler
+    {
+    public:
+        typedef Function<void(Animation*, Actor*, AnimationEvent)> Callback;
+
+        Callback handler;
+
+        CallbackAnimationEventHandler(const Callback& handler) : handler(handler) {}
+
+        void Handle(Animation* anim, Actor* target, AnimationEvent evt) override
+        {
+            if (handler)
+            {
+                handler(anim, target, evt);
+            }
+        }
+    };
+    return AnimationEventHandlerPtr(new CallbackAnimationEventHandler(handler));
+}
+
+AnimationEventHandlerPtr AnimationEventHandler::Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler)
+{
+    class OneEventAnimationEventHandler : public AnimationEventHandler
+    {
+    public:
+        typedef Function<void(Animation*, Actor*)> Callback;
+
+        AnimationEvent evt;
+        Callback       handler;
+
+        OneEventAnimationEventHandler(AnimationEvent evt, const Callback& handler)
+            : handler(handler)
+            , evt(evt)
+        {
+        }
+
+        void Handle(Animation* anim, Actor* target, AnimationEvent evt) override
+        {
+            if (this->evt != evt)
+                return;
+
+            if (handler)
+            {
+                handler(anim, target);
+            }
+        }
+    };
+    return AnimationEventHandlerPtr(new OneEventAnimationEventHandler(evt, handler));
+}
+
+AnimationEventHandlerPtr AnimationEventHandler::HandleStarted(const Function<void(Animation*, Actor*)>& handler)
+{
+    return AnimationEventHandler::Create(AnimationEvent::Started, handler);
+}
+
+AnimationEventHandlerPtr AnimationEventHandler::HandleLoopDone(const Function<void(Animation*, Actor*)>& handler)
+{
+    return AnimationEventHandler::Create(AnimationEvent::LoopDone, handler);
+}
+
+AnimationEventHandlerPtr AnimationEventHandler::HandleDone(const Function<void(Animation*, Actor*)>& handler)
+{
+    return AnimationEventHandler::Create(AnimationEvent::Done, handler);
+}
+
 }  // namespace kiwano

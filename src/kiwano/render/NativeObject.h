@@ -37,7 +37,7 @@ KGE_DECLARE_SMART_PTR(NativeObject);
 
 /**
  * \~chinese
- * @brief 含有本机指针的对象
+ * @brief 含有本地指针的对象
  */
 class KGE_API NativeObjectBase : public ObjectBase
 {

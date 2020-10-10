@@ -67,7 +67,7 @@ FontPtr Font::Preload(const Resource& resource)
     if (ptr)
     {
         Vector<String> family_names;
-        Renderer::GetInstance().CreateFontCollection(*ptr, family_names, resource);
+        Renderer::GetInstance().CreateFontCollection(*ptr, family_names, resource.GetData());
         if (ptr->IsValid())
         {
             FontCache::GetInstance().AddFont(hash_code, ptr);

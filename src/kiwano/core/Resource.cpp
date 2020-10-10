@@ -36,7 +36,7 @@ Resource::Resource(uint32_t id, const String& type)
 {
 }
 
-Resource::Data Resource::GetData() const
+BinaryData Resource::GetData() const
 {
     do
     {
