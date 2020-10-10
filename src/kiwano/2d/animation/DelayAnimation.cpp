@@ -18,29 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/action/ActionDelay.h>
+#include <kiwano/2d/animation/DelayAnimation.h>
 
 namespace kiwano
 {
 
-ActionDelay::ActionDelay(Duration delay)
-{
-    SetEntity(MakePtr<ActionDelayEntity>(delay));
-}
-
-ActionDelayEntity::ActionDelayEntity(Duration delay)
+DelayAnimation::DelayAnimation(Duration delay)
 {
     this->SetDelay(delay);
 }
 
-ActionDelayEntity* ActionDelayEntity::Clone() const
+DelayAnimation* DelayAnimation::Clone() const
 {
-    ActionDelayEntity* ptr = new ActionDelayEntity(GetDelay());
+    DelayAnimation* ptr = new DelayAnimation(GetDelay());
     DoClone(ptr);
     return ptr;
 }
 
-ActionDelayEntity* ActionDelayEntity::Reverse() const
+DelayAnimation* DelayAnimation::Reverse() const
 {
     return Clone();
 }

@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/Frame.h>
+#include <kiwano/2d/animation/KeyFrame.h>
 
 namespace kiwano
 {
@@ -53,8 +53,8 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵
-    /// @param frame 图像帧
-    Sprite(FramePtr frame);
+    /// @param texture 图像
+    Sprite(TexturePtr texture);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -68,35 +68,36 @@ public:
     /// @param crop_rect 裁剪矩形
     Sprite(const Resource& res, const Rect& crop_rect);
 
+    /// \~chinese
+    /// @brief 创建精灵
+    /// @param texture 图像
+    /// @param crop_rect 裁剪矩形
+    Sprite(TexturePtr texture, const Rect& crop_rect);
+
     virtual ~Sprite();
 
     /// \~chinese
-    /// @brief 加载本地图片
+    /// @brief 加载本地图片并重置裁剪矩形
     /// @param file_path 本地图片路径
-    /// @param autoresize 是否自动调整自身大小为图像大小
-    bool Load(const String& file_path, bool autoresize = true);
+    bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief 加载图像资源
+    /// @brief 加载图像资源并重置裁剪矩形
     /// @param res 图片资源
-    /// @param autoresize 是否自动调整自身大小为图像大小
-    bool Load(const Resource& res, bool autoresize = true);
+    bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief 获取图像原宽度
-    float GetSourceWidth() const;
-
-    /// \~chinese
-    /// @brief 获取图像原高度
-    float GetSourceHeight() const;
-
-    /// \~chinese
-    /// @brief 获取图像原大小
-    Size GetSourceSize() const;
+    /// @brief 获取图像
+    TexturePtr GetTexture() const;
 
     /// \~chinese
     /// @brief 获取裁剪矩形
     Rect GetCropRect() const;
+
+    /// \~chinese
+    /// @brief 设置图像并重置裁剪矩形
+    /// @param[in] texture 图像
+    void SetTexture(TexturePtr texture);
 
     /// \~chinese
     /// @brief 使用矩形区域裁剪精灵
@@ -104,25 +105,9 @@ public:
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief 获取帧图像
-    FramePtr GetFrame() const;
-
-    /// \~chinese
-    /// @brief 设置图像帧
-    /// @param[in] frame 图像帧
-    /// @param autoresize 是否自动调整自身大小为图像大小
-    void SetFrame(FramePtr frame, bool autoresize = true);
-
-    /// \~chinese
-    /// @brief 重置精灵大小为图像帧大小
-    void ResetSize();
-
-    /// \~chinese
-    /// @brief 获取图像帧属性
-    inline Value<FramePtr, Function<void()>> FrameProperty()
-    {
-        return Value<FramePtr, Function<void()>>(frame_, Closure(this, &Sprite::ResetSize));
-    }
+    /// @brief 设置关键帧
+    /// @param[in] frame 关键帧
+    void SetKeyFrame(KeyFramePtr frame);
 
     void OnRender(RenderContext& ctx) override;
 
@@ -130,13 +115,35 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    FramePtr frame_;
+    TexturePtr texture_;
+    Rect       crop_rect_;
 };
 
 /** @} */
 
-inline FramePtr Sprite::GetFrame() const
+inline TexturePtr Sprite::GetTexture() const
 {
-    return frame_;
+    return texture_;
 }
+
+inline Rect Sprite::GetCropRect() const
+{
+    return crop_rect_;
+}
+
+inline void Sprite::SetCropRect(const Rect& crop_rect)
+{
+    crop_rect_ = crop_rect;
+    SetSize(crop_rect.GetSize());
+}
+
+inline void Sprite::SetKeyFrame(KeyFramePtr frame)
+{
+    if (frame)
+    {
+        SetTexture(frame->GetTexture());
+        SetCropRect(frame->GetCropRect());
+    }
+}
+
 }  // namespace kiwano

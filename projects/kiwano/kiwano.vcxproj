@@ -1,20 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano\2d\action\Action.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionDelay.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionGroup.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionScheduler.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionWalk.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\ActionTween.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\action\Animation.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h" />
     <ClInclude Include="..\..\src\kiwano\2d\animation\Animation.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\animation\Interpolator.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\animation\Key.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\DelayAnimation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\AnimationGroup.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\Animator.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameSequence.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\KeyFrame.h" />
     <ClInclude Include="..\..\src\kiwano\2d\animation\TweenAnimation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\PathAnimation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\AnimationWrapper.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\CustomAnimation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\base\component\Button.h" />
     <ClInclude Include="..\..\src\kiwano\base\component\Component.h" />
@@ -93,8 +92,6 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
-    <ClInclude Include="..\..\src\kiwano\render\Frame.h" />
-    <ClInclude Include="..\..\src\kiwano\render\FrameSequence.h" />
     <ClInclude Include="..\..\src\kiwano\render\NativeObject.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h" />
@@ -121,18 +118,18 @@
     <ClInclude Include="..\..\src\kiwano\utils\Xml.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano\2d\action\Action.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionDelay.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionGroup.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionScheduler.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionWalk.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\ActionTween.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\action\Animation.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\animation\Animation.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\animation\EaseFunc.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\DelayAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\AnimationGroup.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\Animator.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameSequence.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\KeyFrame.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\animation\TweenAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\PathAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\CustomAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\animation\EaseFunc.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
@@ -179,8 +176,6 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\Frame.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\FrameSequence.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />

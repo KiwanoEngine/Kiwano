@@ -19,11 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Common.h>
+#include <kiwano/2d/animation/TweenAnimation.h>
+#include <kiwano/2d/animation/FrameSequence.h>
 
 namespace kiwano
 {
 
+KGE_DECLARE_SMART_PTR(FrameAnimation);
 
+/**
+ * \addtogroup Animation
+ * @{
+ */
 
-}
+/// \~chinese
+/// @brief 帧动画
+class KGE_API FrameAnimation : public TweenAnimation
+{
+public:
+    FrameAnimation();
+
+    /// \~chinese
+    /// @brief 创建帧动画
+    /// @param dur 动画时长
+    /// @param frame_seq 序列帧
+    FrameAnimation(Duration dur, FrameSequencePtr frame_seq);
+
+    virtual ~FrameAnimation();
+
+    /// \~chinese
+    /// @brief 获取序列帧
+    FrameSequencePtr GetFrameSequence() const;
+
+    /// \~chinese
+    /// @brief 设置序列帧
+    /// @param[in] frame_seq 序列帧
+    void SetFrameSequence(FrameSequencePtr frame_seq);
+
+    /// \~chinese
+    /// @brief 获取该动画的拷贝对象
+    FrameAnimation* Clone() const override;
+
+    /// \~chinese
+    /// @brief 获取该动画的倒转
+    FrameAnimation* Reverse() const override;
+
+protected:
+    void Init(Actor* target) override;
+
+    void UpdateTween(Actor* target, float percent) override;
+
+private:
+    size_t           current_index_;
+    FrameSequencePtr frame_seq_;
+};
+
+/** @} */
+
+}  // namespace kiwano

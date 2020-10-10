@@ -104,8 +104,8 @@ public:
     virtual void CreateGifImage(GifImage& gif, const Resource& resource) = 0;
 
     /// \~chinese
-    /// @brief 创建GIF图像帧内部资源
-    /// @param[out] frame GIF图像帧
+    /// @brief 创建GIF关键帧内部资源
+    /// @param[out] frame GIF关键帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
     virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;

@@ -19,87 +19,87 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/action/ActionScheduler.h>
+#include <kiwano/2d/animation/Animator.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
 
-void ActionScheduler::Update(Actor* target, Duration dt)
+void Animator::Update(Actor* target, Duration dt)
 {
-    if (actions_.IsEmpty() || !target)
+    if (animations_.IsEmpty() || !target)
         return;
 
-    ActionEntityPtr next;
-    for (auto action = actions_.GetFirst(); action; action = next)
+    AnimationPtr next;
+    for (auto animation = animations_.GetFirst(); animation; animation = next)
     {
-        next = action->GetNext();
+        next = animation->GetNext();
 
-        if (action->IsRunning())
-            action->UpdateStep(target, dt);
+        if (animation->IsRunning())
+            animation->UpdateStep(target, dt);
 
-        if (action->IsRemoveable())
-            actions_.Remove(action);
+        if (animation->IsRemoveable())
+            animations_.Remove(animation);
     }
 }
 
-ActionEntity* ActionScheduler::AddAction(ActionEntityPtr action)
+Animation* Animator::AddAnimation(AnimationPtr animation)
 {
-    KGE_ASSERT(action && "AddAction failed, NULL pointer exception");
+    KGE_ASSERT(animation && "AddAnimation failed, NULL pointer exception");
 
-    if (action)
+    if (animation)
     {
-        actions_.PushBack(action);
+        animations_.PushBack(animation);
     }
-    return action.Get();
+    return animation.Get();
 }
 
-void ActionScheduler::ResumeAllActions()
+void Animator::ResumeAllAnimations()
 {
-    if (actions_.IsEmpty())
+    if (animations_.IsEmpty())
         return;
 
-    for (auto& action : actions_)
+    for (auto& animation : animations_)
     {
-        action->Resume();
+        animation->Resume();
     }
 }
 
-void ActionScheduler::PauseAllActions()
+void Animator::PauseAllAnimations()
 {
-    if (actions_.IsEmpty())
+    if (animations_.IsEmpty())
         return;
 
-    for (auto& action : actions_)
+    for (auto& animation : animations_)
     {
-        action->Pause();
+        animation->Pause();
     }
 }
 
-void ActionScheduler::StopAllActions()
+void Animator::StopAllAnimations()
 {
-    if (actions_.IsEmpty())
+    if (animations_.IsEmpty())
         return;
 
-    for (auto& action : actions_)
+    for (auto& animation : animations_)
     {
-        action->Stop();
+        animation->Stop();
     }
 }
 
-ActionEntity* ActionScheduler::GetAction(const String& name)
+Animation* Animator::GetAnimation(const String& name)
 {
-    if (actions_.IsEmpty())
+    if (animations_.IsEmpty())
         return nullptr;
 
-    for (auto& action : actions_)
-        if (action->IsName(name))
-            return action.Get();
+    for (auto& animation : animations_)
+        if (animation->IsName(name))
+            return animation.Get();
     return nullptr;
 }
 
-const ActionList& ActionScheduler::GetAllActions() const
+const AnimationList& Animator::GetAllAnimations() const
 {
-    return actions_;
+    return animations_;
 }
 }  // namespace kiwano

@@ -19,55 +19,71 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
+KGE_DECLARE_SMART_PTR(AnimationGroup);
 
 /**
- * \addtogroup Actions
+ * \addtogroup Animation
  * @{
  */
 
-/**
- * \~chinese
- * @brief 动画调度器
- */
-class KGE_API ActionScheduler
+
+/// \~chinese
+/// @brief 动画组合
+class KGE_API AnimationGroup : public Animation
 {
 public:
+    AnimationGroup();
+
+    /// \~chinese
+    /// @brief 创建动画组合
+    /// @param animations 动画集合
+    /// @param parallel 同步执行
+    AnimationGroup(const Vector<AnimationPtr>& animations, bool parallel = false);
+
+    virtual ~AnimationGroup();
+
     /// \~chinese
     /// @brief 添加动画
-    ActionEntity* AddAction(ActionEntityPtr action);
+    /// @param animation 动画
+    void AddAnimation(AnimationPtr animation);
 
     /// \~chinese
-    /// @brief 继续所有暂停动画
-    void ResumeAllActions();
-
-    /// \~chinese
-    /// @brief 暂停所有动画
-    void PauseAllActions();
-
-    /// \~chinese
-    /// @brief 停止所有动画
-    void StopAllActions();
-
-    /// \~chinese
-    /// @brief 获取指定名称的动画
-    /// @param name 动画名称
-    ActionEntity* GetAction(const String& name);
+    /// @brief 添加多个动画
+    /// @param animations 动画集合
+    void AddAnimation(const Vector<AnimationPtr>& animations);
 
     /// \~chinese
     /// @brief 获取所有动画
-    const ActionList& GetAllActions() const;
+    const AnimationList& GetAnimations() const;
 
     /// \~chinese
-    /// @brief 更新动画
-    void Update(Actor* target, Duration dt);
+    /// @brief 获取该动画的拷贝对象
+    AnimationGroup* Clone() const override;
+
+    /// \~chinese
+    /// @brief 获取该动画的倒转
+    AnimationGroup* Reverse() const override;
+
+protected:
+    void Init(Actor* target) override;
+
+    void Update(Actor* target, Duration dt) override;
 
 private:
-    ActionList actions_;
+    bool            parallel_;
+    AnimationPtr current_;
+    AnimationList      animations_;
 };
 
 /** @} */
+
+inline const AnimationList& AnimationGroup::GetAnimations() const
+{
+    return animations_;
+}
+
 }  // namespace kiwano

@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 Kiwano - Nomango
+// Copyright (c) 2016-2018 Kiwano - Nomango
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,51 +19,62 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/animation/Interpolator.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
 
-template <typename _Ty, typename _NotifierTy>
-class KeyValue
+/**
+ * \addtogroup Animation
+ * @{
+ */
+
+/**
+ * \~chinese
+ * @brief 动画调度器
+ */
+class KGE_API Animator
 {
 public:
-    typedef _Ty                     value_type;
-    typedef Value<_Ty, _NotifierTy> property_type;
+    /// \~chinese
+    /// @brief 添加动画
+    Animation* AddAnimation(AnimationPtr animation);
 
-    inline KeyValue(const property_type& prop, value_type end_value)
-        : end_value_(end_value)
-        , prop_(prop)
-        , interpolator_()
+    /// \~chinese
+    /// @brief 开始动画
+    inline Animation* StartAnimation(AnimationPtr animation)
     {
+        return AddAnimation(animation);
     }
 
-    inline KeyValue(const property_type& prop, value_type end_value, const EaseFunc& ease_func)
-        : end_value_(end_value)
-        , prop_(prop)
-        , interpolator_(ease_func)
-    {
-    }
+    /// \~chinese
+    /// @brief 继续所有暂停动画
+    void ResumeAllAnimations();
 
-    inline property_type GetProperty() const
-    {
-        return prop_;
-    }
+    /// \~chinese
+    /// @brief 暂停所有动画
+    void PauseAllAnimations();
 
-    inline value_type GetEndValue() const
-    {
-        return end_value_;
-    }
+    /// \~chinese
+    /// @brief 停止所有动画
+    void StopAllAnimations();
 
-    inline const Interpolator& GetInterpolator() const
-    {
-        return interpolator_;
-    }
+    /// \~chinese
+    /// @brief 获取指定名称的动画
+    /// @param name 动画名称
+    Animation* GetAnimation(const String& name);
+
+    /// \~chinese
+    /// @brief 获取所有动画
+    const AnimationList& GetAllAnimations() const;
+
+    /// \~chinese
+    /// @brief 更新动画
+    void Update(Actor* target, Duration dt);
 
 private:
-    property_type prop_;
-    value_type    end_value_;
-    Interpolator  interpolator_;
+    AnimationList animations_;
 };
 
-}
+/** @} */
+}  // namespace kiwano

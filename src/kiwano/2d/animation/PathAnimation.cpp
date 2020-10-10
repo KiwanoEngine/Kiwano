@@ -18,19 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <kiwano/2d/animation/PathAnimation.h>
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/action/ActionWalk.h>
 
 namespace kiwano
 {
 
-ActionWalk::ActionWalk(Duration duration, ShapePtr path, bool rotating, float start, float end)
-{
-    SetEntity(MakePtr<ActionWalkEntity>(duration, path, rotating, start, end));
-}
-
-ActionWalkEntity::ActionWalkEntity(Duration duration, ShapePtr path, bool rotating, float start, float end)
-    : ActionTweenEntity(duration)
+PathAnimation::PathAnimation(Duration duration, ShapePtr path, bool rotating, float start, float end)
+    : TweenAnimation(duration)
     , start_(start)
     , end_(end)
     , rotating_(rotating)
@@ -39,21 +34,21 @@ ActionWalkEntity::ActionWalkEntity(Duration duration, ShapePtr path, bool rotati
 {
 }
 
-ActionWalkEntity* ActionWalkEntity::Clone() const
+PathAnimation* PathAnimation::Clone() const
 {
-    ActionWalkEntity* ptr = new ActionWalkEntity(GetDuration(), path_, rotating_, start_, end_);
+    PathAnimation* ptr = new PathAnimation(GetDuration(), path_, rotating_, start_, end_);
     DoClone(ptr);
     return ptr;
 }
 
-ActionWalkEntity* ActionWalkEntity::Reverse() const
+PathAnimation* PathAnimation::Reverse() const
 {
-    ActionWalkEntity* ptr = new ActionWalkEntity(GetDuration(), path_, rotating_, end_, start_);
+    PathAnimation* ptr = new PathAnimation(GetDuration(), path_, rotating_, end_, start_);
     DoClone(ptr);
     return ptr;
 }
 
-void ActionWalkEntity::Init(Actor* target)
+void PathAnimation::Init(Actor* target)
 {
     if (!path_ || !path_->IsValid())
     {
@@ -65,7 +60,7 @@ void ActionWalkEntity::Init(Actor* target)
     length_    = path_->GetLength();
 }
 
-void ActionWalkEntity::UpdateTween(Actor* target, float percent)
+void PathAnimation::UpdateTween(Actor* target, float percent)
 {
     float distance = length_ * std::min(std::max((end_ - start_) * percent + start_, 0.f), 1.f);
 

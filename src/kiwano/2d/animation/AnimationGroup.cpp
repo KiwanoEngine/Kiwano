@@ -18,52 +18,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/Actor.h>
-#include <kiwano/2d/action/ActionGroup.h>
-#include <kiwano/utils/Logger.h>
+#include <kiwano/2d/animation/AnimationGroup.h>
 
 namespace kiwano
 {
 
-ActionGroup::ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel)
-{
-    SetEntity(MakePtr<ActionGroupEntity>(actions, parallel));
-}
-
-ActionGroupEntity::ActionGroupEntity()
+AnimationGroup::AnimationGroup()
     : parallel_(false)
 {
 }
 
-ActionGroupEntity::ActionGroupEntity(const Vector<ActionEntityPtr>& actions, bool parallel)
+AnimationGroup::AnimationGroup(const Vector<AnimationPtr>& animations, bool parallel)
     : parallel_(parallel)
 {
-    AddActions(actions);
+    AddAnimation(animations);
 }
 
-ActionGroupEntity::~ActionGroupEntity() {}
+AnimationGroup::~AnimationGroup() {}
 
-void ActionGroupEntity::Init(Actor* target)
+void AnimationGroup::Init(Actor* target)
 {
-    if (actions_.IsEmpty())
+    if (animations_.IsEmpty())
     {
         Done();
         return;
     }
 
-    // reset all actions
-    for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
+    // reset all animations
+    for (current_ = animations_.GetFirst(); current_; current_ = current_->GetNext())
     {
         current_->Reset();
     }
 
     if (!parallel_)
     {
-        current_ = actions_.GetFirst();
+        current_ = animations_.GetFirst();
     }
 }
 
-void ActionGroupEntity::Update(Actor* target, Duration dt)
+void AnimationGroup::Update(Actor* target, Duration dt)
 {
     if (!parallel_)
     {
@@ -83,7 +76,7 @@ void ActionGroupEntity::Update(Actor* target, Duration dt)
     else
     {
         bool done = true;
-        for (current_ = actions_.GetFirst(); current_; current_ = current_->GetNext())
+        for (current_ = animations_.GetFirst(); current_; current_ = current_->GetNext())
         {
             if (!current_->IsDone())
             {
@@ -99,46 +92,46 @@ void ActionGroupEntity::Update(Actor* target, Duration dt)
     }
 }
 
-void ActionGroupEntity::AddAction(ActionEntityPtr action)
+void AnimationGroup::AddAnimation(AnimationPtr animation)
 {
-    if (action)
+    if (animation)
     {
-        actions_.PushBack(action);
+        animations_.PushBack(animation);
     }
 }
 
-void ActionGroupEntity::AddActions(const Vector<ActionEntityPtr>& actions)
+void AnimationGroup::AddAnimation(const Vector<AnimationPtr>& animations)
 {
-    for (const auto& action : actions)
-        AddAction(action);
+    for (const auto& animation : animations)
+        AddAnimation(animation);
 }
 
-ActionGroupEntity* ActionGroupEntity::Clone() const
+AnimationGroup* AnimationGroup::Clone() const
 {
-    Vector<ActionEntityPtr> actions;
-    if (!actions_.IsEmpty())
+    Vector<AnimationPtr> animations;
+    if (!animations_.IsEmpty())
     {
-        for (auto action = actions_.GetFirst(); action; action = action->GetNext())
+        for (auto animation = animations_.GetFirst(); animation; animation = animation->GetNext())
         {
-            actions.push_back(action->Clone());
+            animations.push_back(animation->Clone());
         }
     }
-    ActionGroupEntity* ptr = new ActionGroupEntity(actions, parallel_);
+    AnimationGroup* ptr = new AnimationGroup(animations, parallel_);
     DoClone(ptr);
     return ptr;
 }
 
-ActionGroupEntity* ActionGroupEntity::Reverse() const
+AnimationGroup* AnimationGroup::Reverse() const
 {
-    Vector<ActionEntityPtr> actions;
-    if (!actions_.IsEmpty())
+    Vector<AnimationPtr> animations;
+    if (!animations_.IsEmpty())
     {
-        for (auto action = actions_.GetLast(); action; action = action->GetPrev())
+        for (auto animation = animations_.GetLast(); animation; animation = animation->GetPrev())
         {
-            actions.push_back(action->Reverse());
+            animations.push_back(animation->Reverse());
         }
     }
-    ActionGroupEntity* ptr = new ActionGroupEntity(actions, parallel_);
+    AnimationGroup* ptr = new AnimationGroup(animations, parallel_);
     DoClone(ptr);
     return ptr;
 }

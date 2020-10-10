@@ -19,72 +19,37 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/FrameSequence.h>
-#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(AnimationEntity);
+KGE_DECLARE_SMART_PTR(DelayAnimation);
 
 /**
- * \addtogroup Actions
+ * \addtogroup Animation
  * @{
  */
 
+
 /// \~chinese
-/// @brief 帧动画
-class KGE_API Animation : public ActionTween
+/// @brief 延时动画
+class KGE_API DelayAnimation : public Animation
 {
 public:
     /// \~chinese
-    /// @brief 创建帧动画
-    /// @param dur 动画时长
-    /// @param frame_seq 序列帧
-    Animation(Duration dur, FrameSequencePtr frame_seq);
-};
-
-/// \~chinese
-/// @brief 帧动画实体
-class KGE_API AnimationEntity : public ActionTweenEntity
-{
-public:
-    AnimationEntity();
-
-    /// \~chinese
-    /// @brief 创建帧动画
-    /// @param dur 动画时长
-    /// @param frame_seq 序列帧
-    AnimationEntity(Duration dur, FrameSequencePtr frame_seq);
-
-    virtual ~AnimationEntity();
-
-    /// \~chinese
-    /// @brief 获取序列帧
-    FrameSequencePtr GetFrameSequence() const;
-
-    /// \~chinese
-    /// @brief 设置序列帧
-    /// @param[in] frame_seq 序列帧
-    void SetFrameSequence(FrameSequencePtr frame_seq);
+    /// @brief 创建延时动画
+    /// @param delay 延时时长
+    DelayAnimation(Duration delay);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    AnimationEntity* Clone() const override;
+    DelayAnimation* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    AnimationEntity* Reverse() const override;
-
-protected:
-    void Init(Actor* target) override;
-
-    void UpdateTween(Actor* target, float percent) override;
-
-private:
-    FrameSequencePtr frame_seq_;
+    DelayAnimation* Reverse() const override;
 };
 
 /** @} */
-
 }  // namespace kiwano

@@ -18,29 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/Frame.h>
+#include <kiwano/2d/animation/KeyFrame.h>
 
 namespace kiwano
 {
 
-Frame::Frame(const String& file_path)
+KeyFrame::KeyFrame() {}
+
+KeyFrame::KeyFrame(const String& file_path)
 {
     Load(file_path);
 }
 
-Frame::Frame(const Resource& res)
+KeyFrame::KeyFrame(const Resource& res)
 {
     Load(res);
 }
 
-Frame::Frame(TexturePtr texture)
+KeyFrame::KeyFrame(TexturePtr texture)
 {
     SetTexture(texture);
 }
 
-Frame::Frame() {}
+KeyFrame::KeyFrame(const String& file_path, const Rect& crop_rect)
+    : KeyFrame(file_path)
+{
+    SetCropRect(crop_rect);
+}
 
-bool Frame::Load(const String& file_path)
+KeyFrame::KeyFrame(const Resource& res, const Rect& crop_rect)
+    : KeyFrame(res)
+{
+    SetCropRect(crop_rect);
+}
+
+KeyFrame::KeyFrame(TexturePtr texture, const Rect& crop_rect)
+    : KeyFrame(texture)
+{
+    SetCropRect(crop_rect);
+}
+
+bool KeyFrame::Load(const String& file_path)
 {
     TexturePtr texture = Texture::Preload(file_path);
     if (texture->IsValid())
@@ -51,7 +69,7 @@ bool Frame::Load(const String& file_path)
     return false;
 }
 
-bool Frame::Load(const Resource& res)
+bool KeyFrame::Load(const Resource& res)
 {
     TexturePtr texture = Texture::Preload(res);
     if (texture->IsValid())
@@ -62,7 +80,7 @@ bool Frame::Load(const Resource& res)
     return false;
 }
 
-void Frame::SetCropRect(const Rect& crop_rect)
+void KeyFrame::SetCropRect(const Rect& crop_rect)
 {
     if (texture_->IsValid())
     {
@@ -74,7 +92,7 @@ void Frame::SetCropRect(const Rect& crop_rect)
     }
 }
 
-void Frame::SetTexture(TexturePtr texture)
+void KeyFrame::SetTexture(TexturePtr texture)
 {
     texture_ = texture;
     if (texture_->IsValid())

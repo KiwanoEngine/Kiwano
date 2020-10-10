@@ -18,48 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/animation/CustomAnimation.h>
 
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ActionDelayEntity);
-
-/**
- * \addtogroup Actions
- * @{
- */
-
-/// \~chinese
-/// @brief 延时动画
-class KGE_API ActionDelay : public Action
+CustomAnimation::CustomAnimation(Duration duration, TweenFunc tween_func)
+    : TweenAnimation(duration)
+    , tween_func_(tween_func)
 {
-public:
-    /// \~chinese
-    /// @brief 创建延时动画
-    /// @param delay 延时时长
-    ActionDelay(Duration delay);
-};
+}
 
-/// \~chinese
-/// @brief 延时动画实体
-class KGE_API ActionDelayEntity : public ActionEntity
+CustomAnimation* CustomAnimation::Clone() const
 {
-public:
-    /// \~chinese
-    /// @brief 创建延时动画
-    /// @param delay 延时时长
-    ActionDelayEntity(Duration delay);
+    CustomAnimation* ptr = new CustomAnimation(GetDuration(), tween_func_);
+    DoClone(ptr);
+    return ptr;
+}
 
-    /// \~chinese
-    /// @brief 获取该动画的拷贝对象
-    ActionDelayEntity* Clone() const override;
+void CustomAnimation::Init(Actor* target)
+{
+    if (!tween_func_)
+        this->Done();
+}
 
-    /// \~chinese
-    /// @brief 获取该动画的倒转
-    ActionDelayEntity* Reverse() const override;
-};
+void CustomAnimation::UpdateTween(Actor* target, float frac)
+{
+    if (tween_func_)
+        tween_func_(target, frac);
+}
 
-/** @} */
 }  // namespace kiwano

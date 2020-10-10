@@ -19,38 +19,53 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/ObjectBase.h>
 #include <kiwano/render/Texture.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Frame);
+KGE_DECLARE_SMART_PTR(KeyFrame);
 
 /**
  * \~chinese
- * @brief 图像帧
+ * @brief 关键帧
  */
-class KGE_API Frame : public ObjectBase
+class KGE_API KeyFrame : public ObjectBase
 {
 public:
+    KeyFrame();
+
     /// \~chinese
-    /// @brief 创建图像帧
+    /// @brief 创建关键帧
     /// @param file_path 图像路径
-    Frame(const String& file_path);
+    KeyFrame(const String& file_path);
 
     /// \~chinese
-    /// @brief 创建图像帧
+    /// @brief 创建关键帧
     /// @param res 图像资源
-    Frame(const Resource& res);
+    KeyFrame(const Resource& res);
 
     /// \~chinese
-    /// @brief 创建图像帧
+    /// @brief 创建关键帧
     /// @param texture 纹理
-    Frame(TexturePtr texture);
+    KeyFrame(TexturePtr texture);
 
     /// \~chinese
-    /// @brief 构建空图像帧
-    Frame();
+    /// @brief 创建关键帧
+    /// @param file_path 图像路径
+    /// @param crop_rect 裁剪矩形
+    KeyFrame(const String& file_path, const Rect& crop_rect);
+
+    /// \~chinese
+    /// @brief 创建关键帧
+    /// @param res 图像资源
+    /// @param crop_rect 裁剪矩形
+    KeyFrame(const Resource& res, const Rect& crop_rect);
+
+    /// \~chinese
+    /// @brief 创建关键帧
+    /// @param texture 纹理
+    /// @param crop_rect 裁剪矩形
+    KeyFrame(TexturePtr texture, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 加载图像
@@ -63,8 +78,12 @@ public:
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief 裁剪图像帧为矩形
-    /// @param crop_rect 裁剪矩形定义
+    /// @brief 是否有效
+    bool IsValid() const;
+
+    /// \~chinese
+    /// @brief 裁剪关键帧为矩形
+    /// @param crop_rect 裁剪矩形
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
@@ -73,40 +92,8 @@ public:
     void SetTexture(TexturePtr texture);
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
-
-    /// \~chinese
-    /// @brief 获取宽度
-    float GetWidth() const;
-
-    /// \~chinese
-    /// @brief 获取高度
-    float GetHeight() const;
-
-    /// \~chinese
-    /// @brief 获取大小
-    Size GetSize() const;
-
-    /// \~chinese
-    /// @brief 获取裁剪位置
-    Point GetCropPoint() const;
-
-    /// \~chinese
     /// @brief 获取裁剪矩形
     const Rect& GetCropRect() const;
-
-    /// \~chinese
-    /// @brief 获取图像原宽度
-    float GetSourceWidth() const;
-
-    /// \~chinese
-    /// @brief 获取图像原高度
-    float GetSourceHeight() const;
-
-    /// \~chinese
-    /// @brief 获取图像原大小
-    Size GetSourceSize() const;
 
     /// \~chinese
     /// @brief 获取纹理
@@ -117,64 +104,17 @@ private:
     Rect       crop_rect_;
 };
 
-inline bool Frame::IsValid() const
+inline bool KeyFrame::IsValid() const
 {
     return texture_ && texture_->IsValid();
 }
 
-inline float Frame::GetWidth() const
-{
-    return crop_rect_.GetWidth();
-}
-
-inline float Frame::GetHeight() const
-{
-    return crop_rect_.GetHeight();
-}
-
-inline Size Frame::GetSize() const
-{
-    return crop_rect_.GetSize();
-}
-
-inline Point Frame::GetCropPoint() const
-{
-    return crop_rect_.GetLeftTop();
-}
-
-inline const Rect& Frame::GetCropRect() const
+inline const Rect& KeyFrame::GetCropRect() const
 {
     return crop_rect_;
 }
 
-inline float Frame::GetSourceWidth() const
-{
-    if (texture_)
-    {
-        return texture_->GetWidth();
-    }
-    return 0.0f;
-}
-
-inline float Frame::GetSourceHeight() const
-{
-    if (texture_)
-    {
-        return texture_->GetHeight();
-    }
-    return 0.0f;
-}
-
-inline Size Frame::GetSourceSize() const
-{
-    if (texture_)
-    {
-        return texture_->GetSize();
-    }
-    return Size();
-}
-
-inline TexturePtr Frame::GetTexture() const
+inline TexturePtr KeyFrame::GetTexture() const
 {
     return texture_;
 }
