@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Keys.h>
+#include <kiwano/platform/Keys.h>
 #include <kiwano/event/Event.h>
 
 namespace kiwano

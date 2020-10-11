@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/2d/Transition.h>
+#include <kiwano/2d/transition/Transition.h>
 #include <kiwano/base/Module.h>
 
 namespace kiwano

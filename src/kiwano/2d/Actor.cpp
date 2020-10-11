@@ -70,7 +70,7 @@ Actor::~Actor()
 
 void Actor::Update(Duration dt)
 {
-    ActionScheduler::Update(this, dt);
+    Animator::Update(this, dt);
     TaskScheduler::Update(dt);
     ComponentManager::Update(dt);
 

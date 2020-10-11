@@ -130,7 +130,7 @@ private:
     void ComposeNextFrame();
 
     /// \~chinese
-    /// @brief 解析当前图像帧
+    /// @brief 解析当前关键帧
     void DisposeCurrentFrame();
 
     /// \~chinese
@@ -138,11 +138,11 @@ private:
     void OverlayNextFrame();
 
     /// \~chinese
-    /// @brief 保存合成后的图像帧
+    /// @brief 保存合成后的关键帧
     void SaveComposedFrame();
 
     /// \~chinese
-    /// @brief 恢复已保存的图像帧
+    /// @brief 恢复已保存的关键帧
     void RestoreSavedFrame();
 
     /// \~chinese

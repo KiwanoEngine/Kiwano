@@ -72,8 +72,8 @@ public:
     HRESULT CreateFontCollectionFromFiles(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
                                           const Vector<String>& file_paths) override;
 
-    HRESULT CreateFontCollectionFromResources(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
-                                              const Vector<Resource>& resources) override;
+    HRESULT CreateFontCollectionFromBinaryData(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
+                                               const Vector<BinaryData>&            data) override;
 
     HRESULT GetFontFamilyNames(_Out_ Vector<String>& family_names,
                                _In_ ComPtr<IDWriteFontCollection> font_collection) override;
@@ -548,8 +548,8 @@ HRESULT D2DDeviceResources::CreateFontCollectionFromFiles(ComPtr<IDWriteFontColl
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateFontCollectionFromResources(ComPtr<IDWriteFontCollection>& font_collection,
-                                                              const Vector<Resource>&        resources)
+HRESULT D2DDeviceResources::CreateFontCollectionFromBinaryData(ComPtr<IDWriteFontCollection>& font_collection,
+                                                              const Vector<BinaryData>& data)
 {
     if (!dwrite_factory_ || !res_font_collection_loader_)
         return E_UNEXPECTED;
@@ -557,7 +557,7 @@ HRESULT D2DDeviceResources::CreateFontCollectionFromResources(ComPtr<IDWriteFont
     LPVOID   key      = nullptr;
     uint32_t key_size = 0;
 
-    HRESULT hr = res_font_collection_loader_->AddResources(resources, &key, &key_size);
+    HRESULT hr = res_font_collection_loader_->AddResources(data, &key, &key_size);
 
     if (SUCCEEDED(hr))
     {

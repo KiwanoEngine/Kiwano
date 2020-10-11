@@ -19,65 +19,37 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
 
+KGE_DECLARE_SMART_PTR(DelayAnimation);
+
 /**
- * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+ * \addtogroup Animation
+ * @{
  */
-class KGE_API Resource
+
+
+/// \~chinese
+/// @brief 延时动画
+class KGE_API DelayAnimation : public Animation
 {
 public:
+    /// \~chinese
+    /// @brief 创建延时动画
+    /// @param delay 延时时长
+    DelayAnimation(Duration delay);
 
     /// \~chinese
-    /// @brief 构造资源
-    Resource();
+    /// @brief 获取该动画的拷贝对象
+    DelayAnimation* Clone() const override;
 
     /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
-
-    /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
-
-    /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
-
-    /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
-
-private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
+    /// @brief 获取该动画的倒转
+    DelayAnimation* Reverse() const override;
 };
 
-inline uint32_t Resource::GetId() const
-{
-    return id_;
-}
-
-inline String Resource::GetType() const
-{
-    return type_;
-}
+/** @} */
 }  // namespace kiwano

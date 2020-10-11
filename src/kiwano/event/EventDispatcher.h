@@ -91,21 +91,6 @@ public:
     void RemoveListeners(const String& name);
 
     /// \~chinese
-    /// @brief 启动监听器
-    /// @param type 监听的事件类型
-    void StartListeners(const EventType& type);
-
-    /// \~chinese
-    /// @brief 停止监听器
-    /// @param type 监听的事件类型
-    void StopListeners(const EventType& type);
-
-    /// \~chinese
-    /// @brief 移除监听器
-    /// @param type 监听的事件类型
-    void RemoveListeners(const EventType& type);
-
-    /// \~chinese
     /// @brief 启动所有监听器
     void StartAllListeners();
 

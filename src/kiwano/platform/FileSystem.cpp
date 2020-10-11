@@ -176,7 +176,7 @@ bool FileSystem::ExtractResourceToFile(const Resource& res, const String& dest_f
     if (file_handle == INVALID_HANDLE_VALUE)
         return false;
 
-    Resource::Data data = res.GetData();
+    BinaryData data = res.GetData();
     if (data.IsValid())
     {
         DWORD written_bytes = 0;

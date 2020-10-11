@@ -94,7 +94,7 @@ HRESULT Transcoder::LoadMediaResource(const Resource& res)
     ComPtr<IMFByteStream>   byte_stream;
     ComPtr<IMFSourceReader> reader;
 
-    Resource::Data data = res.GetData();
+    BinaryData data = res.GetData();
     if (!data.IsValid())
     {
         return E_FAIL;

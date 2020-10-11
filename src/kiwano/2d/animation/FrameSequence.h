@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/Frame.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Time.h>
+#include <kiwano/2d/SpriteFrame.h>
 
 namespace kiwano
 {
@@ -36,19 +36,8 @@ class KGE_API FrameSequence : public ObjectBase
 public:
     /// \~chinese
     /// @brief 创建序列帧
-    /// @param frames 图像帧集合
-    FrameSequence(const Vector<FramePtr>& frames);
-
-    /// \~chinese
-    /// @brief 按行列分割图像并创建序列帧
-    /// @param frame 图像帧
-    /// @param cols 列数
-    /// @param rows 行数
-    /// @param max_num 最大帧数量，设-1为将分割后的图像全部作为序列帧
-    /// @param padding_x X方向间隔
-    /// @param padding_y Y方向间隔
-    FrameSequence(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0,
-                                   float padding_y = 0);
+    /// @param frames 精灵帧集合
+    FrameSequence(const Vector<SpriteFrame>& frames);
 
     /// \~chinese
     /// @brief 构建空序列帧
@@ -57,36 +46,26 @@ public:
     virtual ~FrameSequence();
 
     /// \~chinese
-    /// @brief 添加关键帧
-    /// @param frame 图像帧
-    void AddFrame(FramePtr frame);
+    /// @brief 添加精灵帧
+    /// @param frame 精灵帧
+    void AddFrame(const SpriteFrame& frame);
 
     /// \~chinese
-    /// @brief 添加多个关键帧
-    /// @param frames 图像帧集合
-    void AddFrames(const Vector<FramePtr>& frames);
+    /// @brief 添加多个精灵帧
+    /// @param frames 精灵帧集合
+    void AddFrames(const Vector<SpriteFrame>& frames);
 
     /// \~chinese
-    /// @brief 按行列分割图像并添加序列帧
-    /// @param frame 图像帧
-    /// @param cols 列数
-    /// @param rows 行数
-    /// @param max_num 最大帧数量，设-1为将分割后的图像全部作为序列帧
-    /// @param padding_x X方向间隔
-    /// @param padding_y Y方向间隔
-    void AddFrames(FramePtr frame, int cols, int rows = 1, int max_num = -1, float padding_x = 0, float padding_y = 0);
+    /// @brief 获取精灵帧
+    /// @param index 精灵帧下标
+    const SpriteFrame& GetFrame(size_t index) const;
 
     /// \~chinese
-    /// @brief 获取关键帧
-    /// @param index 图像帧下标
-    FramePtr GetFrame(size_t index) const;
+    /// @brief 获取所有精灵帧
+    const Vector<SpriteFrame>& GetFrames() const;
 
     /// \~chinese
-    /// @brief 获取所有关键帧
-    const Vector<FramePtr>& GetFrames() const;
-
-    /// \~chinese
-    /// @brief 获取关键帧数量
+    /// @brief 获取精灵帧数量
     size_t GetFramesCount() const;
 
     /// \~chinese
@@ -98,6 +77,7 @@ public:
     FrameSequencePtr Reverse() const;
 
 private:
-    Vector<FramePtr> frames_;
+    Vector<SpriteFrame> frames_;
 };
+
 }  // namespace kiwano

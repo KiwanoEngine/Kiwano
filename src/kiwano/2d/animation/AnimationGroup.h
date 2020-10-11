@@ -19,65 +19,71 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
+KGE_DECLARE_SMART_PTR(AnimationGroup);
 
 /**
- * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+ * \addtogroup Animation
+ * @{
  */
-class KGE_API Resource
+
+
+/// \~chinese
+/// @brief 动画组合
+class KGE_API AnimationGroup : public Animation
 {
 public:
+    AnimationGroup();
 
     /// \~chinese
-    /// @brief 构造资源
-    Resource();
+    /// @brief 创建动画组合
+    /// @param animations 动画集合
+    /// @param parallel 同步执行
+    AnimationGroup(const Vector<AnimationPtr>& animations, bool parallel = false);
+
+    virtual ~AnimationGroup();
 
     /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
+    /// @brief 添加动画
+    /// @param animation 动画
+    void AddAnimation(AnimationPtr animation);
 
     /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
+    /// @brief 添加多个动画
+    /// @param animations 动画集合
+    void AddAnimation(const Vector<AnimationPtr>& animations);
 
     /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
+    /// @brief 获取所有动画
+    const AnimationList& GetAnimations() const;
 
     /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
+    /// @brief 获取该动画的拷贝对象
+    AnimationGroup* Clone() const override;
+
+    /// \~chinese
+    /// @brief 获取该动画的倒转
+    AnimationGroup* Reverse() const override;
+
+protected:
+    void Init(Actor* target) override;
+
+    void Update(Actor* target, Duration dt) override;
 
 private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
+    bool            parallel_;
+    AnimationPtr current_;
+    AnimationList      animations_;
 };
 
-inline uint32_t Resource::GetId() const
+/** @} */
+
+inline const AnimationList& AnimationGroup::GetAnimations() const
 {
-    return id_;
+    return animations_;
 }
 
-inline String Resource::GetType() const
-{
-    return type_;
-}
 }  // namespace kiwano

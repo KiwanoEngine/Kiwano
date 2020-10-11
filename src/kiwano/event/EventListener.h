@@ -48,20 +48,32 @@ public:
 
     EventListener();
 
+    virtual ~EventListener();
+
     /// \~chinese
     /// @brief 创建监听器
-    /// @param type 监听的事件类型
     /// @param callback 回调函数
-    EventListener(EventType type, const Callback& callback);
+    static EventListenerPtr Create(const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    EventListener(const String& name, EventType type, const Callback& callback);
+    static EventListenerPtr Create(const String& name, const Callback& callback);
 
-    virtual ~EventListener();
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    static EventListenerPtr Create(EventType type, const Callback& callback);
+
+    /// \~chinese
+    /// @brief 创建监听器
+    /// @param name 监听器名称
+    /// @param type 监听的事件类型
+    /// @param callback 回调函数
+    static EventListenerPtr Create(const String& name, EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 启动监听器
@@ -93,45 +105,13 @@ public:
     void SetSwallowEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief 获取回调函数
-    const Callback& GetCallback() const;
-
-    /// \~chinese
-    /// @brief 设置回调函数
-    void SetCallback(const Callback& cb);
-
-    /// \~chinese
-    /// @brief 获取监听的事件类型
-    EventType GetEventType() const;
-
-    /// \~chinese
-    /// @brief 设置监听的事件类型
-    void SetEventType(const EventType& type);
-
-    /// \~chinese
-    /// @brief 判断是否处理事件
-    virtual bool ShouldHandle(Event* evt) const;
-
-    /// \~chinese
-    /// @brief 设置监听的事件类型
-    /// @tparam _EventTy 事件类型
-    template <typename _EventTy>
-    inline void SetEventType()
-    {
-        static_assert(std::is_base_of<Event, _EventTy>::value, "_EventTy is not an event type.");
-        SetEventType(KGE_EVENT(_EventTy));
-    }
-
-    /// \~chinese
-    /// @brief 接收消息
-    void Receive(Event* evt);
+    /// @brief 处理消息
+    virtual void Handle(Event* evt) = 0;
 
 private:
     bool      running_;
     bool      removeable_;
     bool      swallow_;
-    EventType type_;
-    Callback  callback_;
 };
 
 inline void EventListener::Start()
@@ -167,35 +147,6 @@ inline bool EventListener::IsSwallowEnabled() const
 inline void EventListener::SetSwallowEnabled(bool enabled)
 {
     swallow_ = enabled;
-}
-
-inline const EventListener::Callback& EventListener::GetCallback() const
-{
-    return callback_;
-}
-
-inline void EventListener::SetCallback(const Callback& cb)
-{
-    callback_ = cb;
-}
-
-inline EventType EventListener::GetEventType() const
-{
-    return type_;
-}
-
-inline void EventListener::SetEventType(const EventType& type)
-{
-    type_ = type;
-}
-
-inline bool EventListener::ShouldHandle(Event* evt) const
-{
-    if (evt)
-    {
-        return evt->GetType() == type_;
-    }
-    return false;
 }
 
 }  // namespace kiwano

@@ -25,35 +25,63 @@ namespace kiwano
 {
 
 EventListener::EventListener()
-    : type_()
-    , callback_()
-    , running_(true)
+    : running_(true)
     , removeable_(false)
     , swallow_(false)
 {
 }
 
-EventListener::EventListener(EventType type, const Callback& callback)
-    : EventListener()
-{
-    this->SetEventType(type);
-    this->SetCallback(callback);
-}
-
-EventListener::EventListener(const String& name, EventType type, const Callback& callback)
-    : EventListener(type, callback)
-{
-    this->SetName(name);
-}
-
 EventListener::~EventListener() {}
 
-void EventListener::Receive(Event* evt)
+class CallbackEventListener : public EventListener
 {
-    if (ShouldHandle(evt) && callback_)
+public:
+    CallbackEventListener(EventType type, const Callback& cb)
+        : type_(type)
+        , cb_(cb)
     {
-        callback_(evt);
     }
+
+    void Handle(Event* evt) override
+    {
+        if (type_.IsNull() || type_ == evt->GetType())
+        {
+            if (cb_)
+            {
+                cb_(evt);
+            }
+        }
+    }
+
+private:
+    EventType type_;
+    Callback  cb_;
+};
+
+EventListenerPtr EventListener::Create(const Callback& callback)
+{
+    EventListenerPtr ptr = new CallbackEventListener(EventType(), callback);
+    return ptr;
+}
+
+EventListenerPtr EventListener::Create(const String& name, const Callback& callback)
+{
+    EventListenerPtr ptr = new CallbackEventListener(EventType(), callback);
+    ptr->SetName(name);
+    return ptr;
+}
+
+EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
+{
+    EventListenerPtr ptr = new CallbackEventListener(type, callback);
+    return ptr;
+}
+
+EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
+{
+    EventListenerPtr ptr = new CallbackEventListener(type, callback);
+    ptr->SetName(name);
+    return ptr;
 }
 
 }  // namespace kiwano

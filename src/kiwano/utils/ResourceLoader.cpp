@@ -23,6 +23,10 @@
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/ResourceLoader.h>
 #include <kiwano/utils/ResourceCache.h>
+#include <kiwano/render/Font.h>
+#include <kiwano/render/GifImage.h>
+#include <kiwano/2d/SpriteFrame.h>
+#include <kiwano/2d/animation/FrameSequence.h>
 
 namespace kiwano
 {
@@ -195,10 +199,10 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     else if (!file.empty())
     {
         // Simple image
-        FramePtr frame = MakePtr<Frame>();
-        if (frame && frame->Load(gdata->path + file))
+        TexturePtr texture = MakePtr<Texture>();
+        if (texture && texture->Load(gdata->path + file))
         {
-            cache->AddObject(id, frame);
+            cache->AddObject(id, texture);
             return;
         }
     }
@@ -212,12 +216,12 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
         return;
 
     // Frames
-    Vector<FramePtr> frames;
+    Vector<SpriteFrame> frames;
     frames.reserve(files.size());
     for (const auto& file : files)
     {
-        FramePtr frame = MakePtr<Frame>();
-        if (frame->Load(gdata->path + file))
+        SpriteFrame frame;
+        if (frame.Load(gdata->path + file))
         {
             frames.push_back(frame);
         }
@@ -243,14 +247,14 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     {
         if (rows || cols)
         {
-            // Frame slices
-            FramePtr frame = MakePtr<Frame>();
-            if (frame && frame->Load(gdata->path + file))
+            // KeyFrame slices
+            SpriteFrame frame;
+            if (frame.Load(gdata->path + file))
             {
                 FrameSequencePtr frame_seq = MakePtr<FrameSequence>();
                 if (frame_seq)
                 {
-                    frame_seq->AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
+                    frame_seq->AddFrames(frame.Split(cols, rows, max_num, padding_x, padding_y));
                     cache->AddObject(id, frame_seq);
                     return;
                 }
@@ -259,10 +263,10 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
         else
         {
             // Simple image
-            FramePtr frame = MakePtr<Frame>();
-            if (frame && frame->Load(gdata->path + file))
+            TexturePtr texture = MakePtr<Texture>();
+            if (texture && texture->Load(gdata->path + file))
             {
-                cache->AddObject(id, frame);
+                cache->AddObject(id, texture);
                 return;
             }
         }

@@ -25,7 +25,6 @@
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/render/Frame.h>
 
 namespace kiwano
 {
@@ -79,18 +78,6 @@ public:
     /// @param dest_rect 绘制的目标区域
     virtual void DrawTexture(const Texture& texture, const Rect* src_rect = nullptr,
                              const Rect* dest_rect = nullptr) = 0;
-
-    /// \~chinese
-    /// @brief 绘制图像帧
-    /// @param frame 图像帧
-    /// @param dest_pos 绘制图像的位置
-    virtual void DrawFrame(FramePtr frame, const Point& dest_pos);
-
-    /// \~chinese
-    /// @brief 绘制图像帧
-    /// @param frame 图像帧
-    /// @param dest_rect 绘制的目标区域
-    virtual void DrawFrame(FramePtr frame, const Rect& dest_rect);
 
     /// \~chinese
     /// @brief 绘制文本布局

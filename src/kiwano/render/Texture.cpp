@@ -89,7 +89,7 @@ bool Texture::Load(const String& file_path)
 
 bool Texture::Load(const Resource& res)
 {
-    Renderer::GetInstance().CreateTexture(*this, res);
+    Renderer::GetInstance().CreateTexture(*this, res.GetData());
     return IsValid();
 }
 

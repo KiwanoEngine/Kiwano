@@ -20,10 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/render/Frame.h>
-#include <kiwano/render/FrameSequence.h>
-#include <kiwano/render/Font.h>
-#include <kiwano/render/GifImage.h>
+#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {

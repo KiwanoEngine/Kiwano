@@ -18,40 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/FrameSequence.h>
+#include <kiwano/2d/animation/FrameSequence.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
 
-FrameSequence::FrameSequence(const Vector<FramePtr>& frames)
-{
-    AddFrames(frames);
-}
-
-FrameSequence::FrameSequence(FramePtr frame, int cols, int rows, int max_num, float padding_x,
-                                       float padding_y)
-{
-    AddFrames(frame, cols, rows, max_num, padding_x, padding_y);
-}
-
 FrameSequence::FrameSequence() {}
 
 FrameSequence::~FrameSequence() {}
 
-void FrameSequence::AddFrame(FramePtr frame)
+FrameSequence::FrameSequence(const Vector<SpriteFrame>& frames)
 {
-    if (frame)
+    AddFrames(frames);
+}
+
+void FrameSequence::AddFrame(const SpriteFrame& frame)
+{
+    if (frame.IsValid())
     {
         frames_.push_back(frame);
     }
     else
     {
-        Fail("FrameSequence::Add failed, NULL pointer exception");
+        Fail("FrameSequence::AddFrame failed, frame is invalid");
     }
 }
 
-void FrameSequence::AddFrames(const Vector<FramePtr>& frames)
+void FrameSequence::AddFrames(const Vector<SpriteFrame>& frames)
 {
     if (frames_.empty())
         frames_ = frames;
@@ -63,58 +57,13 @@ void FrameSequence::AddFrames(const Vector<FramePtr>& frames)
     }
 }
 
-void FrameSequence::AddFrames(FramePtr frame, int cols, int rows, int max_num, float padding_x, float padding_y)
-{
-    if (cols <= 0 || rows <= 0 || max_num == 0)
-        return;
-
-    if (!frame)
-        return;
-
-    Rect  src_rect   = frame->GetCropRect();
-    float raw_width  = src_rect.GetWidth();
-    float raw_height = src_rect.GetHeight();
-    float width      = (raw_width - (cols - 1) * padding_x) / cols;
-    float height     = (raw_height - (rows - 1) * padding_y) / rows;
-
-    Vector<FramePtr> frames;
-    frames.reserve((max_num > 0) ? max_num : (rows * cols));
-
-    int current_num = 0;
-
-    float dty = src_rect.GetTop();
-    for (int i = 0; i < rows; i++)
-    {
-        float dtx = src_rect.GetLeft();
-
-        for (int j = 0; j < cols; j++)
-        {
-            FramePtr ptr = MakePtr<Frame>();
-            if (ptr)
-            {
-                ptr->SetTexture(frame->GetTexture());
-                ptr->SetCropRect(Rect{ dtx, dty, dtx + width, dty + height });
-                frames.push_back(ptr);
-                ++current_num;
-            }
-            dtx += (width + padding_x);
-        }
-        dty += (height + padding_y);
-
-        if (max_num > 0 && current_num == max_num)
-            break;
-    }
-
-    AddFrames(frames);
-}
-
-FramePtr FrameSequence::GetFrame(size_t index) const
+const SpriteFrame& FrameSequence::GetFrame(size_t index) const
 {
     KGE_ASSERT(index < frames_.size());
     return frames_[index];
 }
 
-const Vector<FramePtr>& FrameSequence::GetFrames() const
+const Vector<SpriteFrame>& FrameSequence::GetFrames() const
 {
     return frames_;
 }

@@ -36,127 +36,79 @@ Sprite::Sprite(const Resource& res)
     Load(res);
 }
 
-Sprite::Sprite(FramePtr frame)
+Sprite::Sprite(TexturePtr texture)
+{
+    SetFrame(SpriteFrame(texture));
+}
+
+Sprite::Sprite(const String& file_path, const Rect& crop_rect)
+{
+    SetFrame(SpriteFrame(file_path, crop_rect));
+}
+
+Sprite::Sprite(const Resource& res, const Rect& crop_rect)
+{
+    SetFrame(SpriteFrame(res, crop_rect));
+}
+
+Sprite::Sprite(TexturePtr texture, const Rect& crop_rect)
+{
+    SetFrame(SpriteFrame(texture, crop_rect));
+}
+
+Sprite::Sprite(const SpriteFrame& frame)
 {
     SetFrame(frame);
 }
 
-Sprite::Sprite(const String& file_path, const Rect& crop_rect)
-    : Sprite(file_path)
-{
-    SetCropRect(crop_rect);
-}
-
-Sprite::Sprite(const Resource& res, const Rect& crop_rect)
-    : Sprite(res)
-{
-    SetCropRect(crop_rect);
-}
-
 Sprite::~Sprite() {}
 
-bool Sprite::Load(const String& file_path, bool autoresize)
+bool Sprite::Load(const String& file_path)
 {
-    FramePtr frame = MakePtr<Frame>(file_path);
-    if (frame && frame->IsValid())
+    SpriteFrame frame(file_path);
+    if (frame.IsValid())
     {
-        SetFrame(frame, autoresize);
+        SetFrame(frame);
         return true;
     }
     Fail("Sprite::Load failed");
     return false;
 }
 
-bool Sprite::Load(const Resource& res, bool autoresize)
+bool Sprite::Load(const Resource& res)
 {
-    FramePtr frame = MakePtr<Frame>(res);
-    if (frame)
+    SpriteFrame frame(res);
+    if (frame.IsValid())
     {
-        SetFrame(frame, autoresize);
+        SetFrame(frame);
         return true;
     }
     Fail("Sprite::Load failed");
     return false;
 }
 
-float Sprite::GetSourceWidth() const
+void Sprite::SetFrame(const SpriteFrame& frame)
 {
-    if (frame_)
-    {
-        return frame_->GetSourceWidth();
-    }
-    return 0.0f;
-}
+    frame_ = frame;
+    SetSize(frame_.GetSize());
 
-float Sprite::GetSourceHeight() const
-{
-    if (frame_)
+    if (!frame_.IsValid())
     {
-        return frame_->GetSourceHeight();
-    }
-    return 0.0f;
-}
-
-Size Sprite::GetSourceSize() const
-{
-    if (frame_)
-    {
-        return frame_->GetSourceSize();
-    }
-    return Size();
-}
-
-Rect Sprite::GetCropRect() const
-{
-    if (frame_)
-    {
-        return frame_->GetCropRect();
-    }
-    return Rect();
-}
-
-void Sprite::SetCropRect(const Rect& crop_rect)
-{
-    if (frame_)
-    {
-        frame_->SetCropRect(crop_rect);
-    }
-}
-
-void Sprite::SetFrame(FramePtr frame, bool autoresize)
-{
-    if (frame_ != frame)
-    {
-        frame_ = frame;
-        if (autoresize)
-        {
-            ResetSize();
-        }
-    }
-}
-
-void Sprite::ResetSize()
-{
-    if (frame_)
-    {
-        SetSize(frame_->GetSize());
-    }
-    else
-    {
-        SetSize(Size());
+        Fail("Sprite::SetFrame failed");
     }
 }
 
 void Sprite::OnRender(RenderContext& ctx)
 {
-    if (frame_ && frame_->IsValid())
+    if (frame_.IsValid())
     {
-        ctx.DrawTexture(*frame_->GetTexture(), &frame_->GetCropRect(), &GetBounds());
+        ctx.DrawTexture(*frame_.GetTexture(), &frame_.GetCropRect(), &GetBounds());
     }
 }
 
 bool Sprite::CheckVisibility(RenderContext& ctx) const
 {
-    return frame_ && frame_->IsValid() && Actor::CheckVisibility(ctx);
+    return frame_.IsValid() && Actor::CheckVisibility(ctx);
 }
+
 }  // namespace kiwano

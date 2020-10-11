@@ -18,56 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/transition/BoxTransition.h>
 
 namespace kiwano
 {
 
-/**
- * \addtogroup Actions
- * @{
- */
-
-/**
- * \~chinese
- * @brief 动画调度器
- */
-class KGE_API ActionScheduler
+BoxTransition::BoxTransition(Duration duration)
 {
-public:
-    /// \~chinese
-    /// @brief 添加动画
-    ActionEntity* AddAction(ActionEntityPtr action);
+    SetDuration(duration);
+}
 
-    /// \~chinese
-    /// @brief 继续所有暂停动画
-    void ResumeAllActions();
+BoxTransition::BoxTransition() {}
 
-    /// \~chinese
-    /// @brief 暂停所有动画
-    void PauseAllActions();
+void BoxTransition::Init(Stage* prev, Stage* next)
+{
+    Transition::Init(prev, next);
 
-    /// \~chinese
-    /// @brief 停止所有动画
-    void StopAllActions();
+    in_layer_.SetOpacity(0.f);
+}
 
-    /// \~chinese
-    /// @brief 获取指定名称的动画
-    /// @param name 动画名称
-    ActionEntity* GetAction(const String& name);
+void BoxTransition::Update(Duration dt)
+{
+    Transition::Update(dt);
 
-    /// \~chinese
-    /// @brief 获取所有动画
-    const ActionList& GetAllActions() const;
+    if (process_ < .5f)
+    {
+        out_layer_.SetClipRect(Rect(window_size_.x * process_, window_size_.y * process_,
+                                    window_size_.x * (1 - process_), window_size_.y * (1 - process_)));
+    }
+    else
+    {
+        out_layer_.SetOpacity(0.f);
+        in_layer_.SetOpacity(1.f);
+        in_layer_.SetClipRect(Rect(window_size_.x * (1 - process_), window_size_.y * (1 - process_),
+                                   window_size_.x * process_, window_size_.y * process_));
+    }
+}
 
-    /// \~chinese
-    /// @brief 更新动画
-    void Update(Actor* target, Duration dt);
-
-private:
-    ActionList actions_;
-};
-
-/** @} */
 }  // namespace kiwano

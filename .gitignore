@@ -13,6 +13,7 @@ Release/
 # Application folders
 .vs
 .idea
+._Kiwano.sln
 
 # vs2010
 ipch/

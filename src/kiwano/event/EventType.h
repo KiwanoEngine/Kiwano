@@ -32,24 +32,28 @@ namespace kiwano
 
 /// \~chinese
 /// @brief 事件类型
-class EventType : public std::type_index
+class EventType
 {
-    class Dummy
-    {
-    };
-
 public:
-    /// \~chinese
-    /// @brief 构建事件类型
     EventType();
 
-    using std::type_index::type_index;
-    using std::type_index::operator==;
-    using std::type_index::operator!=;
-    using std::type_index::operator<;
-    using std::type_index::operator>=;
-    using std::type_index::operator>;
-    using std::type_index::operator<=;
+    EventType(const std::type_index& type);
+
+    /// \~chinese
+    /// @brief 是否是空类型
+    bool IsNull() const;
+
+    const std::type_index& GetType() const;
+
+    bool operator==(const EventType& rhs) const;
+    bool operator!=(const EventType& rhs) const;
+    bool operator<(const EventType& rhs) const;
+    bool operator<=(const EventType& rhs) const;
+    bool operator>(const EventType& rhs) const;
+    bool operator>=(const EventType& rhs) const;
+
+private:
+    std::type_index type_;
 };
 
 /** @} */
@@ -57,8 +61,53 @@ public:
 #define KGE_EVENT(EVENT_TYPE) ::kiwano::EventType(typeid(EVENT_TYPE))
 
 inline EventType::EventType()
-    : std::type_index(typeid(EventType::Dummy))
+    : type_(typeid(void))
 {
+}
+
+inline EventType::EventType(const std::type_index& type)
+    : type_(type)
+{
+}
+
+inline bool EventType::IsNull() const
+{
+    return type_ == typeid(void);
+}
+
+inline const std::type_index& EventType::GetType() const
+{
+    return type_;
+}
+
+inline bool EventType::operator==(const EventType& rhs) const
+{
+    return type_ == rhs.type_;
+}
+
+inline bool EventType::operator!=(const EventType& rhs) const
+{
+    return type_ != rhs.type_;
+}
+
+inline bool EventType::operator<(const EventType& rhs) const
+{
+    return type_ < rhs.type_;
+}
+
+inline bool EventType::operator<=(const EventType& rhs) const
+{
+    return type_ <= rhs.type_;
+}
+
+inline bool EventType::operator>(const EventType& rhs) const
+{
+    return type_ > rhs.type_;
+}
+
+inline bool EventType::operator>=(const EventType& rhs) const
+{
+    return type_ >= rhs.type_;
 }
 
 }  // namespace kiwano

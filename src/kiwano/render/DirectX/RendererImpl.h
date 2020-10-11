@@ -34,17 +34,17 @@ public:
 
     void CreateTexture(Texture& texture, const String& file_path) override;
 
-    void CreateTexture(Texture& texture, const Resource& resource) override;
+    void CreateTexture(Texture& texture, const BinaryData& data) override;
 
     void CreateGifImage(GifImage& gif, const String& file_path) override;
 
-    void CreateGifImage(GifImage& gif, const Resource& resource) override;
+    void CreateGifImage(GifImage& gif, const BinaryData& data) override;
 
     void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) override;
 
     void CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path) override;
 
-    void CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res) override;
+    void CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data) override;
 
     void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) override;
 

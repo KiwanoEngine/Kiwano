@@ -88,8 +88,8 @@ public:
     /// \~chinese
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
-    /// @param[in] resource 图片资源
-    virtual void CreateTexture(Texture& texture, const Resource& resource) = 0;
+    /// @param[in] data 图片二进制数据
+    virtual void CreateTexture(Texture& texture, const BinaryData& data) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
@@ -100,12 +100,12 @@ public:
     /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
-    /// @param[in] resource 图片资源
-    virtual void CreateGifImage(GifImage& gif, const Resource& resource) = 0;
+    /// @param[in] data 图片二进制数据
+    virtual void CreateGifImage(GifImage& gif, const BinaryData& data) = 0;
 
     /// \~chinese
-    /// @brief 创建GIF图像帧内部资源
-    /// @param[out] frame GIF图像帧
+    /// @brief 创建GIF关键帧内部资源
+    /// @param[out] frame GIF关键帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
     virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;
@@ -121,8 +121,8 @@ public:
     /// @brief 创建字体集内部资源
     /// @param[out] font 字体
     /// @param[out] family_names 字体包含的字体族
-    /// @param[in] res_arr 字体资源
-    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res) = 0;
+    /// @param[in] data 字体二进制资源
+    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局内部资源

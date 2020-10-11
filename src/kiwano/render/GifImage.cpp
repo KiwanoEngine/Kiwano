@@ -92,7 +92,7 @@ bool GifImage::Load(const String& file_path)
 
 bool GifImage::Load(const Resource& res)
 {
-    Renderer::GetInstance().CreateGifImage(*this, res);
+    Renderer::GetInstance().CreateGifImage(*this, res.GetData());
 
     if (IsValid())
     {

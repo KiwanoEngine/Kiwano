@@ -18,66 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/2d/animation/CustomAnimation.h>
 
 namespace kiwano
 {
 
-/**
- * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
- */
-class KGE_API Resource
+CustomAnimation::CustomAnimation(Duration duration, TweenFunc tween_func)
+    : TweenAnimation(duration)
+    , tween_func_(tween_func)
 {
-public:
-
-    /// \~chinese
-    /// @brief 构造资源
-    Resource();
-
-    /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
-
-    /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
-
-    /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
-
-    /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
-
-private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
-};
-
-inline uint32_t Resource::GetId() const
-{
-    return id_;
 }
 
-inline String Resource::GetType() const
+CustomAnimation* CustomAnimation::Clone() const
 {
-    return type_;
+    CustomAnimation* ptr = new CustomAnimation(GetDuration(), tween_func_);
+    DoClone(ptr);
+    return ptr;
 }
+
+void CustomAnimation::Init(Actor* target)
+{
+    if (!tween_func_)
+        this->Done();
+}
+
+void CustomAnimation::UpdateTween(Actor* target, float frac)
+{
+    if (tween_func_)
+        tween_func_(target, frac);
+}
+
 }  // namespace kiwano

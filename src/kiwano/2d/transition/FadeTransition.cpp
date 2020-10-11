@@ -18,31 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/action/ActionDelay.h>
+#include <kiwano/2d/transition/FadeTransition.h>
 
 namespace kiwano
 {
 
-ActionDelay::ActionDelay(Duration delay)
+FadeTransition::FadeTransition(Duration duration, bool parallel)
+    : parallel_(parallel)
 {
-    SetEntity(MakePtr<ActionDelayEntity>(delay));
+    SetDuration(duration);
 }
 
-ActionDelayEntity::ActionDelayEntity(Duration delay)
+FadeTransition::FadeTransition() {}
+
+void FadeTransition::Init(Stage* prev, Stage* next)
 {
-    this->SetDelay(delay);
+    Transition::Init(prev, next);
+
+    out_layer_.SetOpacity(1.f);
+    in_layer_.SetOpacity(0.f);
 }
 
-ActionDelayEntity* ActionDelayEntity::Clone() const
+void FadeTransition::Update(Duration dt)
 {
-    ActionDelayEntity* ptr = new ActionDelayEntity(GetDelay());
-    DoClone(ptr);
-    return ptr;
-}
+    Transition::Update(dt);
 
-ActionDelayEntity* ActionDelayEntity::Reverse() const
-{
-    return Clone();
+    if (parallel_)
+    {
+        out_layer_.SetOpacity(1 - process_);
+        in_layer_.SetOpacity(process_);
+    }
+    else
+    {
+        if (process_ < 0.5)
+        {
+            out_layer_.SetOpacity(1 - process_ * 2);
+            in_layer_.SetOpacity(0.f);
+        }
+        else
+        {
+            out_layer_.SetOpacity(0.f);
+            in_layer_.SetOpacity((process_ - 0.5f) * 2);
+        }
+    }
 }
 
 }  // namespace kiwano

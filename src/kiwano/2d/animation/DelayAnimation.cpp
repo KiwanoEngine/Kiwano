@@ -18,48 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/animation/DelayAnimation.h>
 
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ActionDelayEntity);
-
-/**
- * \addtogroup Actions
- * @{
- */
-
-/// \~chinese
-/// @brief 延时动画
-class KGE_API ActionDelay : public Action
+DelayAnimation::DelayAnimation(Duration delay)
 {
-public:
-    /// \~chinese
-    /// @brief 创建延时动画
-    /// @param delay 延时时长
-    ActionDelay(Duration delay);
-};
+    this->SetDelay(delay);
+}
 
-/// \~chinese
-/// @brief 延时动画实体
-class KGE_API ActionDelayEntity : public ActionEntity
+DelayAnimation* DelayAnimation::Clone() const
 {
-public:
-    /// \~chinese
-    /// @brief 创建延时动画
-    /// @param delay 延时时长
-    ActionDelayEntity(Duration delay);
+    DelayAnimation* ptr = new DelayAnimation(GetDelay());
+    DoClone(ptr);
+    return ptr;
+}
 
-    /// \~chinese
-    /// @brief 获取该动画的拷贝对象
-    ActionDelayEntity* Clone() const override;
+DelayAnimation* DelayAnimation::Reverse() const
+{
+    return Clone();
+}
 
-    /// \~chinese
-    /// @brief 获取该动画的倒转
-    ActionDelayEntity* Reverse() const override;
-};
-
-/** @} */
 }  // namespace kiwano

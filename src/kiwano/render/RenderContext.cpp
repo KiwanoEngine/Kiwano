@@ -60,22 +60,6 @@ void RenderContext::EndDraw()
     }
 }
 
-void RenderContext::DrawFrame(FramePtr frame, const Point& dest_pos)
-{
-    if (frame)
-    {
-        this->DrawTexture(*frame->GetTexture(), &frame->GetCropRect(), &Rect(dest_pos, frame->GetSize()));
-    }
-}
-
-void RenderContext::DrawFrame(FramePtr frame, const Rect& dest_rect)
-{
-    if (frame)
-    {
-        this->DrawTexture(*frame->GetTexture(), &frame->GetCropRect(), &dest_rect);
-    }
-}
-
 void RenderContext::SetGlobalTransform(const Matrix3x2* matrix)
 {
     if (matrix)

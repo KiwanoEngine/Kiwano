@@ -19,65 +19,61 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/2d/animation/TweenAnimation.h>
+#include <kiwano/2d/animation/FrameSequence.h>
 
 namespace kiwano
 {
 
+KGE_DECLARE_SMART_PTR(FrameAnimation);
+
 /**
- * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+ * \addtogroup Animation
+ * @{
  */
-class KGE_API Resource
+
+/// \~chinese
+/// @brief 帧动画
+class KGE_API FrameAnimation : public TweenAnimation
 {
 public:
+    FrameAnimation();
 
     /// \~chinese
-    /// @brief 构造资源
-    Resource();
+    /// @brief 创建帧动画
+    /// @param dur 动画时长
+    /// @param frame_seq 序列帧
+    FrameAnimation(Duration dur, FrameSequencePtr frame_seq);
+
+    virtual ~FrameAnimation();
 
     /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
+    /// @brief 获取序列帧
+    FrameSequencePtr GetFrameSequence() const;
 
     /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
+    /// @brief 设置序列帧
+    /// @param[in] frame_seq 序列帧
+    void SetFrameSequence(FrameSequencePtr frame_seq);
 
     /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
+    /// @brief 获取该动画的拷贝对象
+    FrameAnimation* Clone() const override;
 
     /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
+    /// @brief 获取该动画的倒转
+    FrameAnimation* Reverse() const override;
+
+protected:
+    void Init(Actor* target) override;
+
+    void UpdateTween(Actor* target, float percent) override;
 
 private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
+    size_t           current_index_;
+    FrameSequencePtr frame_seq_;
 };
 
-inline uint32_t Resource::GetId() const
-{
-    return id_;
-}
+/** @} */
 
-inline String Resource::GetType() const
-{
-    return type_;
-}
 }  // namespace kiwano

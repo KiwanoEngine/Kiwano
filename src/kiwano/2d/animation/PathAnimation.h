@@ -19,37 +19,22 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/animation/TweenAnimation.h>
 #include <kiwano/render/Shape.h>
-#include <kiwano/render/ShapeMaker.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(ActionWalkEntity);
+KGE_DECLARE_SMART_PTR(PathAnimation);
 
 /**
- * \addtogroup Actions
+ * \addtogroup Animation
  * @{
  */
 
-/// \~chinese
-/// @brief 路径行走动画
-class KGE_API ActionWalk : public ActionTween
-{
-public:
-    /// \~chinese
-    /// @brief 创建路径行走动画
-    /// @param duration 持续时长
-    /// @param path 路径形状
-    /// @param rotating 是否沿路径切线方向旋转
-    /// @param start 路径起点（百分比）
-    /// @param end 路径终点（百分比）
-    ActionWalk(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
-};
 
 /// \~chinese
-/// @brief 路径行走动画实体
-class KGE_API ActionWalkEntity : public ActionTweenEntity
+/// @brief 路径行走动画
+class KGE_API PathAnimation : public TweenAnimation
 {
 public:
     /// \~chinese
@@ -59,7 +44,7 @@ public:
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    ActionWalkEntity(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
+    PathAnimation(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
 
     /// \~chinese
     /// @brief 获取路线
@@ -95,11 +80,11 @@ public:
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionWalkEntity* Clone() const override;
+    PathAnimation* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionWalkEntity* Reverse() const override;
+    PathAnimation* Reverse() const override;
 
 protected:
     void Init(Actor* target) override;
@@ -117,42 +102,42 @@ private:
 
 /** @} */
 
-inline ShapePtr ActionWalkEntity::GetPath() const
+inline ShapePtr PathAnimation::GetPath() const
 {
     return path_;
 }
 
-inline bool ActionWalkEntity::IsRotating() const
+inline bool PathAnimation::IsRotating() const
 {
     return rotating_;
 }
 
-inline float ActionWalkEntity::GetStartValue() const
+inline float PathAnimation::GetStartValue() const
 {
     return start_;
 }
 
-inline float ActionWalkEntity::GetEndValue() const
+inline float PathAnimation::GetEndValue() const
 {
     return end_;
 }
 
-inline void ActionWalkEntity::SetPath(ShapePtr path)
+inline void PathAnimation::SetPath(ShapePtr path)
 {
     path_ = path;
 }
 
-inline void ActionWalkEntity::SetRotating(bool rotating)
+inline void PathAnimation::SetRotating(bool rotating)
 {
     rotating_ = rotating;
 }
 
-inline void ActionWalkEntity::SetStartValue(float start)
+inline void PathAnimation::SetStartValue(float start)
 {
     start_ = start;
 }
 
-inline void ActionWalkEntity::SetEndValue(float end)
+inline void PathAnimation::SetEndValue(float end)
 {
     end_ = end;
 }

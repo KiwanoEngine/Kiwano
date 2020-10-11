@@ -250,7 +250,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
     KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture failed");
 }
 
-void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
+void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -260,8 +260,6 @@ void RendererImpl::CreateTexture(Texture& texture, const Resource& resource)
 
     if (SUCCEEDED(hr))
     {
-        Resource::Data data = resource.GetData();
-
         hr = data.IsValid() ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
@@ -334,7 +332,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
     KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF texture failed");
 }
 
-void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
+void RendererImpl::CreateGifImage(GifImage& gif, const BinaryData& data)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -344,8 +342,6 @@ void RendererImpl::CreateGifImage(GifImage& gif, const Resource& resource)
 
     if (SUCCEEDED(hr))
     {
-        Resource::Data data = resource.GetData();
-
         hr = data.IsValid() ? S_OK : E_FAIL;
 
         if (SUCCEEDED(hr))
@@ -559,7 +555,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
     KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const Resource& res)
+void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -570,7 +566,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
     if (SUCCEEDED(hr))
     {
         ComPtr<IDWriteFontCollection> font_collection;
-        hr = d2d_res_->CreateFontCollectionFromResources(font_collection, Vector<Resource>{ res });
+        hr = d2d_res_->CreateFontCollectionFromBinaryData(font_collection, Vector<BinaryData>{ data });
 
         if (SUCCEEDED(hr))
         {

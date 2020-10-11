@@ -19,82 +19,75 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/action/Action.h>
+#include <kiwano/2d/animation/TweenAnimation.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(ActionGroupEntity);
+KGE_DECLARE_SMART_PTR(CustomAnimation);
 
 /**
- * \addtogroup Actions
+ * \addtogroup Animation
  * @{
  */
 
+
 /// \~chinese
-/// @brief 动画组合
-class KGE_API ActionGroup : public Action
+/// @brief 补间动画回调函数
+/// @details 在动画更新时回调该函数，第一个参数是执行动画的目标，第二个参数是动画进度（0.0 - 1.0）
+using TweenFunc = Function<void(Actor* /* target */, float /* frac */)>;
+
+/// \~chinese
+/// @brief 自定义动画
+class KGE_API CustomAnimation : public TweenAnimation
 {
 public:
     /// \~chinese
-    /// @brief 创建动画组合
-    /// @param actions 动画集合
-    /// @param parallel 同步执行
-    ActionGroup(const Vector<ActionEntityPtr>& actions, bool parallel = false);
-};
-
-/// \~chinese
-/// @brief 动画组合实体
-class KGE_API ActionGroupEntity : public ActionEntity
-{
-public:
-    ActionGroupEntity();
+    /// @brief 创建自定义动画
+    /// @param duration 动画时长
+    /// @param tween_func 动画回调函数
+    CustomAnimation(Duration duration, TweenFunc tween_func);
 
     /// \~chinese
-    /// @brief 创建动画组合
-    /// @param actions 动画集合
-    /// @param parallel 同步执行
-    ActionGroupEntity(const Vector<ActionEntityPtr>& actions, bool parallel = false);
-
-    virtual ~ActionGroupEntity();
+    /// @brief 获取动画回调函数
+    TweenFunc GetTweenFunc() const;
 
     /// \~chinese
-    /// @brief 添加动画
-    /// @param action 动画
-    void AddAction(ActionEntityPtr action);
-
-    /// \~chinese
-    /// @brief 添加多个动画
-    /// @param actions 动画集合
-    void AddActions(const Vector<ActionEntityPtr>& actions);
-
-    /// \~chinese
-    /// @brief 获取所有动画
-    const ActionList& GetActions() const;
+    /// @brief 设置动画回调函数
+    void SetTweenFunc(const TweenFunc& tween_func);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    ActionGroupEntity* Clone() const override;
+    CustomAnimation* Clone() const override;
 
     /// \~chinese
     /// @brief 获取该动画的倒转
-    ActionGroupEntity* Reverse() const override;
+    CustomAnimation* Reverse() const override
+    {
+        KGE_ERRORF("Reverse() not supported in CustomAnimation");
+        return nullptr;
+    }
 
 protected:
     void Init(Actor* target) override;
 
-    void Update(Actor* target, Duration dt) override;
+    void UpdateTween(Actor* target, float frac) override;
 
 private:
-    bool            parallel_;
-    ActionEntityPtr current_;
-    ActionList      actions_;
+    TweenFunc tween_func_;
 };
 
 /** @} */
 
-inline const ActionList& ActionGroupEntity::GetActions() const
+
+
+inline TweenFunc CustomAnimation::GetTweenFunc() const
 {
-    return actions_;
+    return tween_func_;
+}
+
+inline void CustomAnimation::SetTweenFunc(const TweenFunc& tween_func)
+{
+    tween_func_ = tween_func;
 }
 
 }  // namespace kiwano

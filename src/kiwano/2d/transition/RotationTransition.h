@@ -19,65 +19,40 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/BinaryData.h>
+#include <kiwano/2d/transition/Transition.h>
 
 namespace kiwano
 {
 
+KGE_DECLARE_SMART_PTR(RotationTransition);
+
 /**
  * \~chinese
- * @brief 资源
- * @details
- *   资源是保存在 exe 中的二进制数据，
- *   例如，一份音频资源的类型为 "WAVE"，名称标识符为
- * IDR_WAVE_1，那么可以这样指定该资源:
- *   @code
- *     Resource(IDR_WAVE_1, "WAVE");
- *   @endcode
- *   了解资源的更多信息:
- * https://docs.microsoft.com/en-us/windows/desktop/menurc/resources
+ * @brief 旋转过渡动画
+ * @details 前一场景以旋转方式收缩至消失，后一场景以旋转方式扩大
  */
-class KGE_API Resource
+class RotationTransition : public Transition
 {
 public:
+    /**
+     * \~chinese
+     * @brief 创建旋转过渡动画
+     * @param duration 动画时长
+     * @param rotation 旋转度数
+     */
+    RotationTransition(Duration duration, float rotation = 360.0f);
 
-    /// \~chinese
-    /// @brief 构造资源
-    Resource();
+    RotationTransition();
 
-    /// \~chinese
-    /// @brief 构造资源
-    /// @param id 资源 ID
-    /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
+protected:
+    void Update(Duration dt) override;
 
-    /// \~chinese
-    /// @brief 获取资源的二进制数据
-    /// @return 资源数据
-    BinaryData GetData() const;
+    virtual void Init(Stage* prev, Stage* next) override;
 
-    /// \~chinese
-    /// @brief 获取资源 ID
-    uint32_t GetId() const;
-
-    /// \~chinese
-    /// @brief 获取资源类型
-    String GetType() const;
+    void Reset() override;
 
 private:
-    uint32_t id_;
-    String   type_;
-
-    mutable BinaryData data_;
+    float rotation_;
 };
 
-inline uint32_t Resource::GetId() const
-{
-    return id_;
-}
-
-inline String Resource::GetType() const
-{
-    return type_;
-}
 }  // namespace kiwano

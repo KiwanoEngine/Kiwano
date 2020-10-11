@@ -19,72 +19,62 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/FrameSequence.h>
-#include <kiwano/2d/action/ActionTween.h>
+#include <kiwano/2d/animation/Animation.h>
 
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(AnimationEntity);
-
 /**
- * \addtogroup Actions
+ * \addtogroup Animation
  * @{
  */
 
-/// \~chinese
-/// @brief 帧动画
-class KGE_API Animation : public ActionTween
+/**
+ * \~chinese
+ * @brief 动画调度器
+ */
+class KGE_API Animator
 {
 public:
     /// \~chinese
-    /// @brief 创建帧动画
-    /// @param dur 动画时长
-    /// @param frame_seq 序列帧
-    Animation(Duration dur, FrameSequencePtr frame_seq);
-};
-
-/// \~chinese
-/// @brief 帧动画实体
-class KGE_API AnimationEntity : public ActionTweenEntity
-{
-public:
-    AnimationEntity();
+    /// @brief 添加动画
+    Animation* AddAnimation(AnimationPtr animation);
 
     /// \~chinese
-    /// @brief 创建帧动画
-    /// @param dur 动画时长
-    /// @param frame_seq 序列帧
-    AnimationEntity(Duration dur, FrameSequencePtr frame_seq);
-
-    virtual ~AnimationEntity();
-
-    /// \~chinese
-    /// @brief 获取序列帧
-    FrameSequencePtr GetFrameSequence() const;
+    /// @brief 开始动画
+    inline Animation* StartAnimation(AnimationPtr animation)
+    {
+        return AddAnimation(animation);
+    }
 
     /// \~chinese
-    /// @brief 设置序列帧
-    /// @param[in] frame_seq 序列帧
-    void SetFrameSequence(FrameSequencePtr frame_seq);
+    /// @brief 继续所有暂停动画
+    void ResumeAllAnimations();
 
     /// \~chinese
-    /// @brief 获取该动画的拷贝对象
-    AnimationEntity* Clone() const override;
+    /// @brief 暂停所有动画
+    void PauseAllAnimations();
 
     /// \~chinese
-    /// @brief 获取该动画的倒转
-    AnimationEntity* Reverse() const override;
+    /// @brief 停止所有动画
+    void StopAllAnimations();
 
-protected:
-    void Init(Actor* target) override;
+    /// \~chinese
+    /// @brief 获取指定名称的动画
+    /// @param name 动画名称
+    Animation* GetAnimation(const String& name);
 
-    void UpdateTween(Actor* target, float percent) override;
+    /// \~chinese
+    /// @brief 获取所有动画
+    const AnimationList& GetAllAnimations() const;
+
+    /// \~chinese
+    /// @brief 更新动画
+    void Update(Actor* target, Duration dt);
 
 private:
-    FrameSequencePtr frame_seq_;
+    AnimationList animations_;
 };
 
 /** @} */
-
 }  // namespace kiwano

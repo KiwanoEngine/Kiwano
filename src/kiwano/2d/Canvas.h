@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/render/Frame.h>
+#include <kiwano/2d/SpriteFrame.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/RenderContext.h>
 
@@ -150,17 +150,32 @@ public:
     void FillRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
-    /// @brief 绘制图像帧
-    /// @param frame 图像帧
-    /// @param pos 绘制图像的位置
-    void DrawFrame(FramePtr frame, const Point& pos);
+    /// @brief 绘制纹理
+    /// @param texture 纹理
+    /// @param pos 绘制的目标位置
+    /// @param crop_rect 纹理裁剪矩形
+    void DrawTexture(TexturePtr texture, const Point& pos, const Rect* crop_rect = nullptr);
 
     /// \~chinese
-    /// @brief 绘制图像帧
-    /// @param frame 图像帧
-    /// @param pos 绘制图像的位置
-    /// @param size 渲染的图像大小
-    void DrawFrame(FramePtr frame, const Point& pos, const Size& size);
+    /// @brief 绘制纹理
+    /// @param texture 纹理
+    /// @param pos 绘制的目标位置
+    /// @param size 绘制的目标大小
+    /// @param crop_rect 纹理裁剪矩形
+    void DrawTexture(TexturePtr texture, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
+
+    /// \~chinese
+    /// @brief 绘制精灵帧
+    /// @param frame 精灵帧
+    /// @param pos 绘制的目标位置
+    void DrawSpriteFrame(const SpriteFrame& frame, const Point& pos);
+
+    /// \~chinese
+    /// @brief 绘制精灵帧
+    /// @param frame 精灵帧
+    /// @param pos 绘制的目标位置
+    /// @param size 绘制的目标大小
+    void DrawSpriteFrame(const SpriteFrame& frame, const Point& pos, const Size& size);
 
     /// \~chinese
     /// @brief 绘制文字布局
@@ -381,23 +396,33 @@ inline void CanvasRenderContext::FillRoundedRect(const Rect& rect, const Vec2& r
     ctx_->FillRoundedRectangle(rect, radius);
 }
 
-inline void CanvasRenderContext::DrawFrame(FramePtr frame, const Point& pos)
+inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& pos, const Rect* crop_rect)
 {
-    if (frame)
+    if (texture)
     {
-        Size frame_size = frame->GetSize();
-        this->DrawFrame(frame, pos, frame_size);
+        this->DrawTexture(texture, pos, texture->GetSize(), crop_rect);
     }
 }
 
-inline void CanvasRenderContext::DrawFrame(FramePtr frame, const Point& pos, const Size& size)
+inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& pos, const Size& size,
+                                             const Rect* crop_rect)
 {
     KGE_ASSERT(ctx_);
 
-    if (frame)
+    if (texture)
     {
-        ctx_->DrawFrame(frame, Rect(pos, size));
+        ctx_->DrawTexture(*texture, crop_rect, &Rect(pos, size));
     }
+}
+
+inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const Point& pos)
+{
+    this->DrawSpriteFrame(frame, pos, frame.GetCropRect().GetSize());
+}
+
+inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const Point& pos, const Size& size)
+{
+    this->DrawTexture(frame.GetTexture(), pos, size, &frame.GetCropRect());
 }
 
 inline void CanvasRenderContext::DrawTextLayout(const String& text, const TextStyle& style, const Point& point)

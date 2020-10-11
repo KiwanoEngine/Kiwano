@@ -18,44 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/FrameSequence.h>
+#include <kiwano/2d/animation/FrameAnimation.h>
 #include <kiwano/2d/Sprite.h>
-#include <kiwano/2d/action/Animation.h>
 
 namespace kiwano
 {
 
-Animation::Animation(Duration dur, FrameSequencePtr frame_seq)
-{
-    SetEntity(MakePtr<AnimationEntity>(dur, frame_seq));
-}
-
-AnimationEntity::AnimationEntity()
+FrameAnimation::FrameAnimation()
     : frame_seq_(nullptr)
+    , current_index_(0)
 {
 }
 
-AnimationEntity::AnimationEntity(Duration dur, FrameSequencePtr frame_seq)
-    : ActionTweenEntity(dur)
+FrameAnimation::FrameAnimation(Duration dur, FrameSequencePtr frame_seq)
+    : TweenAnimation(dur)
     , frame_seq_(frame_seq)
+    , current_index_(0)
 {
 }
 
-AnimationEntity::~AnimationEntity() {}
+FrameAnimation::~FrameAnimation() {}
 
-FrameSequencePtr AnimationEntity::GetFrameSequence() const
+FrameSequencePtr FrameAnimation::GetFrameSequence() const
 {
     return frame_seq_;
 }
 
-void AnimationEntity::SetFrameSequence(FrameSequencePtr frame_seq)
+void FrameAnimation::SetFrameSequence(FrameSequencePtr frame_seq)
 {
     frame_seq_ = frame_seq;
 }
 
-void AnimationEntity::Init(Actor* target)
+void FrameAnimation::Init(Actor* target)
 {
-    KGE_ASSERT(frame_seq_ && "AnimationEntity::Init() failed: FrameSequence is NULL!");
+    KGE_ASSERT(frame_seq_ && "FrameAnimation::Init() failed: FrameSequence is NULL!");
     if (!frame_seq_ || frame_seq_->GetFrames().empty())
     {
         Done();
@@ -63,15 +59,16 @@ void AnimationEntity::Init(Actor* target)
     }
 
     auto sprite_target = dynamic_cast<Sprite*>(target);
-    KGE_ASSERT(sprite_target && "AnimationEntity only supports Sprites!");
+    KGE_ASSERT(sprite_target && "FrameAnimation only supports Sprites!");
 
     if (sprite_target && frame_seq_)
     {
         sprite_target->SetFrame(frame_seq_->GetFrames()[0]);
+        current_index_ = 0;
     }
 }
 
-void AnimationEntity::UpdateTween(Actor* target, float percent)
+void FrameAnimation::UpdateTween(Actor* target, float percent)
 {
     auto sprite_target = dynamic_cast<Sprite*>(target);
 
@@ -81,20 +78,24 @@ void AnimationEntity::UpdateTween(Actor* target, float percent)
         auto        size   = frames.size();
         auto        index  = std::min(static_cast<size_t>(math::Floor(size * percent)), size - 1);
 
-        sprite_target->SetFrame(frames[index]);
+        if (index != current_index_)
+        {
+            current_index_ = index;
+            sprite_target->SetFrame(frames[index]);
+        }
     }
 }
 
-AnimationEntity* AnimationEntity::Clone() const
+FrameAnimation* FrameAnimation::Clone() const
 {
-    AnimationEntity* ptr = new AnimationEntity(GetDuration(), frame_seq_);
+    FrameAnimation* ptr = new FrameAnimation(GetDuration(), frame_seq_);
     DoClone(ptr);
     return ptr;
 }
 
-AnimationEntity* AnimationEntity::Reverse() const
+FrameAnimation* FrameAnimation::Reverse() const
 {
-    AnimationEntity* ptr = new AnimationEntity(GetDuration(), nullptr);
+    FrameAnimation* ptr = new FrameAnimation(GetDuration(), nullptr);
     DoClone(ptr);
 
     if (frame_seq_)

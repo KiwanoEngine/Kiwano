@@ -25,7 +25,7 @@
 #include <kiwano/base/component/ComponentManager.h>
 #include <kiwano/event/EventDispatcher.h>
 #include <kiwano/utils/TaskScheduler.h>
-#include <kiwano/2d/action/ActionScheduler.h>
+#include <kiwano/2d/animation/Animator.h>
 
 namespace kiwano
 {
@@ -62,8 +62,8 @@ typedef IntrusiveList<ActorPtr> ActorList;
  */
 class KGE_API Actor
     : public ObjectBase
+    , public Animator
     , public TaskScheduler
-    , public ActionScheduler
     , public EventDispatcher
     , public ComponentManager
     , protected IntrusiveListValue<ActorPtr>

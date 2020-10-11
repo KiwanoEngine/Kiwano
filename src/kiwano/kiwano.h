@@ -82,8 +82,6 @@
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/render/Frame.h>
-#include <kiwano/render/FrameSequence.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
@@ -100,17 +98,34 @@
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>
+#include <kiwano/2d/SpriteFrame.h>
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/TextActor.h>
-#include <kiwano/2d/Transition.h>
-#include <kiwano/2d/action/Action.h>
-#include <kiwano/2d/action/ActionDelay.h>
-#include <kiwano/2d/action/ActionGroup.h>
-#include <kiwano/2d/action/ActionTween.h>
-#include <kiwano/2d/action/ActionWalk.h>
-#include <kiwano/2d/action/Animation.h>
-#include <kiwano/2d/action/ActionScheduler.h>
+
+//
+// transition
+//
+
+#include <kiwano/2d/transition/Transition.h>
+#include <kiwano/2d/transition/BoxTransition.h>
+#include <kiwano/2d/transition/FadeTransition.h>
+#include <kiwano/2d/transition/MoveTransition.h>
+#include <kiwano/2d/transition/RotationTransition.h>
+
+//
+// animation
+//
+
+#include <kiwano/2d/animation/Animation.h>
+#include <kiwano/2d/animation/DelayAnimation.h>
+#include <kiwano/2d/animation/AnimationGroup.h>
+#include <kiwano/2d/animation/TweenAnimation.h>
+#include <kiwano/2d/animation/PathAnimation.h>
+#include <kiwano/2d/animation/FrameSequence.h>
+#include <kiwano/2d/animation/FrameAnimation.h>
+#include <kiwano/2d/animation/Animator.h>
+#include <kiwano/2d/animation/AnimationWrapper.h>
 
 //
 // platform
