@@ -18,70 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/platform/Keys.h>
-#include <kiwano/event/Event.h>
+#include <kiwano/2d/transition/FadeTransition.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(KeyEvent);
-KGE_DECLARE_SMART_PTR(KeyDownEvent);
-KGE_DECLARE_SMART_PTR(KeyUpEvent);
-KGE_DECLARE_SMART_PTR(KeyCharEvent);
 
-/**
- * \addtogroup Events
- * @{
- */
-
-/// \~chinese
-/// @brief 键盘事件
-class KGE_API KeyEvent : public Event
+FadeTransition::FadeTransition(Duration duration, bool parallel)
+    : parallel_(parallel)
 {
-public:
-    KeyEvent(const EventType& type);
-};
+    SetDuration(duration);
+}
 
-/// \~chinese
-/// @brief 键盘按下事件
-class KGE_API KeyDownEvent : public KeyEvent
+FadeTransition::FadeTransition() {}
+
+void FadeTransition::Init(Stage* prev, Stage* next)
 {
-public:
-    KeyCode code;  ///< 键值
+    Transition::Init(prev, next);
 
-    KeyDownEvent();
-};
+    out_layer_.SetOpacity(1.f);
+    in_layer_.SetOpacity(0.f);
+}
 
-/// \~chinese
-/// @brief 键盘抬起事件
-class KGE_API KeyUpEvent : public KeyEvent
+void FadeTransition::Update(Duration dt)
 {
-public:
-    KeyCode code;  ///< 键值
+    Transition::Update(dt);
 
-    KeyUpEvent();
-};
-
-/// \~chinese
-/// @brief 键盘字符事件
-class KGE_API KeyCharEvent : public KeyEvent
-{
-public:
-    char value;  ///< 字符
-
-    KeyCharEvent();
-};
-
-template <>
-struct IsSameEventType<KeyEvent>
-{
-    inline bool operator()(const Event* evt) const
+    if (parallel_)
     {
-        return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent);
+        out_layer_.SetOpacity(1 - process_);
+        in_layer_.SetOpacity(process_);
     }
-};
-
-/** @} */
+    else
+    {
+        if (process_ < 0.5)
+        {
+            out_layer_.SetOpacity(1 - process_ * 2);
+            in_layer_.SetOpacity(0.f);
+        }
+        else
+        {
+            out_layer_.SetOpacity(0.f);
+            in_layer_.SetOpacity((process_ - 0.5f) * 2);
+        }
+    }
+}
 
 }  // namespace kiwano

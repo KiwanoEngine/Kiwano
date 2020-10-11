@@ -15,6 +15,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h" />
     <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h" />
     <ClInclude Include="..\..\src\kiwano\2d\SpriteFrame.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\transition\BoxTransition.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\transition\FadeTransition.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\transition\MoveTransition.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\transition\RotationTransition.h" />
+    <ClInclude Include="..\..\src\kiwano\2d\transition\Transition.h" />
     <ClInclude Include="..\..\src\kiwano\base\component\Button.h" />
     <ClInclude Include="..\..\src\kiwano\base\component\Component.h" />
     <ClInclude Include="..\..\src\kiwano\base\component\ComponentManager.h" />
@@ -35,7 +40,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Flag.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
-    <ClInclude Include="..\..\src\kiwano\core\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Serializable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />
@@ -60,7 +64,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\Stage.h" />
     <ClInclude Include="..\..\src\kiwano\2d\Sprite.h" />
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\Transition.h" />
     <ClInclude Include="..\..\src\kiwano\core\Resource.h" />
     <ClInclude Include="..\..\src\kiwano\core\RefBasePtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\math\Constants.h" />
@@ -75,6 +78,7 @@
     <ClInclude Include="..\..\src\kiwano\platform\Application.h" />
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Input.h" />
+    <ClInclude Include="..\..\src\kiwano\platform\Keys.h" />
     <ClInclude Include="..\..\src\kiwano\platform\Runner.h" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\platform\win32\libraries.h" />
@@ -139,7 +143,11 @@
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\Transition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\transition\BoxTransition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\transition\FadeTransition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\transition\MoveTransition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\transition\RotationTransition.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\transition\Transition.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\component\Button.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\component\Component.cpp" />
     <ClCompile Include="..\..\src\kiwano\base\component\ComponentManager.cpp" />

@@ -19,69 +19,34 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/platform/Keys.h>
-#include <kiwano/event/Event.h>
+#include <kiwano/2d/transition/Transition.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(KeyEvent);
-KGE_DECLARE_SMART_PTR(KeyDownEvent);
-KGE_DECLARE_SMART_PTR(KeyUpEvent);
-KGE_DECLARE_SMART_PTR(KeyCharEvent);
+
+KGE_DECLARE_SMART_PTR(BoxTransition);
 
 /**
- * \addtogroup Events
- * @{
+ * \~chinese
+ * @brief 盒状过渡动画
+ * @details 前一场景以盒状收缩至消失，后一场景以盒状扩大
  */
-
-/// \~chinese
-/// @brief 键盘事件
-class KGE_API KeyEvent : public Event
+class BoxTransition : public Transition
 {
 public:
-    KeyEvent(const EventType& type);
+    /**
+     * \~chinese
+     * @brief 创建盒状过渡动画
+     * @param duration 动画时长
+     */
+    BoxTransition(Duration duration);
+
+    BoxTransition();
+
+protected:
+    void Update(Duration dt) override;
+
+    virtual void Init(Stage* prev, Stage* next) override;
 };
-
-/// \~chinese
-/// @brief 键盘按下事件
-class KGE_API KeyDownEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyDownEvent();
-};
-
-/// \~chinese
-/// @brief 键盘抬起事件
-class KGE_API KeyUpEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyUpEvent();
-};
-
-/// \~chinese
-/// @brief 键盘字符事件
-class KGE_API KeyCharEvent : public KeyEvent
-{
-public:
-    char value;  ///< 字符
-
-    KeyCharEvent();
-};
-
-template <>
-struct IsSameEventType<KeyEvent>
-{
-    inline bool operator()(const Event* evt) const
-    {
-        return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent);
-    }
-};
-
-/** @} */
 
 }  // namespace kiwano

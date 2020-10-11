@@ -21,7 +21,6 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/DebugActor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/2d/Transition.h>
 #include <kiwano/base/Director.h>
 
 namespace kiwano

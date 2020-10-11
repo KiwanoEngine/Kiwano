@@ -19,69 +19,54 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/platform/Keys.h>
-#include <kiwano/event/Event.h>
+#include <kiwano/2d/transition/Transition.h>
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(KeyEvent);
-KGE_DECLARE_SMART_PTR(KeyDownEvent);
-KGE_DECLARE_SMART_PTR(KeyUpEvent);
-KGE_DECLARE_SMART_PTR(KeyCharEvent);
+
+KGE_DECLARE_SMART_PTR(MoveTransition);
 
 /**
- * \addtogroup Events
- * @{
+ * \~chinese
+ * @brief 位移过渡动画
+ * @details 两场景以位移的方式切换
  */
-
-/// \~chinese
-/// @brief 键盘事件
-class KGE_API KeyEvent : public Event
+class MoveTransition : public Transition
 {
 public:
-    KeyEvent(const EventType& type);
-};
-
-/// \~chinese
-/// @brief 键盘按下事件
-class KGE_API KeyDownEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyDownEvent();
-};
-
-/// \~chinese
-/// @brief 键盘抬起事件
-class KGE_API KeyUpEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
-
-    KeyUpEvent();
-};
-
-/// \~chinese
-/// @brief 键盘字符事件
-class KGE_API KeyCharEvent : public KeyEvent
-{
-public:
-    char value;  ///< 字符
-
-    KeyCharEvent();
-};
-
-template <>
-struct IsSameEventType<KeyEvent>
-{
-    inline bool operator()(const Event* evt) const
+    /**
+     * \~chinese
+     * @brief 位移方式
+     */
+    enum class Type : int
     {
-        return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent);
-    }
-};
+        Up,    ///< 上移
+        Down,  ///< 下移
+        Left,  ///< 左移
+        Right  ///< 右移
+    };
 
-/** @} */
+    /**
+     * \~chinese
+     * @brief 创建位移过渡动画
+     * @param duration 动画时长
+     * @param type 位移方式
+     */
+    MoveTransition(Duration duration, Type type);
+
+    MoveTransition();
+
+protected:
+    void Update(Duration dt) override;
+
+    virtual void Init(Stage* prev, Stage* next) override;
+
+    void Reset() override;
+
+private:
+    Type  type_;
+    Point pos_delta_;
+    Point start_pos_;
+};
 
 }  // namespace kiwano

@@ -102,7 +102,16 @@
 #include <kiwano/2d/Sprite.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/TextActor.h>
-#include <kiwano/2d/Transition.h>
+
+//
+// transition
+//
+
+#include <kiwano/2d/transition/Transition.h>
+#include <kiwano/2d/transition/BoxTransition.h>
+#include <kiwano/2d/transition/FadeTransition.h>
+#include <kiwano/2d/transition/MoveTransition.h>
+#include <kiwano/2d/transition/RotationTransition.h>
 
 //
 // animation
