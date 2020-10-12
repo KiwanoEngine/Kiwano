@@ -446,69 +446,6 @@ public:
     /// @brief 设置默认锚点
     static void SetDefaultAnchor(float anchor_x, float anchor_y);
 
-    /// \~chinese
-    /// @brief 获取可见性属性
-    inline Value<bool> VisibleProperty()
-    {
-        return Value<bool>(visible_);
-    }
-
-    /// \~chinese
-    /// @brief 获取不透明度属性
-    inline Value<float, FlagUint8> OpacityProperty()
-    {
-        return Value<float, FlagUint8>(opacity_, { dirty_flag_, DirtyFlag::DirtyOpacity });
-    }
-
-    /// \~chinese
-    /// @brief 获取锚点属性
-    inline Value<Point, FlagUint8> AnchorProperty()
-    {
-        return Value<Point, FlagUint8>(anchor_, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取大小属性
-    inline Value<Size, FlagUint8> SizeProperty()
-    {
-        return Value<Size, FlagUint8>(size_, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取位置属性
-    inline Value<Point, FlagUint8> PositionProperty()
-    {
-        return Value<Point, FlagUint8>(transform_.position, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取旋转角度属性
-    inline Value<float, FlagUint8> RotationProperty()
-    {
-        return Value<float, FlagUint8>(transform_.rotation, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取缩放属性
-    inline Value<Point, FlagUint8> ScaleProperty()
-    {
-        return Value<Point, FlagUint8>(transform_.scale, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取错切角度属性
-    inline Value<Point, FlagUint8> SkewProperty()
-    {
-        return Value<Point, FlagUint8>(transform_.skew, { dirty_flag_, DirtyFlag::DirtyTransform });
-    }
-
-    /// \~chinese
-    /// @brief 获取Z轴顺序属性
-    inline Value<int, Function<void()>> ZOrderProperty()
-    {
-        return Value<int, Function<void()>>(z_order_, Closure(this, &Actor::Reorder));
-    }
-
 protected:
     /// \~chinese
     /// @brief 更新自身和所有子角色

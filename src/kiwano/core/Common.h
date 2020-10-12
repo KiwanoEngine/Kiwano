@@ -36,7 +36,6 @@
 #include <kiwano/core/Allocator.h>
 #include <kiwano/core/BitOperator.h>
 #include <kiwano/core/Flag.h>
-#include <kiwano/core/Value.h>
 
 namespace kiwano
 {
