@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Actor.h>
+#include <kiwano/base/component/MouseSensor.h>
 
 namespace kiwano
 {
@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(Button);
  * \~chinese
  * @brief 基础按钮组件
  */
-class KGE_API ButtonBase : public Component
+class KGE_API ButtonBase : public MouseSensor
 {
 public:
     /// \~chinese
@@ -59,24 +59,8 @@ public:
 
 protected:
     /// \~chinese
-    /// @brief 初始化组件
-    void InitComponent(Actor* actor) override;
-
-    /// \~chinese
-    /// @brief 销毁组件
-    void DestroyComponent() override;
-
-    /// \~chinese
     /// @brief 处理角色事件
     void HandleEvent(kiwano::Event* evt) override;
-
-private:
-    enum class Status
-    {
-        Normal,
-        Hover,
-        Pressed
-    } status_;
 };
 
 /**

@@ -99,10 +99,6 @@ public:
     bool IsVisible() const;
 
     /// \~chinese
-    /// @brief 获取响应状态
-    bool IsResponsible() const;
-
-    /// \~chinese
     /// @brief 是否启用级联透明度
     bool IsCascadeOpacityEnabled() const;
 
@@ -335,11 +331,6 @@ public:
     void SetZOrder(int zorder);
 
     /// \~chinese
-    /// @brief 设置角色是否可响应，默认为 false
-    /// @details 可响应的角色会收到鼠标的 Hover | Out | Click 消息
-    void SetResponsible(bool enable);
-
-    /// \~chinese
     /// @brief 添加子角色
     void AddChild(ActorPtr child);
 
@@ -426,6 +417,11 @@ public:
     virtual bool DispatchEvent(Event* evt);
 
     /// \~chinese
+    /// @brief 处理事件且不分发
+    /// @param evt 事件
+    bool HandleEvent(Event* evt);
+
+    /// \~chinese
     /// @brief 开启或关闭事件分发功能
     /// @param enabled 是否开启
     void SetEventDispatchEnabled(bool enabled);
@@ -484,10 +480,6 @@ protected:
     void SetStage(Stage* stage);
 
     /// \~chinese
-    /// @brief 处理事件
-    bool HandleEvent(Event* evt);
-
-    /// \~chinese
     /// @brief 设置物理身体
     void SetPhysicBody(physics::PhysicBody* body);
 
@@ -498,9 +490,6 @@ private:
     bool         update_pausing_;
     bool         cascade_opacity_;
     bool         show_border_;
-    bool         hover_;
-    bool         pressed_;
-    bool         responsible_;
     bool         evt_dispatch_enabled_;
     mutable bool visible_in_rt_;
 
@@ -547,11 +536,6 @@ inline void Actor::OnRender(RenderContext& ctx)
 inline bool Actor::IsVisible() const
 {
     return visible_;
-}
-
-inline bool Actor::IsResponsible() const
-{
-    return responsible_;
 }
 
 inline bool Actor::IsCascadeOpacityEnabled() const

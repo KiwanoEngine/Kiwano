@@ -124,14 +124,11 @@ void ComponentManager::Update(Duration dt)
 {
     if (!components_.empty())
     {
-        if (!components_.empty())
+        for (auto& p : components_)
         {
-            for (auto& p : components_)
+            if (p.second->IsEnable())
             {
-                if (p.second->IsEnable())
-                {
-                    p.second->OnUpdate(dt);
-                }
+                p.second->OnUpdate(dt);
             }
         }
     }
@@ -141,14 +138,11 @@ void ComponentManager::Render(RenderContext& ctx)
 {
     if (!components_.empty())
     {
-        if (!components_.empty())
+        for (auto& p : components_)
         {
-            for (auto& p : components_)
+            if (p.second->IsEnable())
             {
-                if (p.second->IsEnable())
-                {
-                    p.second->OnRender(ctx);
-                }
+                p.second->OnRender(ctx);
             }
         }
     }
@@ -158,14 +152,11 @@ void ComponentManager::DispatchToComponents(Event* evt)
 {
     if (!components_.empty())
     {
-        if (!components_.empty())
+        for (auto& p : components_)
         {
-            for (auto& p : components_)
+            if (p.second->IsEnable())
             {
-                if (p.second->IsEnable())
-                {
-                    p.second->HandleEvent(evt);
-                }
+                p.second->HandleEvent(evt);
             }
         }
     }

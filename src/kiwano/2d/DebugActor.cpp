@@ -21,6 +21,7 @@
 #include <kiwano/2d/DebugActor.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano/base/component/MouseSensor.h>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")
@@ -49,8 +50,10 @@ DebugActor::DebugActor()
 {
     SetName("kiwano-debug-actor");
     SetPosition(Point{ 10, 10 });
-    SetResponsible(true);
     SetCascadeOpacityEnabled(true);
+
+    MouseSensorPtr sensor = new MouseSensor;
+    this->AddComponent(sensor);
 
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 

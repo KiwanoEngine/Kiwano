@@ -18,64 +18,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/component/Button.h>
+#pragma once
+#include <kiwano/base/component/Component.h>
+#include <kiwano/event/MouseEvent.h>
 
 namespace kiwano
 {
 
-ButtonBase::ButtonBase()
+KGE_DECLARE_SMART_PTR(MouseSensor);
+
+/**
+ * \addtogroup Component
+ * @{
+ */
+
+/**
+ * \~chinese
+ * @brief 鼠标传感器
+ * @details 该组件使角色会收到鼠标的 Hover | Out | Click 消息
+ */
+class KGE_API MouseSensor : public Component
 {
-    SetName("__KGE_BUTTON__");
+public:
+    MouseSensor();
+
+    virtual ~MouseSensor();
+
+    /// \~chinese
+    /// @brief 鼠标是否正悬于角色上
+    bool IsHovering() const;
+
+    /// \~chinese
+    /// @brief 鼠标是否正按于角色上
+    bool IsPressing() const;
+
+protected:
+    /// \~chinese
+    /// @brief 处理角色事件
+    void HandleEvent(Event* evt) override;
+
+private:
+    bool hover_;
+    bool pressed_;
+};
+
+/** @} */
+
+inline bool MouseSensor::IsHovering() const
+{
+    return hover_;
 }
 
-ButtonBase::~ButtonBase()
+inline bool MouseSensor::IsPressing() const
 {
-}
-
-void ButtonBase::HandleEvent(kiwano::Event* evt)
-{
-    MouseSensor::HandleEvent(evt);
-
-    if (evt->IsType<MouseHoverEvent>())
-    {
-        OnEvent(Event::MouseEntered);
-    }
-    else if (evt->IsType<MouseOutEvent>())
-    {
-        OnEvent(Event::MouseExited);
-    }
-    else if (evt->IsType<MouseDownEvent>() && this->IsHovering())
-    {
-        OnEvent(Event::Pressed);
-    }
-    else if (evt->IsType<MouseUpEvent>() && this->IsPressing())
-    {
-        OnEvent(Event::Released);
-    }
-    else if (evt->IsType<MouseClickEvent>())
-    {
-        OnEvent(Event::Clicked);
-    }
-}
-
-Button::Button() {}
-
-Button::Button(const Callback& cb)
-{
-    SetCallback(cb);
-}
-
-void Button::OnEvent(Event evt)
-{
-    if (cb_)
-    {
-        cb_(this, evt);
-    }
-
-    if (evt == Event::Clicked && clicked_cb_)
-    {
-        clicked_cb_(this);
-    }
+    return pressed_;
 }
 
 }  // namespace kiwano

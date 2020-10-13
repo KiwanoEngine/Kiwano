@@ -44,9 +44,6 @@ Actor::Actor()
     , visible_(true)
     , visible_in_rt_(true)
     , update_pausing_(false)
-    , hover_(false)
-    , pressed_(false)
-    , responsible_(false)
     , cascade_opacity_(true)
     , show_border_(false)
     , evt_dispatch_enabled_(true)
@@ -225,8 +222,8 @@ void Actor::SetEventDispatchEnabled(bool enabled)
 void Actor::DoSerialize(Serializer* serializer) const
 {
     ObjectBase::DoSerialize(serializer);
-    (*serializer) << visible_ << update_pausing_ << cascade_opacity_ << responsible_ << z_order_ << opacity_ << anchor_
-                  << size_ << transform_;
+    (*serializer) << visible_ << update_pausing_ << cascade_opacity_ << z_order_ << opacity_ << anchor_ << size_
+                  << transform_;
 }
 
 void Actor::DoDeserialize(Deserializer* deserializer)
@@ -235,8 +232,8 @@ void Actor::DoDeserialize(Deserializer* deserializer)
 
     float opacity = 1.0f;
     Transform transform;
-    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> responsible_ >> z_order_ >> opacity >> anchor_
-        >> size_ >> transform;
+    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_
+        >> transform;
 
     SetOpacity(opacity);
     SetTransform(transform);
@@ -248,49 +245,6 @@ bool Actor::HandleEvent(Event* evt)
 
     if (!EventDispatcher::DispatchEvent(evt))
         return false;
-
-    if (responsible_)
-    {
-        if (evt->IsType<MouseMoveEvent>())
-        {
-            auto mouse_evt = dynamic_cast<MouseMoveEvent*>(evt);
-            bool contains  = ContainsPoint(mouse_evt->pos);
-            if (!hover_ && contains)
-            {
-                hover_ = true;
-
-                MouseHoverEventPtr hover = new MouseHoverEvent;
-                hover->pos = mouse_evt->pos;
-                HandleEvent(hover.Get());
-            }
-            else if (hover_ && !contains)
-            {
-                hover_   = false;
-                pressed_ = false;
-
-                MouseOutEventPtr out = new MouseOutEvent;
-                out->pos = mouse_evt->pos;
-                HandleEvent(out.Get());
-            }
-        }
-
-        if (evt->IsType<MouseDownEvent>() && hover_)
-        {
-            pressed_ = true;
-        }
-
-        if (evt->IsType<MouseUpEvent>() && pressed_)
-        {
-            pressed_ = false;
-
-            auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
-
-            MouseClickEventPtr click = new MouseClickEvent;
-            click->pos               = mouse_up_evt->pos;
-            click->button            = mouse_up_evt->button;
-            HandleEvent(click.Get());
-        }
-    }
     return true;
 }
 
@@ -658,11 +612,6 @@ void Actor::RemoveChildren(const String& child_name)
 void Actor::RemoveAllChildren()
 {
     children_.Clear();
-}
-
-void Actor::SetResponsible(bool enable)
-{
-    responsible_ = enable;
 }
 
 bool Actor::ContainsPoint(const Point& point) const
