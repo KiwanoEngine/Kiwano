@@ -281,7 +281,7 @@ bool ConfigIni::HasKey(const String& section, const String& key) const
 {
     if (HasSection(section))
     {
-        return !!sections_.at(section).count(section);
+        return !!sections_.at(section).count(key);
     }
     return false;
 }

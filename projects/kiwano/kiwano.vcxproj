@@ -48,10 +48,12 @@
     <ClInclude Include="..\..\src\kiwano\core\Time.h" />
     <ClInclude Include="..\..\src\kiwano\event\Event.h" />
     <ClInclude Include="..\..\src\kiwano\event\EventDispatcher.h" />
-    <ClInclude Include="..\..\src\kiwano\event\EventListener.h" />
     <ClInclude Include="..\..\src\kiwano\event\Events.h" />
     <ClInclude Include="..\..\src\kiwano\event\EventType.h" />
     <ClInclude Include="..\..\src\kiwano\event\KeyEvent.h" />
+    <ClInclude Include="..\..\src\kiwano\event\listener\EventListener.h" />
+    <ClInclude Include="..\..\src\kiwano\event\listener\KeyEventListener.h" />
+    <ClInclude Include="..\..\src\kiwano\event\listener\MouseEventListener.h" />
     <ClInclude Include="..\..\src\kiwano\event\MouseEvent.h" />
     <ClInclude Include="..\..\src\kiwano\event\WindowEvent.h" />
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
@@ -165,8 +167,10 @@
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp" />
     <ClCompile Include="..\..\src\kiwano\event\Event.cpp" />
     <ClCompile Include="..\..\src\kiwano\event\EventDispatcher.cpp" />
-    <ClCompile Include="..\..\src\kiwano\event\EventListener.cpp" />
     <ClCompile Include="..\..\src\kiwano\event\KeyEvent.cpp" />
+    <ClCompile Include="..\..\src\kiwano\event\listener\EventListener.cpp" />
+    <ClCompile Include="..\..\src\kiwano\event\listener\KeyEventListener.cpp" />
+    <ClCompile Include="..\..\src\kiwano\event\listener\MouseEventListener.cpp" />
     <ClCompile Include="..\..\src\kiwano\event\MouseEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\event\WindowEvent.cpp" />
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp" />

@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(KeyUpEvent);
 KGE_DECLARE_SMART_PTR(KeyCharEvent);
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

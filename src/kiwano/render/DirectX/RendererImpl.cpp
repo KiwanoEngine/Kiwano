@@ -161,9 +161,9 @@ void RendererImpl::HandleEvent(EventModuleContext& ctx)
 {
     Renderer::HandleEvent(ctx);
 
-    if (ctx.evt->IsType<WindowMovedEvent>())
+    auto evt = ctx.evt->Cast<WindowMovedEvent>();
+    if (evt)
     {
-        auto evt = ctx.evt->SafeCast<WindowMovedEvent>();
         HMONITOR monitor = ::MonitorFromWindow(evt->window->GetHandle(), MONITOR_DEFAULTTONULL);
         if (monitor_ != monitor)
         {

@@ -18,51 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
-#include <kiwano/event/WindowEvent.h>
+#pragma once
+#include <kiwano/event/KeyEvent.h>
+#include <kiwano/event/listener/EventListener.h>
 
 namespace kiwano
 {
 
-Renderer::Renderer()
-    : vsync_(true)
-    , auto_reset_resolution_(false)
-    , clear_color_(Color::Black)
-{
-}
+KGE_DECLARE_SMART_PTR(KeyEventListener);
 
-void Renderer::SetClearColor(const Color& color)
-{
-    clear_color_ = color;
-}
+/**
+ * \addtogroup EventListener
+ * @{
+ */
 
-void Renderer::SetVSyncEnabled(bool enabled)
+/**
+ * \~chinese
+ * @brief 按键事件监听器
+ */
+class KGE_API KeyEventListener
+    : public EventListener
 {
-    vsync_ = enabled;
-}
+public:
+    /// \~chinese
+    /// @brief 按键按下时
+    /// @param key 按键键值
+    virtual void OnKeyDown(KeyCode key) {}
 
-void Renderer::ResetResolutionWhenWindowResized(bool enabled)
-{
-    auto_reset_resolution_ = enabled;
-}
+    /// \~chinese
+    /// @brief 按键抬起时
+    /// @param key 按键键值
+    virtual void OnKeyUp(KeyCode key) {}
 
-void Renderer::Destroy()
-{
-    TextureCache::GetInstance().Clear();
-    FontCache::GetInstance().Clear();
-}
+    /// \~chinese
+    /// @brief 处理消息
+    void Handle(Event* evt) override;
+};
 
-void Renderer::HandleEvent(EventModuleContext& ctx)
-{
-    if (auto_reset_resolution_)
-    {
-        auto evt = ctx.evt->Cast<WindowResizedEvent>();
-        if (evt)
-        {
-            Resize(evt->width, evt->height);
-        }
-    }
-}
+/** @} */
 
 }  // namespace kiwano

@@ -18,50 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
-#include <kiwano/event/WindowEvent.h>
+#pragma once
+#include <kiwano/event/listener/KeyEventListener.h>
 
 namespace kiwano
 {
 
-Renderer::Renderer()
-    : vsync_(true)
-    , auto_reset_resolution_(false)
-    , clear_color_(Color::Black)
+void KeyEventListener::Handle(Event* evt)
 {
-}
-
-void Renderer::SetClearColor(const Color& color)
-{
-    clear_color_ = color;
-}
-
-void Renderer::SetVSyncEnabled(bool enabled)
-{
-    vsync_ = enabled;
-}
-
-void Renderer::ResetResolutionWhenWindowResized(bool enabled)
-{
-    auto_reset_resolution_ = enabled;
-}
-
-void Renderer::Destroy()
-{
-    TextureCache::GetInstance().Clear();
-    FontCache::GetInstance().Clear();
-}
-
-void Renderer::HandleEvent(EventModuleContext& ctx)
-{
-    if (auto_reset_resolution_)
+    if (auto key_evt = evt->Cast<KeyDownEvent>())
     {
-        auto evt = ctx.evt->Cast<WindowResizedEvent>();
-        if (evt)
-        {
-            Resize(evt->width, evt->height);
-        }
+        OnKeyDown(key_evt->code);
+    }
+    else if (auto key_evt = evt->Cast<KeyUpEvent>())
+    {
+        OnKeyUp(key_evt->code);
     }
 }
 

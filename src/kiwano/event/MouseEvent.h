@@ -35,7 +35,7 @@ KGE_DECLARE_SMART_PTR(MouseOutEvent);
 KGE_DECLARE_SMART_PTR(MouseWheelEvent);
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

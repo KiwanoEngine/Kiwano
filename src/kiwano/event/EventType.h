@@ -26,7 +26,7 @@
 namespace kiwano
 {
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

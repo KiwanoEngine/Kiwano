@@ -32,6 +32,16 @@ KGE_DECLARE_SMART_PTR(EventListener);
 
 /**
  * \~chinese
+ * \defgroup EventListener 事件监听器
+ */
+
+/**
+ * \addtogroup EventListener
+ * @{
+ */
+
+/**
+ * \~chinese
  * @brief 事件监听器
  */
 class KGE_API EventListener
@@ -113,6 +123,8 @@ private:
     bool      removeable_;
     bool      swallow_;
 };
+
+/** @} */
 
 inline void EventListener::Start()
 {

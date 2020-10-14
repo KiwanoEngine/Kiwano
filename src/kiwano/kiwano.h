@@ -49,7 +49,6 @@
 #include <kiwano/core/RefBasePtr.hpp>
 #include <kiwano/core/Time.h>
 
-
 //
 // event
 //
@@ -58,7 +57,9 @@
 #include <kiwano/event/KeyEvent.h>
 #include <kiwano/event/MouseEvent.h>
 #include <kiwano/event/WindowEvent.h>
-#include <kiwano/event/EventListener.h>
+#include <kiwano/event/listener/EventListener.h>
+#include <kiwano/event/listener/MouseEventListener.h>
+#include <kiwano/event/listener/KeyEventListener.h>
 #include <kiwano/event/EventDispatcher.h>
 
 //

@@ -30,11 +30,11 @@ KGE_DECLARE_SMART_PTR(Event);
 
 /**
  * \~chinese
- * \defgroup Events 事件
+ * \defgroup Event 事件
  */
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 
@@ -60,16 +60,16 @@ public:
     bool IsType() const;
 
     /// \~chinese
-    /// @brief 安全转换为其他类型事件
-    /// @throw std::bad_cast 类型无法转换时抛出
+    /// @brief 转换为其他类型事件
+    /// @return 其他类型事件指针，如果事件类型无法转换，返回空指针
     template <typename _Ty>
-    const _Ty* SafeCast() const;
+    const _Ty* Cast() const;
 
     /// \~chinese
-    /// @brief 安全转换为其他类型事件
-    /// @throw std::bad_cast 类型无法转换时抛出
+    /// @brief 转换为其他类型事件
+    /// @return 其他类型事件指针，如果事件类型无法转换，返回空指针
     template <typename _Ty>
-    _Ty* SafeCast();
+    _Ty* Cast();
 
 private:
     const EventType type_;
@@ -102,16 +102,16 @@ inline bool Event::IsType() const
 }
 
 template <typename _Ty>
-inline const _Ty* Event::SafeCast() const
+inline const _Ty* Event::Cast() const
 {
-    return const_cast<Event*>(this)->SafeCast<_Ty>();
+    return const_cast<Event*>(this)->Cast<_Ty>();
 }
 
 template <typename _Ty>
-inline _Ty* Event::SafeCast()
+inline _Ty* Event::Cast()
 {
     if (!this->IsType<_Ty>())
-        throw std::bad_cast();
+        return nullptr;
     return dynamic_cast<_Ty*>(this);
 }
 

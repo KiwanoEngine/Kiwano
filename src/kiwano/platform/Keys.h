@@ -118,4 +118,30 @@ enum class KeyCode
 
     Last
 };
+
+inline KeyCode operator+(KeyCode lhs, int rhs) noexcept
+{
+    return KeyCode(int(lhs) + rhs);
+}
+
+inline KeyCode operator-(KeyCode lhs, int rhs) noexcept
+{
+    return KeyCode(int(lhs) - rhs);
+}
+
+inline KeyCode operator+(int lhs, KeyCode rhs) noexcept
+{
+    return KeyCode(lhs + int(rhs));
+}
+
+inline KeyCode operator-(int lhs, KeyCode rhs) noexcept
+{
+    return KeyCode(lhs - int(rhs));
+}
+
+inline int operator-(KeyCode lhs, KeyCode rhs) noexcept
+{
+    return int(lhs) - int(rhs);
+}
+
 }  // namespace kiwano

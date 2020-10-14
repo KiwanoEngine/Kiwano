@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(TickEvent);
 KGE_DECLARE_SMART_PTR(EventTicker);
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

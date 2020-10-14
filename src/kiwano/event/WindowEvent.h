@@ -33,7 +33,7 @@ KGE_DECLARE_SMART_PTR(WindowClosedEvent);
 class Window;
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

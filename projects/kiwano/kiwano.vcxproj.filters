@@ -40,6 +40,9 @@
     <Filter Include="2d\transition">
       <UniqueIdentifier>{f70cecd8-6d5b-405d-8466-d3ca2db9b806}</UniqueIdentifier>
     </Filter>
+    <Filter Include="event\listener">
+      <UniqueIdentifier>{554a3b32-ec18-4123-a12e-b176ec10fbdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
@@ -279,9 +282,6 @@
     <ClInclude Include="..\..\src\kiwano\event\EventDispatcher.h">
       <Filter>event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\event\EventListener.h">
-      <Filter>event</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\event\Events.h">
       <Filter>event</Filter>
     </ClInclude>
@@ -395,6 +395,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\base\component\MouseSensor.h">
       <Filter>base\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\listener\EventListener.h">
+      <Filter>event\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\listener\MouseEventListener.h">
+      <Filter>event\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\event\listener\KeyEventListener.h">
+      <Filter>event\listener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -560,9 +569,6 @@
     <ClCompile Include="..\..\src\kiwano\event\EventDispatcher.cpp">
       <Filter>event</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\event\EventListener.cpp">
-      <Filter>event</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\KeyEvent.cpp">
       <Filter>event</Filter>
     </ClCompile>
@@ -652,6 +658,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\component\MouseSensor.cpp">
       <Filter>base\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\listener\EventListener.cpp">
+      <Filter>event\listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\listener\MouseEventListener.cpp">
+      <Filter>event\listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\event\listener\KeyEventListener.cpp">
+      <Filter>event\listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
