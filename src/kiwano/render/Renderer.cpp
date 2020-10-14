@@ -27,7 +27,7 @@ namespace kiwano
 
 Renderer::Renderer()
     : vsync_(true)
-    , auto_reset_resolution_(false)
+    , auto_reset_resolution_(true)
     , clear_color_(Color::Black)
 {
 }
