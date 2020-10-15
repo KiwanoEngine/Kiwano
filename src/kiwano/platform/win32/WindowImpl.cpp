@@ -340,14 +340,12 @@ void WindowWin32Impl::SetIcon(Icon icon)
 
 void WindowWin32Impl::SetMinimumSize(uint32_t width, uint32_t height)
 {
-    min_width_  = width;
-    min_height_ = height;
+    AdjustWindow(width, height, GetStyle(), &min_width_, &min_height_);
 }
 
 void WindowWin32Impl::SetMaximumSize(uint32_t width, uint32_t height)
 {
-    max_width_  = width;
-    max_height_ = height;
+    AdjustWindow(width, height, GetStyle(), &max_width_, &max_height_);
 }
 
 void WindowWin32Impl::SetCursor(CursorType cursor)
@@ -716,13 +714,14 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_GETMINMAXINFO:
     {
-        if (min_width_ || min_height_)
+        if (min_width_ && min_height_)
         {
             ((MINMAXINFO*)lparam)->ptMinTrackSize = POINT{ LONG(min_width_), LONG(min_height_) };
         }
-        if (max_width_ || max_height_)
+        if (max_width_ && max_height_)
         {
             ((MINMAXINFO*)lparam)->ptMaxTrackSize = POINT{ LONG(max_width_), LONG(max_height_) };
+            ((MINMAXINFO*)lparam)->ptMaxSize = POINT{ LONG(max_width_), LONG(max_height_) };
         }
         return 0;
     }
