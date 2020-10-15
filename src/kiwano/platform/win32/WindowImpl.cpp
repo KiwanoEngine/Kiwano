@@ -603,6 +603,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_SIZE:
     {
+        bool resized = false;
         if (SIZE_MAXHIDE == wparam || SIZE_MINIMIZED == wparam)
         {
             KGE_DEBUG_LOGF("Window minimized");
@@ -619,6 +620,10 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             {
                 is_minimized_ = false;
                 Application::GetInstance().Resume();
+            }
+            else
+            {
+                resized = true;
             }
         }
         else if (wparam == SIZE_RESTORED)
@@ -637,17 +642,21 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             }
             else
             {
-                this->width_  = ((uint32_t)(short)LOWORD(lparam));
-                this->height_ = ((uint32_t)(short)HIWORD(lparam));
-
-                WindowResizedEventPtr evt = new WindowResizedEvent;
-                evt->window               = this;
-                evt->width                = this->GetWidth();
-                evt->height               = this->GetHeight();
-                this->PushEvent(evt);
-
-                KGE_DEBUG_LOGF("Window resized to (%d, %d)", this->width_, this->height_);
+                resized = true;
             }
+        }
+        if (resized)
+        {
+            this->width_  = ((uint32_t)(short)LOWORD(lparam));
+            this->height_ = ((uint32_t)(short)HIWORD(lparam));
+
+            WindowResizedEventPtr evt = new WindowResizedEvent;
+            evt->window               = this;
+            evt->width                = this->GetWidth();
+            evt->height               = this->GetHeight();
+            this->PushEvent(evt);
+
+            KGE_DEBUG_LOGF("Window resized to (%d, %d)", this->width_, this->height_);
         }
     }
     break;
