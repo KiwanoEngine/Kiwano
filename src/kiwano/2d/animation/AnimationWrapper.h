@@ -263,9 +263,9 @@ inline AnimationWrapper RotateTo(kiwano::Duration duration, float rotation)
 /// @brief 创建自定义动画
 /// @param duration 动画时长
 /// @param tween_func 动画回调函数
-inline AnimationWrapper Custom(kiwano::Duration duration, TweenFunc tween_func)
+inline AnimationWrapper Custom(kiwano::Duration duration, Function<void(Actor*, float)> tween_func)
 {
-    return AnimationWrapper(new CustomAnimation(duration, tween_func));
+    return AnimationWrapper(CustomAnimation::Create(duration, tween_func));
 }
 
 /// \~chinese

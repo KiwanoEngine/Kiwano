@@ -23,29 +23,51 @@
 namespace kiwano
 {
 
-CustomAnimation::CustomAnimation(Duration duration, TweenFunc tween_func)
+CustomAnimation::CustomAnimation(Duration duration)
     : TweenAnimation(duration)
-    , tween_func_(tween_func)
 {
 }
 
-CustomAnimation* CustomAnimation::Clone() const
+CustomAnimationPtr CustomAnimation::Create(Duration duration, Function<void(Actor*, float)> tween_func)
 {
-    CustomAnimation* ptr = new CustomAnimation(GetDuration(), tween_func_);
-    DoClone(ptr);
+    class CallbackCustomAnimation : public CustomAnimation
+    {
+    public:
+        CallbackCustomAnimation(Duration duration, Function<void(Actor*, float)> tween_func)
+            : CustomAnimation(duration)
+            , tween_func_(tween_func)
+        {
+        }
+
+        void Init(Actor* target) override
+        {
+            if (!tween_func_)
+                this->Done();
+        }
+
+        void OnAnimationUpdate(Actor* target, float frac) override
+        {
+            if (tween_func_)
+                tween_func_(target, frac);
+        }
+
+        CallbackCustomAnimation* Clone() const
+        {
+            CallbackCustomAnimation* ptr = new CallbackCustomAnimation(GetDuration(), tween_func_);
+            DoClone(ptr);
+            return ptr;
+        }
+
+    private:
+        Function<void(Actor*, float)> tween_func_;
+    };
+    CustomAnimationPtr ptr = new CallbackCustomAnimation(duration, tween_func);
     return ptr;
-}
-
-void CustomAnimation::Init(Actor* target)
-{
-    if (!tween_func_)
-        this->Done();
 }
 
 void CustomAnimation::UpdateTween(Actor* target, float frac)
 {
-    if (tween_func_)
-        tween_func_(target, frac);
+    OnAnimationUpdate(target, frac);
 }
 
 }  // namespace kiwano

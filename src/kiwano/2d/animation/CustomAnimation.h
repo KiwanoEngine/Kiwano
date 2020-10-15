@@ -30,12 +30,6 @@ KGE_DECLARE_SMART_PTR(CustomAnimation);
  * @{
  */
 
-
-/// \~chinese
-/// @brief 补间动画回调函数
-/// @details 在动画更新时回调该函数，第一个参数是执行动画的目标，第二个参数是动画进度（0.0 - 1.0）
-using TweenFunc = Function<void(Actor* /* target */, float /* frac */)>;
-
 /// \~chinese
 /// @brief 自定义动画
 class KGE_API CustomAnimation : public TweenAnimation
@@ -44,20 +38,27 @@ public:
     /// \~chinese
     /// @brief 创建自定义动画
     /// @param duration 动画时长
+    CustomAnimation(Duration duration);
+
+    /// \~chinese
+    /// @brief 创建自定义动画
+    /// @param duration 动画时长
     /// @param tween_func 动画回调函数
-    CustomAnimation(Duration duration, TweenFunc tween_func);
+    static CustomAnimationPtr Create(Duration duration, Function<void(Actor*, float)> tween_func);
 
     /// \~chinese
-    /// @brief 获取动画回调函数
-    TweenFunc GetTweenFunc() const;
-
-    /// \~chinese
-    /// @brief 设置动画回调函数
-    void SetTweenFunc(const TweenFunc& tween_func);
+    /// @brief 动画更新时
+    /// @param target 执行动画的目标
+    /// @param frac 动画进度（0.0 - 1.0）
+    virtual void OnAnimationUpdate(Actor* target, float frac) = 0;
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
-    CustomAnimation* Clone() const override;
+    CustomAnimation* Clone() const override
+    {
+        KGE_ERRORF("Clone() not supported in CustomAnimation");
+        return nullptr;
+    }
 
     /// \~chinese
     /// @brief 获取该动画的倒转
@@ -68,26 +69,9 @@ public:
     }
 
 protected:
-    void Init(Actor* target) override;
-
     void UpdateTween(Actor* target, float frac) override;
-
-private:
-    TweenFunc tween_func_;
 };
 
 /** @} */
-
-
-
-inline TweenFunc CustomAnimation::GetTweenFunc() const
-{
-    return tween_func_;
-}
-
-inline void CustomAnimation::SetTweenFunc(const TweenFunc& tween_func)
-{
-    tween_func_ = tween_func;
-}
 
 }  // namespace kiwano
