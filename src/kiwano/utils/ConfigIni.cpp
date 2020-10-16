@@ -34,9 +34,9 @@ StringView Trim(StringView str)
     if (!str.IsEmpty())
     {
         std::size_t start = 0, end = str.GetLength();
-        while (std::isspace(str[start]))
+        while (start < end && std::isspace(str[start]))
             ++start;
-        while (std::isspace(str[end - 1]))
+        while (end > 0&& std ::isspace(str[end - 1]))
             --end;
 
         if (end > start)
@@ -132,6 +132,13 @@ bool ConfigIni::Load(std::istream& istream)
     return true;
 }
 
+bool ConfigIni::LoadFromString(const String& content)
+{
+    StringStream ss;
+    ss.str(content);
+    return Load(ss);
+}
+
 bool ConfigIni::Save(const String& file_path)
 {
     std::ofstream ofs(file_path);
@@ -174,6 +181,17 @@ bool ConfigIni::Save(std::ostream& os)
         return false;
     }
     return true;
+}
+
+bool ConfigIni::SaveToString(String& content)
+{
+    StringStream ss;
+    if (Save(ss))
+    {
+        content = ss.str();
+        return true;
+    }
+    return false;
 }
 
 ConfigIni::SectionMap ConfigIni::GetSectionMap() const

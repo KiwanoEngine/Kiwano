@@ -58,6 +58,11 @@ public:
     bool Load(std::istream& is);
 
     /// \~chinese
+    /// @brief 加载 ini 格式字符串
+    /// @param content 输入内容
+    bool LoadFromString(const String& content);
+
+    /// \~chinese
     /// @brief 保存至 ini 文件
     /// @param file_path 文件路径
     bool Save(const String& file_path);
@@ -66,6 +71,11 @@ public:
     /// @brief 保存至 ini 文件
     /// @param os 输出流
     bool Save(std::ostream& os);
+
+    /// \~chinese
+    /// @brief 保存至字符串
+    /// @param content 输出内容
+    bool SaveToString(String& content);
 
     /// \~chinese
     /// @brief 是否存在section
