@@ -611,7 +611,12 @@ void Actor::RemoveChildren(const String& child_name)
 
 void Actor::RemoveAllChildren()
 {
-    children_.Clear();
+    ActorPtr next;
+    for (ActorPtr child = children_.GetFirst(); child; child = next)
+    {
+        next = child->GetNext();
+        RemoveChild(child);
+    }
 }
 
 bool Actor::ContainsPoint(const Point& point) const
