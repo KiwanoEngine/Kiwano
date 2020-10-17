@@ -119,13 +119,13 @@ FontCache::~FontCache() {}
 
 void FontCache::AddFont(size_t key, FontPtr font)
 {
-    font_cache_.insert(std::make_pair(key, font));
+    font_cache_[key] = font;
 }
 
 void FontCache::AddFontByFamily(const String& font_family, FontPtr font)
 {
     String family = TransformFamily(font_family);
-    font_family_cache_.insert(std::make_pair(family, font));
+    font_family_cache_[family] = font;
 }
 
 FontPtr FontCache::GetFont(size_t key) const

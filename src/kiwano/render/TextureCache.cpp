@@ -32,12 +32,12 @@ TextureCache::~TextureCache()
 
 void TextureCache::AddTexture(size_t key, TexturePtr texture)
 {
-    texture_cache_.insert(std::make_pair(key, texture));
+    texture_cache_[key] = texture;
 }
 
 void TextureCache::AddGifImage(size_t key, GifImagePtr gif)
 {
-    gif_texture_cache_.insert(std::make_pair(key, gif));
+    gif_texture_cache_[key] = gif;
 }
 
 TexturePtr TextureCache::GetTexture(size_t key) const

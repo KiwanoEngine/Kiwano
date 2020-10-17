@@ -49,7 +49,7 @@ Component* ComponentManager::AddComponent(size_t index, ComponentPtr component)
     {
         component->InitComponent(target_);
 
-        components_.insert(std::make_pair(index, component));
+        components_[index] = component;
     }
     return component.Get();
 }

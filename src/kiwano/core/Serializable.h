@@ -427,7 +427,7 @@ inline Deserializer& operator>>(Deserializer& deserializer, Map<_KTy, _Ty>& map)
         _KTy key;
         _Ty  value;
         deserializer >> key >> value;
-        map.insert(std::make_pair(key, value));
+        map[key] = value;
     }
     return deserializer;
 }

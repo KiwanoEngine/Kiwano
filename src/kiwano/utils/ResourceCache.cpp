@@ -47,7 +47,7 @@ bool ResourceCache::LoadFromXmlFile(const String& file_path)
 
 void ResourceCache::AddObject(const String& id, ObjectBasePtr obj)
 {
-    object_cache_.insert(std::make_pair(id, obj));
+    object_cache_[id] = obj;
 }
 
 void ResourceCache::Remove(const String& id)

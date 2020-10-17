@@ -34,19 +34,19 @@ Any UserData::Get(const String& key, const Any& default_data) const
 
 void UserData::Set(const String& key, const Any& data)
 {
-    data_.insert(std::make_pair(key, data));
+    data_[key] = data;
 }
 
 void UserData::Set(const DataPair& pair)
 {
-    data_.insert(pair);
+    data_[pair.first] = pair.second;
 }
 
 void UserData::Set(const std::initializer_list<DataPair>& list)
 {
     for (const auto& pair : list)
     {
-        data_.insert(pair);
+        data_[pair.first] = pair.second;
     }
 }
 

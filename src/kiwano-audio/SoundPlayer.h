@@ -92,6 +92,23 @@ public:
     void SetVolume(float volume);
 
     /// \~chinese
+    /// @brief 获取本地音频文件id
+    /// @param file_path 本地音频文件路径
+    /// @return 音频标识符
+    size_t GetId(const String& file_path) const;
+
+    /// \~chinese
+    /// @brief 获取音频资源id
+    /// @param res 音频资源
+    /// @return 音频标识符
+    size_t GetId(const Resource& res) const;
+
+    /// \~chinese
+    /// @brief 获取音乐对象
+    /// @param id 音频标识符
+    SoundPtr GetSound(size_t id) const;
+
+    /// \~chinese
     /// @brief 暂停所有音频
     void PauseAll();
 

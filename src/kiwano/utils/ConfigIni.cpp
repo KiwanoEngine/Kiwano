@@ -311,13 +311,13 @@ void ConfigIni::SetSectionMap(const SectionMap& sections)
 
 void ConfigIni::SetSection(const String& section, const ValueMap& values)
 {
-    sections_.insert(std::make_pair(section, values));
+    sections_[section] = values;
 }
 
 void ConfigIni::SetString(const String& section, const String& key, const String& value)
 {
     if (HasSection(section))
-        sections_[section].insert(std::make_pair(key, value));
+        sections_[section][key] = value;
     else
         SetSection(section, ValueMap{ { key, value } });
 }
@@ -363,19 +363,11 @@ void ConfigIni::DeleteKey(const String& section, const String& key)
 
 ConfigIni::ValueMap& ConfigIni::operator[](const String& section)
 {
-    if (!HasSection(section))
-    {
-        sections_.insert(std::make_pair(section, ValueMap()));
-    }
     return sections_[section];
 }
 
 const ConfigIni::ValueMap& ConfigIni::operator[](const String& section) const
 {
-    if (!HasSection(section))
-    {
-        const_cast<SectionMap&>(sections_).insert(std::make_pair(section, ValueMap()));
-    }
     return sections_.at(section);
 }
 

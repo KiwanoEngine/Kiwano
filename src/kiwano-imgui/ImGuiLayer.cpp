@@ -53,7 +53,7 @@ bool ImGuiLayer::CheckVisibility(RenderContext& ctx) const
 
 void ImGuiLayer::AddItem(const String& name, const ImGuiPipeline& item)
 {
-    pipelines_.insert(std::make_pair(name, item));
+    pipelines_[name] = item;
 }
 
 void ImGuiLayer::RemoveItem(const String& name)

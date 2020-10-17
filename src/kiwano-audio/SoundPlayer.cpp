@@ -35,78 +35,77 @@ SoundPlayer::~SoundPlayer()
     ClearCache();
 }
 
+size_t SoundPlayer::GetId(const String& file_path) const
+{
+    return std::hash<String>()(file_path);
+}
+
+size_t SoundPlayer::GetId(const Resource& res) const
+{
+    return static_cast<size_t>(res.GetId());
+}
+
 size_t SoundPlayer::Load(const String& file_path)
 {
-    size_t hash = std::hash<String>()(file_path);
-    if (sound_cache_.end() != sound_cache_.find(hash))
-        return hash;
+    size_t id = GetId(file_path);
+    if (sound_cache_.end() != sound_cache_.find(id))
+        return id;
 
     SoundPtr sound = MakePtr<Sound>();
-    if (sound)
+    if (sound && sound->Load(file_path))
     {
-        if (sound->Load(file_path))
-        {
-            sound->SetVolume(volume_);
-            sound_cache_.insert(std::make_pair(hash, sound));
-            return hash;
-        }
+        sound->SetVolume(volume_);
+        sound_cache_.insert(std::make_pair(id, sound));
+        return id;
     }
     return 0;
 }
 
 size_t SoundPlayer::Load(const Resource& res)
 {
-    size_t hash_code = static_cast<size_t>(res.GetId());
-    if (sound_cache_.end() != sound_cache_.find(hash_code))
-        return hash_code;
+    size_t id = GetId(res);
+    if (sound_cache_.end() != sound_cache_.find(id))
+        return id;
 
     SoundPtr sound = MakePtr<Sound>();
 
-    if (sound)
+    if (sound && sound->Load(res))
     {
-        if (sound->Load(res))
-        {
-            sound->SetVolume(volume_);
-            sound_cache_.insert(std::make_pair(hash_code, sound));
-            return hash_code;
-        }
+        sound->SetVolume(volume_);
+        sound_cache_.insert(std::make_pair(id, sound));
+        return id;
     }
     return 0;
 }
 
 void SoundPlayer::Play(size_t id, int loop_count)
 {
-    auto iter = sound_cache_.find(id);
-    if (sound_cache_.end() != iter)
-        iter->second->Play(loop_count);
+    if (auto sound = GetSound(id))
+        sound->Play(loop_count);
 }
 
 void SoundPlayer::Pause(size_t id)
 {
-    auto iter = sound_cache_.find(id);
-    if (sound_cache_.end() != iter)
-        iter->second->Pause();
+    if (auto sound = GetSound(id))
+        sound->Pause();
 }
 
 void SoundPlayer::Resume(size_t id)
 {
-    auto iter = sound_cache_.find(id);
-    if (sound_cache_.end() != iter)
-        iter->second->Resume();
+    if (auto sound = GetSound(id))
+        sound->Resume();
 }
 
 void SoundPlayer::Stop(size_t id)
 {
-    auto iter = sound_cache_.find(id);
-    if (sound_cache_.end() != iter)
-        iter->second->Stop();
+    if (auto sound = GetSound(id))
+        sound->Stop();
 }
 
 bool SoundPlayer::IsPlaying(size_t id)
 {
-    auto iter = sound_cache_.find(id);
-    if (sound_cache_.end() != iter)
-        return iter->second->IsPlaying();
+    if (auto sound = GetSound(id))
+        return sound->IsPlaying();
     return false;
 }
 
@@ -122,6 +121,14 @@ void SoundPlayer::SetVolume(float volume)
     {
         pair.second->SetVolume(volume_);
     }
+}
+
+SoundPtr SoundPlayer::GetSound(size_t id) const
+{
+    auto iter = sound_cache_.find(id);
+    if (iter != sound_cache_.end())
+        return iter->second;
+    return SoundPtr();
 }
 
 void SoundPlayer::PauseAll()
