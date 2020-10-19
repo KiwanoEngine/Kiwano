@@ -405,6 +405,9 @@
     <ClInclude Include="..\..\src\kiwano\event\listener\KeyEventListener.h">
       <Filter>event\listener</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\math\Interpolator.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">

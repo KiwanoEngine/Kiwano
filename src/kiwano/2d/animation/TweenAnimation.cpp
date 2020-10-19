@@ -42,6 +42,8 @@ TweenAnimation::TweenAnimation(Duration duration)
 
 float TweenAnimation::Interpolate(float frac)
 {
+    if (frac == 1)
+        return 1;
     if (ease_func_)
         frac = ease_func_(frac);
     return frac;

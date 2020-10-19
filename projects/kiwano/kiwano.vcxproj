@@ -70,6 +70,7 @@
     <ClInclude Include="..\..\src\kiwano\core\RefBasePtr.hpp" />
     <ClInclude Include="..\..\src\kiwano\math\Constants.h" />
     <ClInclude Include="..\..\src\kiwano\math\EaseFunctions.h" />
+    <ClInclude Include="..\..\src\kiwano\math\Interpolator.h" />
     <ClInclude Include="..\..\src\kiwano\math\Math.h" />
     <ClInclude Include="..\..\src\kiwano\math\Matrix.hpp" />
     <ClInclude Include="..\..\src\kiwano\math\Random.h" />

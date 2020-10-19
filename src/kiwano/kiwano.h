@@ -38,6 +38,7 @@
 #include <kiwano/math/EaseFunctions.h>
 #include <kiwano/math/Random.h>
 #include <kiwano/math/Scalar.h>
+#include <kiwano/math/Interpolator.h>
 
 //
 // core
