@@ -30,7 +30,7 @@ KGE_DECLARE_SMART_PTR(ContactBeginEvent);
 KGE_DECLARE_SMART_PTR(ContactEndEvent);
 
 /**
- * \addtogroup Events
+ * \addtogroup Event
  * @{
  */
 

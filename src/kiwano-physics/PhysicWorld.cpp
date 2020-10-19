@@ -196,6 +196,7 @@ public:
         KGE_NOT_USED(contact);
         KGE_NOT_USED(oldManifold);
     }
+
     void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override
     {
         KGE_NOT_USED(contact);
