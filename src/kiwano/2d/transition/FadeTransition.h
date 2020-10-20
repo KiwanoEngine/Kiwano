@@ -27,6 +27,11 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(FadeTransition);
 
 /**
+ * \addtogroup Transition
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief 淡入淡出过渡动画
  * @details 前一场景淡出动画结束后，后一场景淡入
@@ -52,5 +57,7 @@ protected:
 private:
     bool parallel_;
 };
+
+/** @} */
 
 }  // namespace kiwano

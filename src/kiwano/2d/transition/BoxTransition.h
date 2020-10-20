@@ -27,6 +27,11 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(BoxTransition);
 
 /**
+ * \addtogroup Transition
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief 盒状过渡动画
  * @details 前一场景以盒状收缩至消失，后一场景以盒状扩大
@@ -48,5 +53,7 @@ protected:
 
     virtual void Init(Stage* prev, Stage* next) override;
 };
+
+/** @} */
 
 }  // namespace kiwano

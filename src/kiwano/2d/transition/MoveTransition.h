@@ -27,6 +27,11 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(MoveTransition);
 
 /**
+ * \addtogroup Transition
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief 位移过渡动画
  * @details 两场景以位移的方式切换
@@ -68,5 +73,7 @@ private:
     Point pos_delta_;
     Point start_pos_;
 };
+
+/** @} */
 
 }  // namespace kiwano

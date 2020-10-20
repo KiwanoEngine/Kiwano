@@ -27,6 +27,11 @@ namespace kiwano
 KGE_DECLARE_SMART_PTR(RotationTransition);
 
 /**
+ * \addtogroup Transition
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief 旋转过渡动画
  * @details 前一场景以旋转方式收缩至消失，后一场景以旋转方式扩大
@@ -54,5 +59,7 @@ protected:
 private:
     float rotation_;
 };
+
+/** @} */
 
 }  // namespace kiwano

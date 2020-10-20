@@ -27,6 +27,11 @@
 #include <kiwano/2d/animation/CustomAnimation.h>
 #include <kiwano/2d/animation/AnimationGroup.h>
 
+/**
+ * \addtogroup Animation
+ * @{
+ */
+
 namespace kiwano
 {
 
@@ -309,3 +314,5 @@ inline AnimationWrapper Group(const Vector<AnimationPtr>& animations, bool paral
 
 }  // namespace animation
 }  // namespace kiwano
+
+/** @} */
