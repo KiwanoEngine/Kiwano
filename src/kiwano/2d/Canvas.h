@@ -411,7 +411,8 @@ inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& po
 
     if (texture)
     {
-        ctx_->DrawTexture(*texture, crop_rect, &Rect(pos, size));
+        Rect dest_rect(pos, size);
+        ctx_->DrawTexture(*texture, crop_rect, &dest_rect);
     }
 }
 
