@@ -51,7 +51,7 @@ for:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     global:
-      job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
+      job_to_deploy: 8 # 4(images) * 1(platform) * 2(configuration)
 -
   branches:
     except:
@@ -65,7 +65,7 @@ for:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     global:
-      job_to_deploy: 6 # 3(images) * 1(platform) * 2(configuration)
+      job_to_deploy: 8 # 4(images) * 1(platform) * 2(configuration)
 
 configuration:
 - Debug
@@ -117,7 +117,7 @@ deploy:
 
 - provider: NuGet
   api_key:
-    secure: J1/Cyk9DzSw+gdQOkYeynTcbcoPal8ySn14eYPsrVkJuGu0GPd7qp7DGHn/vrszQ
+    secure: Qrcgx71V4hcO6MiWnZHdOX9srkrS2AsbEVD+NrEKc4uYUK3dPan03rZie4lIdOke
   # skip_symbols: true
   artifact: /.*\.nupkg/
   on:
