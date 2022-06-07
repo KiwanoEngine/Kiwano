@@ -55,8 +55,16 @@ public:
     /**
      * \~chinese
      * @brief 启动应用程序
+     * @param settings 游戏设置
+     * @param setup 启动函数
+     * @note 该函数是阻塞的，应用程序结束时函数返回
+     */
+    void Run(const Settings& settings, const Function<void()>& setup);
+
+    /**
+     * \~chinese
+     * @brief 启动应用程序
      * @param runner 程序运行器
-     * @param debug 是否启用调试模式
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
     void Run(RunnerPtr runner);

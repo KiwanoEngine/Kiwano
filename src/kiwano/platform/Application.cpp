@@ -43,6 +43,31 @@ Application::~Application()
 {
 }
 
+void Application::Run(const Settings& settings, const Function<void()>& setup)
+{
+    KGE_ASSERT(setup);
+    class CallbackRunner : public Runner
+    {
+    public:
+        Function<void()> setup;
+
+        CallbackRunner(const Function<void()>& setup)
+            : setup(setup)
+        {
+        }
+
+        void OnReady() override
+        {
+            setup();
+        }
+    };
+
+    RunnerPtr runner = new CallbackRunner(setup);
+    runner->SetName("__KGE_CALLBACK_RUNNER__");
+    runner->SetSettings(settings);
+    Run(runner);
+}
+
 void Application::Run(RunnerPtr runner)
 {
     KGE_ASSERT(runner);
