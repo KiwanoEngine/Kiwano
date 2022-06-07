@@ -87,6 +87,7 @@ ObjectBase::ObjectBase()
     , name_(nullptr)
     , user_data_(nullptr)
     , status_(nullptr)
+    , holdings_(nullptr)
     , id_(++last_object_id)
 {
 #ifdef KGE_DEBUG
@@ -104,6 +105,12 @@ ObjectBase::~ObjectBase()
 
     ClearStatus();
 
+    if (holdings_)
+    {
+        delete holdings_;
+        holdings_ = nullptr;
+    }
+
 #ifdef KGE_DEBUG
     ObjectBase::RemoveObjectFromTracingList(this);
 #endif
@@ -117,6 +124,23 @@ void* ObjectBase::GetUserData() const
 void ObjectBase::SetUserData(void* data)
 {
     user_data_ = data;
+}
+
+void ObjectBase::Hold(ObjectBasePtr other)
+{
+    if (!holdings_)
+    {
+        holdings_ = new Set<ObjectBasePtr>;
+    }
+    holdings_->insert(other);
+}
+
+void ObjectBase::Unhold(ObjectBasePtr other)
+{
+    if (holdings_)
+    {
+        holdings_->erase(other);
+    }
 }
 
 void ObjectBase::SetName(const String& name)

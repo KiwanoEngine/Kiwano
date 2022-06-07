@@ -161,7 +161,18 @@ public:
 
     /// \~chinese
     /// @brief 设置用户数据
+    /// @param data 数据指针
     void SetUserData(void* data);
+
+    /// \~chinese
+    /// @brief 持有一个对象并管理其生命周期
+    /// @param other 对象指针
+    void Hold(ObjectBasePtr other);
+
+    /// \~chinese
+    /// @brief 放弃持有的对象
+    /// @param other 对象指针
+    void Unhold(ObjectBasePtr other);
 
     /// \~chinese
     /// @brief 获取对象ID
@@ -232,7 +243,8 @@ private:
     String* name_;
     void*   user_data_;
 
-    ObjectStatus* status_;
+    ObjectStatus*       status_;
+    Set<ObjectBasePtr>* holdings_;
 };
 
 inline String ObjectBase::GetName() const
