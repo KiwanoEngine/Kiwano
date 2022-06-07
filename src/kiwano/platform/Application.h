@@ -59,7 +59,7 @@ public:
      * @param setup 启动函数
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
-    void Run(const Settings& settings, const Function<void()>& setup);
+    void Run(const Settings& settings, const Function<void()>& setup, std::initializer_list<Module*> modules = {});
 
     /**
      * \~chinese
@@ -96,9 +96,9 @@ public:
     /**
      * \~chinese
      * @brief 添加模块
-     * @param[in] module 模块
+     * @param[in] m 模块
      */
-    void Use(Module& module);
+    void Use(Module& m);
 
     /**
      * \~chinese

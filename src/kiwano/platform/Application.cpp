@@ -43,7 +43,7 @@ Application::~Application()
 {
 }
 
-void Application::Run(const Settings& settings, const Function<void()>& setup)
+void Application::Run(const Settings& settings, const Function<void()>& setup, std::initializer_list<Module*> modules)
 {
     KGE_ASSERT(setup);
     class CallbackRunner : public Runner
@@ -65,6 +65,11 @@ void Application::Run(const Settings& settings, const Function<void()>& setup)
     RunnerPtr runner = new CallbackRunner(setup);
     runner->SetName("__KGE_CALLBACK_RUNNER__");
     runner->SetSettings(settings);
+
+    for (auto m : modules)
+    {
+        Use(*m);
+    }
     Run(runner);
 }
 
@@ -156,16 +161,16 @@ void Application::Destroy()
     Renderer::GetInstance().Destroy();
 }
 
-void Application::Use(Module& module)
+void Application::Use(Module& m)
 {
 #if defined(KGE_DEBUG)
-    if (std::find(modules_.begin(), modules_.end(), &module) != modules_.end())
+    if (std::find(modules_.begin(), modules_.end(), &m) != modules_.end())
     {
         KGE_ASSERT(false && "Module already exists!");
     }
 #endif
 
-    modules_.push_back(&module);
+    modules_.push_back(&m);
 }
 
 void Application::SetTimeScale(float scale_factor)
