@@ -142,7 +142,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp" />
-    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.h.cpp" />
+    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp" />
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp" />

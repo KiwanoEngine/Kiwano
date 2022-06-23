@@ -641,7 +641,7 @@
     <ClCompile Include="..\..\src\kiwano\2d\animation\FrameSequence.cpp">
       <Filter>2d\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.h.cpp">
+    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\transition\Transition.cpp">

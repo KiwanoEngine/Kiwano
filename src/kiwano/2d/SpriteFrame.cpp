@@ -126,10 +126,13 @@ Vector<SpriteFrame> SpriteFrame::Split(int cols, int rows, int max_num, float pa
             ++current_num;
 
             dtx += (width + padding_x);
+
+            if (max_num > 0 && current_num >= max_num)
+                break;
         }
         dty += (height + padding_y);
 
-        if (max_num > 0 && current_num == max_num)
+        if (max_num > 0 && current_num >= max_num)
             break;
     }
     return frames;
