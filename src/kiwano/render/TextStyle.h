@@ -52,9 +52,6 @@ class KGE_API TextStyle
 public:
     FontPtr        font;                ///< 字体
     TextAlign      alignment;           ///< 对齐方式
-    BrushPtr       fill_brush;          ///< 填充画刷
-    BrushPtr       outline_brush;       ///< 描边画刷
-    StrokeStylePtr outline_stroke;      ///< 描边样式
     float          wrap_width;          ///< 自动换行宽度
     float          line_spacing;        ///< 行间距
     bool           show_underline;      ///< 显示下划线

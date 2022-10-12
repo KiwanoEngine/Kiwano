@@ -52,10 +52,6 @@ void TextLayout::Reset(const String& content, const TextStyle& style)
         SetWrapWidth(style.wrap_width);
         SetLineSpacing(style.line_spacing);
 
-        SetFillBrush(style.fill_brush);
-        SetOutlineBrush(style.outline_brush);
-        SetOutlineStrokeStyle(style.outline_stroke);
-
         if (style.show_underline)
             SetUnderline(style.show_underline);
 

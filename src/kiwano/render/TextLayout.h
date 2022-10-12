@@ -69,18 +69,6 @@ public:
     uint32_t GetLineCount() const;
 
     /// \~chinese
-    /// @brief 获取默认填充画刷
-    BrushPtr GetFillBrush() const;
-
-    /// \~chinese
-    /// @brief 获取默认描边画刷
-    BrushPtr GetOutlineBrush() const;
-
-    /// \~chinese
-    /// @brief 获取默认描边线条样式
-    StrokeStylePtr GetOutlineStrokeStyle() const;
-
-    /// \~chinese
     /// @brief 设置字体
     /// @param font 字体
     void SetFont(FontPtr font);
@@ -94,21 +82,6 @@ public:
     /// @brief 设置删除线
     /// @param enable 是否显示删除线
     void SetStrikethrough(bool enable);
-
-    /// \~chinese
-    /// @brief 设置文字填充画刷，描边画刷和描边线宽
-    /// @param brush 画刷
-    void SetFillBrush(BrushPtr brush);
-
-    /// \~chinese
-    /// @brief 设置文字描边画刷
-    /// @param brush 画刷
-    void SetOutlineBrush(BrushPtr brush);
-
-    /// \~chinese
-    /// @brief 设置描边线条样式
-    /// @param stroke 线条样式
-    void SetOutlineStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
     /// @brief 设置对齐方式
@@ -145,13 +118,10 @@ public:
     bool UpdateIfDirty();
 
 private:
-    DirtyFlag      dirty_flag_;
-    uint32_t       line_count_;
-    uint32_t       content_length_;
-    Size           size_;
-    BrushPtr       fill_brush_;
-    BrushPtr       outline_brush_;
-    StrokeStylePtr outline_stroke_;
+    DirtyFlag dirty_flag_;
+    uint32_t  line_count_;
+    uint32_t  content_length_;
+    Size      size_;
 };
 
 /** @} */
@@ -174,36 +144,6 @@ inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const
 inline void TextLayout::SetDirtyFlag(TextLayout::DirtyFlag flag)
 {
     dirty_flag_ = flag;
-}
-
-inline BrushPtr TextLayout::GetFillBrush() const
-{
-    return fill_brush_;
-}
-
-inline BrushPtr TextLayout::GetOutlineBrush() const
-{
-    return outline_brush_;
-}
-
-inline StrokeStylePtr TextLayout::GetOutlineStrokeStyle() const
-{
-    return outline_stroke_;
-}
-
-inline void TextLayout::SetFillBrush(BrushPtr brush)
-{
-    fill_brush_ = brush;
-}
-
-inline void TextLayout::SetOutlineBrush(BrushPtr brush)
-{
-    outline_brush_ = brush;
-}
-
-inline void TextLayout::SetOutlineStrokeStyle(StrokeStylePtr stroke)
-{
-    outline_stroke_ = stroke;
 }
 
 }  // namespace kiwano

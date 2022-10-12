@@ -57,15 +57,11 @@ DebugActor::DebugActor()
 
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 
-    background_brush_ = MakePtr<Brush>();
-    background_brush_->SetColor(Color::Rgba(0x000000, 0.7f));
-
-    BrushPtr fill_brush = MakePtr<Brush>();
-    fill_brush->SetColor(Color::White);
+    background_brush_ = MakePtr<Brush>(Color::Rgba(0x000000, 0.7f));
+    debug_text_brush_ = MakePtr<Brush>(Color::White);
 
     debug_text_style_.font         = new Font("Arial", 16.0f, FontWeight::Normal);
     debug_text_style_.line_spacing = 20.f;
-    debug_text_style_.fill_brush   = fill_brush;
 
     AddListener<MouseHoverEvent>([=](Event*) { SetOpacity(0.4f); });
     AddListener<MouseOutEvent>([=](Event*) { SetOpacity(1.f); });
@@ -77,7 +73,9 @@ void DebugActor::OnRender(RenderContext& ctx)
 {
     ctx.SetCurrentBrush(background_brush_);
     ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
-    ctx.DrawTextLayout(debug_text_, Point(10, 10));
+
+    ctx.SetCurrentBrush(debug_text_brush_);
+    ctx.DrawTextLayout(debug_text_, Point(10, 10), nullptr);
 
     frame_buffer_.PushBack(Time::Now());
     while (frame_buffer_.Back() - frame_buffer_.Front() >= time::Second)

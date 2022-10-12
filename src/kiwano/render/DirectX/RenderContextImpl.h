@@ -42,7 +42,7 @@ public:
 
     void DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect) override;
 
-    void DrawTextLayout(const TextLayout& layout, const Point& offset) override;
+    void DrawTextLayout(const TextLayout& layout, const Point& offset, BrushPtr outline_brush) override;
 
     void DrawShape(const Shape& shape) override;
 

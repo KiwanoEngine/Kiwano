@@ -160,9 +160,12 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    String        content_;
-    TextStyle     style_;
-    TextLayoutPtr layout_;
+    String         content_;
+    TextStyle      style_;
+    TextLayoutPtr  layout_;
+    BrushPtr       fill_brush_;
+    BrushPtr       outline_brush_;
+    StrokeStylePtr outline_stroke_;
 };
 
 /** @} */
@@ -189,17 +192,17 @@ inline TextLayoutPtr TextActor::GetLayout() const
 
 inline BrushPtr TextActor::GetFillBrush() const
 {
-    return style_.fill_brush;
+    return fill_brush_;
 }
 
 inline BrushPtr TextActor::GetOutlineBrush() const
 {
-    return style_.outline_brush;
+    return outline_brush_;
 }
 
 inline StrokeStylePtr TextActor::GetOutlineStrokeStyle() const
 {
-    return style_.outline_stroke;
+    return outline_stroke_;
 }
 
 }  // namespace kiwano

@@ -143,6 +143,7 @@ protected:
 private:
     std::locale comma_locale_;
     BrushPtr    background_brush_;
+    BrushPtr    debug_text_brush_;
     TextStyle   debug_text_style_;
     TextLayout  debug_text_;
 

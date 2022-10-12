@@ -44,7 +44,9 @@ void TextActor::OnRender(RenderContext& ctx)
 {
     if (layout_)
     {
-        ctx.DrawTextLayout(*layout_);
+        ctx.SetCurrentBrush(fill_brush_);
+        ctx.SetCurrentStrokeStyle(outline_stroke_);
+        ctx.DrawTextLayout(*layout_, Point{}, outline_brush_);
     }
 }
 
@@ -141,39 +143,24 @@ void TextActor::SetAlignment(TextAlign align)
 
 void TextActor::SetFillBrush(BrushPtr brush)
 {
-    if (style_.fill_brush != brush)
-    {
-        style_.fill_brush = brush;
-        if (layout_)
-            layout_->SetFillBrush(brush);
-    }
+    fill_brush_ = brush;
 }
 
 void TextActor::SetOutlineBrush(BrushPtr brush)
 {
-    if (style_.outline_brush != brush)
-    {
-        style_.outline_brush = brush;
-        if (layout_)
-            layout_->SetOutlineBrush(brush);
-    }
+    outline_brush_ = brush;
 }
 
 void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
 {
-    if (style_.outline_stroke != stroke)
-    {
-        style_.outline_stroke = stroke;
-        if (layout_)
-            layout_->SetOutlineStrokeStyle(stroke);
-    }
+    outline_stroke_ = stroke;
 }
 
 void TextActor::SetFillColor(const Color& color)
 {
-    if (style_.fill_brush)
+    if (fill_brush_)
     {
-        style_.fill_brush->SetColor(color);
+        fill_brush_->SetColor(color);
     }
     else
     {
@@ -183,9 +170,9 @@ void TextActor::SetFillColor(const Color& color)
 
 void TextActor::SetOutlineColor(const Color& outline_color)
 {
-    if (style_.outline_brush)
+    if (outline_brush_)
     {
-        style_.outline_brush->SetColor(outline_color);
+        outline_brush_->SetColor(outline_color);
     }
     else
     {

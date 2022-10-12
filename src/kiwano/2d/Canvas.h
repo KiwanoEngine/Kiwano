@@ -182,13 +182,13 @@ public:
     /// @param text 文字
     /// @param style 文字样式
     /// @param point 绘制文字的位置
-    void DrawTextLayout(const String& text, const TextStyle& style, const Point& point);
+    void DrawTextLayout(const String& text, const TextStyle& style, const Point& point, BrushPtr outline_brush = nullptr);
 
     /// \~chinese
     /// @brief 绘制文字布局
     /// @param layout 文字布局
     /// @param point 绘制布局的位置
-    void DrawTextLayout(TextLayoutPtr layout, const Point& point);
+    void DrawTextLayout(TextLayoutPtr layout, const Point& point, BrushPtr outline_brush = nullptr);
 
     /// \~chinese
     /// @brief 清空画布
@@ -426,18 +426,19 @@ inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const
     this->DrawTexture(frame.GetTexture(), pos, size, &frame.GetCropRect());
 }
 
-inline void CanvasRenderContext::DrawTextLayout(const String& text, const TextStyle& style, const Point& point)
+inline void CanvasRenderContext::DrawTextLayout(const String& text, const TextStyle& style, const Point& point,
+                                                BrushPtr outline_brush)
 {
     TextLayoutPtr layout = MakePtr<TextLayout>(text, style);
-    this->DrawTextLayout(layout, point);
+    this->DrawTextLayout(layout, point, outline_brush);
 }
 
-inline void CanvasRenderContext::DrawTextLayout(TextLayoutPtr layout, const Point& point)
+inline void CanvasRenderContext::DrawTextLayout(TextLayoutPtr layout, const Point& point, BrushPtr outline_brush)
 {
     KGE_ASSERT(ctx_);
     if (layout)
     {
-        ctx_->DrawTextLayout(*layout, point);
+        ctx_->DrawTextLayout(*layout, point, outline_brush);
     }
 }
 

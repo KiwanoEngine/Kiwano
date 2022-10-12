@@ -83,7 +83,8 @@ public:
     /// @brief 绘制文本布局
     /// @param layout 文本布局
     /// @param offset 偏移量
-    virtual void DrawTextLayout(const TextLayout& layout, const Point& offset = Point()) = 0;
+    /// @param outline_brush 描边画刷
+    virtual void DrawTextLayout(const TextLayout& layout, const Point& offset, BrushPtr outline_brush) = 0;
 
     /// \~chinese
     /// @brief 绘制形状轮廓
