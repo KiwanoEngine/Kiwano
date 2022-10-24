@@ -110,27 +110,27 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
         }
     }
 
-    if (SUCCEEDED(hr))
-    {
-        IDWriteFactory* dwrite = d2d_res_->GetDWriteFactory();
-        if (dwrite)
-        {
-            ComPtr<IDWriteFontCollection> system_collection;
-            if (SUCCEEDED(dwrite->GetSystemFontCollection(&system_collection, FALSE)))
-            {
-                Vector<String> family_names;
-                if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
-                {
-                    // dummy font
-                    FontPtr font = MakePtr<Font>();
-                    for (const auto& name : family_names)
-                    {
-                        FontCache::GetInstance().AddFontByFamily(name, font);
-                    }
-                }
-            }
-        }
-    }
+    //if (SUCCEEDED(hr))
+    //{
+    //    IDWriteFactory* dwrite = d2d_res_->GetDWriteFactory();
+    //    if (dwrite)
+    //    {
+    //        ComPtr<IDWriteFontCollection> system_collection;
+    //        if (SUCCEEDED(dwrite->GetSystemFontCollection(&system_collection, FALSE)))
+    //        {
+    //            Vector<String> family_names;
+    //            if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
+    //            {
+    //                // dummy font
+    //                FontPtr font = MakePtr<Font>();
+    //                for (const auto& name : family_names)
+    //                {
+    //                    FontCache::GetInstance().AddFontByFamily(name, font);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }

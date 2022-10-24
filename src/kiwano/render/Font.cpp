@@ -97,6 +97,7 @@ Font::Font(const String& family_name, float size, uint32_t weight, FontPosture p
     , weight_(weight)
     , posture_(posture)
     , stretch_(stretch)
+    , family_name_(family_name)
 {
     if (family_name.empty())
         return;
@@ -105,11 +106,6 @@ Font::Font(const String& family_name, float size, uint32_t weight, FontPosture p
     if (found)
     {
         this->ResetNativePointer(found->GetNativePointer());
-        this->SetFamilyName(family_name);
-    }
-    else
-    {
-        this->Fail(strings::Format("Font::Load failed: cannot find family name \"%s\"", family_name.c_str()));
     }
 }
 
