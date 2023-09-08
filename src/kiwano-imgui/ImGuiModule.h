@@ -54,7 +54,9 @@ public:
     void HandleEvent(EventModuleContext& ctx) override;
 
 private:
-    void UpdateMousePos();
+    void InitPlatform();
+
+    void ShutdownPlatform();
 
     void UpdateMouseCursor();
 

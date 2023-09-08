@@ -43,6 +43,7 @@ enum class CursorType
     SizeNS,     ///< 指向上下方向的箭头
     SizeNESW,   ///< 指向左下到右上方向的箭头
     SizeNWSE,   ///< 指向左上到右下方向的箭头
+    No,         ///< 禁止
 };
 
 /**

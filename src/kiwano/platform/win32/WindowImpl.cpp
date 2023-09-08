@@ -84,6 +84,7 @@ private:
     bool       is_minimized_;
     CursorType mouse_cursor_;
     HIMC       imc_restore_;
+    int        mouse_flag_;
     String     device_name_;
 
     Vector<Resolution>       resolutions_;
@@ -174,6 +175,7 @@ WindowWin32Impl::WindowWin32Impl()
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
     , imc_restore_(nullptr)
+    , mouse_flag_{}
 {
     // Keys
     key_map_[VK_UP]      = KeyCode::Up;
@@ -510,6 +512,9 @@ void WindowWin32Impl::UpdateCursor()
     case CursorType::Hand:
         win32_cursor = IDC_HAND;
         break;
+    case CursorType::No:
+        win32_cursor = IDC_NO;
+        break;
     }
     ::SetCursor(::LoadCursor(nullptr, win32_cursor));
 }
@@ -607,6 +612,10 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             evt->button = MouseButton::Middle;
         }
 
+        if (mouse_flag_ == 0 && ::GetCapture() == nullptr)
+            ::SetCapture(hwnd);
+        mouse_flag_ |= 1 << int(evt->button);
+
         this->PushEvent(evt);
     }
     break;
@@ -630,6 +639,10 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         {
             evt->button = MouseButton::Middle;
         }
+
+        mouse_flag_ &= ~(1 << int(evt->button));
+        if (mouse_flag_ == 0 && ::GetCapture() == hwnd)
+            ::ReleaseCapture();
 
         this->PushEvent(evt);
     }

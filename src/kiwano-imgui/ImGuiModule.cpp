@@ -13,56 +13,149 @@ namespace kiwano
 {
 namespace imgui
 {
-ImGuiModule::ImGuiModule()
+
+ImGuiKey KeyCodeToImGuiKey(const KeyCode code)
 {
+    switch (code)
+    {
+    case KeyCode::Tab:
+        return ImGuiKey_Tab;
+    case KeyCode::Left:
+        return ImGuiKey_LeftArrow;
+    case KeyCode::Right:
+        return ImGuiKey_RightArrow;
+    case KeyCode::Up:
+        return ImGuiKey_UpArrow;
+    case KeyCode::Down:
+        return ImGuiKey_DownArrow;
+    case KeyCode::Delete:
+        return ImGuiKey_Delete;
+    case KeyCode::Back:
+        return ImGuiKey_Backspace;
+    case KeyCode::Space:
+        return ImGuiKey_Space;
+    case KeyCode::Enter:
+        return ImGuiKey_Enter;
+    case KeyCode::Esc:
+        return ImGuiKey_Escape;
+    case KeyCode::Num0:
+    case KeyCode::Num1:
+    case KeyCode::Num2:
+    case KeyCode::Num3:
+    case KeyCode::Num4:
+    case KeyCode::Num5:
+    case KeyCode::Num6:
+    case KeyCode::Num7:
+    case KeyCode::Num8:
+    case KeyCode::Num9:
+        return ImGuiKey(ImGuiKey_0 + (code - KeyCode::Num0));
+    case KeyCode::Numpad0:
+    case KeyCode::Numpad1:
+    case KeyCode::Numpad2:
+    case KeyCode::Numpad3:
+    case KeyCode::Numpad4:
+    case KeyCode::Numpad5:
+    case KeyCode::Numpad6:
+    case KeyCode::Numpad7:
+    case KeyCode::Numpad8:
+    case KeyCode::Numpad9:
+        return ImGuiKey(ImGuiKey_Keypad0 + (code - KeyCode::Numpad0));
+    case KeyCode::A:
+    case KeyCode::B:
+    case KeyCode::C:
+    case KeyCode::D:
+    case KeyCode::E:
+    case KeyCode::F:
+    case KeyCode::G:
+    case KeyCode::H:
+    case KeyCode::I:
+    case KeyCode::J:
+    case KeyCode::K:
+    case KeyCode::L:
+    case KeyCode::M:
+    case KeyCode::N:
+    case KeyCode::O:
+    case KeyCode::P:
+    case KeyCode::Q:
+    case KeyCode::R:
+    case KeyCode::S:
+    case KeyCode::T:
+    case KeyCode::U:
+    case KeyCode::V:
+    case KeyCode::W:
+    case KeyCode::X:
+    case KeyCode::Y:
+    case KeyCode::Z:
+        return ImGuiKey(ImGuiKey_A + (code - KeyCode::A));
+    case KeyCode::F1:
+    case KeyCode::F2:
+    case KeyCode::F3:
+    case KeyCode::F4:
+    case KeyCode::F5:
+    case KeyCode::F6:
+    case KeyCode::F7:
+    case KeyCode::F8:
+    case KeyCode::F9:
+    case KeyCode::F10:
+    case KeyCode::F11:
+    case KeyCode::F12:
+        return ImGuiKey(ImGuiKey_F1 + (code - KeyCode::F1));
+    default:
+        return ImGuiKey_None;
+    }
 }
+
+ImGuiModule::ImGuiModule() {}
 
 void ImGuiModule::SetupModule()
 {
+    window_ = Application::GetInstance().GetWindow();
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    window_ = Application::GetInstance().GetWindow();
+    this->InitPlatform();
+    ImGui_Impl_Init();
+}
+
+void ImGuiModule::InitPlatform()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    IM_ASSERT(io.BackendPlatformUserData == nullptr && "Already initialized a platform backend!");
+
+    // Setup backend capabilities flags
+    io.BackendPlatformUserData = (void*)this;
+    io.BackendPlatformName     = "imgui_impl_win32";
+    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+
+    // Set platform dependent data in viewport
+    ImGui::GetMainViewport()->PlatformHandleRaw = (void*)window_->GetHandle();
 
     // Setup Platform/Renderer bindings
-    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;  // We can honor GetMouseCursor() values (optional)
-    io.BackendFlags |=
-        ImGuiBackendFlags_HasSetMousePos;  // We can honor io.WantSetMousePos requests (optional, rarely used)
+    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+    io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
     io.BackendPlatformName = "imgui_impl_win32";
     io.ImeWindowHandle     = window_->GetHandle();
-
-    // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array that we will update during
-    // the application lifetime.
-    io.KeyMap[ImGuiKey_Tab]        = (int)KeyCode::Tab;
-    io.KeyMap[ImGuiKey_LeftArrow]  = (int)KeyCode::Left;
-    io.KeyMap[ImGuiKey_RightArrow] = (int)KeyCode::Right;
-    io.KeyMap[ImGuiKey_UpArrow]    = (int)KeyCode::Up;
-    io.KeyMap[ImGuiKey_DownArrow]  = (int)KeyCode::Down;
-    io.KeyMap[ImGuiKey_Delete]     = (int)KeyCode::Delete;
-    io.KeyMap[ImGuiKey_Backspace]  = (int)KeyCode::Back;
-    io.KeyMap[ImGuiKey_Space]      = (int)KeyCode::Space;
-    io.KeyMap[ImGuiKey_Enter]      = (int)KeyCode::Enter;
-    io.KeyMap[ImGuiKey_Escape]     = (int)KeyCode::Esc;
-    io.KeyMap[ImGuiKey_A]          = (int)KeyCode::A;
-    io.KeyMap[ImGuiKey_C]          = (int)KeyCode::C;
-    io.KeyMap[ImGuiKey_V]          = (int)KeyCode::V;
-    io.KeyMap[ImGuiKey_X]          = (int)KeyCode::X;
-    io.KeyMap[ImGuiKey_Y]          = (int)KeyCode::Y;
-    io.KeyMap[ImGuiKey_Z]          = (int)KeyCode::Z;
-
-    ImGui_Impl_Init();
 }
 
 void ImGuiModule::DestroyModule()
 {
     ImGui_Impl_Shutdown();
+    this->ShutdownPlatform();
     ImGui::DestroyContext();
+}
+
+void ImGuiModule::ShutdownPlatform()
+{
+    ImGuiIO& io                = ImGui::GetIO();
+    io.BackendPlatformName     = nullptr;
+    io.BackendPlatformUserData = nullptr;
 }
 
 void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
@@ -71,6 +164,11 @@ void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
 
     // Setup time step
     io.DeltaTime = ctx.dt.GetSeconds();
+    if (io.DeltaTime <= 0.f)
+    {
+        // Prevent from failed assertion
+        io.DeltaTime = 0.0001f;
+    }
 
     // Read keyboard modifiers inputs
     io.KeyCtrl  = Input::GetInstance().IsDown(KeyCode::Ctrl);
@@ -78,9 +176,6 @@ void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
     io.KeyAlt   = Input::GetInstance().IsDown(KeyCode::Alt);
     io.KeySuper = Input::GetInstance().IsDown(KeyCode::Super);
     // io.KeysDown[], io.MousePos, io.MouseDown[], io.MouseWheel: filled by the HandleEvent function below.
-
-    // Update OS mouse position
-    UpdateMousePos();
 
     // Update OS mouse cursor with the cursor requested by imgui
     UpdateMouseCursor();
@@ -93,7 +188,6 @@ void ImGuiModule::BeforeRender(RenderModuleContext& ctx)
     ImGui_Impl_NewFrame();
 
     ImGuiIO& io = ImGui::GetIO();
-    KGE_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built!");
 
     // Setup display size (every frame to accommodate for window resizing)
     Size display_size = Renderer::GetInstance().GetOutputSize();
@@ -118,7 +212,12 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
         ImGuiIO& io = ImGui::GetIO();
         if (evt->IsType<MouseEvent>())
         {
-            if (evt->IsType<MouseDownEvent>())
+            if (evt->IsType<MouseMoveEvent>())
+            {
+                const auto& pos = dynamic_cast<MouseMoveEvent*>(evt)->pos;
+                io.AddMousePosEvent(pos.x, pos.y);
+            }
+            else if (evt->IsType<MouseDownEvent>())
             {
                 MouseButton button = dynamic_cast<MouseDownEvent*>(evt)->button;
                 int         index  = 0;
@@ -128,7 +227,7 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
                     index = 1;
                 else if (button == MouseButton::Middle)
                     index = 2;
-                io.MouseDown[index] = true;
+                io.AddMouseButtonEvent(index, true);
             }
             else if (evt->IsType<MouseUpEvent>())
             {
@@ -140,25 +239,25 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
                     index = 1;
                 else if (button == MouseButton::Middle)
                     index = 2;
-                io.MouseDown[index] = false;
+                io.AddMouseButtonEvent(index, false);
             }
             else if (evt->IsType<MouseWheelEvent>())
             {
                 float wheel = dynamic_cast<MouseWheelEvent*>(evt)->wheel;
-                io.MouseWheel += wheel;
+                io.AddMouseWheelEvent(0.0f, wheel);
             }
         }
         else if (evt->IsType<KeyEvent>())
         {
             if (evt->IsType<KeyDownEvent>())
             {
-                KeyCode key           = dynamic_cast<KeyDownEvent*>(evt)->code;
-                io.KeysDown[(int)key] = true;
+                KeyCode key = dynamic_cast<KeyDownEvent*>(evt)->code;
+                io.AddKeyEvent(KeyCodeToImGuiKey(key), true);
             }
             else if (evt->IsType<KeyUpEvent>())
             {
-                KeyCode key           = dynamic_cast<KeyUpEvent*>(evt)->code;
-                io.KeysDown[(int)key] = false;
+                KeyCode key = dynamic_cast<KeyUpEvent*>(evt)->code;
+                io.AddKeyEvent(KeyCodeToImGuiKey(key), false);
             }
             else if (evt->IsType<KeyCharEvent>())
             {
@@ -172,26 +271,17 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
                 io.AddInputCharactersUTF8(utf8_str.c_str());
             }
         }
+        else if (evt->IsType<WindowEvent>())
+        {
+            if (evt->IsType<WindowFocusChangedEvent>())
+            {
+                bool focus = dynamic_cast<WindowFocusChangedEvent*>(evt)->focus;
+                io.AddFocusEvent(focus);
+            }
+        }
     }
 
     ctx.Next();
-}
-
-void ImGuiModule::UpdateMousePos()
-{
-    ImGuiIO& io = ImGui::GetIO();
-
-    // Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by
-    // user)
-    if (io.WantSetMousePos)
-    {
-        POINT pos = { (int)io.MousePos.x, (int)io.MousePos.y };
-        ::ClientToScreen(window_->GetHandle(), &pos);
-        ::SetCursorPos(pos.x, pos.y);
-    }
-
-    Point pos   = Input::GetInstance().GetMousePos();
-    io.MousePos = ImVec2(pos.x, pos.y);
 }
 
 void ImGuiModule::UpdateMouseCursor()
@@ -231,6 +321,9 @@ void ImGuiModule::UpdateMouseCursor()
         break;
     case ImGuiMouseCursor_Hand:
         cursor = CursorType::Hand;
+        break;
+    case ImGuiMouseCursor_NotAllowed:
+        cursor = CursorType::No;
         break;
     }
 
