@@ -83,7 +83,7 @@ private:
     bool       is_moving_or_resizing_;
     bool       is_minimized_;
     CursorType mouse_cursor_;
-    HIMC       imc_;
+    HIMC       imc_restore_;
     String     device_name_;
 
     Vector<Resolution>       resolutions_;
@@ -173,7 +173,7 @@ WindowWin32Impl::WindowWin32Impl()
     , is_minimized_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
-    , imc_(nullptr)
+    , imc_restore_(nullptr)
 {
     // Keys
     key_map_[VK_UP]      = KeyCode::Up;
@@ -329,17 +329,17 @@ void WindowWin32Impl::PumpEvents()
 
 void WindowWin32Impl::SetImmEnabled(bool enable)
 {
-    const bool enabled = imc_ != nullptr;
+    const bool enabled = imc_restore_ == nullptr;
     if (enable != enabled)
     {
         if (enable)
         {
-            imc_ = ::ImmAssociateContext(handle_, nullptr);
+            ::ImmAssociateContext(handle_, imc_restore_);
+            imc_restore_ = nullptr;
         }
         else
         {
-            ::ImmAssociateContext(handle_, imc_);
-            imc_ = nullptr;
+            imc_restore_ = ::ImmAssociateContext(handle_, nullptr);
         }
     }
 }
