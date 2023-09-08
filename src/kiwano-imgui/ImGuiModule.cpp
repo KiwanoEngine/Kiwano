@@ -162,9 +162,14 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
             }
             else if (evt->IsType<KeyCharEvent>())
             {
-                // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
                 char ch = dynamic_cast<KeyCharEvent*>(evt)->value;
                 io.AddInputCharacter(static_cast<ImWchar>(ch));
+            }
+            else if (evt->IsType<IMEInputEvent>())
+            {
+                const auto& str = dynamic_cast<IMEInputEvent*>(evt)->value;
+                const auto utf8_str = strings::WideToUTF8(strings::NarrowToWide(str));
+                io.AddInputCharactersUTF8(utf8_str.c_str());
             }
         }
     }

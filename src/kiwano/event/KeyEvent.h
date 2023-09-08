@@ -28,6 +28,7 @@ KGE_DECLARE_SMART_PTR(KeyEvent);
 KGE_DECLARE_SMART_PTR(KeyDownEvent);
 KGE_DECLARE_SMART_PTR(KeyUpEvent);
 KGE_DECLARE_SMART_PTR(KeyCharEvent);
+KGE_DECLARE_SMART_PTR(IMEInputEvent);
 
 /**
  * \addtogroup Event
@@ -72,13 +73,23 @@ public:
     KeyCharEvent();
 };
 
+/// \~chinese
+/// @brief 输入法输入事件
+class KGE_API IMEInputEvent : public KeyEvent
+{
+public:
+    String value;  ///< 输入内容
+
+    IMEInputEvent();
+};
+
 template <>
 struct IsSameEventType<KeyEvent>
 {
     inline bool operator()(const Event* evt) const
     {
         return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent);
+               || evt->GetType() == KGE_EVENT(KeyCharEvent) || evt->GetType() == KGE_EVENT(IMEInputEvent);
     }
 };
 

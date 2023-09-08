@@ -66,6 +66,14 @@ String WideToNarrow(const WideString& str);
 /// @brief Õ­×Ö·û´®×ª¿í×Ö·û´®
 WideString NarrowToWide(const String& str);
 
+/// \~chinese
+/// @brief ¿í×Ö·û´®×ª utf8 ×Ö·û´®
+String WideToUTF8(const WideString& str);
+
+/// \~chinese
+/// @brief utf8 ×Ö·û´®×ª¿í×Ö·û´®
+WideString UTF8ToWide(const String& str);
+
 }
 
 

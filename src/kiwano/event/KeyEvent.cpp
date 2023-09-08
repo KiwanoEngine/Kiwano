@@ -26,4 +26,10 @@ KeyCharEvent::KeyCharEvent()
 {
 }
 
+IMEInputEvent::IMEInputEvent()
+    : KeyEvent(KGE_EVENT(IMEInputEvent))
+    , value()
+{
+}
+
 }  // namespace kiwano
