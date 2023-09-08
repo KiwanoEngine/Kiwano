@@ -264,6 +264,12 @@ public:
      */
     void SetShouldClose(bool should);
 
+    /**
+     * \~chinese
+     * @brief 启用或禁用输入法（默认禁用）
+     */
+    virtual void SetImmEnabled(bool enable) = 0;
+
 protected:
     Window();
 

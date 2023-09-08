@@ -66,6 +66,8 @@ public:
 
     void PumpEvents() override;
 
+    void SetImmEnabled(bool enable) override;
+
     DWORD GetStyle() const;
 
     void SetActive(bool active);
@@ -81,6 +83,7 @@ private:
     bool       is_moving_or_resizing_;
     bool       is_minimized_;
     CursorType mouse_cursor_;
+    HIMC       imc_;
     String     device_name_;
 
     Vector<Resolution>       resolutions_;
@@ -170,6 +173,7 @@ WindowWin32Impl::WindowWin32Impl()
     , is_minimized_(false)
     , mouse_cursor_(CursorType::Arrow)
     , key_map_{}
+    , imc_(nullptr)
 {
     // Keys
     key_map_[VK_UP]      = KeyCode::Up;
@@ -280,7 +284,7 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     }
 
     // disable imm
-    ::ImmAssociateContext(handle_, nullptr);
+    SetImmEnabled(false);
 
     // use Application instance in message loop
     ::SetWindowLongPtrA(handle_, GWLP_USERDATA, LONG_PTR(this));
@@ -320,6 +324,23 @@ void WindowWin32Impl::PumpEvents()
     {
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
+    }
+}
+
+void WindowWin32Impl::SetImmEnabled(bool enable)
+{
+    const bool enabled = imc_ != nullptr;
+    if (enable != enabled)
+    {
+        if (enable)
+        {
+            imc_ = ::ImmAssociateContext(handle_, nullptr);
+        }
+        else
+        {
+            ::ImmAssociateContext(handle_, imc_);
+            imc_ = nullptr;
+        }
     }
 }
 
