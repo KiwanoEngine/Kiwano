@@ -280,7 +280,7 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     }
 
     // disable imm
-    ::ImmAssociateContext(handle_, nullptr);
+    //::ImmAssociateContext(handle_, nullptr);
 
     // use Application instance in message loop
     ::SetWindowLongPtrA(handle_, GWLP_USERDATA, LONG_PTR(this));
