@@ -73,7 +73,6 @@ private:
     RenderContextPtr render_ctx_;
 };
 
-
 /// \~chinese
 /// @brief 画布渲染上下文
 class KGE_API CanvasRenderContext : public ObjectBase
@@ -411,7 +410,7 @@ inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& po
 
     if (texture)
     {
-        Rect dest_rect(pos, size);
+        Rect dest_rect(pos, pos + size);
         ctx_->DrawTexture(*texture, crop_rect, &dest_rect);
     }
 }
