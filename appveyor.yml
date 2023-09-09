@@ -107,7 +107,7 @@ deploy:
   release: v$(APPVEYOR_BUILD_VERSION)
   description: Kiwano-v$(APPVEYOR_BUILD_VERSION) releases.
   auth_token:
-    secure: 7wGg7/tmbIRFsQlSp2iu1xagTDFyDCo9brZGWJV2oNsD/ogE0t2/xDHCpXfI1huJ
+    secure: psAvqoc1T3UXtZpgmtYjof7kEKlLBdnWyM3BmAIj7bC9LJYtk89XqX+fPIOZpRZX
   artifact: /.*\.nupkg/
   draft: true
   on:
