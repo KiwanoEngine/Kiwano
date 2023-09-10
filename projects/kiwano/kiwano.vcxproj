@@ -88,6 +88,7 @@
     <ClInclude Include="..\..\src\kiwano\platform\Window.h" />
     <ClInclude Include="..\..\src\kiwano\render\Brush.h" />
     <ClInclude Include="..\..\src\kiwano\render\Color.h" />
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="..\..\src\kiwano\platform\Window.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Brush.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Color.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D10DeviceResources.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.cpp" />

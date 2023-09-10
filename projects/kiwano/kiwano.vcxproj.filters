@@ -408,6 +408,9 @@
     <ClInclude Include="..\..\src\kiwano\math\Interpolator.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -670,6 +673,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\listener\KeyEventListener.cpp">
       <Filter>event\listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.cpp">
+      <Filter>render\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

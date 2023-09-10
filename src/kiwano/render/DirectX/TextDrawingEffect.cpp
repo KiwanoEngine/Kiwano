@@ -1,0 +1,197 @@
+// Copyright (c) 2023 Kiwano - Nomango
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+#include <kiwano/render/DirectX/TextDrawingEffect.h>
+
+namespace kiwano
+{
+class TextDrawingEffect : public ITextDrawingEffect
+{
+public:
+    TextDrawingEffect();
+
+    STDMETHOD(CreateDeviceResources)(_In_ ID2D1Factory* pFactory);
+
+    STDMETHOD(CreateOutlineGeomerty)
+    (_Out_ ID2D1Geometry** ppOutlineGeo, _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX, float fOriginY);
+
+    // IUnknown methods
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
+    virtual ULONG STDMETHODCALLTYPE   AddRef();
+    virtual ULONG STDMETHODCALLTYPE   Release();
+
+private:
+    unsigned long             cRefCount_;
+    ComPtr<ID2D1Factory>      pFactory_;
+
+    // Outline geometry cache
+    const DWRITE_GLYPH_RUN* pLastGlyphRun_;
+    float                   fLastOriginX_;
+    float                   fLastOriginY_;
+    ComPtr<ID2D1Geometry>   pOutlineGeo_;
+};
+
+HRESULT ITextDrawingEffect::Create(_Out_ ITextDrawingEffect** ppTextDrawingEffect, _In_ ID2D1Factory* pFactory)
+{
+    HRESULT hr = E_FAIL;
+
+    if (ppTextDrawingEffect)
+    {
+        TextDrawingEffect* pTextDrawingEffect = new (std::nothrow) TextDrawingEffect;
+        if (pTextDrawingEffect)
+        {
+            hr = pTextDrawingEffect->CreateDeviceResources(pFactory);
+
+            if (SUCCEEDED(hr))
+            {
+                pTextDrawingEffect->AddRef();
+
+                DX::SafeRelease(*ppTextDrawingEffect);
+                (*ppTextDrawingEffect) = pTextDrawingEffect;
+                return S_OK;
+            }
+            else
+            {
+                delete pTextDrawingEffect;
+                pTextDrawingEffect = NULL;
+            }
+        }
+    }
+    return hr;
+}
+
+TextDrawingEffect::TextDrawingEffect()
+    : cRefCount_(0)
+    , pLastGlyphRun_(nullptr)
+    , fLastOriginX_(0)
+    , fLastOriginY_(0)
+{
+}
+
+STDMETHODIMP TextDrawingEffect::CreateDeviceResources(_In_ ID2D1Factory* pFactory)
+{
+    pFactory_ = pFactory;
+    return S_OK;
+}
+
+STDMETHODIMP TextDrawingEffect::CreateOutlineGeomerty(_Out_ ID2D1Geometry**        ppOutlineGeo,
+                                                      _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX,
+                                                      float fOriginY)
+{
+    HRESULT hr = S_OK;
+
+    if (pOutlineGeo_ && glyphRun == pLastGlyphRun_ && fOriginX == fLastOriginX_ && fOriginY == fLastOriginY_)
+    {
+        // Use cached geometry
+        pOutlineGeo_->AddRef();
+        DX::SafeRelease(*ppOutlineGeo);
+        (*ppOutlineGeo) = pOutlineGeo_.Get();
+        return S_OK;
+    }
+
+    ComPtr<ID2D1GeometrySink>        pSink;
+    ComPtr<ID2D1PathGeometry>        pPathGeometry;
+    ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pFactory_->CreatePathGeometry(&pPathGeometry);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pPathGeometry->Open(&pSink);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = glyphRun->fontFace->GetGlyphRunOutline(
+                glyphRun->fontEmSize, glyphRun->glyphIndices, glyphRun->glyphAdvances, glyphRun->glyphOffsets,
+                glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.Get());
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            hr = pSink->Close();
+        }
+
+        if (SUCCEEDED(hr))
+        {
+            D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, fOriginX, fOriginY);
+
+            if (SUCCEEDED(hr))
+            {
+                hr = pFactory_->CreateTransformedGeometry(pPathGeometry.Get(), &matrix, &pTransformedGeometry);
+            }
+        }
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        pOutlineGeo_   = pTransformedGeometry;
+        pLastGlyphRun_ = glyphRun;
+        fLastOriginX_  = fOriginX;
+        fLastOriginY_  = fOriginY;
+
+        pOutlineGeo_->AddRef();
+        DX::SafeRelease(*ppOutlineGeo);
+        (*ppOutlineGeo) = pOutlineGeo_.Get();
+    }
+    return hr;
+}
+
+STDMETHODIMP_(unsigned long) TextDrawingEffect::AddRef()
+{
+    return InterlockedIncrement(&cRefCount_);
+}
+
+STDMETHODIMP_(unsigned long) TextDrawingEffect::Release()
+{
+    unsigned long newCount = InterlockedDecrement(&cRefCount_);
+
+    if (newCount == 0)
+    {
+        delete this;
+        return 0;
+    }
+
+    return newCount;
+}
+
+STDMETHODIMP TextDrawingEffect::QueryInterface(REFIID riid, void** ppvObject)
+{
+    if (__uuidof(ITextDrawingEffect) == riid)
+    {
+        *ppvObject = this;
+    }
+    else if (__uuidof(IUnknown) == riid)
+    {
+        *ppvObject = this;
+    }
+    else
+    {
+        *ppvObject = NULL;
+        return E_FAIL;
+    }
+
+    AddRef();
+
+    return S_OK;
+}
+}  // namespace kiwano

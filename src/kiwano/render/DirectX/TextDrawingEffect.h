@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Kiwano - Nomango
+// Copyright (c) 2023 Kiwano - Nomango
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,20 +19,18 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/DirectX/helper.h>
+#include <dwrite.h>
 
 namespace kiwano
 {
-interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64") ITextRenderer : public IDWriteTextRenderer
+
+interface DWRITE_DECLARE_INTERFACE("7431F439-6E54-4707-A0DC-1AA035D6AFB8") ITextDrawingEffect : public IUnknown
 {
 public:
-    static KGE_API HRESULT Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1RenderTarget* pRT);
+    static HRESULT Create(_Out_ ITextDrawingEffect** ppTextDrawingEffect, _In_ ID2D1Factory* pFactory);
 
-    STDMETHOD(DrawTextLayout)
-    (_In_ IDWriteTextLayout * pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
-     _In_opt_ ID2D1Brush* pDefaultOutlineBrush, float fDefaultOutlineWidth,
-     _In_opt_ ID2D1StrokeStyle* pDefaultStrokeStyle) PURE;
-
-    STDMETHOD_(uint32_t, GetLastPrimitivesCount)() PURE;
+    STDMETHOD(CreateOutlineGeomerty)
+    (_Out_ ID2D1Geometry** ppOutlineGeo, _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX, float fOriginY) PURE;
 };
 }  // namespace kiwano

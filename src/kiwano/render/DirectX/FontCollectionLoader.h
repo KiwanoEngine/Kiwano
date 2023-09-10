@@ -29,7 +29,7 @@ interface DWRITE_DECLARE_INTERFACE("7EC7A55A-1964-4098-83E0-EFA7C12C6EF7") IFont
     : public IDWriteFontCollectionLoader
 {
 public:
-    static HRESULT Create(_Out_ IFontCollectionLoader * *ppCollectionLoader);
+    static HRESULT Create(_Out_ IFontCollectionLoader** ppCollectionLoader);
 
     STDMETHOD(AddFilePaths)
     (const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
@@ -39,7 +39,7 @@ interface DWRITE_DECLARE_INTERFACE("0A1A3F2A-85F2-41BB-80FD-EC01271740C4") IFont
     : public IDWriteFontFileEnumerator
 {
 public:
-    static HRESULT Create(_Out_ IFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory);
+    static HRESULT Create(_Out_ IFontFileEnumerator** ppEnumerator, IDWriteFactory* pFactory);
 
     STDMETHOD(SetFilePaths)(const Vector<String>& filePaths) PURE;
 };
@@ -48,8 +48,7 @@ interface DWRITE_DECLARE_INTERFACE("F2C411F0-2FB0-4D0E-8C73-D2B8F30137A4") IReso
     : public IDWriteFontCollectionLoader
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontCollectionLoader * *ppCollectionLoader,
-                          IDWriteFontFileLoader * pFileLoader);
+    static HRESULT Create(_Out_ IResourceFontCollectionLoader** ppCollectionLoader, IDWriteFontFileLoader* pFileLoader);
 
     STDMETHOD(AddResources)
     (const Vector<BinaryData>& data, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
@@ -59,15 +58,15 @@ interface DWRITE_DECLARE_INTERFACE("08D21408-6FC1-4E36-A4EB-4DA16BE3399E") IReso
     : public IDWriteFontFileLoader
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileLoader * *ppFileLoader);
+    static HRESULT Create(_Out_ IResourceFontFileLoader** ppFileLoader);
 };
 
 interface DWRITE_DECLARE_INTERFACE("0AD0EC74-7503-46E8-8899-520175ECCB4A") IResourceFontFileEnumerator
     : public IDWriteFontFileEnumerator
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory,
-                          IDWriteFontFileLoader * pFileLoader);
+    static HRESULT Create(_Out_ IResourceFontFileEnumerator** ppEnumerator, IDWriteFactory* pFactory,
+                          IDWriteFontFileLoader* pFileLoader);
 
     STDMETHOD(SetResources)(const Vector<BinaryData>& data) PURE;
 };
@@ -76,7 +75,7 @@ interface DWRITE_DECLARE_INTERFACE("A6267450-27F3-4948-995F-FF8345A72F88") IReso
     : public IDWriteFontFileStream
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileStream * *ppStream, const BinaryData& data);
+    static HRESULT Create(_Out_ IResourceFontFileStream** ppStream, const BinaryData& data);
 };
 
 }  // namespace kiwano

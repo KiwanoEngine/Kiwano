@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/DirectX/TextRenderer.h>
+#include <kiwano/render/DirectX/TextDrawingEffect.h>
 
 namespace kiwano
 {
@@ -110,9 +111,6 @@ TextRenderer::TextRenderer()
     , cPrimitivesCount_(0)
     , fDefaultOutlineWidth_(1)
 {
-    if (pRT_)
-    {
-    }
 }
 
 TextRenderer::~TextRenderer() {}
@@ -162,71 +160,34 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
     KGE_NOT_USED(measuringMode);
     KGE_NOT_USED(glyphRunDescription);
 
-    HRESULT hr = S_OK;
+    ComPtr<ITextDrawingEffect> pTextDrawingEffect;
+
+    HRESULT hr = clientDrawingEffect->QueryInterface(&pTextDrawingEffect);
 
     if (pDefaultOutlineBrush_)
     {
-        ComPtr<ID2D1GeometrySink>        pSink;
-        ComPtr<ID2D1PathGeometry>        pPathGeometry;
-        ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
+        ComPtr<ID2D1Geometry> pOutlineGeometry;
 
         if (SUCCEEDED(hr))
         {
-            hr = pFactory_->CreatePathGeometry(&pPathGeometry);
+            hr = pTextDrawingEffect->CreateOutlineGeomerty(&pOutlineGeometry, glyphRun, baselineOriginX,
+                                                           baselineOriginY);
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = pPathGeometry->Open(&pSink);
+            pRT_->DrawGeometry(pOutlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                               pDefaultStrokeStyle_.Get());
 
-            if (SUCCEEDED(hr))
-            {
-                hr = glyphRun->fontFace->GetGlyphRunOutline(
-                    glyphRun->fontEmSize, glyphRun->glyphIndices, glyphRun->glyphAdvances, glyphRun->glyphOffsets,
-                    glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.Get());
-            }
-
-            if (SUCCEEDED(hr))
-            {
-                hr = pSink->Close();
-            }
-
-            if (SUCCEEDED(hr))
-            {
-                D2D1::Matrix3x2F const matrix =
-                    D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, baselineOriginX, baselineOriginY);
-
-                if (SUCCEEDED(hr))
-                {
-                    hr = pFactory_->CreateTransformedGeometry(pPathGeometry.Get(), &matrix, &pTransformedGeometry);
-                }
-
-                if (SUCCEEDED(hr))
-                {
-                    pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                                       pDefaultStrokeStyle_.Get());
-
-                    ++cPrimitivesCount_;
-                }
-            }
+            ++cPrimitivesCount_;
         }
     }
 
-    if (SUCCEEDED(hr))
+    if (pDefaultFillBrush_)
     {
-        ComPtr<ID2D1Brush> pCurrentFillBrush;
-        if (clientDrawingEffect)
+        if (SUCCEEDED(hr))
         {
-            hr = clientDrawingEffect->QueryInterface<ID2D1Brush>(&pCurrentFillBrush);
-        }
-        else
-        {
-            pCurrentFillBrush = pDefaultFillBrush_;
-        }
-
-        if (SUCCEEDED(hr) && pCurrentFillBrush)
-        {
-            pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pCurrentFillBrush.Get());
+            pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pDefaultFillBrush_.Get());
 
             ++cPrimitivesCount_;
         }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
+#include <kiwano/render/DirectX/TextDrawingEffect.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -521,6 +522,18 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
     ComPtr<IDWriteTextLayout> output;
 
     HRESULT hr = dwrite_factory_->CreateTextLayout(text, length, text_format.Get(), 0, 0, &output);
+
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ITextDrawingEffect> effect;
+        hr = ITextDrawingEffect::Create(&effect, factory_.Get());
+
+        if (SUCCEEDED(hr))
+        {
+            DWRITE_TEXT_RANGE textRange = { 0, std::numeric_limits<UINT32>::max() };
+            hr = output->SetDrawingEffect(effect.Get(), textRange);
+        }
+    }
 
     if (SUCCEEDED(hr))
     {
