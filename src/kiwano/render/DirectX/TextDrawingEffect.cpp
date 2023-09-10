@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <tuple>
 #include <kiwano/render/DirectX/TextDrawingEffect.h>
 
 namespace kiwano
@@ -42,10 +43,7 @@ private:
     ComPtr<ID2D1Factory>      pFactory_;
 
     // Outline geometry cache
-    const DWRITE_GLYPH_RUN* pLastGlyphRun_;
-    float                   fLastOriginX_;
-    float                   fLastOriginY_;
-    ComPtr<ID2D1Geometry>   pOutlineGeo_;
+    Map<std::tuple<const DWRITE_GLYPH_RUN*, float, float>, ComPtr<ID2D1Geometry>> outlineCache_;
 };
 
 HRESULT ITextDrawingEffect::Create(_Out_ ITextDrawingEffect** ppTextDrawingEffect, _In_ ID2D1Factory* pFactory)
@@ -79,9 +77,7 @@ HRESULT ITextDrawingEffect::Create(_Out_ ITextDrawingEffect** ppTextDrawingEffec
 
 TextDrawingEffect::TextDrawingEffect()
     : cRefCount_(0)
-    , pLastGlyphRun_(nullptr)
-    , fLastOriginX_(0)
-    , fLastOriginY_(0)
+    , outlineCache_{}
 {
 }
 
@@ -95,63 +91,67 @@ STDMETHODIMP TextDrawingEffect::CreateOutlineGeomerty(_Out_ ID2D1Geometry**     
                                                       _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX,
                                                       float fOriginY)
 {
+    auto cache = outlineCache_.find(std::make_tuple(glyphRun, fOriginX, fOriginY));
+    if (cache != outlineCache_.end())
+    {
+        auto& pOutlineGeo = cache->second;
+        if (pOutlineGeo)
+        {
+            // Use cached geometry
+            pOutlineGeo->AddRef();
+            DX::SafeRelease(*ppOutlineGeo);
+            (*ppOutlineGeo) = pOutlineGeo.Get();
+            return S_OK;
+        }
+    }
+
     HRESULT hr = S_OK;
 
-    if (pOutlineGeo_ && glyphRun == pLastGlyphRun_ && fOriginX == fLastOriginX_ && fOriginY == fLastOriginY_)
-    {
-        // Use cached geometry
-        pOutlineGeo_->AddRef();
-        DX::SafeRelease(*ppOutlineGeo);
-        (*ppOutlineGeo) = pOutlineGeo_.Get();
-        return S_OK;
-    }
-
-    ComPtr<ID2D1GeometrySink>        pSink;
-    ComPtr<ID2D1PathGeometry>        pPathGeometry;
-    ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
-
+    ComPtr<ID2D1Geometry> pOutlineGeo;
     if (SUCCEEDED(hr))
     {
+        ComPtr<ID2D1PathGeometry> pPathGeometry;
         hr = pFactory_->CreatePathGeometry(&pPathGeometry);
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        hr = pPathGeometry->Open(&pSink);
 
         if (SUCCEEDED(hr))
         {
-            hr = glyphRun->fontFace->GetGlyphRunOutline(
-                glyphRun->fontEmSize, glyphRun->glyphIndices, glyphRun->glyphAdvances, glyphRun->glyphOffsets,
-                glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.Get());
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            hr = pSink->Close();
-        }
-
-        if (SUCCEEDED(hr))
-        {
-            D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, fOriginX, fOriginY);
+            ComPtr<ID2D1GeometrySink> pSink;
+            hr = pPathGeometry->Open(&pSink);
 
             if (SUCCEEDED(hr))
             {
+                hr = glyphRun->fontFace->GetGlyphRunOutline(
+                    glyphRun->fontEmSize, glyphRun->glyphIndices, glyphRun->glyphAdvances, glyphRun->glyphOffsets,
+                    glyphRun->glyphCount, glyphRun->isSideways, glyphRun->bidiLevel % 2, pSink.Get());
+            }
+
+            if (SUCCEEDED(hr))
+            {
+                hr = pSink->Close();
+            }
+
+            if (SUCCEEDED(hr))
+            {
+                const auto matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, fOriginX, fOriginY);
+
+                ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
                 hr = pFactory_->CreateTransformedGeometry(pPathGeometry.Get(), &matrix, &pTransformedGeometry);
+
+                if (SUCCEEDED(hr))
+                {
+                    pOutlineGeo = pTransformedGeometry;
+                }
             }
         }
     }
 
     if (SUCCEEDED(hr))
     {
-        pOutlineGeo_   = pTransformedGeometry;
-        pLastGlyphRun_ = glyphRun;
-        fLastOriginX_  = fOriginX;
-        fLastOriginY_  = fOriginY;
-
-        pOutlineGeo_->AddRef();
+        pOutlineGeo->AddRef();
         DX::SafeRelease(*ppOutlineGeo);
-        (*ppOutlineGeo) = pOutlineGeo_.Get();
+        (*ppOutlineGeo) = pOutlineGeo.Get();
+
+        outlineCache_.insert(std::make_pair(std::make_tuple(glyphRun, fOriginX, fOriginY), pOutlineGeo));
     }
     return hr;
 }
