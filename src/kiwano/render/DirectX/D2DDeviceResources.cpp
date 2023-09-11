@@ -63,6 +63,10 @@ public:
     HRESULT CreateBitmapDecoderFromResource(_Out_ ComPtr<IWICBitmapDecoder>& decoder, _In_ void* data,
                                             DWORD data_size) override;
 
+    HRESULT CreateBitmapSourceFromMemory(_Out_ ComPtr<IWICBitmapSource>& source, _In_ UINT width, _In_ UINT height,
+                                         _In_ UINT cbStride, _In_ UINT cbBufferSize, _In_ BYTE* buffer,
+                                         _In_ REFWICPixelFormatGUID cPixelFormat);
+
     HRESULT CreateTextFormat(_Out_ ComPtr<IDWriteTextFormat>& text_format, _In_ LPCWSTR family,
                              _In_ ComPtr<IDWriteFontCollection> collection, DWRITE_FONT_WEIGHT weight,
                              DWRITE_FONT_STYLE style, DWRITE_FONT_STRETCH stretch, FLOAT font_size) override;
@@ -399,6 +403,23 @@ void D2DDeviceResources::ResetTextRenderingParams(HMONITOR monitor)
     {
         device_context_->SetTextRenderingParams(params.Get());
     }
+}
+
+HRESULT D2DDeviceResources::CreateBitmapSourceFromMemory(_Out_ ComPtr<IWICBitmapSource>& source, _In_ UINT width,
+                                                         _In_ UINT height, _In_ UINT cbStride, _In_ UINT cbBufferSize,
+                                                         _In_ BYTE* buffer, _In_ REFWICPixelFormatGUID cPixelFormat)
+{
+    if (!imaging_factory_)
+        return E_UNEXPECTED;
+
+    ComPtr<IWICBitmap> output;
+
+    HRESULT hr = imaging_factory_->CreateBitmapFromMemory(width, height, cPixelFormat, cbStride, cbBufferSize, buffer, &output);
+    if (SUCCEEDED(hr))
+    {
+        source = output;
+    }
+    return hr;
 }
 
 HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter,

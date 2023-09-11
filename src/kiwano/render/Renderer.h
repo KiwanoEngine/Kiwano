@@ -92,6 +92,14 @@ public:
     virtual void CreateTexture(Texture& texture, const BinaryData& data) = 0;
 
     /// \~chinese
+    /// @brief 从内存加载位图纹理资源
+    /// @param[out] texture 纹理
+    /// @param[in] size 位图大小
+    /// @param[in] data 位图二进制数据
+    /// @param[in] format 像素格式
+    virtual void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format) = 0;
+
+    /// \~chinese
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径

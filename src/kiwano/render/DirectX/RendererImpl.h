@@ -36,6 +36,8 @@ public:
 
     void CreateTexture(Texture& texture, const BinaryData& data) override;
 
+    void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format);
+
     void CreateGifImage(GifImage& gif, const String& file_path) override;
 
     void CreateGifImage(GifImage& gif, const BinaryData& data) override;

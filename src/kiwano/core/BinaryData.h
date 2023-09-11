@@ -33,12 +33,20 @@ struct KGE_API BinaryData
 
     BinaryData();
 
+    BinaryData(void* buffer, uint32_t size);
+
     bool IsValid() const;
 };
 
 inline BinaryData::BinaryData()
     : buffer(nullptr)
     , size(0)
+{
+}
+
+inline BinaryData::BinaryData(void* buffer, uint32_t size)
+    : buffer(buffer)
+    , size(size)
 {
 }
 

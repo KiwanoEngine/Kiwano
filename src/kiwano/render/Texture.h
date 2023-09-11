@@ -49,6 +49,17 @@ typedef math::Vec2T<uint32_t> PixelSize;
 
 /**
  * \~chinese
+ * @brief 像素格式
+ * @details 像素格式指定了从内存加载位图时内存以何种方式排列
+ */
+enum class PixelFormat
+{
+    Bpp32RGB,
+    Bpp32RGBA,
+};
+
+/**
+ * \~chinese
  * @brief 纹理
  */
 class KGE_API Texture : public NativeObject
@@ -61,6 +72,10 @@ public:
     /// \~chinese
     /// @brief 预加载图片资源
     static TexturePtr Preload(const Resource& res);
+
+    /// \~chinese
+    /// @brief 从内存加载位图纹理
+    static TexturePtr Preload(const PixelSize& size, const BinaryData& data, PixelFormat format);
 
     Texture();
 

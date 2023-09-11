@@ -62,6 +62,16 @@ TexturePtr Texture::Preload(const Resource& res)
     return ptr;
 }
 
+TexturePtr Texture::Preload(const PixelSize& size, const BinaryData& data, PixelFormat format)
+{
+    TexturePtr ptr = MakePtr<Texture>();
+    if (ptr)
+    {
+        Renderer::GetInstance().CreateTexture(*ptr, size, data, format);
+    }
+    return ptr;
+}
+
 Texture::Texture(const String& file_path)
     : Texture()
 {
