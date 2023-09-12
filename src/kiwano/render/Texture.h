@@ -56,6 +56,8 @@ enum class PixelFormat
 {
     Bpp32RGB,
     Bpp32RGBA,
+    Bpp32BGR,
+    Bpp32BGRA,
 };
 
 /**

@@ -46,7 +46,13 @@ inline const GUID& ConvertPixelFormat(PixelFormat format, UINT& stride)
         return GUID_WICPixelFormat32bppRGB;
     case PixelFormat::Bpp32RGBA:
         stride = 4;
-        return GUID_WICPixelFormat32bppRGB;
+        return GUID_WICPixelFormat32bppRGBA;
+    case PixelFormat::Bpp32BGR:
+        stride = 3;
+        return GUID_WICPixelFormat32bppBGR;
+    case PixelFormat::Bpp32BGRA:
+        stride = 4;
+        return GUID_WICPixelFormat32bppBGRA;
     default:
         return GUID_WICPixelFormatDontCare;
     }
