@@ -143,6 +143,10 @@ public:
     void SetTextLayout(TextLayoutPtr layout);
 
     /// \~chinese
+    /// @brief 设置预渲染模式，在描边等情况下会有更好的性能
+    void SetPreRenderEnabled(bool enable);
+
+    /// \~chinese
     /// @brief 更新脏文字布局
     /// @details 仅当文字布局脏时更新
     void UpdateDirtyLayout();
@@ -159,13 +163,18 @@ protected:
 
     bool CheckVisibility(RenderContext& ctx) const override;
 
+    void UpdateCachedTexture();
+
 private:
-    String         content_;
-    TextStyle      style_;
-    TextLayoutPtr  layout_;
-    BrushPtr       fill_brush_;
-    BrushPtr       outline_brush_;
-    StrokeStylePtr outline_stroke_;
+    bool             is_cache_dirty_;
+    String           content_;
+    TextStyle        style_;
+    TextLayoutPtr    layout_;
+    BrushPtr         fill_brush_;
+    BrushPtr         outline_brush_;
+    StrokeStylePtr   outline_stroke_;
+    TexturePtr       texture_cached_;
+    RenderContextPtr render_ctx_;
 };
 
 /** @} */
