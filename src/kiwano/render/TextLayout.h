@@ -69,6 +69,10 @@ public:
     uint32_t GetLineCount() const;
 
     /// \~chinese
+    /// @brief 获取文本长度
+    uint32_t GetContentLength() const;
+
+    /// \~chinese
     /// @brief 设置字体
     /// @param font 字体
     void SetFont(FontPtr font);
@@ -134,6 +138,11 @@ inline bool TextLayout::IsDirty() const
 inline void TextLayout::Clear()
 {
     ResetNativePointer();
+}
+
+inline uint32_t TextLayout::GetContentLength() const
+{
+    return content_length_;
 }
 
 inline TextLayout::DirtyFlag TextLayout::GetDirtyFlag() const

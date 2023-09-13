@@ -222,16 +222,20 @@ void TextActor::SetTextLayout(TextLayoutPtr layout)
 
 void TextActor::SetPreRenderEnabled(bool enable)
 {
-    if (enable)
+    const bool enabled = texture_cached_ != nullptr;
+    if (enabled != enable)
     {
-        texture_cached_ = MakePtr<Texture>();
+        if (enable)
+        {
+            texture_cached_ = MakePtr<Texture>();
+        }
+        else
+        {
+            texture_cached_ = nullptr;
+        }
+        render_ctx_     = nullptr;
+        is_cache_dirty_ = true;
     }
-    else
-    {
-        texture_cached_ = nullptr;
-    }
-    render_ctx_     = nullptr;
-    is_cache_dirty_ = true;
 }
 
 void TextActor::Update(Duration dt)
@@ -273,6 +277,10 @@ void TextActor::ForceUpdateLayout()
 
 void TextActor::UpdateCachedTexture()
 {
+    // 有文字描边或其他额外渲染时，需要开启预渲染以提升性能
+    this->SetPreRenderEnabled(outline_brush_ || style_.show_strikethrough || style_.show_underline
+                              || (layout_ && layout_->GetContentLength() > 30));
+
     if (!texture_cached_)
     {
         return;
