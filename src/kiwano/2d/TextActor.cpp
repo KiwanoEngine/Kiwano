@@ -55,7 +55,7 @@ void TextActor::OnRender(RenderContext& ctx)
         {
             Rect dest_rect = GetBounds();
             dest_rect.left_top -= cached_texture_offset;
-            dest_rect.right_bottom -= cached_texture_offset;
+            dest_rect.right_bottom += cached_texture_offset;
             ctx.DrawTexture(*texture_cached_, nullptr, &dest_rect);
         }
         else
