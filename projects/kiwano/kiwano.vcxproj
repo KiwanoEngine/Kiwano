@@ -96,7 +96,6 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h" />
-    <ClInclude Include="..\..\src\kiwano\render\DirectX\NativePtr.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RenderContextImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />

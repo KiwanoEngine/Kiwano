@@ -25,10 +25,9 @@ namespace kiwano
 {
 Canvas::Canvas()
 {
-    RecreateContext(nullptr);
 }
 
-Canvas::Canvas(const Size& size)
+Canvas::Canvas(const PixelSize& size)
 {
     ResizeAndClear(size);
 }
@@ -39,24 +38,10 @@ CanvasRenderContextPtr Canvas::GetContext2D() const
     return ctx;
 }
 
-void Canvas::ResizeAndClear(Size size)
-{
-    RecreateContext(&size);
-}
-
-void Canvas::RecreateContext(Size* size)
+void Canvas::ResizeAndClear(const PixelSize& size)
 {
     texture_cached_ = MakePtr<Texture>();
-
-    if (size)
-    {
-        render_ctx_ = RenderContext::Create(*texture_cached_, *size);
-    }
-    else
-    {
-        render_ctx_ = RenderContext::Create(*texture_cached_);
-    }
-
+    render_ctx_     = RenderContext::Create(texture_cached_, size);
     if (render_ctx_)
     {
         SetSize(render_ctx_->GetSize());
@@ -65,11 +50,6 @@ void Canvas::RecreateContext(Size* size)
     {
         Fail("Canvas::ResizeAndClear failed");
     }
-}
-
-TexturePtr Canvas::ExportToTexture() const
-{
-    return texture_cached_;
 }
 
 void Canvas::OnRender(RenderContext& ctx)

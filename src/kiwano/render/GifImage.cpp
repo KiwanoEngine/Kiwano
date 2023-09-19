@@ -116,14 +116,13 @@ GifImage::Frame GifImage::GetFrame(uint32_t index)
 }  // namespace kiwano
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
 
 namespace kiwano
 {
 
 bool GifImage::GetGlobalMetadata()
 {
-    ComPtr<IWICBitmapDecoder> decoder = NativePtr::Get<IWICBitmapDecoder>(this);
+    ComPtr<IWICBitmapDecoder> decoder = NativeObject::Get<IWICBitmapDecoder>(this);
 
     HRESULT hr = decoder ? S_OK : E_FAIL;
 

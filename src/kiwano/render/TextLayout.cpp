@@ -21,10 +21,6 @@
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/TextLayout.h>
 
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
-#endif
-
 namespace kiwano
 {
 
@@ -84,7 +80,7 @@ void TextLayout::SetFont(FontPtr font)
         return;
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -93,7 +89,7 @@ void TextLayout::SetFont(FontPtr font)
 
         // reset font collection
         {
-            auto collection = NativePtr::Get<IDWriteFontCollection>(font);
+            auto collection = NativeObject::Get<IDWriteFontCollection>(font);
 
             hr = native->SetFontCollection(collection.Get(), { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontCollection failed");
@@ -148,7 +144,7 @@ void TextLayout::SetFont(FontPtr font)
 void TextLayout::SetUnderline(bool enable)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -166,7 +162,7 @@ void TextLayout::SetUnderline(bool enable)
 void TextLayout::SetStrikethrough(bool enable)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -184,7 +180,7 @@ void TextLayout::SetStrikethrough(bool enable)
 void TextLayout::SetAlignment(TextAlign align)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -219,7 +215,7 @@ void TextLayout::SetAlignment(TextAlign align)
 void TextLayout::SetWrapWidth(float wrap_width)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -249,7 +245,7 @@ void TextLayout::SetWrapWidth(float wrap_width)
 void TextLayout::SetLineSpacing(float line_spacing)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<IDWriteTextLayout>(this);
+    auto native = NativeObject::Get<IDWriteTextLayout>(this);
     KGE_ASSERT(native);
 
     if (native)
@@ -284,7 +280,7 @@ bool TextLayout::UpdateIfDirty()
         line_count_ = 0;
         size_       = Size();
 
-        auto native = NativePtr::Get<IDWriteTextLayout>(this);
+        auto native = NativeObject::Get<IDWriteTextLayout>(this);
         if (content_length_ == 0 || !native)
             return true;
 

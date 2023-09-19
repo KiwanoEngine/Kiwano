@@ -17,10 +17,7 @@ void NativeObjectBase::ResetNativePointer(void* native_pointer)
     native_pointer_ = native_pointer;
 }
 
-//
-// NativeObject for Windows
-//
-#if defined(KGE_PLATFORM_WINDOWS)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 
 NativeObject::~NativeObject()
 {

@@ -23,8 +23,7 @@
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
-#include <d2d1.h>
-#include <d2d1_1.h>
+#include <d2d1_3.h>
 
 namespace kiwano
 {
@@ -76,7 +75,7 @@ inline D2D1_POINT_2F* ConvertToPoint2F(Vec2* vec2)
 }
 
 //
-// SizeF
+// Size
 //
 
 inline const D2D1_SIZE_F& ConvertToSizeF(const Vec2& vec2)
@@ -97,6 +96,26 @@ inline const D2D1_SIZE_F* ConvertToSizeF(const Vec2* vec2)
 inline D2D1_SIZE_F* ConvertToSizeF(Vec2* vec2)
 {
     return reinterpret_cast<D2D1_SIZE_F*>(vec2);
+}
+
+inline const D2D1_SIZE_U& ConvertToSizeU(const math::Vec2T<uint32_t>& vec2)
+{
+    return reinterpret_cast<const D2D1_SIZE_U&>(vec2);
+}
+
+inline D2D1_SIZE_U& ConvertToSizeU(math::Vec2T<uint32_t>& vec2)
+{
+    return reinterpret_cast<D2D1_SIZE_U&>(vec2);
+}
+
+inline const D2D1_SIZE_U* ConvertToSizeU(const math::Vec2T<uint32_t>* vec2)
+{
+    return reinterpret_cast<const D2D1_SIZE_U*>(vec2);
+}
+
+inline D2D1_SIZE_U* ConvertToSizeU(math::Vec2T<uint32_t>* vec2)
+{
+    return reinterpret_cast<D2D1_SIZE_U*>(vec2);
 }
 
 //

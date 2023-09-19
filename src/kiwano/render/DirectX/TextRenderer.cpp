@@ -23,6 +23,10 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
 class TextRenderer : public ITextRenderer
 {
 public:
@@ -30,7 +34,7 @@ public:
 
     ~TextRenderer();
 
-    STDMETHOD(CreateDeviceResources)(_In_ ID2D1RenderTarget* pRT);
+    STDMETHOD(CreateDeviceResources)(_In_ ID2D1DeviceContext* pContext);
 
     STDMETHOD(DrawTextLayout)
     (_In_ IDWriteTextLayout* pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
@@ -67,17 +71,17 @@ public:
     HRESULT STDMETHODCALLTYPE       QueryInterface(REFIID riid, void** ppvObject);
 
 private:
-    unsigned long             cRefCount_;
-    uint32_t                  cPrimitivesCount_;
-    float                     fDefaultOutlineWidth_;
-    ComPtr<ID2D1Factory>      pFactory_;
-    ComPtr<ID2D1RenderTarget> pRT_;
-    ComPtr<ID2D1Brush>        pDefaultFillBrush_;
-    ComPtr<ID2D1Brush>        pDefaultOutlineBrush_;
-    ComPtr<ID2D1StrokeStyle>  pDefaultStrokeStyle_;
+    unsigned long              cRefCount_;
+    uint32_t                   cPrimitivesCount_;
+    float                      fDefaultOutlineWidth_;
+    ComPtr<ID2D1Factory>       pFactory_;
+    ComPtr<ID2D1DeviceContext> pContext_;
+    ComPtr<ID2D1Brush>         pDefaultFillBrush_;
+    ComPtr<ID2D1Brush>         pDefaultOutlineBrush_;
+    ComPtr<ID2D1StrokeStyle>   pDefaultStrokeStyle_;
 };
 
-HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1RenderTarget* pRT)
+HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1DeviceContext* pContext)
 {
     HRESULT hr = E_FAIL;
 
@@ -86,7 +90,7 @@ HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1Re
         TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer;
         if (pTextRenderer)
         {
-            hr = pTextRenderer->CreateDeviceResources(pRT);
+            hr = pTextRenderer->CreateDeviceResources(pContext);
 
             if (SUCCEEDED(hr))
             {
@@ -115,17 +119,17 @@ TextRenderer::TextRenderer()
 
 TextRenderer::~TextRenderer() {}
 
-STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1RenderTarget* pRT)
+STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1DeviceContext* pContext)
 {
     HRESULT hr = E_FAIL;
 
     pFactory_.Reset();
-    pRT_.Reset();
+    pContext_.Reset();
 
-    if (pRT)
+    if (pContext)
     {
-        pRT_ = pRT;
-        pRT_->GetFactory(&pFactory_);
+        pContext_ = pContext;
+        pContext_->GetFactory(&pFactory_);
         hr = S_OK;
     }
     return hr;
@@ -152,7 +156,7 @@ STDMETHODIMP TextRenderer::DrawTextLayout(_In_ IDWriteTextLayout* pTextLayout, f
 
 STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, float baselineOriginX,
                                         float baselineOriginY, DWRITE_MEASURING_MODE measuringMode,
-                                        __in DWRITE_GLYPH_RUN const* glyphRun,
+                                        __in DWRITE_GLYPH_RUN const*             glyphRun,
                                         __in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
                                         IUnknown*                                clientDrawingEffect)
 {
@@ -176,8 +180,8 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
 
         if (SUCCEEDED(hr))
         {
-            pRT_->DrawGeometry(pOutlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                               pDefaultStrokeStyle_.Get());
+            pContext_->DrawGeometry(pOutlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                                    pDefaultStrokeStyle_.Get());
 
             ++cPrimitivesCount_;
         }
@@ -187,7 +191,8 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
     {
         if (SUCCEEDED(hr))
         {
-            pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pDefaultFillBrush_.Get());
+            pContext_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun,
+                                    pDefaultFillBrush_.Get());
 
             ++cPrimitivesCount_;
         }
@@ -236,15 +241,15 @@ STDMETHODIMP TextRenderer::DrawUnderline(__maybenull void* clientDrawingContext,
 
     if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                           pDefaultStrokeStyle_.Get());
+        pContext_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                                pDefaultStrokeStyle_.Get());
 
         ++cPrimitivesCount_;
     }
 
     if (SUCCEEDED(hr) && pCurrentFillBrush)
     {
-        pRT_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
+        pContext_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
 
         ++cPrimitivesCount_;
     }
@@ -292,15 +297,15 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(__maybenull void* clientDrawingCont
 
     if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
     {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                           pDefaultStrokeStyle_.Get());
+        pContext_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                                pDefaultStrokeStyle_.Get());
 
         ++cPrimitivesCount_;
     }
 
     if (SUCCEEDED(hr) && pCurrentFillBrush)
     {
-        pRT_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
+        pContext_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
 
         ++cPrimitivesCount_;
     }
@@ -333,7 +338,7 @@ STDMETHODIMP TextRenderer::GetCurrentTransform(__maybenull void* clientDrawingCo
 {
     KGE_NOT_USED(clientDrawingContext);
 
-    pRT_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
+    pContext_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
     return S_OK;
 }
 
@@ -343,7 +348,7 @@ STDMETHODIMP TextRenderer::GetPixelsPerDip(__maybenull void* clientDrawingContex
 
     float x, yUnused;
 
-    pRT_->GetDpi(&x, &yUnused);
+    pContext_->GetDpi(&x, &yUnused);
     *pixelsPerDip = x / 96;
 
     return S_OK;
@@ -400,4 +405,6 @@ STDMETHODIMP TextRenderer::QueryInterface(REFIID riid, void** ppvObject)
 
     return S_OK;
 }
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

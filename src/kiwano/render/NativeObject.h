@@ -57,7 +57,7 @@ protected:
     void* native_pointer_;
 };
 
-#if defined(KGE_PLATFORM_WINDOWS)
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
 
 class KGE_API NativeObject : public NativeObjectBase
 {
@@ -65,6 +65,52 @@ public:
     virtual ~NativeObject();
 
     void ResetNativePointer(void* native_pointer = nullptr) override;
+
+    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+    static inline ComPtr<_Ty> Get(const NativeObject* object)
+    {
+        if (object)
+        {
+            ComPtr<IUnknown> ptr = object->GetNativePointer<IUnknown>();
+            if (ptr)
+            {
+                ComPtr<_Ty> native;
+                if (SUCCEEDED(ptr->QueryInterface<_Ty>(&native)))
+                    return native;
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename _Ty>
+    static inline ComPtr<_Ty> Get(const NativeObject& object)
+    {
+        return NativeObject::Get<_Ty>(&object);
+    }
+
+    template <typename _Ty>
+    static inline ComPtr<_Ty> Get(NativeObjectPtr object)
+    {
+        return NativeObject::Get<_Ty>(object.Get());
+    }
+
+    static inline void Set(NativeObject* object, ComPtr<IUnknown> com_ptr)
+    {
+        if (object)
+        {
+            object->ResetNativePointer(com_ptr.Get());
+        }
+    }
+
+    static inline void Set(NativeObject& object, ComPtr<IUnknown> com_ptr)
+    {
+        NativeObject::Set(&object, com_ptr);
+    }
+
+    static inline void Set(NativeObjectPtr object, ComPtr<IUnknown> com_ptr)
+    {
+        NativeObject::Set(object.Get(), com_ptr);
+    }
 };
 
 #else

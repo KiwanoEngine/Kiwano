@@ -23,6 +23,10 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
 class TextDrawingEffect : public ITextDrawingEffect
 {
 public:
@@ -39,8 +43,8 @@ public:
     virtual ULONG STDMETHODCALLTYPE   Release();
 
 private:
-    unsigned long             cRefCount_;
-    ComPtr<ID2D1Factory>      pFactory_;
+    unsigned long        cRefCount_;
+    ComPtr<ID2D1Factory> pFactory_;
 
     // Outline geometry cache
     Map<std::tuple<const DWRITE_GLYPH_RUN*, float, float>, ComPtr<ID2D1Geometry>> outlineCache_;
@@ -194,4 +198,6 @@ STDMETHODIMP TextDrawingEffect::QueryInterface(REFIID riid, void** ppvObject)
 
     return S_OK;
 }
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

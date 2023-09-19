@@ -55,13 +55,8 @@ public:
     /// \~chinese
     /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
     /// @param texture 保存绘制结果的纹理
-    static RenderContextPtr Create(Texture& texture);
-
-    /// \~chinese
-    /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
-    /// @param texture 保存绘制结果的纹理
     /// @param size 渲染输出大小
-    static RenderContextPtr Create(Texture& texture, const Size& size);
+    static RenderContextPtr Create(TexturePtr texture, const PixelSize& size);
 
     /// \~chinese
     /// @brief 开始渲染
@@ -70,6 +65,12 @@ public:
     /// \~chinese
     /// @brief 结束渲染
     virtual void EndDraw();
+
+    /// \~chinese
+    /// @brief 创建空纹理
+    /// @param[out] texture 输出纹理
+    /// @param[in] size 纹理像素大小
+    virtual void CreateTexture(Texture& texture, const PixelSize& size) = 0;
 
     /// \~chinese
     /// @brief 绘制纹理
@@ -147,12 +148,6 @@ public:
     /// @param center 圆心
     /// @param radius 椭圆半径
     virtual void FillEllipse(const Point& center, const Vec2& radius) = 0;
-
-    /// \~chinese
-    /// @brief 创建纹理
-    /// @param texture 纹理
-    /// @param size 纹理像素大小
-    virtual void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) = 0;
 
     /// \~chinese
     /// @brief 设置绘制的裁剪区域
@@ -236,6 +231,10 @@ public:
     /// \~chinese
     /// @brief 设置全局二维变换
     virtual void SetGlobalTransform(const Matrix3x2* matrix);
+
+    /// \~chinese
+    /// @brief 获取渲染目标
+    virtual TexturePtr GetTarget() const = 0;
 
 public:
     /// \~chinese

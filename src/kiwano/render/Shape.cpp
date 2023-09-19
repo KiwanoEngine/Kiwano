@@ -22,10 +22,6 @@
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/Renderer.h>
 
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
-#endif
-
 namespace kiwano
 {
 
@@ -40,7 +36,7 @@ Rect Shape::GetBoundingBox() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
-    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (geometry)
     {
         // no matter it failed or not
@@ -56,7 +52,7 @@ Rect Shape::GetBoundingBox(const Matrix3x2& transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     Rect bounds;
-    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (geometry)
     {
         // no matter it failed or not
@@ -72,7 +68,7 @@ float Shape::GetLength() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     float length = 0.f;
-    auto  geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto  geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (geometry)
     {
         // no matter it failed or not
@@ -87,7 +83,7 @@ float Shape::GetLength() const
 bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (geometry)
     {
         HRESULT hr = geometry->ComputePointAtLength(length, D2D1::Matrix3x2F::Identity(), DX::ConvertToPoint2F(&point),
@@ -104,7 +100,7 @@ bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) cons
 float Shape::ComputeArea() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (geometry)
     {
         float area = 0.f;
@@ -120,7 +116,7 @@ float Shape::ComputeArea() const
 bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto geometry = NativePtr::Get<ID2D1Geometry>(this);
+    auto geometry = NativeObject::Get<ID2D1Geometry>(this);
     if (!geometry)
         return false;
 

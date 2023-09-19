@@ -20,6 +20,7 @@
 
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/render/Renderer.h>
 
 namespace kiwano
 {
@@ -76,9 +77,8 @@ bool GifSprite::Load(GifImagePtr gif)
         frame_to_render_.Reset();
         frame_rt_.Reset();
 
-        Size frame_size  = Size(float(gif_->GetWidthInPixels()), float(gif_->GetHeightInPixels()));
         frame_to_render_ = MakePtr<Texture>();
-        frame_rt_        = RenderContext::Create(*frame_to_render_, frame_size);
+        frame_rt_        = RenderContext::Create(frame_to_render_, gif_->GetSizeInPixels());
 
         if (frame_rt_)
         {

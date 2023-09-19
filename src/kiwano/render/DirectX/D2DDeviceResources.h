@@ -78,8 +78,6 @@ public:
 
     virtual void DiscardResources() = 0;
 
-    virtual void SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target) = 0;
-
     virtual void ResetTextRenderingParams(_In_ HMONITOR monitor) = 0;
 
     inline ID2D1Factory1* GetFactory()
@@ -112,17 +110,10 @@ public:
         return device_context_.Get();
     }
 
-    inline ID2D1Bitmap1* GetTargetBitmap()
-    {
-        KGE_ASSERT(target_bitmap_);
-        return target_bitmap_.Get();
-    }
-
 protected:
     ComPtr<ID2D1Factory1>      factory_;
     ComPtr<ID2D1Device>        device_;
     ComPtr<ID2D1DeviceContext> device_context_;
-    ComPtr<ID2D1Bitmap1>       target_bitmap_;
 
     ComPtr<IWICImagingFactory> imaging_factory_;
     ComPtr<IDWriteFactory>     dwrite_factory_;

@@ -22,10 +22,6 @@
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Renderer.h>
 
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
-#endif
-
 namespace kiwano
 {
 GradientStop::GradientStop()
@@ -124,7 +120,7 @@ void Brush::SetTransform(const Transform& transform)
 void Brush::SetTransform(const Matrix3x2& transform)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<ID2D1Brush>(this);
+    auto native = NativeObject::Get<ID2D1Brush>(this);
     KGE_ASSERT(native);
 
     if (native)

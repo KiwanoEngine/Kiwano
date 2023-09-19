@@ -24,8 +24,12 @@
 
 namespace kiwano
 {
-
-interface DWRITE_DECLARE_INTERFACE("7431F439-6E54-4707-A0DC-1AA035D6AFB8") ITextDrawingEffect : public IUnknown
+namespace graphics
+{
+namespace directx
+{
+interface DWRITE_DECLARE_INTERFACE("7431F439-6E54-4707-A0DC-1AA035D6AFB8") ITextDrawingEffect
+    : public IUnknown
 {
 public:
     static HRESULT Create(_Out_ ITextDrawingEffect** ppTextDrawingEffect, _In_ ID2D1Factory* pFactory);
@@ -33,4 +37,6 @@ public:
     STDMETHOD(CreateOutlineGeomerty)
     (_Out_ ID2D1Geometry** ppOutlineGeo, _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX, float fOriginY) PURE;
 };
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano
