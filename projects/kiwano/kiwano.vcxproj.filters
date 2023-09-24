@@ -405,8 +405,8 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.h">
       <Filter>render\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\NativeObject.h">
-      <Filter>render</Filter>
+    <ClInclude Include="..\..\src\kiwano\platform\NativeObject.hpp">
+      <Filter>platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -670,9 +670,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.cpp">
       <Filter>render\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp">
-      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

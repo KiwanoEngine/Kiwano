@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/render/NativeObject.h>
+#include <kiwano/platform/NativeObject.hpp>
 
 namespace kiwano
 {

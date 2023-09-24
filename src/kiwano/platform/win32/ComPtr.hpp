@@ -22,11 +22,12 @@
 #include <type_traits>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/RefBasePtr.hpp>
+#include <kiwano/platform/NativeObject.hpp>
 #include <Unknwnbase.h>
 
 namespace kiwano
 {
-struct ComPtrPolicy
+struct ComRefPolicy
 {
     inline void Retain(IUnknown* ptr)
     {
@@ -43,6 +44,74 @@ struct ComPtrPolicy
 
 // ComPtr<> is a smart pointer for COM
 template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = RefBasePtr<_Ty, ComPtrPolicy>;
+using ComPtr = RefBasePtr<_Ty, ComRefPolicy>;
+
+struct ComPolicy
+{
+    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+    static inline ComPtr<_Ty> Get(const NativeObject* object)
+    {
+        if (object)
+        {
+            const auto& native = object->GetNative();
+            if (native.HasValue())
+            {
+                auto ptr = native.Cast<ComPtr<IUnknown>>();
+                if (ptr)
+                {
+                    ComPtr<_Ty> native;
+                    if (SUCCEEDED(ptr->QueryInterface<_Ty>(&native)))
+                        return native;
+                }
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+    static inline ComPtr<_Ty> Get(const NativeObject& object)
+    {
+        return ComPolicy::Get<_Ty>(&object);
+    }
+
+    template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
+    static inline ComPtr<_Ty> Get(NativeObjectPtr object)
+    {
+        return ComPolicy::Get<_Ty>(object.Get());
+    }
+
+    static inline void Set(NativeObject* object, ComPtr<IUnknown> com_ptr)
+    {
+        if (object)
+        {
+            object->SetNative(Any{ com_ptr });
+        }
+    }
+
+    static inline void Set(NativeObject* object, IUnknown* com_ptr)
+    {
+        ComPolicy::Set(object, ComPtr<IUnknown>(com_ptr));
+    }
+
+    static inline void Set(NativeObject& object, IUnknown* com_ptr)
+    {
+        ComPolicy::Set(&object, com_ptr);
+    }
+
+    static inline void Set(NativeObjectPtr object, IUnknown* com_ptr)
+    {
+        ComPolicy::Set(object.Get(), com_ptr);
+    }
+
+    static inline void Set(NativeObject& object, ComPtr<IUnknown> com_ptr)
+    {
+        ComPolicy::Set(&object, com_ptr.Get());
+    }
+
+    static inline void Set(NativeObjectPtr object, ComPtr<IUnknown> com_ptr)
+    {
+        ComPolicy::Set(object.Get(), com_ptr.Get());
+    }
+};
 
 }  // namespace kiwano

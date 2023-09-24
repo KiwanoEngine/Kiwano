@@ -24,6 +24,7 @@
 #include <kiwano/render/Color.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
 #include <d2d1_3.h>
+#include <dwrite.h>
 
 namespace kiwano
 {

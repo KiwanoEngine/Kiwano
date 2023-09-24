@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano/core/BinaryData.h>
 #include <kiwano/render/DirectX/helper.h>
-#include <dwrite.h>
 
 namespace kiwano
 {

@@ -208,12 +208,12 @@ bool Sound::IsPlaying() const
         if (!voice_)
             return false;
 
+        if (!playing_)
+            return false;
+
         XAUDIO2_VOICE_STATE state;
         voice_->GetState(&state);
-        uint32_t buffers_queued = state.BuffersQueued;
-
-        if (buffers_queued && playing_)
-            return true;
+        return !!state.BuffersQueued;
     }
     return false;
 }
@@ -231,7 +231,7 @@ void Sound::SetVolume(float volume)
 {
     KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    volume = std::min(std::max(volume, -224.f), 224.f);
+    volume = std::min(std::max(volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
     voice_->SetVolume(volume);
 }
 }  // namespace audio

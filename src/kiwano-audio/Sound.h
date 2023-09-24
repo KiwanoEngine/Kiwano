@@ -22,7 +22,6 @@
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Resource.h>
 #include <kiwano/base/ObjectBase.h>
-#include <kiwano/platform/win32/ComPtr.hpp>
 #include <xaudio2.h>
 
 namespace kiwano

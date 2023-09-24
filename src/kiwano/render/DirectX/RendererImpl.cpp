@@ -20,7 +20,7 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
-#include <kiwano/render/NativeObject.h>
+#include <kiwano/platform/NativeObject.hpp>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
@@ -258,7 +258,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 
                     if (SUCCEEDED(hr))
                     {
-                        NativeObject::Set(texture, bitmap);
+                        ComPolicy::Set(texture, bitmap);
 
                         texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                         texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -307,7 +307,7 @@ void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
 
                         if (SUCCEEDED(hr))
                         {
-                            NativeObject::Set(texture, bitmap);
+                            ComPolicy::Set(texture, bitmap);
 
                             texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                             texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -344,7 +344,7 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
                 D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET, D2D1::PixelFormat(dxgi_format)), &output);
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(texture, output);
+                ComPolicy::Set(texture, output);
 
                 texture.SetSize({ output->GetSize().width, output->GetSize().height });
                 texture.SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
@@ -380,7 +380,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
         if (SUCCEEDED(hr))
         {
-            NativeObject::Set(gif, decoder);
+            ComPolicy::Set(gif, decoder);
         }
     }
 
@@ -406,7 +406,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const BinaryData& data)
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(gif, decoder);
+                ComPolicy::Set(gif, decoder);
             }
         }
     }
@@ -422,7 +422,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
         hr = E_UNEXPECTED;
     }
 
-    auto decoder = NativeObject::Get<IWICBitmapDecoder>(gif);
+    auto decoder = ComPolicy::Get<IWICBitmapDecoder>(gif);
 
     if (!decoder)
     {
@@ -449,7 +449,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
                 if (SUCCEEDED(hr))
                 {
                     frame.texture = MakePtr<Texture>();
-                    NativeObject::Set(frame.texture, bitmap);
+                    ComPolicy::Set(frame.texture, bitmap);
 
                     frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                     frame.texture->SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -603,7 +603,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            NativeObject::Set(font, font_collection);
+            ComPolicy::Set(font, font_collection);
         }
     }
 
@@ -626,7 +626,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            NativeObject::Set(font, font_collection);
+            ComPolicy::Set(font, font_collection);
         }
     }
 
@@ -660,7 +660,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
         auto  font_weight  = DWRITE_FONT_WEIGHT(font->GetWeight());
         auto  font_style   = DWRITE_FONT_STYLE(font->GetPosture());
         auto  font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
-        auto  collection   = NativeObject::Get<IDWriteFontCollection>(font);
+        auto  collection   = ComPolicy::Get<IDWriteFontCollection>(font);
 
         WideString font_family;
 
@@ -683,7 +683,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(layout, output);
+                ComPolicy::Set(layout, output);
                 layout.SetDirtyFlag(TextLayout::DirtyFlag::Dirty);
             }
         }
@@ -720,7 +720,7 @@ void RendererImpl::CreateLineShape(Shape& shape, const Point& begin_pos, const P
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(shape, path_geo);
+                ComPolicy::Set(shape, path_geo);
             }
         }
     }
@@ -744,7 +744,7 @@ void RendererImpl::CreateRectShape(Shape& shape, const Rect& rect)
 
     if (SUCCEEDED(hr))
     {
-        NativeObject::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RectangleGeometry failed");
@@ -767,7 +767,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, const Rect& rect, const 
 
     if (SUCCEEDED(hr))
     {
-        NativeObject::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RoundedRectangleGeometry failed");
@@ -790,7 +790,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, const Point& center, const V
 
     if (SUCCEEDED(hr))
     {
-        NativeObject::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1EllipseGeometry failed");
@@ -813,7 +813,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
         if (SUCCEEDED(hr))
         {
             ShapePtr shape = MakePtr<Shape>();
-            NativeObject::Set(shape, geometry);
+            ComPolicy::Set(shape, geometry);
 
             maker.SetShape(shape);
         }
@@ -835,7 +835,7 @@ void RendererImpl::CreateBrush(Brush& brush, const Color& color)
 
         if (brush.GetType() == Brush::Type::SolidColor && brush.IsValid())
         {
-            hr = NativeObject::Get<ID2D1Brush>(brush)->QueryInterface(&solid_brush);
+            hr = ComPolicy::Get<ID2D1Brush>(brush)->QueryInterface(&solid_brush);
             if (SUCCEEDED(hr))
             {
                 solid_brush->SetColor(DX::ConvertToColorF(color));
@@ -847,7 +847,7 @@ void RendererImpl::CreateBrush(Brush& brush, const Color& color)
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(brush, solid_brush);
+                ComPolicy::Set(brush, solid_brush);
             }
         }
     }
@@ -879,7 +879,7 @@ void RendererImpl::CreateBrush(Brush& brush, const LinearGradientStyle& style)
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -912,7 +912,7 @@ void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -930,7 +930,7 @@ void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
 
     if (SUCCEEDED(hr))
     {
-        auto bitmap = NativeObject::Get<ID2D1Bitmap>(texture);
+        auto bitmap = ComPolicy::Get<ID2D1Bitmap>(texture);
 
         if (SUCCEEDED(hr))
         {
@@ -939,7 +939,7 @@ void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
 
             if (SUCCEEDED(hr))
             {
-                NativeObject::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -979,7 +979,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
 
         if (SUCCEEDED(hr))
         {
-            NativeObject::Set(stroke_style, output);
+            ComPolicy::Set(stroke_style, output);
         }
     }
 
@@ -1023,7 +1023,7 @@ RenderContextPtr RendererImpl::CreateTextureRenderContext(TexturePtr texture, co
             if (SUCCEEDED(hr))
             {
                 render_ctx->SetTarget(output.Get());
-                NativeObject::Set(texture, output);
+                ComPolicy::Set(texture, output);
 
                 texture->SetSize({ output->GetSize().width, output->GetSize().height });
                 texture->SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });

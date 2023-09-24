@@ -62,7 +62,7 @@ HRESULT RenderContextImpl::CreateDeviceResources(ComPtr<ID2D1Factory> factory, C
 
     if (SUCCEEDED(hr))
     {
-        NativeObject::Set(this, ctx);
+        ComPolicy::Set(this, ctx);
     }
     return hr;
 }
@@ -73,7 +73,7 @@ void RenderContextImpl::DiscardDeviceResources()
     render_ctx_.Reset();
     current_brush_.Reset();
 
-    ResetNativePointer();
+    ComPolicy::Set(this, nullptr);
 }
 
 TexturePtr RenderContextImpl::GetTarget() const
@@ -85,7 +85,7 @@ TexturePtr RenderContextImpl::GetTarget() const
     if (target)
     {
         TexturePtr ptr = MakePtr<Texture>();
-        NativeObject::Set(*ptr, target.Get());
+        ComPolicy::Set(*ptr, target.Get());
     }
     return nullptr;
 }
@@ -123,7 +123,7 @@ void RenderContextImpl::CreateTexture(Texture& texture, const PixelSize& size)
 
     if (SUCCEEDED(hr))
     {
-        NativeObject::Set(texture, saved_bitmap);
+        ComPolicy::Set(texture, saved_bitmap);
     }
 
     KGE_THROW_IF_FAILED(hr, "Create texture failed");
@@ -145,7 +145,7 @@ void RenderContextImpl::DrawTexture(const Texture& texture, const Rect* src_rect
             mode = D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
         }
 
-        auto bitmap = NativeObject::Get<ID2D1Bitmap>(texture);
+        auto bitmap = ComPolicy::Get<ID2D1Bitmap>(texture);
         render_ctx_->DrawBitmap(bitmap.Get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr, brush_opacity_,
                                    mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
 
@@ -159,10 +159,10 @@ void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& of
 
     if (layout.IsValid())
     {
-        auto  native         = NativeObject::Get<IDWriteTextLayout>(layout);
-        auto  fill_brush     = NativeObject::Get<ID2D1Brush>(current_brush_);
-        auto  outline_brush  = NativeObject::Get<ID2D1Brush>(current_outline_brush);
-        auto  outline_stroke = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+        auto  native         = ComPolicy::Get<IDWriteTextLayout>(layout);
+        auto  fill_brush     = ComPolicy::Get<ID2D1Brush>(current_brush_);
+        auto  outline_brush  = ComPolicy::Get<ID2D1Brush>(current_outline_brush);
+        auto  outline_stroke = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
         float outline_width  = 1.0f;
 
         if (fill_brush)
@@ -201,9 +201,9 @@ void RenderContextImpl::DrawShape(const Shape& shape)
 
     if (shape.IsValid())
     {
-        auto  geometry     = NativeObject::Get<ID2D1Geometry>(shape);
-        auto  brush        = NativeObject::Get<ID2D1Brush>(current_brush_);
-        auto  stroke_style = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+        auto  geometry     = ComPolicy::Get<ID2D1Geometry>(shape);
+        auto  brush        = ComPolicy::Get<ID2D1Brush>(current_brush_);
+        auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
         float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
         render_ctx_->DrawGeometry(geometry.Get(), brush.Get(), stroke_width, stroke_style.Get());
@@ -217,8 +217,8 @@ void RenderContextImpl::DrawLine(const Point& point1, const Point& point2)
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto  brush        = NativeObject::Get<ID2D1Brush>(current_brush_);
-    auto  stroke_style = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+    auto  brush        = ComPolicy::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), brush.Get(), stroke_width,
@@ -232,8 +232,8 @@ void RenderContextImpl::DrawRectangle(const Rect& rect)
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto  brush        = NativeObject::Get<ID2D1Brush>(current_brush_);
-    auto  stroke_style = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+    auto  brush        = ComPolicy::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawRectangle(DX::ConvertToRectF(rect), brush.Get(), stroke_width, stroke_style.Get());
@@ -246,8 +246,8 @@ void RenderContextImpl::DrawRoundedRectangle(const Rect& rect, const Vec2& radiu
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto  brush        = NativeObject::Get<ID2D1Brush>(current_brush_);
-    auto  stroke_style = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+    auto  brush        = ComPolicy::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get(),
@@ -261,8 +261,8 @@ void RenderContextImpl::DrawEllipse(const Point& center, const Vec2& radius)
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto  brush        = NativeObject::Get<ID2D1Brush>(current_brush_);
-    auto  stroke_style = NativeObject::Get<ID2D1StrokeStyle>(current_stroke_);
+    auto  brush        = ComPolicy::Get<ID2D1Brush>(current_brush_);
+    auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get(),
@@ -278,8 +278,8 @@ void RenderContextImpl::FillShape(const Shape& shape)
 
     if (shape.IsValid())
     {
-        auto brush    = NativeObject::Get<ID2D1Brush>(current_brush_);
-        auto geometry = NativeObject::Get<ID2D1Geometry>(shape);
+        auto brush    = ComPolicy::Get<ID2D1Brush>(current_brush_);
+        auto geometry = ComPolicy::Get<ID2D1Geometry>(shape);
         render_ctx_->FillGeometry(geometry.Get(), brush.Get());
 
         IncreasePrimitivesCount();
@@ -291,7 +291,7 @@ void RenderContextImpl::FillRectangle(const Rect& rect)
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto brush = NativeObject::Get<ID2D1Brush>(current_brush_);
+    auto brush = ComPolicy::Get<ID2D1Brush>(current_brush_);
     render_ctx_->FillRectangle(DX::ConvertToRectF(rect), brush.Get());
 
     IncreasePrimitivesCount();
@@ -302,7 +302,7 @@ void RenderContextImpl::FillRoundedRectangle(const Rect& rect, const Vec2& radiu
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto brush = NativeObject::Get<ID2D1Brush>(current_brush_);
+    auto brush = ComPolicy::Get<ID2D1Brush>(current_brush_);
     render_ctx_->FillRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get());
 
     IncreasePrimitivesCount();
@@ -313,7 +313,7 @@ void RenderContextImpl::FillEllipse(const Point& center, const Vec2& radius)
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
     KGE_ASSERT(current_brush_ && "The brush used for rendering has not been set!");
 
-    auto brush = NativeObject::Get<ID2D1Brush>(current_brush_);
+    auto brush = ComPolicy::Get<ID2D1Brush>(current_brush_);
     render_ctx_->FillEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get());
 
     IncreasePrimitivesCount();
@@ -345,8 +345,8 @@ void RenderContextImpl::PushLayer(Layer& layer)
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
-    auto native = NativeObject::Get<ID2D1Layer>(layer);
-    auto mask   = NativeObject::Get<ID2D1Geometry>(layer.GetMaskShape());
+    auto native = ComPolicy::Get<ID2D1Layer>(layer);
+    auto mask   = ComPolicy::Get<ID2D1Geometry>(layer.GetMaskShape());
 
     if (!native)
     {
@@ -354,7 +354,7 @@ void RenderContextImpl::PushLayer(Layer& layer)
 
         if (SUCCEEDED(hr))
         {
-            NativeObject::Set(layer, native);
+            ComPolicy::Set(layer, native);
         }
         KGE_THROW_IF_FAILED(hr, "Create ID2D1Layer failed");
     }
@@ -400,7 +400,7 @@ void RenderContextImpl::SetCurrentBrush(BrushPtr brush)
 
     if (current_brush_ && current_brush_->IsValid())
     {
-        NativeObject::Get<ID2D1Brush>(current_brush_)->SetOpacity(brush_opacity_);
+        ComPolicy::Get<ID2D1Brush>(current_brush_)->SetOpacity(brush_opacity_);
     }
 }
 
