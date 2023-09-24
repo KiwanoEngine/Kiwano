@@ -29,11 +29,31 @@ namespace audio
 SoundPlayer::SoundPlayer()
     : volume_(1.f)
 {
+    class SoundCallbackFunc : public SoundCallback
+    {
+    public:
+        Function<void(Sound* sound)>                cb_on_end;
+        Function<float(Sound* sound, float volume)> cb_on_volume_changed;
+
+        void OnEnd(Sound* sound) override
+        {
+            cb_on_end(sound);
+        }
+
+        float OnVolumeChanged(Sound* sound, float volume) override
+        {
+            return cb_on_volume_changed(sound, volume);
+        }
+    };
+    auto cb       = MakePtr<SoundCallbackFunc>();
+    cb->cb_on_end = std::bind(&SoundPlayer::OnEnd, this, std::placeholders::_1);
+    cb->cb_on_volume_changed =
+        std::bind(&SoundPlayer::OnVolumeChanged, this, std::placeholders::_1, std::placeholders::_2);
+    callback_ = cb;
 }
 
 SoundPlayer::~SoundPlayer()
 {
-    StopAll();
 }
 
 void SoundPlayer::Play(SoundPtr sound, int loop_count)
@@ -120,10 +140,10 @@ void SoundPlayer::SetCallback(Sound* sound)
 {
     // add callback if not exists
     auto& cbs  = sound->GetCallbacks();
-    auto iter = std::find_if(cbs.begin(), cbs.end(), [this](const SoundCallbackPtr& ptr) { return ptr.Get() == this; });
+    auto  iter = std::find(cbs.begin(), cbs.end(), callback_);
     if (iter == cbs.end())
     {
-        sound->AddCallback(this);
+        sound->AddCallback(callback_);
     }
     sound->ResetVolume();
 }
@@ -131,7 +151,7 @@ void SoundPlayer::SetCallback(Sound* sound)
 void SoundPlayer::RemoveCallback(Sound* sound)
 {
     auto& cbs = sound->GetCallbacks();
-    auto iter = std::find_if(cbs.begin(), cbs.end(), [this](const SoundCallbackPtr& ptr) { return ptr.Get() == this; });
+    auto  iter = std::find(cbs.begin(), cbs.end(), callback_);
     if (iter != cbs.end())
     {
         *iter = nullptr; // will be removed by sound

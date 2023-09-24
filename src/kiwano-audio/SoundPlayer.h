@@ -36,7 +36,7 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
  * \~chinese
  * @brief 音频播放器
  */
-class KGE_API SoundPlayer : public SoundCallback
+class KGE_API SoundPlayer : public ObjectBase
 {
 public:
     using SoundList = List<SoundPtr>;
@@ -90,12 +90,11 @@ public:
     /// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
     void SetVolume(float volume);
 
-public:
-    void OnEnd(Sound* sound) override;
-
-    float OnVolumeChanged(Sound* sound, float volume) override;
-
 protected:
+    void OnEnd(Sound* sound);
+
+    float OnVolumeChanged(Sound* sound, float volume);
+
     void SetCallback(Sound* sound);
 
     void RemoveCallback(Sound* sound);
@@ -103,9 +102,10 @@ protected:
     void ClearTrash();
 
 protected:
-    float     volume_;
-    SoundList sound_list_;
-    SoundList trash_;
+    float            volume_;
+    SoundList        sound_list_;
+    SoundList        trash_;
+    SoundCallbackPtr callback_;
 };
 
 /** @} */
