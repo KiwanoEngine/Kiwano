@@ -37,6 +37,13 @@ public:
     STDMETHOD(CreateOutlineGeomerty)
     (_Out_ ID2D1Geometry** ppOutlineGeo, _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX, float fOriginY);
 
+    STDMETHOD(CreateStrikethroughGeomerty)
+    (_Out_ ID2D1Geometry** ppStrikethroughGeo, _In_ DWRITE_STRIKETHROUGH const* strikethrough, float fOriginX,
+     float fOriginY);
+
+    STDMETHOD(CreateUnderlineGeomerty)
+    (_Out_ ID2D1Geometry** ppUnderlineGeo, _In_ DWRITE_UNDERLINE const* underline, float fOriginX, float fOriginY);
+
     // IUnknown methods
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** ppvObject);
     virtual ULONG STDMETHODCALLTYPE   AddRef();
@@ -46,8 +53,9 @@ private:
     unsigned long        cRefCount_;
     ComPtr<ID2D1Factory> pFactory_;
 
-    // Outline geometry cache
-    Map<std::tuple<const DWRITE_GLYPH_RUN*, float, float>, ComPtr<ID2D1Geometry>> outlineCache_;
+    Map<std::tuple<const DWRITE_GLYPH_RUN*, float, float>, ComPtr<ID2D1Geometry>>     outlineCache_;
+    Map<std::tuple<const DWRITE_STRIKETHROUGH*, float, float>, ComPtr<ID2D1Geometry>> strikethroughCache_;
+    Map<std::tuple<const DWRITE_UNDERLINE*, float, float>, ComPtr<ID2D1Geometry>>     underlineCache_;
 };
 
 HRESULT ITextDrawingEffect::Create(_Out_ ITextDrawingEffect** ppTextDrawingEffect, _In_ ID2D1Factory* pFactory)
@@ -156,6 +164,115 @@ STDMETHODIMP TextDrawingEffect::CreateOutlineGeomerty(_Out_ ID2D1Geometry**     
         (*ppOutlineGeo) = pOutlineGeo.Get();
 
         outlineCache_.insert(std::make_pair(std::make_tuple(glyphRun, fOriginX, fOriginY), pOutlineGeo));
+    }
+    return hr;
+}
+
+STDMETHODIMP TextDrawingEffect::CreateStrikethroughGeomerty(_Out_ ID2D1Geometry**            ppStrikethroughGeo,
+                                                            _In_ DWRITE_STRIKETHROUGH const* strikethrough,
+                                                            float fOriginX, float fOriginY)
+{
+    auto cache = strikethroughCache_.find(std::make_tuple(strikethrough, fOriginX, fOriginY));
+    if (cache != strikethroughCache_.end())
+    {
+        auto& pStrikethroughGeo = cache->second;
+        if (pStrikethroughGeo)
+        {
+            // Use cached geometry
+            pStrikethroughGeo->AddRef();
+            DX::SafeRelease(*ppStrikethroughGeo);
+            (*ppStrikethroughGeo) = pStrikethroughGeo.Get();
+            return S_OK;
+        }
+    }
+
+    HRESULT hr = S_OK;
+
+    ComPtr<ID2D1Geometry> pStrikethroughGeo;
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ID2D1RectangleGeometry> pRectangleGeometry;
+
+        D2D1_RECT_F rect = D2D1::RectF(0, strikethrough->offset, strikethrough->width,
+                                       strikethrough->offset + strikethrough->thickness);
+        hr               = pFactory_->CreateRectangleGeometry(&rect, &pRectangleGeometry);
+
+        if (SUCCEEDED(hr))
+        {
+            const auto matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, fOriginX, fOriginY);
+
+            ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
+            hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
+
+            if (SUCCEEDED(hr))
+            {
+                pStrikethroughGeo = pTransformedGeometry;
+            }
+        }
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        pStrikethroughGeo->AddRef();
+        DX::SafeRelease(*ppStrikethroughGeo);
+        (*ppStrikethroughGeo) = pStrikethroughGeo.Get();
+
+        strikethroughCache_.insert(
+            std::make_pair(std::make_tuple(strikethrough, fOriginX, fOriginY), pStrikethroughGeo));
+    }
+    return hr;
+}
+
+STDMETHODIMP TextDrawingEffect::CreateUnderlineGeomerty(_Out_ ID2D1Geometry**        ppUnderlineGeo,
+                                                        _In_ DWRITE_UNDERLINE const* underline, float fOriginX,
+                                                        float fOriginY)
+{
+    auto cache = underlineCache_.find(std::make_tuple(underline, fOriginX, fOriginY));
+    if (cache != underlineCache_.end())
+    {
+        auto& pUnderlineGeo = cache->second;
+        if (pUnderlineGeo)
+        {
+            // Use cached geometry
+            pUnderlineGeo->AddRef();
+            DX::SafeRelease(*ppUnderlineGeo);
+            (*ppUnderlineGeo) = pUnderlineGeo.Get();
+            return S_OK;
+        }
+    }
+
+    HRESULT hr = S_OK;
+
+    ComPtr<ID2D1Geometry> pUnderlineGeo;
+    if (SUCCEEDED(hr))
+    {
+        ComPtr<ID2D1RectangleGeometry> pRectangleGeometry;
+
+        D2D1_RECT_F rect =
+            D2D1::RectF(0, underline->offset, underline->width, underline->offset + underline->thickness);
+        hr = pFactory_->CreateRectangleGeometry(&rect, &pRectangleGeometry);
+
+        if (SUCCEEDED(hr))
+        {
+            const auto matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, fOriginX, fOriginY);
+
+            ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
+            hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
+
+            if (SUCCEEDED(hr))
+            {
+                pUnderlineGeo = pTransformedGeometry;
+            }
+        }
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        pUnderlineGeo->AddRef();
+        DX::SafeRelease(*ppUnderlineGeo);
+        (*ppUnderlineGeo) = pUnderlineGeo.Get();
+
+        underlineCache_.insert(std::make_pair(std::make_tuple(underline, fOriginX, fOriginY), pUnderlineGeo));
     }
     return hr;
 }

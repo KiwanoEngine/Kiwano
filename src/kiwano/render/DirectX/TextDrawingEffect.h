@@ -36,6 +36,13 @@ public:
 
     STDMETHOD(CreateOutlineGeomerty)
     (_Out_ ID2D1Geometry** ppOutlineGeo, _In_ DWRITE_GLYPH_RUN const* glyphRun, float fOriginX, float fOriginY) PURE;
+
+    STDMETHOD(CreateStrikethroughGeomerty)
+    (_Out_ ID2D1Geometry** ppStrikethroughGeo, _In_ DWRITE_STRIKETHROUGH const* strikethrough, float fOriginX,
+     float fOriginY) PURE;
+
+    STDMETHOD(CreateUnderlineGeomerty)
+    (_Out_ ID2D1Geometry** ppUnderlineGeo, _In_ DWRITE_UNDERLINE const* underline, float fOriginX, float fOriginY) PURE;
 };
 }  // namespace directx
 }  // namespace graphics
