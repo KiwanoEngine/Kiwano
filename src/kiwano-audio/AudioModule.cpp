@@ -62,7 +62,10 @@ public:
 
     STDMETHOD_(void, OnVoiceProcessingPassStart(UINT32 SamplesRequired)) {}
 
-    STDMETHOD_(void, OnVoiceError(void* pBufferContext, HRESULT Error)) {}
+    STDMETHOD_(void, OnVoiceError(void* pBufferContext, HRESULT Error))
+    {
+        KGE_ERRORF("Voice error with HRESULT of %08X", Error);
+    }
 };
 
 AudioModule::AudioModule()

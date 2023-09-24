@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-audio/SoundPlayer.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -32,81 +33,31 @@ SoundPlayer::SoundPlayer()
 
 SoundPlayer::~SoundPlayer()
 {
-    ClearCache();
+    StopAll();
 }
 
-size_t SoundPlayer::GetId(const String& file_path) const
+void SoundPlayer::Play(SoundPtr sound, int loop_count)
 {
-    return std::hash<String>()(file_path);
-}
-
-size_t SoundPlayer::GetId(const Resource& res) const
-{
-    return static_cast<size_t>(res.GetId());
-}
-
-size_t SoundPlayer::Load(const String& file_path)
-{
-    size_t id = GetId(file_path);
-    if (sound_cache_.end() != sound_cache_.find(id))
-        return id;
-
-    SoundPtr sound = MakePtr<Sound>();
-    if (sound && sound->Load(file_path))
+    if (sound)
     {
-        sound->SetVolume(volume_);
-        sound_cache_.insert(std::make_pair(id, sound));
-        return id;
-    }
-    return 0;
-}
-
-size_t SoundPlayer::Load(const Resource& res)
-{
-    size_t id = GetId(res);
-    if (sound_cache_.end() != sound_cache_.find(id))
-        return id;
-
-    SoundPtr sound = MakePtr<Sound>();
-
-    if (sound && sound->Load(res))
-    {
-        sound->SetVolume(volume_);
-        sound_cache_.insert(std::make_pair(id, sound));
-        return id;
-    }
-    return 0;
-}
-
-void SoundPlayer::Play(size_t id, int loop_count)
-{
-    if (auto sound = GetSound(id))
+        SetCallback(sound.Get());
         sound->Play(loop_count);
+        sound_list_.push_back(sound);
+    }
 }
 
-void SoundPlayer::Pause(size_t id)
+SoundPtr SoundPlayer::Play(const String& file_path, int loop_count, std::initializer_list<SoundCallbackPtr> callbacks)
 {
-    if (auto sound = GetSound(id))
-        sound->Pause();
+    SoundPtr sound = Sound::Preload(file_path, callbacks);
+    Play(sound, loop_count);
+    return sound;
 }
 
-void SoundPlayer::Resume(size_t id)
+SoundPtr SoundPlayer::Play(const Resource& res, int loop_count, std::initializer_list<SoundCallbackPtr> callbacks)
 {
-    if (auto sound = GetSound(id))
-        sound->Resume();
-}
-
-void SoundPlayer::Stop(size_t id)
-{
-    if (auto sound = GetSound(id))
-        sound->Stop();
-}
-
-bool SoundPlayer::IsPlaying(size_t id)
-{
-    if (auto sound = GetSound(id))
-        return sound->IsPlaying();
-    return false;
+    SoundPtr sound = Sound::Preload(res, callbacks);
+    Play(sound, loop_count);
+    return sound;
 }
 
 float SoundPlayer::GetVolume() const
@@ -116,53 +67,81 @@ float SoundPlayer::GetVolume() const
 
 void SoundPlayer::SetVolume(float volume)
 {
-    volume_ = std::min(std::max(volume, -224.f), 224.f);
-    for (auto& pair : sound_cache_)
-    {
-        pair.second->SetVolume(volume_);
-    }
-}
-
-SoundPtr SoundPlayer::GetSound(size_t id) const
-{
-    auto iter = sound_cache_.find(id);
-    if (iter != sound_cache_.end())
-        return iter->second;
-    return SoundPtr();
+    volume_ = volume;
 }
 
 void SoundPlayer::PauseAll()
 {
-    for (auto& pair : sound_cache_)
+    for (auto& sound : sound_list_)
     {
-        pair.second->Pause();
+        sound->Pause();
     }
 }
 
 void SoundPlayer::ResumeAll()
 {
-    for (auto& pair : sound_cache_)
+    for (auto& sound : sound_list_)
     {
-        pair.second->Resume();
+        sound->Resume();
     }
 }
 
 void SoundPlayer::StopAll()
 {
-    for (auto& pair : sound_cache_)
+    for (auto& sound : sound_list_)
     {
-        pair.second->Stop();
+        sound->Stop();
     }
 }
 
-void SoundPlayer::ReleaseSound(size_t id)
+void SoundPlayer::OnEnd(Sound* sound)
 {
-    sound_cache_.erase(id);
+    // remove callback
+    RemoveCallback(sound);
+
+    // remove sound after stopped
+    auto iter = std::find(sound_list_.begin(), sound_list_.end(), sound);
+    if (iter != sound_list_.end())
+    {
+        trash_.push_back(*iter);
+        sound_list_.erase(iter);
+    }
+
+    // clear trash in main thread
+    Application::GetInstance().PerformInMainThread(std::bind(&SoundPlayer::ClearTrash, this));
 }
 
-void SoundPlayer::ClearCache()
+float SoundPlayer::OnVolumeChanged(Sound* sound, float volume)
 {
-    sound_cache_.clear();
+    return volume * volume_;
 }
+
+void SoundPlayer::SetCallback(Sound* sound)
+{
+    // add callback if not exists
+    auto& cbs  = sound->GetCallbacks();
+    auto iter = std::find_if(cbs.begin(), cbs.end(), [this](const SoundCallbackPtr& ptr) { return ptr.Get() == this; });
+    if (iter == cbs.end())
+    {
+        sound->AddCallback(this);
+    }
+    sound->ResetVolume();
+}
+
+void SoundPlayer::RemoveCallback(Sound* sound)
+{
+    auto& cbs = sound->GetCallbacks();
+    auto iter = std::find_if(cbs.begin(), cbs.end(), [this](const SoundCallbackPtr& ptr) { return ptr.Get() == this; });
+    if (iter != cbs.end())
+    {
+        *iter = nullptr; // will be removed by sound
+    }
+}
+
+void SoundPlayer::ClearTrash()
+{
+    trash_.clear();
+}
+
 }  // namespace audio
 }  // namespace kiwano

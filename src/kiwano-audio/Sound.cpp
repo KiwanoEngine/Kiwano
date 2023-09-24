@@ -139,9 +139,7 @@ bool Sound::Load(TranscoderPtr transcoder)
     }
 
     // reset volume
-    const float old_volume = volume_;
-    volume_                = 0.f;
-    SetVolume(old_volume);
+    ResetVolume();
 
     coder_  = transcoder;
     opened_ = true;
@@ -297,6 +295,14 @@ void Sound::SetVolume(float volume)
     voice->SetVolume(actual_volume);
 }
 
+void Sound::ResetVolume()
+{
+    const float old_volume = volume_;
+
+    volume_ += 1.f;
+    SetVolume(old_volume);
+}
+
 SoundCallbackPtr Sound::GetCallbackChain()
 {
     class SoundCallbackChain : public SoundCallback
@@ -313,6 +319,7 @@ SoundCallbackPtr Sound::GetCallbackChain()
                     cb->OnStart(sound);
                 }
             }
+            RemoveUsedCallbacks();
         }
 
         void OnLoopEnd(Sound*) override
@@ -324,6 +331,7 @@ SoundCallbackPtr Sound::GetCallbackChain()
                     cb->OnLoopEnd(sound);
                 }
             }
+            RemoveUsedCallbacks();
         }
 
         void OnEnd(Sound*) override
@@ -335,6 +343,7 @@ SoundCallbackPtr Sound::GetCallbackChain()
                     cb->OnEnd(sound);
                 }
             }
+            RemoveUsedCallbacks();
         }
 
         float OnVolumeChanged(Sound*, float volume) override
@@ -348,6 +357,23 @@ SoundCallbackPtr Sound::GetCallbackChain()
                 }
             }
             return actual_volume;
+        }
+
+        void RemoveUsedCallbacks()
+        {
+            auto& cbs  = sound->GetCallbacks();
+            auto  iter = cbs.begin();
+            while (iter != cbs.end())
+            {
+                if (*iter == nullptr)
+                {
+                    iter = cbs.erase(iter);
+                }
+                else
+                {
+                    iter++;
+                }
+            }
         }
     };
 

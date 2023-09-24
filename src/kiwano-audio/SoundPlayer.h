@@ -20,7 +20,6 @@
 
 #pragma once
 #include <kiwano-audio/Sound.h>
-#include <kiwano/base/ObjectBase.h>
 
 namespace kiwano
 {
@@ -37,78 +36,34 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
  * \~chinese
  * @brief 音频播放器
  */
-class KGE_API SoundPlayer : public ObjectBase
+class KGE_API SoundPlayer : public SoundCallback
 {
 public:
-    using SoundMap = Map<size_t, SoundPtr>;
+    using SoundList = List<SoundPtr>;
 
     SoundPlayer();
 
     ~SoundPlayer();
 
     /// \~chinese
-    /// @brief 加载本地音频文件
-    /// @param file_path 本地音频文件路径
-    /// @return 音频标识符
-    size_t Load(const String& file_path);
-
-    /// \~chinese
-    /// @brief 加载音频资源
-    /// @param res 音频资源
-    /// @return 音频标识符
-    size_t Load(const Resource& res);
+    /// @brief 播放音频
+    /// @param sound 音频
+    /// @param loop_count 播放循环次数，设置 -1 为循环播放
+    void Play(SoundPtr sound, int loop_count = 0);
 
     /// \~chinese
     /// @brief 播放音频
-    /// @param id 音频标识符
-    /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    void Play(size_t id, int loop_count = 0);
-
-    /// \~chinese
-    /// @brief 暂停音频
-    /// @param id 音频标识符
-    void Pause(size_t id);
-
-    /// \~chinese
-    /// @brief 继续播放音频
-    /// @param id 音频标识符
-    void Resume(size_t id);
-
-    /// \~chinese
-    /// @brief 停止音频
-    /// @param id 音频标识符
-    void Stop(size_t id);
-
-    /// \~chinese
-    /// @brief 获取音频播放状态
-    /// @param id 音频标识符
-    bool IsPlaying(size_t id);
-
-    /// \~chinese
-    /// @brief 获取音量
-    float GetVolume() const;
-
-    /// \~chinese
-    /// @brief 设置音量
-    /// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
-    void SetVolume(float volume);
-
-    /// \~chinese
-    /// @brief 获取本地音频文件id
     /// @param file_path 本地音频文件路径
-    /// @return 音频标识符
-    size_t GetId(const String& file_path) const;
+    /// @param loop_count 播放循环次数，设置 -1 为循环播放
+    /// @param callbacks 注册回调
+    SoundPtr Play(const String& file_path, int loop_count = 0, std::initializer_list<SoundCallbackPtr> callbacks = {});
 
     /// \~chinese
-    /// @brief 获取音频资源id
+    /// @brief 播放音频
     /// @param res 音频资源
-    /// @return 音频标识符
-    size_t GetId(const Resource& res) const;
-
-    /// \~chinese
-    /// @brief 获取音乐对象
-    /// @param id 音频标识符
-    SoundPtr GetSound(size_t id) const;
+    /// @param loop_count 播放循环次数，设置 -1 为循环播放
+    /// @param callbacks 注册回调
+    SoundPtr Play(const Resource& res, int loop_count = 0, std::initializer_list<SoundCallbackPtr> callbacks = {});
 
     /// \~chinese
     /// @brief 暂停所有音频
@@ -123,29 +78,41 @@ public:
     void StopAll();
 
     /// \~chinese
-    /// @brief 释放音乐对象缓存
-    /// @param id 音频标识符
-    void ReleaseSound(size_t id);
+    /// @brief 获取正在播放的音频列表
+    const SoundList& GetPlayingList() const;
 
     /// \~chinese
-    /// @brief 获取缓存
-    const SoundMap& GetCache() const;
+    /// @brief 获取音量
+    float GetVolume() const;
 
     /// \~chinese
-    /// @brief 清除缓存
-    void ClearCache();
+    /// @brief 设置音量
+    /// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
+    void SetVolume(float volume);
 
-private:
-    float volume_;
+public:
+    void OnEnd(Sound* sound) override;
 
-    SoundMap sound_cache_;
+    float OnVolumeChanged(Sound* sound, float volume) override;
+
+protected:
+    void SetCallback(Sound* sound);
+
+    void RemoveCallback(Sound* sound);
+
+    void ClearTrash();
+
+protected:
+    float     volume_;
+    SoundList sound_list_;
+    SoundList trash_;
 };
 
 /** @} */
 
-inline const SoundPlayer::SoundMap& SoundPlayer::GetCache() const
+inline const SoundPlayer::SoundList& SoundPlayer::GetPlayingList() const
 {
-    return sound_cache_;
+    return sound_list_;
 }
 
 }  // namespace audio

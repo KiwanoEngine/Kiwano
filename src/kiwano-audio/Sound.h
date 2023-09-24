@@ -178,6 +178,8 @@ protected:
 
     SoundCallbackPtr GetCallbackChain();
 
+    void ResetVolume();
+
 private:
     bool          opened_;
     bool          playing_;
