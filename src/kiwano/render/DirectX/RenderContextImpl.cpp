@@ -429,6 +429,12 @@ void RenderContextImpl::SetTransform(const Matrix3x2& matrix)
     }
 }
 
+void RenderContextImpl::SetBlendMode(BlendMode blend)
+{
+    KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
+    render_ctx_->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND(blend));
+}
+
 void RenderContextImpl::SetAntialiasMode(bool enabled)
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");

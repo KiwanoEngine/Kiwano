@@ -87,6 +87,8 @@ public:
 
     void SetTransform(const Matrix3x2& matrix) override;
 
+    void SetBlendMode(BlendMode blend) override;
+
     void SetAntialiasMode(bool enabled) override;
 
     void SetTextAntialiasMode(TextAntialiasMode mode) override;

@@ -47,6 +47,17 @@ enum class TextAntialiasMode
 };
 
 /// \~chinese
+/// @brief 混合模式
+enum class BlendMode
+{
+    SourceOver = 0,
+    Copy       = 1,
+    Min        = 2,
+    Add        = 3,
+    Max        = 4,
+};
+
+/// \~chinese
 /// @brief 渲染上下文
 /// @details 渲染上下文将完成基础图元的绘制，并将绘制结果输出到特定的平面中
 class KGE_API RenderContext : public NativeObject
@@ -203,6 +214,10 @@ public:
     /// \~chinese
     /// @brief 设置当前使用的线条样式
     virtual void SetCurrentStrokeStyle(StrokeStylePtr stroke);
+
+    /// \~chinese
+    /// @brief 设置混合模式
+    virtual void SetBlendMode(BlendMode blend) = 0;
 
     /// \~chinese
     /// @brief 设置抗锯齿模式
