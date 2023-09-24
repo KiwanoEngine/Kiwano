@@ -260,7 +260,7 @@ void HttpModule::NetworkThread()
         response_queue_.push(response);
         response_mutex_.unlock();
 
-        Application::GetInstance().PreformInMainThread(Closure(this, &HttpModule::DispatchResponseCallback));
+        Application::GetInstance().PerformInMainThread(Closure(this, &HttpModule::DispatchResponseCallback));
     }
 }
 

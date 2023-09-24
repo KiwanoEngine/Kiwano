@@ -143,7 +143,7 @@ public:
      * @details 提供在其他线程调用 Kiwano 函数的能力
      * @param func 需要执行的函数
      */
-    void PreformInMainThread(Function<void()> func);
+    void PerformInMainThread(Function<void()> func);
 
     /**
      * \~chinese
