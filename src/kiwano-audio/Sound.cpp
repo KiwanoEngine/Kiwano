@@ -27,9 +27,13 @@ namespace kiwano
 namespace audio
 {
 
-SoundPtr Sound::Preload(const String& file_path)
+SoundPtr Sound::Preload(const String& file_path, std::initializer_list<SoundCallbackPtr> callbacks)
 {
     auto ptr = MakePtr<Sound>();
+    for (auto& cb : callbacks)
+    {
+        ptr->AddCallback(cb);
+    }
 
     size_t hash_code = std::hash<String>{}(file_path);
     if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
@@ -46,9 +50,13 @@ SoundPtr Sound::Preload(const String& file_path)
     return ptr;
 }
 
-SoundPtr Sound::Preload(const Resource& res)
+SoundPtr Sound::Preload(const Resource& res, std::initializer_list<SoundCallbackPtr> callbacks)
 {
     auto ptr = MakePtr<Sound>();
+    for (auto& cb : callbacks)
+    {
+        ptr->AddCallback(cb);
+    }
 
     size_t hash_code = res.GetId();
     if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
@@ -80,6 +88,7 @@ Sound::Sound(const Resource& res)
 Sound::Sound()
     : opened_(false)
     , playing_(false)
+    , volume_(1.f)
 {
 }
 
@@ -128,6 +137,11 @@ bool Sound::Load(TranscoderPtr transcoder)
     {
         return false;
     }
+
+    // reset volume
+    const float old_volume = volume_;
+    volume_                = 0.f;
+    SetVolume(old_volume);
 
     coder_  = transcoder;
     opened_ = true;
@@ -181,8 +195,14 @@ void Sound::Pause()
     auto voice = GetNativePtr<IXAudio2SourceVoice>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    if (SUCCEEDED(voice->Stop()))
+    HRESULT hr = voice->Stop();
+    if (SUCCEEDED(hr))
         playing_ = false;
+
+    if (FAILED(hr))
+    {
+        KGE_ERRORF("Pause voice failed with HRESULT of %08X", hr);
+    }
 }
 
 void Sound::Resume()
@@ -190,8 +210,14 @@ void Sound::Resume()
     auto voice = GetNativePtr<IXAudio2SourceVoice>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    if (SUCCEEDED(voice->Start()))
+    HRESULT hr = voice->Start();
+    if (SUCCEEDED(hr))
         playing_ = true;
+
+    if (FAILED(hr))
+    {
+        KGE_ERRORF("Start voice failed with HRESULT of %08X", hr);
+    }
 }
 
 void Sound::Stop()
@@ -209,6 +235,11 @@ void Sound::Stop()
 
     if (SUCCEEDED(hr))
         playing_ = false;
+
+    if (FAILED(hr))
+    {
+        KGE_ERRORF("Stop voice failed with HRESULT of %08X", hr);
+    }
 }
 
 void Sound::Close()
@@ -246,21 +277,169 @@ bool Sound::IsPlaying() const
 
 float Sound::GetVolume() const
 {
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
-    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
-
-    float volume = 0.0f;
-    voice->GetVolume(&volume);
-    return volume;
+    return volume_;
 }
 
 void Sound::SetVolume(float volume)
 {
+    if (volume_ == volume)
+    {
+        return;
+    }
+    volume_ = volume;
+
+    float actual_volume = GetCallbackChain()->OnVolumeChanged(this, volume_);
+
     auto voice = GetNativePtr<IXAudio2SourceVoice>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    volume = std::min(std::max(volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
-    voice->SetVolume(volume);
+    actual_volume = std::min(std::max(actual_volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
+    voice->SetVolume(actual_volume);
 }
+
+SoundCallbackPtr Sound::GetCallbackChain()
+{
+    class SoundCallbackChain : public SoundCallback
+    {
+    public:
+        Sound* sound;
+
+        void OnStart(Sound*) override
+        {
+            for (auto& cb : sound->GetCallbacks())
+            {
+                if (cb)
+                {
+                    cb->OnStart(sound);
+                }
+            }
+        }
+
+        void OnLoopEnd(Sound*) override
+        {
+            for (auto& cb : sound->GetCallbacks())
+            {
+                if (cb)
+                {
+                    cb->OnLoopEnd(sound);
+                }
+            }
+        }
+
+        void OnEnd(Sound*) override
+        {
+            for (auto& cb : sound->GetCallbacks())
+            {
+                if (cb)
+                {
+                    cb->OnEnd(sound);
+                }
+            }
+        }
+
+        float OnVolumeChanged(Sound*, float volume) override
+        {
+            float actual_volume = volume;
+            for (auto& cb : sound->GetCallbacks())
+            {
+                if (cb)
+                {
+                    actual_volume = cb->OnVolumeChanged(sound, volume);
+                }
+            }
+            return actual_volume;
+        }
+    };
+
+    if (!callback_chain_)
+    {
+        auto chain      = MakePtr<SoundCallbackChain>();
+        chain->sound    = this;
+        callback_chain_ = chain;
+    }
+    return callback_chain_;
+}
+
+SoundCallbackPtr SoundCallback::OnStart(const Function<void(Sound* sound)>& cb)
+{
+    class SoundCallbackFunc : public SoundCallback
+    {
+    public:
+        Function<void(Sound* sound)> cb;
+
+        void OnStart(Sound* sound) override
+        {
+            if (cb)
+            {
+                cb(sound);
+            }
+        }
+    };
+    auto ptr = MakePtr<SoundCallbackFunc>();
+    ptr->cb  = cb;
+    return ptr;
+}
+
+SoundCallbackPtr SoundCallback::OnLoopEnd(const Function<void(Sound* sound)>& cb)
+{
+    class SoundCallbackFunc : public SoundCallback
+    {
+    public:
+        Function<void(Sound* sound)> cb;
+
+        void OnLoopEnd(Sound* sound) override
+        {
+            if (cb)
+            {
+                cb(sound);
+            }
+        }
+    };
+    auto ptr = MakePtr<SoundCallbackFunc>();
+    ptr->cb  = cb;
+    return ptr;
+}
+
+SoundCallbackPtr SoundCallback::OnEnd(const Function<void(Sound* sound)>& cb)
+{
+    class SoundCallbackFunc : public SoundCallback
+    {
+    public:
+        Function<void(Sound* sound)> cb;
+
+        void OnEnd(Sound* sound) override
+        {
+            if (cb)
+            {
+                cb(sound);
+            }
+        }
+    };
+    auto ptr = MakePtr<SoundCallbackFunc>();
+    ptr->cb  = cb;
+    return ptr;
+}
+
+SoundCallbackPtr SoundCallback::OnVolumeChanged(const Function<float(Sound* sound, float volume)>& cb)
+{
+    class SoundCallbackFunc : public SoundCallback
+    {
+    public:
+        Function<float(Sound* sound, float volume)> cb;
+
+        float OnVolumeChanged(Sound* sound, float volume) override
+        {
+            if (cb)
+            {
+                return cb(sound, volume);
+            }
+            return volume;
+        }
+    };
+    auto ptr = MakePtr<SoundCallbackFunc>();
+    ptr->cb  = cb;
+    return ptr;
+}
+
 }  // namespace audio
 }  // namespace kiwano

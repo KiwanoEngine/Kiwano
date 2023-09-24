@@ -29,6 +29,42 @@ namespace kiwano
 namespace audio
 {
 
+class VoiceCallback : public IXAudio2VoiceCallback
+{
+public:
+    SoundCallback* cb;
+
+    VoiceCallback(SoundCallback* cb)
+        : cb(cb)
+    {
+    }
+
+    ~VoiceCallback() {}
+
+    STDMETHOD_(void, OnBufferStart(void* pBufferContext))
+    {
+        cb->OnStart(nullptr);
+    }
+
+    STDMETHOD_(void, OnLoopEnd(void* pBufferContext))
+    {
+        cb->OnLoopEnd(nullptr);
+    }
+
+    STDMETHOD_(void, OnBufferEnd(void* pBufferContext))
+    {
+        cb->OnEnd(nullptr);
+    }
+
+    STDMETHOD_(void, OnStreamEnd()) {}
+
+    STDMETHOD_(void, OnVoiceProcessingPassEnd()) {}
+
+    STDMETHOD_(void, OnVoiceProcessingPassStart(UINT32 SamplesRequired)) {}
+
+    STDMETHOD_(void, OnVoiceError(void* pBufferContext, HRESULT Error)) {}
+};
+
 AudioModule::AudioModule()
     : x_audio2_(nullptr)
     , mastering_voice_(nullptr)
@@ -121,10 +157,12 @@ bool AudioModule::CreateSound(Sound& sound, TranscoderPtr transcoder)
 
     if (SUCCEEDED(hr))
     {
+        auto chain = sound.GetCallbackChain();
+        chain->SetNative(VoiceCallback{ chain.Get() });
+        auto callback = const_cast<VoiceCallback*>(chain->GetNative().CastPtr<VoiceCallback>());
+
         IXAudio2SourceVoice* voice = nullptr;
-
-        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-
+        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
         if (SUCCEEDED(hr))
         {
             sound.Close();
@@ -143,7 +181,6 @@ bool AudioModule::CreateSound(Sound& sound, TranscoderPtr transcoder)
 void AudioModule::Open()
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
-
     if (x_audio2_)
         x_audio2_->StartEngine();
 }
