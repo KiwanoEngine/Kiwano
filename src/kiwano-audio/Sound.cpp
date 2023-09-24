@@ -21,12 +21,50 @@
 #include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano/utils/Logger.h>
-#include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
 {
 namespace audio
 {
+
+SoundPtr Sound::Preload(const String& file_path)
+{
+    auto ptr = MakePtr<Sound>();
+
+    size_t hash_code = std::hash<String>{}(file_path);
+    if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
+    {
+        if (ptr->Load(transcoder))
+            return ptr;
+        return nullptr;
+    }
+
+    if (ptr && ptr->Load(file_path))
+    {
+        TranscoderCache::GetInstance().Add(hash_code, ptr->coder_);
+    }
+    return ptr;
+}
+
+SoundPtr Sound::Preload(const Resource& res)
+{
+    auto ptr = MakePtr<Sound>();
+
+    size_t hash_code = res.GetId();
+    if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
+    {
+        if (ptr->Load(transcoder))
+            return ptr;
+        return nullptr;
+    }
+
+    if (ptr && ptr->Load(res))
+    {
+        TranscoderCache::GetInstance().Add(hash_code, ptr->coder_);
+    }
+    return ptr;
+}
+
 Sound::Sound(const String& file_path)
     : Sound()
 {
@@ -42,7 +80,6 @@ Sound::Sound(const Resource& res)
 Sound::Sound()
     : opened_(false)
     , playing_(false)
-    , voice_(nullptr)
 {
 }
 
@@ -53,34 +90,17 @@ Sound::~Sound()
 
 bool Sound::Load(const String& file_path)
 {
-    if (!FileSystem::GetInstance().IsFileExists(file_path))
-    {
-        KGE_WARNF("Media file '%s' not found", file_path.c_str());
-        return false;
-    }
-
     if (opened_)
     {
         Close();
     }
 
-    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
-
-    HRESULT hr = transcoder_.LoadMediaFile(full_path);
-    if (FAILED(hr))
+    TranscoderPtr transcoder = AudioModule::GetInstance().CreateTranscoder(file_path);
+    if (!transcoder)
     {
-        KGE_ERRORF("Load media file failed with HRESULT of %08X", hr);
         return false;
     }
-
-    if (!AudioModule::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
-    {
-        Close();
-        return false;
-    }
-
-    opened_ = true;
-    return true;
+    return Load(transcoder);
 }
 
 bool Sound::Load(const Resource& res)
@@ -90,26 +110,28 @@ bool Sound::Load(const Resource& res)
         Close();
     }
 
-    HRESULT hr = transcoder_.LoadMediaResource(res);
-    if (FAILED(hr))
+    TranscoderPtr transcoder = AudioModule::GetInstance().CreateTranscoder(res);
+    if (!transcoder)
     {
-        KGE_ERRORF("Load media resource failed with HRESULT of %08X", hr);
         return false;
     }
-
-    if (!AudioModule::GetInstance().CreateSound(*this, transcoder_.GetBuffer()))
-    {
-        Close();
-        return false;
-    }
-
-    opened_ = true;
-    return true;
+    return Load(transcoder);
 }
 
-bool Sound::IsValid() const
+bool Sound::Load(TranscoderPtr transcoder)
 {
-    return voice_ != nullptr;
+    if (opened_)
+    {
+        Close();
+    }
+    if (!AudioModule::GetInstance().CreateSound(*this, transcoder))
+    {
+        return false;
+    }
+
+    coder_  = transcoder;
+    opened_ = true;
+    return true;
 }
 
 void Sound::Play(int loop_count)
@@ -120,29 +142,30 @@ void Sound::Play(int loop_count)
         return;
     }
 
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     // if sound stream is not empty, stop() will clear it
     XAUDIO2_VOICE_STATE state;
-    voice_->GetState(&state);
+    voice->GetState(&state);
     if (state.BuffersQueued)
         Stop();
 
     // clamp loop count
     loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
 
-    auto wave_buffer = transcoder_.GetBuffer();
+    auto buffer = coder_->GetBuffer();
 
-    XAUDIO2_BUFFER buffer = { 0 };
-    buffer.pAudioData     = wave_buffer.data;
-    buffer.Flags          = XAUDIO2_END_OF_STREAM;
-    buffer.AudioBytes     = wave_buffer.size;
-    buffer.LoopCount      = static_cast<uint32_t>(loop_count);
+    XAUDIO2_BUFFER xaudio2_buffer = { 0 };
+    xaudio2_buffer.pAudioData     = buffer.data;
+    xaudio2_buffer.Flags          = XAUDIO2_END_OF_STREAM;
+    xaudio2_buffer.AudioBytes     = buffer.size;
+    xaudio2_buffer.LoopCount      = static_cast<uint32_t>(loop_count);
 
-    HRESULT hr = voice_->SubmitSourceBuffer(&buffer);
+    HRESULT hr = voice->SubmitSourceBuffer(&xaudio2_buffer);
     if (SUCCEEDED(hr))
     {
-        hr = voice_->Start();
+        hr = voice->Start();
     }
 
     if (FAILED(hr))
@@ -155,31 +178,34 @@ void Sound::Play(int loop_count)
 
 void Sound::Pause()
 {
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    if (SUCCEEDED(voice_->Stop()))
+    if (SUCCEEDED(voice->Stop()))
         playing_ = false;
 }
 
 void Sound::Resume()
 {
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    if (SUCCEEDED(voice_->Start()))
+    if (SUCCEEDED(voice->Start()))
         playing_ = true;
 }
 
 void Sound::Stop()
 {
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
-    HRESULT hr = voice_->Stop();
-
-    if (SUCCEEDED(hr))
-        hr = voice_->ExitLoop();
+    HRESULT hr = voice->Stop();
 
     if (SUCCEEDED(hr))
-        hr = voice_->FlushSourceBuffers();
+        hr = voice->ExitLoop();
+
+    if (SUCCEEDED(hr))
+        hr = voice->FlushSourceBuffers();
 
     if (SUCCEEDED(hr))
         playing_ = false;
@@ -187,16 +213,15 @@ void Sound::Stop()
 
 void Sound::Close()
 {
-    if (voice_)
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    if (voice)
     {
-        voice_->Stop();
-        voice_->FlushSourceBuffers();
-        voice_->DestroyVoice();
-        voice_ = nullptr;
+        voice->Stop();
+        voice->FlushSourceBuffers();
+        voice->DestroyVoice();
     }
 
-    transcoder_.ClearBuffer();
-
+    coder_   = nullptr;
     opened_  = false;
     playing_ = false;
 }
@@ -205,14 +230,15 @@ bool Sound::IsPlaying() const
 {
     if (opened_)
     {
-        if (!voice_)
-            return false;
-
         if (!playing_)
             return false;
 
+        auto voice = GetNativePtr<IXAudio2SourceVoice>();
+        if (!voice)
+            return false;
+
         XAUDIO2_VOICE_STATE state;
-        voice_->GetState(&state);
+        voice->GetState(&state);
         return !!state.BuffersQueued;
     }
     return false;
@@ -220,19 +246,21 @@ bool Sound::IsPlaying() const
 
 float Sound::GetVolume() const
 {
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     float volume = 0.0f;
-    voice_->GetVolume(&volume);
+    voice->GetVolume(&volume);
     return volume;
 }
 
 void Sound::SetVolume(float volume)
 {
-    KGE_ASSERT(voice_ != nullptr && "IXAudio2SourceVoice* is NULL");
+    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     volume = std::min(std::max(volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
-    voice_->SetVolume(volume);
+    voice->SetVolume(volume);
 }
 }  // namespace audio
 }  // namespace kiwano

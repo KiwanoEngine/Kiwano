@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/platform/NativeObject.hpp>
 #include <xaudio2.h>
 
 namespace kiwano
@@ -41,11 +41,19 @@ KGE_DECLARE_SMART_PTR(Sound);
  * \~chinese
  * @brief 音频对象
  */
-class KGE_API Sound : public ObjectBase
+class KGE_API Sound : public NativeObject
 {
     friend class AudioModule;
 
 public:
+    /// \~chinese
+    /// @brief 预加载音频
+    static SoundPtr Preload(const String& file_path);
+
+    /// \~chinese
+    /// @brief 预加载音频资源
+    static SoundPtr Preload(const Resource& res);
+
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 本地音频文件路径
@@ -71,8 +79,9 @@ public:
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
+    /// @brief 打开音频资源
+    /// @param res 音频资源
+    bool Load(TranscoderPtr transcoder);
 
     /// \~chinese
     /// @brief 播放
@@ -109,27 +118,12 @@ public:
     void SetVolume(float volume);
 
 private:
-    IXAudio2SourceVoice* GetXAudio2Voice() const;
-
-    void SetXAudio2Voice(IXAudio2SourceVoice* voice);
-
-private:
-    bool                 opened_;
-    bool                 playing_;
-    Transcoder           transcoder_;
-    IXAudio2SourceVoice* voice_;
+    bool          opened_;
+    bool          playing_;
+    TranscoderPtr coder_;
 };
 
 /** @} */
 
-inline IXAudio2SourceVoice* Sound::GetXAudio2Voice() const
-{
-    return voice_;
-}
-
-inline void Sound::SetXAudio2Voice(IXAudio2SourceVoice* voice)
-{
-    voice_ = voice;
-}
 }  // namespace audio
 }  // namespace kiwano

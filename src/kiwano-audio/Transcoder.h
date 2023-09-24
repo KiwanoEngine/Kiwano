@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
+#include <kiwano/base/ObjectBase.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -28,7 +29,9 @@ namespace kiwano
 {
 namespace audio
 {
-class Sound;
+class AudioModule;
+
+KGE_DECLARE_SMART_PTR(Transcoder);
 
 /**
  * \addtogroup Audio
@@ -39,9 +42,9 @@ class Sound;
  * \~chinese
  * @brief ÒôÆµ½âÂëÆ÷
  */
-class KGE_API Transcoder
+class KGE_API Transcoder : public ObjectBase
 {
-    friend class Sound;
+    friend class AudioModule;
 
 public:
     /**
@@ -84,6 +87,56 @@ private:
     BYTE*         wave_data_;
     uint32_t      wave_size_;
     WAVEFORMATEX* wave_format_;
+};
+
+
+class KGE_API TranscoderCache final : public Singleton<TranscoderCache>
+{
+    friend Singleton<TranscoderCache>;
+
+public:
+    /// \~chinese
+    /// @brief Ìí¼Ó»º´æ
+    inline void Add(size_t key, TranscoderPtr v)
+    {
+        cache_.insert(std::make_pair(key, v));
+    }
+
+    /// \~chinese
+    /// @brief »ñÈ¡»º´æ
+    inline TranscoderPtr Get(size_t key) const
+    {
+        if (cache_.count(key))
+        {
+            return cache_.at(key);
+        }
+        return nullptr;
+    }
+
+    /// \~chinese
+    /// @brief ÒÆ³ý»º´æ
+    inline void Remove(size_t key)
+    {
+        cache_.erase(key);
+    }
+
+    /// \~chinese
+    /// @brief Çå¿Õ»º´æ
+    inline void Clear()
+    {
+        cache_.clear();
+    }
+
+    ~TranscoderCache()
+    {
+        Clear();
+    }
+
+private:
+    TranscoderCache() = default;
+
+private:
+    UnorderedMap<size_t, TranscoderPtr> cache_;
 };
 
 /** @} */
