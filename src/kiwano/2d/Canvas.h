@@ -87,6 +87,11 @@ public:
     void EndDraw();
 
     /// \~chinese
+    /// @brief »­½ÇÉ«
+    /// @param actor ½ÇÉ«
+    void DrawActor(ActorPtr actor);
+
+    /// \~chinese
     /// @brief »­ÐÎ×´ÂÖÀª
     /// @param shape ÐÎ×´
     void DrawShape(ShapePtr shape);
@@ -300,6 +305,15 @@ inline void CanvasRenderContext::EndDraw()
 {
     KGE_ASSERT(ctx_);
     ctx_->EndDraw();
+}
+
+inline void CanvasRenderContext::DrawActor(ActorPtr actor)
+{
+    KGE_ASSERT(ctx_);
+    if (actor)
+    {
+        actor->OnRender(*ctx_);
+    }
 }
 
 inline void CanvasRenderContext::DrawShape(ShapePtr shape)
