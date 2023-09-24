@@ -155,6 +155,11 @@ void SoundPlayer::StopAll()
     }
 }
 
+void SoundPlayer::ReleaseSound(size_t id)
+{
+    sound_cache_.erase(id);
+}
+
 void SoundPlayer::ClearCache()
 {
     sound_cache_.clear();

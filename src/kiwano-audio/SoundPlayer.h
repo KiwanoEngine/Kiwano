@@ -40,6 +40,8 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
 class KGE_API SoundPlayer : public ObjectBase
 {
 public:
+    using SoundMap = Map<size_t, SoundPtr>;
+
     SoundPlayer();
 
     ~SoundPlayer();
@@ -121,16 +123,30 @@ public:
     void StopAll();
 
     /// \~chinese
+    /// @brief 释放音乐对象缓存
+    /// @param id 音频标识符
+    void ReleaseSound(size_t id);
+
+    /// \~chinese
+    /// @brief 获取缓存
+    const SoundMap& GetCache() const;
+
+    /// \~chinese
     /// @brief 清除缓存
     void ClearCache();
 
 private:
     float volume_;
 
-    using SoundMap = Map<size_t, SoundPtr>;
     SoundMap sound_cache_;
 };
 
 /** @} */
+
+inline const SoundPlayer::SoundMap& SoundPlayer::GetCache() const
+{
+    return sound_cache_;
+}
+
 }  // namespace audio
 }  // namespace kiwano
