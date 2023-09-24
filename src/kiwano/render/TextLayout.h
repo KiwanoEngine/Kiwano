@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/math/Math.h>
-#include <kiwano/render/NativeObject.h>
+#include <kiwano/platform/NativeObject.hpp>
 #include <kiwano/render/TextStyle.h>
 
 namespace kiwano
@@ -133,11 +133,6 @@ private:
 inline bool TextLayout::IsDirty() const
 {
     return dirty_flag_ != DirtyFlag::Clean;
-}
-
-inline void TextLayout::Clear()
-{
-    ResetNativePointer();
 }
 
 inline uint32_t TextLayout::GetContentLength() const

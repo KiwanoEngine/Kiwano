@@ -24,7 +24,7 @@
 #include <functional>  // std::hash
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
+#include <kiwano/render/DirectX/helper.h>
 #endif
 
 namespace kiwano
@@ -108,8 +108,8 @@ void Texture::CopyFrom(TexturePtr copy_from)
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
-        auto native         = NativePtr::Get<ID2D1Bitmap>(this);
-        auto native_to_copy = NativePtr::Get<ID2D1Bitmap>(copy_from);
+        auto native         = ComPolicy::Get<ID2D1Bitmap>(this);
+        auto native_to_copy = ComPolicy::Get<ID2D1Bitmap>(copy_from);
 
         HRESULT hr = native->CopyFromBitmap(nullptr, native_to_copy.Get(), nullptr);
 
@@ -125,8 +125,8 @@ void Texture::CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
     {
-        auto native         = NativePtr::Get<ID2D1Bitmap>(this);
-        auto native_to_copy = NativePtr::Get<ID2D1Bitmap>(copy_from);
+        auto native         = ComPolicy::Get<ID2D1Bitmap>(this);
+        auto native_to_copy = ComPolicy::Get<ID2D1Bitmap>(copy_from);
 
         HRESULT hr =
             native->CopyFromBitmap(&D2D1::Point2U(uint32_t(dest_point.x), uint32_t(dest_point.y)), native_to_copy.Get(),

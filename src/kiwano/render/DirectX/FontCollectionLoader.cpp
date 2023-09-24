@@ -22,6 +22,10 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 // FontCollectionLoader
@@ -41,7 +45,7 @@ public:
 
     // IDWriteFontCollectionLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(IDWriteFactory* pFactory, void const* collectionKey,
-                                                              uint32_t collectionKeySize,
+                                                              uint32_t                          collectionKeySize,
                                                               _Out_ IDWriteFontFileEnumerator** fontFileEnumerator);
 
     // IUnknown methods
@@ -348,7 +352,7 @@ public:
 
     // IDWriteFontCollectionLoader methods
     virtual HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(IDWriteFactory* pFactory, void const* collectionKey,
-                                                              uint32_t collectionKeySize,
+                                                              uint32_t                          collectionKeySize,
                                                               _Out_ IDWriteFontFileEnumerator** fontFileEnumerator);
 
     // IUnknown methods
@@ -389,8 +393,7 @@ HRESULT IResourceFontCollectionLoader::Create(_Out_ IResourceFontCollectionLoade
     return hr;
 }
 
-STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<BinaryData>& data,
-                                                        _Out_ LPVOID* pCollectionKey,
+STDMETHODIMP ResourceFontCollectionLoader::AddResources(const Vector<BinaryData>& data, _Out_ LPVOID* pCollectionKey,
                                                         _Out_ uint32_t* pCollectionKeySize)
 {
     if (!pCollectionKey || !pCollectionKeySize)
@@ -492,8 +495,8 @@ public:
     }
 
     // IDWriteFontFileLoader methods
-    virtual HRESULT STDMETHODCALLTYPE CreateStreamFromKey(void const* fontFileReferenceKey,
-                                                          uint32_t    fontFileReferenceKeySize,
+    virtual HRESULT STDMETHODCALLTYPE CreateStreamFromKey(void const*                   fontFileReferenceKey,
+                                                          uint32_t                      fontFileReferenceKeySize,
                                                           _Out_ IDWriteFontFileStream** fontFileStream);
 
     // IUnknown methods
@@ -891,4 +894,6 @@ ULONG STDMETHODCALLTYPE ResourceFontFileStream::Release()
     return newCount;
 }
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

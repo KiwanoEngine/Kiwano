@@ -20,11 +20,11 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
+#include <kiwano/platform/NativeObject.hpp>
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
-#include <kiwano/render/DirectX/NativePtr.h>
 
 #define KGE_SET_STATUS_IF_FAILED(ERRCODE, OBJ, MESSAGE)                                   \
     if (FAILED(ERRCODE))                                                                  \
@@ -37,24 +37,24 @@ namespace kiwano
 
 using namespace kiwano::graphics::directx;
 
-inline const GUID& ConvertPixelFormat(PixelFormat format, UINT& stride)
+inline DXGI_FORMAT ConvertPixelFormat(PixelFormat format, UINT32& pitch)
 {
     switch (format)
     {
-    case PixelFormat::Bpp32RGB:
-        stride = 3;
-        return GUID_WICPixelFormat32bppRGB;
+    //case PixelFormat::Bpp32RGB:
+    //    pitch = 4;
+    //    return DXGI_FORMAT_R8G8B8X8_UNORM;
     case PixelFormat::Bpp32RGBA:
-        stride = 4;
-        return GUID_WICPixelFormat32bppRGBA;
+        pitch = 4;
+        return DXGI_FORMAT_R8G8B8A8_UNORM;
     case PixelFormat::Bpp32BGR:
-        stride = 3;
-        return GUID_WICPixelFormat32bppBGR;
+        pitch = 4;
+        return DXGI_FORMAT_B8G8R8X8_UNORM;
     case PixelFormat::Bpp32BGRA:
-        stride = 4;
-        return GUID_WICPixelFormat32bppBGRA;
+        pitch = 4;
+        return DXGI_FORMAT_B8G8R8A8_UNORM;
     default:
-        return GUID_WICPixelFormatDontCare;
+        return DXGI_FORMAT_UNKNOWN;
     }
 }
 
@@ -258,7 +258,7 @@ void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
 
                     if (SUCCEEDED(hr))
                     {
-                        NativePtr::Set(texture, bitmap);
+                        ComPolicy::Set(texture, bitmap);
 
                         texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                         texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -307,7 +307,7 @@ void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
 
                         if (SUCCEEDED(hr))
                         {
-                            NativePtr::Set(texture, bitmap);
+                            ComPolicy::Set(texture, bitmap);
 
                             texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                             texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -335,34 +335,19 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 
         if (SUCCEEDED(hr))
         {
-            UINT        stride    = 0;
-            const auto& wicFormat = ConvertPixelFormat(format, stride);
+            ComPtr<ID2D1Bitmap1> output;
+            UINT32               pitch       = 0;
+            const auto           dxgi_format = ConvertPixelFormat(format, pitch);
 
-            ComPtr<IWICBitmapSource> source;
-            hr = d2d_res_->CreateBitmapSourceFromMemory(source, UINT(size.x), UINT(size.y), UINT(size.x) * stride,
-                                                        UINT(data.size), reinterpret_cast<BYTE*>(data.buffer),
-                                                        wicFormat);
-
+            hr = d2d_res_->GetDeviceContext()->CreateBitmap(
+                DX::ConvertToSizeU(size), data.buffer, UINT(size.x) * pitch,
+                D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET, D2D1::PixelFormat(dxgi_format)), &output);
             if (SUCCEEDED(hr))
             {
-                ComPtr<IWICFormatConverter> converter;
-                hr = d2d_res_->CreateBitmapConverter(converter, source, GUID_WICPixelFormat32bppPBGRA,
-                                                     WICBitmapDitherTypeNone, nullptr, 0.f,
-                                                     WICBitmapPaletteTypeMedianCut);
+                ComPolicy::Set(texture, output);
 
-                if (SUCCEEDED(hr))
-                {
-                    ComPtr<ID2D1Bitmap> bitmap;
-                    hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
-
-                    if (SUCCEEDED(hr))
-                    {
-                        NativePtr::Set(texture, bitmap);
-
-                        texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
-                        texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
-                    }
-                }
+                texture.SetSize({ output->GetSize().width, output->GetSize().height });
+                texture.SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
             }
         }
     }
@@ -395,7 +380,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 
         if (SUCCEEDED(hr))
         {
-            NativePtr::Set(gif, decoder);
+            ComPolicy::Set(gif, decoder);
         }
     }
 
@@ -421,7 +406,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const BinaryData& data)
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(gif, decoder);
+                ComPolicy::Set(gif, decoder);
             }
         }
     }
@@ -437,7 +422,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
         hr = E_UNEXPECTED;
     }
 
-    auto decoder = NativePtr::Get<IWICBitmapDecoder>(gif);
+    auto decoder = ComPolicy::Get<IWICBitmapDecoder>(gif);
 
     if (!decoder)
     {
@@ -464,7 +449,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
                 if (SUCCEEDED(hr))
                 {
                     frame.texture = MakePtr<Texture>();
-                    NativePtr::Set(frame.texture, bitmap);
+                    ComPolicy::Set(frame.texture, bitmap);
 
                     frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
                     frame.texture->SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
@@ -618,7 +603,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            NativePtr::Set(font, font_collection);
+            ComPolicy::Set(font, font_collection);
         }
     }
 
@@ -641,7 +626,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            NativePtr::Set(font, font_collection);
+            ComPolicy::Set(font, font_collection);
         }
     }
 
@@ -675,7 +660,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
         auto  font_weight  = DWRITE_FONT_WEIGHT(font->GetWeight());
         auto  font_style   = DWRITE_FONT_STYLE(font->GetPosture());
         auto  font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
-        auto  collection   = NativePtr::Get<IDWriteFontCollection>(font);
+        auto  collection   = ComPolicy::Get<IDWriteFontCollection>(font);
 
         WideString font_family;
 
@@ -698,7 +683,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(layout, output);
+                ComPolicy::Set(layout, output);
                 layout.SetDirtyFlag(TextLayout::DirtyFlag::Dirty);
             }
         }
@@ -735,7 +720,7 @@ void RendererImpl::CreateLineShape(Shape& shape, const Point& begin_pos, const P
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(shape, path_geo);
+                ComPolicy::Set(shape, path_geo);
             }
         }
     }
@@ -759,7 +744,7 @@ void RendererImpl::CreateRectShape(Shape& shape, const Rect& rect)
 
     if (SUCCEEDED(hr))
     {
-        NativePtr::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RectangleGeometry failed");
@@ -782,7 +767,7 @@ void RendererImpl::CreateRoundedRectShape(Shape& shape, const Rect& rect, const 
 
     if (SUCCEEDED(hr))
     {
-        NativePtr::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1RoundedRectangleGeometry failed");
@@ -805,7 +790,7 @@ void RendererImpl::CreateEllipseShape(Shape& shape, const Point& center, const V
 
     if (SUCCEEDED(hr))
     {
-        NativePtr::Set(shape, output);
+        ComPolicy::Set(shape, output);
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, shape, "Create ID2D1EllipseGeometry failed");
@@ -828,7 +813,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
         if (SUCCEEDED(hr))
         {
             ShapePtr shape = MakePtr<Shape>();
-            NativePtr::Set(shape, geometry);
+            ComPolicy::Set(shape, geometry);
 
             maker.SetShape(shape);
         }
@@ -850,7 +835,7 @@ void RendererImpl::CreateBrush(Brush& brush, const Color& color)
 
         if (brush.GetType() == Brush::Type::SolidColor && brush.IsValid())
         {
-            hr = NativePtr::Get<ID2D1Brush>(brush)->QueryInterface(&solid_brush);
+            hr = ComPolicy::Get<ID2D1Brush>(brush)->QueryInterface(&solid_brush);
             if (SUCCEEDED(hr))
             {
                 solid_brush->SetColor(DX::ConvertToColorF(color));
@@ -862,7 +847,7 @@ void RendererImpl::CreateBrush(Brush& brush, const Color& color)
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(brush, solid_brush);
+                ComPolicy::Set(brush, solid_brush);
             }
         }
     }
@@ -894,7 +879,7 @@ void RendererImpl::CreateBrush(Brush& brush, const LinearGradientStyle& style)
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -927,7 +912,7 @@ void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -945,7 +930,7 @@ void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
 
     if (SUCCEEDED(hr))
     {
-        auto bitmap = NativePtr::Get<ID2D1Bitmap>(texture);
+        auto bitmap = ComPolicy::Get<ID2D1Bitmap>(texture);
 
         if (SUCCEEDED(hr))
         {
@@ -954,7 +939,7 @@ void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
 
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(brush, output);
+                ComPolicy::Set(brush, output);
             }
         }
     }
@@ -994,55 +979,60 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
 
         if (SUCCEEDED(hr))
         {
-            NativePtr::Set(stroke_style, output);
+            ComPolicy::Set(stroke_style, output);
         }
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, stroke_style, "Create ID2D1StrokeStyle failed");
 }
 
-RenderContextPtr RendererImpl::CreateTextureRenderContext(Texture& texture, const Size* desired_size)
+RenderContextPtr RendererImpl::CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size)
 {
-    RenderContextImplPtr ptr = MakePtr<RenderContextImpl>();
-
     HRESULT hr = S_OK;
     if (!d2d_res_)
     {
         hr = E_UNEXPECTED;
     }
+    else if (texture == nullptr)
+    {
+        hr = E_INVALIDARG;
+    }
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<ID2D1BitmapRenderTarget> bitmap_rt;
+        RenderContextImplPtr ptr = MakePtr<RenderContextImpl>();
 
-        if (desired_size)
+        ComPtr<ID2D1DeviceContext> render_ctx;
+        hr = d2d_res_->GetDevice()->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
+                                                        &render_ctx);
+
+        if (SUCCEEDED(hr))
         {
-            hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(DX::ConvertToSizeF(*desired_size),
-                                                                            &bitmap_rt);
-        }
-        else
-        {
-            hr = d2d_res_->GetDeviceContext()->CreateCompatibleRenderTarget(&bitmap_rt);
+            hr = ptr->CreateDeviceResources(d2d_res_->GetFactory(), render_ctx);
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = ptr->CreateDeviceResources(d2d_res_->GetFactory(), bitmap_rt);
-        }
+            ComPtr<ID2D1Bitmap1> output;
+            hr = render_ctx->CreateBitmap(
+                DX::ConvertToSizeU(desired_size), nullptr, 0,
+                D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET,
+                                        D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)),
+                &output);
 
-        if (SUCCEEDED(hr))
-        {
-            ComPtr<ID2D1Bitmap> output;
-            hr = bitmap_rt->GetBitmap(&output);
             if (SUCCEEDED(hr))
             {
-                NativePtr::Set(texture, output);
+                render_ctx->SetTarget(output.Get());
+                ComPolicy::Set(texture, output);
+
+                texture->SetSize({ output->GetSize().width, output->GetSize().height });
+                texture->SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
+                return ptr;
             }
         }
     }
 
-    if (SUCCEEDED(hr))
-        return ptr;
+    KGE_THROW_IF_FAILED(hr, "Create render context failed");
     return nullptr;
 }
 
@@ -1056,7 +1046,7 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
     if (SUCCEEDED(hr))
     {
         // Clear resources
-        d2d_res_->SetTargetBitmap(nullptr);
+        d2d_res_->GetDeviceContext()->SetTarget(nullptr);
     }
 
     if (SUCCEEDED(hr))

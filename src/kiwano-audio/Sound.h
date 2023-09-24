@@ -21,8 +21,7 @@
 #pragma once
 #include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/platform/win32/ComPtr.hpp>
+#include <kiwano/platform/NativeObject.hpp>
 #include <xaudio2.h>
 
 namespace kiwano
@@ -30,8 +29,10 @@ namespace kiwano
 namespace audio
 {
 class AudioModule;
+class SoundPlayer;
 
 KGE_DECLARE_SMART_PTR(Sound);
+KGE_DECLARE_SMART_PTR(SoundCallback);
 
 /**
  * \addtogroup Audio
@@ -40,13 +41,65 @@ KGE_DECLARE_SMART_PTR(Sound);
 
 /**
  * \~chinese
- * @brief 音频对象
+ * @brief 音频回调
  */
-class KGE_API Sound : public ObjectBase
+class KGE_API SoundCallback : public NativeObject
+{
+public:
+    /// \~chinese
+    /// @brief 创建一个回调，在音频开始播放时执行
+    static SoundCallbackPtr OnStart(const Function<void(Sound* sound)>& cb);
+
+    /// \~chinese
+    /// @brief 创建一个回调，在音频循环结束时执行
+    static SoundCallbackPtr OnLoopEnd(const Function<void(Sound* sound)>& cb);
+
+    /// \~chinese
+    /// @brief 创建一个回调，在音频结束时执行
+    static SoundCallbackPtr OnEnd(const Function<void(Sound* sound)>& cb);
+
+    /// \~chinese
+    /// @brief 创建一个回调，在音频修改音量时执行
+    static SoundCallbackPtr OnVolumeChanged(const Function<float(Sound* sound, float volume)>& cb);
+
+    /// \~chinese
+    /// @brief 在音频开始播放时执行
+    virtual inline void OnStart(Sound* sound) {}
+
+    /// \~chinese
+    /// @brief 在音频循环结束时执行
+    virtual inline void OnLoopEnd(Sound* sound) {}
+
+    /// \~chinese
+    /// @brief 在音频结束时执行
+    virtual inline void OnEnd(Sound* sound) {}
+
+    /// \~chinese
+    /// @brief 在音频修改音量时执行
+    virtual inline float OnVolumeChanged(Sound* sound, float volume)
+    {
+        return volume;
+    }
+};
+
+/**
+ * \~chinese
+ * @brief 音频
+ */
+class KGE_API Sound : public NativeObject
 {
     friend class AudioModule;
+    friend class SoundPlayer;
 
 public:
+    /// \~chinese
+    /// @brief 预加载音频
+    static SoundPtr Preload(const String& file_path, std::initializer_list<SoundCallbackPtr> callbacks = {});
+
+    /// \~chinese
+    /// @brief 预加载音频资源
+    static SoundPtr Preload(const Resource& res, std::initializer_list<SoundCallbackPtr> callbacks = {});
+
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 本地音频文件路径
@@ -60,20 +113,6 @@ public:
     Sound();
 
     virtual ~Sound();
-
-    /// \~chinese
-    /// @brief 打开本地音频文件
-    /// @param res 本地音频文件路径
-    bool Load(const String& file_path);
-
-    /// \~chinese
-    /// @brief 打开音频资源
-    /// @param res 音频资源
-    bool Load(const Resource& res);
-
-    /// \~chinese
-    /// @brief 是否有效
-    bool IsValid() const;
 
     /// \~chinese
     /// @brief 播放
@@ -109,28 +148,64 @@ public:
     /// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
     void SetVolume(float volume);
 
-private:
-    IXAudio2SourceVoice* GetXAudio2Voice() const;
+    /// \~chinese
+    /// @brief 添加回调
+    void AddCallback(SoundCallbackPtr callback);
 
-    void SetXAudio2Voice(IXAudio2SourceVoice* voice);
+    /// \~chinese
+    /// @brief 获取所有回调
+    List<SoundCallbackPtr>& GetCallbacks();
+
+    /// \~chinese
+    /// @brief 获取所有回调
+    const List<SoundCallbackPtr>& GetCallbacks() const;
+
+protected:
+    /// \~chinese
+    /// @brief 打开本地音频文件
+    /// @param res 本地音频文件路径
+    bool Load(const String& file_path);
+
+    /// \~chinese
+    /// @brief 打开音频资源
+    /// @param res 音频资源
+    bool Load(const Resource& res);
+
+    /// \~chinese
+    /// @brief 打开音频资源
+    /// @param res 音频资源
+    bool Load(TranscoderPtr transcoder);
+
+    SoundCallbackPtr GetCallbackChain();
+
+    void ResetVolume();
 
 private:
-    bool                 opened_;
-    bool                 playing_;
-    Transcoder           transcoder_;
-    IXAudio2SourceVoice* voice_;
+    bool          opened_;
+    bool          playing_;
+    float         volume_;
+    TranscoderPtr coder_;
+
+    SoundCallbackPtr       callback_chain_;
+    List<SoundCallbackPtr> callbacks_;
 };
 
 /** @} */
 
-inline IXAudio2SourceVoice* Sound::GetXAudio2Voice() const
+inline List<SoundCallbackPtr>& kiwano::audio::Sound::GetCallbacks()
 {
-    return voice_;
+    return callbacks_;
 }
 
-inline void Sound::SetXAudio2Voice(IXAudio2SourceVoice* voice)
+inline const List<SoundCallbackPtr>& kiwano::audio::Sound::GetCallbacks() const
 {
-    voice_ = voice;
+    return callbacks_;
 }
+
+inline void kiwano::audio::Sound::AddCallback(SoundCallbackPtr callback)
+{
+    callbacks_.push_back(callback);
+}
+
 }  // namespace audio
 }  // namespace kiwano

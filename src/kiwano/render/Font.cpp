@@ -105,7 +105,7 @@ Font::Font(const String& family_name, float size, uint32_t weight, FontPosture p
     FontPtr found = FontCache::GetInstance().GetFontByFamily(family_name);
     if (found)
     {
-        this->ResetNativePointer(found->GetNativePointer());
+        this->SetNative(found->GetNative());
     }
 }
 

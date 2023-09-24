@@ -21,73 +21,69 @@
 #pragma once
 #include <kiwano/base/ObjectBase.h>
 
-#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/D2DDeviceResources.h>
-#endif
-
 namespace kiwano
 {
 
 KGE_DECLARE_SMART_PTR(NativeObject);
 
 /**
- * \addtogroup Render
- * @{
- */
-
-/**
  * \~chinese
  * @brief 含有本地指针的对象
  */
-class KGE_API NativeObjectBase : public ObjectBase
+class KGE_API NativeObject : public ObjectBase
 {
 public:
-    NativeObjectBase();
+    NativeObject() = default;
 
-    bool IsValid() const override;
+    const Any& GetNative() const;
 
-    void* GetNativePointer() const;
+    template <class _Ty>
+    _Ty GetNative() const;
 
-    template <typename _NativeTy>
-    _NativeTy* GetNativePointer() const;
+    template<class _Ty>
+    _Ty* GetNativePtr() const;
 
-    virtual void ResetNativePointer(void* native_pointer = nullptr);
+    void SetNative(const Any& native);
+
+    void ResetNative();
 
 protected:
-    void* native_pointer_;
+    Any native_;
 };
 
-#if defined(KGE_PLATFORM_WINDOWS)
-
-class KGE_API NativeObject : public NativeObjectBase
+inline const Any& NativeObject::GetNative() const
 {
-public:
-    virtual ~NativeObject();
-
-    void ResetNativePointer(void* native_pointer = nullptr) override;
-};
-
-#else
-
-typedef NativeObjectBase NativeObject;
-
-#endif
-
-/** @} */
-
-inline void* NativeObjectBase::GetNativePointer() const
-{
-    return native_pointer_;
+    return native_;
 }
 
-template <typename _NativeTy>
-inline _NativeTy* NativeObjectBase::GetNativePointer() const
+template <class _Ty>
+inline _Ty NativeObject::GetNative() const
 {
-    if (native_pointer_ != nullptr)
+    if (native_.HasValue())
     {
-        return static_cast<_NativeTy*>(native_pointer_);
+        return native_.Cast<_Ty>();
     }
     return nullptr;
+}
+
+template <class _Ty>
+inline _Ty* NativeObject::GetNativePtr() const
+{
+    if (native_.HasValue())
+    {
+        return native_.Cast<_Ty*>();
+    }
+    return nullptr;
+}
+
+inline void NativeObject::SetNative(const Any& native)
+{
+    native_ = native;
+}
+
+inline void NativeObject::ResetNative()
+{
+    native_.Clear();
 }
 
 }  // namespace kiwano

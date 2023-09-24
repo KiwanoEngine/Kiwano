@@ -22,11 +22,52 @@
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
+#include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
 {
 namespace audio
 {
+
+class VoiceCallback : public IXAudio2VoiceCallback
+{
+public:
+    SoundCallback* cb;
+
+    VoiceCallback(SoundCallback* cb)
+        : cb(cb)
+    {
+    }
+
+    ~VoiceCallback() {}
+
+    STDMETHOD_(void, OnBufferStart(void* pBufferContext))
+    {
+        cb->OnStart(nullptr);
+    }
+
+    STDMETHOD_(void, OnLoopEnd(void* pBufferContext))
+    {
+        cb->OnLoopEnd(nullptr);
+    }
+
+    STDMETHOD_(void, OnBufferEnd(void* pBufferContext))
+    {
+        cb->OnEnd(nullptr);
+    }
+
+    STDMETHOD_(void, OnStreamEnd()) {}
+
+    STDMETHOD_(void, OnVoiceProcessingPassEnd()) {}
+
+    STDMETHOD_(void, OnVoiceProcessingPassStart(UINT32 SamplesRequired)) {}
+
+    STDMETHOD_(void, OnVoiceError(void* pBufferContext, HRESULT Error))
+    {
+        KGE_ERRORF("Voice error with HRESULT of %08X", Error);
+    }
+};
+
 AudioModule::AudioModule()
     : x_audio2_(nullptr)
     , mastering_voice_(nullptr)
@@ -58,6 +99,8 @@ void AudioModule::DestroyModule()
 {
     KGE_DEBUG_LOGF("Destroying audio resources");
 
+    TranscoderCache::GetInstance().Clear();
+
     if (mastering_voice_)
     {
         mastering_voice_->DestroyVoice();
@@ -73,31 +116,60 @@ void AudioModule::DestroyModule()
     dlls::MediaFoundation::Get().MFShutdown();
 }
 
-bool AudioModule::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
+TranscoderPtr AudioModule::CreateTranscoder(const String& file_path)
+{
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
+    {
+        KGE_WARNF("Media file '%s' not found", file_path.c_str());
+        return nullptr;
+    }
+
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
+
+    auto    ptr = MakePtr<Transcoder>();
+    HRESULT hr  = ptr->LoadMediaFile(full_path);
+    if (FAILED(hr))
+    {
+        KGE_ERRORF("Load media file failed with HRESULT of %08X", hr);
+        return nullptr;
+    }
+    return ptr;
+}
+
+TranscoderPtr AudioModule::CreateTranscoder(const Resource& res)
+{
+    auto    ptr = MakePtr<Transcoder>();
+    HRESULT hr  = ptr->LoadMediaResource(res);
+    if (FAILED(hr))
+    {
+        KGE_ERRORF("Load media resource failed with HRESULT of %08X", hr);
+        return nullptr;
+    }
+    return ptr;
+}
+
+bool AudioModule::CreateSound(Sound& sound, TranscoderPtr transcoder)
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     HRESULT hr = S_OK;
 
+    auto buffer = transcoder->GetBuffer();
     if (buffer.format == nullptr)
         hr = E_INVALIDARG;
 
     if (SUCCEEDED(hr))
     {
+        auto chain = sound.GetCallbackChain();
+        chain->SetNative(VoiceCallback{ chain.Get() });
+        auto callback = const_cast<VoiceCallback*>(chain->GetNative().CastPtr<VoiceCallback>());
+
         IXAudio2SourceVoice* voice = nullptr;
-
-        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO);
-
+        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
         if (SUCCEEDED(hr))
         {
-            IXAudio2SourceVoice* old = sound.GetXAudio2Voice();
-            if (old)
-            {
-                old->DestroyVoice();
-                old = nullptr;
-            }
-
-            sound.SetXAudio2Voice(voice);
+            sound.Close();
+            sound.SetNative(voice);
         }
     }
 
@@ -112,7 +184,6 @@ bool AudioModule::CreateSound(Sound& sound, const Transcoder::Buffer& buffer)
 void AudioModule::Open()
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
-
     if (x_audio2_)
         x_audio2_->StartEngine();
 }

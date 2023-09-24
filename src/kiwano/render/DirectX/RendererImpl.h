@@ -36,7 +36,7 @@ public:
 
     void CreateTexture(Texture& texture, const BinaryData& data) override;
 
-    void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format);
+    void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format) override;
 
     void CreateGifImage(GifImage& gif, const String& file_path) override;
 
@@ -70,7 +70,7 @@ public:
 
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
-    RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) override;
+    RenderContextPtr CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size) override;
 
 public:
     void Clear() override;

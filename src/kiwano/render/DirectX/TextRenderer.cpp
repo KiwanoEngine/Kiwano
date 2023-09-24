@@ -23,6 +23,10 @@
 
 namespace kiwano
 {
+namespace graphics
+{
+namespace directx
+{
 class TextRenderer : public ITextRenderer
 {
 public:
@@ -30,7 +34,7 @@ public:
 
     ~TextRenderer();
 
-    STDMETHOD(CreateDeviceResources)(_In_ ID2D1RenderTarget* pRT);
+    STDMETHOD(CreateDeviceResources)(_In_ ID2D1DeviceContext* pContext);
 
     STDMETHOD(DrawTextLayout)
     (_In_ IDWriteTextLayout* pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
@@ -67,17 +71,18 @@ public:
     HRESULT STDMETHODCALLTYPE       QueryInterface(REFIID riid, void** ppvObject);
 
 private:
-    unsigned long             cRefCount_;
-    uint32_t                  cPrimitivesCount_;
-    float                     fDefaultOutlineWidth_;
-    ComPtr<ID2D1Factory>      pFactory_;
-    ComPtr<ID2D1RenderTarget> pRT_;
-    ComPtr<ID2D1Brush>        pDefaultFillBrush_;
-    ComPtr<ID2D1Brush>        pDefaultOutlineBrush_;
-    ComPtr<ID2D1StrokeStyle>  pDefaultStrokeStyle_;
+    bool                       bOutlineRendering_;
+    unsigned long              cRefCount_;
+    uint32_t                   cPrimitivesCount_;
+    float                      fDefaultOutlineWidth_;
+    ComPtr<ID2D1Factory>       pFactory_;
+    ComPtr<ID2D1DeviceContext> pContext_;
+    ComPtr<ID2D1Brush>         pDefaultFillBrush_;
+    ComPtr<ID2D1Brush>         pDefaultOutlineBrush_;
+    ComPtr<ID2D1StrokeStyle>   pDefaultStrokeStyle_;
 };
 
-HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1RenderTarget* pRT)
+HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1DeviceContext* pContext)
 {
     HRESULT hr = E_FAIL;
 
@@ -86,7 +91,7 @@ HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1Re
         TextRenderer* pTextRenderer = new (std::nothrow) TextRenderer;
         if (pTextRenderer)
         {
-            hr = pTextRenderer->CreateDeviceResources(pRT);
+            hr = pTextRenderer->CreateDeviceResources(pContext);
 
             if (SUCCEEDED(hr))
             {
@@ -107,7 +112,8 @@ HRESULT ITextRenderer::Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1Re
 }
 
 TextRenderer::TextRenderer()
-    : cRefCount_(0)
+    : bOutlineRendering_(false)
+    , cRefCount_(0)
     , cPrimitivesCount_(0)
     , fDefaultOutlineWidth_(1)
 {
@@ -115,17 +121,17 @@ TextRenderer::TextRenderer()
 
 TextRenderer::~TextRenderer() {}
 
-STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1RenderTarget* pRT)
+STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1DeviceContext* pContext)
 {
     HRESULT hr = E_FAIL;
 
     pFactory_.Reset();
-    pRT_.Reset();
+    pContext_.Reset();
 
-    if (pRT)
+    if (pContext)
     {
-        pRT_ = pRT;
-        pRT_->GetFactory(&pFactory_);
+        pContext_ = pContext;
+        pContext_->GetFactory(&pFactory_);
         hr = S_OK;
     }
     return hr;
@@ -146,13 +152,21 @@ STDMETHODIMP TextRenderer::DrawTextLayout(_In_ IDWriteTextLayout* pTextLayout, f
     pDefaultOutlineBrush_ = pDefaultOutlineBrush;
     fDefaultOutlineWidth_ = fDefaultOutlineWidth;
     pDefaultStrokeStyle_  = pDefaultStrokeStyle;
+    bOutlineRendering_    = pDefaultOutlineBrush_ != nullptr;
 
-    return pTextLayout->Draw(nullptr, this, fOriginX, fOriginY);
+    HRESULT hr = pTextLayout->Draw(nullptr, this, fOriginX, fOriginY);
+    if (SUCCEEDED(hr) && bOutlineRendering_)
+    {
+        bOutlineRendering_ = false;
+
+        hr = pTextLayout->Draw(nullptr, this, fOriginX, fOriginY);
+    }
+    return hr;
 }
 
 STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, float baselineOriginX,
                                         float baselineOriginY, DWRITE_MEASURING_MODE measuringMode,
-                                        __in DWRITE_GLYPH_RUN const* glyphRun,
+                                        __in DWRITE_GLYPH_RUN const*             glyphRun,
                                         __in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
                                         IUnknown*                                clientDrawingEffect)
 {
@@ -160,36 +174,41 @@ STDMETHODIMP TextRenderer::DrawGlyphRun(__maybenull void* clientDrawingContext, 
     KGE_NOT_USED(measuringMode);
     KGE_NOT_USED(glyphRunDescription);
 
-    ComPtr<ITextDrawingEffect> pTextDrawingEffect;
-
-    HRESULT hr = clientDrawingEffect->QueryInterface(&pTextDrawingEffect);
-
-    if (pDefaultOutlineBrush_)
+    HRESULT hr = S_OK;
+    if (!bOutlineRendering_)
     {
-        ComPtr<ID2D1Geometry> pOutlineGeometry;
-
-        if (SUCCEEDED(hr))
+        if (pDefaultFillBrush_)
         {
-            hr = pTextDrawingEffect->CreateOutlineGeomerty(&pOutlineGeometry, glyphRun, baselineOriginX,
-                                                           baselineOriginY);
-        }
+            if (SUCCEEDED(hr))
+            {
+                pContext_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun,
+                                        pDefaultFillBrush_.Get());
 
-        if (SUCCEEDED(hr))
-        {
-            pRT_->DrawGeometry(pOutlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                               pDefaultStrokeStyle_.Get());
-
-            ++cPrimitivesCount_;
+                ++cPrimitivesCount_;
+            }
         }
     }
-
-    if (pDefaultFillBrush_)
+    else
     {
-        if (SUCCEEDED(hr))
+        if (pDefaultOutlineBrush_)
         {
-            pRT_->DrawGlyphRun(D2D1::Point2F(baselineOriginX, baselineOriginY), glyphRun, pDefaultFillBrush_.Get());
+            ComPtr<ITextDrawingEffect> pTextDrawingEffect;
+            hr = clientDrawingEffect->QueryInterface(&pTextDrawingEffect);
 
-            ++cPrimitivesCount_;
+            ComPtr<ID2D1Geometry> pOutlineGeometry;
+            if (SUCCEEDED(hr))
+            {
+                hr = pTextDrawingEffect->CreateOutlineGeomerty(&pOutlineGeometry, glyphRun, baselineOriginX,
+                                                               baselineOriginY);
+            }
+
+            if (SUCCEEDED(hr))
+            {
+                pContext_->DrawGeometry(pOutlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                                        pDefaultStrokeStyle_.Get());
+
+                ++cPrimitivesCount_;
+            }
         }
     }
     return hr;
@@ -203,50 +222,36 @@ STDMETHODIMP TextRenderer::DrawUnderline(__maybenull void* clientDrawingContext,
 
     HRESULT hr = S_OK;
 
-    ComPtr<ID2D1RectangleGeometry>   pRectangleGeometry;
-    ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
-    ComPtr<ID2D1Brush>               pCurrentFillBrush;
+    ComPtr<ITextDrawingEffect> pTextDrawingEffect;
+    hr = clientDrawingEffect->QueryInterface(&pTextDrawingEffect);
 
-    if (clientDrawingEffect)
+    ComPtr<ID2D1Geometry> pUnderlineGeometry;
+    if (SUCCEEDED(hr))
     {
-        hr = clientDrawingEffect->QueryInterface<ID2D1Brush>(&pCurrentFillBrush);
-    }
-    else
-    {
-        pCurrentFillBrush = pDefaultFillBrush_;
+        hr = pTextDrawingEffect->CreateUnderlineGeomerty(&pUnderlineGeometry, underline, baselineOriginX,
+                                                         baselineOriginY);
     }
 
-    if (pCurrentFillBrush || pDefaultOutlineBrush_)
+    if (SUCCEEDED(hr))
     {
-        if (SUCCEEDED(hr))
+        if (!bOutlineRendering_)
         {
-            D2D1_RECT_F rect =
-                D2D1::RectF(0, underline->offset, underline->width, underline->offset + underline->thickness);
-
-            hr = pFactory_->CreateRectangleGeometry(&rect, &pRectangleGeometry);
+            if (pDefaultFillBrush_)
+            {
+                pContext_->FillGeometry(pUnderlineGeometry.Get(), pDefaultFillBrush_.Get());
+                ++cPrimitivesCount_;
+            }
         }
-
-        if (SUCCEEDED(hr))
+        else
         {
-            D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, baselineOriginX, baselineOriginY);
+            if (pDefaultOutlineBrush_)
+            {
+                pContext_->DrawGeometry(pUnderlineGeometry.Get(), pDefaultOutlineBrush_.Get(),
+                                        fDefaultOutlineWidth_, pDefaultStrokeStyle_.Get());
 
-            hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
+                ++cPrimitivesCount_;
+            }
         }
-    }
-
-    if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
-    {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                           pDefaultStrokeStyle_.Get());
-
-        ++cPrimitivesCount_;
-    }
-
-    if (SUCCEEDED(hr) && pCurrentFillBrush)
-    {
-        pRT_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
-
-        ++cPrimitivesCount_;
     }
     return hr;
 }
@@ -259,50 +264,36 @@ STDMETHODIMP TextRenderer::DrawStrikethrough(__maybenull void* clientDrawingCont
 
     HRESULT hr = S_OK;
 
-    ComPtr<ID2D1RectangleGeometry>   pRectangleGeometry;
-    ComPtr<ID2D1TransformedGeometry> pTransformedGeometry;
-    ComPtr<ID2D1Brush>               pCurrentFillBrush;
+    ComPtr<ITextDrawingEffect> pTextDrawingEffect;
+    hr = clientDrawingEffect->QueryInterface(&pTextDrawingEffect);
 
-    if (clientDrawingEffect)
+    ComPtr<ID2D1Geometry> pStrikethroughGeometry;
+    if (SUCCEEDED(hr))
     {
-        hr = clientDrawingEffect->QueryInterface<ID2D1Brush>(&pCurrentFillBrush);
-    }
-    else
-    {
-        pCurrentFillBrush = pDefaultFillBrush_;
+        hr = pTextDrawingEffect->CreateStrikethroughGeomerty(&pStrikethroughGeometry, strikethrough, baselineOriginX,
+                                                             baselineOriginY);
     }
 
-    if (pCurrentFillBrush || pDefaultOutlineBrush_)
+    if (SUCCEEDED(hr))
     {
-        if (SUCCEEDED(hr))
+        if (!bOutlineRendering_)
         {
-            D2D1_RECT_F rect = D2D1::RectF(0, strikethrough->offset, strikethrough->width,
-                                           strikethrough->offset + strikethrough->thickness);
-
-            hr = pFactory_->CreateRectangleGeometry(&rect, &pRectangleGeometry);
+            if (pDefaultFillBrush_)
+            {
+                pContext_->FillGeometry(pStrikethroughGeometry.Get(), pDefaultFillBrush_.Get());
+                ++cPrimitivesCount_;
+            }
         }
-
-        if (SUCCEEDED(hr))
+        else
         {
-            D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(1.0f, 0.0f, 0.0f, 1.0f, baselineOriginX, baselineOriginY);
+            if (pDefaultOutlineBrush_)
+            {
+                pContext_->DrawGeometry(pStrikethroughGeometry.Get(), pDefaultOutlineBrush_.Get(),
+                                        fDefaultOutlineWidth_, pDefaultStrokeStyle_.Get());
 
-            hr = pFactory_->CreateTransformedGeometry(pRectangleGeometry.Get(), &matrix, &pTransformedGeometry);
+                ++cPrimitivesCount_;
+            }
         }
-    }
-
-    if (SUCCEEDED(hr) && pDefaultOutlineBrush_)
-    {
-        pRT_->DrawGeometry(pTransformedGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
-                           pDefaultStrokeStyle_.Get());
-
-        ++cPrimitivesCount_;
-    }
-
-    if (SUCCEEDED(hr) && pCurrentFillBrush)
-    {
-        pRT_->FillGeometry(pTransformedGeometry.Get(), pCurrentFillBrush.Get());
-
-        ++cPrimitivesCount_;
     }
     return hr;
 }
@@ -333,7 +324,7 @@ STDMETHODIMP TextRenderer::GetCurrentTransform(__maybenull void* clientDrawingCo
 {
     KGE_NOT_USED(clientDrawingContext);
 
-    pRT_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
+    pContext_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
     return S_OK;
 }
 
@@ -343,7 +334,7 @@ STDMETHODIMP TextRenderer::GetPixelsPerDip(__maybenull void* clientDrawingContex
 
     float x, yUnused;
 
-    pRT_->GetDpi(&x, &yUnused);
+    pContext_->GetDpi(&x, &yUnused);
     *pixelsPerDip = x / 96;
 
     return S_OK;
@@ -400,4 +391,6 @@ STDMETHODIMP TextRenderer::QueryInterface(REFIID riid, void** ppvObject)
 
     return S_OK;
 }
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

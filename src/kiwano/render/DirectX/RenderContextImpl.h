@@ -24,7 +24,10 @@
 
 namespace kiwano
 {
-
+namespace graphics
+{
+namespace directx
+{
 KGE_DECLARE_SMART_PTR(RenderContextImpl);
 
 class KGE_API RenderContextImpl : public RenderContext
@@ -34,11 +37,13 @@ public:
 
     virtual ~RenderContextImpl();
 
-    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1RenderTarget> render_target);
+    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1DeviceContext> ctx);
 
     void BeginDraw() override;
 
     void EndDraw() override;
+
+    void CreateTexture(Texture& texture, const PixelSize& size) override;
 
     void DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect) override;
 
@@ -62,8 +67,6 @@ public:
 
     void FillEllipse(const Point& center, const Vec2& radius) override;
 
-    void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) override;
-
     void PushClipRect(const Rect& clip_rect) override;
 
     void PopClipRect() override;
@@ -84,6 +87,8 @@ public:
 
     void SetTransform(const Matrix3x2& matrix) override;
 
+    void SetBlendMode(BlendMode blend) override;
+
     void SetAntialiasMode(bool enabled) override;
 
     void SetTextAntialiasMode(TextAntialiasMode mode) override;
@@ -91,6 +96,8 @@ public:
     bool CheckVisibility(const Rect& bounds, const Matrix3x2& transform) override;
 
     void Resize(const Size& size) override;
+
+    TexturePtr GetTarget() const override;
 
 private:
     void DiscardDeviceResources();
@@ -101,8 +108,10 @@ private:
 
 private:
     ComPtr<ITextRenderer>          text_renderer_;
-    ComPtr<ID2D1RenderTarget>      render_target_;
+    ComPtr<ID2D1DeviceContext>     render_ctx_;
     ComPtr<ID2D1DrawingStateBlock> drawing_state_;
 };
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

@@ -47,6 +47,17 @@ enum class TextAntialiasMode
 };
 
 /// \~chinese
+/// @brief 混合模式
+enum class BlendMode
+{
+    SourceOver = 0,
+    Copy       = 1,
+    Min        = 2,
+    Add        = 3,
+    Max        = 4,
+};
+
+/// \~chinese
 /// @brief 渲染上下文
 /// @details 渲染上下文将完成基础图元的绘制，并将绘制结果输出到特定的平面中
 class KGE_API RenderContext : public NativeObject
@@ -55,13 +66,8 @@ public:
     /// \~chinese
     /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
     /// @param texture 保存绘制结果的纹理
-    static RenderContextPtr Create(Texture& texture);
-
-    /// \~chinese
-    /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
-    /// @param texture 保存绘制结果的纹理
     /// @param size 渲染输出大小
-    static RenderContextPtr Create(Texture& texture, const Size& size);
+    static RenderContextPtr Create(TexturePtr texture, const PixelSize& size);
 
     /// \~chinese
     /// @brief 开始渲染
@@ -70,6 +76,12 @@ public:
     /// \~chinese
     /// @brief 结束渲染
     virtual void EndDraw();
+
+    /// \~chinese
+    /// @brief 创建空纹理
+    /// @param[out] texture 输出纹理
+    /// @param[in] size 纹理像素大小
+    virtual void CreateTexture(Texture& texture, const PixelSize& size) = 0;
 
     /// \~chinese
     /// @brief 绘制纹理
@@ -149,12 +161,6 @@ public:
     virtual void FillEllipse(const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
-    /// @brief 创建纹理
-    /// @param texture 纹理
-    /// @param size 纹理像素大小
-    virtual void CreateTexture(Texture& texture, math::Vec2T<uint32_t> size) = 0;
-
-    /// \~chinese
     /// @brief 设置绘制的裁剪区域
     /// @param clip_rect 裁剪矩形
     virtual void PushClipRect(const Rect& clip_rect) = 0;
@@ -210,6 +216,10 @@ public:
     virtual void SetCurrentStrokeStyle(StrokeStylePtr stroke);
 
     /// \~chinese
+    /// @brief 设置混合模式
+    virtual void SetBlendMode(BlendMode blend) = 0;
+
+    /// \~chinese
     /// @brief 设置抗锯齿模式
     virtual void SetAntialiasMode(bool enabled) = 0;
 
@@ -236,6 +246,10 @@ public:
     /// \~chinese
     /// @brief 设置全局二维变换
     virtual void SetGlobalTransform(const Matrix3x2* matrix);
+
+    /// \~chinese
+    /// @brief 获取渲染目标
+    virtual TexturePtr GetTarget() const = 0;
 
 public:
     /// \~chinese

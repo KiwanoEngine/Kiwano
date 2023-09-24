@@ -43,12 +43,15 @@ KGE_DECLARE_SMART_PTR(CanvasRenderContext);
 class KGE_API Canvas : public Actor
 {
 public:
+    /// \~chinese
+    /// @brief 创建画布
+    /// @warning 必须调用 ResizeAndClear 以初始化画布
     Canvas();
 
     /// \~chinese
     /// @brief 创建画布
     /// @param size 画布大小
-    Canvas(const Size& size);
+    Canvas(const PixelSize& size);
 
     /// \~chinese
     /// @brief 获取2D绘图上下文
@@ -57,16 +60,13 @@ public:
     /// \~chinese
     /// @brief 清空画布大小并重设画布大小
     /// @warning 该函数会导致原绘图上下文失效
-    void ResizeAndClear(Size size);
+    void ResizeAndClear(const PixelSize& size);
 
     /// \~chinese
     /// @brief 导出纹理
-    TexturePtr ExportToTexture() const;
+    TexturePtr GetTexture() const;
 
     void OnRender(RenderContext& ctx) override;
-
-private:
-    void RecreateContext(Size* size);
 
 private:
     TexturePtr       texture_cached_;
@@ -85,6 +85,11 @@ public:
     /// \~chinese
     /// @brief 结束渲染
     void EndDraw();
+
+    /// \~chinese
+    /// @brief 画角色
+    /// @param actor 角色
+    void DrawActor(ActorPtr actor);
 
     /// \~chinese
     /// @brief 画形状轮廓
@@ -285,6 +290,11 @@ private:
 
 /** @} */
 
+inline TexturePtr Canvas::GetTexture() const
+{
+    return texture_cached_;
+}
+
 inline void CanvasRenderContext::BeginDraw()
 {
     KGE_ASSERT(ctx_);
@@ -295,6 +305,15 @@ inline void CanvasRenderContext::EndDraw()
 {
     KGE_ASSERT(ctx_);
     ctx_->EndDraw();
+}
+
+inline void CanvasRenderContext::DrawActor(ActorPtr actor)
+{
+    KGE_ASSERT(ctx_);
+    if (actor)
+    {
+        actor->OnRender(*ctx_);
+    }
 }
 
 inline void CanvasRenderContext::DrawShape(ShapePtr shape)

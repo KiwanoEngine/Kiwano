@@ -60,8 +60,16 @@ public:
     void Close();
 
     /// \~chinese
-    /// @brief 从解码器数据缓冲中创建音频对象
-    bool CreateSound(Sound& sound, const Transcoder::Buffer& buffer);
+    /// @brief 创建音频解码器
+    TranscoderPtr CreateTranscoder(const String& file_path);
+
+    /// \~chinese
+    /// @brief 创建音频解码器
+    TranscoderPtr CreateTranscoder(const Resource& res);
+
+    /// \~chinese
+    /// @brief 创建音频
+    bool CreateSound(Sound& sound, TranscoderPtr transcoder);
 
 public:
     void SetupModule() override;

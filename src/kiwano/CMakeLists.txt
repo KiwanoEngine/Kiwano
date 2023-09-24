@@ -100,6 +100,8 @@ set(SOURCE_FILES
         math/Transform.hpp
         math/Vec2.hpp
         platform/win32/ComPtr.hpp
+        platform/win32/ComObject.cpp
+        platform/win32/ComObject.h
         platform/win32/libraries.cpp
         platform/win32/libraries.h
         platform/win32/WindowImpl.cpp
@@ -113,6 +115,8 @@ set(SOURCE_FILES
         platform/Runner.h
         platform/Window.cpp
         platform/Window.h
+        platform/NativeObject.cpp
+        platform/NativeObject.h
         render/DirectX/D2DDeviceResources.cpp
         render/DirectX/D2DDeviceResources.h
         render/DirectX/D3D10DeviceResources.cpp
@@ -123,7 +127,6 @@ set(SOURCE_FILES
         render/DirectX/FontCollectionLoader.cpp
         render/DirectX/FontCollectionLoader.h
         render/DirectX/helper.h
-        render/DirectX/NativePtr.h
         render/DirectX/RenderContextImpl.cpp
         render/DirectX/RenderContextImpl.h
         render/DirectX/RendererImpl.cpp

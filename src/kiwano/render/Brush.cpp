@@ -23,7 +23,7 @@
 #include <kiwano/render/Renderer.h>
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-#include <kiwano/render/DirectX/NativePtr.h>
+#include <kiwano/render/DirectX/helper.h>
 #endif
 
 namespace kiwano
@@ -124,7 +124,7 @@ void Brush::SetTransform(const Transform& transform)
 void Brush::SetTransform(const Matrix3x2& transform)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    auto native = NativePtr::Get<ID2D1Brush>(this);
+    auto native = ComPolicy::Get<ID2D1Brush>(this);
     KGE_ASSERT(native);
 
     if (native)

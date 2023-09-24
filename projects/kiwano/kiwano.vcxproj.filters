@@ -222,12 +222,6 @@
     <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\NativeObject.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\DirectX\NativePtr.h">
-      <Filter>render\DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -410,6 +404,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.h">
       <Filter>render\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\platform\NativeObject.hpp">
+      <Filter>platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -606,9 +603,6 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\TextStyle.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\NativeObject.cpp">
       <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Duration.cpp">

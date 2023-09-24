@@ -235,7 +235,7 @@ void Application::Render()
     renderer.Present();
 }
 
-void Application::PreformInMainThread(Function<void()> func)
+void Application::PerformInMainThread(Function<void()> func)
 {
     std::lock_guard<std::mutex> lock(perform_mutex_);
     functions_to_perform_.push(func);

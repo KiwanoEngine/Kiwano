@@ -24,14 +24,9 @@
 namespace kiwano
 {
 
-RenderContextPtr RenderContext::Create(Texture& texture)
+RenderContextPtr RenderContext::Create(TexturePtr texture, const PixelSize& size)
 {
-    return Renderer::GetInstance().CreateTextureRenderContext(texture, nullptr);
-}
-
-RenderContextPtr RenderContext::Create(Texture& texture, const Size& size)
-{
-    return Renderer::GetInstance().CreateTextureRenderContext(texture, &size);
+    return Renderer::GetInstance().CreateTextureRenderContext(texture, size);
 }
 
 RenderContext::RenderContext()

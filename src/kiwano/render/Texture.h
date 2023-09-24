@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/render/NativeObject.h>
+#include <kiwano/platform/NativeObject.hpp>
 
 namespace kiwano
 {
@@ -54,7 +54,6 @@ typedef math::Vec2T<uint32_t> PixelSize;
  */
 enum class PixelFormat
 {
-    Bpp32RGB,
     Bpp32RGBA,
     Bpp32BGR,
     Bpp32BGRA,

@@ -21,9 +21,12 @@
 #pragma once
 #include <kiwano/core/BinaryData.h>
 #include <kiwano/render/DirectX/helper.h>
-#include <dwrite.h>
 
 namespace kiwano
+{
+namespace graphics
+{
+namespace directx
 {
 interface DWRITE_DECLARE_INTERFACE("7EC7A55A-1964-4098-83E0-EFA7C12C6EF7") IFontCollectionLoader
     : public IDWriteFontCollectionLoader
@@ -78,4 +81,6 @@ public:
     static HRESULT Create(_Out_ IResourceFontFileStream** ppStream, const BinaryData& data);
 };
 
+}  // namespace directx
+}  // namespace graphics
 }  // namespace kiwano

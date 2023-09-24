@@ -92,8 +92,6 @@ public:
 
     void DiscardResources() override;
 
-    void SetTargetBitmap(_In_ ComPtr<ID2D1Bitmap1> target) override;
-
     void ResetTextRenderingParams(_In_ HMONITOR monitor) override;
 
 public:
@@ -213,7 +211,6 @@ void D2DDeviceResources::DiscardResources()
         }
     }
 
-    target_bitmap_.Reset();
     device_context_.Reset();
     device_.Reset();
 
@@ -315,7 +312,7 @@ HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_
     {
         ComPtr<ID2D1DeviceContext> device_ctx;
 
-        hr = device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &device_ctx);
+        hr = device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS, &device_ctx);
 
         if (SUCCEEDED(hr))
         {
@@ -350,7 +347,7 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
 
         if (SUCCEEDED(hr))
         {
-            SetTargetBitmap(target);
+            device_context_->SetTarget(target.Get());
         }
     }
     return hr;
@@ -382,15 +379,6 @@ HRESULT D2DDeviceResources::HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_devic
         hr = CreateWindowSizeDependentResources();
     }
     return hr;
-}
-
-void D2DDeviceResources::SetTargetBitmap(ComPtr<ID2D1Bitmap1> target)
-{
-    target_bitmap_ = target;
-    if (device_context_)
-    {
-        device_context_->SetTarget(target_bitmap_.Get());
-    }
 }
 
 void D2DDeviceResources::ResetTextRenderingParams(HMONITOR monitor)

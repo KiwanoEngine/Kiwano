@@ -289,7 +289,8 @@ void TextActor::UpdateCachedTexture()
     const auto expectedSize = layout_->GetSize() + cached_texture_offset * 2;
     if (!render_ctx_)
     {
-        render_ctx_ = RenderContext::Create(*texture_cached_, expectedSize);
+        const auto pixelSize = PixelSize((uint32_t)math::Ceil(expectedSize.x), (uint32_t)math::Ceil(expectedSize.y));
+        render_ctx_ = RenderContext::Create(texture_cached_, pixelSize);
     }
     else if (render_ctx_->GetSize() != expectedSize)
     {

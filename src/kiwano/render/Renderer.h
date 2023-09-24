@@ -210,7 +210,7 @@ public:
     /// @param[in,out] texture 渲染输出的纹理
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
-    virtual RenderContextPtr CreateTextureRenderContext(Texture& texture, const Size* desired_size = nullptr) = 0;
+    virtual RenderContextPtr CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size) = 0;
 
 public:
     /// \~chinese
