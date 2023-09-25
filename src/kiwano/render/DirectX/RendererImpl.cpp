@@ -341,7 +341,9 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 
             hr = d2d_res_->GetDeviceContext()->CreateBitmap(
                 DX::ConvertToSizeU(size), data.buffer, UINT(size.x) * pitch,
-                D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET, D2D1::PixelFormat(dxgi_format)), &output);
+                D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET,
+                                        D2D1::PixelFormat(dxgi_format, D2D1_ALPHA_MODE_PREMULTIPLIED)),
+                &output);
             if (SUCCEEDED(hr))
             {
                 ComPolicy::Set(texture, output);
