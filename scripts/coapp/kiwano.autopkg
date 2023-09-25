@@ -14,7 +14,7 @@ configurations {
 
     Platform {
         key : "Platform"; 
-        choices: { Win32 };
+        choices: { Win32, x64 };
         Win32.aliases : { x86, win32, 386 };
     };
 
@@ -100,14 +100,14 @@ nuget {
             ${SRC_ROOT}\3rd-party\**\*.dll
         };
 
-        ("v140,v141,v142,v143", "Win32", "Debug") => {
+        ("v140,v141,v142,v143", "Win32,x64", "Debug") => {
             [${0},${1},${2}] {
                 lib:     { ${OUTPUT_DIR}\${0}\${1}\${2}\*.lib };
                 symbols: { ${OUTPUT_DIR}\${0}\${1}\${2}\*.pdb };
             };
         };
 
-        ("v140,v141,v142,v143", "Win32", "Release") => {
+        ("v140,v141,v142,v143", "Win32,x64", "Release") => {
             [${0},${1},${2}] {
                 lib:     { ${OUTPUT_DIR}\${0}\${1}\${2}\*.lib };
             };

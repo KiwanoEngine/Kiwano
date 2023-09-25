@@ -179,7 +179,7 @@ void GifSprite::OverlayNextFrame()
     KGE_ASSERT(frame_rt_);
     KGE_ASSERT(gif_);
 
-    frame_ = gif_->GetFrame(next_index_);
+    frame_ = gif_->GetFrame(uint32_t(next_index_));
 
     if (frame_.disposal_type == GifImage::DisposalType::Previous)
     {

@@ -85,11 +85,12 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HRESULT    hr            = target_window ? S_OK : E_FAIL;
 
     output_size_ = Size{ float(resolution.width), float(resolution.height) };
-    monitor_     = ::MonitorFromWindow(target_window, MONITOR_DEFAULTTONULL);
 
     // Initialize Direct3D resources
     if (SUCCEEDED(hr))
     {
+        monitor_ = ::MonitorFromWindow(target_window, MONITOR_DEFAULTTONULL);
+
         auto d3d_res = graphics::directx::GetD3DDeviceResources();
 
         hr = d3d_res->Initialize(target_window, output_size_);
@@ -681,7 +682,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
             WideString wide = strings::NarrowToWide(content);
 
             ComPtr<IDWriteTextLayout> output;
-            hr = d2d_res_->CreateTextLayout(output, wide.c_str(), wide.length(), format);
+            hr = d2d_res_->CreateTextLayout(output, wide.c_str(), UINT32(wide.length()), format);
 
             if (SUCCEEDED(hr))
             {

@@ -51,7 +51,7 @@ for:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     global:
-      job_to_deploy: 8 # 4(images) * 1(platform) * 2(configuration)
+      job_to_deploy: 16 # 4(images) * 1(platform) * 4(configuration)
 -
   branches:
     except:
@@ -60,12 +60,12 @@ for:
   #   message: /\[build\]/
   environment:
     matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     global:
-      job_to_deploy: 8 # 4(images) * 1(platform) * 2(configuration)
+      job_to_deploy: 4 # 1(images) * 1(platform) * 4(configuration)
 
 configuration:
 - Debug
@@ -73,6 +73,7 @@ configuration:
 
 platform:
 - Win32
+- x64
 
 # cache: packages/
 
