@@ -106,25 +106,21 @@ public:
 
     inline pointer_type operator->()
     {
-        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
         return ptr_;
     }
 
     inline const_pointer_type operator->() const
     {
-        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
         return ptr_;
     }
 
     inline reference_type operator*()
     {
-        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
         return *ptr_;
     }
 
     inline const_reference_type operator*() const
     {
-        KGE_ASSERT(ptr_ != nullptr && "Invalid pointer");
         return *ptr_;
     }
 

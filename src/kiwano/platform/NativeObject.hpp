@@ -47,6 +47,8 @@ public:
 
     void ResetNative();
 
+    bool IsValid() const override;
+
 protected:
     Any native_;
 };
@@ -84,6 +86,11 @@ inline void NativeObject::SetNative(const Any& native)
 inline void NativeObject::ResetNative()
 {
     native_.Clear();
+}
+
+inline bool NativeObject::IsValid() const
+{
+    return native_.HasValue() && ObjectBase::IsValid();
 }
 
 }  // namespace kiwano
