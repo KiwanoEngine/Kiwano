@@ -40,6 +40,22 @@ class KGE_API TextureCache final : public Singleton<TextureCache>
 
 public:
     /// \~chinese
+    /// @brief 预加载本地图片
+    TexturePtr Preload(const String& file_path);
+
+    /// \~chinese
+    /// @brief 预加载图片资源
+    TexturePtr Preload(const Resource& res);
+
+    /// \~chinese
+    /// @brief 预加载本地GIF图片
+    GifImagePtr PreloadGif(const String& file_path);
+
+    /// \~chinese
+    /// @brief 预加载GIF图片资源
+    GifImagePtr PreloadGif(const Resource& res);
+
+    /// \~chinese
     /// @brief 添加纹理缓存
     void AddTexture(size_t key, TexturePtr texture);
 

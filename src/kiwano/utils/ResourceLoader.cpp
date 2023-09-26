@@ -189,8 +189,8 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     if (type == "gif")
     {
         // GIF image
-        GifImagePtr gif = GifImage::Preload(gdata->path + file);
-        if (gif)
+        GifImagePtr gif = MakePtr<GifImage>();
+        if (gif && gif->Load(gdata->path + file))
         {
             cache->AddObject(id, gif);
             return;

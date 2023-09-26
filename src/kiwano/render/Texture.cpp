@@ -20,7 +20,6 @@
 
 #include <kiwano/render/Renderer.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/render/TextureCache.h>
 #include <functional>  // std::hash
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
@@ -31,46 +30,6 @@ namespace kiwano
 {
 
 InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
-
-TexturePtr Texture::Preload(const String& file_path)
-{
-    size_t hash_code = std::hash<String>{}(file_path);
-    if (TexturePtr ptr = TextureCache::GetInstance().GetTexture(hash_code))
-    {
-        return ptr;
-    }
-    TexturePtr ptr = MakePtr<Texture>();
-    if (ptr && ptr->Load(file_path))
-    {
-        TextureCache::GetInstance().AddTexture(hash_code, ptr);
-    }
-    return ptr;
-}
-
-TexturePtr Texture::Preload(const Resource& res)
-{
-    size_t hash_code = res.GetId();
-    if (TexturePtr ptr = TextureCache::GetInstance().GetTexture(hash_code))
-    {
-        return ptr;
-    }
-    TexturePtr ptr = MakePtr<Texture>();
-    if (ptr && ptr->Load(res))
-    {
-        TextureCache::GetInstance().AddTexture(hash_code, ptr);
-    }
-    return ptr;
-}
-
-TexturePtr Texture::Preload(const PixelSize& size, const BinaryData& data, PixelFormat format)
-{
-    TexturePtr ptr = MakePtr<Texture>();
-    if (ptr)
-    {
-        Renderer::GetInstance().CreateTexture(*ptr, size, data, format);
-    }
-    return ptr;
-}
 
 Texture::Texture(const String& file_path)
     : Texture()
@@ -84,6 +43,12 @@ Texture::Texture(const Resource& res)
     Load(res);
 }
 
+Texture::Texture(const PixelSize& size, const BinaryData& data, PixelFormat format)
+    : Texture()
+{
+    Load(size, data, format);
+}
+
 Texture::Texture()
     : interpolation_mode_(default_interpolation_mode_)
 {
@@ -93,13 +58,22 @@ Texture::~Texture() {}
 
 bool Texture::Load(const String& file_path)
 {
+    ResetNative();
     Renderer::GetInstance().CreateTexture(*this, file_path);
     return IsValid();
 }
 
 bool Texture::Load(const Resource& res)
 {
+    ResetNative();
     Renderer::GetInstance().CreateTexture(*this, res.GetData());
+    return IsValid();
+}
+
+bool Texture::Load(const PixelSize& size, const BinaryData& data, PixelFormat format)
+{
+    ResetNative();
+    Renderer::GetInstance().CreateTexture(*this, size, data, format);
     return IsValid();
 }
 
