@@ -55,7 +55,6 @@ typedef math::Vec2T<uint32_t> PixelSize;
 enum class PixelFormat
 {
     Bpp32RGBA,
-    Bpp32BGR,
     Bpp32BGRA,
 };
 

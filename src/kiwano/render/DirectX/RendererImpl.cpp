@@ -41,15 +41,9 @@ inline DXGI_FORMAT ConvertPixelFormat(PixelFormat format, UINT32& pitch)
 {
     switch (format)
     {
-    //case PixelFormat::Bpp32RGB:
-    //    pitch = 4;
-    //    return DXGI_FORMAT_R8G8B8X8_UNORM;
     case PixelFormat::Bpp32RGBA:
         pitch = 4;
         return DXGI_FORMAT_R8G8B8A8_UNORM;
-    case PixelFormat::Bpp32BGR:
-        pitch = 4;
-        return DXGI_FORMAT_B8G8R8X8_UNORM;
     case PixelFormat::Bpp32BGRA:
         pitch = 4;
         return DXGI_FORMAT_B8G8R8A8_UNORM;
