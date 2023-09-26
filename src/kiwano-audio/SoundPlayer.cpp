@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-audio/SoundPlayer.h>
+#include <kiwano-audio/AudioModule.h>
 #include <kiwano/platform/Application.h>
 
 namespace kiwano
@@ -53,7 +54,36 @@ SoundPlayer::SoundPlayer()
 }
 
 SoundPlayer::~SoundPlayer()
+{}
+
+TranscoderPtr SoundPlayer::Preload(const String& file_path)
 {
+    size_t hash_code = std::hash<String>{}(file_path);
+    if (cache_.count(hash_code))
+    {
+        return cache_.at(hash_code);
+    }
+    TranscoderPtr ptr = AudioModule::GetInstance().CreateTranscoder(file_path);
+    if (ptr)
+    {
+        cache_.insert(std::make_pair(hash_code, ptr));
+    }
+    return ptr;
+}
+
+TranscoderPtr SoundPlayer::Preload(const Resource& res)
+{
+    size_t hash_code = res.GetId();
+    if (cache_.count(hash_code))
+    {
+        return cache_.at(hash_code);
+    }
+    TranscoderPtr ptr = AudioModule::GetInstance().CreateTranscoder(res);
+    if (ptr)
+    {
+        cache_.insert(std::make_pair(hash_code, ptr));
+    }
+    return ptr;
 }
 
 void SoundPlayer::Play(SoundPtr sound, int loop_count)
@@ -68,14 +98,26 @@ void SoundPlayer::Play(SoundPtr sound, int loop_count)
 
 SoundPtr SoundPlayer::Play(const String& file_path, int loop_count, std::initializer_list<SoundCallbackPtr> callbacks)
 {
-    SoundPtr sound = Sound::Preload(file_path, callbacks);
+    TranscoderPtr transcoder = Preload(file_path);
+
+    SoundPtr sound = new Sound(transcoder);
+    for (const auto& cb : callbacks)
+    {
+        sound->AddCallback(cb);
+    }
     Play(sound, loop_count);
     return sound;
 }
 
 SoundPtr SoundPlayer::Play(const Resource& res, int loop_count, std::initializer_list<SoundCallbackPtr> callbacks)
 {
-    SoundPtr sound = Sound::Preload(res, callbacks);
+    TranscoderPtr transcoder = Preload(res);
+
+    SoundPtr sound = new Sound(transcoder);
+    for (const auto& cb : callbacks)
+    {
+        sound->AddCallback(cb);
+    }
     Play(sound, loop_count);
     return sound;
 }
@@ -112,6 +154,11 @@ void SoundPlayer::StopAll()
     {
         sound->Stop();
     }
+}
+
+void SoundPlayer::ClearCache()
+{
+    cache_.clear();
 }
 
 void SoundPlayer::OnEnd(Sound* sound)

@@ -27,52 +27,6 @@ namespace kiwano
 namespace audio
 {
 
-SoundPtr Sound::Preload(const String& file_path, std::initializer_list<SoundCallbackPtr> callbacks)
-{
-    auto ptr = MakePtr<Sound>();
-    for (auto& cb : callbacks)
-    {
-        ptr->AddCallback(cb);
-    }
-
-    size_t hash_code = std::hash<String>{}(file_path);
-    if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
-    {
-        if (ptr->Load(transcoder))
-            return ptr;
-        return nullptr;
-    }
-
-    if (ptr && ptr->Load(file_path))
-    {
-        TranscoderCache::GetInstance().Add(hash_code, ptr->coder_);
-    }
-    return ptr;
-}
-
-SoundPtr Sound::Preload(const Resource& res, std::initializer_list<SoundCallbackPtr> callbacks)
-{
-    auto ptr = MakePtr<Sound>();
-    for (auto& cb : callbacks)
-    {
-        ptr->AddCallback(cb);
-    }
-
-    size_t hash_code = res.GetId();
-    if (TranscoderPtr transcoder = TranscoderCache::GetInstance().Get(hash_code))
-    {
-        if (ptr->Load(transcoder))
-            return ptr;
-        return nullptr;
-    }
-
-    if (ptr && ptr->Load(res))
-    {
-        TranscoderCache::GetInstance().Add(hash_code, ptr->coder_);
-    }
-    return ptr;
-}
-
 Sound::Sound(const String& file_path)
     : Sound()
 {
@@ -83,6 +37,12 @@ Sound::Sound(const Resource& res)
     : Sound()
 {
     Load(res);
+}
+
+Sound::Sound(TranscoderPtr transcoder)
+    : Sound()
+{
+    Load(transcoder);
 }
 
 Sound::Sound()
@@ -308,7 +268,7 @@ SoundCallbackPtr Sound::GetCallbackChain()
     class SoundCallbackChain : public SoundCallback
     {
     public:
-        Sound* sound;
+        Sound* sound = nullptr;
 
         void OnStart(Sound*) override
         {

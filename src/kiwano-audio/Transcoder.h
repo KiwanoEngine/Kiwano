@@ -89,56 +89,7 @@ private:
     WAVEFORMATEX* wave_format_;
 };
 
-
-class KGE_API TranscoderCache final : public Singleton<TranscoderCache>
-{
-    friend Singleton<TranscoderCache>;
-
-public:
-    /// \~chinese
-    /// @brief Ìí¼Ó»º´æ
-    inline void Add(size_t key, TranscoderPtr v)
-    {
-        cache_.insert(std::make_pair(key, v));
-    }
-
-    /// \~chinese
-    /// @brief »ñÈ¡»º´æ
-    inline TranscoderPtr Get(size_t key) const
-    {
-        if (cache_.count(key))
-        {
-            return cache_.at(key);
-        }
-        return nullptr;
-    }
-
-    /// \~chinese
-    /// @brief ÒÆ³ý»º´æ
-    inline void Remove(size_t key)
-    {
-        cache_.erase(key);
-    }
-
-    /// \~chinese
-    /// @brief Çå¿Õ»º´æ
-    inline void Clear()
-    {
-        cache_.clear();
-    }
-
-    ~TranscoderCache()
-    {
-        Clear();
-    }
-
-private:
-    TranscoderCache() = default;
-
-private:
-    UnorderedMap<size_t, TranscoderPtr> cache_;
-};
-
 /** @} */
+
 }  // namespace audio
 }  // namespace kiwano
