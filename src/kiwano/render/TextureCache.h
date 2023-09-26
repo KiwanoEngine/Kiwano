@@ -21,7 +21,6 @@
 #pragma once
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Texture.h>
-#include <kiwano/core/Singleton.h>
 
 namespace kiwano
 {
@@ -34,10 +33,8 @@ namespace kiwano
  * \~chinese
  * @brief Œ∆¿Ìª∫¥Ê
  */
-class KGE_API TextureCache final : public Singleton<TextureCache>
+class KGE_API TextureCache final
 {
-    friend Singleton<TextureCache>;
-
 public:
     /// \~chinese
     /// @brief ‘§º”‘ÿ±æµÿÕº∆¨

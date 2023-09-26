@@ -54,13 +54,13 @@ GifSprite::GifSprite(GifImagePtr gif)
 
 bool GifSprite::Load(const String& file_path)
 {
-    GifImagePtr image = TextureCache::GetInstance().PreloadGif(file_path);
+    GifImagePtr image = new GifImage(file_path);
     return Load(image);
 }
 
 bool GifSprite::Load(const Resource& res)
 {
-    GifImagePtr image = TextureCache::GetInstance().PreloadGif(res);
+    GifImagePtr image = new GifImage(res);
     return Load(image);
 }
 

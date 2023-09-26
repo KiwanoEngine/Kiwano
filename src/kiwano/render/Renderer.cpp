@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
 #include <kiwano/event/WindowEvent.h>
 
 namespace kiwano
@@ -49,7 +48,6 @@ void Renderer::ResetResolutionWhenWindowResized(bool enabled)
 
 void Renderer::Destroy()
 {
-    TextureCache::GetInstance().Clear();
     FontCache::GetInstance().Clear();
 }
 

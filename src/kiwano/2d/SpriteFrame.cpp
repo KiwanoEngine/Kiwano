@@ -61,7 +61,7 @@ SpriteFrame::SpriteFrame(TexturePtr texture, const Rect& crop_rect)
 
 bool SpriteFrame::Load(const String& file_path)
 {
-    TexturePtr texture = TextureCache::GetInstance().Preload(file_path);
+    TexturePtr texture = new Texture(file_path);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -72,7 +72,7 @@ bool SpriteFrame::Load(const String& file_path)
 
 bool SpriteFrame::Load(const Resource& res)
 {
-    TexturePtr texture = TextureCache::GetInstance().Preload(res);
+    TexturePtr texture = new Texture(res);
     if (texture->IsValid())
     {
         SetTexture(texture);
