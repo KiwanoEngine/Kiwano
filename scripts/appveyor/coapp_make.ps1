@@ -1,5 +1,6 @@
 . .\scripts\appveyor\appveyor_get_build.ps1
 . .\scripts\appveyor\appveyor_get_artifacts.ps1
+. .\scripts\appveyor\copy_recurse.ps1
 
 # get job artifacts
 Write-Host "Start to download artifacts from other jobs"
@@ -24,6 +25,13 @@ Write-Host "Start to build nupkg files"
 
 # This is the CoApp .autopkg file to create.
 $autopkgFile = "scripts\coapp\kiwano.autopkg"
+
+# Copy include files
+Copy-Recurse -Path "src\" -Destination "include\" -Filter "*.h"
+Copy-Recurse -Path "src\" -Destination "include\" -Filter "*.hpp"
+Remove-Item -Path "include\3rd-party" -Recurse
+Copy-Recurse -Path "src\3rd-party\" -Destination "include\" -Filter "*.h"
+Copy-Recurse -Path "src\3rd-party\" -Destination "include\" -Filter "*.hpp"
 
 # Create a copy of ".autopkg" file
 Copy-Item -Path $autopkgFile -Destination ($autopkgFile + '.template')

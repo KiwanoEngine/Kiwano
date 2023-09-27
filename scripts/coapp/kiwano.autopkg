@@ -51,7 +51,7 @@ nuget {
     // The nuspec file metadata.
     nuspec {
         id = Kiwano;
-        // "@appveyor_version" is replaced by the current Appveyor build number in the
+        // "appveyor_version" is replaced by the current Appveyor build number in the
         // pre-deployment script.
         version: @appveyor_version;
         title: Kiwano Game Framework;
@@ -86,13 +86,14 @@ nuget {
 
     files {
         #defines {
+            INCLUDE_ROOT   = ..\..\include;
             SRC_ROOT   = ..\..\src;
             OUTPUT_DIR = ..\..\projects\output;
         }
 
         include: {
-            ${SRC_ROOT}\kiwano*\**\*.h, ${SRC_ROOT}\kiwano*\**\*.hpp,
-            ${SRC_ROOT}\3rd-party\**\*.h, ${SRC_ROOT}\3rd-party\**\*.hpp,
+            ${INCLUDE_ROOT}\**\*.h,
+            ${INCLUDE_ROOT}\**\*.hpp,
         };
 
         // third patry
