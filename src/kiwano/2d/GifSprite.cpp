@@ -21,6 +21,7 @@
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/render/Renderer.h>
+#include <kiwano/render/TextureCache.h>
 
 namespace kiwano
 {
@@ -53,13 +54,13 @@ GifSprite::GifSprite(GifImagePtr gif)
 
 bool GifSprite::Load(const String& file_path)
 {
-    GifImagePtr image = GifImage::Preload(file_path);
+    GifImagePtr image = new GifImage(file_path);
     return Load(image);
 }
 
 bool GifSprite::Load(const Resource& res)
 {
-    GifImagePtr image = GifImage::Preload(res);
+    GifImagePtr image = new GifImage(res);
     return Load(image);
 }
 
@@ -179,7 +180,7 @@ void GifSprite::OverlayNextFrame()
     KGE_ASSERT(frame_rt_);
     KGE_ASSERT(gif_);
 
-    frame_ = gif_->GetFrame(next_index_);
+    frame_ = gif_->GetFrame(uint32_t(next_index_));
 
     if (frame_.disposal_type == GifImage::DisposalType::Previous)
     {

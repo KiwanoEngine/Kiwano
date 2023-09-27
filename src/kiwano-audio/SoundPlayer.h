@@ -46,6 +46,15 @@ public:
     ~SoundPlayer();
 
     /// \~chinese
+    /// @brief 预加载音频
+    /// @details 
+    TranscoderPtr Preload(const String& file_path);
+
+    /// \~chinese
+    /// @brief 预加载音频资源
+    TranscoderPtr Preload(const Resource& res);
+
+    /// \~chinese
     /// @brief 播放音频
     /// @param sound 音频
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
@@ -90,6 +99,10 @@ public:
     /// @param volume 音量大小，1.0 为原始音量, 大于 1 为放大音量, 0 为最小音量
     void SetVolume(float volume);
 
+    /// \~chinese
+    /// @brief 清空缓存
+    void ClearCache();
+
 protected:
     void OnEnd(Sound* sound);
 
@@ -106,6 +119,8 @@ protected:
     SoundList        sound_list_;
     SoundList        trash_;
     SoundCallbackPtr callback_;
+
+    UnorderedMap<size_t, TranscoderPtr> cache_;
 };
 
 /** @} */

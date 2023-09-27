@@ -32,7 +32,7 @@ namespace audio
 class VoiceCallback : public IXAudio2VoiceCallback
 {
 public:
-    SoundCallback* cb;
+    SoundCallback* cb = nullptr;
 
     VoiceCallback(SoundCallback* cb)
         : cb(cb)
@@ -98,8 +98,6 @@ void AudioModule::SetupModule()
 void AudioModule::DestroyModule()
 {
     KGE_DEBUG_LOGF("Destroying audio resources");
-
-    TranscoderCache::GetInstance().Clear();
 
     if (mastering_voice_)
     {

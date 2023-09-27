@@ -41,20 +41,29 @@ inline DXGI_FORMAT ConvertPixelFormat(PixelFormat format, UINT32& pitch)
 {
     switch (format)
     {
-    //case PixelFormat::Bpp32RGB:
-    //    pitch = 4;
-    //    return DXGI_FORMAT_R8G8B8X8_UNORM;
     case PixelFormat::Bpp32RGBA:
         pitch = 4;
         return DXGI_FORMAT_R8G8B8A8_UNORM;
-    case PixelFormat::Bpp32BGR:
-        pitch = 4;
-        return DXGI_FORMAT_B8G8R8X8_UNORM;
     case PixelFormat::Bpp32BGRA:
         pitch = 4;
         return DXGI_FORMAT_B8G8R8A8_UNORM;
     default:
         return DXGI_FORMAT_UNKNOWN;
+    }
+}
+
+inline const GUID& ConvertPixelFormat2WIC(PixelFormat format, UINT& stride)
+{
+    switch (format)
+    {
+    case PixelFormat::Bpp32RGBA:
+        stride = 4;
+        return GUID_WICPixelFormat32bppRGBA;
+    case PixelFormat::Bpp32BGRA:
+        stride = 4;
+        return GUID_WICPixelFormat32bppBGRA;
+    default:
+        return GUID_WICPixelFormatDontCare;
     }
 }
 
@@ -85,11 +94,12 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     HRESULT    hr            = target_window ? S_OK : E_FAIL;
 
     output_size_ = Size{ float(resolution.width), float(resolution.height) };
-    monitor_     = ::MonitorFromWindow(target_window, MONITOR_DEFAULTTONULL);
 
     // Initialize Direct3D resources
     if (SUCCEEDED(hr))
     {
+        monitor_ = ::MonitorFromWindow(target_window, MONITOR_DEFAULTTONULL);
+
         auto d3d_res = graphics::directx::GetD3DDeviceResources();
 
         hr = d3d_res->Initialize(target_window, output_size_);
@@ -335,6 +345,56 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 
         if (SUCCEEDED(hr))
         {
+            UINT        stride    = 0;
+            const auto& wicFormat = ConvertPixelFormat2WIC(format, stride);
+
+            ComPtr<IWICBitmapSource> source;
+            hr = d2d_res_->CreateBitmapSourceFromMemory(source, UINT(size.x), UINT(size.y), UINT(size.x) * stride,
+                                                        UINT(data.size), reinterpret_cast<BYTE*>(data.buffer),
+                                                        wicFormat);
+
+            if (SUCCEEDED(hr))
+            {
+                ComPtr<IWICFormatConverter> converter;
+                hr = d2d_res_->CreateBitmapConverter(converter, source, GUID_WICPixelFormat32bppPBGRA,
+                                                     WICBitmapDitherTypeNone, nullptr, 0.f,
+                                                     WICBitmapPaletteTypeMedianCut);
+
+                if (SUCCEEDED(hr))
+                {
+                    ComPtr<ID2D1Bitmap> bitmap;
+                    hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+
+                    if (SUCCEEDED(hr))
+                    {
+                        ComPolicy::Set(texture, bitmap);
+
+                        texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+                        texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
+                    }
+                }
+            }
+        }
+    }
+
+    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture from memory failed");
+}
+
+/*
+void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = data.IsValid() ? S_OK : E_FAIL;
+
+        if (SUCCEEDED(hr))
+        {
             ComPtr<ID2D1Bitmap1> output;
             UINT32               pitch       = 0;
             const auto           dxgi_format = ConvertPixelFormat(format, pitch);
@@ -356,6 +416,7 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 
     KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture from memory failed");
 }
+*/
 
 void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
 {
@@ -681,7 +742,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, c
             WideString wide = strings::NarrowToWide(content);
 
             ComPtr<IDWriteTextLayout> output;
-            hr = d2d_res_->CreateTextLayout(output, wide.c_str(), wide.length(), format);
+            hr = d2d_res_->CreateTextLayout(output, wide.c_str(), UINT32(wide.length()), format);
 
             if (SUCCEEDED(hr))
             {

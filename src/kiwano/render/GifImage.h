@@ -38,14 +38,6 @@ KGE_DECLARE_SMART_PTR(GifImage);
 class KGE_API GifImage : public NativeObject
 {
 public:
-    /// \~chinese
-    /// @brief 预加载本地GIF图片
-    static GifImagePtr Preload(const String& file_path);
-
-    /// \~chinese
-    /// @brief 预加载GIF图片资源
-    static GifImagePtr Preload(const Resource& res);
-
     GifImage();
 
     /// \~chinese

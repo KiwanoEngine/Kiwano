@@ -55,7 +55,6 @@ typedef math::Vec2T<uint32_t> PixelSize;
 enum class PixelFormat
 {
     Bpp32RGBA,
-    Bpp32BGR,
     Bpp32BGRA,
 };
 
@@ -66,18 +65,6 @@ enum class PixelFormat
 class KGE_API Texture : public NativeObject
 {
 public:
-    /// \~chinese
-    /// @brief 预加载本地图片
-    static TexturePtr Preload(const String& file_path);
-
-    /// \~chinese
-    /// @brief 预加载图片资源
-    static TexturePtr Preload(const Resource& res);
-
-    /// \~chinese
-    /// @brief 从内存加载位图纹理
-    static TexturePtr Preload(const PixelSize& size, const BinaryData& data, PixelFormat format);
-
     Texture();
 
     /// \~chinese
@@ -88,6 +75,10 @@ public:
     /// @brief 从资源创建纹理
     Texture(const Resource& res);
 
+    /// \~chinese
+    /// @brief 从内存加载位图纹理
+    Texture(const PixelSize& size, const BinaryData& data, PixelFormat format);
+
     virtual ~Texture();
 
     /// \~chinese
@@ -97,6 +88,10 @@ public:
     /// \~chinese
     /// @brief 加载资源
     bool Load(const Resource& res);
+
+    /// \~chinese
+    /// @brief 从内存加载位图纹理
+    bool Load(const PixelSize& size, const BinaryData& data, PixelFormat format);
 
     /// \~chinese
     /// @brief 获取纹理宽度

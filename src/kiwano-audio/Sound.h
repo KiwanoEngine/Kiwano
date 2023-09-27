@@ -93,14 +93,6 @@ class KGE_API Sound : public NativeObject
 
 public:
     /// \~chinese
-    /// @brief 预加载音频
-    static SoundPtr Preload(const String& file_path, std::initializer_list<SoundCallbackPtr> callbacks = {});
-
-    /// \~chinese
-    /// @brief 预加载音频资源
-    static SoundPtr Preload(const Resource& res, std::initializer_list<SoundCallbackPtr> callbacks = {});
-
-    /// \~chinese
     /// @brief 创建音频对象
     /// @param res 本地音频文件路径
     Sound(const String& file_path);
@@ -109,6 +101,11 @@ public:
     /// @brief 创建音频对象
     /// @param res 音频资源
     Sound(const Resource& res);
+
+    /// \~chinese
+    /// @brief 创建音频对象
+    /// @param transcoder 音频解码器
+    Sound(TranscoderPtr transcoder);
 
     Sound();
 
@@ -162,18 +159,18 @@ public:
 
 protected:
     /// \~chinese
-    /// @brief 打开本地音频文件
+    /// @brief 加载本地音频文件
     /// @param res 本地音频文件路径
     bool Load(const String& file_path);
 
     /// \~chinese
-    /// @brief 打开音频资源
+    /// @brief 加载音频资源
     /// @param res 音频资源
     bool Load(const Resource& res);
 
     /// \~chinese
-    /// @brief 打开音频资源
-    /// @param res 音频资源
+    /// @brief 加载音频
+    /// @param transcoder 音频解码器
     bool Load(TranscoderPtr transcoder);
 
     SoundCallbackPtr GetCallbackChain();

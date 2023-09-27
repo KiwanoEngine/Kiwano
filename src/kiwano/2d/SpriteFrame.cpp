@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/SpriteFrame.h>
+#include <kiwano/render/TextureCache.h>
 
 namespace kiwano
 {
@@ -60,7 +61,7 @@ SpriteFrame::SpriteFrame(TexturePtr texture, const Rect& crop_rect)
 
 bool SpriteFrame::Load(const String& file_path)
 {
-    TexturePtr texture = Texture::Preload(file_path);
+    TexturePtr texture = new Texture(file_path);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -71,7 +72,7 @@ bool SpriteFrame::Load(const String& file_path)
 
 bool SpriteFrame::Load(const Resource& res)
 {
-    TexturePtr texture = Texture::Preload(res);
+    TexturePtr texture = new Texture(res);
     if (texture->IsValid())
     {
         SetTexture(texture);
