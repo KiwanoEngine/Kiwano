@@ -130,6 +130,10 @@ float SoundPlayer::GetVolume() const
 void SoundPlayer::SetVolume(float volume)
 {
     volume_ = volume;
+    for (auto& sound : sound_list_)
+    {
+        sound->ResetVolume();
+    }
 }
 
 void SoundPlayer::PauseAll()
