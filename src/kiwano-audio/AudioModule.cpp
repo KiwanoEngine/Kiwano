@@ -22,7 +22,6 @@
 #include <kiwano-audio/libraries.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
-#include <kiwano/platform/FileSystem.h>
 
 namespace kiwano
 {
@@ -67,6 +66,16 @@ public:
         KGE_ERRORF("Voice error with HRESULT of %08X", Error);
     }
 };
+
+WORD ConvertWaveFormat(AudioFormat format)
+{
+    switch (format)
+    {
+    case kiwano::audio::AudioFormat::PCM:
+        return WAVE_FORMAT_PCM;
+    }
+    return 0;
+}
 
 AudioModule::AudioModule()
     : x_audio2_(nullptr)
@@ -114,47 +123,25 @@ void AudioModule::DestroyModule()
     dlls::MediaFoundation::Get().MFShutdown();
 }
 
-TranscoderPtr AudioModule::CreateTranscoder(const String& file_path)
-{
-    if (!FileSystem::GetInstance().IsFileExists(file_path))
-    {
-        KGE_WARNF("Media file '%s' not found", file_path.c_str());
-        return nullptr;
-    }
-
-    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
-
-    auto    ptr = MakePtr<Transcoder>();
-    HRESULT hr  = ptr->LoadMediaFile(full_path);
-    if (FAILED(hr))
-    {
-        KGE_ERRORF("Load media file failed with HRESULT of %08X", hr);
-        return nullptr;
-    }
-    return ptr;
-}
-
-TranscoderPtr AudioModule::CreateTranscoder(const Resource& res)
-{
-    auto    ptr = MakePtr<Transcoder>();
-    HRESULT hr  = ptr->LoadMediaResource(res);
-    if (FAILED(hr))
-    {
-        KGE_ERRORF("Load media resource failed with HRESULT of %08X", hr);
-        return nullptr;
-    }
-    return ptr;
-}
-
-bool AudioModule::CreateSound(Sound& sound, TranscoderPtr transcoder)
+bool AudioModule::CreateSound(Sound& sound, const AudioMetadata& metadata)
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     HRESULT hr = S_OK;
 
-    auto buffer = transcoder->GetBuffer();
-    if (buffer.format == nullptr)
-        hr = E_INVALIDARG;
+    WAVEFORMATEX wave_format    = { 0 };
+    wave_format.wFormatTag      = ConvertWaveFormat(metadata.format);
+    wave_format.nChannels       = WORD(metadata.channels);
+    wave_format.nSamplesPerSec  = DWORD(metadata.samples_per_sec);
+    wave_format.wBitsPerSample  = WORD(metadata.bits_per_sample);
+    wave_format.nBlockAlign     = WORD(metadata.block_align);
+    wave_format.nAvgBytesPerSec = DWORD(metadata.samples_per_sec * metadata.block_align);
+
+    WAVEFORMATEX* wave_format_ptr = &wave_format;
+    if (metadata.extra_data != nullptr)
+    {
+        wave_format_ptr = reinterpret_cast<WAVEFORMATEX*>(metadata.extra_data);
+    }
 
     if (SUCCEEDED(hr))
     {
@@ -163,7 +150,7 @@ bool AudioModule::CreateSound(Sound& sound, TranscoderPtr transcoder)
         auto callback = const_cast<VoiceCallback*>(chain->GetNative().CastPtr<VoiceCallback>());
 
         IXAudio2SourceVoice* voice = nullptr;
-        hr = x_audio2_->CreateSourceVoice(&voice, buffer.format, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
+        hr = x_audio2_->CreateSourceVoice(&voice, wave_format_ptr, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
         if (SUCCEEDED(hr))
         {
             sound.Close();

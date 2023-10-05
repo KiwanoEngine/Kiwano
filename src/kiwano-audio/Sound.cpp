@@ -30,13 +30,21 @@ namespace audio
 Sound::Sound(const String& file_path)
     : Sound()
 {
-    Load(file_path);
+    TranscoderPtr transcoder = MakePtr<Transcoder>(file_path);
+    Load(transcoder);
 }
 
 Sound::Sound(const Resource& res)
     : Sound()
 {
-    Load(res);
+    TranscoderPtr transcoder = MakePtr<Transcoder>(res);
+    Load(transcoder);
+}
+
+Sound::Sound(const BinaryData& data, const AudioMetadata& metadata)
+{
+    TranscoderPtr transcoder = MakePtr<Transcoder>(data, metadata);
+    Load(transcoder);
 }
 
 Sound::Sound(TranscoderPtr transcoder)
@@ -57,43 +65,22 @@ Sound::~Sound()
     Close();
 }
 
-bool Sound::Load(const String& file_path)
-{
-    if (opened_)
-    {
-        Close();
-    }
-
-    TranscoderPtr transcoder = AudioModule::GetInstance().CreateTranscoder(file_path);
-    if (!transcoder)
-    {
-        return false;
-    }
-    return Load(transcoder);
-}
-
-bool Sound::Load(const Resource& res)
-{
-    if (opened_)
-    {
-        Close();
-    }
-
-    TranscoderPtr transcoder = AudioModule::GetInstance().CreateTranscoder(res);
-    if (!transcoder)
-    {
-        return false;
-    }
-    return Load(transcoder);
-}
-
 bool Sound::Load(TranscoderPtr transcoder)
 {
+    if (!transcoder->IsValid())
+    {
+        return false;
+    }
+
+    
+    BinaryData    data_;
+    AudioMetadata metadata_;
+
     if (opened_)
     {
         Close();
     }
-    if (!AudioModule::GetInstance().CreateSound(*this, transcoder))
+    if (!AudioModule::GetInstance().CreateSound(*this, transcoder->GetMetadata()))
     {
         return false;
     }
@@ -126,12 +113,12 @@ void Sound::Play(int loop_count)
     // clamp loop count
     loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
 
-    auto buffer = coder_->GetBuffer();
+    auto data = coder_->GetData();
 
     XAUDIO2_BUFFER xaudio2_buffer = { 0 };
-    xaudio2_buffer.pAudioData     = buffer.data;
+    xaudio2_buffer.pAudioData     = reinterpret_cast<BYTE*>(data.buffer);
     xaudio2_buffer.Flags          = XAUDIO2_END_OF_STREAM;
-    xaudio2_buffer.AudioBytes     = buffer.size;
+    xaudio2_buffer.AudioBytes     = UINT32(data.size);
     xaudio2_buffer.LoopCount      = static_cast<uint32_t>(loop_count);
 
     HRESULT hr = voice->SubmitSourceBuffer(&xaudio2_buffer);
@@ -143,6 +130,10 @@ void Sound::Play(int loop_count)
     if (FAILED(hr))
     {
         KGE_ERRORF("Submitting source buffer failed with HRESULT of %08X", hr);
+    }
+    else
+    {
+        KGE_LOG("success!!");
     }
 
     playing_ = SUCCEEDED(hr);
@@ -246,13 +237,13 @@ void Sound::SetVolume(float volume)
     }
     volume_ = volume;
 
-    float actual_volume = GetCallbackChain()->OnVolumeChanged(this, volume_);
-
     auto voice = GetNativePtr<IXAudio2SourceVoice>();
-    KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
-
-    actual_volume = std::min(std::max(actual_volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
-    voice->SetVolume(actual_volume);
+    if (voice)
+    {
+        float actual_volume = GetCallbackChain()->OnVolumeChanged(this, volume_);
+        actual_volume       = std::min(std::max(actual_volume, -XAUDIO2_MAX_VOLUME_LEVEL), XAUDIO2_MAX_VOLUME_LEVEL);
+        voice->SetVolume(actual_volume);
+    }
 }
 
 void Sound::ResetVolume()

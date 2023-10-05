@@ -60,16 +60,8 @@ public:
     void Close();
 
     /// \~chinese
-    /// @brief 创建音频解码器
-    TranscoderPtr CreateTranscoder(const String& file_path);
-
-    /// \~chinese
-    /// @brief 创建音频解码器
-    TranscoderPtr CreateTranscoder(const Resource& res);
-
-    /// \~chinese
     /// @brief 创建音频
-    bool CreateSound(Sound& sound, TranscoderPtr transcoder);
+    bool CreateSound(Sound& sound, const AudioMetadata& metadata);
 
 public:
     void SetupModule() override;

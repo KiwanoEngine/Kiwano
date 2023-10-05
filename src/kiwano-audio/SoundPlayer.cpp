@@ -63,7 +63,7 @@ TranscoderPtr SoundPlayer::Preload(const String& file_path)
     {
         return cache_.at(hash_code);
     }
-    TranscoderPtr ptr = AudioModule::GetInstance().CreateTranscoder(file_path);
+    TranscoderPtr ptr = MakePtr<Transcoder>(file_path);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));
@@ -78,7 +78,7 @@ TranscoderPtr SoundPlayer::Preload(const Resource& res)
     {
         return cache_.at(hash_code);
     }
-    TranscoderPtr ptr = AudioModule::GetInstance().CreateTranscoder(res);
+    TranscoderPtr ptr = MakePtr<Transcoder>(res);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));

@@ -104,6 +104,12 @@ public:
 
     /// \~chinese
     /// @brief 创建音频对象
+    /// @param data 音频数据
+    /// @param metadata 音频元数据
+    Sound(const BinaryData& data, const AudioMetadata& metadata);
+
+    /// \~chinese
+    /// @brief 创建音频对象
     /// @param transcoder 音频解码器
     Sound(TranscoderPtr transcoder);
 
@@ -158,16 +164,6 @@ public:
     const List<SoundCallbackPtr>& GetCallbacks() const;
 
 protected:
-    /// \~chinese
-    /// @brief 加载本地音频文件
-    /// @param res 本地音频文件路径
-    bool Load(const String& file_path);
-
-    /// \~chinese
-    /// @brief 加载音频资源
-    /// @param res 音频资源
-    bool Load(const Resource& res);
-
     /// \~chinese
     /// @brief 加载音频
     /// @param transcoder 音频解码器
