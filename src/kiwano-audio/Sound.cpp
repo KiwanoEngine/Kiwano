@@ -131,10 +131,6 @@ void Sound::Play(int loop_count)
     {
         KGE_ERRORF("Submitting source buffer failed with HRESULT of %08X", hr);
     }
-    else
-    {
-        KGE_LOG("success!!");
-    }
 
     playing_ = SUCCEEDED(hr);
 }
