@@ -7,12 +7,15 @@
     <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
     <ClInclude Include="..\..\src\kiwano-audio\AudioModule.h" />
     <ClInclude Include="..\..\src\kiwano-audio\AudioData.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\Transcoder.h">
+    <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.h">
       <Filter>MediaFoundation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano-audio\libraries.h" />
     <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\mflib.h">
       <Filter>MediaFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano-audio\Ogg\OggTranscoder.h">
+      <Filter>Ogg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -20,17 +23,23 @@
     <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\AudioModule.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\AudioData.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\Transcoder.cpp">
+    <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.cpp">
       <Filter>MediaFoundation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano-audio\libraries.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\mflib.cpp">
       <Filter>MediaFoundation</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kiwano-audio\Ogg\OggTranscoder.cpp">
+      <Filter>Ogg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MediaFoundation">
       <UniqueIdentifier>{213a58dc-8054-4bc7-bac5-456e889ae038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ogg">
+      <UniqueIdentifier>{fd19f717-c321-45c3-948d-5cad830e1072}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

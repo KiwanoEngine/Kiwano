@@ -6,7 +6,8 @@
     <ClInclude Include="..\..\src\kiwano-audio\kiwano-audio.h" />
     <ClInclude Include="..\..\src\kiwano-audio\libraries.h" />
     <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\mflib.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\Transcoder.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Ogg\OggTranscoder.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
     <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
@@ -34,7 +35,8 @@
     <ClCompile Include="..\..\src\kiwano-audio\AudioModule.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\libraries.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\mflib.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\Transcoder.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Ogg\OggTranscoder.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
   </ItemGroup>
@@ -182,6 +184,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rd-party\libogg\libogg.vcxproj">
+      <Project>{d8a5e8ec-3983-4028-9ba9-b1e337e75917}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\3rd-party\vorbis\libvorbis.vcxproj">
+      <Project>{b62e3de6-812d-4ce6-90d9-18fd4fea8eb2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\kiwano\kiwano.vcxproj">
       <Project>{ff7f943d-a89c-4e6c-97cf-84f7d8ff8edf}</Project>
     </ProjectReference>

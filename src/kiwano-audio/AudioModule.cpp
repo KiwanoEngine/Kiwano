@@ -22,7 +22,8 @@
 #include <kiwano/platform/FileSystem.h>
 #include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/libraries.h>
-#include <kiwano-audio/MediaFoundation/Transcoder.h>
+#include <kiwano-audio/MediaFoundation/MFTranscoder.h>
+#include <kiwano-audio/Ogg/OggTranscoder.h>
 
 namespace kiwano
 {
@@ -100,6 +101,7 @@ void AudioModule::SetupModule()
     if (SUCCEEDED(hr))
     {
         RegisterTranscoder("*", MakePtr<MFTranscoder>());
+        RegisterTranscoder("ogg", MakePtr<OggTranscoder>());
     }
 
     KGE_THROW_IF_FAILED(hr, "Create audio resources failed");

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-audio/MediaFoundation/Transcoder.h>
+#include <kiwano-audio/MediaFoundation/MFTranscoder.h>
 #include <kiwano-audio/MediaFoundation/mflib.h>
 #include <kiwano/core/Common.h>
 #include <kiwano/utils/Logger.h>
@@ -58,7 +58,7 @@ AudioDataPtr MFTranscoder::Decode(const String& file_path)
 
     if (FAILED(hr))
     {
-        Fail(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
+        KGE_ERROR(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
         return nullptr;
     }
     return output;
@@ -75,7 +75,7 @@ AudioDataPtr MFTranscoder::Decode(const Resource& res)
     BinaryData data = res.GetData();
     if (!data.IsValid())
     {
-        Fail("invalid audio data");
+        KGE_ERROR("invalid audio data");
         return nullptr;
     }
 
@@ -84,7 +84,7 @@ AudioDataPtr MFTranscoder::Decode(const Resource& res)
 
     if (stream == nullptr)
     {
-        Fail("SHCreateMemStream failed");
+        KGE_ERROR("SHCreateMemStream failed");
         return nullptr;
     }
 
@@ -106,7 +106,7 @@ AudioDataPtr MFTranscoder::Decode(const Resource& res)
 
     if (FAILED(hr))
     {
-        Fail(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
+        KGE_ERROR(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
         return nullptr;
     }
     return output;
