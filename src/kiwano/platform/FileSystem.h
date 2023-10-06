@@ -56,6 +56,14 @@ public:
 
     /**
      * \~chinese
+     * @brief 获取文件拓展名
+     * @param file 文件路径
+     * @return 文件拓展名，不包含 . 符号
+     */
+    String GetFileExt(const String& file) const;
+
+    /**
+     * \~chinese
      * @brief 添加文件路径查找字典规则
      * @param key 文件关键词
      * @param file_path 文件路径

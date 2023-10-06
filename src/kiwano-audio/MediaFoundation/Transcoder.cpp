@@ -18,113 +18,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef INITGUID
-#define INITGUID  // MFAudioFormat_PCM, MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MFMediaType_Audio
-#endif
-
-#include <kiwano-audio/Transcoder.h>
-#include <kiwano-audio/libraries.h>
+#include <kiwano-audio/MediaFoundation/Transcoder.h>
+#include <kiwano-audio/MediaFoundation/mflib.h>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/Resource.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
 #include <kiwano/platform/win32/libraries.h>
-#include <kiwano/platform/FileSystem.h>
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
 
 namespace kiwano
 {
 namespace audio
 {
 
-HRESULT ReadSource(IMFSourceReader* reader, AudioMetadata& output_metadata, std::unique_ptr<uint8_t[]>& output_data,
-                   uint32_t& output_size);
+HRESULT ReadSource(AudioDataPtr& output, IMFSourceReader* reader);
 
-Transcoder::Transcoder(const String& file_path)
+MFTranscoder::MFTranscoder()
 {
-    Load(file_path);
+    HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
+    KGE_THROW_IF_FAILED(hr, "Initialize Media Foundation failed!");
 }
 
-Transcoder::Transcoder(const Resource& res)
+MFTranscoder::~MFTranscoder()
 {
-    Load(res);
+    dlls::MediaFoundation::Get().MFShutdown();
 }
 
-Transcoder::Transcoder(const BinaryData& data, const AudioMetadata& metadata)
+AudioDataPtr MFTranscoder::Decode(const String& file_path)
 {
-    Load(data, metadata);
-}
-
-Transcoder::~Transcoder()
-{
-    Clear();
-}
-
-AudioMetadata Transcoder::GetMetadata() const
-{
-    return metadata_;
-}
-
-BinaryData Transcoder::GetData() const
-{
-    return data_;
-}
-
-void Transcoder::Clear()
-{
-    if (metadata_.extra_data != nullptr)
-    {
-        WAVEFORMATEX* wave_format = reinterpret_cast<WAVEFORMATEX*>(metadata_.extra_data);
-        ::CoTaskMemFree(wave_format);
-        metadata_.extra_data = nullptr;
-    }
-
-    data_ = {};
-    raw_.reset();
-}
-
-bool Transcoder::Load(const BinaryData& data, const AudioMetadata& metadata)
-{
-    data_     = data;
-    metadata_ = metadata;
-    return true;
-}
-
-bool Transcoder::Load(const String& file_path)
-{
-    if (!FileSystem::GetInstance().IsFileExists(file_path))
-    {
-        KGE_WARNF("Media file '%s' not found", file_path.c_str());
-        return false;
-    }
-
-    String     full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
-    WideString path      = strings::NarrowToWide(full_path);
-
     ComPtr<IMFSourceReader> reader;
 
-    HRESULT hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(path.c_str(), nullptr, &reader);
+    WideString path = strings::NarrowToWide(file_path);
+    HRESULT    hr   = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(path.c_str(), nullptr, &reader);
+
+    AudioDataPtr output;
     if (SUCCEEDED(hr))
     {
-        hr = ReadSource(reader.Get(), metadata_, raw_, data_.size);
-
-        if (SUCCEEDED(hr))
-        {
-            data_.buffer = raw_.get();
-        }
+        hr = ReadSource(output, reader.Get());
     }
 
     if (FAILED(hr))
     {
         Fail(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
-        return false;
+        return nullptr;
     }
-    return true;
+    return output;
 }
 
-bool Transcoder::Load(const Resource& res)
+AudioDataPtr MFTranscoder::Decode(const Resource& res)
 {
     HRESULT hr = S_OK;
 
@@ -136,7 +76,7 @@ bool Transcoder::Load(const Resource& res)
     if (!data.IsValid())
     {
         Fail("invalid audio data");
-        return false;
+        return nullptr;
     }
 
     stream = win32::dlls::Shlwapi::Get().SHCreateMemStream(static_cast<const BYTE*>(data.buffer),
@@ -145,7 +85,7 @@ bool Transcoder::Load(const Resource& res)
     if (stream == nullptr)
     {
         Fail("SHCreateMemStream failed");
-        return false;
+        return nullptr;
     }
 
     if (SUCCEEDED(hr))
@@ -158,26 +98,51 @@ bool Transcoder::Load(const Resource& res)
         hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(byte_stream.Get(), nullptr, &reader);
     }
 
+    AudioDataPtr output;
     if (SUCCEEDED(hr))
     {
-        hr = ReadSource(reader.Get(), metadata_, raw_, data_.size);
-
-        if (SUCCEEDED(hr))
-        {
-            data_.buffer = raw_.get();
-        }
+        hr = ReadSource(output, reader.Get());
     }
 
     if (FAILED(hr))
     {
         Fail(strings::Format("%s failed (%#x): %s", __FUNCTION__, hr, "Load audio failed"));
-        return false;
+        return nullptr;
     }
-    return true;
+    return output;
 }
 
-HRESULT ReadSource(IMFSourceReader* reader, AudioMetadata& output_metadata, std::unique_ptr<uint8_t[]>& output_data,
-                   uint32_t& output_size)
+class MFAudioData : public AudioData
+{
+public:
+    MFAudioData(WAVEFORMATEX* wave_fmt, std::unique_ptr<uint8_t[]> raw, uint32_t size)
+        : wave_fmt_(wave_fmt)
+        , raw_(std::move(raw))
+    {
+        data_                 = BinaryData{ raw_.get(), size };
+        meta_.format          = AudioFormat::PCM;
+        meta_.channels        = uint16_t(wave_fmt->nChannels);
+        meta_.samples_per_sec = uint32_t(wave_fmt->nSamplesPerSec);
+        meta_.bits_per_sample = uint16_t(wave_fmt->wBitsPerSample);
+        meta_.block_align     = uint16_t(wave_fmt->nBlockAlign);
+
+        SetNative(wave_fmt);
+    }
+
+    virtual ~MFAudioData()
+    {
+        if (wave_fmt_ != nullptr)
+        {
+            ::CoTaskMemFree(wave_fmt_);
+            wave_fmt_ = nullptr;
+        }
+    }
+
+    WAVEFORMATEX*              wave_fmt_;
+    std::unique_ptr<uint8_t[]> raw_;
+};
+
+HRESULT ReadSource(AudioDataPtr& output, IMFSourceReader* reader)
 {
     HRESULT hr = S_OK;
 
@@ -224,16 +189,6 @@ HRESULT ReadSource(IMFSourceReader* reader, AudioMetadata& output_metadata, std:
             uncompressed_type.Get(), &wave_format, &size, (DWORD)MFWaveFormatExConvertFlag_Normal);
     }
 
-    if (SUCCEEDED(hr))
-    {
-        output_metadata.format          = AudioFormat::PCM;
-        output_metadata.channels        = uint16_t(wave_format->nChannels);
-        output_metadata.samples_per_sec = uint32_t(wave_format->nSamplesPerSec);
-        output_metadata.bits_per_sample = uint16_t(wave_format->wBitsPerSample);
-        output_metadata.block_align     = uint16_t(wave_format->nBlockAlign);
-        output_metadata.extra_data      = wave_format;
-    }
-
     // π¿À„“Ù∆µ¡˜¥Û–°
     DWORD max_stream_size = 0;
     if (SUCCEEDED(hr))
@@ -257,7 +212,7 @@ HRESULT ReadSource(IMFSourceReader* reader, AudioMetadata& output_metadata, std:
         DWORD flags    = 0;
         DWORD position = 0;
 
-        output_data = std::make_unique<uint8_t[]>(max_stream_size);
+        auto output_data = std::make_unique<uint8_t[]>(max_stream_size);
 
         ComPtr<IMFSample>      sample;
         ComPtr<IMFMediaBuffer> buffer;
@@ -319,12 +274,8 @@ HRESULT ReadSource(IMFSourceReader* reader, AudioMetadata& output_metadata, std:
 
             if (SUCCEEDED(hr))
             {
-                output_size = uint32_t(position);
-            }
-            else
-            {
-                output_data.reset();
-                output_size = 0;
+                output = new MFAudioData(wave_format, std::move(output_data), uint32_t(position));
+                return hr;
             }
         }
     }

@@ -48,11 +48,11 @@ public:
     /// \~chinese
     /// @brief 预加载音频
     /// @details 
-    TranscoderPtr Preload(const String& file_path);
+    AudioDataPtr Preload(const String& file_path);
 
     /// \~chinese
     /// @brief 预加载音频资源
-    TranscoderPtr Preload(const Resource& res);
+    AudioDataPtr Preload(const Resource& res, const String& ext = "");
 
     /// \~chinese
     /// @brief 播放音频
@@ -64,15 +64,13 @@ public:
     /// @brief 播放音频
     /// @param file_path 本地音频文件路径
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    /// @param callbacks 注册回调
-    SoundPtr Play(const String& file_path, int loop_count = 0, std::initializer_list<SoundCallbackPtr> callbacks = {});
+    SoundPtr Play(const String& file_path, int loop_count = 0);
 
     /// \~chinese
     /// @brief 播放音频
     /// @param res 音频资源
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    /// @param callbacks 注册回调
-    SoundPtr Play(const Resource& res, int loop_count = 0, std::initializer_list<SoundCallbackPtr> callbacks = {});
+    SoundPtr Play(const Resource& res, int loop_count = 0);
 
     /// \~chinese
     /// @brief 暂停所有音频
@@ -120,7 +118,7 @@ protected:
     SoundList        trash_;
     SoundCallbackPtr callback_;
 
-    UnorderedMap<size_t, TranscoderPtr> cache_;
+    UnorderedMap<size_t, AudioDataPtr> cache_;
 };
 
 /** @} */

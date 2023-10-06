@@ -19,65 +19,36 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano-audio/Transcoder.h>
 
 namespace kiwano
 {
+namespace audio
+{
 
-KGE_DECLARE_SMART_PTR(NativeObject);
+/**
+ * \addtogroup Audio
+ * @{
+ */
 
 /**
  * \~chinese
- * @brief 含有本地指针的对象
+ * @brief Media Foundation 音频解码器
+ * @detail 支持 .wav .mp3 等常见音频类型
  */
-class KGE_API NativeObject : public ObjectBase
+class KGE_API MFTranscoder : public Transcoder
 {
 public:
-    NativeObject() = default;
+    MFTranscoder();
 
-    const Any& GetNative() const;
+    virtual ~MFTranscoder();
 
-    template <class _Ty>
-    _Ty GetNative() const;
+    AudioDataPtr Decode(const String& file_path) override;
 
-    void SetNative(const Any& native);
-
-    void ResetNative();
-
-    bool IsValid() const override;
-
-protected:
-    Any native_;
+    AudioDataPtr Decode(const Resource& res) override;
 };
 
-inline const Any& NativeObject::GetNative() const
-{
-    return native_;
-}
+/** @} */
 
-template <class _Ty>
-inline _Ty NativeObject::GetNative() const
-{
-    if (native_.HasValue())
-    {
-        return native_.Cast<_Ty>();
-    }
-    return _Ty{};
-}
-
-inline void NativeObject::SetNative(const Any& native)
-{
-    native_ = native;
-}
-
-inline void NativeObject::ResetNative()
-{
-    native_.Clear();
-}
-
-inline bool NativeObject::IsValid() const
-{
-    return native_.HasValue() && ObjectBase::IsValid();
-}
-
+}  // namespace audio
 }  // namespace kiwano

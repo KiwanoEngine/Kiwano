@@ -18,66 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano-audio/AudioData.h>
 
 namespace kiwano
 {
-
-KGE_DECLARE_SMART_PTR(NativeObject);
-
-/**
- * \~chinese
- * @brief 含有本地指针的对象
- */
-class KGE_API NativeObject : public ObjectBase
+namespace audio
 {
-public:
-    NativeObject() = default;
-
-    const Any& GetNative() const;
-
-    template <class _Ty>
-    _Ty GetNative() const;
-
-    void SetNative(const Any& native);
-
-    void ResetNative();
-
-    bool IsValid() const override;
-
-protected:
-    Any native_;
-};
-
-inline const Any& NativeObject::GetNative() const
+AudioData::AudioData(const BinaryData& data, const AudioMeta& meta)
+    : data_(data)
+    , meta_(meta)
 {
-    return native_;
 }
 
-template <class _Ty>
-inline _Ty NativeObject::GetNative() const
+AudioMeta AudioData::GetMeta() const
 {
-    if (native_.HasValue())
-    {
-        return native_.Cast<_Ty>();
-    }
-    return _Ty{};
+    return meta_;
 }
 
-inline void NativeObject::SetNative(const Any& native)
+BinaryData AudioData::GetData() const
 {
-    native_ = native;
+    return data_;
 }
 
-inline void NativeObject::ResetNative()
-{
-    native_.Clear();
-}
-
-inline bool NativeObject::IsValid() const
-{
-    return native_.HasValue() && ObjectBase::IsValid();
-}
-
+}  // namespace audio
 }  // namespace kiwano

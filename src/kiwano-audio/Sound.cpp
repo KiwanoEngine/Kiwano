@@ -21,6 +21,7 @@
 #include <kiwano-audio/AudioModule.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano/utils/Logger.h>
+#include <xaudio2.h>
 
 namespace kiwano
 {
@@ -30,27 +31,19 @@ namespace audio
 Sound::Sound(const String& file_path)
     : Sound()
 {
-    TranscoderPtr transcoder = MakePtr<Transcoder>(file_path);
-    Load(transcoder);
+    Load(AudioModule::GetInstance().Decode(file_path));
 }
 
-Sound::Sound(const Resource& res)
+Sound::Sound(const Resource& res, const String& ext)
     : Sound()
 {
-    TranscoderPtr transcoder = MakePtr<Transcoder>(res);
-    Load(transcoder);
+    Load(AudioModule::GetInstance().Decode(res, ext));
 }
 
-Sound::Sound(const BinaryData& data, const AudioMetadata& metadata)
-{
-    TranscoderPtr transcoder = MakePtr<Transcoder>(data, metadata);
-    Load(transcoder);
-}
-
-Sound::Sound(TranscoderPtr transcoder)
+Sound::Sound(AudioDataPtr data)
     : Sound()
 {
-    Load(transcoder);
+    Load(data);
 }
 
 Sound::Sound()
@@ -65,22 +58,18 @@ Sound::~Sound()
     Close();
 }
 
-bool Sound::Load(TranscoderPtr transcoder)
+bool Sound::Load(AudioDataPtr data)
 {
-    if (!transcoder->IsValid())
+    if (!data)
     {
         return false;
     }
-
-    
-    BinaryData    data_;
-    AudioMetadata metadata_;
 
     if (opened_)
     {
         Close();
     }
-    if (!AudioModule::GetInstance().CreateSound(*this, transcoder->GetMetadata()))
+    if (!AudioModule::GetInstance().CreateSound(*this, data))
     {
         return false;
     }
@@ -88,7 +77,7 @@ bool Sound::Load(TranscoderPtr transcoder)
     // reset volume
     ResetVolume();
 
-    coder_  = transcoder;
+    data_   = data;
     opened_ = true;
     return true;
 }
@@ -101,7 +90,7 @@ void Sound::Play(int loop_count)
         return;
     }
 
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     // if sound stream is not empty, stop() will clear it
@@ -113,7 +102,7 @@ void Sound::Play(int loop_count)
     // clamp loop count
     loop_count = (loop_count < 0) ? XAUDIO2_LOOP_INFINITE : std::min(loop_count, XAUDIO2_LOOP_INFINITE - 1);
 
-    auto data = coder_->GetData();
+    auto data = data_->GetData();
 
     XAUDIO2_BUFFER xaudio2_buffer = { 0 };
     xaudio2_buffer.pAudioData     = reinterpret_cast<BYTE*>(data.buffer);
@@ -137,7 +126,7 @@ void Sound::Play(int loop_count)
 
 void Sound::Pause()
 {
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     HRESULT hr = voice->Stop();
@@ -152,7 +141,7 @@ void Sound::Pause()
 
 void Sound::Resume()
 {
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     HRESULT hr = voice->Start();
@@ -167,7 +156,7 @@ void Sound::Resume()
 
 void Sound::Stop()
 {
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     KGE_ASSERT(voice != nullptr && "IXAudio2SourceVoice* is NULL");
 
     HRESULT hr = voice->Stop();
@@ -189,7 +178,7 @@ void Sound::Stop()
 
 void Sound::Close()
 {
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     if (voice)
     {
         voice->Stop();
@@ -197,7 +186,7 @@ void Sound::Close()
         voice->DestroyVoice();
     }
 
-    coder_   = nullptr;
+    data_    = nullptr;
     opened_  = false;
     playing_ = false;
 }
@@ -209,7 +198,7 @@ bool Sound::IsPlaying() const
         if (!playing_)
             return false;
 
-        auto voice = GetNativePtr<IXAudio2SourceVoice>();
+        auto voice = GetNative<IXAudio2SourceVoice*>();
         if (!voice)
             return false;
 
@@ -233,7 +222,7 @@ void Sound::SetVolume(float volume)
     }
     volume_ = volume;
 
-    auto voice = GetNativePtr<IXAudio2SourceVoice>();
+    auto voice = GetNative<IXAudio2SourceVoice*>();
     if (voice)
     {
         float actual_volume = GetCallbackChain()->OnVolumeChanged(this, volume_);

@@ -130,6 +130,16 @@ String FileSystem::GetFullPathForFile(const String& file) const
     return "";
 }
 
+String FileSystem::GetFileExt(const String& file) const
+{
+    const auto pos = file.find_last_of(".");
+    if (pos == String::npos)
+    {
+        return "";
+    }
+    return file.substr(pos + 1);
+}
+
 void FileSystem::AddFileLookupRule(const String& key, const String& file_path)
 {
     file_lookup_dict_.emplace(key, ConvertPathFormat(file_path));

@@ -20,9 +20,6 @@
 
 #pragma once
 #include <kiwano/core/Library.h>
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
 #include <xaudio2.h>
 
 #ifndef KGE_DOXYGEN_DO_NOT_INCLUDE
@@ -54,42 +51,6 @@ private:
     XAudio2& operator=(const XAudio2&) = delete;
 
     Library xaudio2;
-};
-
-class KGE_API MediaFoundation
-{
-public:
-    static inline MediaFoundation& Get()
-    {
-        static MediaFoundation instance;
-        return instance;
-    }
-
-    // MediaFoundation functions
-    typedef HRESULT(WINAPI* PFN_MFStartup)(ULONG, DWORD);
-    typedef HRESULT(WINAPI* PFN_MFShutdown)();
-    typedef HRESULT(WINAPI* PFN_MFCreateMediaType)(IMFMediaType**);
-    typedef HRESULT(WINAPI* PFN_MFCreateWaveFormatExFromMFMediaType)(IMFMediaType*, WAVEFORMATEX**, UINT32*, UINT32);
-    typedef HRESULT(WINAPI* PFN_MFCreateSourceReaderFromURL)(LPCWSTR, IMFAttributes*, IMFSourceReader**);
-    typedef HRESULT(WINAPI* PFN_MFCreateSourceReaderFromByteStream)(IMFByteStream*, IMFAttributes*, IMFSourceReader**);
-    typedef HRESULT(WINAPI* PFN_MFCreateMFByteStreamOnStream)(IStream*, IMFByteStream**);
-
-    PFN_MFStartup                           MFStartup;
-    PFN_MFShutdown                          MFShutdown;
-    PFN_MFCreateMediaType                   MFCreateMediaType;
-    PFN_MFCreateWaveFormatExFromMFMediaType MFCreateWaveFormatExFromMFMediaType;
-    PFN_MFCreateSourceReaderFromURL         MFCreateSourceReaderFromURL;
-    PFN_MFCreateSourceReaderFromByteStream  MFCreateSourceReaderFromByteStream;
-    PFN_MFCreateMFByteStreamOnStream        MFCreateMFByteStreamOnStream;
-
-private:
-    MediaFoundation();
-
-    MediaFoundation(const MediaFoundation&) = delete;
-    MediaFoundation& operator=(const MediaFoundation&) = delete;
-
-    Library mfplat;
-    Library mfreadwrite;
 };
 }  // namespace dlls
 }  // namespace audio

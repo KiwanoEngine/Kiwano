@@ -19,10 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano-audio/Transcoder.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/platform/NativeObject.hpp>
-#include <xaudio2.h>
+#include <kiwano-audio/AudioData.h>
 
 namespace kiwano
 {
@@ -94,24 +92,19 @@ class KGE_API Sound : public NativeObject
 public:
     /// \~chinese
     /// @brief 创建音频对象
-    /// @param res 本地音频文件路径
+    /// @param file_path 本地音频文件路径
     Sound(const String& file_path);
 
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 音频资源
-    Sound(const Resource& res);
+    /// @param ext 音频类型，决定了使用何种解码器
+    Sound(const Resource& res, const String& ext = "");
 
     /// \~chinese
     /// @brief 创建音频对象
     /// @param data 音频数据
-    /// @param metadata 音频元数据
-    Sound(const BinaryData& data, const AudioMetadata& metadata);
-
-    /// \~chinese
-    /// @brief 创建音频对象
-    /// @param transcoder 音频解码器
-    Sound(TranscoderPtr transcoder);
+    Sound(AudioDataPtr data);
 
     Sound();
 
@@ -164,20 +157,17 @@ public:
     const List<SoundCallbackPtr>& GetCallbacks() const;
 
 protected:
-    /// \~chinese
-    /// @brief 加载音频
-    /// @param transcoder 音频解码器
-    bool Load(TranscoderPtr transcoder);
+    bool Load(AudioDataPtr data);
 
     SoundCallbackPtr GetCallbackChain();
 
     void ResetVolume();
 
 private:
-    bool          opened_;
-    bool          playing_;
-    float         volume_;
-    TranscoderPtr coder_;
+    bool         opened_;
+    bool         playing_;
+    float        volume_;
+    AudioDataPtr data_;
 
     SoundCallbackPtr       callback_chain_;
     List<SoundCallbackPtr> callbacks_;

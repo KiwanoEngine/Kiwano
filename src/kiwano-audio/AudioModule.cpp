@@ -17,11 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-#include <kiwano-audio/AudioModule.h>
-#include <kiwano-audio/libraries.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/utils/Logger.h>
+#include <kiwano/platform/FileSystem.h>
+#include <kiwano-audio/AudioModule.h>
+#include <kiwano-audio/libraries.h>
+#include <kiwano-audio/MediaFoundation/Transcoder.h>
 
 namespace kiwano
 {
@@ -89,16 +90,16 @@ void AudioModule::SetupModule()
 {
     KGE_DEBUG_LOGF("Creating audio resources");
 
-    HRESULT hr = dlls::MediaFoundation::Get().MFStartup(MF_VERSION, MFSTARTUP_FULL);
-
-    if (SUCCEEDED(hr))
-    {
-        hr = dlls::XAudio2::Get().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-    }
+    HRESULT hr = dlls::XAudio2::Get().XAudio2Create(&x_audio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 
     if (SUCCEEDED(hr))
     {
         hr = x_audio2_->CreateMasteringVoice(&mastering_voice_);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        RegisterTranscoder("*", MakePtr<MFTranscoder>());
     }
 
     KGE_THROW_IF_FAILED(hr, "Create audio resources failed");
@@ -119,28 +120,28 @@ void AudioModule::DestroyModule()
         x_audio2_->Release();
         x_audio2_ = nullptr;
     }
-
-    dlls::MediaFoundation::Get().MFShutdown();
 }
 
-bool AudioModule::CreateSound(Sound& sound, const AudioMetadata& metadata)
+bool AudioModule::CreateSound(Sound& sound, AudioDataPtr data)
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
     HRESULT hr = S_OK;
 
-    WAVEFORMATEX wave_format    = { 0 };
-    wave_format.wFormatTag      = ConvertWaveFormat(metadata.format);
-    wave_format.nChannels       = WORD(metadata.channels);
-    wave_format.nSamplesPerSec  = DWORD(metadata.samples_per_sec);
-    wave_format.wBitsPerSample  = WORD(metadata.bits_per_sample);
-    wave_format.nBlockAlign     = WORD(metadata.block_align);
-    wave_format.nAvgBytesPerSec = DWORD(metadata.samples_per_sec * metadata.block_align);
-
-    WAVEFORMATEX* wave_format_ptr = &wave_format;
-    if (metadata.extra_data != nullptr)
+    WAVEFORMATEX* wave_fmt = data->GetNative<WAVEFORMATEX*>();
+    if (wave_fmt == nullptr)
     {
-        wave_format_ptr = reinterpret_cast<WAVEFORMATEX*>(metadata.extra_data);
+        const auto   meta   = data->GetMeta();
+        WAVEFORMATEX tmp    = { 0 };
+        tmp.wFormatTag      = ConvertWaveFormat(meta.format);
+        tmp.nChannels       = WORD(meta.channels);
+        tmp.nSamplesPerSec  = DWORD(meta.samples_per_sec);
+        tmp.wBitsPerSample  = WORD(meta.bits_per_sample);
+        tmp.nBlockAlign     = WORD(meta.block_align);
+        tmp.nAvgBytesPerSec = DWORD(meta.samples_per_sec * meta.block_align);
+
+        data->SetNative(tmp);
+        wave_fmt = const_cast<WAVEFORMATEX*>(data->GetNative().CastPtr<WAVEFORMATEX>());
     }
 
     if (SUCCEEDED(hr))
@@ -150,7 +151,7 @@ bool AudioModule::CreateSound(Sound& sound, const AudioMetadata& metadata)
         auto callback = const_cast<VoiceCallback*>(chain->GetNative().CastPtr<VoiceCallback>());
 
         IXAudio2SourceVoice* voice = nullptr;
-        hr = x_audio2_->CreateSourceVoice(&voice, wave_format_ptr, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
+        hr = x_audio2_->CreateSourceVoice(&voice, wave_fmt, 0, XAUDIO2_DEFAULT_FREQ_RATIO, callback);
         if (SUCCEEDED(hr))
         {
             sound.Close();
@@ -180,5 +181,50 @@ void AudioModule::Close()
     if (x_audio2_)
         x_audio2_->StopEngine();
 }
+
+void AudioModule::RegisterTranscoder(const String& ext, TranscoderPtr transcoder)
+{
+    registered_transcoders_.insert(std::make_pair(ext, transcoder));
+}
+
+TranscoderPtr AudioModule::GetTranscoder(const String& ext)
+{
+    auto iter = registered_transcoders_.find(ext);
+    if (iter != registered_transcoders_.end())
+    {
+        return iter->second;
+    }
+    return registered_transcoders_.at("*");
+}
+
+AudioDataPtr AudioModule::Decode(const String& file_path)
+{
+    if (!FileSystem::GetInstance().IsFileExists(file_path))
+    {
+        KGE_WARNF("Media file '%s' not found", file_path.c_str());
+        return nullptr;
+    }
+
+    const auto ext = FileSystem::GetInstance().GetFileExt(file_path);
+
+    auto transcoder = GetTranscoder(ext);
+    if (!transcoder)
+    {
+        return nullptr;
+    }
+    String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
+    return transcoder->Decode(full_path);
+}
+
+AudioDataPtr AudioModule::Decode(const Resource& res, const String& ext)
+{
+    auto transcoder = GetTranscoder(ext);
+    if (!transcoder)
+    {
+        return nullptr;
+    }
+    return transcoder->Decode(res);
+}
+
 }  // namespace audio
 }  // namespace kiwano

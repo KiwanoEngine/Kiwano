@@ -19,65 +19,74 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/core/BinaryData.h>
 #include <kiwano/base/ObjectBase.h>
+#include <kiwano/platform/NativeObject.hpp>
 
 namespace kiwano
 {
+namespace audio
+{
 
-KGE_DECLARE_SMART_PTR(NativeObject);
+KGE_DECLARE_SMART_PTR(AudioData);
+
+/**
+ * \addtogroup Audio
+ * @{
+ */
 
 /**
  * \~chinese
- * @brief 含有本地指针的对象
+ * @brief 音频格式
  */
-class KGE_API NativeObject : public ObjectBase
+enum class AudioFormat
 {
-public:
-    NativeObject() = default;
-
-    const Any& GetNative() const;
-
-    template <class _Ty>
-    _Ty GetNative() const;
-
-    void SetNative(const Any& native);
-
-    void ResetNative();
-
-    bool IsValid() const override;
-
-protected:
-    Any native_;
+    PCM,
 };
 
-inline const Any& NativeObject::GetNative() const
+/**
+ * \~chinese
+ * @brief 音频元数据
+ */
+struct AudioMeta
 {
-    return native_;
-}
+    AudioFormat format       = AudioFormat::PCM;  ///< 音频格式
+    uint16_t    channels     = 2;                 ///< 声道，单声道为1，立体声为2
+    uint32_t samples_per_sec = 44100;  ///< 采样率，11025 表示 11.025kHz。PCM格式的采样率通常为44.1kHz
+    uint16_t bits_per_sample = 16;     ///< 位深，PCM格式为 8 或 16
+    uint16_t block_align     = 4;      ///< 块对齐，PCM格式通常是 (channels * bits_per_sample) / 8
+};
 
-template <class _Ty>
-inline _Ty NativeObject::GetNative() const
+/**
+ * \~chinese
+ * @brief 音频数据
+ */
+class AudioData : public NativeObject
 {
-    if (native_.HasValue())
-    {
-        return native_.Cast<_Ty>();
-    }
-    return _Ty{};
-}
+public:
+    /// \~chinese
+    /// @brief 音频数据
+    /// @param data 音频数据
+    /// @param meta 音频元数据
+    AudioData(const BinaryData& data, const AudioMeta& meta);
 
-inline void NativeObject::SetNative(const Any& native)
-{
-    native_ = native;
-}
+    /// \~chinese
+    /// @brief 获取音频元数据
+    AudioMeta GetMeta() const;
 
-inline void NativeObject::ResetNative()
-{
-    native_.Clear();
-}
+    /// \~chinese
+    /// @brief 获取数据
+    BinaryData GetData() const;
 
-inline bool NativeObject::IsValid() const
-{
-    return native_.HasValue() && ObjectBase::IsValid();
-}
+protected:
+    AudioData() = default;
 
+protected:
+    BinaryData data_;
+    AudioMeta  meta_;
+};
+
+/** @} */
+
+}  // namespace audio
 }  // namespace kiwano

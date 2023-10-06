@@ -55,45 +55,6 @@ XAudio2::XAudio2()
         KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load xaudio2.dll failed");
     }
 }
-
-MediaFoundation::MediaFoundation()
-    : mfplat()
-    , mfreadwrite()
-    , MFStartup(nullptr)
-    , MFShutdown(nullptr)
-    , MFCreateMediaType(nullptr)
-    , MFCreateWaveFormatExFromMFMediaType(nullptr)
-    , MFCreateSourceReaderFromURL(nullptr)
-    , MFCreateSourceReaderFromByteStream(nullptr)
-    , MFCreateMFByteStreamOnStream(nullptr)
-{
-    if (mfplat.Load("Mfplat.dll"))
-    {
-        MFStartup         = mfplat.GetProcess<PFN_MFStartup>("MFStartup");
-        MFShutdown        = mfplat.GetProcess<PFN_MFShutdown>("MFShutdown");
-        MFCreateMediaType = mfplat.GetProcess<PFN_MFCreateMediaType>("MFCreateMediaType");
-        MFCreateWaveFormatExFromMFMediaType =
-            mfplat.GetProcess<PFN_MFCreateWaveFormatExFromMFMediaType>("MFCreateWaveFormatExFromMFMediaType");
-        MFCreateMFByteStreamOnStream =
-            mfplat.GetProcess<PFN_MFCreateMFByteStreamOnStream>("MFCreateMFByteStreamOnStream");
-    }
-    else
-    {
-        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load Mfplat.dll failed");
-    }
-
-    if (mfreadwrite.Load("Mfreadwrite.dll"))
-    {
-        MFCreateSourceReaderFromURL =
-            mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromURL>("MFCreateSourceReaderFromURL");
-        MFCreateSourceReaderFromByteStream =
-            mfreadwrite.GetProcess<PFN_MFCreateSourceReaderFromByteStream>("MFCreateSourceReaderFromByteStream");
-    }
-    else
-    {
-        KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Load Mfreadwrite.dll failed");
-    }
-}
 }  // namespace dlls
 }  // namespace audio
 }  // namespace kiwano
