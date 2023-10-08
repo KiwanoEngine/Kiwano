@@ -140,7 +140,7 @@ bool AudioModule::CreateSound(Sound& sound, AudioDataPtr data)
         tmp.nSamplesPerSec  = DWORD(meta.samples_per_sec);
         tmp.wBitsPerSample  = WORD(meta.bits_per_sample);
         tmp.nBlockAlign     = WORD(meta.block_align);
-        tmp.nAvgBytesPerSec = DWORD(meta.samples_per_sec * meta.block_align);
+        tmp.nAvgBytesPerSec = DWORD(meta.avg_bytes_per_sec());
 
         data->SetNative(tmp);
         wave_fmt = const_cast<WAVEFORMATEX*>(data->GetNative().CastPtr<WAVEFORMATEX>());

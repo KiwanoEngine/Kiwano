@@ -47,7 +47,7 @@ AudioDataPtr OggTranscoder::Decode(const String& file_path)
     int err = ov_fopen(file_path.c_str(), &vf);
     if (err != 0)
     {
-        KGE_ERROR(strings::Format("%s failed (%d): %s", __FUNCTION__, err, "Load audio failed"));
+        KGE_ERROR(strings::Format("%s failed (%d): %s", __FUNCTION__, err, "Open ogg audio failed"));
         return nullptr;
     }
 
@@ -57,28 +57,38 @@ AudioDataPtr OggTranscoder::Decode(const String& file_path)
     AudioMeta meta;
     meta.samples_per_sec = uint32_t(vi->rate);
     meta.channels        = uint16_t(vi->channels);
+    meta.bits_per_sample = uint16_t(16);  // the 'word' param of ov_read sets to 2, which means 16-bits samples.
+    meta.block_align     = uint16_t(meta.channels * meta.bits_per_sample / 8);
+
+    // Get the audio total duration (in microseconds)
+    auto duration = static_cast<std::uintmax_t>(math::Ceil(ov_time_total(&vf, -1) * 1e6));
+
+    // allocate buffer
+    std::vector<char> data;
+
+    const size_t expected_size = size_t(((duration * meta.avg_bytes_per_sec())) / 1000000) + 1;
+    data.resize(expected_size);
 
     // read ogg audio
-    size_t buffer_size = 4096;
-    size_t grow_size   = buffer_size;
+    size_t pos  = 0;
+    size_t step = 4096;
     int    bitstream;
-
-    std::vector<char> data;
-    size_t pos = data.size();
     while (true)
     {
-        if (data.size() < pos + buffer_size)
+        if (data.size() <= pos)
         {
-            // allocate buffer
-            data.resize(pos + grow_size);
-            if (grow_size < 1024000)
-            {
-                grow_size = size_t(double(grow_size) * 1.25);
-            }
+            data.resize(pos + step);
         }
+        const size_t buffer_size = std::min(step, data.size() - pos);
+
         int bytes_read = ov_read(&vf, data.data() + pos, int(buffer_size), 0, 2, 1, &bitstream);
-        if (bytes_read <= 0)
+        if (bytes_read == 0)
             break;
+        if (bytes_read < 0)
+        {
+            KGE_ERROR(strings::Format("%s failed (%d): %s", __FUNCTION__, bytes_read, "Decode ogg audio failed"));
+            return nullptr;
+        }
         pos += bytes_read;
     }
     ov_clear(&vf);

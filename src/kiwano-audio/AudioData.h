@@ -55,6 +55,11 @@ struct AudioMeta
     uint32_t samples_per_sec = 44100;  ///< 采样率，11025 表示 11.025kHz。PCM格式的采样率通常为44.1kHz
     uint16_t bits_per_sample = 16;     ///< 位深，PCM格式为 8 或 16
     uint16_t block_align     = 4;      ///< 块对齐，PCM格式通常是 (channels * bits_per_sample) / 8
+
+    inline uint32_t avg_bytes_per_sec() const noexcept
+    {
+        return uint32_t(this->samples_per_sec * this->block_align);
+    }
 };
 
 /**
