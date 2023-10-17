@@ -25,4 +25,4 @@ jobs:
         access-key-secret: ${{ secrets.OSS_KEY_SECRET }}
 
     - name: upload files
-      run: ossutil cp -rf ./docs/html oss://kiwano-docs-website/
+      run: ossutil sync --force --update --delete ./docs/html oss://kiwano-docs-website/
