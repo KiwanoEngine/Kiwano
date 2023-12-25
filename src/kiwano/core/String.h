@@ -207,7 +207,7 @@ public:
 
     friend bool operator==(const BasicStringView& lhs, const BasicStringView& rhs)
     {
-        return lhs.size() == rhs.size() ? std::char_traits<value_type>::compare(lhs.data(), rhs.data(), lhs.size()) : false;
+        return lhs.size() == rhs.size() ? std::char_traits<value_type>::compare(lhs.data(), rhs.data(), lhs.size()) == 0 : false;
     }
 
     inline operator string_type() const
