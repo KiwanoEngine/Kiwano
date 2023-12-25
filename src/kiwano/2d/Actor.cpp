@@ -177,7 +177,7 @@ bool Actor::CheckVisibility(RenderContext& ctx) const
         }
         else
         {
-            visible_in_rt_ = ctx.CheckVisibility(GetBounds(), GetTransformMatrix());
+            visible_in_rt_ = ctx.CheckVisibility(GetBounds(), transform_matrix_ /* GetTransformMatrix() */);
         }
     }
     return visible_in_rt_;
@@ -250,13 +250,13 @@ bool Actor::HandleEvent(Event* evt)
 
 const Matrix3x2& Actor::GetTransformMatrix() const
 {
-    UpdateTransform();
+    UpdateTransformUpwards();
     return transform_matrix_;
 }
 
 const Matrix3x2& Actor::GetTransformInverseMatrix() const
 {
-    UpdateTransform();
+    UpdateTransformUpwards();
     if (dirty_flag_.Has(DirtyFlag::DirtyTransformInverse))
     {
         dirty_flag_.Unset(DirtyFlag::DirtyTransformInverse);
@@ -267,7 +267,7 @@ const Matrix3x2& Actor::GetTransformInverseMatrix() const
 
 const Matrix3x2& Actor::GetTransformMatrixToParent() const
 {
-    UpdateTransform();
+    UpdateTransformUpwards();
     return transform_matrix_to_parent_;
 }
 
@@ -302,6 +302,21 @@ void Actor::UpdateTransform() const
     // update children's transform
     for (const auto& child : children_)
         child->dirty_flag_.Set(DirtyFlag::DirtyTransform);
+}
+
+void Actor::UpdateTransformUpwards() const
+{
+    if (parent_)
+    {
+        parent_->UpdateTransformUpwards();
+
+        if (parent_->dirty_flag_.Has(DirtyFlag::DirtyTransform))
+        {
+            dirty_flag_.Set(DirtyFlag::DirtyTransform);
+        }
+    }
+
+    UpdateTransform();
 }
 
 void Actor::UpdateOpacity()

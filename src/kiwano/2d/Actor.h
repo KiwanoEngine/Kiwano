@@ -468,6 +468,11 @@ protected:
     void UpdateTransform() const;
 
     /// \~chinese
+    /// @brief 向上追溯更新
+    /// @details 对于节点树 A->B(dirty)->C->D，当对 D 执行 UpdateTransformUpwards 时会对 B、C、D 从上到下依次更新
+    void UpdateTransformUpwards() const;
+
+    /// \~chinese
     /// @brief 更新自己和所有子角色的透明度
     void UpdateOpacity();
 
