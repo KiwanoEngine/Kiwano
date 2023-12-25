@@ -35,7 +35,7 @@ TextLayout::TextLayout()
 {
 }
 
-TextLayout::TextLayout(const String& content, const TextStyle& style)
+TextLayout::TextLayout(StringView content, const TextStyle& style)
     : TextLayout()
 {
     Reset(content, style);
@@ -46,9 +46,9 @@ void TextLayout::Clear()
     ResetNative();
 }
 
-void TextLayout::Reset(const String& content, const TextStyle& style)
+void TextLayout::Reset(StringView content, const TextStyle& style)
     {
-    content_length_ = (uint32_t)content.length();
+    content_length_ = (uint32_t)content.size();
     if (content_length_)
     {
         Renderer::GetInstance().CreateTextLayout(*this, content, style);

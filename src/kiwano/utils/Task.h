@@ -56,7 +56,7 @@ public:
     /// @param name 名称
     /// @param cb 回调函数
     /// @param 报时器
-    Task(const String& name, const Callback& cb, TickerPtr ticker);
+    Task(StringView name, const Callback& cb, TickerPtr ticker);
 
     /// \~chinese
     /// @brief 创建任务
@@ -71,7 +71,7 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Task(const String& name, const Callback& cb, Duration interval, int times = -1);
+    Task(StringView name, const Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 构造空任务

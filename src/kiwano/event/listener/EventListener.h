@@ -70,7 +70,7 @@ public:
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(const String& name, const Callback& callback);
+    static EventListenerPtr Create(StringView name, const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
@@ -83,7 +83,7 @@ public:
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(const String& name, EventType type, const Callback& callback);
+    static EventListenerPtr Create(StringView name, EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 启动监听器

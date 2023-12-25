@@ -81,56 +81,56 @@ WideString FormatArgs(const wchar_t* format, va_list args)
     return result;
 }
 
-String WideToNarrowWithCodePage(const WideString& str, UINT code_page)
+String WideToNarrowWithCodePage(WideStringView str, UINT code_page)
 {
     if (str.empty())
         return String();
 
-    int len = ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+    int len = ::WideCharToMultiByte(code_page, 0, str.data(), int(str.size()), NULL, 0, NULL, NULL);
     if (len > 0)
     {
         String result;
         result.resize(len - 1);
 
-        ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, &result[0], len, NULL, NULL);
+        ::WideCharToMultiByte(code_page, 0, str.data(), int(str.size()), &result[0], len, NULL, NULL);
         return result;
     }
     return String();
 }
 
-WideString NarrowToWideWithCodePage(const String& str, UINT code_page)
+WideString NarrowToWideWithCodePage(StringView str, UINT code_page)
 {
     if (str.empty())
         return WideString();
 
-    int len = ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, NULL, 0);
+    int len = ::MultiByteToWideChar(code_page, 0, str.data(), int(str.size()), NULL, 0);
     if (len > 0)
     {
         WideString result;
         result.resize(len - 1);
 
-        ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, &result[0], len);
+        ::MultiByteToWideChar(code_page, 0, str.data(), int(str.size()), &result[0], len);
         return result;
     }
     return WideString();
 }
 
-String WideToNarrow(const WideString& str)
+String WideToNarrow(WideStringView str)
 {
     return WideToNarrowWithCodePage(str, CP_ACP);
 }
 
-WideString NarrowToWide(const String& str)
+WideString NarrowToWide(StringView str)
 {
     return NarrowToWideWithCodePage(str, CP_ACP);
 }
 
-String WideToUTF8(const WideString& str)
+String WideToUTF8(WideStringView str)
 {
     return WideToNarrowWithCodePage(str, CP_UTF8);
 }
 
-WideString UTF8ToWide(const String& str)
+WideString UTF8ToWide(StringView str)
 {
     return NarrowToWideWithCodePage(str, CP_UTF8);
 }

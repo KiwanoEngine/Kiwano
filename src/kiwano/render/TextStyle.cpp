@@ -38,7 +38,7 @@ TextStyle::TextStyle(FontPtr font)
 {
 }
 
-TextStyle::TextStyle(const String& font_family, float font_size, uint32_t font_weight)
+TextStyle::TextStyle(StringView font_family, float font_size, uint32_t font_weight)
     : TextStyle(MakePtr<Font>(font_family, font_size, font_weight))
 {
 }

@@ -31,26 +31,26 @@ ResourceCache::~ResourceCache()
     Clear();
 }
 
-bool ResourceCache::LoadFromJsonFile(const String& file_path)
+bool ResourceCache::LoadFromJsonFile(StringView file_path)
 {
     ResourceLoader loader(*this);
     loader.LoadFromJsonFile(file_path);
     return IsValid();
 }
 
-bool ResourceCache::LoadFromXmlFile(const String& file_path)
+bool ResourceCache::LoadFromXmlFile(StringView file_path)
 {
     ResourceLoader loader(*this);
     loader.LoadFromXmlFile(file_path);
     return IsValid();
 }
 
-void ResourceCache::AddObject(const String& id, ObjectBasePtr obj)
+void ResourceCache::AddObject(StringView id, ObjectBasePtr obj)
 {
     object_cache_[id] = obj;
 }
 
-void ResourceCache::Remove(const String& id)
+void ResourceCache::Remove(StringView id)
 {
     object_cache_.erase(id);
 }
@@ -60,7 +60,7 @@ void ResourceCache::Clear()
     object_cache_.clear();
 }
 
-ObjectBasePtr ResourceCache::Get(const String& id) const
+ObjectBasePtr ResourceCache::Get(StringView id) const
 {
     auto iter = object_cache_.find(id);
     if (iter == object_cache_.end())

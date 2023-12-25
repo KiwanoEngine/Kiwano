@@ -280,9 +280,9 @@ inline Serializer& operator<<(Serializer& serializer, const char* str)
     return serializer;
 }
 
-inline Serializer& operator<<(Serializer& serializer, const String& str)
+inline Serializer& operator<<(Serializer& serializer, StringView str)
 {
-    return serializer << str.c_str();
+    return serializer << str.data();
 }
 
 template <typename _Ty>

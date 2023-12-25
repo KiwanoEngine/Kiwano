@@ -143,7 +143,7 @@ void ObjectBase::Unhold(ObjectBasePtr other)
     }
 }
 
-void ObjectBase::SetName(const String& name)
+void ObjectBase::SetName(StringView name)
 {
     if (IsName(name))
         return;
@@ -205,7 +205,7 @@ void ObjectBase::SetStatus(const ObjectStatus& status)
     }
 }
 
-void ObjectBase::Fail(const String& msg, int code)
+void ObjectBase::Fail(StringView msg, int code)
 {
     SetStatus(ObjectStatus(code, msg));
 }

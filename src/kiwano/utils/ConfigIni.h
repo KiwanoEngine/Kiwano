@@ -45,12 +45,12 @@ public:
     /// \~chinese
     /// @brief 加载 ini 文件
     /// @param file_path 文件路径
-    ConfigIni(const String& file_path);
+    ConfigIni(StringView file_path);
 
     /// \~chinese
     /// @brief 加载 ini 文件
     /// @param file_path 文件路径
-    bool Load(const String& file_path);
+    bool Load(StringView file_path);
 
     /// \~chinese
     /// @brief 加载 ini 文件
@@ -60,12 +60,12 @@ public:
     /// \~chinese
     /// @brief 加载 ini 格式字符串
     /// @param content 输入内容
-    bool LoadFromString(const String& content);
+    bool LoadFromString(StringView content);
 
     /// \~chinese
     /// @brief 保存至 ini 文件
     /// @param file_path 文件路径
-    bool Save(const String& file_path);
+    bool Save(StringView file_path);
 
     /// \~chinese
     /// @brief 保存至 ini 文件
@@ -80,13 +80,13 @@ public:
     /// \~chinese
     /// @brief 是否存在section
     /// @param section section的名称
-    bool HasSection(const String& section) const;
+    bool HasSection(StringView section) const;
 
     /// \~chinese
     /// @brief 是否存在值
     /// @param section section的名称
     /// @param key key的名称
-    bool HasKey(const String& section, const String& key) const;
+    bool HasKey(StringView section, StringView key) const;
 
     /// \~chinese
     /// @brief 获取所有section
@@ -95,41 +95,41 @@ public:
     /// \~chinese
     /// @brief 获取section
     /// @param section section的名称
-    ValueMap GetSection(const String& section) const;
+    ValueMap GetSection(StringView section) const;
 
     /// \~chinese
     /// @brief 获取值
     /// @param section section的名称
     /// @param key key的名称
-    String GetString(const String& section, const String& key, const String& default_value = String()) const;
-
-    /// \~chinese
-    /// @brief 获取值
-    /// @param section section的名称
-    /// @param key key的名称
-    /// @param default_value 不存在时的默认值
-    float GetFloat(const String& section, const String& key, float default_value = 0.0f) const;
+    String GetString(StringView section, StringView key, StringView default_value = String()) const;
 
     /// \~chinese
     /// @brief 获取值
     /// @param section section的名称
     /// @param key key的名称
     /// @param default_value 不存在时的默认值
-    double GetDouble(const String& section, const String& key, double default_value = 0.0) const;
+    float GetFloat(StringView section, StringView key, float default_value = 0.0f) const;
 
     /// \~chinese
     /// @brief 获取值
     /// @param section section的名称
     /// @param key key的名称
     /// @param default_value 不存在时的默认值
-    int GetInt(const String& section, const String& key, int default_value = 0) const;
+    double GetDouble(StringView section, StringView key, double default_value = 0.0) const;
 
     /// \~chinese
     /// @brief 获取值
     /// @param section section的名称
     /// @param key key的名称
     /// @param default_value 不存在时的默认值
-    bool GetBool(const String& section, const String& key, bool default_value = false) const;
+    int GetInt(StringView section, StringView key, int default_value = 0) const;
+
+    /// \~chinese
+    /// @brief 获取值
+    /// @param section section的名称
+    /// @param key key的名称
+    /// @param default_value 不存在时的默认值
+    bool GetBool(StringView section, StringView key, bool default_value = false) const;
 
     /// \~chinese
     /// @brief 设置所有section
@@ -140,57 +140,57 @@ public:
     /// @brief 设置section
     /// @param section section的名称
     /// @param values 键值字典
-    void SetSection(const String& section, const ValueMap& values);
+    void SetSection(StringView section, const ValueMap& values);
 
     /// \~chinese
     /// @brief 设置值
     /// @param section section的名称
     /// @param key key的名称
     /// @param value 值
-    void SetString(const String& section, const String& key, const String& value);
+    void SetString(StringView section, StringView key, StringView value);
 
     /// \~chinese
     /// @brief 设置值
     /// @param section section的名称
     /// @param key key的名称
     /// @param value 值
-    void SetFloat(const String& section, const String& key, float value);
+    void SetFloat(StringView section, StringView key, float value);
 
     /// \~chinese
     /// @brief 设置值
     /// @param section section的名称
     /// @param key key的名称
     /// @param value 值
-    void SetDouble(const String& section, const String& key, double value);
+    void SetDouble(StringView section, StringView key, double value);
 
     /// \~chinese
     /// @brief 设置值
     /// @param section section的名称
     /// @param key key的名称
     /// @param value 值
-    void SetInt(const String& section, const String& key, int value);
+    void SetInt(StringView section, StringView key, int value);
 
     /// \~chinese
     /// @brief 设置值
     /// @param section section的名称
     /// @param key key的名称
     /// @param value 值
-    void SetBool(const String& section, const String& key, bool value);
+    void SetBool(StringView section, StringView key, bool value);
 
     /// \~chinese
     /// @brief 删除section
     /// @param section section的名称
-    void DeleteSection(const String& section);
+    void DeleteSection(StringView section);
 
     /// \~chinese
     /// @brief 删除值
     /// @param section section的名称
     /// @param key key的名称
-    void DeleteKey(const String& section, const String& key);
+    void DeleteKey(StringView section, StringView key);
 
-    ValueMap& operator[](const String& section);
+    ValueMap& operator[](StringView section);
 
-    const ValueMap& operator[](const String& section) const;
+    const ValueMap& operator[](StringView section) const;
 
 private:
     void ParseLine(StringView line, String* section);

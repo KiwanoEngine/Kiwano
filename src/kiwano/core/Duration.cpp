@@ -115,14 +115,14 @@ String Duration::ToString() const
     return stream.str();
 }
 
-Duration Duration::Parse(const String& format)
+Duration Duration::Parse(StringView format)
 {
     bool     negative = false;
-    size_t   len      = format.length();
+    size_t   len      = format.size();
     size_t   pos      = 0;
     Duration ret;
 
-    if (!std::regex_match(format.c_str(), duration_regex))
+    if (!std::regex_match(format.data(), duration_regex))
     {
         KGE_THROW("Duration::Parse failed, invalid duration");
     }

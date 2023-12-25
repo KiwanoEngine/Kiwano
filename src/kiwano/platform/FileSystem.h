@@ -37,7 +37,7 @@ public:
      * @brief 添加文件搜索路径
      * @param path 文件搜索路径
      */
-    void AddSearchPath(const String& path);
+    void AddSearchPath(StringView path);
 
     /**
      * \~chinese
@@ -52,7 +52,7 @@ public:
      * @param file 文件路径
      * @return 完整的文件路径
      */
-    String GetFullPathForFile(const String& file) const;
+    String GetFullPathForFile(StringView file) const;
 
     /**
      * \~chinese
@@ -60,7 +60,7 @@ public:
      * @param file 文件路径
      * @return 文件拓展名，不包含 . 符号
      */
-    String GetFileExt(const String& file) const;
+    String GetFileExt(StringView file) const;
 
     /**
      * \~chinese
@@ -68,7 +68,7 @@ public:
      * @param key 文件关键词
      * @param file_path 文件路径
      */
-    void AddFileLookupRule(const String& key, const String& file_path);
+    void AddFileLookupRule(StringView key, StringView file_path);
 
     /**
      * \~chinese
@@ -83,7 +83,7 @@ public:
      * @param file_path 文件路径
      * @return 若文件存在，返回 true
      */
-    bool IsFileExists(const String& file_path) const;
+    bool IsFileExists(StringView file_path) const;
 
     /**
      * \~chinese
@@ -91,7 +91,7 @@ public:
      * @param path 文件路径
      * @return 若是绝对路径，返回 true
      */
-    bool IsAbsolutePath(const String& path) const;
+    bool IsAbsolutePath(StringView path) const;
 
     /**
      * \~chinese
@@ -99,7 +99,7 @@ public:
      * @param file_path 文件路径
      * @return 删除是否成功
      */
-    bool RemoveFile(const String& file_path) const;
+    bool RemoveFile(StringView file_path) const;
 
     /**
      * \~chinese
@@ -108,7 +108,7 @@ public:
      * @param dest_file_name 目标文件名
      * @return 操作是否成功
      */
-    bool ExtractResourceToFile(const Resource& res, const String& dest_file_name) const;
+    bool ExtractResourceToFile(const Resource& res, StringView dest_file_name) const;
 
     ~FileSystem();
 

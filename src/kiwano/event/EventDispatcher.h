@@ -50,7 +50,7 @@ public:
     /// @param name ¼àÌıÆ÷Ãû³Æ
     /// @param type ¼àÌıµÄÊÂ¼şÀàĞÍ
     /// @param callback »Øµ÷º¯Êı
-    EventListener* AddListener(const String& name, EventType type, EventListener::Callback callback);
+    EventListener* AddListener(StringView name, EventType type, EventListener::Callback callback);
 
     /// \~chinese
     /// @brief Ìí¼Ó¼àÌıÆ÷
@@ -69,7 +69,7 @@ public:
     /// @param name ¼àÌıÆ÷Ãû³Æ
     /// @param callback »Øµ÷º¯Êı
     template <typename _EventTy>
-    EventListener* AddListener(const String& name, EventListener::Callback callback)
+    EventListener* AddListener(StringView name, EventListener::Callback callback)
     {
         static_assert(std::is_base_of<Event, _EventTy>::value, "_EventTy is not an event type.");
         return AddListener(name, KGE_EVENT(_EventTy), callback);
@@ -78,17 +78,17 @@ public:
     /// \~chinese
     /// @brief Æô¶¯¼àÌıÆ÷
     /// @param name ¼àÌıÆ÷Ãû³Æ
-    void StartListeners(const String& name);
+    void StartListeners(StringView name);
 
     /// \~chinese
     /// @brief Í£Ö¹¼àÌıÆ÷
     /// @param name ¼àÌıÆ÷Ãû³Æ
-    void StopListeners(const String& name);
+    void StopListeners(StringView name);
 
     /// \~chinese
     /// @brief ÒÆ³ı¼àÌıÆ÷
     /// @param name ¼àÌıÆ÷Ãû³Æ
-    void RemoveListeners(const String& name);
+    void RemoveListeners(StringView name);
 
     /// \~chinese
     /// @brief Æô¶¯ËùÓĞ¼àÌıÆ÷

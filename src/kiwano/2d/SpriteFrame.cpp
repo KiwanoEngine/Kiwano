@@ -26,7 +26,7 @@ namespace kiwano
 
 SpriteFrame::SpriteFrame() {}
 
-SpriteFrame::SpriteFrame(const String& file_path)
+SpriteFrame::SpriteFrame(StringView file_path)
 {
     Load(file_path);
 }
@@ -41,7 +41,7 @@ SpriteFrame::SpriteFrame(TexturePtr texture)
     SetTexture(texture);
 }
 
-SpriteFrame::SpriteFrame(const String& file_path, const Rect& crop_rect)
+SpriteFrame::SpriteFrame(StringView file_path, const Rect& crop_rect)
     : SpriteFrame(file_path)
 {
     SetCropRect(crop_rect);
@@ -59,7 +59,7 @@ SpriteFrame::SpriteFrame(TexturePtr texture, const Rect& crop_rect)
     SetCropRect(crop_rect);
 }
 
-bool SpriteFrame::Load(const String& file_path)
+bool SpriteFrame::Load(StringView file_path)
 {
     TexturePtr texture = new Texture(file_path);
     if (texture->IsValid())

@@ -50,7 +50,7 @@ public:
 
     void Init(const WindowConfig& config);
 
-    void SetTitle(const String& title) override;
+    void SetTitle(StringView title) override;
 
     void SetIcon(Icon icon) override;
 
@@ -346,10 +346,10 @@ void WindowWin32Impl::SetImmEnabled(bool enable)
     }
 }
 
-void WindowWin32Impl::SetTitle(const String& title)
+void WindowWin32Impl::SetTitle(StringView title)
 {
     KGE_ASSERT(handle_);
-    ::SetWindowTextA(handle_, title.c_str());
+    ::SetWindowTextA(handle_, title.data());
 }
 
 void WindowWin32Impl::SetIcon(Icon icon)

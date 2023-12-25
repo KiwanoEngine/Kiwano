@@ -113,7 +113,7 @@ struct KGE_API Duration
     ///   允许的时间单位有 "ms", "s", "m", "h"
     /// @return 解析出的时间段
     /// @throw kiwano::RuntimeError 传入一个不合法的格式时抛出
-    static Duration Parse(const String& str);
+    static Duration Parse(StringView str);
 
     bool operator==(const Duration&) const;
     bool operator!=(const Duration&) const;

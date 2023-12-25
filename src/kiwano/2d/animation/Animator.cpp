@@ -87,7 +87,7 @@ void Animator::StopAllAnimations()
     }
 }
 
-Animation* Animator::GetAnimation(const String& name)
+Animation* Animator::GetAnimation(StringView name)
 {
     if (animations_.IsEmpty())
         return nullptr;

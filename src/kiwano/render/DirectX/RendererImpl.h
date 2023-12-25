@@ -32,23 +32,23 @@ class KGE_API RendererImpl
 public:
     static RendererImpl& GetInstance();
 
-    void CreateTexture(Texture& texture, const String& file_path) override;
+    void CreateTexture(Texture& texture, StringView file_path) override;
 
     void CreateTexture(Texture& texture, const BinaryData& data) override;
 
     void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format) override;
 
-    void CreateGifImage(GifImage& gif, const String& file_path) override;
+    void CreateGifImage(GifImage& gif, StringView file_path) override;
 
     void CreateGifImage(GifImage& gif, const BinaryData& data) override;
 
     void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) override;
 
-    void CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path) override;
+    void CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path) override;
 
     void CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data) override;
 
-    void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) override;
+    void CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style) override;
 
     void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) override;
 

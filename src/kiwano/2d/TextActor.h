@@ -44,19 +44,19 @@ public:
     /// \~chinese
     /// @brief 创建文本角色
     /// @param text 文字内容
-    TextActor(const String& text);
+    TextActor(StringView text);
 
     /// \~chinese
     /// @brief 创建文本角色
     /// @param text 文字内容
     /// @param style 文本样式
-    TextActor(const String& text, const TextStyle& style);
+    TextActor(StringView text, const TextStyle& style);
 
     virtual ~TextActor();
 
     /// \~chinese
     /// @brief 获取文本
-    String GetText() const;
+    StringView GetText() const;
 
     /// \~chinese
     /// @brief 获取文本样式
@@ -88,7 +88,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文本
-    void SetText(const String& text);
+    void SetText(StringView text);
 
     /// \~chinese
     /// @brief 设置文本样式
@@ -179,7 +179,7 @@ private:
 
 /** @} */
 
-inline String TextActor::GetText() const
+inline StringView TextActor::GetText() const
 {
     return content_;
 }

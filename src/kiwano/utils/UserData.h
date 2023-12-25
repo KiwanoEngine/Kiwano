@@ -45,13 +45,13 @@ public:
     /// @param key 键
     /// @param default_data 数据不存在时返回的默认值
     /// @return 键对应的值数据
-    Any Get(const String& key, const Any& default_data = Any()) const;
+    Any Get(StringView key, const Any& default_data = Any()) const;
 
     /// \~chinese
     /// @brief 存数据
     /// @param key 键
     /// @param data 值
-    void Set(const String& key, const Any& data);
+    void Set(StringView key, const Any& data);
 
     /// \~chinese
     /// @brief 存数据
@@ -71,7 +71,7 @@ public:
     /// \~chinese
     /// @brief 判断是否包含键对应的数据
     /// @param key 键
-    bool Contains(const String& key) const;
+    bool Contains(StringView key) const;
 
     /// \~chinese
     /// @brief 获取数据字典

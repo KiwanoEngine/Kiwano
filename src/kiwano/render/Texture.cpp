@@ -31,7 +31,7 @@ namespace kiwano
 
 InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
 
-Texture::Texture(const String& file_path)
+Texture::Texture(StringView file_path)
     : Texture()
 {
     Load(file_path);
@@ -56,7 +56,7 @@ Texture::Texture()
 
 Texture::~Texture() {}
 
-bool Texture::Load(const String& file_path)
+bool Texture::Load(StringView file_path)
 {
     ResetNative();
     Renderer::GetInstance().CreateTexture(*this, file_path);

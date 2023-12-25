@@ -41,7 +41,7 @@ struct ObjectStatus
 
     ObjectStatus() = default;
 
-    ObjectStatus(int code, const String& msg)
+    ObjectStatus(int code, StringView msg)
         : code(code)
         , msg(msg)
     {
@@ -144,16 +144,16 @@ public:
 
     /// \~chinese
     /// @brief 设置对象名
-    void SetName(const String& name);
+    void SetName(StringView name);
 
     /// \~chinese
     /// @brief 获取对象名
-    String GetName() const;
+    StringView GetName() const;
 
     /// \~chinese
     /// @brief 判断对象的名称是否相同
     /// @param name 需要判断的名称
-    bool IsName(const String& name) const;
+    bool IsName(StringView name) const;
 
     /// \~chinese
     /// @brief 获取用户数据
@@ -200,7 +200,7 @@ public:
 
     /// \~chinese
     /// @brief 将对象标记为失败状态
-    void Fail(const String& msg, int code = ObjectStatus::fail);
+    void Fail(StringView msg, int code = ObjectStatus::fail);
 
     /// \~chinese
     /// @brief 清除对象状态
@@ -247,14 +247,14 @@ private:
     Set<ObjectBasePtr>* holdings_;
 };
 
-inline String ObjectBase::GetName() const
+inline StringView ObjectBase::GetName() const
 {
     if (name_)
         return *name_;
-    return String();
+    return StringView();
 }
 
-inline bool ObjectBase::IsName(const String& name) const
+inline bool ObjectBase::IsName(StringView name) const
 {
     return name_ ? (*name_ == name) : name.empty();
 }

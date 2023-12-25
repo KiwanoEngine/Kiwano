@@ -93,13 +93,13 @@ public:
     /// \~chinese
     /// @brief 创建音频对象
     /// @param file_path 本地音频文件路径
-    Sound(const String& file_path);
+    Sound(StringView file_path);
 
     /// \~chinese
     /// @brief 创建音频对象
     /// @param res 音频资源
     /// @param ext 音频类型，决定了使用何种解码器
-    Sound(const Resource& res, const String& ext = "");
+    Sound(const Resource& res, StringView ext = "");
 
     /// \~chinese
     /// @brief 创建音频对象

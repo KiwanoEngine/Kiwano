@@ -64,7 +64,7 @@ EventListenerPtr EventListener::Create(const Callback& callback)
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(const String& name, const Callback& callback)
+EventListenerPtr EventListener::Create(StringView name, const Callback& callback)
 {
     EventListenerPtr ptr = new CallbackEventListener(EventType(), callback);
     ptr->SetName(name);
@@ -77,7 +77,7 @@ EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(const String& name, EventType type, const Callback& callback)
+EventListenerPtr EventListener::Create(StringView name, EventType type, const Callback& callback)
 {
     EventListenerPtr ptr = new CallbackEventListener(type, callback);
     ptr->SetName(name);

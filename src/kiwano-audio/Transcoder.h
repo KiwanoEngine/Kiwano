@@ -45,7 +45,7 @@ public:
 
     virtual ~Transcoder() = default;
 
-    virtual AudioDataPtr Decode(const String& file_path) = 0;
+    virtual AudioDataPtr Decode(StringView file_path) = 0;
 
     virtual AudioDataPtr Decode(const Resource& res) = 0;
 };

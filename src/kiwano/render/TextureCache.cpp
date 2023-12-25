@@ -30,7 +30,7 @@ TextureCache::~TextureCache()
     Clear();
 }
 
-TexturePtr TextureCache::Preload(const String& file_path)
+TexturePtr TextureCache::Preload(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
     if (TexturePtr ptr = this->GetTexture(hash_code))
@@ -60,7 +60,7 @@ TexturePtr TextureCache::Preload(const Resource& res)
     return ptr;
 }
 
-GifImagePtr TextureCache::PreloadGif(const String& file_path)
+GifImagePtr TextureCache::PreloadGif(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
     if (GifImagePtr ptr = this->GetGifImage(hash_code))

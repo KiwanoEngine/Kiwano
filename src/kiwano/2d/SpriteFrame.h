@@ -38,7 +38,7 @@ public:
     /// \~chinese
     /// @brief 创建精灵帧
     /// @param file_path 图像路径
-    SpriteFrame(const String& file_path);
+    SpriteFrame(StringView file_path);
 
     /// \~chinese
     /// @brief 创建精灵帧
@@ -54,7 +54,7 @@ public:
     /// @brief 创建精灵帧
     /// @param file_path 图像路径
     /// @param crop_rect 裁剪矩形
-    SpriteFrame(const String& file_path, const Rect& crop_rect);
+    SpriteFrame(StringView file_path, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 创建精灵帧
@@ -71,7 +71,7 @@ public:
     /// \~chinese
     /// @brief 加载图像
     /// @param file_path 图像路径
-    bool Load(const String& file_path);
+    bool Load(StringView file_path);
 
     /// \~chinese
     /// @brief 加载图像

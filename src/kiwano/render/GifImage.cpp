@@ -26,7 +26,7 @@
 namespace kiwano
 {
 
-GifImage::GifImage(const String& file_path)
+GifImage::GifImage(StringView file_path)
     : GifImage()
 {
     Load(file_path);
@@ -43,7 +43,7 @@ GifImage::GifImage()
 {
 }
 
-bool GifImage::Load(const String& file_path)
+bool GifImage::Load(StringView file_path)
 {
     Renderer::GetInstance().CreateGifImage(*this, file_path);
 

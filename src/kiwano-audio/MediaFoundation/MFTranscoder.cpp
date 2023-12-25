@@ -43,7 +43,7 @@ MFTranscoder::~MFTranscoder()
     dlls::MediaFoundation::Get().MFShutdown();
 }
 
-AudioDataPtr MFTranscoder::Decode(const String& file_path)
+AudioDataPtr MFTranscoder::Decode(StringView file_path)
 {
     ComPtr<IMFSourceReader> reader;
 

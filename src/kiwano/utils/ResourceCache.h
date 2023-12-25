@@ -39,17 +39,17 @@ public:
     /// \~chinese
     /// @brief 从 JSON 文件加载资源信息
     /// @param file_path JSON文件路径
-    bool LoadFromJsonFile(const String& file_path);
+    bool LoadFromJsonFile(StringView file_path);
 
     /// \~chinese
     /// @brief 从 XML 文件加载资源信息
     /// @param file_path XML文件路径
-    bool LoadFromXmlFile(const String& file_path);
+    bool LoadFromXmlFile(StringView file_path);
 
     /// \~chinese
     /// @brief 获取资源
     /// @param id 对象ID
-    ObjectBasePtr Get(const String& id) const;
+    ObjectBasePtr Get(StringView id) const;
 
     /// \~chinese
     /// @brief 获取资源
@@ -57,7 +57,7 @@ public:
     /// @param id 对象ID
     /// @return 指定对象类型的指针
     template <typename _Ty>
-    RefPtr<_Ty> Get(const String& id) const
+    RefPtr<_Ty> Get(StringView id) const
     {
         return dynamic_cast<_Ty*>(Get(id).Get());
     }
@@ -66,12 +66,12 @@ public:
     /// @brief 将对象放入缓存
     /// @param id 对象ID
     /// @param obj 对象
-    void AddObject(const String& id, ObjectBasePtr obj);
+    void AddObject(StringView id, ObjectBasePtr obj);
 
     /// \~chinese
     /// @brief 删除指定资源
     /// @param id 对象ID
-    void Remove(const String& id);
+    void Remove(StringView id);
 
     /// \~chinese
     /// @brief 清空所有资源

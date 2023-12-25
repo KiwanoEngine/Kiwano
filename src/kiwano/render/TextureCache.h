@@ -38,7 +38,7 @@ class KGE_API TextureCache final
 public:
     /// \~chinese
     /// @brief 预加载本地图片
-    TexturePtr Preload(const String& file_path);
+    TexturePtr Preload(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载图片资源
@@ -46,7 +46,7 @@ public:
 
     /// \~chinese
     /// @brief 预加载本地GIF图片
-    GifImagePtr PreloadGif(const String& file_path);
+    GifImagePtr PreloadGif(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载GIF图片资源

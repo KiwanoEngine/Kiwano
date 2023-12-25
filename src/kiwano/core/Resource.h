@@ -40,7 +40,6 @@ namespace kiwano
 class KGE_API Resource
 {
 public:
-
     /// \~chinese
     /// @brief 构造资源
     Resource();
@@ -49,7 +48,7 @@ public:
     /// @brief 构造资源
     /// @param id 资源 ID
     /// @param type 资源类型
-    Resource(uint32_t id, const String& type);
+    Resource(uint32_t id, StringView type);
 
     /// \~chinese
     /// @brief 获取资源的二进制数据
@@ -62,7 +61,7 @@ public:
 
     /// \~chinese
     /// @brief 获取资源类型
-    String GetType() const;
+    StringView GetType() const;
 
 private:
     uint32_t id_;
@@ -76,7 +75,7 @@ inline uint32_t Resource::GetId() const
     return id_;
 }
 
-inline String Resource::GetType() const
+inline StringView Resource::GetType() const
 {
     return type_;
 }

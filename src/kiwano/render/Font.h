@@ -92,7 +92,7 @@ public:
     /// \~chinese
     /// @brief 预加载字体
     /// @param file 字体文件
-    static FontPtr Preload(const String& file);
+    static FontPtr Preload(StringView file);
 
     /// \~chinese
     /// @brief 预加载字体
@@ -109,7 +109,7 @@ public:
     /// @param size 字号
     /// @param weight 字体粗细
     /// @param posture 字体形态
-    Font(const String& family_name, float size, uint32_t weight = FontWeight::Normal,
+    Font(StringView family_name, float size, uint32_t weight = FontWeight::Normal,
          FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
 
     /// \~chinese
@@ -135,7 +135,7 @@ public:
 protected:
     /// \~chinese
     /// @brief 获取字体族
-    void SetFamilyName(const String& name);
+    void SetFamilyName(StringView name);
 
 protected:
     float       size_;
@@ -160,7 +160,7 @@ public:
 
     /// \~chinese
     /// @brief 添加字体族映射字体缓存
-    void AddFontByFamily(const String& font_family, FontPtr font);
+    void AddFontByFamily(StringView font_family, FontPtr font);
 
     /// \~chinese
     /// @brief 获取字体缓存
@@ -168,7 +168,7 @@ public:
 
     /// \~chinese
     /// @brief 获取字体族映射字体缓存
-    FontPtr GetFontByFamily(const String& font_family) const;
+    FontPtr GetFontByFamily(StringView font_family) const;
 
     /// \~chinese
     /// @brief 移除字体缓存
@@ -176,7 +176,7 @@ public:
 
     /// \~chinese
     /// @brief 移除字体族映射字体缓存
-    void RemoveFontByFamily(const String& font_family);
+    void RemoveFontByFamily(StringView font_family);
 
     /// \~chinese
     /// @brief 清空缓存
@@ -224,7 +224,7 @@ inline FontStretch Font::GetStretch() const
     return stretch_;
 }
 
-inline void Font::SetFamilyName(const String& name)
+inline void Font::SetFamilyName(StringView name)
 {
     family_name_ = name;
 }

@@ -62,7 +62,7 @@ public:
     /// \~chinese
     /// @brief 获取指定名称的动画
     /// @param name 动画名称
-    Animation* GetAnimation(const String& name);
+    Animation* GetAnimation(StringView name);
 
     /// \~chinese
     /// @brief 获取所有动画

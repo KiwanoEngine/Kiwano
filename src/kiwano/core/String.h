@@ -38,6 +38,19 @@ using String = BasicString<char>;
 /// @brief ¿í×Ö·û´®ÈÝÆ÷
 using WideString = BasicString<wchar_t>;
 
+/// \~chinese
+/// @brief »ù´¡×Ö·û´®ÊÓÍ¼
+template <typename CharTy>
+class BasicStringView;
+
+/// \~chinese
+/// @brief ×Ö·û´®ÊÓÍ¼
+using StringView = BasicStringView<char>;
+
+/// \~chinese
+/// @brief ¿í×Ö·û´®ÊÓÍ¼
+using WideStringView = BasicStringView<wchar_t>;
+
 
 namespace strings
 {
@@ -60,19 +73,19 @@ WideString FormatArgs(const wchar_t* format, va_list args);
 
 /// \~chinese
 /// @brief ¿í×Ö·û´®×ªÕ­×Ö·û´®
-String WideToNarrow(const WideString& str);
+String WideToNarrow(WideStringView str);
 
 /// \~chinese
 /// @brief Õ­×Ö·û´®×ª¿í×Ö·û´®
-WideString NarrowToWide(const String& str);
+WideString NarrowToWide(StringView str);
 
 /// \~chinese
 /// @brief ¿í×Ö·û´®×ª utf8 ×Ö·û´®
-String WideToUTF8(const WideString& str);
+String WideToUTF8(WideStringView str);
 
 /// \~chinese
 /// @brief utf8 ×Ö·û´®×ª¿í×Ö·û´®
-WideString UTF8ToWide(const String& str);
+WideString UTF8ToWide(StringView str);
 
 }
 
@@ -136,17 +149,17 @@ public:
     {
     }
 
-    inline const value_type* Data() const
+    inline const value_type* data() const
     {
         return ptr_;
     }
 
-    inline bool IsEmpty() const
+    inline bool empty() const
     {
         return !ptr_ || !count_;
     }
 
-    inline size_type Find(value_type ch) const
+    inline size_type find(value_type ch) const
     {
         const auto ptr = traits_type::find(ptr_, count_, ch);
         if (ptr)
@@ -156,7 +169,7 @@ public:
         return string_type::npos;
     }
 
-    inline BasicStringView SubStr(size_type pos, size_type count = string_type::npos) const
+    inline BasicStringView substr(size_type pos, size_type count = string_type::npos) const
     {
         if (pos >= count_)
             return BasicStringView();
@@ -168,26 +181,21 @@ public:
         return BasicStringView(ptr_ + pos, count);
     }
 
-    inline size_type GetLength() const
+    inline size_type size() const
     {
         return count_;
     }
 
-    inline value_type At(size_type index) const
+    inline value_type at(size_type index) const
     {
         return operator[](index);
     }
 
     inline value_type operator[](size_type index) const
     {
-        if (IsEmpty() || index >= count_)
+        if (empty() || index >= count_)
             throw std::out_of_range("operator[] out of index");
         return ptr_[index];
-    }
-
-    inline operator string_type() const
-    {
-        return string_type(ptr_, count_);
     }
 
     inline BasicStringView& operator=(const BasicStringView& rhs)
@@ -195,6 +203,16 @@ public:
         ptr_ = rhs.ptr_;
         count_ = rhs.count_;
         return *this;
+    }
+
+    friend bool operator==(const BasicStringView& lhs, const BasicStringView& rhs)
+    {
+        return lhs.size() == rhs.size() ? std::char_traits<value_type>::compare(lhs.data(), rhs.data(), lhs.size()) : false;
+    }
+
+    inline operator string_type() const
+    {
+        return string_type(ptr_, count_);
     }
 
 public:
@@ -398,14 +416,14 @@ public:
 
     inline const value_type& front() const
     {
-        if (IsEmpty())
+        if (empty())
             throw std::out_of_range("front() called on empty list");
         return ptr_[0];
     }
 
     inline const value_type& back() const
     {
-        if (IsEmpty())
+        if (empty())
             throw std::out_of_range("back() called on empty list");
         return ptr_[count_];
     }
@@ -415,12 +433,23 @@ private:
     size_type         count_;
 };
 
-/// \~chinese
-/// @brief ×Ö·û´®ÊÓÍ¼
-using StringView = BasicStringView<char>;
-
-/// \~chinese
-/// @brief ¿í×Ö·û´®ÊÓÍ¼
-using WideStringView = BasicStringView<wchar_t>;
-
 }  // namespace kiwano
+
+namespace std
+{
+
+template <class _Char>
+struct hash<::kiwano::BasicStringView<_Char>>
+{
+    inline size_t operator()(const ::kiwano::BasicStringView<_Char>& v) const
+    {
+        std::hash<_Char> hasher;
+
+        size_t result = 0;
+        for (size_t i = 0; i < v.size(); ++i)
+            result = (result << 1) ^ hasher(v[i]);
+        return result;
+    }
+};
+
+}

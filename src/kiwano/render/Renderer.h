@@ -83,7 +83,7 @@ public:
     /// @brief 创建纹理内部资源
     /// @param[out] texture 纹理
     /// @param[in] file_path 图片路径
-    virtual void CreateTexture(Texture& texture, const String& file_path) = 0;
+    virtual void CreateTexture(Texture& texture, StringView file_path) = 0;
 
     /// \~chinese
     /// @brief 创建纹理内部资源
@@ -103,7 +103,7 @@ public:
     /// @brief 创建GIF图像内部资源
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
-    virtual void CreateGifImage(GifImage& gif, const String& file_path) = 0;
+    virtual void CreateGifImage(GifImage& gif, StringView file_path) = 0;
 
     /// \~chinese
     /// @brief 创建GIF图像内部资源
@@ -123,7 +123,7 @@ public:
     /// @param[out] font 字体
     /// @param[out] family_names 字体包含的字体族
     /// @param[in] file_paths 字体文件路径
-    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path) = 0;
+    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path) = 0;
 
     /// \~chinese
     /// @brief 创建字体集内部资源
@@ -137,7 +137,7 @@ public:
     /// @param[out] layout 字体布局
     /// @param text 文字内容
     /// @param style 文本样式
-    virtual void CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style) = 0;
+    virtual void CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style) = 0;
 
     /// \~chinese
     /// @brief 创建线段形状内部资源

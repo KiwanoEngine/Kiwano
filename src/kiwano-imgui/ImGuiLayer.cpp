@@ -30,7 +30,7 @@ ImGuiLayer::ImGuiLayer()
     SetSwallowEvents(true);
 }
 
-ImGuiLayer::ImGuiLayer(const String& name, const ImGuiPipeline& item)
+ImGuiLayer::ImGuiLayer(StringView name, const ImGuiPipeline& item)
     : ImGuiLayer()
 {
     AddItem(name, item);
@@ -51,12 +51,12 @@ bool ImGuiLayer::CheckVisibility(RenderContext& ctx) const
     return true;
 }
 
-void ImGuiLayer::AddItem(const String& name, const ImGuiPipeline& item)
+void ImGuiLayer::AddItem(StringView name, const ImGuiPipeline& item)
 {
     pipelines_[name] = item;
 }
 
-void ImGuiLayer::RemoveItem(const String& name)
+void ImGuiLayer::RemoveItem(StringView name)
 {
     auto iter = pipelines_.find(name);
     if (iter != pipelines_.end())

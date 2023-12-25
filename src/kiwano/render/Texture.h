@@ -69,7 +69,7 @@ public:
 
     /// \~chinese
     /// @brief 从本地文件创建纹理
-    Texture(const String& file_path);
+    Texture(StringView file_path);
 
     /// \~chinese
     /// @brief 从资源创建纹理
@@ -83,7 +83,7 @@ public:
 
     /// \~chinese
     /// @brief 加载本地文件
-    bool Load(const String& file_path);
+    bool Load(StringView file_path);
 
     /// \~chinese
     /// @brief 加载资源

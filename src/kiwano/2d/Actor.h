@@ -236,7 +236,7 @@ public:
 
     /// \~chinese
     /// @brief 设置名称
-    void SetName(const String& name);
+    void SetName(StringView name);
 
     /// \~chinese
     /// @brief 设置坐标
@@ -344,11 +344,11 @@ public:
 
     /// \~chinese
     /// @brief 获取名称相同的子角色
-    ActorPtr GetChild(const String& name) const;
+    ActorPtr GetChild(StringView name) const;
 
     /// \~chinese
     /// @brief 获取所有名称相同的子角色
-    Vector<ActorPtr> GetChildren(const String& name) const;
+    Vector<ActorPtr> GetChildren(StringView name) const;
 
     /// \~chinese
     /// @brief 获取全部子角色
@@ -364,7 +364,7 @@ public:
 
     /// \~chinese
     /// @brief 移除所有名称相同的子角色
-    void RemoveChildren(const String& child_name);
+    void RemoveChildren(StringView child_name);
 
     /// \~chinese
     /// @brief 移除所有角色

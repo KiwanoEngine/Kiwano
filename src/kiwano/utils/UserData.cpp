@@ -22,7 +22,7 @@
 
 namespace kiwano
 {
-Any UserData::Get(const String& key, const Any& default_data) const
+Any UserData::Get(StringView key, const Any& default_data) const
 {
     auto iter = data_.find(key);
     if (iter != data_.end())
@@ -32,7 +32,7 @@ Any UserData::Get(const String& key, const Any& default_data) const
     return default_data;
 }
 
-void UserData::Set(const String& key, const Any& data)
+void UserData::Set(StringView key, const Any& data)
 {
     data_[key] = data;
 }
@@ -55,7 +55,7 @@ void UserData::Set(const DataMap& map)
     data_ = map;
 }
 
-bool UserData::Contains(const String& key) const
+bool UserData::Contains(StringView key) const
 {
     return data_.count(key) != 0;
 }

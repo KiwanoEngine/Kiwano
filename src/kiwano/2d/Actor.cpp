@@ -424,10 +424,10 @@ void Actor::SetVisible(bool val)
     visible_ = val;
 }
 
-void Actor::SetName(const String& name)
+void Actor::SetName(StringView name)
 {
     ObjectBase::SetName(name);
-    hash_name_ = std::hash<String>{}(name);
+    hash_name_ = std::hash<StringView>{}(name);
 }
 
 void Actor::SetPosition(const Point& pos)
@@ -523,10 +523,10 @@ Rect Actor::GetBoundingBox() const
     return GetTransformMatrix().Transform(GetBounds());
 }
 
-Vector<ActorPtr> Actor::GetChildren(const String& name) const
+Vector<ActorPtr> Actor::GetChildren(StringView name) const
 {
     Vector<ActorPtr> children;
-    size_t           hash_code = std::hash<String>{}(name);
+    size_t           hash_code = std::hash<StringView>{}(name);
 
     for (const auto& child : children_)
     {
@@ -538,9 +538,9 @@ Vector<ActorPtr> Actor::GetChildren(const String& name) const
     return children;
 }
 
-ActorPtr Actor::GetChild(const String& name) const
+ActorPtr Actor::GetChild(StringView name) const
 {
-    size_t hash_code = std::hash<String>{}(name);
+    size_t hash_code = std::hash<StringView>{}(name);
 
     for (const auto& child : children_)
     {
@@ -588,14 +588,14 @@ void Actor::RemoveChild(ActorPtr child)
     }
 }
 
-void Actor::RemoveChildren(const String& child_name)
+void Actor::RemoveChildren(StringView child_name)
 {
     if (children_.IsEmpty())
     {
         return;
     }
 
-    size_t hash_code = std::hash<String>{}(child_name);
+    size_t hash_code = std::hash<StringView>{}(child_name);
 
     ActorPtr next;
     for (ActorPtr child = children_.GetFirst(); child; child = next)

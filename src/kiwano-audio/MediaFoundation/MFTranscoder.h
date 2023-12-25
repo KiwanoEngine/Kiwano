@@ -43,7 +43,7 @@ public:
 
     virtual ~MFTranscoder();
 
-    AudioDataPtr Decode(const String& file_path) override;
+    AudioDataPtr Decode(StringView file_path) override;
 
     AudioDataPtr Decode(const Resource& res) override;
 };

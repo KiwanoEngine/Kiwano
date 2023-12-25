@@ -40,11 +40,11 @@ public:
     std::vector<char> raw_;
 };
 
-AudioDataPtr OggTranscoder::Decode(const String& file_path)
+AudioDataPtr OggTranscoder::Decode(StringView file_path)
 {
     OggVorbis_File vf;
 
-    int err = ov_fopen(file_path.c_str(), &vf);
+    int err = ov_fopen(file_path.data(), &vf);
     if (err != 0)
     {
         KGE_ERROR(strings::Format("%s failed (%d): %s", __FUNCTION__, err, "Open ogg audio failed"));

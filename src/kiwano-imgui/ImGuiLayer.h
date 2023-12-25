@@ -44,7 +44,7 @@ public:
     /// @brief 创建ImGui图层
     /// @param name 元素名称
     /// @param item 管道
-    ImGuiLayer(const String& name, const ImGuiPipeline& item);
+    ImGuiLayer(StringView name, const ImGuiPipeline& item);
 
     virtual ~ImGuiLayer();
 
@@ -52,12 +52,12 @@ public:
     /// @brief 添加 ImGui 元素
     /// @param name 元素名称
     /// @param item 管道
-    void AddItem(const String& name, const ImGuiPipeline& item);
+    void AddItem(StringView name, const ImGuiPipeline& item);
 
     /// \~chinese
     /// @brief 移除 ImGui 元素
     /// @param name 元素名称
-    void RemoveItem(const String& name);
+    void RemoveItem(StringView name);
 
     // 移除所有元素
     /// \~chinese

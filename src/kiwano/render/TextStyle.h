@@ -78,7 +78,7 @@ public:
      * @param font_size 字体大小
      * @param font_weight 字体粗细
      */
-    TextStyle(const String& font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
+    TextStyle(StringView font_family, float font_size, uint32_t font_weight = FontWeight::Normal);
 };
 
 /** @} */

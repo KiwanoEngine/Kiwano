@@ -48,11 +48,11 @@ public:
     /// \~chinese
     /// @brief 预加载音频
     /// @details 
-    AudioDataPtr Preload(const String& file_path);
+    AudioDataPtr Preload(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载音频资源
-    AudioDataPtr Preload(const Resource& res, const String& ext = "");
+    AudioDataPtr Preload(const Resource& res, StringView ext = "");
 
     /// \~chinese
     /// @brief 播放音频
@@ -64,7 +64,7 @@ public:
     /// @brief 播放音频
     /// @param file_path 本地音频文件路径
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    SoundPtr Play(const String& file_path, int loop_count = 0);
+    SoundPtr Play(StringView file_path, int loop_count = 0);
 
     /// \~chinese
     /// @brief 播放音频

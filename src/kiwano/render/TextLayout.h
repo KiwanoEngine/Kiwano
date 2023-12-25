@@ -44,7 +44,7 @@ public:
     /// @brief 创建文本布局
     /// @param content 文字内容
     /// @param style 文本样式
-    TextLayout(const String& content, const TextStyle& style);
+    TextLayout(StringView content, const TextStyle& style);
 
     /// \~chinese
     /// @brief 文本布局是否陈旧
@@ -58,7 +58,7 @@ public:
     /// @brief 重设文本布局
     /// @param content 文字内容
     /// @param style 文本样式
-    void Reset(const String& content, const TextStyle& style);
+    void Reset(StringView content, const TextStyle& style);
 
     /// \~chinese
     /// @brief 获取文本布局大小

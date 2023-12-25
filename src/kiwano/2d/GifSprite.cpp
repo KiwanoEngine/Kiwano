@@ -34,7 +34,7 @@ GifSprite::GifSprite()
 {
 }
 
-GifSprite::GifSprite(const String& file_path)
+GifSprite::GifSprite(StringView file_path)
     : GifSprite()
 {
     Load(file_path);
@@ -52,7 +52,7 @@ GifSprite::GifSprite(GifImagePtr gif)
     SetGifImage(gif);
 }
 
-bool GifSprite::Load(const String& file_path)
+bool GifSprite::Load(StringView file_path)
 {
     GifImagePtr image = new GifImage(file_path);
     return Load(image);

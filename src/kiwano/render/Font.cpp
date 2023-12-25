@@ -26,7 +26,7 @@
 namespace kiwano
 {
 
-FontPtr Font::Preload(const String& file)
+FontPtr Font::Preload(StringView file)
 {
     size_t hash_code = std::hash<String>{}(file);
     if (FontPtr ptr = FontCache::GetInstance().GetFont(hash_code))
@@ -92,7 +92,7 @@ Font::Font()
 {
 }
 
-Font::Font(const String& family_name, float size, uint32_t weight, FontPosture posture, FontStretch stretch)
+Font::Font(StringView family_name, float size, uint32_t weight, FontPosture posture, FontStretch stretch)
     : size_(size)
     , weight_(weight)
     , posture_(posture)
@@ -118,7 +118,7 @@ void FontCache::AddFont(size_t key, FontPtr font)
     font_cache_[key] = font;
 }
 
-void FontCache::AddFontByFamily(const String& font_family, FontPtr font)
+void FontCache::AddFontByFamily(StringView font_family, FontPtr font)
 {
     String family = TransformFamily(font_family);
     font_family_cache_[family] = font;
@@ -133,7 +133,7 @@ FontPtr FontCache::GetFont(size_t key) const
     return FontPtr();
 }
 
-FontPtr FontCache::GetFontByFamily(const String& font_family) const
+FontPtr FontCache::GetFontByFamily(StringView font_family) const
 {
     String family = TransformFamily(font_family);
     if (font_family_cache_.count(family))
@@ -148,7 +148,7 @@ void FontCache::RemoveFont(size_t key)
     font_cache_.erase(key);
 }
 
-void FontCache::RemoveFontByFamily(const String& font_family)
+void FontCache::RemoveFontByFamily(StringView font_family)
 {
     String family = TransformFamily(font_family);
     font_family_cache_.erase(family);

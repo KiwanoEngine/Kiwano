@@ -74,7 +74,7 @@ struct Icon
 {
     Icon() = default;
 
-    Icon(const String& file_path)
+    Icon(StringView file_path)
         : file_path(file_path)
     {
     }
@@ -192,7 +192,7 @@ public:
      * @brief 设置标题
      * @param title 标题
      */
-    virtual void SetTitle(const String& title) = 0;
+    virtual void SetTitle(StringView title) = 0;
 
     /**
      * \~chinese

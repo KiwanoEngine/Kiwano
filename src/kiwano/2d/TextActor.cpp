@@ -33,12 +33,12 @@ TextActor::TextActor()
 {
 }
 
-TextActor::TextActor(const String& text)
+TextActor::TextActor(StringView text)
     : TextActor(text, TextStyle())
 {
 }
 
-TextActor::TextActor(const String& text, const TextStyle& style)
+TextActor::TextActor(StringView text, const TextStyle& style)
     : TextActor()
 {
     SetStyle(style);
@@ -73,7 +73,7 @@ Size TextActor::GetSize() const
     return Actor::GetSize();
 }
 
-void TextActor::SetText(const String& text)
+void TextActor::SetText(StringView text)
 {
     if (!layout_)
     {

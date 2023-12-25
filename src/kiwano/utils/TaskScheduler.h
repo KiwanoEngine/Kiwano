@@ -50,7 +50,7 @@ public:
     /// @param name 名称
     /// @param cb 回调函数
     /// @param 报时器
-    Task* AddTask(const String& name, const Task::Callback& cb, TickerPtr ticker);
+    Task* AddTask(StringView name, const Task::Callback& cb, TickerPtr ticker);
 
     /// \~chinese
     /// @brief 添加任务
@@ -65,19 +65,19 @@ public:
     /// @param cb 回调函数
     /// @param interval 时间间隔
     /// @param times 执行次数（设 -1 为永久执行）
-    Task* AddTask(const String& name, const Task::Callback& cb, Duration interval, int times = -1);
+    Task* AddTask(StringView name, const Task::Callback& cb, Duration interval, int times = -1);
 
     /// \~chinese
     /// @brief 启动任务
-    void StartTasks(const String& task_name);
+    void StartTasks(StringView task_name);
 
     /// \~chinese
     /// @brief 停止任务
-    void StopTasks(const String& task_name);
+    void StopTasks(StringView task_name);
 
     /// \~chinese
     /// @brief 移除任务
-    void RemoveTasks(const String& task_name);
+    void RemoveTasks(StringView task_name);
 
     /// \~chinese
     /// @brief 启动所有任务

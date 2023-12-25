@@ -31,16 +31,16 @@ namespace kiwano
 
 StringView Trim(StringView str)
 {
-    if (!str.IsEmpty())
+    if (!str.empty())
     {
-        std::size_t start = 0, end = str.GetLength();
+        std::size_t start = 0, end = str.size();
         while (start < end && std::isspace(str[start]))
             ++start;
         while (end > 0&& std ::isspace(str[end - 1]))
             --end;
 
         if (end > start)
-            return StringView(str.Data() + start, end - start);
+            return StringView(str.data() + start, end - start);
     }
     return StringView();
 }
@@ -56,7 +56,7 @@ public:
 
     bool ClearComment()
     {
-        auto pos = line_.Find(';');
+        auto pos = line_.find(';');
         if (pos != String::npos)
         {
             if (pos == 0)
@@ -64,8 +64,8 @@ public:
 
             if (std::isspace(line_[pos - 1]))
             {
-                line_ = Trim(line_.SubStr(0, pos - 1));
-                return line_.IsEmpty();
+                line_ = Trim(line_.substr(0, pos - 1));
+                return line_.empty();
             }
         }
         return false;
@@ -73,35 +73,35 @@ public:
 
     bool IsSection() const
     {
-        return line_[0] == '[' && line_.GetLength() > 2 && line_[line_.GetLength() - 1] == ']';
+        return line_[0] == '[' && line_.size() > 2 && line_[line_.size() - 1] == ']';
     }
 
     StringView GetSectionName() const
     {
-        return Trim(line_.SubStr(1, line_.GetLength() - 2));
+        return Trim(line_.substr(1, line_.size() - 2));
     }
 
     bool GetKeyValue(StringView* key, StringView* value)
     {
-        auto pos = line_.Find('=');
+        auto pos = line_.find('=');
         if (pos == String::npos)
             return false;
 
-        *key = Trim(line_.SubStr(0, pos));
-        *value = Trim(line_.SubStr(pos + 1));
+        *key = Trim(line_.substr(0, pos));
+        *value = Trim(line_.substr(pos + 1));
 
-        return !(*key).IsEmpty() && !(*value).IsEmpty();
+        return !(*key).empty() && !(*value).empty();
     }
 };
 
 ConfigIni::ConfigIni() {}
 
-ConfigIni::ConfigIni(const String& file_path)
+ConfigIni::ConfigIni(StringView file_path)
 {
     Load(file_path);
 }
 
-bool ConfigIni::Load(const String& file_path)
+bool ConfigIni::Load(StringView file_path)
 {
     std::ifstream ifs(file_path);
 
@@ -132,14 +132,14 @@ bool ConfigIni::Load(std::istream& istream)
     return true;
 }
 
-bool ConfigIni::LoadFromString(const String& content)
+bool ConfigIni::LoadFromString(StringView content)
 {
     StringStream ss;
     ss.str(content);
     return Load(ss);
 }
 
-bool ConfigIni::Save(const String& file_path)
+bool ConfigIni::Save(StringView file_path)
 {
     std::ofstream ofs(file_path);
 
@@ -199,7 +199,7 @@ ConfigIni::SectionMap ConfigIni::GetSectionMap() const
     return sections_;
 }
 
-ConfigIni::ValueMap ConfigIni::GetSection(const String& section) const
+ConfigIni::ValueMap ConfigIni::GetSection(StringView section) const
 {
     if (HasSection(section))
     {
@@ -208,7 +208,7 @@ ConfigIni::ValueMap ConfigIni::GetSection(const String& section) const
     return ValueMap();
 }
 
-String ConfigIni::GetString(const String& section, const String& key, const String& default_value) const
+String ConfigIni::GetString(StringView section, StringView key, StringView default_value) const
 {
     if (HasKey(section, key))
     {
@@ -217,7 +217,7 @@ String ConfigIni::GetString(const String& section, const String& key, const Stri
     return default_value;
 }
 
-float ConfigIni::GetFloat(const String& section, const String& key, float default_value) const
+float ConfigIni::GetFloat(StringView section, StringView key, float default_value) const
 {
     String str = GetString(section, key);
     if (str.empty())
@@ -237,7 +237,7 @@ float ConfigIni::GetFloat(const String& section, const String& key, float defaul
     return default_value;
 }
 
-double ConfigIni::GetDouble(const String& section, const String& key, double default_value) const
+double ConfigIni::GetDouble(StringView section, StringView key, double default_value) const
 {
     String str = GetString(section, key);
     if (str.empty())
@@ -257,7 +257,7 @@ double ConfigIni::GetDouble(const String& section, const String& key, double def
     return default_value;
 }
 
-int ConfigIni::GetInt(const String& section, const String& key, int default_value) const
+int ConfigIni::GetInt(StringView section, StringView key, int default_value) const
 {
     String str = GetString(section, key);
     if (str.empty())
@@ -277,7 +277,7 @@ int ConfigIni::GetInt(const String& section, const String& key, int default_valu
     return default_value;
 }
 
-bool ConfigIni::GetBool(const String& section, const String& key, bool default_value) const
+bool ConfigIni::GetBool(StringView section, StringView key, bool default_value) const
 {
     String str = GetString(section, key);
     if (!str.empty())
@@ -290,12 +290,12 @@ bool ConfigIni::GetBool(const String& section, const String& key, bool default_v
     return default_value;
 }
 
-bool ConfigIni::HasSection(const String& section) const
+bool ConfigIni::HasSection(StringView section) const
 {
     return !!sections_.count(section);
 }
 
-bool ConfigIni::HasKey(const String& section, const String& key) const
+bool ConfigIni::HasKey(StringView section, StringView key) const
 {
     if (HasSection(section))
     {
@@ -309,12 +309,12 @@ void ConfigIni::SetSectionMap(const SectionMap& sections)
     sections_ = sections;
 }
 
-void ConfigIni::SetSection(const String& section, const ValueMap& values)
+void ConfigIni::SetSection(StringView section, const ValueMap& values)
 {
     sections_[section] = values;
 }
 
-void ConfigIni::SetString(const String& section, const String& key, const String& value)
+void ConfigIni::SetString(StringView section, StringView key, StringView value)
 {
     if (HasSection(section))
         sections_[section][key] = value;
@@ -322,30 +322,30 @@ void ConfigIni::SetString(const String& section, const String& key, const String
         SetSection(section, ValueMap{ { key, value } });
 }
 
-void ConfigIni::SetFloat(const String& section, const String& key, float value)
+void ConfigIni::SetFloat(StringView section, StringView key, float value)
 {
     String str = std::to_string(value);
     SetString(section, key, str);
 }
 
-void ConfigIni::SetDouble(const String& section, const String& key, double value)
+void ConfigIni::SetDouble(StringView section, StringView key, double value)
 {
     String str = std::to_string(value);
     SetString(section, key, str);
 }
 
-void ConfigIni::SetInt(const String& section, const String& key, int value)
+void ConfigIni::SetInt(StringView section, StringView key, int value)
 {
     String str = std::to_string(value);
     SetString(section, key, str);
 }
 
-void ConfigIni::SetBool(const String& section, const String& key, bool value)
+void ConfigIni::SetBool(StringView section, StringView key, bool value)
 {
     SetString(section, key, value ? "true" : "false");
 }
 
-void ConfigIni::DeleteSection(const String& section)
+void ConfigIni::DeleteSection(StringView section)
 {
     if (HasSection(section))
     {
@@ -353,7 +353,7 @@ void ConfigIni::DeleteSection(const String& section)
     }
 }
 
-void ConfigIni::DeleteKey(const String& section, const String& key)
+void ConfigIni::DeleteKey(StringView section, StringView key)
 {
     if (HasKey(section, key))
     {
@@ -361,12 +361,12 @@ void ConfigIni::DeleteKey(const String& section, const String& key)
     }
 }
 
-ConfigIni::ValueMap& ConfigIni::operator[](const String& section)
+ConfigIni::ValueMap& ConfigIni::operator[](StringView section)
 {
     return sections_[section];
 }
 
-const ConfigIni::ValueMap& ConfigIni::operator[](const String& section) const
+const ConfigIni::ValueMap& ConfigIni::operator[](StringView section) const
 {
     return sections_.at(section);
 }
@@ -374,7 +374,7 @@ const ConfigIni::ValueMap& ConfigIni::operator[](const String& section) const
 void ConfigIni::ParseLine(StringView line, String* section)
 {
     line = Trim(line);
-    if (line.IsEmpty())
+    if (line.empty())
         return;
 
     IniParser parser(line);
@@ -384,7 +384,7 @@ void ConfigIni::ParseLine(StringView line, String* section)
     if (parser.IsSection())
     {
         auto name = parser.GetSectionName();
-        if (name.IsEmpty())
+        if (name.empty())
             throw RuntimeError("Empty section name");
         *section = name;
         return;

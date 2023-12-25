@@ -184,12 +184,12 @@ void AudioModule::Close()
         x_audio2_->StopEngine();
 }
 
-void AudioModule::RegisterTranscoder(const String& ext, TranscoderPtr transcoder)
+void AudioModule::RegisterTranscoder(StringView ext, TranscoderPtr transcoder)
 {
     registered_transcoders_.insert(std::make_pair(ext, transcoder));
 }
 
-TranscoderPtr AudioModule::GetTranscoder(const String& ext)
+TranscoderPtr AudioModule::GetTranscoder(StringView ext)
 {
     auto iter = registered_transcoders_.find(ext);
     if (iter != registered_transcoders_.end())
@@ -199,11 +199,11 @@ TranscoderPtr AudioModule::GetTranscoder(const String& ext)
     return registered_transcoders_.at("*");
 }
 
-AudioDataPtr AudioModule::Decode(const String& file_path)
+AudioDataPtr AudioModule::Decode(StringView file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        KGE_WARNF("Media file '%s' not found", file_path.c_str());
+        KGE_WARNF("Media file '%s' not found", file_path.data());
         return nullptr;
     }
 
@@ -218,7 +218,7 @@ AudioDataPtr AudioModule::Decode(const String& file_path)
     return transcoder->Decode(full_path);
 }
 
-AudioDataPtr AudioModule::Decode(const Resource& res, const String& ext)
+AudioDataPtr AudioModule::Decode(const Resource& res, StringView ext)
 {
     auto transcoder = GetTranscoder(ext);
     if (!transcoder)

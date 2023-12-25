@@ -238,7 +238,7 @@ private:
 class KGE_API FileLogProvider : public LogProvider
 {
 public:
-    FileLogProvider(const String& filepath, std::ios_base::openmode mode = std::ios_base::out);
+    FileLogProvider(StringView filepath, std::ios_base::openmode mode = std::ios_base::out);
 
    virtual ~FileLogProvider();
 

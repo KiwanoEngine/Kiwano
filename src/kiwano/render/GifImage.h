@@ -42,7 +42,7 @@ public:
 
     /// \~chinese
     /// @brief 创建GIF图片
-    GifImage(const String& file_path);
+    GifImage(StringView file_path);
 
     /// \~chinese
     /// @brief 创建GIF图片
@@ -50,7 +50,7 @@ public:
 
     /// \~chinese
     /// @brief 加载本地GIF图片
-    bool Load(const String& file_path);
+    bool Load(StringView file_path);
 
     /// \~chinese
     /// @brief 加载GIF资源

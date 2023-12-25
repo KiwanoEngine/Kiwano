@@ -299,9 +299,9 @@ ConsoleLogProvider::ConsoleColor ConsoleLogProvider::GetColor(LogLevel level)
     return ConsoleColorBrush<0>;
 }
 
-FileLogProvider::FileLogProvider(const String& filepath, std::ios_base::openmode mode)
+FileLogProvider::FileLogProvider(StringView filepath, std::ios_base::openmode mode)
 {
-    ofs_.open(filepath, mode);
+    ofs_.open(filepath.data(), mode);
 }
 
 FileLogProvider::~FileLogProvider()

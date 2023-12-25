@@ -38,7 +38,7 @@ public:
     /// \~chinese
     /// @brief 从 JSON 文件加载资源信息
     /// @param file_path JSON文件路径
-    void LoadFromJsonFile(const String& file_path);
+    void LoadFromJsonFile(StringView file_path);
 
     /// \~chinese
     /// @brief 从 JSON 加载资源信息
@@ -48,7 +48,7 @@ public:
     /// \~chinese
     /// @brief 从 XML 文件加载资源信息
     /// @param file_path XML文件路径
-    void LoadFromXmlFile(const String& file_path);
+    void LoadFromXmlFile(StringView file_path);
 
     /// \~chinese
     /// @brief 从 XML 文档对象加载资源信息

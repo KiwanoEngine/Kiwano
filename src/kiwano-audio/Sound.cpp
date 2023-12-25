@@ -28,13 +28,13 @@ namespace kiwano
 namespace audio
 {
 
-Sound::Sound(const String& file_path)
+Sound::Sound(StringView file_path)
     : Sound()
 {
     Load(AudioModule::GetInstance().Decode(file_path));
 }
 
-Sound::Sound(const Resource& res, const String& ext)
+Sound::Sound(const Resource& res, StringView ext)
     : Sound()
 {
     Load(AudioModule::GetInstance().Decode(res, ext));

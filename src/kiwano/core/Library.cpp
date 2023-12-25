@@ -28,7 +28,7 @@ Library::Library()
 {
 }
 
-Library::Library(const String& lib)
+Library::Library(StringView lib)
     : instance_(nullptr)
 {
     Load(lib);
@@ -39,9 +39,9 @@ Library::~Library()
     Free();
 }
 
-bool Library::Load(const String& lib)
+bool Library::Load(StringView lib)
 {
-    instance_ = ::LoadLibraryA(lib.c_str());
+    instance_ = ::LoadLibraryA(lib.data());
     return IsValid();
 }
 
@@ -59,13 +59,13 @@ void Library::Free()
     }
 }
 
-FARPROC Library::GetProcess(const String& proc_name)
+FARPROC Library::GetProcess(StringView proc_name)
 {
     KGE_ASSERT(instance_ != nullptr);
 
     if (!IsValid())
         return nullptr;
-    return GetProcAddress(instance_, proc_name.c_str());
+    return GetProcAddress(instance_, proc_name.data());
 }
 
 }  // namespace kiwano

@@ -30,7 +30,7 @@ Task::Task(const Callback& cb, TickerPtr ticker)
 {
 }
 
-Task::Task(const String& name, const Callback& cb, TickerPtr ticker)
+Task::Task(StringView name, const Callback& cb, TickerPtr ticker)
     : Task(cb, ticker)
 {
     SetName(name);
@@ -44,7 +44,7 @@ Task::Task(const Callback& cb, Duration interval, int times)
     ticker_ = MakePtr<Ticker>(interval, times);
 }
 
-Task::Task(const String& name, const Callback& cb, Duration interval, int times)
+Task::Task(StringView name, const Callback& cb, Duration interval, int times)
     : Task(cb, interval, times)
 {
     SetName(name);

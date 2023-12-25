@@ -85,7 +85,7 @@ public:
 
     /// \~chinese
     /// @brief ÉèÖÃÃû³Æ
-    inline AnimationWrapper& Name(const String& name)
+    inline AnimationWrapper& Name(StringView name)
     {
         if (ptr)
             ptr->SetName(name);

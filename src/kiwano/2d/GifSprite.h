@@ -53,7 +53,7 @@ public:
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param file_path GIF图片路径
-    GifSprite(const String& file_path);
+    GifSprite(StringView file_path);
 
     /// \~chinese
     /// @brief 创建GIF精灵
@@ -68,7 +68,7 @@ public:
     /// \~chinese
     /// @brief 加载GIF图片
     /// @param file_path GIF图片路径
-    bool Load(const String& file_path);
+    bool Load(StringView file_path);
 
     /// \~chinese
     /// @brief 加载GIF图片

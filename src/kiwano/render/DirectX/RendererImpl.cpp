@@ -226,7 +226,7 @@ void RendererImpl::Present()
     }
 }
 
-void RendererImpl::CreateTexture(Texture& texture, const String& file_path)
+void RendererImpl::CreateTexture(Texture& texture, StringView file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -418,7 +418,7 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 }
 */
 
-void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
+void RendererImpl::CreateGifImage(GifImage& gif, StringView file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -430,7 +430,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const String& file_path)
     {
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
         KGE_SET_STATUS_IF_FAILED(hr, gif,
-                                 strings::Format("Gif texture file '%s' not found!", file_path.c_str()).c_str());
+                                 strings::Format("Gif texture file '%s' not found!", file_path.data()).c_str());
         return;
     }
 
@@ -638,7 +638,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
     KGE_SET_STATUS_IF_FAILED(hr, const_cast<GifImage&>(gif), "Load GIF frame failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const String& file_path)
+void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -651,7 +651,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         if (!FileSystem::GetInstance().IsFileExists(file_path))
         {
             hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
-            KGE_SET_STATUS_IF_FAILED(hr, font, strings::Format("Font file '%s' not found!", file_path.c_str()).c_str());
+            KGE_SET_STATUS_IF_FAILED(hr, font, strings::Format("Font file '%s' not found!", file_path.data()).c_str());
             return;
         }
     }
@@ -696,7 +696,7 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
     KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
 }
 
-void RendererImpl::CreateTextLayout(TextLayout& layout, const String& content, const TextStyle& style)
+void RendererImpl::CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)

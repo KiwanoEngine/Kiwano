@@ -56,7 +56,7 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {}
 
-AudioDataPtr SoundPlayer::Preload(const String& file_path)
+AudioDataPtr SoundPlayer::Preload(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
     if (cache_.count(hash_code))
@@ -71,7 +71,7 @@ AudioDataPtr SoundPlayer::Preload(const String& file_path)
     return ptr;
 }
 
-AudioDataPtr SoundPlayer::Preload(const Resource& res, const String& ext)
+AudioDataPtr SoundPlayer::Preload(const Resource& res, StringView ext)
 {
     size_t hash_code = res.GetId();
     if (cache_.count(hash_code))
@@ -96,7 +96,7 @@ void SoundPlayer::Play(SoundPtr sound, int loop_count)
     }
 }
 
-SoundPtr SoundPlayer::Play(const String& file_path, int loop_count)
+SoundPtr SoundPlayer::Play(StringView file_path, int loop_count)
 {
     SoundPtr sound = new Sound(Preload(file_path));
     Play(sound, loop_count);

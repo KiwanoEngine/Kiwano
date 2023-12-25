@@ -58,11 +58,11 @@ ResourceLoader::ResourceLoader(ResourceCache& cache)
 {
 }
 
-void ResourceLoader::LoadFromJsonFile(const String& file_path)
+void ResourceLoader::LoadFromJsonFile(StringView file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: [%s] file not found.", file_path.c_str()));
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: [%s] file not found.", file_path.data()));
         return;
     }
 
@@ -81,13 +81,13 @@ void ResourceLoader::LoadFromJsonFile(const String& file_path)
     catch (std::ios_base::failure& e)
     {
         cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: cannot open file [%s]. %s",
-                                    file_path.c_str(), e.what()));
+                                    file_path.data(), e.what()));
         return;
     }
     catch (Json::exception& e)
     {
         cache_.Fail(strings::Format("ResourceLoader::LoadFromJsonFile failed: Json file [%s] parsed with errors: %s",
-                                    file_path.c_str(), e.what()));
+                                    file_path.data(), e.what()));
         return;
     }
 
@@ -120,11 +120,11 @@ void ResourceLoader::LoadFromJson(const Json& json_data)
     }
 }
 
-void ResourceLoader::LoadFromXmlFile(const String& file_path)
+void ResourceLoader::LoadFromXmlFile(StringView file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
-        cache_.Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: [%s] file not found.", file_path.c_str()));
+        cache_.Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: [%s] file not found.", file_path.data()));
         return;
     }
 
@@ -140,7 +140,7 @@ void ResourceLoader::LoadFromXmlFile(const String& file_path)
     else
     {
         cache_.Fail(strings::Format("ResourceLoader::LoadFromXmlFile failed: XML file [%s] parsed with errors: %s",
-                                    file_path.c_str(), result.description()));
+                                    file_path.data(), result.description()));
     }
 }
 
@@ -183,14 +183,14 @@ struct GlobalData
     String path;
 };
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String& id, const String& type,
-                          const String& file)
+void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView type,
+                          StringView file)
 {
     if (type == "gif")
     {
         // GIF image
         GifImagePtr gif = MakePtr<GifImage>();
-        if (gif && gif->Load(gdata->path + file))
+        if (gif && gif->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, gif);
             return;
@@ -200,7 +200,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     {
         // Simple image
         TexturePtr texture = MakePtr<Texture>();
-        if (texture && texture->Load(gdata->path + file))
+        if (texture && texture->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, texture);
             return;
@@ -210,7 +210,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String& id, const Vector<String>& files)
+void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, const Vector<String>& files)
 {
     if (files.empty())
         return;
@@ -240,7 +240,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String& id, const String& file, int rows,
+void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file, int rows,
                           int cols, int max_num, float padding_x, float padding_y)
 {
     if (!file.empty())
@@ -249,7 +249,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
         {
             // KeyFrame slices
             SpriteFrame frame;
-            if (frame.Load(gdata->path + file))
+            if (frame.Load(gdata->path + file.data()))
             {
                 FrameSequencePtr frame_seq = MakePtr<FrameSequence>();
                 if (frame_seq)
@@ -264,7 +264,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
         {
             // Simple image
             TexturePtr texture = MakePtr<Texture>();
-            if (texture && texture->Load(gdata->path + file))
+            if (texture && texture->Load(gdata->path + file.data()))
             {
                 cache->AddObject(id, texture);
                 return;
@@ -275,9 +275,9 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, const String&
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, const String& id, const String& file)
+void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file)
 {
-    FontPtr font = Font::Preload(gdata->path + file);
+    FontPtr font = Font::Preload(gdata->path + file.data());
     if (font)
     {
         cache->AddObject(id, font);

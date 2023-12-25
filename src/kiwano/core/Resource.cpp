@@ -30,7 +30,7 @@ Resource::Resource()
 {
 }
 
-Resource::Resource(uint32_t id, const String& type)
+Resource::Resource(uint32_t id, StringView type)
     : id_(id)
     , type_(type)
 {

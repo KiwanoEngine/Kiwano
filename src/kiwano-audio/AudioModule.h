@@ -63,22 +63,22 @@ public:
     /// @brief 注册解码器
     /// @param ext 文件类型（如：ogg），* 为默认解码器
     /// @param transcoder 解码器
-    void RegisterTranscoder(const String& ext, TranscoderPtr transcoder);
+    void RegisterTranscoder(StringView ext, TranscoderPtr transcoder);
 
     /// \~chinese
     /// @brief 获取解码器
-    TranscoderPtr GetTranscoder(const String& ext);
+    TranscoderPtr GetTranscoder(StringView ext);
 
     /// \~chinese
     /// @brief 解码音频
     /// @param file_path 本地音频文件路径
-    AudioDataPtr Decode(const String& file_path);
+    AudioDataPtr Decode(StringView file_path);
 
     /// \~chinese
     /// @brief 解码音频
     /// @param res 音频资源
     /// @param ext 音频类型，决定了使用何种解码器
-    AudioDataPtr Decode(const Resource& res, const String& ext = "");
+    AudioDataPtr Decode(const Resource& res, StringView ext = "");
 
     /// \~chinese
     /// @brief 创建音频

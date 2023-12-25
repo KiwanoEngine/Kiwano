@@ -54,7 +54,7 @@ public:
 
     /// \~chinese
     /// @brief 获取组件
-    Component* GetComponent(const String& name);
+    Component* GetComponent(StringView name);
 
     /// \~chinese
     /// @brief 获取组件
@@ -75,7 +75,7 @@ public:
     /// \~chinese
     /// @brief 移除组件
     /// @param name 组件名称
-    void RemoveComponent(const String& name);
+    void RemoveComponent(StringView name);
 
     /// \~chinese
     /// @brief 移除组件

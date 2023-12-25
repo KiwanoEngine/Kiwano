@@ -54,7 +54,7 @@ Component* ComponentManager::AddComponent(size_t index, ComponentPtr component)
     return component.Get();
 }
 
-Component* ComponentManager::GetComponent(const String& name)
+Component* ComponentManager::GetComponent(StringView name)
 {
     size_t hash = std::hash<String>{}(name);
     return GetComponent(hash);
@@ -88,7 +88,7 @@ void ComponentManager::RemoveComponent(ComponentPtr component)
     RemoveComponent(component->GetName());
 }
 
-void ComponentManager::RemoveComponent(const String& name)
+void ComponentManager::RemoveComponent(StringView name)
 {
     size_t hash = std::hash<String>{}(name);
     RemoveComponent(hash);
