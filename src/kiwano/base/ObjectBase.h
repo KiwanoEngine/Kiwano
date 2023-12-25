@@ -250,7 +250,7 @@ private:
 inline StringView ObjectBase::GetName() const
 {
     if (name_)
-        return *name_;
+        return StringView(*name_);
     return StringView();
 }
 

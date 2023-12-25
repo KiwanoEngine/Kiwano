@@ -245,7 +245,7 @@ void ObjectBase::DumpTracingObjects()
     for (const auto object : tracing_objects)
     {
         KGE_DEBUG_LOGF("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*object).name(), object->GetObjectID(),
-                    object->GetRefCount(), object->GetName().c_str());
+                    object->GetRefCount(), object->GetName().data());
     }
     KGE_DEBUG_LOGF("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }

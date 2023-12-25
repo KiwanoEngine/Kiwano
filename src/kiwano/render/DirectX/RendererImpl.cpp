@@ -238,7 +238,7 @@ void RendererImpl::CreateTexture(Texture& texture, StringView file_path)
     {
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
         KGE_SET_STATUS_IF_FAILED(hr, texture,
-                                 strings::Format("Texture file '%s' not found!", file_path.c_str()).c_str());
+                                 strings::Format("Texture file '%s' not found!", file_path.data()).c_str());
         return;
     }
 
