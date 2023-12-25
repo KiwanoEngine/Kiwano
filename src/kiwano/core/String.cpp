@@ -86,13 +86,13 @@ String WideToNarrowWithCodePage(WideStringView str, UINT code_page)
     if (str.empty())
         return String();
 
-    int len = ::WideCharToMultiByte(code_page, 0, str.data(), int(str.size()), NULL, 0, NULL, NULL);
+    int len = ::WideCharToMultiByte(code_page, 0, str.data(), -1, NULL, 0, NULL, NULL);
     if (len > 0)
     {
         String result;
         result.resize(len - 1);
 
-        ::WideCharToMultiByte(code_page, 0, str.data(), int(str.size()), &result[0], len, NULL, NULL);
+        ::WideCharToMultiByte(code_page, 0, str.data(), -1, &result[0], len, NULL, NULL);
         return result;
     }
     return String();
@@ -103,13 +103,13 @@ WideString NarrowToWideWithCodePage(StringView str, UINT code_page)
     if (str.empty())
         return WideString();
 
-    int len = ::MultiByteToWideChar(code_page, 0, str.data(), int(str.size()), NULL, 0);
+    int len = ::MultiByteToWideChar(code_page, 0, str.data(), -1, NULL, 0);
     if (len > 0)
     {
         WideString result;
         result.resize(len - 1);
 
-        ::MultiByteToWideChar(code_page, 0, str.data(), int(str.size()), &result[0], len);
+        ::MultiByteToWideChar(code_page, 0, str.data(), -1, &result[0], len);
         return result;
     }
     return WideString();
