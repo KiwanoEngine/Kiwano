@@ -44,7 +44,7 @@ PhysicBody::PhysicBody(PhysicWorld* world, Type type)
     }
 }
 
-PhysicBody::PhysicBody(PhysicWorldPtr world, Type type)
+PhysicBody::PhysicBody(RefPtr<PhysicWorld> world, Type type)
     : PhysicBody(world.Get(), type)
 {
 }
@@ -174,7 +174,7 @@ void PhysicBody::UpdateFromActor(Actor* actor, const Matrix3x2& actor_to_world, 
     position_cached_ = GetPosition();
 }
 
-void PhysicBody::AddFixture(FixturePtr fixture)
+void PhysicBody::AddFixture(RefPtr<Fixture> fixture)
 {
     if (fixture)
     {
@@ -187,40 +187,40 @@ void PhysicBody::AddFixture(FixturePtr fixture)
 
 Fixture* PhysicBody::AddCircleShape(float radius, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreateCircle(Fixture::Param(density, friction), radius);
+    RefPtr<Fixture> fixture = Fixture::CreateCircle(Fixture::Param(density, friction), radius);
     AddFixture(fixture);
     return fixture.Get();
 }
 
 Fixture* PhysicBody::AddRectShape(const Vec2& size, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreateRect(Fixture::Param(density, friction), size);
+    RefPtr<Fixture> fixture = Fixture::CreateRect(Fixture::Param(density, friction), size);
     AddFixture(fixture);
     return fixture.Get();
 }
 
 Fixture* PhysicBody::AddPolygonShape(const Vector<Point>& vertexs, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreatePolygon(Fixture::Param(density, friction), vertexs);
+    RefPtr<Fixture> fixture = Fixture::CreatePolygon(Fixture::Param(density, friction), vertexs);
     AddFixture(fixture);
     return fixture.Get();
 }
 
 Fixture* PhysicBody::AddEdgeShape(const Point& p1, const Point& p2, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreateEdge(Fixture::Param(density, friction), p1, p2);
+    RefPtr<Fixture> fixture = Fixture::CreateEdge(Fixture::Param(density, friction), p1, p2);
     AddFixture(fixture);
     return fixture.Get();
 }
 
 Fixture* PhysicBody::AddChainShape(const Vector<Point>& vertices, bool loop, float density, float friction)
 {
-    FixturePtr fixture = Fixture::CreateChain(Fixture::Param(density, friction), vertices, loop);
+    RefPtr<Fixture> fixture = Fixture::CreateChain(Fixture::Param(density, friction), vertices, loop);
     AddFixture(fixture);
     return fixture.Get();
 }
 
-void PhysicBody::RemoveFixture(FixturePtr fixture)
+void PhysicBody::RemoveFixture(RefPtr<Fixture> fixture)
 {
     if (fixture)
     {

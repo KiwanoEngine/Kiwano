@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-RenderContextPtr RenderContext::Create(TexturePtr texture, const PixelSize& size)
+RefPtr<RenderContext> RenderContext::Create(RefPtr<Texture> texture, const PixelSize& size)
 {
     return Renderer::GetInstance().CreateTextureRenderContext(texture, size);
 }
@@ -86,7 +86,7 @@ float RenderContext::GetBrushOpacity() const
     return brush_opacity_;
 }
 
-BrushPtr RenderContext::GetCurrentBrush() const
+RefPtr<Brush> RenderContext::GetCurrentBrush() const
 {
     return current_brush_;
 }
@@ -106,12 +106,12 @@ void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
     SetGlobalTransform(&matrix);
 }
 
-void RenderContext::SetCurrentBrush(BrushPtr brush)
+void RenderContext::SetCurrentBrush(RefPtr<Brush> brush)
 {
     current_brush_ = brush;
 }
 
-void RenderContext::SetCurrentStrokeStyle(StrokeStylePtr stroke)
+void RenderContext::SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke)
 {
     current_stroke_ = stroke;
 }

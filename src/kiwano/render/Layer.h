@@ -24,8 +24,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Layer);
-
 /**
  * \addtogroup Render
  * @{
@@ -50,7 +48,7 @@ public:
 
     /// \~chinese
     /// @brief 获取几何蒙层
-    ShapePtr GetMaskShape() const;
+    RefPtr<Shape> GetMaskShape() const;
 
     /// \~chinese
     /// @brief 获取几何蒙层变换
@@ -66,7 +64,7 @@ public:
 
     /// \~chinese
     /// @brief 设置几何蒙层
-    void SetMaskShape(ShapePtr mask);
+    void SetMaskShape(RefPtr<Shape> mask);
 
     /// \~chinese
     /// @brief 设置几何蒙层变换
@@ -75,7 +73,7 @@ public:
 private:
     Rect      clip_rect_;
     float     opacity_;
-    ShapePtr  mask_;
+    RefPtr<Shape>  mask_;
     Matrix3x2 mask_transform_;
 };
 
@@ -91,7 +89,7 @@ inline float Layer::GetOpacity() const
     return opacity_;
 }
 
-inline ShapePtr Layer::GetMaskShape() const
+inline RefPtr<Shape> Layer::GetMaskShape() const
 {
     return mask_;
 }
@@ -111,7 +109,7 @@ inline void Layer::SetOpacity(float opacity)
     opacity_ = opacity;
 }
 
-inline void Layer::SetMaskShape(ShapePtr mask)
+inline void Layer::SetMaskShape(RefPtr<Shape> mask)
 {
     mask_ = mask;
 }

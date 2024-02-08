@@ -41,7 +41,7 @@ void ShapeMaker::Clear()
     ResetNative();
 }
 
-ShapePtr ShapeMaker::GetShape()
+RefPtr<Shape> ShapeMaker::GetShape()
 {
     return shape_;
 }
@@ -143,7 +143,7 @@ void ShapeMaker::AddArc(const Point& point, const Size& radius, float rotation, 
 #endif
 }
 
-ShapePtr ShapeMaker::Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix)
+RefPtr<Shape> ShapeMaker::Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode, const Matrix3x2* matrix)
 {
     ShapeMaker maker;
     maker.OpenStream();
@@ -210,7 +210,7 @@ void ShapeMaker::CloseStream()
 #endif
 }
 
-void ShapeMaker::SetShape(ShapePtr shape)
+void ShapeMaker::SetShape(RefPtr<Shape> shape)
 {
     shape_ = shape;
 }

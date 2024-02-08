@@ -28,8 +28,6 @@ namespace kiwano
 namespace audio
 {
 
-KGE_DECLARE_SMART_PTR(AudioData);
-
 /**
  * \addtogroup Audio
  * @{

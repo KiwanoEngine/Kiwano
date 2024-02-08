@@ -36,7 +36,7 @@ Sprite::Sprite(const Resource& res)
     Load(res);
 }
 
-Sprite::Sprite(TexturePtr texture)
+Sprite::Sprite(RefPtr<Texture> texture)
 {
     SetFrame(SpriteFrame(texture));
 }
@@ -51,7 +51,7 @@ Sprite::Sprite(const Resource& res, const Rect& crop_rect)
     SetFrame(SpriteFrame(res, crop_rect));
 }
 
-Sprite::Sprite(TexturePtr texture, const Rect& crop_rect)
+Sprite::Sprite(RefPtr<Texture> texture, const Rect& crop_rect)
 {
     SetFrame(SpriteFrame(texture, crop_rect));
 }

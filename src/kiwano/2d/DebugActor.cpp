@@ -52,13 +52,13 @@ DebugActor::DebugActor()
     SetPosition(Point{ 10, 10 });
     SetCascadeOpacityEnabled(true);
 
-    MouseSensorPtr sensor = new MouseSensor;
+    RefPtr<MouseSensor> sensor = new MouseSensor;
     this->AddComponent(sensor);
 
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 
-    background_brush_ = MakePtr<Brush>(Color::Rgba(0x000000, 0.7f));
-    debug_text_brush_ = MakePtr<Brush>(Color::White);
+    background_brush_ =  MakePtr<Brush>(Color::Rgba(0x000000, 0.7f));
+    debug_text_brush_ =  MakePtr<Brush>(Color::White);
 
     debug_text_style_.font         = new Font("Arial", 16.0f, FontWeight::Normal);
     debug_text_style_.line_spacing = 20.f;

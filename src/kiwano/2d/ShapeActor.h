@@ -28,14 +28,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ShapeActor);
-KGE_DECLARE_SMART_PTR(LineActor);
-KGE_DECLARE_SMART_PTR(RectActor);
-KGE_DECLARE_SMART_PTR(RoundedRectActor);
-KGE_DECLARE_SMART_PTR(CircleActor);
-KGE_DECLARE_SMART_PTR(EllipseActor);
-KGE_DECLARE_SMART_PTR(PolygonActor);
-
 /**
  * \addtogroup Actors
  * @{
@@ -53,39 +45,39 @@ public:
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
-    ShapeActor(ShapePtr shape);
+    ShapeActor(RefPtr<Shape> shape);
 
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
     /// @param fill_color 填充颜色
     /// @param stroke_color 轮廓颜色
-    ShapeActor(ShapePtr shape, const Color& fill_color, const Color& stroke_color);
+    ShapeActor(RefPtr<Shape> shape, const Color& fill_color, const Color& stroke_color);
 
     /// \~chinese
     /// @brief 创建形状角色
     /// @param shape 形状
     /// @param fill_brush 填充画刷
     /// @param stroke_brush 轮廓画刷
-    ShapeActor(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush);
+    ShapeActor(RefPtr<Shape> shape, RefPtr<Brush> fill_brush, RefPtr<Brush> stroke_brush);
 
     virtual ~ShapeActor();
 
     /// \~chinese
     /// @brief 获取填充画刷
-    BrushPtr GetFillBrush() const;
+    RefPtr<Brush> GetFillBrush() const;
 
     /// \~chinese
     /// @brief 获取轮廓画刷
-    BrushPtr GetStrokeBrush() const;
+    RefPtr<Brush> GetStrokeBrush() const;
 
     /// \~chinese
     /// @brief 获取线条样式
-    StrokeStylePtr GetStrokeStyle() const;
+    RefPtr<StrokeStyle> GetStrokeStyle() const;
 
     /// \~chinese
     /// @brief 获取形状
-    ShapePtr GetShape() const;
+    RefPtr<Shape> GetShape() const;
 
     /// \~chinese
     /// @brief 获取边界
@@ -107,7 +99,7 @@ public:
     /// \~chinese
     /// @brief 设置填充画刷
     /// @param[in] brush 填充画刷
-    void SetFillBrush(BrushPtr brush);
+    void SetFillBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置轮廓颜色
@@ -117,15 +109,15 @@ public:
     /// \~chinese
     /// @brief 设置轮廓画刷
     /// @param[in] brush 轮廓画刷
-    void SetStrokeBrush(BrushPtr brush);
+    void SetStrokeBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置线条样式
-    void SetStrokeStyle(StrokeStylePtr stroke_style);
+    void SetStrokeStyle(RefPtr<StrokeStyle> stroke_style);
 
     /// \~chinese
     /// @brief 设置形状
-    void SetShape(ShapePtr shape);
+    void SetShape(RefPtr<Shape> shape);
 
     void OnRender(RenderContext& ctx) override;
 
@@ -133,11 +125,11 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    BrushPtr       fill_brush_;
-    BrushPtr       stroke_brush_;
-    StrokeStylePtr stroke_style_;
+    RefPtr<Brush>       fill_brush_;
+    RefPtr<Brush>       stroke_brush_;
+    RefPtr<StrokeStyle> stroke_style_;
     Rect           bounds_;
-    ShapePtr       shape_;
+    RefPtr<Shape>       shape_;
 };
 
 /// \~chinese
@@ -336,7 +328,7 @@ inline void ShapeActor::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ = MakePtr<Brush>();
+        stroke_brush_ =  MakePtr<Brush>();
     }
     stroke_brush_->SetColor(color);
 }
@@ -345,42 +337,42 @@ inline void ShapeActor::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ = MakePtr<Brush>();
+        fill_brush_ =  MakePtr<Brush>();
     }
     fill_brush_->SetColor(color);
 }
 
-inline void ShapeActor::SetFillBrush(BrushPtr brush)
+inline void ShapeActor::SetFillBrush(RefPtr<Brush> brush)
 {
     fill_brush_ = brush;
 }
 
-inline void ShapeActor::SetStrokeBrush(BrushPtr brush)
+inline void ShapeActor::SetStrokeBrush(RefPtr<Brush> brush)
 {
     stroke_brush_ = brush;
 }
 
-inline BrushPtr ShapeActor::GetFillBrush() const
+inline RefPtr<Brush> ShapeActor::GetFillBrush() const
 {
     return fill_brush_;
 }
 
-inline BrushPtr ShapeActor::GetStrokeBrush() const
+inline RefPtr<Brush> ShapeActor::GetStrokeBrush() const
 {
     return stroke_brush_;
 }
 
-inline StrokeStylePtr ShapeActor::GetStrokeStyle() const
+inline RefPtr<StrokeStyle> ShapeActor::GetStrokeStyle() const
 {
     return stroke_style_;
 }
 
-inline ShapePtr ShapeActor::GetShape() const
+inline RefPtr<Shape> ShapeActor::GetShape() const
 {
     return shape_;
 }
 
-inline void ShapeActor::SetStrokeStyle(StrokeStylePtr stroke_style)
+inline void ShapeActor::SetStrokeStyle(RefPtr<StrokeStyle> stroke_style)
 {
     stroke_style_ = stroke_style;
 }

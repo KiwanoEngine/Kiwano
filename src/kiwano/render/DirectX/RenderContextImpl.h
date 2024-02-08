@@ -28,7 +28,6 @@ namespace graphics
 {
 namespace directx
 {
-KGE_DECLARE_SMART_PTR(RenderContextImpl);
 
 class KGE_API RenderContextImpl : public RenderContext
 {
@@ -47,7 +46,7 @@ public:
 
     void DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect) override;
 
-    void DrawTextLayout(const TextLayout& layout, const Point& offset, BrushPtr outline_brush) override;
+    void DrawTextLayout(const TextLayout& layout, const Point& offset, RefPtr<Brush> outline_brush) override;
 
     void DrawShape(const Shape& shape) override;
 
@@ -81,9 +80,9 @@ public:
 
     Size GetSize() const override;
 
-    void SetCurrentBrush(BrushPtr brush) override;
+    void SetCurrentBrush(RefPtr<Brush> brush) override;
 
-    void SetCurrentStrokeStyle(StrokeStylePtr stroke_style) override;
+    void SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke_style) override;
 
     void SetTransform(const Matrix3x2& matrix) override;
 
@@ -97,7 +96,7 @@ public:
 
     void Resize(const Size& size) override;
 
-    TexturePtr GetTarget() const override;
+    RefPtr<Texture> GetTarget() const override;
 
 private:
     void DiscardDeviceResources();

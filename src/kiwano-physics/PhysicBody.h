@@ -60,7 +60,7 @@ public:
     /// @brief 初始化物体
     /// @param world 物理世界
     /// @param type 物体类型
-    PhysicBody(PhysicWorldPtr world, Type type);
+    PhysicBody(RefPtr<PhysicWorld> world, Type type);
 
     virtual ~PhysicBody();
 
@@ -71,7 +71,7 @@ public:
 
     /// \~chinese
     /// @brief 添加夹具
-    void AddFixture(FixturePtr fixture);
+    void AddFixture(RefPtr<Fixture> fixture);
 
     /// \~chinese
     /// @brief 添加圆形夹具
@@ -108,7 +108,7 @@ public:
 
     /// \~chinese
     /// @brief 移除夹具
-    void RemoveFixture(FixturePtr fixture);
+    void RemoveFixture(RefPtr<Fixture> fixture);
 
     /// \~chinese
     /// @brief 移除所有夹具
@@ -361,7 +361,7 @@ private:
     int16_t      group_index_;
 
     PhysicBody::Type   type_;
-    Vector<FixturePtr> fixtures_;
+    Vector<RefPtr<Fixture>> fixtures_;
 
     Point offset_;
     Point position_cached_;

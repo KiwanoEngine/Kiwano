@@ -24,7 +24,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Font);
 
 class Renderer;
 
@@ -92,12 +91,12 @@ public:
     /// \~chinese
     /// @brief 预加载字体
     /// @param file 字体文件
-    static FontPtr Preload(StringView file);
+    static RefPtr<Font> Preload(StringView file);
 
     /// \~chinese
     /// @brief 预加载字体
     /// @param resource 字体资源
-    static FontPtr Preload(const Resource& resource);
+    static RefPtr<Font> Preload(const Resource& resource);
 
     /// \~chinese
     /// @brief 创建系统默认字体
@@ -156,19 +155,19 @@ class KGE_API FontCache final : public Singleton<FontCache>
 public:
     /// \~chinese
     /// @brief 添加字体缓存
-    void AddFont(size_t key, FontPtr font);
+    void AddFont(size_t key, RefPtr<Font> font);
 
     /// \~chinese
     /// @brief 添加字体族映射字体缓存
-    void AddFontByFamily(StringView font_family, FontPtr font);
+    void AddFontByFamily(StringView font_family, RefPtr<Font> font);
 
     /// \~chinese
     /// @brief 获取字体缓存
-    FontPtr GetFont(size_t key) const;
+    RefPtr<Font> GetFont(size_t key) const;
 
     /// \~chinese
     /// @brief 获取字体族映射字体缓存
-    FontPtr GetFontByFamily(StringView font_family) const;
+    RefPtr<Font> GetFontByFamily(StringView font_family) const;
 
     /// \~chinese
     /// @brief 移除字体缓存
@@ -190,10 +189,10 @@ private:
     String TransformFamily(String family) const;
 
 private:
-    using FontMap = UnorderedMap<size_t, FontPtr>;
+    using FontMap = UnorderedMap<size_t, RefPtr<Font>>;
     FontMap font_cache_;
 
-    using FontFamilyMap = UnorderedMap<String, FontPtr>;
+    using FontFamilyMap = UnorderedMap<String, RefPtr<Font>>;
     FontFamilyMap font_family_cache_;
 };
 

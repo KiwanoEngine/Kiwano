@@ -24,7 +24,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(GifImage);
 
 /**
  * \addtogroup Render
@@ -88,7 +87,7 @@ public:
     struct Frame
     {
         Duration     delay;          ///< Ö¡ÑÓ³Ù
-        TexturePtr   texture;        ///< Ö¡Í¼Ïñ
+        RefPtr<Texture>   texture;        ///< Ö¡Í¼Ïñ
         Rect         rect;           ///< »æÖÆÇøÓò
         DisposalType disposal_type;  ///< ´¦ÖÃ·½Ê½
 

@@ -77,7 +77,7 @@ void TextActor::SetText(StringView text)
 {
     if (!layout_)
     {
-        layout_ = MakePtr<TextLayout>();
+        layout_ =  MakePtr<TextLayout>();
     }
 
     try
@@ -100,7 +100,7 @@ void TextActor::SetStyle(const TextStyle& style)
         layout_->Reset(content_, style);
 }
 
-void TextActor::SetFont(FontPtr font)
+void TextActor::SetFont(RefPtr<Font> font)
 {
     if (style_.font != font)
     {
@@ -166,19 +166,19 @@ void TextActor::SetAlignment(TextAlign align)
     }
 }
 
-void TextActor::SetFillBrush(BrushPtr brush)
+void TextActor::SetFillBrush(RefPtr<Brush> brush)
 {
     fill_brush_     = brush;
     is_cache_dirty_ = true;
 }
 
-void TextActor::SetOutlineBrush(BrushPtr brush)
+void TextActor::SetOutlineBrush(RefPtr<Brush> brush)
 {
     outline_brush_  = brush;
     is_cache_dirty_ = true;
 }
 
-void TextActor::SetOutlineStrokeStyle(StrokeStylePtr stroke)
+void TextActor::SetOutlineStrokeStyle(RefPtr<StrokeStyle> stroke)
 {
     outline_stroke_ = stroke;
     is_cache_dirty_ = true;
@@ -193,7 +193,7 @@ void TextActor::SetFillColor(const Color& color)
     }
     else
     {
-        SetFillBrush(MakePtr<Brush>(color));
+        SetFillBrush( MakePtr<Brush>(color));
     }
 }
 
@@ -206,11 +206,11 @@ void TextActor::SetOutlineColor(const Color& outline_color)
     }
     else
     {
-        SetOutlineBrush(MakePtr<Brush>(outline_color));
+        SetOutlineBrush( MakePtr<Brush>(outline_color));
     }
 }
 
-void TextActor::SetTextLayout(TextLayoutPtr layout)
+void TextActor::SetTextLayout(RefPtr<TextLayout> layout)
 {
     if (layout_ != layout)
     {
@@ -227,7 +227,7 @@ void TextActor::SetPreRenderEnabled(bool enable)
     {
         if (enable)
         {
-            texture_cached_ = MakePtr<Texture>();
+            texture_cached_ =  MakePtr<Texture>();
         }
         else
         {

@@ -30,8 +30,6 @@ class Actor;
 class Event;
 class ComponentManager;
 
-KGE_DECLARE_SMART_PTR(Component);
-
 /**
  * \~chinese
  * \defgroup Component ×é¼þ

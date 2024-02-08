@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ConfigIni);
-
 /// \~chinese
 /// @brief ini格式文件
 class KGE_API ConfigIni : public ObjectBase

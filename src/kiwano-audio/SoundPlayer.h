@@ -25,7 +25,6 @@ namespace kiwano
 {
 namespace audio
 {
-KGE_DECLARE_SMART_PTR(SoundPlayer);
 
 /**
  * \addtogroup Audio
@@ -39,7 +38,7 @@ KGE_DECLARE_SMART_PTR(SoundPlayer);
 class KGE_API SoundPlayer : public ObjectBase
 {
 public:
-    using SoundList = List<SoundPtr>;
+    using SoundList = List<RefPtr<Sound>>;
 
     SoundPlayer();
 
@@ -48,29 +47,29 @@ public:
     /// \~chinese
     /// @brief 预加载音频
     /// @details 
-    AudioDataPtr Preload(StringView file_path);
+    RefPtr<AudioData> Preload(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载音频资源
-    AudioDataPtr Preload(const Resource& res, StringView ext = "");
+    RefPtr<AudioData> Preload(const Resource& res, StringView ext = "");
 
     /// \~chinese
     /// @brief 播放音频
     /// @param sound 音频
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    void Play(SoundPtr sound, int loop_count = 0);
+    void Play(RefPtr<Sound> sound, int loop_count = 0);
 
     /// \~chinese
     /// @brief 播放音频
     /// @param file_path 本地音频文件路径
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    SoundPtr Play(StringView file_path, int loop_count = 0);
+    RefPtr<Sound> Play(StringView file_path, int loop_count = 0);
 
     /// \~chinese
     /// @brief 播放音频
     /// @param res 音频资源
     /// @param loop_count 播放循环次数，设置 -1 为循环播放
-    SoundPtr Play(const Resource& res, int loop_count = 0);
+    RefPtr<Sound> Play(const Resource& res, int loop_count = 0);
 
     /// \~chinese
     /// @brief 暂停所有音频
@@ -116,9 +115,9 @@ protected:
     float            volume_;
     SoundList        sound_list_;
     SoundList        trash_;
-    SoundCallbackPtr callback_;
+    RefPtr<SoundCallback> callback_;
 
-    UnorderedMap<size_t, AudioDataPtr> cache_;
+    UnorderedMap<size_t, RefPtr<AudioData>> cache_;
 };
 
 /** @} */

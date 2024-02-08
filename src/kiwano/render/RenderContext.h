@@ -29,8 +29,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(RenderContext);
-
 /**
  * \addtogroup Render
  * @{
@@ -67,7 +65,7 @@ public:
     /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
     /// @param texture 保存绘制结果的纹理
     /// @param size 渲染输出大小
-    static RenderContextPtr Create(TexturePtr texture, const PixelSize& size);
+    static RefPtr<RenderContext> Create(RefPtr<Texture> texture, const PixelSize& size);
 
     /// \~chinese
     /// @brief 开始渲染
@@ -96,7 +94,7 @@ public:
     /// @param layout 文本布局
     /// @param offset 偏移量
     /// @param outline_brush 描边画刷
-    virtual void DrawTextLayout(const TextLayout& layout, const Point& offset, BrushPtr outline_brush) = 0;
+    virtual void DrawTextLayout(const TextLayout& layout, const Point& offset, RefPtr<Brush> outline_brush) = 0;
 
     /// \~chinese
     /// @brief 绘制形状轮廓
@@ -197,7 +195,7 @@ public:
 
     /// \~chinese
     /// @brief 获取当前画刷
-    virtual BrushPtr GetCurrentBrush() const;
+    virtual RefPtr<Brush> GetCurrentBrush() const;
 
     /// \~chinese
     /// @brief 获取全局二维变换
@@ -209,11 +207,11 @@ public:
 
     /// \~chinese
     /// @brief 设置当前使用的画刷
-    virtual void SetCurrentBrush(BrushPtr brush);
+    virtual void SetCurrentBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置当前使用的线条样式
-    virtual void SetCurrentStrokeStyle(StrokeStylePtr stroke);
+    virtual void SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke);
 
     /// \~chinese
     /// @brief 设置混合模式
@@ -249,7 +247,7 @@ public:
 
     /// \~chinese
     /// @brief 获取渲染目标
-    virtual TexturePtr GetTarget() const = 0;
+    virtual RefPtr<Texture> GetTarget() const = 0;
 
 public:
     /// \~chinese
@@ -284,8 +282,8 @@ protected:
     mutable bool      collecting_status_;
     float             brush_opacity_;
     TextAntialiasMode text_antialias_;
-    BrushPtr          current_brush_;
-    StrokeStylePtr    current_stroke_;
+    RefPtr<Brush>          current_brush_;
+    RefPtr<StrokeStyle>    current_stroke_;
     Rect              visible_size_;
     Matrix3x2         global_transform_;
     mutable Status    status_;

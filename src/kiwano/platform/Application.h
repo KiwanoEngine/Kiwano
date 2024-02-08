@@ -67,7 +67,7 @@ public:
      * @param runner 程序运行器
      * @note 该函数是阻塞的，应用程序结束时函数返回
      */
-    void Run(RunnerPtr runner);
+    void Run(RefPtr<Runner> runner);
 
     /**
      * \~chinese
@@ -104,13 +104,13 @@ public:
      * \~chinese
      * @brief 获取程序运行器
      */
-    RunnerPtr GetRunner() const;
+    RefPtr<Runner> GetRunner() const;
 
     /**
      * \~chinese
      * @brief 获取窗口
      */
-    WindowPtr GetWindow() const;
+    RefPtr<Window> GetWindow() const;
 
     /**
      * \~chinese
@@ -127,7 +127,7 @@ public:
      * @details 将事件分发给所有事件功能模块
      * @param evt 事件
      */
-    void DispatchEvent(EventPtr evt);
+    void DispatchEvent(RefPtr<Event> evt);
 
     /**
      * \~chinese
@@ -176,19 +176,19 @@ private:
     bool                    running_;
     bool                    is_paused_;
     float                   time_scale_;
-    RunnerPtr               runner_;
-    TimerPtr                timer_;
+    RefPtr<Runner>               runner_;
+    RefPtr<Timer>                timer_;
     ModuleList              modules_;
     std::mutex              perform_mutex_;
     Queue<Function<void()>> functions_to_perform_;
 };
 
-inline RunnerPtr Application::GetRunner() const
+inline RefPtr<Runner> Application::GetRunner() const
 {
     return runner_;
 }
 
-inline WindowPtr Application::GetWindow() const
+inline RefPtr<Window> Application::GetWindow() const
 {
     if (runner_)
         return runner_->GetWindow();

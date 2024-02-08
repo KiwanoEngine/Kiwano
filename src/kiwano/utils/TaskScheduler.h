@@ -26,7 +26,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief 任务列表
-typedef IntrusiveList<TaskPtr> TaskList;
+typedef IntrusiveList<RefPtr<Task>> TaskList;
 
 /**
  * \~chinese
@@ -37,20 +37,20 @@ class KGE_API TaskScheduler : Noncopyable
 public:
     /// \~chinese
     /// @brief 添加任务
-    Task* AddTask(TaskPtr task);
+    Task* AddTask(RefPtr<Task> task);
 
     /// \~chinese
     /// @brief 添加任务
     /// @param cb 回调函数
     /// @param 报时器
-    Task* AddTask(const Task::Callback& cb, TickerPtr ticker);
+    Task* AddTask(const Task::Callback& cb, RefPtr<Ticker> ticker);
 
     /// \~chinese
     /// @brief 添加任务
     /// @param name 名称
     /// @param cb 回调函数
     /// @param 报时器
-    Task* AddTask(StringView name, const Task::Callback& cb, TickerPtr ticker);
+    Task* AddTask(StringView name, const Task::Callback& cb, RefPtr<Ticker> ticker);
 
     /// \~chinese
     /// @brief 添加任务

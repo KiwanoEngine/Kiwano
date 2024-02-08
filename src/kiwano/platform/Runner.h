@@ -32,8 +32,6 @@ namespace kiwano
 
 class Application;
 
-KGE_DECLARE_SMART_PTR(Runner);
-
 /**
  * \~chinese
  * @brief 游戏设置
@@ -96,7 +94,7 @@ public:
 
     /// \~chinese
     /// @brief 获取窗口
-    WindowPtr GetWindow() const;
+    RefPtr<Window> GetWindow() const;
 
     /// \~chinese
     /// @brief 获取设置
@@ -104,11 +102,11 @@ public:
 
     /// \~chinese
     /// @brief 获取帧报时器
-    TickerPtr GetFrameTicker() const;
+    RefPtr<Ticker> GetFrameTicker() const;
 
     /// \~chinese
     /// @brief 设置帧报时器
-    void SetFrameTicker(TickerPtr ticker);
+    void SetFrameTicker(RefPtr<Ticker> ticker);
 
 protected:
     /// \~chinese
@@ -117,7 +115,7 @@ protected:
 
     /// \~chinese
     /// @brief 设置窗口
-    void SetWindow(WindowPtr window);
+    void SetWindow(RefPtr<Window> window);
 
 private:
     friend class Application;
@@ -126,8 +124,8 @@ private:
 
 private:
     Settings  settings_;
-    WindowPtr main_window_;
-    TickerPtr frame_ticker_;
+    RefPtr<Window> main_window_;
+    RefPtr<Ticker> frame_ticker_;
 };
 
 inline void Runner::OnReady() {}
@@ -139,12 +137,12 @@ inline bool Runner::OnClose()
     return true;
 }
 
-inline WindowPtr Runner::GetWindow() const
+inline RefPtr<Window> Runner::GetWindow() const
 {
     return main_window_;
 }
 
-inline void Runner::SetWindow(WindowPtr window)
+inline void Runner::SetWindow(RefPtr<Window> window)
 {
     main_window_ = window;
 }
@@ -159,12 +157,12 @@ inline void Runner::SetSettings(Settings settings)
     settings_ = settings;
 }
 
-inline TickerPtr Runner::GetFrameTicker() const
+inline RefPtr<Ticker> Runner::GetFrameTicker() const
 {
     return frame_ticker_;
 }
 
-inline void Runner::SetFrameTicker(TickerPtr ticker)
+inline void Runner::SetFrameTicker(RefPtr<Ticker> ticker)
 {
     frame_ticker_ = ticker;
 }

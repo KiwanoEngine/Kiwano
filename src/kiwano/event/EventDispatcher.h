@@ -26,7 +26,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief ¼àÌıÆ÷ÁĞ±í
-typedef IntrusiveList<EventListenerPtr> ListenerList;
+typedef IntrusiveList<RefPtr<EventListener>> ListenerList;
 
 /**
  * \~chinese
@@ -37,7 +37,7 @@ class KGE_API EventDispatcher
 public:
     /// \~chinese
     /// @brief Ìí¼Ó¼àÌıÆ÷
-    EventListener* AddListener(EventListenerPtr listener);
+    EventListener* AddListener(RefPtr<EventListener> listener);
 
     /// \~chinese
     /// @brief Ìí¼Ó¼àÌıÆ÷

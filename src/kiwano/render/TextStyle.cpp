@@ -24,11 +24,11 @@ namespace kiwano
 {
 
 TextStyle::TextStyle()
-    : TextStyle(FontPtr(nullptr))
+    : TextStyle(RefPtr<Font>(nullptr))
 {
 }
 
-TextStyle::TextStyle(FontPtr font)
+TextStyle::TextStyle(RefPtr<Font> font)
     : font(font)
     , alignment(TextAlign::Left)
     , wrap_width(0)
@@ -39,7 +39,7 @@ TextStyle::TextStyle(FontPtr font)
 }
 
 TextStyle::TextStyle(StringView font_family, float font_size, uint32_t font_weight)
-    : TextStyle(MakePtr<Font>(font_family, font_size, font_weight))
+    : TextStyle( MakePtr<Font>(font_family, font_size, font_weight))
 {
 }
 

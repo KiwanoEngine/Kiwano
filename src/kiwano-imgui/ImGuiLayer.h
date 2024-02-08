@@ -25,7 +25,6 @@ namespace kiwano
 {
 namespace imgui
 {
-KGE_DECLARE_SMART_PTR(ImGuiLayer);
 
 /// \~chinese
 /// @brief ImGui¹ÜµÀ

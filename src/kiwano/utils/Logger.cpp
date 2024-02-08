@@ -551,10 +551,10 @@ Logger::Logger()
     , buffer_(1024)
     , stream_(&buffer_)
 {
-    LogFormaterPtr formater = MakePtr<TextFormater>();
+    RefPtr<LogFormater> formater =  MakePtr<TextFormater>();
     SetFormater(formater);
 
-    LogProviderPtr provider = MakePtr<ConsoleLogProvider>();
+    RefPtr<LogProvider> provider =  MakePtr<ConsoleLogProvider>();
     AddProvider(provider);
 }
 
@@ -614,7 +614,7 @@ void Logger::SetLevel(LogLevel level)
     level_ = level;
 }
 
-void Logger::AddProvider(LogProviderPtr provider)
+void Logger::AddProvider(RefPtr<LogProvider> provider)
 {
     if (provider)
     {
@@ -623,7 +623,7 @@ void Logger::AddProvider(LogProviderPtr provider)
     }
 }
 
-LogFormaterPtr Logger::GetFormater()
+RefPtr<LogFormater> Logger::GetFormater()
 {
     return formater_;
 }

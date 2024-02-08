@@ -24,8 +24,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(PathAnimation);
-
 /**
  * \addtogroup Animation
  * @{
@@ -44,11 +42,11 @@ public:
     /// @param rotating 是否沿路径切线方向旋转
     /// @param start 路径起点（百分比）
     /// @param end 路径终点（百分比）
-    PathAnimation(Duration duration, ShapePtr path, bool rotating = false, float start = 0.f, float end = 1.f);
+    PathAnimation(Duration duration, RefPtr<Shape> path, bool rotating = false, float start = 0.f, float end = 1.f);
 
     /// \~chinese
     /// @brief 获取路线
-    ShapePtr GetPath() const;
+    RefPtr<Shape> GetPath() const;
 
     /// \~chinese
     /// @brief 是否沿路径切线方向旋转
@@ -64,7 +62,7 @@ public:
 
     /// \~chinese
     /// @brief 设置路径形状
-    void SetPath(ShapePtr path);
+    void SetPath(RefPtr<Shape> path);
 
     /// \~chinese
     /// @brief 设置沿路径切线方向旋转
@@ -97,12 +95,12 @@ private:
     float    end_;
     float    length_;
     Point    start_pos_;
-    ShapePtr path_;
+    RefPtr<Shape> path_;
 };
 
 /** @} */
 
-inline ShapePtr PathAnimation::GetPath() const
+inline RefPtr<Shape> PathAnimation::GetPath() const
 {
     return path_;
 }
@@ -122,7 +120,7 @@ inline float PathAnimation::GetEndValue() const
     return end_;
 }
 
-inline void PathAnimation::SetPath(ShapePtr path)
+inline void PathAnimation::SetPath(RefPtr<Shape> path)
 {
     path_ = path;
 }

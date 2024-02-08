@@ -24,8 +24,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Ticker);
-
 /// \~chinese
 /// @brief 报时器
 class KGE_API Ticker
@@ -93,11 +91,11 @@ public:
 
     /// \~chinese
     /// @brief 获取计时器
-    TimerPtr GetTimer();
+    RefPtr<Timer> GetTimer();
 
     /// \~chinese
     /// @brief 设置计时器
-    void SetTimer(TimerPtr timer);
+    void SetTimer(RefPtr<Timer> timer);
 
     /// \~chinese
     /// @brief 重置报时器
@@ -111,7 +109,7 @@ private:
     Duration elapsed_time_;
     Duration delta_time_;
     Duration error_time_;
-    TimerPtr timer_;
+    RefPtr<Timer> timer_;
 };
 
 inline bool Ticker::IsPausing() const

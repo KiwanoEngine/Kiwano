@@ -75,7 +75,7 @@ struct ComPolicy
     }
 
     template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-    static inline ComPtr<_Ty> Get(NativeObjectPtr object)
+    static inline ComPtr<_Ty> Get(RefPtr<NativeObject> object)
     {
         return ComPolicy::Get<_Ty>(object.Get());
     }
@@ -98,7 +98,7 @@ struct ComPolicy
         ComPolicy::Set(&object, com_ptr);
     }
 
-    static inline void Set(NativeObjectPtr object, IUnknown* com_ptr)
+    static inline void Set(RefPtr<NativeObject> object, IUnknown* com_ptr)
     {
         ComPolicy::Set(object.Get(), com_ptr);
     }
@@ -108,7 +108,7 @@ struct ComPolicy
         ComPolicy::Set(&object, com_ptr.Get());
     }
 
-    static inline void Set(NativeObjectPtr object, ComPtr<IUnknown> com_ptr)
+    static inline void Set(RefPtr<NativeObject> object, ComPtr<IUnknown> com_ptr)
     {
         ComPolicy::Set(object.Get(), com_ptr.Get());
     }

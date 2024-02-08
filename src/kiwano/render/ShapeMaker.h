@@ -24,8 +24,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ShapeMaker);
-
 /**
  * \addtogroup Render
  * @{
@@ -52,7 +50,7 @@ public:
 
     /// \~chinese
     /// @brief 获取生成的形状
-    ShapePtr GetShape();
+    RefPtr<Shape> GetShape();
 
     /// \~chinese
     /// @brief 清空图形
@@ -107,12 +105,12 @@ public:
     /// @param mode 合并方式
     /// @param matrix 应用到输入形状B上的二维变换
     /// @return 返回合并后的形状
-    static ShapePtr Combine(ShapePtr shape_a, ShapePtr shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
+    static RefPtr<Shape> Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
     /// @brief 设置生成的形状
     /// @note 应由系统调用该函数
-    void SetShape(ShapePtr shape);
+    void SetShape(RefPtr<Shape> shape);
 
 private:
     /// \~chinese
@@ -131,7 +129,7 @@ private:
     bool IsStreamOpened() const;
 
 private:
-    ShapePtr shape_;
+    RefPtr<Shape> shape_;
 };
 
 /** @} */

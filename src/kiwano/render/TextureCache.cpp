@@ -30,14 +30,14 @@ TextureCache::~TextureCache()
     Clear();
 }
 
-TexturePtr TextureCache::Preload(StringView file_path)
+RefPtr<Texture> TextureCache::Preload(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
-    if (TexturePtr ptr = this->GetTexture(hash_code))
+    if (RefPtr<Texture> ptr = this->GetTexture(hash_code))
     {
         return ptr;
     }
-    TexturePtr ptr = MakePtr<Texture>();
+    RefPtr<Texture> ptr =  MakePtr<Texture>();
     if (ptr && ptr->Load(file_path))
     {
         this->AddTexture(hash_code, ptr);
@@ -45,14 +45,14 @@ TexturePtr TextureCache::Preload(StringView file_path)
     return ptr;
 }
 
-TexturePtr TextureCache::Preload(const Resource& res)
+RefPtr<Texture> TextureCache::Preload(const Resource& res)
 {
     size_t hash_code = res.GetId();
-    if (TexturePtr ptr = this->GetTexture(hash_code))
+    if (RefPtr<Texture> ptr = this->GetTexture(hash_code))
     {
         return ptr;
     }
-    TexturePtr ptr = MakePtr<Texture>();
+    RefPtr<Texture> ptr =  MakePtr<Texture>();
     if (ptr && ptr->Load(res))
     {
         this->AddTexture(hash_code, ptr);
@@ -60,14 +60,14 @@ TexturePtr TextureCache::Preload(const Resource& res)
     return ptr;
 }
 
-GifImagePtr TextureCache::PreloadGif(StringView file_path)
+RefPtr<GifImage> TextureCache::PreloadGif(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
-    if (GifImagePtr ptr = this->GetGifImage(hash_code))
+    if (RefPtr<GifImage> ptr = this->GetGifImage(hash_code))
     {
         return ptr;
     }
-    GifImagePtr ptr = MakePtr<GifImage>();
+    RefPtr<GifImage> ptr =  MakePtr<GifImage>();
     if (ptr && ptr->Load(file_path))
     {
         this->AddGifImage(hash_code, ptr);
@@ -75,14 +75,14 @@ GifImagePtr TextureCache::PreloadGif(StringView file_path)
     return ptr;
 }
 
-GifImagePtr TextureCache::PreloadGif(const Resource& res)
+RefPtr<GifImage> TextureCache::PreloadGif(const Resource& res)
 {
     size_t hash_code = res.GetId();
-    if (GifImagePtr ptr = this->GetGifImage(hash_code))
+    if (RefPtr<GifImage> ptr = this->GetGifImage(hash_code))
     {
         return ptr;
     }
-    GifImagePtr ptr = MakePtr<GifImage>();
+    RefPtr<GifImage> ptr =  MakePtr<GifImage>();
     if (ptr && ptr->Load(res))
     {
         this->AddGifImage(hash_code, ptr);
@@ -90,32 +90,32 @@ GifImagePtr TextureCache::PreloadGif(const Resource& res)
     return ptr;
 }
 
-void TextureCache::AddTexture(size_t key, TexturePtr texture)
+void TextureCache::AddTexture(size_t key, RefPtr<Texture> texture)
 {
     texture_cache_[key] = texture;
 }
 
-void TextureCache::AddGifImage(size_t key, GifImagePtr gif)
+void TextureCache::AddGifImage(size_t key, RefPtr<GifImage> gif)
 {
     gif_texture_cache_[key] = gif;
 }
 
-TexturePtr TextureCache::GetTexture(size_t key) const
+RefPtr<Texture> TextureCache::GetTexture(size_t key) const
 {
     if (texture_cache_.count(key))
     {
         return texture_cache_.at(key);
     }
-    return TexturePtr();
+    return RefPtr<Texture>();
 }
 
-GifImagePtr TextureCache::GetGifImage(size_t key) const
+RefPtr<GifImage> TextureCache::GetGifImage(size_t key) const
 {
     if (gif_texture_cache_.count(key))
     {
         return gif_texture_cache_.at(key);
     }
-    return GifImagePtr();
+    return RefPtr<GifImage>();
 }
 
 void TextureCache::RemoveTexture(size_t key)

@@ -81,7 +81,7 @@ void Actor::Update(Duration dt)
 
     if (!children_.IsEmpty())
     {
-        ActorPtr next;
+        RefPtr<Actor> next;
         for (auto child = children_.GetFirst(); child; child = next)
         {
             next = child->GetNext();
@@ -110,7 +110,7 @@ void Actor::Render(RenderContext& ctx)
     else
     {
         // render children those are less than 0 in Z-Order
-        ActorPtr child = children_.GetFirst();
+        RefPtr<Actor> child = children_.GetFirst();
         while (child)
         {
             if (child->GetZOrder() >= 0)
@@ -189,7 +189,7 @@ bool Actor::DispatchEvent(Event* evt)
         return true;
 
     // Dispatch to children those are greater than 0 in Z-Order
-    ActorPtr child = children_.GetLast();
+    RefPtr<Actor> child = children_.GetLast();
     while (child)
     {
         if (child->GetZOrder() < 0)
@@ -355,11 +355,11 @@ void Actor::Reorder()
 {
     if (parent_)
     {
-        ActorPtr me = this;
+        RefPtr<Actor> me = this;
 
         parent_->children_.Remove(me);
 
-        ActorPtr sibling = parent_->children_.GetLast();
+        RefPtr<Actor> sibling = parent_->children_.GetLast();
 
         if (sibling && sibling->GetZOrder() > z_order_)
         {
@@ -481,7 +481,7 @@ void Actor::SetRotation(float angle)
     dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
-void Actor::AddChild(ActorPtr child)
+void Actor::AddChild(RefPtr<Actor> child)
 {
     if (child)
     {
@@ -514,13 +514,13 @@ void Actor::AddChild(ActorPtr child)
     }
 }
 
-void Actor::AddChild(ActorPtr child, int zorder)
+void Actor::AddChild(RefPtr<Actor> child, int zorder)
 {
     child->z_order_ = zorder;
     this->AddChild(child);
 }
 
-void Actor::AddChildren(const Vector<ActorPtr>& children)
+void Actor::AddChildren(const Vector<RefPtr<Actor>>& children)
 {
     for (const auto& actor : children)
     {
@@ -538,9 +538,9 @@ Rect Actor::GetBoundingBox() const
     return GetTransformMatrix().Transform(GetBounds());
 }
 
-Vector<ActorPtr> Actor::GetChildren(StringView name) const
+Vector<RefPtr<Actor>> Actor::GetChildren(StringView name) const
 {
-    Vector<ActorPtr> children;
+    Vector<RefPtr<Actor>> children;
     size_t           hash_code = std::hash<StringView>{}(name);
 
     for (const auto& child : children_)
@@ -553,7 +553,7 @@ Vector<ActorPtr> Actor::GetChildren(StringView name) const
     return children;
 }
 
-ActorPtr Actor::GetChild(StringView name) const
+RefPtr<Actor> Actor::GetChild(StringView name) const
 {
     size_t hash_code = std::hash<StringView>{}(name);
 
@@ -585,7 +585,7 @@ void Actor::RemoveFromParent()
     }
 }
 
-void Actor::RemoveChild(ActorPtr child)
+void Actor::RemoveChild(RefPtr<Actor> child)
 {
     if (children_.IsEmpty())
         return;
@@ -612,8 +612,8 @@ void Actor::RemoveChildren(StringView child_name)
 
     size_t hash_code = std::hash<StringView>{}(child_name);
 
-    ActorPtr next;
-    for (ActorPtr child = children_.GetFirst(); child; child = next)
+    RefPtr<Actor> next;
+    for (RefPtr<Actor> child = children_.GetFirst(); child; child = next)
     {
         next = child->GetNext();
 
@@ -626,8 +626,8 @@ void Actor::RemoveChildren(StringView child_name)
 
 void Actor::RemoveAllChildren()
 {
-    ActorPtr next;
-    for (ActorPtr child = children_.GetFirst(); child; child = next)
+    RefPtr<Actor> next;
+    for (RefPtr<Actor> child = children_.GetFirst(); child; child = next)
     {
         next = child->GetNext();
         RemoveChild(child);

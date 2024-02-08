@@ -40,7 +40,7 @@ bool EventTicker::Tick(Duration dt)
 {
     if (Ticker::Tick(dt))
     {
-        TickEventPtr evt = new TickEvent;
+        RefPtr<TickEvent> evt = new TickEvent;
         evt->delta_time_ = GetDeltaTime();
         evt->ticker_     = this;
         DispatchEvent(evt.Get());

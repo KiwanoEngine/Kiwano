@@ -27,8 +27,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Window);
-
 /**
  * \~chinese
  * @brief 鼠标指针类型
@@ -125,7 +123,7 @@ public:
      * @param config 窗口设置
      * @throw kiwano::SystemError 窗口创建失败时抛出
      */
-    static WindowPtr Create(const WindowConfig& config);
+    static RefPtr<Window> Create(const WindowConfig& config);
 
     /**
      * \~chinese
@@ -238,14 +236,14 @@ public:
      * @brief 轮询窗口事件
      * @return 返回事件队列中的第一个事件并将其从队列中移除, 若队列为空则返回空指针
      */
-    EventPtr PollEvent();
+    RefPtr<Event> PollEvent();
 
     /**
      * \~chinese
      * @brief 将事件放入队列
      * @param evt 事件
      */
-    void PushEvent(EventPtr evt);
+    void PushEvent(RefPtr<Event> evt);
 
     /**
      * \~chinese
@@ -290,7 +288,7 @@ protected:
     Resolution           resolution_;
     WindowHandle         handle_;
     String               title_;
-    std::queue<EventPtr> event_queue_;
+    std::queue<RefPtr<Event>> event_queue_;
 };
 
 }  // namespace kiwano

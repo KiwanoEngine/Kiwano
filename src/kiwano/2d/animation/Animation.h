@@ -30,9 +30,7 @@ namespace kiwano
 {
 class Actor;
 class Animator;
-
-KGE_DECLARE_SMART_PTR(Animation);
-KGE_DECLARE_SMART_PTR(AnimationEventHandler);
+class Animation;
 
 /**
  * \~chinese
@@ -68,44 +66,44 @@ public:
     /// \~chinese
     /// @brief 创建动画事件处理器
     /// @param handler 处理动画事件回调函数
-    static AnimationEventHandlerPtr Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler);
+    static RefPtr<AnimationEventHandler> Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler);
 
     /// \~chinese
     /// @brief 创建动画事件处理器
     /// @param evt 处理的动画事件
     /// @param handler 处理动画事件回调函数
-    static AnimationEventHandlerPtr Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler);
+    static RefPtr<AnimationEventHandler> Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler);
 
     /// \~chinese
     /// @brief 创建Started动画事件处理器
     /// @param handler 处理动画事件回调函数
-    static AnimationEventHandlerPtr HandleStarted(const Function<void(Animation*, Actor*)>& handler);
+    static RefPtr<AnimationEventHandler> HandleStarted(const Function<void(Animation*, Actor*)>& handler);
 
     /// \~chinese
     /// @brief 创建LoopDone动画事件处理器
     /// @param handler 处理动画事件回调函数
-    static AnimationEventHandlerPtr HandleLoopDone(const Function<void(Animation*, Actor*)>& handler);
+    static RefPtr<AnimationEventHandler> HandleLoopDone(const Function<void(Animation*, Actor*)>& handler);
 
     /// \~chinese
     /// @brief 创建Done动画事件处理器
     /// @param handler 处理动画事件回调函数
-    static AnimationEventHandlerPtr HandleDone(const Function<void(Animation*, Actor*)>& handler);
+    static RefPtr<AnimationEventHandler> HandleDone(const Function<void(Animation*, Actor*)>& handler);
 };
 
 /// \~chinese
 /// @brief 动画列表
-typedef IntrusiveList<AnimationPtr> AnimationList;
+typedef IntrusiveList<RefPtr<Animation>> AnimationList;
 
 /// \~chinese
 /// @brief 动画
 class KGE_API Animation
     : public ObjectBase
     , public Cloneable<Animation>
-    , protected IntrusiveListValue<AnimationPtr>
+    , protected IntrusiveListValue<RefPtr<Animation>>
 {
     friend class Animator;
     friend class AnimationGroup;
-    friend IntrusiveList<AnimationPtr>;
+    friend IntrusiveList<RefPtr<Animation>>;
 
 public:
     Animation();
@@ -155,11 +153,11 @@ public:
 
     /// \~chinese
     /// @brief 设置动画事件处理
-    void SetHandler(AnimationEventHandlerPtr handler);
+    void SetHandler(RefPtr<AnimationEventHandler> handler);
 
     /// \~chinese
     /// @brief 获取动画事件处理
-    AnimationEventHandlerPtr GetHandler() const;
+    RefPtr<AnimationEventHandler> GetHandler() const;
 
 protected:
     /// \~chinese
@@ -234,7 +232,7 @@ private:
     Duration delay_;
     Duration elapsed_;
 
-    AnimationEventHandlerPtr handler_;
+    RefPtr<AnimationEventHandler> handler_;
 };
 
 /** @} */
@@ -312,12 +310,12 @@ inline Duration Animation::GetDelay() const
     return delay_;
 }
 
-inline void Animation::SetHandler(AnimationEventHandlerPtr handler)
+inline void Animation::SetHandler(RefPtr<AnimationEventHandler> handler)
 {
     handler_ = handler;
 }
 
-inline AnimationEventHandlerPtr Animation::GetHandler() const
+inline RefPtr<AnimationEventHandler> Animation::GetHandler() const
 {
     return handler_;
 }

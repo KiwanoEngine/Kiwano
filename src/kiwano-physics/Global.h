@@ -29,9 +29,6 @@ namespace kiwano
 namespace physics
 {
 
-KGE_DECLARE_SMART_PTR(PhysicWorld);
-KGE_DECLARE_SMART_PTR(PhysicBody);
-
 namespace global
 {
 

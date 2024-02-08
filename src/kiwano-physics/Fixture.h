@@ -27,8 +27,6 @@ namespace kiwano
 namespace physics
 {
 
-KGE_DECLARE_SMART_PTR(Fixture);
-
 /**
  * \addtogroup Physics
  * @{
@@ -64,7 +62,7 @@ public:
     /// @param param 夹具参数
     /// @param radius 圆形半径
     /// @param offset 偏移量
-    static FixturePtr CreateCircle(const Param& param, float radius, const Point& offset = Point());
+    static RefPtr<Fixture> CreateCircle(const Param& param, float radius, const Point& offset = Point());
 
     /// \~chinese
     /// @brief 创建矩形夹具
@@ -72,28 +70,28 @@ public:
     /// @param size 矩形大小
     /// @param offset 偏移量
     /// @param rotation 旋转角度
-    static FixturePtr CreateRect(const Param& param, const Size& size, const Point& offset = Point(),
+    static RefPtr<Fixture> CreateRect(const Param& param, const Size& size, const Point& offset = Point(),
                                  float rotation = 0.f);
 
     /// \~chinese
     /// @brief 创建多边形夹具
     /// @param param 夹具参数
     /// @param vertexs 多边形顶点
-    static FixturePtr CreatePolygon(const Param& param, const Vector<Point>& vertexs);
+    static RefPtr<Fixture> CreatePolygon(const Param& param, const Vector<Point>& vertexs);
 
     /// \~chinese
     /// @brief 创建边夹具
     /// @param param 夹具参数
     /// @param p1 边的起点
     /// @param p2 边的终点
-    static FixturePtr CreateEdge(const Param& param, const Point& p1, const Point& p2);
+    static RefPtr<Fixture> CreateEdge(const Param& param, const Point& p1, const Point& p2);
 
     /// \~chinese
     /// @brief 创建链条夹具
     /// @param param 夹具参数
     /// @param vertexs 链条顶点
     /// @param loop 是否连接链条的起点和终点
-    static FixturePtr CreateChain(const Param& param, const Vector<Point>& vertices, bool loop = false);
+    static RefPtr<Fixture> CreateChain(const Param& param, const Vector<Point>& vertices, bool loop = false);
 
     Fixture();
 
@@ -101,7 +99,7 @@ public:
 
     /// \~chinese
     /// @brief 初始化夹具
-    bool Init(PhysicBodyPtr body);
+    bool Init(RefPtr<PhysicBody> body);
 
     /// \~chinese
     /// @brief 初始化夹具

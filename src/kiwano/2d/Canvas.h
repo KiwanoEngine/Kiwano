@@ -26,9 +26,7 @@
 
 namespace kiwano
 {
-
-KGE_DECLARE_SMART_PTR(Canvas);
-KGE_DECLARE_SMART_PTR(CanvasRenderContext);
+class CanvasRenderContext;
 
 /**
  * \addtogroup Actors
@@ -55,7 +53,7 @@ public:
 
     /// \~chinese
     /// @brief 获取2D绘图上下文
-    CanvasRenderContextPtr GetContext2D() const;
+    RefPtr<CanvasRenderContext> GetContext2D() const;
 
     /// \~chinese
     /// @brief 清空画布大小并重设画布大小
@@ -64,13 +62,13 @@ public:
 
     /// \~chinese
     /// @brief 导出纹理
-    TexturePtr GetTexture() const;
+    RefPtr<Texture> GetTexture() const;
 
     void OnRender(RenderContext& ctx) override;
 
 private:
-    TexturePtr       texture_cached_;
-    RenderContextPtr render_ctx_;
+    RefPtr<Texture>       texture_cached_;
+    RefPtr<RenderContext> render_ctx_;
 };
 
 /// \~chinese
@@ -89,12 +87,12 @@ public:
     /// \~chinese
     /// @brief 画角色
     /// @param actor 角色
-    void DrawActor(ActorPtr actor);
+    void DrawActor(RefPtr<Actor> actor);
 
     /// \~chinese
     /// @brief 画形状轮廓
     /// @param shape 形状
-    void DrawShape(ShapePtr shape);
+    void DrawShape(RefPtr<Shape> shape);
 
     /// \~chinese
     /// @brief 画线段
@@ -128,7 +126,7 @@ public:
     /// \~chinese
     /// @brief 填充形状
     /// @param shape 形状
-    void FillShape(ShapePtr shape);
+    void FillShape(RefPtr<Shape> shape);
 
     /// \~chinese
     /// @brief 填充圆形
@@ -158,7 +156,7 @@ public:
     /// @param texture 纹理
     /// @param pos 绘制的目标位置
     /// @param crop_rect 纹理裁剪矩形
-    void DrawTexture(TexturePtr texture, const Point& pos, const Rect* crop_rect = nullptr);
+    void DrawTexture(RefPtr<Texture> texture, const Point& pos, const Rect* crop_rect = nullptr);
 
     /// \~chinese
     /// @brief 绘制纹理
@@ -166,7 +164,7 @@ public:
     /// @param pos 绘制的目标位置
     /// @param size 绘制的目标大小
     /// @param crop_rect 纹理裁剪矩形
-    void DrawTexture(TexturePtr texture, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
+    void DrawTexture(RefPtr<Texture> texture, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
 
     /// \~chinese
     /// @brief 绘制精灵帧
@@ -192,7 +190,7 @@ public:
     /// @brief 绘制文字布局
     /// @param layout 文字布局
     /// @param point 绘制布局的位置
-    void DrawTextLayout(TextLayoutPtr layout, const Point& point);
+    void DrawTextLayout(RefPtr<TextLayout> layout, const Point& point);
 
     /// \~chinese
     /// @brief 清空画布
@@ -211,11 +209,11 @@ public:
     /// \~chinese
     /// @brief 设置填充画刷
     /// @param[in] brush 填充画刷
-    void SetFillBrush(BrushPtr brush);
+    void SetFillBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 获取填充画刷
-    BrushPtr GetFillBrush() const;
+    RefPtr<Brush> GetFillBrush() const;
 
     /// \~chinese
     /// @brief 设置轮廓颜色
@@ -225,20 +223,20 @@ public:
     /// \~chinese
     /// @brief 设置轮廓画刷
     /// @param[in] brush 轮廓画刷
-    void SetStrokeBrush(BrushPtr brush);
+    void SetStrokeBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 获取轮廓画刷
-    BrushPtr GetStrokeBrush() const;
+    RefPtr<Brush> GetStrokeBrush() const;
 
     /// \~chinese
     /// @brief 设置轮廓样式
     /// @param stroke_style 轮廓样式
-    void SetStrokeStyle(StrokeStylePtr stroke_style);
+    void SetStrokeStyle(RefPtr<StrokeStyle> stroke_style);
 
     /// \~chinese
     /// @brief 获取轮廓样式
-    StrokeStylePtr GetStrokeStyle() const;
+    RefPtr<StrokeStyle> GetStrokeStyle() const;
 
     /// \~chinese
     /// @brief 添加一个裁剪区域
@@ -252,7 +250,7 @@ public:
     /// \~chinese
     /// @brief 添加一个图层
     /// @param layer 图层
-    void PushLayer(LayerPtr layer);
+    void PushLayer(RefPtr<Layer> layer);
 
     /// \~chinese
     /// @brief 删除最近添加的图层
@@ -279,18 +277,18 @@ public:
 private:
     friend class Canvas;
 
-    CanvasRenderContext(RenderContextPtr ctx);
+    CanvasRenderContext(RefPtr<RenderContext> ctx);
 
 private:
-    RenderContextPtr ctx_;
-    BrushPtr         fill_brush_;
-    BrushPtr         stroke_brush_;
-    StrokeStylePtr   stroke_style_;
+    RefPtr<RenderContext> ctx_;
+    RefPtr<Brush>         fill_brush_;
+    RefPtr<Brush>         stroke_brush_;
+    RefPtr<StrokeStyle>   stroke_style_;
 };
 
 /** @} */
 
-inline TexturePtr Canvas::GetTexture() const
+inline RefPtr<Texture> Canvas::GetTexture() const
 {
     return texture_cached_;
 }
@@ -307,7 +305,7 @@ inline void CanvasRenderContext::EndDraw()
     ctx_->EndDraw();
 }
 
-inline void CanvasRenderContext::DrawActor(ActorPtr actor)
+inline void CanvasRenderContext::DrawActor(RefPtr<Actor> actor)
 {
     KGE_ASSERT(ctx_);
     if (actor)
@@ -316,7 +314,7 @@ inline void CanvasRenderContext::DrawActor(ActorPtr actor)
     }
 }
 
-inline void CanvasRenderContext::DrawShape(ShapePtr shape)
+inline void CanvasRenderContext::DrawShape(RefPtr<Shape> shape)
 {
     KGE_ASSERT(ctx_);
     if (shape)
@@ -372,7 +370,7 @@ inline void CanvasRenderContext::DrawRoundedRect(const Rect& rect, const Vec2& r
     ctx_->DrawRoundedRectangle(rect, radius);
 }
 
-inline void CanvasRenderContext::FillShape(ShapePtr shape)
+inline void CanvasRenderContext::FillShape(RefPtr<Shape> shape)
 {
     KGE_ASSERT(ctx_);
     if (shape)
@@ -414,7 +412,7 @@ inline void CanvasRenderContext::FillRoundedRect(const Rect& rect, const Vec2& r
     ctx_->FillRoundedRectangle(rect, radius);
 }
 
-inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& pos, const Rect* crop_rect)
+inline void CanvasRenderContext::DrawTexture(RefPtr<Texture> texture, const Point& pos, const Rect* crop_rect)
 {
     if (texture)
     {
@@ -422,7 +420,7 @@ inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& po
     }
 }
 
-inline void CanvasRenderContext::DrawTexture(TexturePtr texture, const Point& pos, const Size& size,
+inline void CanvasRenderContext::DrawTexture(RefPtr<Texture> texture, const Point& pos, const Size& size,
                                              const Rect* crop_rect)
 {
     KGE_ASSERT(ctx_);
@@ -446,11 +444,11 @@ inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const
 
 inline void CanvasRenderContext::DrawTextLayout(StringView text, const TextStyle& style, const Point& point)
 {
-    TextLayoutPtr layout = MakePtr<TextLayout>(text, style);
+    RefPtr<TextLayout> layout =  MakePtr<TextLayout>(text, style);
     this->DrawTextLayout(layout, point);
 }
 
-inline void CanvasRenderContext::DrawTextLayout(TextLayoutPtr layout, const Point& point)
+inline void CanvasRenderContext::DrawTextLayout(RefPtr<TextLayout> layout, const Point& point)
 {
     KGE_ASSERT(ctx_);
     if (layout)
@@ -477,22 +475,22 @@ inline void CanvasRenderContext::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ = MakePtr<Brush>();
+        fill_brush_ =  MakePtr<Brush>();
     }
     fill_brush_->SetColor(color);
 }
 
-inline void CanvasRenderContext::SetFillBrush(BrushPtr brush)
+inline void CanvasRenderContext::SetFillBrush(RefPtr<Brush> brush)
 {
     fill_brush_ = brush;
 }
 
-inline BrushPtr CanvasRenderContext::GetFillBrush() const
+inline RefPtr<Brush> CanvasRenderContext::GetFillBrush() const
 {
     return fill_brush_;
 }
 
-inline void CanvasRenderContext::SetStrokeBrush(BrushPtr brush)
+inline void CanvasRenderContext::SetStrokeBrush(RefPtr<Brush> brush)
 {
     stroke_brush_ = brush;
 }
@@ -501,22 +499,22 @@ inline void CanvasRenderContext::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ = MakePtr<Brush>();
+        stroke_brush_ =  MakePtr<Brush>();
     }
     stroke_brush_->SetColor(color);
 }
 
-inline BrushPtr CanvasRenderContext::GetStrokeBrush() const
+inline RefPtr<Brush> CanvasRenderContext::GetStrokeBrush() const
 {
     return stroke_brush_;
 }
 
-inline void CanvasRenderContext::SetStrokeStyle(StrokeStylePtr stroke_style)
+inline void CanvasRenderContext::SetStrokeStyle(RefPtr<StrokeStyle> stroke_style)
 {
     stroke_style_ = stroke_style;
 }
 
-inline StrokeStylePtr CanvasRenderContext::GetStrokeStyle() const
+inline RefPtr<StrokeStyle> CanvasRenderContext::GetStrokeStyle() const
 {
     return stroke_style_;
 }
@@ -533,7 +531,7 @@ inline void CanvasRenderContext::PopClipRect()
     ctx_->PopClipRect();
 }
 
-inline void CanvasRenderContext::PushLayer(LayerPtr layer)
+inline void CanvasRenderContext::PushLayer(RefPtr<Layer> layer)
 {
     KGE_ASSERT(ctx_);
     if (layer)

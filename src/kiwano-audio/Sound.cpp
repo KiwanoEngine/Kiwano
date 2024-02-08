@@ -40,7 +40,7 @@ Sound::Sound(const Resource& res, StringView ext)
     Load(AudioModule::GetInstance().Decode(res, ext));
 }
 
-Sound::Sound(AudioDataPtr data)
+Sound::Sound(RefPtr<AudioData> data)
     : Sound()
 {
     Load(data);
@@ -58,7 +58,7 @@ Sound::~Sound()
     Close();
 }
 
-bool Sound::Load(AudioDataPtr data)
+bool Sound::Load(RefPtr<AudioData> data)
 {
     if (!data)
     {
@@ -239,7 +239,7 @@ void Sound::ResetVolume()
     SetVolume(old_volume);
 }
 
-SoundCallbackPtr Sound::GetCallbackChain()
+RefPtr<SoundCallback> Sound::GetCallbackChain()
 {
     class SoundCallbackChain : public SoundCallback
     {
@@ -322,7 +322,7 @@ SoundCallbackPtr Sound::GetCallbackChain()
     return callback_chain_;
 }
 
-SoundCallbackPtr SoundCallback::OnStart(const Function<void(Sound* sound)>& cb)
+RefPtr<SoundCallback> SoundCallback::OnStart(const Function<void(Sound* sound)>& cb)
 {
     class SoundCallbackFunc : public SoundCallback
     {
@@ -342,7 +342,7 @@ SoundCallbackPtr SoundCallback::OnStart(const Function<void(Sound* sound)>& cb)
     return ptr;
 }
 
-SoundCallbackPtr SoundCallback::OnLoopEnd(const Function<void(Sound* sound)>& cb)
+RefPtr<SoundCallback> SoundCallback::OnLoopEnd(const Function<void(Sound* sound)>& cb)
 {
     class SoundCallbackFunc : public SoundCallback
     {
@@ -362,7 +362,7 @@ SoundCallbackPtr SoundCallback::OnLoopEnd(const Function<void(Sound* sound)>& cb
     return ptr;
 }
 
-SoundCallbackPtr SoundCallback::OnEnd(const Function<void(Sound* sound)>& cb)
+RefPtr<SoundCallback> SoundCallback::OnEnd(const Function<void(Sound* sound)>& cb)
 {
     class SoundCallbackFunc : public SoundCallback
     {
@@ -382,7 +382,7 @@ SoundCallbackPtr SoundCallback::OnEnd(const Function<void(Sound* sound)>& cb)
     return ptr;
 }
 
-SoundCallbackPtr SoundCallback::OnVolumeChanged(const Function<float(Sound* sound, float volume)>& cb)
+RefPtr<SoundCallback> SoundCallback::OnVolumeChanged(const Function<float(Sound* sound, float volume)>& cb)
 {
     class SoundCallbackFunc : public SoundCallback
     {

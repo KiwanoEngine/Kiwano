@@ -58,11 +58,11 @@ public:
 
     /// \~chinese
     /// @brief 添加物体
-    void AddBody(PhysicBodyPtr body);
+    void AddBody(RefPtr<PhysicBody> body);
 
     /// \~chinese
     /// @brief 移除物体
-    void RemoveBody(PhysicBodyPtr body);
+    void RemoveBody(RefPtr<PhysicBody> body);
 
     /// \~chinese
     /// @brief 移除所有物体
@@ -70,15 +70,15 @@ public:
 
     /// \~chinese
     /// @brief 获取所有物体
-    const List<PhysicBodyPtr>& GetAllBodies() const;
+    const List<RefPtr<PhysicBody>>& GetAllBodies() const;
 
     /// \~chinese
     /// @brief 添加关节
-    void AddJoint(JointPtr joint);
+    void AddJoint(RefPtr<Joint> joint);
 
     /// \~chinese
     /// @brief 移除关节
-    void RemoveJoint(JointPtr joint);
+    void RemoveJoint(RefPtr<Joint> joint);
 
     /// \~chinese
     /// @brief 移除所有关节
@@ -86,7 +86,7 @@ public:
 
     /// \~chinese
     /// @brief 获取所有关节
-    const List<JointPtr>& GetAllJoints() const;
+    const List<RefPtr<Joint>>& GetAllJoints() const;
 
     /// \~chinese
     /// @brief 获取重力 [N]
@@ -158,8 +158,8 @@ private:
     class DebugDrawer;
     std::unique_ptr<DebugDrawer> drawer_;
 
-    List<PhysicBodyPtr> bodies_;
-    List<JointPtr>      joints_;
+    List<RefPtr<PhysicBody>> bodies_;
+    List<RefPtr<Joint>>      joints_;
 
     std::unique_ptr<b2DestructionListener> destroy_listener_;
     std::unique_ptr<b2ContactListener>     contact_listener_;

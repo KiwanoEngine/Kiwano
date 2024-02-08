@@ -28,8 +28,6 @@ namespace kiwano
 {
 class EventDispatcher;
 
-KGE_DECLARE_SMART_PTR(EventListener);
-
 /**
  * \~chinese
  * \defgroup EventListener 事件监听器
@@ -46,10 +44,10 @@ KGE_DECLARE_SMART_PTR(EventListener);
  */
 class KGE_API EventListener
     : public ObjectBase
-    , protected IntrusiveListValue<EventListenerPtr>
+    , protected IntrusiveListValue<RefPtr<EventListener>>
 {
     friend class EventDispatcher;
-    friend IntrusiveList<EventListenerPtr>;
+    friend IntrusiveList<RefPtr<EventListener>>;
 
 public:
     /// \~chinese
@@ -63,27 +61,27 @@ public:
     /// \~chinese
     /// @brief 创建监听器
     /// @param callback 回调函数
-    static EventListenerPtr Create(const Callback& callback);
+    static RefPtr<EventListener> Create(const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(StringView name, const Callback& callback);
+    static RefPtr<EventListener> Create(StringView name, const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(EventType type, const Callback& callback);
+    static RefPtr<EventListener> Create(EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 创建监听器
     /// @param name 监听器名称
     /// @param type 监听的事件类型
     /// @param callback 回调函数
-    static EventListenerPtr Create(StringView name, EventType type, const Callback& callback);
+    static RefPtr<EventListener> Create(StringView name, EventType type, const Callback& callback);
 
     /// \~chinese
     /// @brief 启动监听器

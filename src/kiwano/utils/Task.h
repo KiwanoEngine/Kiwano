@@ -26,17 +26,15 @@ namespace kiwano
 {
 class TaskScheduler;
 
-KGE_DECLARE_SMART_PTR(Task);
-
 /// \~chinese
 /// @brief 任务
 /// @details 任务用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Task
     : public ObjectBase
-    , protected IntrusiveListValue<TaskPtr>
+    , protected IntrusiveListValue<RefPtr<Task>>
 {
     friend class TaskScheduler;
-    friend IntrusiveList<TaskPtr>;
+    friend IntrusiveList<RefPtr<Task>>;
 
 public:
     /// \~chinese
@@ -49,14 +47,14 @@ public:
     /// @brief 创建任务
     /// @param cb 回调函数
     /// @param 报时器
-    Task(const Callback& cb, TickerPtr ticker);
+    Task(const Callback& cb, RefPtr<Ticker> ticker);
 
     /// \~chinese
     /// @brief 创建任务
     /// @param name 名称
     /// @param cb 回调函数
     /// @param 报时器
-    Task(StringView name, const Callback& cb, TickerPtr ticker);
+    Task(StringView name, const Callback& cb, RefPtr<Ticker> ticker);
 
     /// \~chinese
     /// @brief 创建任务
@@ -107,11 +105,11 @@ public:
 
     /// \~chinese
     /// @brief 获取任务的报时器
-    TickerPtr GetTicker() const;
+    RefPtr<Ticker> GetTicker() const;
 
     /// \~chinese
     /// @brief 设置任务的报时器
-    void SetTicker(TickerPtr ticker);
+    void SetTicker(RefPtr<Ticker> ticker);
 
 private:
     /// \~chinese
@@ -125,7 +123,7 @@ private:
 private:
     bool      running_;
     bool      removeable_;
-    TickerPtr ticker_;
+    RefPtr<Ticker> ticker_;
     Callback  callback_;
 };
 
@@ -144,12 +142,12 @@ inline bool Task::IsRemoveable() const
     return removeable_;
 }
 
-inline TickerPtr Task::GetTicker() const
+inline RefPtr<Ticker> Task::GetTicker() const
 {
     return ticker_;
 }
 
-inline void Task::SetTicker(TickerPtr ticker)
+inline void Task::SetTicker(RefPtr<Ticker> ticker)
 {
     ticker_ = ticker;
     if (ticker_)

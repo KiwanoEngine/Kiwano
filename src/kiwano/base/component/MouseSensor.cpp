@@ -42,7 +42,7 @@ void MouseSensor::HandleEvent(Event* evt)
         {
             hover_ = true;
 
-            MouseHoverEventPtr hover = new MouseHoverEvent;
+            RefPtr<MouseHoverEvent> hover = new MouseHoverEvent;
             hover->pos               = mouse_evt->pos;
             target->HandleEvent(hover.Get());
         }
@@ -51,7 +51,7 @@ void MouseSensor::HandleEvent(Event* evt)
             hover_   = false;
             pressed_ = false;
 
-            MouseOutEventPtr out = new MouseOutEvent;
+            RefPtr<MouseOutEvent> out = new MouseOutEvent;
             out->pos             = mouse_evt->pos;
             target->HandleEvent(out.Get());
         }
@@ -68,7 +68,7 @@ void MouseSensor::HandleEvent(Event* evt)
 
         auto mouse_up_evt = dynamic_cast<MouseUpEvent*>(evt);
 
-        MouseClickEventPtr click = new MouseClickEvent;
+        RefPtr<MouseClickEvent> click = new MouseClickEvent;
         click->pos               = mouse_up_evt->pos;
         click->button            = mouse_up_evt->button;
         target->HandleEvent(click.Get());

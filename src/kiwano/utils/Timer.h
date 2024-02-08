@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Timer);
-
 /// \~chinese
 /// @brief ¼ÆÊ±Æ÷
 class KGE_API Timer

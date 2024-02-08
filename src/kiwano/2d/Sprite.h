@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Sprite);
-
 /**
  * \addtogroup Actors
  * @{
@@ -54,7 +52,7 @@ public:
     /// \~chinese
     /// @brief 创建精灵
     /// @param texture 图像
-    Sprite(TexturePtr texture);
+    Sprite(RefPtr<Texture> texture);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -72,7 +70,7 @@ public:
     /// @brief 创建精灵
     /// @param texture 图像
     /// @param crop_rect 裁剪矩形
-    Sprite(TexturePtr texture, const Rect& crop_rect);
+    Sprite(RefPtr<Texture> texture, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -93,7 +91,7 @@ public:
 
     /// \~chinese
     /// @brief 获取图像
-    TexturePtr GetTexture() const;
+    RefPtr<Texture> GetTexture() const;
 
     /// \~chinese
     /// @brief 获取裁剪矩形
@@ -124,7 +122,7 @@ private:
 
 /** @} */
 
-inline TexturePtr Sprite::GetTexture() const
+inline RefPtr<Texture> Sprite::GetTexture() const
 {
     return frame_.GetTexture();
 }

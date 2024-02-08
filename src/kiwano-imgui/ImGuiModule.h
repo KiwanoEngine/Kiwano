@@ -61,7 +61,7 @@ private:
     void UpdateMouseCursor();
 
 private:
-    WindowPtr window_;
+    RefPtr<Window> window_;
 };
 
 }  // namespace imgui

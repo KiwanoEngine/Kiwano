@@ -24,8 +24,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(FadeTransition);
-
 /**
  * \addtogroup Transition
  * @{

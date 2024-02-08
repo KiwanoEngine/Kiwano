@@ -45,7 +45,7 @@ public:
      * @param[in] stage 舞台
      * @param[in] transition 过渡动画
      */
-    void EnterStage(StagePtr stage, TransitionPtr transition = nullptr);
+    void EnterStage(RefPtr<Stage> stage, RefPtr<Transition> transition = nullptr);
 
     /**
      * \~chinese
@@ -53,21 +53,21 @@ public:
      * @param[in] stage 舞台
      * @param[in] transition 过渡动画
      */
-    void PushStage(StagePtr stage, TransitionPtr transition = nullptr);
+    void PushStage(RefPtr<Stage> stage, RefPtr<Transition> transition = nullptr);
 
     /**
      * \~chinese
      * @brief 退出当前舞台，并切换到上一个舞台
      * @param[in] transition 过渡动画
      */
-    void PopStage(TransitionPtr transition = nullptr);
+    void PopStage(RefPtr<Transition> transition = nullptr);
 
     /**
      * \~chinese
      * @brief 获取当前舞台
      * @return 返回当前舞台的指针
      */
-    StagePtr GetCurrentStage();
+    RefPtr<Stage> GetCurrentStage();
 
     /**
      * \~chinese
@@ -103,10 +103,10 @@ private:
 
 private:
     bool            render_border_enabled_;
-    Stack<StagePtr> stages_;
-    StagePtr        current_stage_;
-    StagePtr        next_stage_;
-    ActorPtr        debug_actor_;
-    TransitionPtr   transition_;
+    Stack<RefPtr<Stage>> stages_;
+    RefPtr<Stage>        current_stage_;
+    RefPtr<Stage>        next_stage_;
+    RefPtr<Actor>        debug_actor_;
+    RefPtr<Transition>   transition_;
 };
 }  // namespace kiwano

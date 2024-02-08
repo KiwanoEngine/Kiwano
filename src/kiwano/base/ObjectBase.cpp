@@ -126,16 +126,16 @@ void ObjectBase::SetUserData(void* data)
     user_data_ = data;
 }
 
-void ObjectBase::Hold(ObjectBasePtr other)
+void ObjectBase::Hold(RefPtr<ObjectBase> other)
 {
     if (!holdings_)
     {
-        holdings_ = new Set<ObjectBasePtr>;
+        holdings_ = new Set<RefPtr<ObjectBase>>;
     }
     holdings_->insert(other);
 }
 
-void ObjectBase::Unhold(ObjectBasePtr other)
+void ObjectBase::Unhold(RefPtr<ObjectBase> other)
 {
     if (holdings_)
     {

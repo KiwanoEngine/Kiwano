@@ -26,7 +26,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Event);
 
 /**
  * \~chinese

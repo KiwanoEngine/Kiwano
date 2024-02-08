@@ -28,7 +28,7 @@ CustomAnimation::CustomAnimation(Duration duration)
 {
 }
 
-CustomAnimationPtr CustomAnimation::Create(Duration duration, Function<void(Actor*, float)> tween_func)
+RefPtr<CustomAnimation> CustomAnimation::Create(Duration duration, Function<void(Actor*, float)> tween_func)
 {
     class CallbackCustomAnimation : public CustomAnimation
     {
@@ -61,7 +61,7 @@ CustomAnimationPtr CustomAnimation::Create(Duration duration, Function<void(Acto
     private:
         Function<void(Actor*, float)> tween_func_;
     };
-    CustomAnimationPtr ptr = new CallbackCustomAnimation(duration, tween_func);
+    RefPtr<CustomAnimation> ptr = new CallbackCustomAnimation(duration, tween_func);
     return ptr;
 }
 

@@ -46,7 +46,7 @@ void Runner::InitSettings()
     }
 
     // Create game window
-    WindowPtr window = Window::Create(settings_.window);
+    RefPtr<Window> window = Window::Create(settings_.window);
     SetWindow(window);
 
     // Update renderer settings
@@ -69,7 +69,7 @@ void Runner::InitSettings()
     // Create frame ticker
     if (!settings_.frame_interval.IsZero())
     {
-        frame_ticker_ = MakePtr<Ticker>(settings_.frame_interval, -1);
+        frame_ticker_ =  MakePtr<Ticker>(settings_.frame_interval, -1);
     }
 }
 
@@ -90,7 +90,7 @@ bool Runner::MainLoop(Duration dt)
 
     // Poll events
     main_window_->PumpEvents();
-    while (EventPtr evt = main_window_->PollEvent())
+    while (RefPtr<Event> evt = main_window_->PollEvent())
     {
         app.DispatchEvent(evt.Get());
     }

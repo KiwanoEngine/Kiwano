@@ -50,7 +50,7 @@ enum class TextAlign
 class KGE_API TextStyle
 {
 public:
-    FontPtr        font;                ///< 字体
+    RefPtr<Font>        font;                ///< 字体
     TextAlign      alignment;           ///< 对齐方式
     float          wrap_width;          ///< 自动换行宽度
     float          line_spacing;        ///< 行间距
@@ -69,7 +69,7 @@ public:
      * @brief 构建文本样式
      * @param font 字体
      */
-    TextStyle(FontPtr font);
+    TextStyle(RefPtr<Font> font);
 
     /**
      * \~chinese

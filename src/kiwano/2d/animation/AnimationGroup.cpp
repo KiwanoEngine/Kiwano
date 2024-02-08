@@ -28,7 +28,7 @@ AnimationGroup::AnimationGroup()
 {
 }
 
-AnimationGroup::AnimationGroup(const Vector<AnimationPtr>& animations, bool parallel)
+AnimationGroup::AnimationGroup(const Vector<RefPtr<Animation>>& animations, bool parallel)
     : parallel_(parallel)
 {
     AddAnimation(animations);
@@ -92,7 +92,7 @@ void AnimationGroup::Update(Actor* target, Duration dt)
     }
 }
 
-void AnimationGroup::AddAnimation(AnimationPtr animation)
+void AnimationGroup::AddAnimation(RefPtr<Animation> animation)
 {
     if (animation)
     {
@@ -100,7 +100,7 @@ void AnimationGroup::AddAnimation(AnimationPtr animation)
     }
 }
 
-void AnimationGroup::AddAnimation(const Vector<AnimationPtr>& animations)
+void AnimationGroup::AddAnimation(const Vector<RefPtr<Animation>>& animations)
 {
     for (const auto& animation : animations)
         AddAnimation(animation);
@@ -108,7 +108,7 @@ void AnimationGroup::AddAnimation(const Vector<AnimationPtr>& animations)
 
 AnimationGroup* AnimationGroup::Clone() const
 {
-    Vector<AnimationPtr> animations;
+    Vector<RefPtr<Animation>> animations;
     if (!animations_.IsEmpty())
     {
         for (auto animation = animations_.GetFirst(); animation; animation = animation->GetNext())
@@ -123,7 +123,7 @@ AnimationGroup* AnimationGroup::Clone() const
 
 AnimationGroup* AnimationGroup::Reverse() const
 {
-    Vector<AnimationPtr> animations;
+    Vector<RefPtr<Animation>> animations;
     if (!animations_.IsEmpty())
     {
         for (auto animation = animations_.GetLast(); animation; animation = animation->GetPrev())

@@ -76,7 +76,7 @@ void RenderContextImpl::DiscardDeviceResources()
     ComPolicy::Set(this, nullptr);
 }
 
-TexturePtr RenderContextImpl::GetTarget() const
+RefPtr<Texture> RenderContextImpl::GetTarget() const
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
@@ -84,7 +84,7 @@ TexturePtr RenderContextImpl::GetTarget() const
     render_ctx_->GetTarget(&target);
     if (target)
     {
-        TexturePtr ptr = MakePtr<Texture>();
+        RefPtr<Texture> ptr =  MakePtr<Texture>();
         ComPolicy::Set(*ptr, target.Get());
     }
     return nullptr;
@@ -153,7 +153,7 @@ void RenderContextImpl::DrawTexture(const Texture& texture, const Rect* src_rect
     }
 }
 
-void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& offset, BrushPtr current_outline_brush)
+void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& offset, RefPtr<Brush> current_outline_brush)
 {
     KGE_ASSERT(text_renderer_ && "Text renderer has not been initialized!");
 
@@ -394,7 +394,7 @@ Size RenderContextImpl::GetSize() const
     return Size();
 }
 
-void RenderContextImpl::SetCurrentBrush(BrushPtr brush)
+void RenderContextImpl::SetCurrentBrush(RefPtr<Brush> brush)
 {
     RenderContext::SetCurrentBrush(brush);
 
@@ -404,7 +404,7 @@ void RenderContextImpl::SetCurrentBrush(BrushPtr brush)
     }
 }
 
-void RenderContextImpl::SetCurrentStrokeStyle(StrokeStylePtr stroke_style)
+void RenderContextImpl::SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke_style)
 {
     RenderContext::SetCurrentStrokeStyle(stroke_style);
 

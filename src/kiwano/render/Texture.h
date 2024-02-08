@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Texture);
-
 /**
  * \addtogroup Render
  * @{
@@ -135,14 +133,14 @@ public:
     /// \~chinese
     /// @brief 拷贝纹理
     /// @param copy_from 源纹理
-    void CopyFrom(TexturePtr copy_from);
+    void CopyFrom(RefPtr<Texture> copy_from);
 
     /// \~chinese
     /// @brief 拷贝纹理
     /// @param copy_from 源纹理
     /// @param src_rect 源纹理裁剪矩形
     /// @param dest_point 拷贝至目标位置
-    void CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& dest_point);
+    void CopyFrom(RefPtr<Texture> copy_from, const Rect& src_rect, const Point& dest_point);
 
     /// \~chinese
     /// @brief 设置默认的像素插值方式

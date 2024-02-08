@@ -38,9 +38,9 @@ namespace audio
 class KGE_API OggTranscoder : public Transcoder
 {
 public:
-    AudioDataPtr Decode(StringView file_path) override;
+    RefPtr<AudioData> Decode(StringView file_path) override;
 
-    AudioDataPtr Decode(const Resource& res) override;
+    RefPtr<AudioData> Decode(const Resource& res) override;
 };
 
 /** @} */

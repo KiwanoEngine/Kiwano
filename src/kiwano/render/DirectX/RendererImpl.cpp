@@ -83,7 +83,7 @@ RendererImpl::RendererImpl()
 {
 }
 
-void RendererImpl::MakeContextForWindow(WindowPtr window)
+void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
 {
     KGE_DEBUG_LOGF("Creating device resources");
 
@@ -132,7 +132,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     // Initialize other device resources
     if (SUCCEEDED(hr))
     {
-        RenderContextImplPtr ctx = MakePtr<RenderContextImpl>();
+        RefPtr<RenderContextImpl> ctx =  MakePtr<RenderContextImpl>();
 
         hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
         if (SUCCEEDED(hr))
@@ -153,7 +153,7 @@ void RendererImpl::MakeContextForWindow(WindowPtr window)
     //            if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
     //            {
     //                // dummy font
-    //                FontPtr font = MakePtr<Font>();
+    //                RefPtr<Font> font =  MakePtr<Font>();
     //                for (const auto& name : family_names)
     //                {
     //                    FontCache::GetInstance().AddFontByFamily(name, font);
@@ -511,7 +511,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
 
                 if (SUCCEEDED(hr))
                 {
-                    frame.texture = MakePtr<Texture>();
+                    frame.texture =  MakePtr<Texture>();
                     ComPolicy::Set(frame.texture, bitmap);
 
                     frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
@@ -713,7 +713,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, StringView content, cons
 
     if (SUCCEEDED(hr))
     {
-        FontPtr font = style.font;
+        RefPtr<Font> font = style.font;
         if (!font)
         {
             font = new Font;
@@ -875,7 +875,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
 
         if (SUCCEEDED(hr))
         {
-            ShapePtr shape = MakePtr<Shape>();
+            RefPtr<Shape> shape =  MakePtr<Shape>();
             ComPolicy::Set(shape, geometry);
 
             maker.SetShape(shape);
@@ -983,7 +983,7 @@ void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
     KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1RadialGradientBrush failed");
 }
 
-void RendererImpl::CreateBrush(Brush& brush, TexturePtr texture)
+void RendererImpl::CreateBrush(Brush& brush, RefPtr<Texture> texture)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -1049,7 +1049,7 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
     KGE_SET_STATUS_IF_FAILED(hr, stroke_style, "Create ID2D1StrokeStyle failed");
 }
 
-RenderContextPtr RendererImpl::CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size)
+RefPtr<RenderContext> RendererImpl::CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -1063,7 +1063,7 @@ RenderContextPtr RendererImpl::CreateTextureRenderContext(TexturePtr texture, co
 
     if (SUCCEEDED(hr))
     {
-        RenderContextImplPtr ptr = MakePtr<RenderContextImpl>();
+        RefPtr<RenderContextImpl> ptr =  MakePtr<RenderContextImpl>();
 
         ComPtr<ID2D1DeviceContext> render_ctx;
         hr = d2d_res_->GetDevice()->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,

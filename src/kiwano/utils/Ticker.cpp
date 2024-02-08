@@ -43,7 +43,7 @@ bool Ticker::Tick()
         return false;
 
     if (!timer_)
-        timer_ = MakePtr<Timer>();
+        timer_ =  MakePtr<Timer>();
 
     if (timer_->IsPausing())
         return false;
@@ -100,12 +100,12 @@ Duration Ticker::GetDeltaTime()
     return delta_time_;
 }
 
-TimerPtr Ticker::GetTimer()
+RefPtr<Timer> Ticker::GetTimer()
 {
     return timer_;
 }
 
-void Ticker::SetTimer(TimerPtr timer)
+void Ticker::SetTimer(RefPtr<Timer> timer)
 {
     timer_ = timer;
 }

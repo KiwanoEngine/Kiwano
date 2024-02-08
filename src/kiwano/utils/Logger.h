@@ -117,9 +117,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(LogFormater);
-KGE_DECLARE_SMART_PTR(LogProvider);
-
 /**
  * \~chinese
  * @brief 日志等级
@@ -294,17 +291,17 @@ public:
     /// \~chinese
     /// @brief 添加日志生产者
     /// @param provider 日志生产者
-    void AddProvider(LogProviderPtr provider);
+    void AddProvider(RefPtr<LogProvider> provider);
 
     /// \~chinese
     /// @brief 设置日志格式
     /// @param formater 日志格式化
-    void SetFormater(LogFormaterPtr formater);
+    void SetFormater(RefPtr<LogFormater> formater);
 
     /// \~chinese
     /// @brief 获取日志格式
     /// @return 日志格式
-    LogFormaterPtr GetFormater();
+    RefPtr<LogFormater> GetFormater();
 
     /// \~chinese
     /// @brief 重设缓冲区大小
@@ -327,10 +324,10 @@ private:
 private:
     bool                   enabled_;
     LogLevel               level_;
-    LogFormaterPtr         formater_;
+    RefPtr<LogFormater>         formater_;
     LogBuffer              buffer_;
     std::iostream          stream_;
-    Vector<LogProviderPtr> providers_;
+    Vector<RefPtr<LogProvider>> providers_;
     std::mutex             mutex_;
 };
 
@@ -344,7 +341,7 @@ inline void Logger::Disable()
     enabled_ = false;
 }
 
-inline void Logger::SetFormater(LogFormaterPtr formater)
+inline void Logger::SetFormater(RefPtr<LogFormater> formater)
 {
     formater_ = formater;
 }

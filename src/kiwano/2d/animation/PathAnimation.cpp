@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-PathAnimation::PathAnimation(Duration duration, ShapePtr path, bool rotating, float start, float end)
+PathAnimation::PathAnimation(Duration duration, RefPtr<Shape> path, bool rotating, float start, float end)
     : TweenAnimation(duration)
     , start_(start)
     , end_(end)

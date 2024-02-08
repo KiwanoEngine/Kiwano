@@ -24,11 +24,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(KeyEvent);
-KGE_DECLARE_SMART_PTR(KeyDownEvent);
-KGE_DECLARE_SMART_PTR(KeyUpEvent);
-KGE_DECLARE_SMART_PTR(KeyCharEvent);
-KGE_DECLARE_SMART_PTR(IMEInputEvent);
 
 /**
  * \addtogroup Event

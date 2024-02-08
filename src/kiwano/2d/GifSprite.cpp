@@ -46,7 +46,7 @@ GifSprite::GifSprite(const Resource& res)
     Load(res);
 }
 
-GifSprite::GifSprite(GifImagePtr gif)
+GifSprite::GifSprite(RefPtr<GifImage> gif)
     : GifSprite()
 {
     SetGifImage(gif);
@@ -54,17 +54,17 @@ GifSprite::GifSprite(GifImagePtr gif)
 
 bool GifSprite::Load(StringView file_path)
 {
-    GifImagePtr image = new GifImage(file_path);
+    RefPtr<GifImage> image = new GifImage(file_path);
     return Load(image);
 }
 
 bool GifSprite::Load(const Resource& res)
 {
-    GifImagePtr image = new GifImage(res);
+    RefPtr<GifImage> image = new GifImage(res);
     return Load(image);
 }
 
-bool GifSprite::Load(GifImagePtr gif)
+bool GifSprite::Load(RefPtr<GifImage> gif)
 {
     if (gif && gif->IsValid())
     {
@@ -78,7 +78,7 @@ bool GifSprite::Load(GifImagePtr gif)
         frame_to_render_.Reset();
         frame_rt_.Reset();
 
-        frame_to_render_ = MakePtr<Texture>();
+        frame_to_render_ =  MakePtr<Texture>();
         frame_rt_        = RenderContext::Create(frame_to_render_, gif_->GetSizeInPixels());
 
         if (frame_rt_)
@@ -126,7 +126,7 @@ void GifSprite::Update(Duration dt)
     }
 }
 
-void GifSprite::SetGifImage(GifImagePtr gif)
+void GifSprite::SetGifImage(RefPtr<GifImage> gif)
 {
     gif_ = gif;
     RestartAnimation();
@@ -225,7 +225,7 @@ void GifSprite::SaveComposedFrame()
 
     if (!saved_frame_)
     {
-        saved_frame_ = MakePtr<Texture>();
+        saved_frame_ =  MakePtr<Texture>();
         frame_rt_->CreateTexture(*saved_frame_, frame_to_render_->GetSizeInPixels());
     }
     saved_frame_->CopyFrom(frame_to_render_);

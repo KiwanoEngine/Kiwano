@@ -38,11 +38,11 @@ class KGE_API Animator
 public:
     /// \~chinese
     /// @brief 添加动画
-    Animation* AddAnimation(AnimationPtr animation);
+    Animation* AddAnimation(RefPtr<Animation> animation);
 
     /// \~chinese
     /// @brief 开始动画
-    inline Animation* StartAnimation(AnimationPtr animation)
+    inline Animation* StartAnimation(RefPtr<Animation> animation)
     {
         return AddAnimation(animation);
     }

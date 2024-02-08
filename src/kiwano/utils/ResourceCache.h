@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(ResourceCache);
-
 /// \~chinese
 /// @brief 资源缓存
 class KGE_API ResourceCache final : public ObjectBase
@@ -49,7 +47,7 @@ public:
     /// \~chinese
     /// @brief 获取资源
     /// @param id 对象ID
-    ObjectBasePtr Get(StringView id) const;
+    RefPtr<ObjectBase> Get(StringView id) const;
 
     /// \~chinese
     /// @brief 获取资源
@@ -66,7 +64,7 @@ public:
     /// @brief 将对象放入缓存
     /// @param id 对象ID
     /// @param obj 对象
-    void AddObject(StringView id, ObjectBasePtr obj);
+    void AddObject(StringView id, RefPtr<ObjectBase> obj);
 
     /// \~chinese
     /// @brief 删除指定资源
@@ -78,7 +76,7 @@ public:
     void Clear();
 
 private:
-    UnorderedMap<String, ObjectBasePtr> object_cache_;
+    UnorderedMap<String, RefPtr<ObjectBase>> object_cache_;
 };
 
 }  // namespace kiwano

@@ -27,8 +27,6 @@ namespace kiwano
 class Director;
 class RenderContext;
 
-KGE_DECLARE_SMART_PTR(Transition);
-
 /**
  * \~chinese
  * \defgroup Transition ÎèÌ¨¹ý¶É¶¯»­
@@ -105,8 +103,8 @@ protected:
     Duration duration_;
     Duration delta_;
     Size     window_size_;
-    StagePtr out_stage_;
-    StagePtr in_stage_;
+    RefPtr<Stage> out_stage_;
+    RefPtr<Stage> in_stage_;
     Layer    out_layer_;
     Layer    in_layer_;
 };

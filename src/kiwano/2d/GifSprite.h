@@ -26,7 +26,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(GifSprite);
 
 /**
  * \addtogroup Actors
@@ -63,7 +62,7 @@ public:
     /// \~chinese
     /// @brief 创建GIF精灵
     /// @param gif GIF图片
-    GifSprite(GifImagePtr gif);
+    GifSprite(RefPtr<GifImage> gif);
 
     /// \~chinese
     /// @brief 加载GIF图片
@@ -78,7 +77,7 @@ public:
     /// \~chinese
     /// @brief 加载GIF图片
     /// @param gif GIF图片
-    bool Load(GifImagePtr gif);
+    bool Load(RefPtr<GifImage> gif);
 
     /// \~chinese
     /// @brief 设置 GIF 动画循环次数
@@ -94,7 +93,7 @@ public:
 
     /// \~chinese
     /// @brief 设置 GIF 图像
-    void SetGifImage(GifImagePtr gif);
+    void SetGifImage(RefPtr<GifImage> gif);
 
     /// \~chinese
     /// @brief 重新播放 GIF 动画
@@ -110,7 +109,7 @@ public:
 
     /// \~chinese
     /// @brief 获取 GIF 图片
-    GifImagePtr GetGifImage() const;
+    RefPtr<GifImage> GetGifImage() const;
 
     void OnRender(RenderContext& ctx) override;
 
@@ -157,11 +156,11 @@ private:
     Duration         frame_elapsed_;
     LoopDoneCallback loop_cb_;
     DoneCallback     done_cb_;
-    GifImagePtr      gif_;
+    RefPtr<GifImage>      gif_;
     GifImage::Frame  frame_;
-    TexturePtr       saved_frame_;
-    TexturePtr       frame_to_render_;
-    RenderContextPtr frame_rt_;
+    RefPtr<Texture>       saved_frame_;
+    RefPtr<Texture>       frame_to_render_;
+    RefPtr<RenderContext> frame_rt_;
 };
 
 /** @} */
@@ -191,7 +190,7 @@ inline GifSprite::DoneCallback GifSprite::GetDoneCallback() const
     return done_cb_;
 }
 
-inline GifImagePtr GifSprite::GetGifImage() const
+inline RefPtr<GifImage> GifSprite::GetGifImage() const
 {
     return gif_;
 }

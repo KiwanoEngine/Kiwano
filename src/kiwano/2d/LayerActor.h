@@ -25,7 +25,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(LayerActor);
 
 /**
  * \addtogroup Actors
@@ -49,12 +48,12 @@ public:
 
     /// \~chinese
     /// @brief 获取图层
-    LayerPtr GetLayer() const;
+    RefPtr<Layer> GetLayer() const;
 
     /// \~chinese
     /// @brief 设置图层
     /// @param layer 图层
-    void SetLayer(LayerPtr layer);
+    void SetLayer(RefPtr<Layer> layer);
 
     /// \~chinese
     /// @brief 设置消息吞没功能
@@ -75,7 +74,7 @@ protected:
 
 private:
     bool     swallow_;
-    LayerPtr layer_;
+    RefPtr<Layer> layer_;
 };
 
 /** @} */
@@ -90,12 +89,12 @@ inline void LayerActor::SetSwallowEvents(bool enabled)
     swallow_ = enabled;
 }
 
-inline void LayerActor::SetLayer(LayerPtr layer)
+inline void LayerActor::SetLayer(RefPtr<Layer> layer)
 {
     layer_ = layer;
 }
 
-inline LayerPtr LayerActor::GetLayer() const
+inline RefPtr<Layer> LayerActor::GetLayer() const
 {
     return layer_;
 }

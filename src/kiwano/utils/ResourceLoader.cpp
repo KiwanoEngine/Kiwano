@@ -189,7 +189,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     if (type == "gif")
     {
         // GIF image
-        GifImagePtr gif = MakePtr<GifImage>();
+        RefPtr<GifImage> gif =  MakePtr<GifImage>();
         if (gif && gif->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, gif);
@@ -199,7 +199,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     else if (!file.empty())
     {
         // Simple image
-        TexturePtr texture = MakePtr<Texture>();
+        RefPtr<Texture> texture =  MakePtr<Texture>();
         if (texture && texture->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, texture);
@@ -229,7 +229,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
 
     if (!frames.empty())
     {
-        FrameSequencePtr frame_seq = MakePtr<FrameSequence>(frames);
+        RefPtr<FrameSequence> frame_seq =  MakePtr<FrameSequence>(frames);
         if (frame_seq)
         {
             cache->AddObject(id, frame_seq);
@@ -251,7 +251,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
             SpriteFrame frame;
             if (frame.Load(gdata->path + file.data()))
             {
-                FrameSequencePtr frame_seq = MakePtr<FrameSequence>();
+                RefPtr<FrameSequence> frame_seq =  MakePtr<FrameSequence>();
                 if (frame_seq)
                 {
                     frame_seq->AddFrames(frame.Split(cols, rows, max_num, padding_x, padding_y));
@@ -263,7 +263,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
         else
         {
             // Simple image
-            TexturePtr texture = MakePtr<Texture>();
+            RefPtr<Texture> texture =  MakePtr<Texture>();
             if (texture && texture->Load(gdata->path + file.data()))
             {
                 cache->AddObject(id, texture);
@@ -277,7 +277,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
 
 void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file)
 {
-    FontPtr font = Font::Preload(gdata->path + file.data());
+    RefPtr<Font> font = Font::Preload(gdata->path + file.data());
     if (font)
     {
         cache->AddObject(id, font);

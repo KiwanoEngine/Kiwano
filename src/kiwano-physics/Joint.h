@@ -25,18 +25,6 @@ namespace kiwano
 {
 namespace physics
 {
-KGE_DECLARE_SMART_PTR(Joint);
-KGE_DECLARE_SMART_PTR(DistanceJoint);
-KGE_DECLARE_SMART_PTR(FrictionJoint);
-KGE_DECLARE_SMART_PTR(GearJoint);
-KGE_DECLARE_SMART_PTR(MotorJoint);
-KGE_DECLARE_SMART_PTR(MouseJoint);
-KGE_DECLARE_SMART_PTR(PrismaticJoint);
-KGE_DECLARE_SMART_PTR(PulleyJoint);
-KGE_DECLARE_SMART_PTR(RevoluteJoint);
-KGE_DECLARE_SMART_PTR(RopeJoint);
-KGE_DECLARE_SMART_PTR(WeldJoint);
-KGE_DECLARE_SMART_PTR(WheelJoint);
 
 /**
  * \addtogroup Physics
@@ -81,7 +69,7 @@ public:
         {
         }
 
-        ParamBase(PhysicBodyPtr body_a, PhysicBodyPtr body_b)
+        ParamBase(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b)
             : ParamBase(body_a.Get(), body_b.Get())
         {
         }
@@ -101,11 +89,11 @@ public:
 
     /// \~chinese
     /// @brief 获取关节连接的物体A
-    PhysicBodyPtr GetBodyA() const;
+    RefPtr<PhysicBody> GetBodyA() const;
 
     /// \~chinese
     /// @brief 获取关节连接的物体B
-    PhysicBodyPtr GetBodyB() const;
+    RefPtr<PhysicBody> GetBodyB() const;
 
     /// \~chinese
     /// @brief 获取物理世界
@@ -148,7 +136,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor_a, const Point& anchor_b)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor_a, const Point& anchor_b)
             : ParamBase(body_a, body_b)
             , anchor_a(anchor_a)
             , anchor_b(anchor_b)
@@ -212,7 +200,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, float max_force = 0.f, float max_torque = 0.f)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor, float max_force = 0.f, float max_torque = 0.f)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , max_force(max_force)
@@ -269,7 +257,7 @@ public:
         {
         }
 
-        Param(JointPtr joint_a, JointPtr joint_b, float ratio = 1.f)
+        Param(RefPtr<Joint> joint_a, RefPtr<Joint> joint_b, float ratio = 1.f)
             : ParamBase(nullptr, nullptr)
             , joint_a(joint_a.Get())
             , joint_b(joint_b.Get())
@@ -318,7 +306,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, float max_force = 0.f, float max_torque = 0.f)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, float max_force = 0.f, float max_torque = 0.f)
             : ParamBase(body_a, body_b)
             , max_force(max_force)
             , max_torque(max_torque)
@@ -380,7 +368,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, const Vec2& axis)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor, const Vec2& axis)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , axis(axis)
@@ -484,7 +472,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor_a, const Point& anchor_b,
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor_a, const Point& anchor_b,
               const Point& ground_anchor_a, const Point& ground_anchor_b, float ratio = 1.0f)
             : ParamBase(body_a, body_b)
             , anchor_a(anchor_a)
@@ -560,7 +548,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , enable_limit(false)
@@ -661,7 +649,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& local_anchor_a, const Point& local_anchor_b)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& local_anchor_a, const Point& local_anchor_b)
             : ParamBase(body_a, body_b)
             , local_anchor_a(local_anchor_a)
             , local_anchor_b(local_anchor_b)
@@ -710,7 +698,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , frequency_hz(0.0f)
@@ -775,7 +763,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& anchor, const Vec2& axis)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor, const Vec2& axis)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , axis(axis)
@@ -878,7 +866,7 @@ public:
         {
         }
 
-        Param(PhysicBodyPtr body_a, PhysicBodyPtr body_b, const Point& target)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& target)
             : ParamBase(body_a, body_b)
             , target(target)
             , max_force(0.0f)

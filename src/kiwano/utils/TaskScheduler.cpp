@@ -29,7 +29,7 @@ void TaskScheduler::Update(Duration dt)
     if (tasks_.IsEmpty())
         return;
 
-    TaskPtr next;
+    RefPtr<Task> next;
     for (auto task = tasks_.GetFirst(); task; task = next)
     {
         next = task->GetNext();
@@ -41,7 +41,7 @@ void TaskScheduler::Update(Duration dt)
     }
 }
 
-Task* TaskScheduler::AddTask(TaskPtr task)
+Task* TaskScheduler::AddTask(RefPtr<Task> task)
 {
     KGE_ASSERT(task && "AddTask failed, NULL pointer exception");
 
@@ -53,27 +53,27 @@ Task* TaskScheduler::AddTask(TaskPtr task)
     return task.Get();
 }
 
-Task* TaskScheduler::AddTask(const Task::Callback& cb, TickerPtr ticker)
+Task* TaskScheduler::AddTask(const Task::Callback& cb, RefPtr<Ticker> ticker)
 {
-    auto task = MakePtr<Task>(cb, ticker);
+    auto task =  MakePtr<Task>(cb, ticker);
     return AddTask(task);
 }
 
-Task* TaskScheduler::AddTask(StringView name, const Task::Callback& cb, TickerPtr ticker)
+Task* TaskScheduler::AddTask(StringView name, const Task::Callback& cb, RefPtr<Ticker> ticker)
 {
-    auto task = MakePtr<Task>(name, cb, ticker);
+    auto task =  MakePtr<Task>(name, cb, ticker);
     return AddTask(task);
 }
 
 Task* TaskScheduler::AddTask(const Task::Callback& cb, Duration interval, int times)
 {
-    auto task = MakePtr<Task>(cb, interval, times);
+    auto task =  MakePtr<Task>(cb, interval, times);
     return AddTask(task);
 }
 
 Task* TaskScheduler::AddTask(StringView name, const Task::Callback& cb, Duration interval, int times)
 {
-    auto task = MakePtr<Task>(name, cb, interval, times);
+    auto task =  MakePtr<Task>(name, cb, interval, times);
     return AddTask(task);
 }
 

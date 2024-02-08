@@ -124,7 +124,7 @@ void AudioModule::DestroyModule()
     }
 }
 
-bool AudioModule::CreateSound(Sound& sound, AudioDataPtr data)
+bool AudioModule::CreateSound(Sound& sound, RefPtr<AudioData> data)
 {
     KGE_ASSERT(x_audio2_ && "AudioModule hasn't been initialized!");
 
@@ -184,12 +184,12 @@ void AudioModule::Close()
         x_audio2_->StopEngine();
 }
 
-void AudioModule::RegisterTranscoder(StringView ext, TranscoderPtr transcoder)
+void AudioModule::RegisterTranscoder(StringView ext, RefPtr<Transcoder> transcoder)
 {
     registered_transcoders_.insert(std::make_pair(ext, transcoder));
 }
 
-TranscoderPtr AudioModule::GetTranscoder(StringView ext)
+RefPtr<Transcoder> AudioModule::GetTranscoder(StringView ext)
 {
     auto iter = registered_transcoders_.find(ext);
     if (iter != registered_transcoders_.end())
@@ -199,7 +199,7 @@ TranscoderPtr AudioModule::GetTranscoder(StringView ext)
     return registered_transcoders_.at("*");
 }
 
-AudioDataPtr AudioModule::Decode(StringView file_path)
+RefPtr<AudioData> AudioModule::Decode(StringView file_path)
 {
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
@@ -218,7 +218,7 @@ AudioDataPtr AudioModule::Decode(StringView file_path)
     return transcoder->Decode(full_path);
 }
 
-AudioDataPtr AudioModule::Decode(const Resource& res, StringView ext)
+RefPtr<AudioData> AudioModule::Decode(const Resource& res, StringView ext)
 {
     auto transcoder = GetTranscoder(ext);
     if (!transcoder)

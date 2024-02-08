@@ -26,8 +26,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(TextLayout);
-
 /**
  * \addtogroup Render
  * @{
@@ -75,7 +73,7 @@ public:
     /// \~chinese
     /// @brief 设置字体
     /// @param font 字体
-    void SetFont(FontPtr font);
+    void SetFont(RefPtr<Font> font);
 
     /// \~chinese
     /// @brief 设置下划线

@@ -83,7 +83,7 @@ public:
         {
             local_vertices.push_back(global::WorldToLocal(vertices[i]));
         }
-        ShapePtr polygon = Shape::CreatePolygon(local_vertices);
+        RefPtr<Shape> polygon = Shape::CreatePolygon(local_vertices);
 
         SetFillColor(color);
         ctx_->FillShape(polygon);
@@ -133,8 +133,8 @@ public:
     }
 
 private:
-    CanvasPtr              canvas_;
-    CanvasRenderContextPtr ctx_;
+    RefPtr<Canvas>              canvas_;
+    RefPtr<CanvasRenderContext> ctx_;
 };
 
 class DestructionListener : public b2DestructionListener
@@ -170,7 +170,7 @@ public:
         Contact contact;
         contact.SetB2Contact(b2contact);
 
-        ContactBeginEventPtr evt = new ContactBeginEvent(contact);
+        RefPtr<ContactBeginEvent> evt = new ContactBeginEvent(contact);
         dispatcher_(evt.Get());
     }
 
@@ -187,7 +187,7 @@ public:
         Contact contact;
         contact.SetB2Contact(b2contact);
 
-        ContactEndEventPtr evt = new ContactEndEvent(contact);
+        RefPtr<ContactEndEvent> evt = new ContactEndEvent(contact);
         dispatcher_(evt.Get());
     }
 
@@ -234,7 +234,7 @@ PhysicWorld::~PhysicWorld()
     RemoveAllBodies();
 }
 
-void PhysicWorld::AddBody(PhysicBodyPtr body)
+void PhysicWorld::AddBody(RefPtr<PhysicBody> body)
 {
     if (body)
     {
@@ -242,7 +242,7 @@ void PhysicWorld::AddBody(PhysicBodyPtr body)
     }
 }
 
-void PhysicWorld::RemoveBody(PhysicBodyPtr body)
+void PhysicWorld::RemoveBody(RefPtr<PhysicBody> body)
 {
     if (body)
     {
@@ -264,12 +264,12 @@ void PhysicWorld::RemoveAllBodies()
     bodies_.clear();
 }
 
-const List<PhysicBodyPtr>& PhysicWorld::GetAllBodies() const
+const List<RefPtr<PhysicBody>>& PhysicWorld::GetAllBodies() const
 {
     return bodies_;
 }
 
-void PhysicWorld::AddJoint(JointPtr joint)
+void PhysicWorld::AddJoint(RefPtr<Joint> joint)
 {
     if (joint)
     {
@@ -280,7 +280,7 @@ void PhysicWorld::AddJoint(JointPtr joint)
     }
 }
 
-void PhysicWorld::RemoveJoint(JointPtr joint)
+void PhysicWorld::RemoveJoint(RefPtr<Joint> joint)
 {
     if (joint)
     {
@@ -302,7 +302,7 @@ void PhysicWorld::RemoveAllJoints()
     joints_.clear();
 }
 
-const List<JointPtr>& PhysicWorld::GetAllJoints() const
+const List<RefPtr<Joint>>& PhysicWorld::GetAllJoints() const
 {
     return joints_;
 }

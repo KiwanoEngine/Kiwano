@@ -27,8 +27,6 @@ namespace kiwano
 namespace audio
 {
 
-KGE_DECLARE_SMART_PTR(Transcoder);
-
 /**
  * \addtogroup Audio
  * @{
@@ -45,9 +43,9 @@ public:
 
     virtual ~Transcoder() = default;
 
-    virtual AudioDataPtr Decode(StringView file_path) = 0;
+    virtual RefPtr<AudioData> Decode(StringView file_path) = 0;
 
-    virtual AudioDataPtr Decode(const Resource& res) = 0;
+    virtual RefPtr<AudioData> Decode(const Resource& res) = 0;
 };
 
 /** @} */

@@ -83,7 +83,7 @@ uint32_t TextLayout::GetLineCount() const
     return line_count_;
 }
 
-void TextLayout::SetFont(FontPtr font)
+void TextLayout::SetFont(RefPtr<Font> font)
 {
     if (!font)
         return;

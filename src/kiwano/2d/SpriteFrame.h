@@ -48,7 +48,7 @@ public:
     /// \~chinese
     /// @brief 创建精灵帧
     /// @param texture 纹理
-    SpriteFrame(TexturePtr texture);
+    SpriteFrame(RefPtr<Texture> texture);
 
     /// \~chinese
     /// @brief 创建精灵帧
@@ -66,7 +66,7 @@ public:
     /// @brief 创建精灵帧
     /// @param texture 纹理
     /// @param crop_rect 裁剪矩形
-    SpriteFrame(TexturePtr texture, const Rect& crop_rect);
+    SpriteFrame(RefPtr<Texture> texture, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 加载图像
@@ -88,7 +88,7 @@ public:
 
     /// \~chinese
     /// @brief 获取纹理
-    TexturePtr GetTexture() const;
+    RefPtr<Texture> GetTexture() const;
 
     /// \~chinese
     /// @brief 获取精灵帧大小
@@ -102,7 +102,7 @@ public:
     /// \~chinese
     /// @brief 设置纹理并重置裁剪矩形
     /// @param texture 纹理
-    void SetTexture(TexturePtr texture);
+    void SetTexture(RefPtr<Texture> texture);
 
     /// \~chinese
     /// @brief 按行列分割精灵帧
@@ -114,7 +114,7 @@ public:
     Vector<SpriteFrame> Split(int cols, int rows, int max_num = -1, float padding_x = 0, float padding_y = 0);
 
 private:
-    TexturePtr texture_;
+    RefPtr<Texture> texture_;
     Rect       crop_rect_;
 };
 
@@ -128,7 +128,7 @@ inline const Rect& SpriteFrame::GetCropRect() const
     return crop_rect_;
 }
 
-inline TexturePtr SpriteFrame::GetTexture() const
+inline RefPtr<Texture> SpriteFrame::GetTexture() const
 {
     return texture_;
 }

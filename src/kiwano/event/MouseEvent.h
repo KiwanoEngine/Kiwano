@@ -25,14 +25,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(MouseEvent);
-KGE_DECLARE_SMART_PTR(MouseMoveEvent);
-KGE_DECLARE_SMART_PTR(MouseDownEvent);
-KGE_DECLARE_SMART_PTR(MouseUpEvent);
-KGE_DECLARE_SMART_PTR(MouseClickEvent);
-KGE_DECLARE_SMART_PTR(MouseHoverEvent);
-KGE_DECLARE_SMART_PTR(MouseOutEvent);
-KGE_DECLARE_SMART_PTR(MouseWheelEvent);
 
 /**
  * \addtogroup Event

@@ -28,7 +28,8 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(ObjectBase);
+
+class ObjectBase;
 
 /**
  * \~chinese
@@ -167,12 +168,12 @@ public:
     /// \~chinese
     /// @brief 持有一个对象并管理其生命周期
     /// @param other 对象指针
-    void Hold(ObjectBasePtr other);
+    void Hold(RefPtr<ObjectBase> other);
 
     /// \~chinese
     /// @brief 放弃持有的对象
     /// @param other 对象指针
-    void Unhold(ObjectBasePtr other);
+    void Unhold(RefPtr<ObjectBase> other);
 
     /// \~chinese
     /// @brief 获取对象ID
@@ -244,7 +245,7 @@ private:
     void*   user_data_;
 
     ObjectStatus*       status_;
-    Set<ObjectBasePtr>* holdings_;
+    Set<RefPtr<ObjectBase>>* holdings_;
 };
 
 inline StringView ObjectBase::GetName() const

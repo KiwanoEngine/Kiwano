@@ -24,8 +24,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(NativeObject);
-
 /**
  * \~chinese
  * @brief 含有本地指针的对象

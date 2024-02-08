@@ -23,8 +23,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(CustomAnimation);
-
 /**
  * \addtogroup Animation
  * @{
@@ -44,7 +42,7 @@ public:
     /// @brief 创建自定义动画
     /// @param duration 动画时长
     /// @param tween_func 动画回调函数
-    static CustomAnimationPtr Create(Duration duration, Function<void(Actor*, float)> tween_func);
+    static RefPtr<CustomAnimation> Create(Duration duration, Function<void(Actor*, float)> tween_func);
 
     /// \~chinese
     /// @brief 动画更新时

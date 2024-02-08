@@ -24,7 +24,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(Stage);
 
 /**
  * \addtogroup Actors
@@ -59,19 +58,19 @@ public:
 
     /// \~chinese
     /// @brief 获取角色边界填充画刷
-    BrushPtr GetBorderFillBrush() const;
+    RefPtr<Brush> GetBorderFillBrush() const;
 
     /// \~chinese
     /// @brief 获取角色边界轮廓画刷
-    BrushPtr GetBorderStrokeBrush() const;
+    RefPtr<Brush> GetBorderStrokeBrush() const;
 
     /// \~chinese
     /// @brief 设置角色边界填充画刷
-    void SetBorderFillBrush(BrushPtr brush);
+    void SetBorderFillBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置角色边界轮廓画刷
-    void SetBorderStrokeBrush(BrushPtr brush);
+    void SetBorderStrokeBrush(RefPtr<Brush> brush);
 
 protected:
     /// \~chinese
@@ -79,28 +78,28 @@ protected:
     void RenderBorder(RenderContext& ctx) override;
 
 private:
-    BrushPtr border_fill_brush_;
-    BrushPtr border_stroke_brush_;
+    RefPtr<Brush> border_fill_brush_;
+    RefPtr<Brush> border_stroke_brush_;
 };
 
 /** @} */
 
-inline BrushPtr Stage::GetBorderFillBrush() const
+inline RefPtr<Brush> Stage::GetBorderFillBrush() const
 {
     return border_fill_brush_;
 }
 
-inline BrushPtr Stage::GetBorderStrokeBrush() const
+inline RefPtr<Brush> Stage::GetBorderStrokeBrush() const
 {
     return border_stroke_brush_;
 }
 
-inline void Stage::SetBorderFillBrush(BrushPtr brush)
+inline void Stage::SetBorderFillBrush(RefPtr<Brush> brush)
 {
     border_fill_brush_ = brush;
 }
 
-inline void Stage::SetBorderStrokeBrush(BrushPtr brush)
+inline void Stage::SetBorderStrokeBrush(RefPtr<Brush> brush)
 {
     border_stroke_brush_ = brush;
 }

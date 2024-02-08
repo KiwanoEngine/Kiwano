@@ -42,9 +42,9 @@ Window::~Window()
 {
 }
 
-EventPtr Window::PollEvent()
+RefPtr<Event> Window::PollEvent()
 {
-    EventPtr evt;
+    RefPtr<Event> evt;
     if (!event_queue_.empty())
     {
         evt = event_queue_.front();
@@ -103,7 +103,7 @@ void Window::SetShouldClose(bool should)
     should_close_ = should;
 }
 
-void Window::PushEvent(EventPtr evt)
+void Window::PushEvent(RefPtr<Event> evt)
 {
     event_queue_.push(evt);
 }

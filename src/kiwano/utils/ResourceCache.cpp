@@ -45,7 +45,7 @@ bool ResourceCache::LoadFromXmlFile(StringView file_path)
     return IsValid();
 }
 
-void ResourceCache::AddObject(StringView id, ObjectBasePtr obj)
+void ResourceCache::AddObject(StringView id, RefPtr<ObjectBase> obj)
 {
     object_cache_[id] = obj;
 }
@@ -60,7 +60,7 @@ void ResourceCache::Clear()
     object_cache_.clear();
 }
 
-ObjectBasePtr ResourceCache::Get(StringView id) const
+RefPtr<ObjectBase> ResourceCache::Get(StringView id) const
 {
     auto iter = object_cache_.find(id);
     if (iter == object_cache_.end())

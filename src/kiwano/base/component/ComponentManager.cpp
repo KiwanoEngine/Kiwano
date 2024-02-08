@@ -29,7 +29,7 @@ ComponentManager::ComponentManager(Actor* target)
 {
 }
 
-Component* ComponentManager::AddComponent(ComponentPtr component)
+Component* ComponentManager::AddComponent(RefPtr<Component> component)
 {
     KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
 
@@ -41,7 +41,7 @@ Component* ComponentManager::AddComponent(ComponentPtr component)
     return component.Get();
 }
 
-Component* ComponentManager::AddComponent(size_t index, ComponentPtr component)
+Component* ComponentManager::AddComponent(size_t index, RefPtr<Component> component)
 {
     KGE_ASSERT(component && "AddComponent failed, NULL pointer exception");
 
@@ -83,7 +83,7 @@ const ComponentMap& ComponentManager::GetAllComponents() const
     return components_;
 }
 
-void ComponentManager::RemoveComponent(ComponentPtr component)
+void ComponentManager::RemoveComponent(RefPtr<Component> component)
 {
     RemoveComponent(component->GetName());
 }

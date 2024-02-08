@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(KeyEventListener);
-
 /**
  * \addtogroup EventListener
  * @{

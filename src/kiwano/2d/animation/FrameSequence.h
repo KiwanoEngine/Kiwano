@@ -25,8 +25,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(FrameSequence);
-
 /**
  * \~chinese
  * @brief 序列帧
@@ -70,11 +68,11 @@ public:
 
     /// \~chinese
     /// @brief 获取序列帧的拷贝对象
-    FrameSequencePtr Clone() const;
+    RefPtr<FrameSequence> Clone() const;
 
     /// \~chinese
     /// @brief 获取序列帧的倒转
-    FrameSequencePtr Reverse() const;
+    RefPtr<FrameSequence> Reverse() const;
 
 private:
     Vector<SpriteFrame> frames_;

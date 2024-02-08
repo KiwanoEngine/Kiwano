@@ -28,7 +28,7 @@ bool EventDispatcher::DispatchEvent(Event* evt)
     if (listeners_.IsEmpty())
         return true;
 
-    EventListenerPtr next;
+    RefPtr<EventListener> next;
     for (auto listener = listeners_.GetFirst(); listener; listener = next)
     {
         next = listener->GetNext();
@@ -45,7 +45,7 @@ bool EventDispatcher::DispatchEvent(Event* evt)
     return true;
 }
 
-EventListener* EventDispatcher::AddListener(EventListenerPtr listener)
+EventListener* EventDispatcher::AddListener(RefPtr<EventListener> listener)
 {
     KGE_ASSERT(listener && "AddListener failed, NULL pointer exception");
 

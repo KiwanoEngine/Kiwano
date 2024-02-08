@@ -23,12 +23,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(WindowEvent);
-KGE_DECLARE_SMART_PTR(WindowMovedEvent);
-KGE_DECLARE_SMART_PTR(WindowResizedEvent);
-KGE_DECLARE_SMART_PTR(WindowFocusChangedEvent);
-KGE_DECLARE_SMART_PTR(WindowTitleChangedEvent);
-KGE_DECLARE_SMART_PTR(WindowClosedEvent);
 
 class Window;
 

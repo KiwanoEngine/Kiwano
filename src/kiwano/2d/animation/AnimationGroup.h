@@ -23,8 +23,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(AnimationGroup);
-
 /**
  * \addtogroup Animation
  * @{
@@ -42,19 +40,19 @@ public:
     /// @brief 创建动画组合
     /// @param animations 动画集合
     /// @param parallel 同步执行
-    AnimationGroup(const Vector<AnimationPtr>& animations, bool parallel = false);
+    AnimationGroup(const Vector<RefPtr<Animation>>& animations, bool parallel = false);
 
     virtual ~AnimationGroup();
 
     /// \~chinese
     /// @brief 添加动画
     /// @param animation 动画
-    void AddAnimation(AnimationPtr animation);
+    void AddAnimation(RefPtr<Animation> animation);
 
     /// \~chinese
     /// @brief 添加多个动画
     /// @param animations 动画集合
-    void AddAnimation(const Vector<AnimationPtr>& animations);
+    void AddAnimation(const Vector<RefPtr<Animation>>& animations);
 
     /// \~chinese
     /// @brief 获取所有动画
@@ -75,7 +73,7 @@ protected:
 
 private:
     bool            parallel_;
-    AnimationPtr current_;
+    RefPtr<Animation> current_;
     AnimationList      animations_;
 };
 

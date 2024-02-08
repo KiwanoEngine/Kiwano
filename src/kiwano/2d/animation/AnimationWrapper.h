@@ -42,7 +42,7 @@ class KGE_API AnimationWrapper
 public:
     AnimationWrapper() = default;
 
-    inline AnimationWrapper(AnimationPtr ptr)
+    inline AnimationWrapper(RefPtr<Animation> ptr)
         : ptr(ptr)
     {
     }
@@ -67,7 +67,7 @@ public:
 
     /// \~chinese
     /// @brief 设置动画结束回调函数
-    inline AnimationWrapper& Handler(AnimationEventHandlerPtr handler)
+    inline AnimationWrapper& Handler(RefPtr<AnimationEventHandler> handler)
     {
         if (ptr)
             ptr->SetHandler(handler);
@@ -131,7 +131,7 @@ public:
 
     /// \~chinese
     /// @brief 设置动画
-    inline void SetEntity(AnimationPtr ptr)
+    inline void SetEntity(RefPtr<Animation> ptr)
     {
         this->ptr = ptr;
     }
@@ -146,7 +146,7 @@ public:
         return Get();
     }
 
-    inline operator AnimationPtr() const
+    inline operator RefPtr<Animation>() const
     {
         return ptr;
     }
@@ -157,7 +157,7 @@ public:
     }
 
 protected:
-    AnimationPtr ptr;
+    RefPtr<Animation> ptr;
 };
 
 namespace animation
@@ -280,7 +280,7 @@ inline AnimationWrapper Custom(kiwano::Duration duration, Function<void(Actor*, 
 /// @param rotating 是否沿路径切线方向旋转
 /// @param start 路径起点（百分比）
 /// @param end 路径终点（百分比）
-inline AnimationWrapper Path(kiwano::Duration duration, ShapePtr path, bool rotating = false, float start = 0.f,
+inline AnimationWrapper Path(kiwano::Duration duration, RefPtr<Shape> path, bool rotating = false, float start = 0.f,
                              float end = 1.f)
 {
     return AnimationWrapper(new PathAnimation(duration, path, rotating, start, end));
@@ -298,7 +298,7 @@ inline AnimationWrapper Delay(kiwano::Duration delay)
 /// @brief 创建帧动画
 /// @param duration 动画时长
 /// @param frame_seq 序列帧
-inline AnimationWrapper Frames(kiwano::Duration duration, FrameSequencePtr frame_seq)
+inline AnimationWrapper Frames(kiwano::Duration duration, RefPtr<FrameSequence> frame_seq)
 {
     return AnimationWrapper(new FrameAnimation(duration, frame_seq));
 }
@@ -307,7 +307,7 @@ inline AnimationWrapper Frames(kiwano::Duration duration, FrameSequencePtr frame
 /// @brief 创建动画组合
 /// @param actions 动画集合
 /// @param parallel 同步执行
-inline AnimationWrapper Group(const Vector<AnimationPtr>& animations, bool parallel = false)
+inline AnimationWrapper Group(const Vector<RefPtr<Animation>>& animations, bool parallel = false)
 {
     return AnimationWrapper(new AnimationGroup(animations, parallel));
 }

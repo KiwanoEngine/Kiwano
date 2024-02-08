@@ -30,7 +30,7 @@ void Animator::Update(Actor* target, Duration dt)
     if (animations_.IsEmpty() || !target)
         return;
 
-    AnimationPtr next;
+    RefPtr<Animation> next;
     for (auto animation = animations_.GetFirst(); animation; animation = next)
     {
         next = animation->GetNext();
@@ -43,7 +43,7 @@ void Animator::Update(Actor* target, Duration dt)
     }
 }
 
-Animation* Animator::AddAnimation(AnimationPtr animation)
+Animation* Animator::AddAnimation(RefPtr<Animation> animation)
 {
     KGE_ASSERT(animation && "AddAnimation failed, NULL pointer exception");
 

@@ -25,8 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(FrameAnimation);
-
 /**
  * \addtogroup Animation
  * @{
@@ -43,18 +41,18 @@ public:
     /// @brief 创建帧动画
     /// @param dur 动画时长
     /// @param frame_seq 序列帧
-    FrameAnimation(Duration dur, FrameSequencePtr frame_seq);
+    FrameAnimation(Duration dur, RefPtr<FrameSequence> frame_seq);
 
     virtual ~FrameAnimation();
 
     /// \~chinese
     /// @brief 获取序列帧
-    FrameSequencePtr GetFrameSequence() const;
+    RefPtr<FrameSequence> GetFrameSequence() const;
 
     /// \~chinese
     /// @brief 设置序列帧
     /// @param[in] frame_seq 序列帧
-    void SetFrameSequence(FrameSequencePtr frame_seq);
+    void SetFrameSequence(RefPtr<FrameSequence> frame_seq);
 
     /// \~chinese
     /// @brief 获取该动画的拷贝对象
@@ -71,7 +69,7 @@ protected:
 
 private:
     size_t           current_index_;
-    FrameSequencePtr frame_seq_;
+    RefPtr<FrameSequence> frame_seq_;
 };
 
 /** @} */

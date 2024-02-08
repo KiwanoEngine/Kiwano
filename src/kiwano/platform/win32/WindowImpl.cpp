@@ -39,8 +39,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(WindowWin32Impl);
-
 class KGE_API WindowWin32Impl : public Window
 {
 public:
@@ -91,9 +89,9 @@ private:
     std::array<KeyCode, 256> key_map_;
 };
 
-WindowPtr Window::Create(const WindowConfig& config)
+RefPtr<Window> Window::Create(const WindowConfig& config)
 {
-    WindowWin32ImplPtr ptr = MakePtr<WindowWin32Impl>();
+    RefPtr<WindowWin32Impl> ptr =  MakePtr<WindowWin32Impl>();
     if (ptr)
     {
         ptr->Init(config);
@@ -529,7 +527,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         KeyCode key = this->key_map_[size_t(wparam)];
         if (key != KeyCode::Unknown)
         {
-            KeyDownEventPtr evt = new KeyDownEvent;
+            RefPtr<KeyDownEvent> evt = new KeyDownEvent;
             evt->code           = key;
             this->PushEvent(evt);
         }
@@ -542,7 +540,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         KeyCode key = this->key_map_[size_t(wparam)];
         if (key != KeyCode::Unknown)
         {
-            KeyUpEventPtr evt = new KeyUpEvent;
+            RefPtr<KeyUpEvent> evt = new KeyUpEvent;
             evt->code         = key;
             this->PushEvent(evt);
         }
@@ -551,7 +549,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_CHAR:
     {
-        KeyCharEventPtr evt = new KeyCharEvent;
+        RefPtr<KeyCharEvent> evt = new KeyCharEvent;
         evt->value          = char(wparam);
         this->PushEvent(evt);
     }
@@ -581,7 +579,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
                 ::ImmGetCompositionStringA(hIMC, GCS_RESULTSTR, const_cast<char*>(buf.data()), dwSize);
                 ::ImmReleaseContext(hwnd, hIMC);
 
-                IMEInputEventPtr evt = new IMEInputEvent;
+                RefPtr<IMEInputEvent> evt = new IMEInputEvent;
                 evt->value           = std::move(buf);
                 this->PushEvent(evt);
                 return TRUE;
@@ -596,7 +594,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_MBUTTONDOWN:
     case WM_MBUTTONDBLCLK:
     {
-        MouseDownEventPtr evt = new MouseDownEvent;
+        RefPtr<MouseDownEvent> evt = new MouseDownEvent;
         evt->pos              = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 
         if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONDBLCLK)
@@ -624,7 +622,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_MBUTTONUP:
     case WM_RBUTTONUP:
     {
-        MouseUpEventPtr evt = new MouseUpEvent;
+        RefPtr<MouseUpEvent> evt = new MouseUpEvent;
         evt->pos            = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
 
         if (msg == WM_LBUTTONUP)
@@ -650,7 +648,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_MOUSEMOVE:
     {
-        MouseMoveEventPtr evt = new MouseMoveEvent;
+        RefPtr<MouseMoveEvent> evt = new MouseMoveEvent;
         evt->pos              = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
         this->PushEvent(evt);
     }
@@ -658,7 +656,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_MOUSEWHEEL:
     {
-        MouseWheelEventPtr evt = new MouseWheelEvent;
+        RefPtr<MouseWheelEvent> evt = new MouseWheelEvent;
         evt->pos               = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
         evt->wheel             = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
         this->PushEvent(evt);
@@ -714,7 +712,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             this->width_  = ((uint32_t)(short)LOWORD(lparam));
             this->height_ = ((uint32_t)(short)HIWORD(lparam));
 
-            WindowResizedEventPtr evt = new WindowResizedEvent;
+            RefPtr<WindowResizedEvent> evt = new WindowResizedEvent;
             evt->window               = this;
             evt->width                = this->GetWidth();
             evt->height               = this->GetHeight();
@@ -750,7 +748,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             this->width_  = client_width;
             this->height_ = client_height;
 
-            WindowResizedEventPtr evt = new WindowResizedEvent;
+            RefPtr<WindowResizedEvent> evt = new WindowResizedEvent;
             evt->window               = this;
             evt->width                = client_width;
             evt->height               = client_height;
@@ -769,7 +767,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             this->pos_x_ = window_x;
             this->pos_y_ = window_y;
 
-            WindowMovedEventPtr evt = new WindowMovedEvent;
+            RefPtr<WindowMovedEvent> evt = new WindowMovedEvent;
             evt->window             = this;
             evt->x                  = window_x;
             evt->y                  = window_y;
@@ -808,7 +806,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
             this->pos_x_ = window_x;
             this->pos_y_ = window_y;
 
-            WindowMovedEventPtr evt = new WindowMovedEvent;
+            RefPtr<WindowMovedEvent> evt = new WindowMovedEvent;
             evt->window             = this;
             evt->x                  = window_x;
             evt->y                  = window_y;
@@ -828,7 +826,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         bool active = (LOWORD(wparam) != WA_INACTIVE);
 
-        WindowFocusChangedEventPtr evt = new WindowFocusChangedEvent;
+        RefPtr<WindowFocusChangedEvent> evt = new WindowFocusChangedEvent;
         evt->window                    = this;
         evt->focus                     = active;
         this->PushEvent(evt);
@@ -859,7 +857,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
         this->title_ = strings::WideToNarrow(reinterpret_cast<LPCWSTR>(lparam));
 
-        WindowTitleChangedEventPtr evt = new WindowTitleChangedEvent;
+        RefPtr<WindowTitleChangedEvent> evt = new WindowTitleChangedEvent;
         evt->window                    = this;
         evt->title                     = this->title_;
         this->PushEvent(evt);
@@ -888,7 +886,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     {
         KGE_DEBUG_LOGF("Window is closing");
 
-        WindowClosedEventPtr evt = new WindowClosedEvent;
+        RefPtr<WindowClosedEvent> evt = new WindowClosedEvent;
         evt->window              = this;
         this->PushEvent(evt);
         this->SetShouldClose(true);

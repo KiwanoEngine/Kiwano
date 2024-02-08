@@ -25,7 +25,6 @@
 
 namespace kiwano
 {
-KGE_DECLARE_SMART_PTR(TextActor);
 
 /**
  * \addtogroup Actors
@@ -64,7 +63,7 @@ public:
 
     /// \~chinese
     /// @brief 获取文本布局
-    TextLayoutPtr GetLayout() const;
+    RefPtr<TextLayout> GetLayout() const;
 
     /// \~chinese
     /// @brief 获取大小
@@ -72,19 +71,19 @@ public:
 
     /// \~chinese
     /// @brief 获取填充画刷
-    BrushPtr GetFillBrush() const;
+    RefPtr<Brush> GetFillBrush() const;
 
     /// \~chinese
     /// @brief 获取描边画刷
-    BrushPtr GetOutlineBrush() const;
+    RefPtr<Brush> GetOutlineBrush() const;
 
     /// \~chinese
     /// @brief 获取描边线条样式
-    StrokeStylePtr GetOutlineStrokeStyle() const;
+    RefPtr<StrokeStyle> GetOutlineStrokeStyle() const;
 
     /// \~chinese
     /// @brief 获取字体
-    FontPtr GetFont() const;
+    RefPtr<Font> GetFont() const;
 
     /// \~chinese
     /// @brief 设置文本
@@ -96,11 +95,11 @@ public:
 
     /// \~chinese
     /// @brief 设置字体
-    void SetFont(FontPtr font);
+    void SetFont(RefPtr<Font> font);
 
     /// \~chinese
     /// @brief 设置文字填充画刷
-    void SetFillBrush(BrushPtr brush);
+    void SetFillBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置文字填充颜色（默认值为 Color::White）
@@ -120,7 +119,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文字描边画刷
-    void SetOutlineBrush(BrushPtr brush);
+    void SetOutlineBrush(RefPtr<Brush> brush);
 
     /// \~chinese
     /// @brief 设置文字描边颜色
@@ -128,7 +127,7 @@ public:
 
     /// \~chinese
     /// @brief 设置描边线条样式
-    void SetOutlineStrokeStyle(StrokeStylePtr stroke);
+    void SetOutlineStrokeStyle(RefPtr<StrokeStyle> stroke);
 
     /// \~chinese
     /// @brief 设置是否显示下划线（默认值为 false）
@@ -140,7 +139,7 @@ public:
 
     /// \~chinese
     /// @brief 设置文本布局
-    void SetTextLayout(TextLayoutPtr layout);
+    void SetTextLayout(RefPtr<TextLayout> layout);
 
     /// \~chinese
     /// @brief 更新脏文字布局
@@ -169,12 +168,12 @@ private:
     bool             is_cache_dirty_;
     String           content_;
     TextStyle        style_;
-    TextLayoutPtr    layout_;
-    BrushPtr         fill_brush_;
-    BrushPtr         outline_brush_;
-    StrokeStylePtr   outline_stroke_;
-    TexturePtr       texture_cached_;
-    RenderContextPtr render_ctx_;
+    RefPtr<TextLayout>    layout_;
+    RefPtr<Brush>         fill_brush_;
+    RefPtr<Brush>         outline_brush_;
+    RefPtr<StrokeStyle>   outline_stroke_;
+    RefPtr<Texture>       texture_cached_;
+    RefPtr<RenderContext> render_ctx_;
 };
 
 /** @} */
@@ -184,7 +183,7 @@ inline StringView TextActor::GetText() const
     return content_;
 }
 
-inline FontPtr TextActor::GetFont() const
+inline RefPtr<Font> TextActor::GetFont() const
 {
     return style_.font;
 }
@@ -194,22 +193,22 @@ inline TextStyle TextActor::GetStyle() const
     return style_;
 }
 
-inline TextLayoutPtr TextActor::GetLayout() const
+inline RefPtr<TextLayout> TextActor::GetLayout() const
 {
     return layout_;
 }
 
-inline BrushPtr TextActor::GetFillBrush() const
+inline RefPtr<Brush> TextActor::GetFillBrush() const
 {
     return fill_brush_;
 }
 
-inline BrushPtr TextActor::GetOutlineBrush() const
+inline RefPtr<Brush> TextActor::GetOutlineBrush() const
 {
     return outline_brush_;
 }
 
-inline StrokeStylePtr TextActor::GetOutlineStrokeStyle() const
+inline RefPtr<StrokeStyle> TextActor::GetOutlineStrokeStyle() const
 {
     return outline_stroke_;
 }

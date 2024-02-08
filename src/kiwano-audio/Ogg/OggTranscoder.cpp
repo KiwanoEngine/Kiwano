@@ -40,7 +40,7 @@ public:
     std::vector<char> raw_;
 };
 
-AudioDataPtr OggTranscoder::Decode(StringView file_path)
+RefPtr<AudioData> OggTranscoder::Decode(StringView file_path)
 {
     OggVorbis_File vf;
 
@@ -93,11 +93,11 @@ AudioDataPtr OggTranscoder::Decode(StringView file_path)
     }
     ov_clear(&vf);
 
-    AudioDataPtr output = new OggAudioData(std::move(data), uint32_t(pos), meta);
+    RefPtr<AudioData> output = new OggAudioData(std::move(data), uint32_t(pos), meta);
     return output;
 }
 
-AudioDataPtr OggTranscoder::Decode(const Resource& res)
+RefPtr<AudioData> OggTranscoder::Decode(const Resource& res)
 {
     KGE_ERROR("Loading audio from memory resource is not supported for OggTranscoder");
     return nullptr;

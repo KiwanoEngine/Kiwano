@@ -134,42 +134,42 @@ bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
 #endif
 }
 
-ShapePtr Shape::CreateLine(const Point& begin, const Point& end)
+RefPtr<Shape> Shape::CreateLine(const Point& begin, const Point& end)
 {
-    ShapePtr output = MakePtr<Shape>();
+    RefPtr<Shape> output =  MakePtr<Shape>();
     Renderer::GetInstance().CreateLineShape(*output, begin, end);
     return output;
 }
 
-ShapePtr Shape::CreateRect(const Rect& rect)
+RefPtr<Shape> Shape::CreateRect(const Rect& rect)
 {
-    ShapePtr output = MakePtr<Shape>();
+    RefPtr<Shape> output =  MakePtr<Shape>();
     Renderer::GetInstance().CreateRectShape(*output, rect);
     return output;
 }
 
-ShapePtr Shape::CreateRoundedRect(const Rect& rect, const Vec2& radius)
+RefPtr<Shape> Shape::CreateRoundedRect(const Rect& rect, const Vec2& radius)
 {
-    ShapePtr output = MakePtr<Shape>();
+    RefPtr<Shape> output =  MakePtr<Shape>();
     Renderer::GetInstance().CreateRoundedRectShape(*output, rect, radius);
     return output;
 }
 
-ShapePtr Shape::CreateCircle(const Point& center, float radius)
+RefPtr<Shape> Shape::CreateCircle(const Point& center, float radius)
 {
-    ShapePtr output = MakePtr<Shape>();
+    RefPtr<Shape> output =  MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, Vec2{ radius, radius });
     return output;
 }
 
-ShapePtr Shape::CreateEllipse(const Point& center, const Vec2& radius)
+RefPtr<Shape> Shape::CreateEllipse(const Point& center, const Vec2& radius)
 {
-    ShapePtr output = MakePtr<Shape>();
+    RefPtr<Shape> output =  MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, radius);
     return output;
 }
 
-ShapePtr Shape::CreatePolygon(const Vector<Point>& vertices)
+RefPtr<Shape> Shape::CreatePolygon(const Vector<Point>& vertices)
 {
     if (vertices.size() > 1)
     {
@@ -179,7 +179,7 @@ ShapePtr Shape::CreatePolygon(const Vector<Point>& vertices)
         maker.EndPath(true);
         return maker.GetShape();
     }
-    return ShapePtr();
+    return RefPtr<Shape>();
 }
 
 }  // namespace kiwano

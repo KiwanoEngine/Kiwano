@@ -66,9 +66,3 @@ inline RefPtr<_Ty> MakePtr(_Ty* ptr)
 }
 
 }  // namespace kiwano
-
-#ifndef KGE_DECLARE_SMART_PTR
-#define KGE_DECLARE_SMART_PTR(CLASS) \
-    class CLASS;                     \
-    typedef ::kiwano::RefPtr<CLASS> CLASS##Ptr;
-#endif

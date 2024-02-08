@@ -124,7 +124,7 @@ void Animation::DoClone(Animation* to) const
     }
 }
 
-AnimationEventHandlerPtr AnimationEventHandler::Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler)
 {
     class CallbackAnimationEventHandler : public AnimationEventHandler
     {
@@ -143,10 +143,10 @@ AnimationEventHandlerPtr AnimationEventHandler::Create(const Function<void(Anima
             }
         }
     };
-    return AnimationEventHandlerPtr(new CallbackAnimationEventHandler(handler));
+    return RefPtr<AnimationEventHandler>(new CallbackAnimationEventHandler(handler));
 }
 
-AnimationEventHandlerPtr AnimationEventHandler::Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler)
 {
     class OneEventAnimationEventHandler : public AnimationEventHandler
     {
@@ -173,20 +173,20 @@ AnimationEventHandlerPtr AnimationEventHandler::Create(AnimationEvent evt, const
             }
         }
     };
-    return AnimationEventHandlerPtr(new OneEventAnimationEventHandler(evt, handler));
+    return RefPtr<AnimationEventHandler>(new OneEventAnimationEventHandler(evt, handler));
 }
 
-AnimationEventHandlerPtr AnimationEventHandler::HandleStarted(const Function<void(Animation*, Actor*)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::HandleStarted(const Function<void(Animation*, Actor*)>& handler)
 {
     return AnimationEventHandler::Create(AnimationEvent::Started, handler);
 }
 
-AnimationEventHandlerPtr AnimationEventHandler::HandleLoopDone(const Function<void(Animation*, Actor*)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::HandleLoopDone(const Function<void(Animation*, Actor*)>& handler)
 {
     return AnimationEventHandler::Create(AnimationEvent::LoopDone, handler);
 }
 
-AnimationEventHandlerPtr AnimationEventHandler::HandleDone(const Function<void(Animation*, Actor*)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::HandleDone(const Function<void(Animation*, Actor*)>& handler)
 {
     return AnimationEventHandler::Create(AnimationEvent::Done, handler);
 }

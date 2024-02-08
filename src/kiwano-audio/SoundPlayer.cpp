@@ -56,14 +56,14 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {}
 
-AudioDataPtr SoundPlayer::Preload(StringView file_path)
+RefPtr<AudioData> SoundPlayer::Preload(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
     if (cache_.count(hash_code))
     {
         return cache_.at(hash_code);
     }
-    AudioDataPtr ptr = AudioModule::GetInstance().Decode(file_path);
+    RefPtr<AudioData> ptr = AudioModule::GetInstance().Decode(file_path);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));
@@ -71,14 +71,14 @@ AudioDataPtr SoundPlayer::Preload(StringView file_path)
     return ptr;
 }
 
-AudioDataPtr SoundPlayer::Preload(const Resource& res, StringView ext)
+RefPtr<AudioData> SoundPlayer::Preload(const Resource& res, StringView ext)
 {
     size_t hash_code = res.GetId();
     if (cache_.count(hash_code))
     {
         return cache_.at(hash_code);
     }
-    AudioDataPtr  ptr = AudioModule::GetInstance().Decode(res, ext);
+    RefPtr<AudioData>  ptr = AudioModule::GetInstance().Decode(res, ext);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));
@@ -86,7 +86,7 @@ AudioDataPtr SoundPlayer::Preload(const Resource& res, StringView ext)
     return ptr;
 }
 
-void SoundPlayer::Play(SoundPtr sound, int loop_count)
+void SoundPlayer::Play(RefPtr<Sound> sound, int loop_count)
 {
     if (sound)
     {
@@ -96,16 +96,16 @@ void SoundPlayer::Play(SoundPtr sound, int loop_count)
     }
 }
 
-SoundPtr SoundPlayer::Play(StringView file_path, int loop_count)
+RefPtr<Sound> SoundPlayer::Play(StringView file_path, int loop_count)
 {
-    SoundPtr sound = new Sound(Preload(file_path));
+    RefPtr<Sound> sound = new Sound(Preload(file_path));
     Play(sound, loop_count);
     return sound;
 }
 
-SoundPtr SoundPlayer::Play(const Resource& res, int loop_count)
+RefPtr<Sound> SoundPlayer::Play(const Resource& res, int loop_count)
 {
-    SoundPtr sound = new Sound(Preload(res));
+    RefPtr<Sound> sound = new Sound(Preload(res));
     Play(sound, loop_count);
     return sound;
 }

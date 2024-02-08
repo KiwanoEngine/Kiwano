@@ -32,15 +32,15 @@ Canvas::Canvas(const PixelSize& size)
     ResizeAndClear(size);
 }
 
-CanvasRenderContextPtr Canvas::GetContext2D() const
+RefPtr<CanvasRenderContext> Canvas::GetContext2D() const
 {
-    CanvasRenderContextPtr ctx = new CanvasRenderContext(render_ctx_);
+    RefPtr<CanvasRenderContext> ctx = new CanvasRenderContext(render_ctx_);
     return ctx;
 }
 
 void Canvas::ResizeAndClear(const PixelSize& size)
 {
-    texture_cached_ = MakePtr<Texture>();
+    texture_cached_ =  MakePtr<Texture>();
     render_ctx_     = RenderContext::Create(texture_cached_, size);
     if (render_ctx_)
     {
@@ -60,7 +60,7 @@ void Canvas::OnRender(RenderContext& ctx)
     }
 }
 
-CanvasRenderContext::CanvasRenderContext(RenderContextPtr ctx)
+CanvasRenderContext::CanvasRenderContext(RefPtr<RenderContext> ctx)
     : ctx_(ctx)
 {
     if (!ctx_)

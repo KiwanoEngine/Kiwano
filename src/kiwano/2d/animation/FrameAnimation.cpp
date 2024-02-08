@@ -30,7 +30,7 @@ FrameAnimation::FrameAnimation()
 {
 }
 
-FrameAnimation::FrameAnimation(Duration dur, FrameSequencePtr frame_seq)
+FrameAnimation::FrameAnimation(Duration dur, RefPtr<FrameSequence> frame_seq)
     : TweenAnimation(dur)
     , frame_seq_(frame_seq)
     , current_index_(0)
@@ -39,12 +39,12 @@ FrameAnimation::FrameAnimation(Duration dur, FrameSequencePtr frame_seq)
 
 FrameAnimation::~FrameAnimation() {}
 
-FrameSequencePtr FrameAnimation::GetFrameSequence() const
+RefPtr<FrameSequence> FrameAnimation::GetFrameSequence() const
 {
     return frame_seq_;
 }
 
-void FrameAnimation::SetFrameSequence(FrameSequencePtr frame_seq)
+void FrameAnimation::SetFrameSequence(RefPtr<FrameSequence> frame_seq)
 {
     frame_seq_ = frame_seq;
 }
@@ -100,7 +100,7 @@ FrameAnimation* FrameAnimation::Reverse() const
 
     if (frame_seq_)
     {
-        FrameSequencePtr frames = frame_seq_->Reverse();
+        RefPtr<FrameSequence> frames = frame_seq_->Reverse();
         ptr->SetFrameSequence(frames);
     }
     return ptr;

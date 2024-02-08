@@ -193,7 +193,7 @@ public:
     /// @brief 创建纹理画刷内部资源
     /// @param[out] brush 画刷
     /// @param[in] texture 纹理
-    virtual void CreateBrush(Brush& brush, TexturePtr texture) = 0;
+    virtual void CreateBrush(Brush& brush, RefPtr<Texture> texture) = 0;
 
     /// \~chinese
     /// @brief 创建线条样式内部资源
@@ -210,7 +210,7 @@ public:
     /// @param[in,out] texture 渲染输出的纹理
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
-    virtual RenderContextPtr CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size) = 0;
+    virtual RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size) = 0;
 
 public:
     /// \~chinese
@@ -225,7 +225,7 @@ public:
     /// \~chinese
     /// @brief 为窗口创建渲染上下文
     /// @throw kiwano::SystemError 创建上下文失败时抛出
-    virtual void MakeContextForWindow(WindowPtr window) = 0;
+    virtual void MakeContextForWindow(RefPtr<Window> window) = 0;
 
     /// \~chinese
     /// @brief 销毁渲染器资源
@@ -243,7 +243,7 @@ protected:
     bool             auto_reset_resolution_;
     Color            clear_color_;
     Size             output_size_;
-    RenderContextPtr render_ctx_;
+    RefPtr<RenderContext> render_ctx_;
 };
 
 /** @} */

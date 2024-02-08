@@ -62,7 +62,7 @@ void Application::Run(const Settings& settings, const Function<void()>& setup, s
         }
     };
 
-    RunnerPtr runner = new CallbackRunner(setup);
+    RefPtr<Runner> runner = new CallbackRunner(setup);
     runner->SetName("__KGE_CALLBACK_RUNNER__");
     runner->SetSettings(settings);
 
@@ -73,13 +73,13 @@ void Application::Run(const Settings& settings, const Function<void()>& setup, s
     Run(runner);
 }
 
-void Application::Run(RunnerPtr runner)
+void Application::Run(RefPtr<Runner> runner)
 {
     KGE_ASSERT(runner);
     running_   = true;
     is_paused_ = false;
     runner_    = runner;
-    timer_     = MakePtr<Timer>();
+    timer_     =  MakePtr<Timer>();
 
     // Initialize runner
     runner->InitSettings();
@@ -178,7 +178,7 @@ void Application::SetTimeScale(float scale_factor)
     time_scale_ = scale_factor;
 }
 
-void Application::DispatchEvent(EventPtr evt)
+void Application::DispatchEvent(RefPtr<Event> evt)
 {
     this->DispatchEvent(evt.Get());
 }

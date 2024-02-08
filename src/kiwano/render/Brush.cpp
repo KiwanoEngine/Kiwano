@@ -110,7 +110,7 @@ void Brush::SetStyle(const RadialGradientStyle& style)
     type_ = Brush::Type::RadialGradient;
 }
 
-void Brush::SetTexture(TexturePtr texture)
+void Brush::SetTexture(RefPtr<Texture> texture)
 {
     Renderer::GetInstance().CreateBrush(*this, texture);
     type_ = Brush::Type::Texture;

@@ -38,11 +38,9 @@ namespace physics
 class PhysicBody;
 }
 
-KGE_DECLARE_SMART_PTR(Actor);
-
 /// \~chinese
 /// @brief 角色列表
-typedef IntrusiveList<ActorPtr> ActorList;
+typedef IntrusiveList<RefPtr<Actor>> ActorList;
 
 /**
  * \~chinese
@@ -66,11 +64,11 @@ class KGE_API Actor
     , public TaskScheduler
     , public EventDispatcher
     , public ComponentManager
-    , protected IntrusiveListValue<ActorPtr>
+    , protected IntrusiveListValue<RefPtr<Actor>>
 {
     friend class Director;
     friend class Transition;
-    friend IntrusiveList<ActorPtr>;
+    friend IntrusiveList<RefPtr<Actor>>;
 
 public:
     /// \~chinese
@@ -332,23 +330,23 @@ public:
 
     /// \~chinese
     /// @brief 添加子角色
-    void AddChild(ActorPtr child);
+    void AddChild(RefPtr<Actor> child);
 
     /// \~chinese
     /// @brief 添加子角色
-    void AddChild(ActorPtr child, int zorder);
+    void AddChild(RefPtr<Actor> child, int zorder);
 
     /// \~chinese
     /// @brief 添加多个子角色
-    void AddChildren(const Vector<ActorPtr>& children);
+    void AddChildren(const Vector<RefPtr<Actor>>& children);
 
     /// \~chinese
     /// @brief 获取名称相同的子角色
-    ActorPtr GetChild(StringView name) const;
+    RefPtr<Actor> GetChild(StringView name) const;
 
     /// \~chinese
     /// @brief 获取所有名称相同的子角色
-    Vector<ActorPtr> GetChildren(StringView name) const;
+    Vector<RefPtr<Actor>> GetChildren(StringView name) const;
 
     /// \~chinese
     /// @brief 获取全部子角色
@@ -360,7 +358,7 @@ public:
 
     /// \~chinese
     /// @brief 移除子角色
-    void RemoveChild(ActorPtr child);
+    void RemoveChild(RefPtr<Actor> child);
 
     /// \~chinese
     /// @brief 移除所有名称相同的子角色

@@ -27,9 +27,9 @@ namespace kiwano
 namespace physics
 {
 
-FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& offset)
+RefPtr<Fixture> Fixture::CreateCircle(const Param& param, float radius, const Point& offset)
 {
-    FixturePtr ptr = MakePtr<Fixture>();
+    RefPtr<Fixture> ptr = MakePtr<Fixture>();
     if (ptr)
     {
         auto shape      = std::make_unique<b2CircleShape>();
@@ -42,9 +42,9 @@ FixturePtr Fixture::CreateCircle(const Param& param, float radius, const Point& 
     return ptr;
 }
 
-FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point& offset, float rotation)
+RefPtr<Fixture> Fixture::CreateRect(const Param& param, const Size& size, const Point& offset, float rotation)
 {
-    FixturePtr ptr = MakePtr<Fixture>();
+    RefPtr<Fixture> ptr = MakePtr<Fixture>();
     if (ptr)
     {
         b2Vec2 b2size   = global::LocalToWorld(size);
@@ -59,9 +59,9 @@ FixturePtr Fixture::CreateRect(const Param& param, const Size& size, const Point
     return ptr;
 }
 
-FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& vertexs)
+RefPtr<Fixture> Fixture::CreatePolygon(const Param& param, const Vector<Point>& vertexs)
 {
-    FixturePtr ptr = MakePtr<Fixture>();
+    RefPtr<Fixture> ptr = MakePtr<Fixture>();
     if (ptr)
     {
         Vector<b2Vec2> b2vertexs;
@@ -80,9 +80,9 @@ FixturePtr Fixture::CreatePolygon(const Param& param, const Vector<Point>& verte
     return ptr;
 }
 
-FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point& p2)
+RefPtr<Fixture> Fixture::CreateEdge(const Param& param, const Point& p1, const Point& p2)
 {
-    FixturePtr ptr = MakePtr<Fixture>();
+    RefPtr<Fixture> ptr = MakePtr<Fixture>();
     if (ptr)
     {
         b2Vec2 start = global::LocalToWorld(p1);
@@ -97,9 +97,9 @@ FixturePtr Fixture::CreateEdge(const Param& param, const Point& p1, const Point&
     return ptr;
 }
 
-FixturePtr Fixture::CreateChain(const Param& param, const Vector<Point>& vertices, bool loop)
+RefPtr<Fixture> Fixture::CreateChain(const Param& param, const Vector<Point>& vertices, bool loop)
 {
-    FixturePtr ptr = MakePtr<Fixture>();
+    RefPtr<Fixture> ptr = MakePtr<Fixture>();
     if (ptr)
     {
         Vector<b2Vec2> b2vertices;
@@ -134,7 +134,7 @@ Fixture::~Fixture()
 {
 }
 
-bool Fixture::Init(PhysicBodyPtr body)
+bool Fixture::Init(RefPtr<PhysicBody> body)
 {
     return this->Init(body.Get());
 }

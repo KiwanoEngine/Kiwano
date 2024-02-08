@@ -25,9 +25,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(MouseEventListener);
-KGE_DECLARE_SMART_PTR(MouseDragEventListener);
-
 /**
  * \addtogroup EventListener
  * @{

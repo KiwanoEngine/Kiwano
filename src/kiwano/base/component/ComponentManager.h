@@ -32,7 +32,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief 组件映射
-typedef UnorderedMap<size_t, ComponentPtr> ComponentMap;
+typedef UnorderedMap<size_t, RefPtr<Component>> ComponentMap;
 
 /**
  * \~chinese
@@ -44,13 +44,13 @@ public:
     /// \~chinese
     /// @brief 添加组件
     /// @param component 组件
-    Component* AddComponent(ComponentPtr component);
+    Component* AddComponent(RefPtr<Component> component);
 
     /// \~chinese
     /// @brief 添加组件
     /// @param index 索引值
     /// @param component 组件
-    Component* AddComponent(size_t index, ComponentPtr component);
+    Component* AddComponent(size_t index, RefPtr<Component> component);
 
     /// \~chinese
     /// @brief 获取组件
@@ -70,7 +70,7 @@ public:
 
     /// \~chinese
     /// @brief 移除组件
-    void RemoveComponent(ComponentPtr component);
+    void RemoveComponent(RefPtr<Component> component);
 
     /// \~chinese
     /// @brief 移除组件

@@ -26,17 +26,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(TweenAnimation);
-KGE_DECLARE_SMART_PTR(MoveByAnimation);
-KGE_DECLARE_SMART_PTR(MoveToAnimation);
-KGE_DECLARE_SMART_PTR(JumpByAnimation);
-KGE_DECLARE_SMART_PTR(JumpToAnimation);
-KGE_DECLARE_SMART_PTR(ScaleByAnimation);
-KGE_DECLARE_SMART_PTR(ScaleToAnimation);
-KGE_DECLARE_SMART_PTR(FadeToAnimation);
-KGE_DECLARE_SMART_PTR(RotateByAnimation);
-KGE_DECLARE_SMART_PTR(RotateToAnimation);
-
 /**
  * \addtogroup Animation
  * @{

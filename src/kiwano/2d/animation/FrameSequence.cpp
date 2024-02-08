@@ -73,9 +73,9 @@ size_t FrameSequence::GetFramesCount() const
     return frames_.size();
 }
 
-FrameSequencePtr FrameSequence::Clone() const
+RefPtr<FrameSequence> FrameSequence::Clone() const
 {
-    auto frame_seq = MakePtr<FrameSequence>();
+    auto frame_seq =  MakePtr<FrameSequence>();
     if (frame_seq)
     {
         frame_seq->AddFrames(frames_);
@@ -83,9 +83,9 @@ FrameSequencePtr FrameSequence::Clone() const
     return frame_seq;
 }
 
-FrameSequencePtr FrameSequence::Reverse() const
+RefPtr<FrameSequence> FrameSequence::Reverse() const
 {
-    auto frame_seq = MakePtr<FrameSequence>();
+    auto frame_seq =  MakePtr<FrameSequence>();
     if (!frames_.empty())
     {
         for (auto iter = frames_.crbegin(), crend = frames_.crend(); iter != crend; ++iter)

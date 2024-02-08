@@ -58,28 +58,28 @@ private:
     Callback  cb_;
 };
 
-EventListenerPtr EventListener::Create(const Callback& callback)
+RefPtr<EventListener> EventListener::Create(const Callback& callback)
 {
-    EventListenerPtr ptr = new CallbackEventListener(EventType(), callback);
+    RefPtr<EventListener> ptr = new CallbackEventListener(EventType(), callback);
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(StringView name, const Callback& callback)
+RefPtr<EventListener> EventListener::Create(StringView name, const Callback& callback)
 {
-    EventListenerPtr ptr = new CallbackEventListener(EventType(), callback);
+    RefPtr<EventListener> ptr = new CallbackEventListener(EventType(), callback);
     ptr->SetName(name);
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(EventType type, const Callback& callback)
+RefPtr<EventListener> EventListener::Create(EventType type, const Callback& callback)
 {
-    EventListenerPtr ptr = new CallbackEventListener(type, callback);
+    RefPtr<EventListener> ptr = new CallbackEventListener(type, callback);
     return ptr;
 }
 
-EventListenerPtr EventListener::Create(StringView name, EventType type, const Callback& callback)
+RefPtr<EventListener> EventListener::Create(StringView name, EventType type, const Callback& callback)
 {
-    EventListenerPtr ptr = new CallbackEventListener(type, callback);
+    RefPtr<EventListener> ptr = new CallbackEventListener(type, callback);
     ptr->SetName(name);
     return ptr;
 }

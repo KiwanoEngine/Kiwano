@@ -33,7 +33,7 @@ Director::Director()
 
 Director::~Director() {}
 
-void Director::EnterStage(StagePtr stage, TransitionPtr transition)
+void Director::EnterStage(RefPtr<Stage> stage, RefPtr<Transition> transition)
 {
     KGE_ASSERT(stage && "Director::EnterStage failed, NULL pointer exception");
 
@@ -53,7 +53,7 @@ void Director::EnterStage(StagePtr stage, TransitionPtr transition)
     }
 }
 
-void Director::PushStage(StagePtr stage, TransitionPtr transition)
+void Director::PushStage(RefPtr<Stage> stage, RefPtr<Transition> transition)
 {
     EnterStage(stage, transition);
 
@@ -63,7 +63,7 @@ void Director::PushStage(StagePtr stage, TransitionPtr transition)
     }
 }
 
-void Director::PopStage(TransitionPtr transition)
+void Director::PopStage(RefPtr<Transition> transition)
 {
     KGE_ASSERT(!stages_.empty() && "Director::PopStage failed, calling pop() on empty stage stack");
 
@@ -84,7 +84,7 @@ void Director::PopStage(TransitionPtr transition)
     }
 }
 
-StagePtr Director::GetCurrentStage()
+RefPtr<Stage> Director::GetCurrentStage()
 {
     return current_stage_;
 }
@@ -99,7 +99,7 @@ void Director::ShowDebugInfo(bool show)
     if (show)
     {
         if (!debug_actor_)
-            debug_actor_ = MakePtr<DebugActor>();
+            debug_actor_ =  MakePtr<DebugActor>();
     }
     else
     {

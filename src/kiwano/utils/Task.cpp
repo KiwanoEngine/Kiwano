@@ -22,7 +22,7 @@
 
 namespace kiwano
 {
-Task::Task(const Callback& cb, TickerPtr ticker)
+Task::Task(const Callback& cb, RefPtr<Ticker> ticker)
     : running_(true)
     , removeable_(false)
     , callback_(cb)
@@ -30,7 +30,7 @@ Task::Task(const Callback& cb, TickerPtr ticker)
 {
 }
 
-Task::Task(StringView name, const Callback& cb, TickerPtr ticker)
+Task::Task(StringView name, const Callback& cb, RefPtr<Ticker> ticker)
     : Task(cb, ticker)
 {
     SetName(name);
@@ -41,7 +41,7 @@ Task::Task(const Callback& cb, Duration interval, int times)
     , removeable_(false)
     , callback_(cb)
 {
-    ticker_ = MakePtr<Ticker>(interval, times);
+    ticker_ =  MakePtr<Ticker>(interval, times);
 }
 
 Task::Task(StringView name, const Callback& cb, Duration interval, int times)

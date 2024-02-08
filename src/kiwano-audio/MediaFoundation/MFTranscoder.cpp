@@ -30,7 +30,7 @@ namespace kiwano
 namespace audio
 {
 
-HRESULT ReadSource(AudioDataPtr& output, IMFSourceReader* reader);
+HRESULT ReadSource(RefPtr<AudioData>& output, IMFSourceReader* reader);
 
 MFTranscoder::MFTranscoder()
 {
@@ -43,14 +43,14 @@ MFTranscoder::~MFTranscoder()
     dlls::MediaFoundation::Get().MFShutdown();
 }
 
-AudioDataPtr MFTranscoder::Decode(StringView file_path)
+RefPtr<AudioData> MFTranscoder::Decode(StringView file_path)
 {
     ComPtr<IMFSourceReader> reader;
 
     WideString path = strings::NarrowToWide(file_path);
     HRESULT    hr   = dlls::MediaFoundation::Get().MFCreateSourceReaderFromURL(path.c_str(), nullptr, &reader);
 
-    AudioDataPtr output;
+    RefPtr<AudioData> output;
     if (SUCCEEDED(hr))
     {
         hr = ReadSource(output, reader.Get());
@@ -64,7 +64,7 @@ AudioDataPtr MFTranscoder::Decode(StringView file_path)
     return output;
 }
 
-AudioDataPtr MFTranscoder::Decode(const Resource& res)
+RefPtr<AudioData> MFTranscoder::Decode(const Resource& res)
 {
     HRESULT hr = S_OK;
 
@@ -98,7 +98,7 @@ AudioDataPtr MFTranscoder::Decode(const Resource& res)
         hr = dlls::MediaFoundation::Get().MFCreateSourceReaderFromByteStream(byte_stream.Get(), nullptr, &reader);
     }
 
-    AudioDataPtr output;
+    RefPtr<AudioData> output;
     if (SUCCEEDED(hr))
     {
         hr = ReadSource(output, reader.Get());
@@ -142,7 +142,7 @@ public:
     std::unique_ptr<uint8_t[]> raw_;
 };
 
-HRESULT ReadSource(AudioDataPtr& output, IMFSourceReader* reader)
+HRESULT ReadSource(RefPtr<AudioData>& output, IMFSourceReader* reader)
 {
     HRESULT hr = S_OK;
 

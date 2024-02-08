@@ -26,15 +26,15 @@
 namespace kiwano
 {
 
-FontPtr Font::Preload(StringView file)
+RefPtr<Font> Font::Preload(StringView file)
 {
     size_t hash_code = std::hash<String>{}(file);
-    if (FontPtr ptr = FontCache::GetInstance().GetFont(hash_code))
+    if (RefPtr<Font> ptr = FontCache::GetInstance().GetFont(hash_code))
     {
         return ptr;
     }
 
-    FontPtr ptr = MakePtr<Font>();
+    RefPtr<Font> ptr =  MakePtr<Font>();
     if (ptr)
     {
         Vector<String> family_names;
@@ -55,15 +55,15 @@ FontPtr Font::Preload(StringView file)
     return ptr;
 }
 
-FontPtr Font::Preload(const Resource& resource)
+RefPtr<Font> Font::Preload(const Resource& resource)
 {
     size_t hash_code = resource.GetId();
-    if (FontPtr ptr = FontCache::GetInstance().GetFont(hash_code))
+    if (RefPtr<Font> ptr = FontCache::GetInstance().GetFont(hash_code))
     {
         return ptr;
     }
 
-    FontPtr ptr = MakePtr<Font>();
+    RefPtr<Font> ptr =  MakePtr<Font>();
     if (ptr)
     {
         Vector<String> family_names;
@@ -102,7 +102,7 @@ Font::Font(StringView family_name, float size, uint32_t weight, FontPosture post
     if (family_name.empty())
         return;
 
-    FontPtr found = FontCache::GetInstance().GetFontByFamily(family_name);
+    RefPtr<Font> found = FontCache::GetInstance().GetFontByFamily(family_name);
     if (found)
     {
         this->SetNative(found->GetNative());
@@ -113,34 +113,34 @@ FontCache::FontCache() {}
 
 FontCache::~FontCache() {}
 
-void FontCache::AddFont(size_t key, FontPtr font)
+void FontCache::AddFont(size_t key, RefPtr<Font> font)
 {
     font_cache_[key] = font;
 }
 
-void FontCache::AddFontByFamily(StringView font_family, FontPtr font)
+void FontCache::AddFontByFamily(StringView font_family, RefPtr<Font> font)
 {
     String family = TransformFamily(font_family);
     font_family_cache_[family] = font;
 }
 
-FontPtr FontCache::GetFont(size_t key) const
+RefPtr<Font> FontCache::GetFont(size_t key) const
 {
     if (font_cache_.count(key))
     {
         return font_cache_.at(key);
     }
-    return FontPtr();
+    return RefPtr<Font>();
 }
 
-FontPtr FontCache::GetFontByFamily(StringView font_family) const
+RefPtr<Font> FontCache::GetFontByFamily(StringView font_family) const
 {
     String family = TransformFamily(font_family);
     if (font_family_cache_.count(family))
     {
         return font_family_cache_.at(family);
     }
-    return FontPtr();
+    return RefPtr<Font>();
 }
 
 void FontCache::RemoveFont(size_t key)

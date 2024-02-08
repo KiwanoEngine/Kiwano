@@ -26,8 +26,6 @@
 namespace kiwano
 {
 
-KGE_DECLARE_SMART_PTR(Brush);
-
 /**
  * \addtogroup Render
  * @{
@@ -124,7 +122,7 @@ public:
 
     /// \~chinese
     /// @brief 设置纹理
-    void SetTexture(TexturePtr texture);
+    void SetTexture(RefPtr<Texture> texture);
 
     /// \~chinese
     /// @brief 设置二维变换

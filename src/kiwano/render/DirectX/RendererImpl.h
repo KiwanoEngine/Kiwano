@@ -66,11 +66,11 @@ public:
 
     void CreateBrush(Brush& brush, const RadialGradientStyle& style) override;
 
-    void CreateBrush(Brush& brush, TexturePtr texture) override;
+    void CreateBrush(Brush& brush, RefPtr<Texture> texture) override;
 
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
-    RenderContextPtr CreateTextureRenderContext(TexturePtr texture, const PixelSize& desired_size) override;
+    RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size) override;
 
 public:
     void Clear() override;
@@ -79,7 +79,7 @@ public:
 
     void Resize(uint32_t width, uint32_t height) override;
 
-    void MakeContextForWindow(WindowPtr window) override;
+    void MakeContextForWindow(RefPtr<Window> window) override;
 
     void Destroy() override;
 

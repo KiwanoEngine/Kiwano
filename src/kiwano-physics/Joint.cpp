@@ -62,20 +62,20 @@ bool Joint::Init(PhysicWorld* world, b2JointDef* joint_def)
     return false;
 }
 
-PhysicBodyPtr Joint::GetBodyA() const
+RefPtr<PhysicBody> Joint::GetBodyA() const
 {
     KGE_ASSERT(joint_);
 
     b2Body* body = joint_->GetBodyA();
-    return PhysicBodyPtr(static_cast<PhysicBody*>(body->GetUserData()));
+    return RefPtr<PhysicBody>(static_cast<PhysicBody*>(body->GetUserData()));
 }
 
-PhysicBodyPtr Joint::GetBodyB() const
+RefPtr<PhysicBody> Joint::GetBodyB() const
 {
     KGE_ASSERT(joint_);
 
     b2Body* body = joint_->GetBodyB();
-    return PhysicBodyPtr(static_cast<PhysicBody*>(body->GetUserData()));
+    return RefPtr<PhysicBody>(static_cast<PhysicBody*>(body->GetUserData()));
 }
 
 void Joint::SetB2Joint(b2Joint* joint)

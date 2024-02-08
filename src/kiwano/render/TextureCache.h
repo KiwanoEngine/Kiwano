@@ -38,35 +38,35 @@ class KGE_API TextureCache final
 public:
     /// \~chinese
     /// @brief 预加载本地图片
-    TexturePtr Preload(StringView file_path);
+    RefPtr<Texture> Preload(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载图片资源
-    TexturePtr Preload(const Resource& res);
+    RefPtr<Texture> Preload(const Resource& res);
 
     /// \~chinese
     /// @brief 预加载本地GIF图片
-    GifImagePtr PreloadGif(StringView file_path);
+    RefPtr<GifImage> PreloadGif(StringView file_path);
 
     /// \~chinese
     /// @brief 预加载GIF图片资源
-    GifImagePtr PreloadGif(const Resource& res);
+    RefPtr<GifImage> PreloadGif(const Resource& res);
 
     /// \~chinese
     /// @brief 添加纹理缓存
-    void AddTexture(size_t key, TexturePtr texture);
+    void AddTexture(size_t key, RefPtr<Texture> texture);
 
     /// \~chinese
     /// @brief 添加GIF图像缓存
-    void AddGifImage(size_t key, GifImagePtr gif);
+    void AddGifImage(size_t key, RefPtr<GifImage> gif);
 
     /// \~chinese
     /// @brief 获取纹理缓存
-    TexturePtr GetTexture(size_t key) const;
+    RefPtr<Texture> GetTexture(size_t key) const;
 
     /// \~chinese
     /// @brief 获取GIF图像缓存
-    GifImagePtr GetGifImage(size_t key) const;
+    RefPtr<GifImage> GetGifImage(size_t key) const;
 
     /// \~chinese
     /// @brief 移除纹理缓存
@@ -86,10 +86,10 @@ private:
     TextureCache();
 
 private:
-    using TextureMap = UnorderedMap<size_t, TexturePtr>;
+    using TextureMap = UnorderedMap<size_t, RefPtr<Texture>>;
     TextureMap texture_cache_;
 
-    using GifImageMap = UnorderedMap<size_t, GifImagePtr>;
+    using GifImageMap = UnorderedMap<size_t, RefPtr<GifImage>>;
     GifImageMap gif_texture_cache_;
 };
 

@@ -27,19 +27,19 @@ namespace kiwano
 
 ShapeActor::ShapeActor() {}
 
-ShapeActor::ShapeActor(ShapePtr shape)
+ShapeActor::ShapeActor(RefPtr<Shape> shape)
 {
     SetShape(shape);
 }
 
-ShapeActor::ShapeActor(ShapePtr shape, const Color& fill_color, const Color& stroke_color)
+ShapeActor::ShapeActor(RefPtr<Shape> shape, const Color& fill_color, const Color& stroke_color)
     : ShapeActor(shape)
 {
     SetFillColor(fill_color);
     SetStrokeColor(stroke_color);
 }
 
-ShapeActor::ShapeActor(ShapePtr shape, BrushPtr fill_brush, BrushPtr stroke_brush)
+ShapeActor::ShapeActor(RefPtr<Shape> shape, RefPtr<Brush> fill_brush, RefPtr<Brush> stroke_brush)
     : ShapeActor(shape)
 {
     SetFillBrush(fill_brush);
@@ -69,7 +69,7 @@ bool ShapeActor::ContainsPoint(const Point& point) const
     return shape_->ContainsPoint(point, &GetTransformMatrix());
 }
 
-void ShapeActor::SetShape(ShapePtr shape)
+void ShapeActor::SetShape(RefPtr<Shape> shape)
 {
     shape_ = shape;
     if (shape_)

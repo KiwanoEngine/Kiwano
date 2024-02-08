@@ -36,7 +36,7 @@ SpriteFrame::SpriteFrame(const Resource& res)
     Load(res);
 }
 
-SpriteFrame::SpriteFrame(TexturePtr texture)
+SpriteFrame::SpriteFrame(RefPtr<Texture> texture)
 {
     SetTexture(texture);
 }
@@ -53,7 +53,7 @@ SpriteFrame::SpriteFrame(const Resource& res, const Rect& crop_rect)
     SetCropRect(crop_rect);
 }
 
-SpriteFrame::SpriteFrame(TexturePtr texture, const Rect& crop_rect)
+SpriteFrame::SpriteFrame(RefPtr<Texture> texture, const Rect& crop_rect)
     : SpriteFrame(texture)
 {
     SetCropRect(crop_rect);
@@ -61,7 +61,7 @@ SpriteFrame::SpriteFrame(TexturePtr texture, const Rect& crop_rect)
 
 bool SpriteFrame::Load(StringView file_path)
 {
-    TexturePtr texture = new Texture(file_path);
+    RefPtr<Texture> texture = new Texture(file_path);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -72,7 +72,7 @@ bool SpriteFrame::Load(StringView file_path)
 
 bool SpriteFrame::Load(const Resource& res)
 {
-    TexturePtr texture = new Texture(res);
+    RefPtr<Texture> texture = new Texture(res);
     if (texture->IsValid())
     {
         SetTexture(texture);
@@ -86,7 +86,7 @@ void SpriteFrame::SetCropRect(const Rect& crop_rect)
     crop_rect_ = crop_rect;
 }
 
-void SpriteFrame::SetTexture(TexturePtr texture)
+void SpriteFrame::SetTexture(RefPtr<Texture> texture)
 {
     texture_ = texture;
 

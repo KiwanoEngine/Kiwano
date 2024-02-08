@@ -77,7 +77,7 @@ bool Texture::Load(const PixelSize& size, const BinaryData& data, PixelFormat fo
     return IsValid();
 }
 
-void Texture::CopyFrom(TexturePtr copy_from)
+void Texture::CopyFrom(RefPtr<Texture> copy_from)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
@@ -94,7 +94,7 @@ void Texture::CopyFrom(TexturePtr copy_from)
 #endif
 }
 
-void Texture::CopyFrom(TexturePtr copy_from, const Rect& src_rect, const Point& dest_point)
+void Texture::CopyFrom(RefPtr<Texture> copy_from, const Rect& src_rect, const Point& dest_point)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
