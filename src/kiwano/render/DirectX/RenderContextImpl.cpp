@@ -84,7 +84,7 @@ RefPtr<Texture> RenderContextImpl::GetTarget() const
     render_ctx_->GetTarget(&target);
     if (target)
     {
-        RefPtr<Texture> ptr =  MakePtr<Texture>();
+        RefPtr<Texture> ptr = MakePtr<Texture>();
         ComPolicy::Set(*ptr, target.Get());
     }
     return nullptr;
@@ -147,13 +147,14 @@ void RenderContextImpl::DrawTexture(const Texture& texture, const Rect* src_rect
 
         auto bitmap = ComPolicy::Get<ID2D1Bitmap>(texture);
         render_ctx_->DrawBitmap(bitmap.Get(), dest_rect ? &DX::ConvertToRectF(*dest_rect) : nullptr, brush_opacity_,
-                                   mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
+                                mode, src_rect ? &DX::ConvertToRectF(*src_rect) : nullptr);
 
         IncreasePrimitivesCount();
     }
 }
 
-void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& offset, RefPtr<Brush> current_outline_brush)
+void RenderContextImpl::DrawTextLayout(const TextLayout& layout, const Point& offset,
+                                       RefPtr<Brush> current_outline_brush)
 {
     KGE_ASSERT(text_renderer_ && "Text renderer has not been initialized!");
 
@@ -222,7 +223,7 @@ void RenderContextImpl::DrawLine(const Point& point1, const Point& point2)
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawLine(DX::ConvertToPoint2F(point1), DX::ConvertToPoint2F(point2), brush.Get(), stroke_width,
-                             stroke_style.Get());
+                          stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
@@ -251,7 +252,7 @@ void RenderContextImpl::DrawRoundedRectangle(const Rect& rect, const Vec2& radiu
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
     render_ctx_->DrawRoundedRectangle(D2D1::RoundedRect(DX::ConvertToRectF(rect), radius.x, radius.y), brush.Get(),
-                                         stroke_width, stroke_style.Get());
+                                      stroke_width, stroke_style.Get());
 
     IncreasePrimitivesCount();
 }
@@ -265,8 +266,8 @@ void RenderContextImpl::DrawEllipse(const Point& center, const Vec2& radius)
     auto  stroke_style = ComPolicy::Get<ID2D1StrokeStyle>(current_stroke_);
     float stroke_width = current_stroke_ ? current_stroke_->GetWidth() : 1.0f;
 
-    render_ctx_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get(),
-                                stroke_width, stroke_style.Get());
+    render_ctx_->DrawEllipse(D2D1::Ellipse(DX::ConvertToPoint2F(center), radius.x, radius.y), brush.Get(), stroke_width,
+                             stroke_style.Get());
 
     IncreasePrimitivesCount();
 }

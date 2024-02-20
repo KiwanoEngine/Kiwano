@@ -80,7 +80,7 @@ struct ByteSerializer : public Serializer
 private:
     void GenerateSize(size_t size)
     {
-        size_t old_size = bytes_.size();
+        size_t old_size   = bytes_.size();
         size_t total_size = old_size + size;
         if (total_size > bytes_.capacity())
         {
@@ -189,7 +189,7 @@ struct ByteDeserializer : public Deserializer
     }
 
 private:
-    size_t index_;
+    size_t                 index_;
     const Vector<uint8_t>& bytes_;
 };
 
@@ -264,7 +264,6 @@ public:
     /// @brief 执行反序列化
     virtual void DoDeserialize(Deserializer* deserializer) = 0;
 };
-
 
 //
 // operator<< for Serializer
@@ -347,7 +346,6 @@ inline Serializer& operator<<(Serializer& serializer, const math::TransformT<flo
 {
     return serializer << transform.position << transform.rotation << transform.scale << transform.skew;
 }
-
 
 //
 // operator>> for Deserializer
@@ -448,6 +446,5 @@ inline Deserializer& operator>>(Deserializer& deserializer, math::TransformT<flo
 }
 
 /** @} */
-
 
 }  // namespace kiwano

@@ -124,7 +124,8 @@ void Animation::DoClone(Animation* to) const
     }
 }
 
-RefPtr<AnimationEventHandler> AnimationEventHandler::Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler)
+RefPtr<AnimationEventHandler>
+AnimationEventHandler::Create(const Function<void(Animation*, Actor*, AnimationEvent)>& handler)
 {
     class CallbackAnimationEventHandler : public AnimationEventHandler
     {
@@ -133,7 +134,10 @@ RefPtr<AnimationEventHandler> AnimationEventHandler::Create(const Function<void(
 
         Callback handler;
 
-        CallbackAnimationEventHandler(const Callback& handler) : handler(handler) {}
+        CallbackAnimationEventHandler(const Callback& handler)
+            : handler(handler)
+        {
+        }
 
         void Handle(Animation* anim, Actor* target, AnimationEvent evt) override
         {
@@ -146,7 +150,8 @@ RefPtr<AnimationEventHandler> AnimationEventHandler::Create(const Function<void(
     return RefPtr<AnimationEventHandler>(new CallbackAnimationEventHandler(handler));
 }
 
-RefPtr<AnimationEventHandler> AnimationEventHandler::Create(AnimationEvent evt, const Function<void(Animation*, Actor*)>& handler)
+RefPtr<AnimationEventHandler> AnimationEventHandler::Create(AnimationEvent                            evt,
+                                                            const Function<void(Animation*, Actor*)>& handler)
 {
     class OneEventAnimationEventHandler : public AnimationEventHandler
     {

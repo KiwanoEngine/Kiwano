@@ -83,9 +83,9 @@ Time Time::Now() noexcept
 
 #else
 
-    using std::chrono::steady_clock;
     using std::chrono::duration_cast;
     using std::chrono::milliseconds;
+    using std::chrono::steady_clock;
 
     const auto now   = steady_clock::now();
     const auto count = duration_cast<milliseconds>(now.time_since_epoch()).count();

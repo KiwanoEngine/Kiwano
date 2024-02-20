@@ -64,7 +64,7 @@ Component* ComponentManager::GetComponent(size_t name_hash)
 {
     if (!components_.empty())
     {
-        auto   iter = components_.find(name_hash);
+        auto iter = components_.find(name_hash);
         if (iter != components_.end())
         {
             return iter->second.Get();

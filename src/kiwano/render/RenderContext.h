@@ -277,16 +277,16 @@ protected:
     void IncreasePrimitivesCount(uint32_t increase = 1) const;
 
 protected:
-    bool              antialias_;
-    bool              fast_global_transform_;
-    mutable bool      collecting_status_;
-    float             brush_opacity_;
-    TextAntialiasMode text_antialias_;
-    RefPtr<Brush>          current_brush_;
-    RefPtr<StrokeStyle>    current_stroke_;
-    Rect              visible_size_;
-    Matrix3x2         global_transform_;
-    mutable Status    status_;
+    bool                antialias_;
+    bool                fast_global_transform_;
+    mutable bool        collecting_status_;
+    float               brush_opacity_;
+    TextAntialiasMode   text_antialias_;
+    RefPtr<Brush>       current_brush_;
+    RefPtr<StrokeStyle> current_stroke_;
+    Rect                visible_size_;
+    Matrix3x2           global_transform_;
+    mutable Status      status_;
 };
 
 /** @} */

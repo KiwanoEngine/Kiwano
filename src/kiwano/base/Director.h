@@ -102,7 +102,7 @@ private:
     Director();
 
 private:
-    bool            render_border_enabled_;
+    bool                 render_border_enabled_;
     Stack<RefPtr<Stage>> stages_;
     RefPtr<Stage>        current_stage_;
     RefPtr<Stage>        next_stage_;

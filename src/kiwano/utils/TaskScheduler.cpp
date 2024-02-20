@@ -55,25 +55,25 @@ Task* TaskScheduler::AddTask(RefPtr<Task> task)
 
 Task* TaskScheduler::AddTask(const Task::Callback& cb, RefPtr<Ticker> ticker)
 {
-    auto task =  MakePtr<Task>(cb, ticker);
+    auto task = MakePtr<Task>(cb, ticker);
     return AddTask(task);
 }
 
 Task* TaskScheduler::AddTask(StringView name, const Task::Callback& cb, RefPtr<Ticker> ticker)
 {
-    auto task =  MakePtr<Task>(name, cb, ticker);
+    auto task = MakePtr<Task>(name, cb, ticker);
     return AddTask(task);
 }
 
 Task* TaskScheduler::AddTask(const Task::Callback& cb, Duration interval, int times)
 {
-    auto task =  MakePtr<Task>(cb, interval, times);
+    auto task = MakePtr<Task>(cb, interval, times);
     return AddTask(task);
 }
 
 Task* TaskScheduler::AddTask(StringView name, const Task::Callback& cb, Duration interval, int times)
 {
-    auto task =  MakePtr<Task>(name, cb, interval, times);
+    auto task = MakePtr<Task>(name, cb, interval, times);
     return AddTask(task);
 }
 

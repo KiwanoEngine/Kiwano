@@ -39,9 +39,7 @@ Application::Application()
 {
 }
 
-Application::~Application()
-{
-}
+Application::~Application() {}
 
 void Application::Run(const Settings& settings, const Function<void()>& setup, std::initializer_list<Module*> modules)
 {
@@ -79,7 +77,7 @@ void Application::Run(RefPtr<Runner> runner)
     running_   = true;
     is_paused_ = false;
     runner_    = runner;
-    timer_     =  MakePtr<Timer>();
+    timer_     = MakePtr<Timer>();
 
     // Initialize runner
     runner->InitSettings();

@@ -137,5 +137,5 @@ WideString UTF8ToWide(StringView str)
 
 #endif  // KGE_PLATFORM_WINDOWS
 
-}  // namespace string
+}  // namespace strings
 }  // namespace kiwano

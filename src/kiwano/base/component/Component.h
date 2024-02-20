@@ -44,8 +44,7 @@ class ComponentManager;
  * \~chinese
  * @brief ×é¼þ
  */
-class KGE_API Component
-    : public ObjectBase
+class KGE_API Component : public ObjectBase
 {
     friend class ComponentManager;
 

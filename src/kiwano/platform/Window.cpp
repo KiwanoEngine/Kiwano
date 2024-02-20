@@ -38,9 +38,7 @@ Window::Window()
 {
 }
 
-Window::~Window()
-{
-}
+Window::~Window() {}
 
 RefPtr<Event> Window::PollEvent()
 {

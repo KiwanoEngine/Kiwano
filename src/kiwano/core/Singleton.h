@@ -40,8 +40,8 @@ public:
     }
 
 protected:
-    Singleton()                 = default;
-    Singleton(const Singleton&) = delete;
+    Singleton()                            = default;
+    Singleton(const Singleton&)            = delete;
     Singleton& operator=(const Singleton&) = delete;
 
     static _Ty instance_;

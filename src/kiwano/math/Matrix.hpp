@@ -37,7 +37,8 @@ struct Matrix3x2T
     using Vec2Type  = Vec2T<ValueType>;
     using RectType  = RectT<ValueType>;
 
-    union {
+    union
+    {
         struct
         {
             _Ty m[6];  // m[3][2]
@@ -85,8 +86,8 @@ struct Matrix3x2T
     {
     }
 
-KGE_SUPPRESS_WARNING_PUSH
-KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variables"
+    KGE_SUPPRESS_WARNING_PUSH
+    KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variables"
 
     template <typename _MTy>
     Matrix3x2T(const _MTy& other)
@@ -95,7 +96,7 @@ KGE_SUPPRESS_WARNING(26495)  // ignore warning "always initialize member variabl
             m[i] = other[i];
     }
 
-KGE_SUPPRESS_WARNING_POP
+    KGE_SUPPRESS_WARNING_POP
 
     inline ValueType operator[](uint32_t index) const
     {

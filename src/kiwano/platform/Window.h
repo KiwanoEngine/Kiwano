@@ -50,8 +50,8 @@ enum class CursorType
  */
 struct Resolution
 {
-    uint32_t width = 0;         ///< 分辨率宽度
-    uint32_t height = 0;        ///< 分辨率高度
+    uint32_t width        = 0;  ///< 分辨率宽度
+    uint32_t height       = 0;  ///< 分辨率高度
     uint32_t refresh_rate = 0;  ///< 刷新率
 
     Resolution() = default;
@@ -89,7 +89,6 @@ struct Icon
 #endif
 };
 
-
 /**
  * \~chinese
  * @brief 窗口设置
@@ -104,11 +103,9 @@ struct WindowConfig
     bool     fullscreen = false;      ///< 窗口全屏
 };
 
-
 #if defined(KGE_PLATFORM_WINDOWS)
 typedef HWND WindowHandle;
 #endif
-
 
 /**
  * \~chinese
@@ -275,19 +272,19 @@ protected:
     virtual ~Window();
 
 protected:
-    bool                 should_close_;
-    bool                 is_fullscreen_;
-    int                  pos_x_;
-    int                  pos_y_;
-    uint32_t             width_;
-    uint32_t             height_;
-    uint32_t             min_width_;
-    uint32_t             min_height_;
-    uint32_t             max_width_;
-    uint32_t             max_height_;
-    Resolution           resolution_;
-    WindowHandle         handle_;
-    String               title_;
+    bool                      should_close_;
+    bool                      is_fullscreen_;
+    int                       pos_x_;
+    int                       pos_y_;
+    uint32_t                  width_;
+    uint32_t                  height_;
+    uint32_t                  min_width_;
+    uint32_t                  min_height_;
+    uint32_t                  max_width_;
+    uint32_t                  max_height_;
+    Resolution                resolution_;
+    WindowHandle              handle_;
+    String                    title_;
     std::queue<RefPtr<Event>> event_queue_;
 };
 

@@ -116,7 +116,6 @@ private:
     size_t    rear_  = 0;
 };
 
-
 /**
  * \addtogroup Actors
  * @{
@@ -141,11 +140,11 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    std::locale comma_locale_;
-    RefPtr<Brush>    background_brush_;
-    RefPtr<Brush>    debug_text_brush_;
-    TextStyle   debug_text_style_;
-    TextLayout  debug_text_;
+    std::locale   comma_locale_;
+    RefPtr<Brush> background_brush_;
+    RefPtr<Brush> debug_text_brush_;
+    TextStyle     debug_text_style_;
+    TextLayout    debug_text_;
 
     SimpleRingBuffer<Time> frame_buffer_;
 };

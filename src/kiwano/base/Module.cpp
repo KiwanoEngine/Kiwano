@@ -113,24 +113,14 @@ void Module::SetupModule() {}
 
 void Module::DestroyModule() {}
 
-void Module::OnRender(RenderModuleContext& ctx)
-{
-}
+void Module::OnRender(RenderModuleContext& ctx) {}
 
-void Module::OnUpdate(UpdateModuleContext& ctx)
-{
-}
+void Module::OnUpdate(UpdateModuleContext& ctx) {}
 
-void Module::HandleEvent(EventModuleContext& ctx)
-{
-}
+void Module::HandleEvent(EventModuleContext& ctx) {}
 
-void Module::BeforeRender(RenderModuleContext& ctx)
-{
-}
+void Module::BeforeRender(RenderModuleContext& ctx) {}
 
-void Module::AfterRender(RenderModuleContext& ctx)
-{
-}
+void Module::AfterRender(RenderModuleContext& ctx) {}
 
 }  // namespace kiwano

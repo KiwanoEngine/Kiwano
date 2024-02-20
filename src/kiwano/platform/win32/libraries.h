@@ -47,7 +47,7 @@ public:
 private:
     Shlwapi();
 
-    Shlwapi(const Shlwapi&) = delete;
+    Shlwapi(const Shlwapi&)            = delete;
     Shlwapi& operator=(const Shlwapi&) = delete;
 
     Library shlwapi;

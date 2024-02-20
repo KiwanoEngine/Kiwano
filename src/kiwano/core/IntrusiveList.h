@@ -145,8 +145,8 @@ public:
         else
             first_ = child;
 
-        child->prev_ = before->prev_;
-        child->next_ = before;
+        child->prev_  = before->prev_;
+        child->next_  = before;
         before->prev_ = child;
     }
 
@@ -203,7 +203,7 @@ public:
         while (p)
         {
             value_type tmp = p;
-            p = p->next_;
+            p              = p->next_;
             if (tmp)
             {
                 tmp->next_ = nullptr;
@@ -211,7 +211,7 @@ public:
             }
         }
         first_ = nullptr;
-        last_ = nullptr;
+        last_  = nullptr;
     }
 
     /// \~chinese
@@ -228,7 +228,7 @@ public:
         do
         {
             tmp = p;
-            p = p->next_;
+            p   = p->next_;
             ++pos;
 
             if (p)
@@ -426,7 +426,6 @@ private:
     value_type first_;
     value_type last_;
 };
-
 
 /// \~chinese
 /// @brief 侵入式链表元素

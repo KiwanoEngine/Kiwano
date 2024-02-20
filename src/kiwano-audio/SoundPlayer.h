@@ -46,7 +46,7 @@ public:
 
     /// \~chinese
     /// @brief ‘§º”‘ÿ“Ù∆µ
-    /// @details 
+    /// @details
     RefPtr<AudioData> Preload(StringView file_path);
 
     /// \~chinese
@@ -112,9 +112,9 @@ protected:
     void ClearTrash();
 
 protected:
-    float            volume_;
-    SoundList        sound_list_;
-    SoundList        trash_;
+    float                 volume_;
+    SoundList             sound_list_;
+    SoundList             trash_;
     RefPtr<SoundCallback> callback_;
 
     UnorderedMap<size_t, RefPtr<AudioData>> cache_;

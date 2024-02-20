@@ -73,7 +73,7 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool     swallow_;
+    bool          swallow_;
     RefPtr<Layer> layer_;
 };
 

@@ -244,7 +244,7 @@ private:
     String* name_;
     void*   user_data_;
 
-    ObjectStatus*       status_;
+    ObjectStatus*            status_;
     Set<RefPtr<ObjectBase>>* holdings_;
 };
 

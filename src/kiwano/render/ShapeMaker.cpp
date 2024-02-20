@@ -136,14 +136,15 @@ void ShapeMaker::AddArc(const Point& point, const Size& radius, float rotation, 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = ComPolicy::Get<ID2D1GeometrySink>(this);
     native->AddArc(D2D1::ArcSegment(DX::ConvertToPoint2F(point), DX::ConvertToSizeF(radius), rotation,
-                                   clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
-                                   is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE));
+                                    clockwise ? D2D1_SWEEP_DIRECTION_CLOCKWISE : D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
+                                    is_small ? D2D1_ARC_SIZE_SMALL : D2D1_ARC_SIZE_LARGE));
 #else
     // not supported
 #endif
 }
 
-RefPtr<Shape> ShapeMaker::Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode, const Matrix3x2* matrix)
+RefPtr<Shape> ShapeMaker::Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode,
+                                  const Matrix3x2* matrix)
 {
     ShapeMaker maker;
     maker.OpenStream();

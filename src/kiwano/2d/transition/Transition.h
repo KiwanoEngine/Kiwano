@@ -98,15 +98,15 @@ protected:
     virtual void Reset() {}
 
 protected:
-    bool     done_;
-    float    process_;
-    Duration duration_;
-    Duration delta_;
-    Size     window_size_;
+    bool          done_;
+    float         process_;
+    Duration      duration_;
+    Duration      delta_;
+    Size          window_size_;
     RefPtr<Stage> out_stage_;
     RefPtr<Stage> in_stage_;
-    Layer    out_layer_;
-    Layer    in_layer_;
+    Layer         out_layer_;
+    Layer         in_layer_;
 };
 
 /** @} */

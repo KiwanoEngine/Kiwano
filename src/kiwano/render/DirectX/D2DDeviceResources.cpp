@@ -54,7 +54,7 @@ public:
                                   WICBitmapDitherType dither, _In_opt_ ComPtr<IWICPalette> palette,
                                   double alpha_threshold_percent, WICBitmapPaletteType palette_translate) override;
 
-    HRESULT CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+    HRESULT CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>&             bitmap,
                                       _In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
                                       _In_ ComPtr<IWICFormatConverter> converter) override;
 
@@ -75,7 +75,7 @@ public:
                              _In_ ComPtr<IDWriteTextFormat> text_format) override;
 
     HRESULT CreateFontCollectionFromFiles(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
-                                          const Vector<String>& file_paths) override;
+                                          const Vector<String>&                file_paths) override;
 
     HRESULT CreateFontCollectionFromBinaryData(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
                                                const Vector<BinaryData>&            data) override;
@@ -111,7 +111,6 @@ private:
     ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
     ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
 };
-
 
 ComPtr<ID2DDeviceResources> GetD2DDeviceResources()
 {
@@ -402,7 +401,8 @@ HRESULT D2DDeviceResources::CreateBitmapSourceFromMemory(_Out_ ComPtr<IWICBitmap
 
     ComPtr<IWICBitmap> output;
 
-    HRESULT hr = imaging_factory_->CreateBitmapFromMemory(width, height, cPixelFormat, cbStride, cbBufferSize, buffer, &output);
+    HRESULT hr =
+        imaging_factory_->CreateBitmapFromMemory(width, height, cPixelFormat, cbStride, cbBufferSize, buffer, &output);
     if (SUCCEEDED(hr))
     {
         source = output;
@@ -435,7 +435,7 @@ HRESULT D2DDeviceResources::CreateBitmapConverter(_Out_ ComPtr<IWICFormatConvert
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>& bitmap,
+HRESULT D2DDeviceResources::CreateBitmapFromConverter(_Out_ ComPtr<ID2D1Bitmap>&             bitmap,
                                                       _In_opt_ const D2D1_BITMAP_PROPERTIES* properties,
                                                       _In_ ComPtr<IWICFormatConverter> converter)
 {
@@ -540,7 +540,7 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
         if (SUCCEEDED(hr))
         {
             DWRITE_TEXT_RANGE textRange = { 0, std::numeric_limits<UINT32>::max() };
-            hr = output->SetDrawingEffect(effect.Get(), textRange);
+            hr                          = output->SetDrawingEffect(effect.Get(), textRange);
         }
     }
 
@@ -571,7 +571,7 @@ HRESULT D2DDeviceResources::CreateFontCollectionFromFiles(ComPtr<IDWriteFontColl
 }
 
 HRESULT D2DDeviceResources::CreateFontCollectionFromBinaryData(ComPtr<IDWriteFontCollection>& font_collection,
-                                                              const Vector<BinaryData>& data)
+                                                               const Vector<BinaryData>&      data)
 {
     if (!dwrite_factory_ || !res_font_collection_loader_)
         return E_UNEXPECTED;
@@ -583,7 +583,8 @@ HRESULT D2DDeviceResources::CreateFontCollectionFromBinaryData(ComPtr<IDWriteFon
 
     if (SUCCEEDED(hr))
     {
-        hr = dwrite_factory_->CreateCustomFontCollection(res_font_collection_loader_.Get(), key, key_size, &font_collection);
+        hr = dwrite_factory_->CreateCustomFontCollection(res_font_collection_loader_.Get(), key, key_size,
+                                                         &font_collection);
     }
     return hr;
 }

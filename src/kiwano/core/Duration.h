@@ -127,11 +127,11 @@ struct KGE_API Duration
     const Duration operator+(const Duration&) const;
     const Duration operator-(const Duration&) const;
     const Duration operator-() const;
-    const Duration operator*(int)const;
-    const Duration operator*(unsigned long long)const;
-    const Duration operator*(float)const;
-    const Duration operator*(double)const;
-    const Duration operator*(long double)const;
+    const Duration operator*(int) const;
+    const Duration operator*(unsigned long long) const;
+    const Duration operator*(float) const;
+    const Duration operator*(double) const;
+    const Duration operator*(long double) const;
     const Duration operator/(int) const;
     const Duration operator/(float) const;
     const Duration operator/(double) const;

@@ -29,7 +29,6 @@ namespace kiwano
  * @{
  */
 
-
 /// \~chinese
 /// @brief —” ±∂Øª≠
 class KGE_API DelayAnimation : public Animation

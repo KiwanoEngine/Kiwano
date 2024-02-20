@@ -36,8 +36,6 @@ ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
 
 }  // namespace
 
-
-
 ObjectFailException::ObjectFailException(ObjectBase* obj, const ObjectStatus& status)
     : obj_(obj)
     , status_(status)
@@ -245,7 +243,7 @@ void ObjectBase::DumpTracingObjects()
     for (const auto object : tracing_objects)
     {
         KGE_DEBUG_LOGF("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*object).name(), object->GetObjectID(),
-                    object->GetRefCount(), object->GetName().data());
+                       object->GetRefCount(), object->GetName().data());
     }
     KGE_DEBUG_LOGF("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }

@@ -113,7 +113,6 @@
 #endif
 #endif  // KGE_PLATFORM_WINDOWS
 
-
 namespace kiwano
 {
 
@@ -223,7 +222,7 @@ protected:
     void WriteMessage(LogLevel level, const char* msg) override;
 
 private:
-    typedef std::ostream&(*ConsoleColor)(std::ostream&);
+    typedef std::ostream& (*ConsoleColor)(std::ostream&);
 
     ConsoleColor GetColor(LogLevel level);
 };
@@ -237,7 +236,7 @@ class KGE_API FileLogProvider : public LogProvider
 public:
     FileLogProvider(StringView filepath, std::ios_base::openmode mode = std::ios_base::out);
 
-   virtual ~FileLogProvider();
+    virtual ~FileLogProvider();
 
     void Init() override;
 
@@ -322,13 +321,13 @@ private:
     void WriteToProviders(LogLevel level, LogBuffer* buffer);
 
 private:
-    bool                   enabled_;
-    LogLevel               level_;
+    bool                        enabled_;
+    LogLevel                    level_;
     RefPtr<LogFormater>         formater_;
-    LogBuffer              buffer_;
-    std::iostream          stream_;
+    LogBuffer                   buffer_;
+    std::iostream               stream_;
     Vector<RefPtr<LogProvider>> providers_;
-    std::mutex             mutex_;
+    std::mutex                  mutex_;
 };
 
 inline void Logger::Enable()

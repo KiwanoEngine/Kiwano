@@ -165,9 +165,9 @@ protected:
     void SetPreRenderEnabled(bool enable);
 
 private:
-    bool             is_cache_dirty_;
-    String           content_;
-    TextStyle        style_;
+    bool                  is_cache_dirty_;
+    String                content_;
+    TextStyle             style_;
     RefPtr<TextLayout>    layout_;
     RefPtr<Brush>         fill_brush_;
     RefPtr<Brush>         outline_brush_;

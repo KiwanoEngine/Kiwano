@@ -54,7 +54,7 @@ LinearGradientStyle::LinearGradientStyle(const Point& begin, const Point& end, c
 {
 }
 
-RadialGradientStyle::RadialGradientStyle() 
+RadialGradientStyle::RadialGradientStyle()
     : extend_mode(GradientExtendMode::Clamp)
 {
 }

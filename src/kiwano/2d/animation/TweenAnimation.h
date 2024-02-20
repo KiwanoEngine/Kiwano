@@ -70,7 +70,6 @@ private:
     EaseFunc ease_func_;
 };
 
-
 /// \~chinese
 /// @brief 相对位移动画
 class KGE_API MoveByAnimation : public TweenAnimation
@@ -109,7 +108,6 @@ protected:
     Vec2  displacement_;
 };
 
-
 /// \~chinese
 /// @brief 位移动画
 class KGE_API MoveToAnimation : public MoveByAnimation
@@ -147,7 +145,6 @@ protected:
 private:
     Point distination_;
 };
-
 
 /// \~chinese
 /// @brief 相对跳跃动画
@@ -207,7 +204,6 @@ protected:
     Point prev_pos_;
 };
 
-
 /// \~chinese
 /// @brief 跳跃动画
 class KGE_API JumpToAnimation : public JumpByAnimation
@@ -247,7 +243,6 @@ protected:
 private:
     Point distination_;
 };
-
 
 /// \~chinese
 /// @brief 相对缩放动画
@@ -293,7 +288,6 @@ protected:
     Vec2 start_val_;
     Vec2 delta_;
 };
-
 
 /// \~chinese
 /// @brief 缩放动画
@@ -341,7 +335,6 @@ private:
     Vec2 end_val_;
 };
 
-
 /// \~chinese
 /// @brief 透明度渐变动画
 class KGE_API FadeToAnimation : public TweenAnimation
@@ -384,7 +377,6 @@ private:
     float end_val_;
 };
 
-
 /// \~chinese
 /// @brief 相对旋转动画
 class KGE_API RotateByAnimation : public TweenAnimation
@@ -421,7 +413,6 @@ protected:
     float start_val_;
     float delta_val_;
 };
-
 
 /// \~chinese
 /// @brief 旋转动画

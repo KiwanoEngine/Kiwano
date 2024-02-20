@@ -27,8 +27,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief ¼ÆÊ±Æ÷
-class KGE_API Timer
-    : public ObjectBase
+class KGE_API Timer : public ObjectBase
 {
 public:
     Timer();

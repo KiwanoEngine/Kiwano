@@ -26,7 +26,6 @@
 #include <kiwano/render/Texture.h>
 #include <kiwano/utils/Ticker.h>
 
-
 namespace kiwano
 {
 
@@ -123,7 +122,7 @@ private:
     void InitSettings();
 
 private:
-    Settings  settings_;
+    Settings       settings_;
     RefPtr<Window> main_window_;
     RefPtr<Ticker> frame_ticker_;
 };

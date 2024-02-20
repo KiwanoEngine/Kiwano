@@ -1,6 +1,5 @@
 // Copyright (C) 2019 Nomango
 
-
 #include <kiwano/core/Common.h>
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Input.h>
@@ -266,8 +265,8 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
             }
             else if (evt->IsType<IMEInputEvent>())
             {
-                const auto& str = dynamic_cast<IMEInputEvent*>(evt)->value;
-                const auto utf8_str = strings::WideToUTF8(strings::NarrowToWide(str));
+                const auto& str      = dynamic_cast<IMEInputEvent*>(evt)->value;
+                const auto  utf8_str = strings::WideToUTF8(strings::NarrowToWide(str));
                 io.AddInputCharactersUTF8(utf8_str.c_str());
             }
         }

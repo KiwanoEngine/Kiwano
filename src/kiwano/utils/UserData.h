@@ -82,8 +82,8 @@ public:
     void Clear();
 
 private:
-    UserData()                = default;
-    UserData(const UserData&) = default;
+    UserData()                           = default;
+    UserData(const UserData&)            = default;
     UserData& operator=(const UserData&) = default;
 
 private:

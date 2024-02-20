@@ -43,7 +43,7 @@ bool Ticker::Tick()
         return false;
 
     if (!timer_)
-        timer_ =  MakePtr<Timer>();
+        timer_ = MakePtr<Timer>();
 
     if (timer_->IsPausing())
         return false;

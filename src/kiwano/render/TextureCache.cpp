@@ -37,7 +37,7 @@ RefPtr<Texture> TextureCache::Preload(StringView file_path)
     {
         return ptr;
     }
-    RefPtr<Texture> ptr =  MakePtr<Texture>();
+    RefPtr<Texture> ptr = MakePtr<Texture>();
     if (ptr && ptr->Load(file_path))
     {
         this->AddTexture(hash_code, ptr);
@@ -52,7 +52,7 @@ RefPtr<Texture> TextureCache::Preload(const Resource& res)
     {
         return ptr;
     }
-    RefPtr<Texture> ptr =  MakePtr<Texture>();
+    RefPtr<Texture> ptr = MakePtr<Texture>();
     if (ptr && ptr->Load(res))
     {
         this->AddTexture(hash_code, ptr);
@@ -67,7 +67,7 @@ RefPtr<GifImage> TextureCache::PreloadGif(StringView file_path)
     {
         return ptr;
     }
-    RefPtr<GifImage> ptr =  MakePtr<GifImage>();
+    RefPtr<GifImage> ptr = MakePtr<GifImage>();
     if (ptr && ptr->Load(file_path))
     {
         this->AddGifImage(hash_code, ptr);
@@ -82,7 +82,7 @@ RefPtr<GifImage> TextureCache::PreloadGif(const Resource& res)
     {
         return ptr;
     }
-    RefPtr<GifImage> ptr =  MakePtr<GifImage>();
+    RefPtr<GifImage> ptr = MakePtr<GifImage>();
     if (ptr && ptr->Load(res))
     {
         this->AddGifImage(hash_code, ptr);

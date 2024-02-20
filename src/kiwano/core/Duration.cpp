@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <regex>  // std::regex
+#include <regex>          // std::regex
 #include <unordered_map>  // std::unordered_map
-#include <chrono>  // std::chrono::milliseconds
-#include <thread>  // std::this_thread::sleep_for
+#include <chrono>         // std::chrono::milliseconds
+#include <thread>         // std::this_thread::sleep_for
 #include <kiwano/core/Duration.h>
 #include <kiwano/utils/Logger.h>  // KGE_THROW
 
@@ -39,7 +39,8 @@ const auto duration_regex = std::regex(R"(^[-+]?([0-9]*(\.[0-9]*)?(h|m|s|ms)+)+$
 
 typedef std::unordered_map<String, Duration> UnitMap;
 
-const auto unit_map = UnitMap{ { "ms", time::Millisecond }, { "s", time::Second }, { "m", time::Minute }, { "h", time::Hour } };
+const auto unit_map =
+    UnitMap{ { "ms", time::Millisecond }, { "s", time::Second }, { "m", time::Minute }, { "h", time::Hour } };
 }  // namespace
 
 float Duration::GetSeconds() const

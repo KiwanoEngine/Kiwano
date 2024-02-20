@@ -20,8 +20,8 @@
 
 #pragma once
 #include <utility>  // std::forward
-#include <limits>  // std::numeric_limits
-#include <memory>  // std::addressof
+#include <limits>   // std::numeric_limits
+#include <memory>   // std::addressof
 #include <kiwano/macros.h>
 
 namespace kiwano

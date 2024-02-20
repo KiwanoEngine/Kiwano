@@ -47,7 +47,7 @@ public:
 private:
     XAudio2();
 
-    XAudio2(const XAudio2&) = delete;
+    XAudio2(const XAudio2&)            = delete;
     XAudio2& operator=(const XAudio2&) = delete;
 
     Library xaudio2;

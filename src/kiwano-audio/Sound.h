@@ -162,9 +162,9 @@ protected:
     void ResetVolume();
 
 private:
-    bool         opened_;
-    bool         playing_;
-    float        volume_;
+    bool              opened_;
+    bool              playing_;
+    float             volume_;
     RefPtr<AudioData> data_;
 
     RefPtr<SoundCallback>       callback_chain_;

@@ -130,9 +130,7 @@ Fixture::Fixture()
 {
 }
 
-Fixture::~Fixture()
-{
-}
+Fixture::~Fixture() {}
 
 bool Fixture::Init(RefPtr<PhysicBody> body)
 {

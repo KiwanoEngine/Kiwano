@@ -99,7 +99,8 @@ using Stack = std::stack<_Ty, _Container>;
 
 /// \~chinese
 /// @brief ÅÅÐò¹ØÁªÈÝÆ÷
-template <typename _Kty, typename _Ty, typename _Compare = std::less<_Kty>, typename _Alloc = std::allocator<Pair<const _Kty, _Ty>>>
+template <typename _Kty, typename _Ty, typename _Compare = std::less<_Kty>,
+          typename _Alloc = std::allocator<Pair<const _Kty, _Ty>>>
 using Map = std::map<_Kty, _Ty, _Compare, _Alloc>;
 
 /// \~chinese

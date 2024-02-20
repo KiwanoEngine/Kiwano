@@ -115,7 +115,7 @@ public:
 
 private:
     RefPtr<Texture> texture_;
-    Rect       crop_rect_;
+    Rect            crop_rect_;
 };
 
 inline bool SpriteFrame::IsValid() const

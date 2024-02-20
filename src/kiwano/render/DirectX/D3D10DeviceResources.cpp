@@ -115,7 +115,6 @@ public:
     DXGI_FORMAT   desired_color_format_;
 };
 
-
 ComPtr<ID3D10DeviceResources> GetD3D10DeviceResources()
 {
     if (!global_d3d10_device_resources)
@@ -140,7 +139,7 @@ D3D10DeviceResources::~D3D10DeviceResources()
 
 HRESULT D3D10DeviceResources::Initialize(HWND hwnd, Size logical_size)
 {
-    this->hwnd_           = hwnd;
+    this->hwnd_         = hwnd;
     this->logical_size_ = logical_size;
 
     HRESULT hr = this->CreateDeviceResources();

@@ -444,7 +444,7 @@ inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const
 
 inline void CanvasRenderContext::DrawTextLayout(StringView text, const TextStyle& style, const Point& point)
 {
-    RefPtr<TextLayout> layout =  MakePtr<TextLayout>(text, style);
+    RefPtr<TextLayout> layout = MakePtr<TextLayout>(text, style);
     this->DrawTextLayout(layout, point);
 }
 
@@ -475,7 +475,7 @@ inline void CanvasRenderContext::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ =  MakePtr<Brush>();
+        fill_brush_ = MakePtr<Brush>();
     }
     fill_brush_->SetColor(color);
 }
@@ -499,7 +499,7 @@ inline void CanvasRenderContext::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ =  MakePtr<Brush>();
+        stroke_brush_ = MakePtr<Brush>();
     }
     stroke_brush_->SetColor(color);
 }

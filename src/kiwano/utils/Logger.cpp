@@ -551,10 +551,10 @@ Logger::Logger()
     , buffer_(1024)
     , stream_(&buffer_)
 {
-    RefPtr<LogFormater> formater =  MakePtr<TextFormater>();
+    RefPtr<LogFormater> formater = MakePtr<TextFormater>();
     SetFormater(formater);
 
-    RefPtr<LogProvider> provider =  MakePtr<ConsoleLogProvider>();
+    RefPtr<LogProvider> provider = MakePtr<ConsoleLogProvider>();
     AddProvider(provider);
 }
 
@@ -650,7 +650,6 @@ void Logger::WriteToProviders(LogLevel level, LogBuffer* buffer)
 }
 
 }  // namespace kiwano
-
 
 #if defined(KGE_PLATFORM_WINDOWS)
 
@@ -751,7 +750,7 @@ void ResetStdIO()
     _close(stderr_dupfd);
 
     stdout_dupfd = 0;
-    stdin_dupfd = 0;
+    stdin_dupfd  = 0;
     stderr_dupfd = 0;
 }
 

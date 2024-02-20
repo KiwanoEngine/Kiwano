@@ -151,7 +151,7 @@ class ContactList
         inline IteratorImpl operator++(int)
         {
             IteratorImpl old = *this;
-                         operator++();
+            operator++();
             return old;
         }
 

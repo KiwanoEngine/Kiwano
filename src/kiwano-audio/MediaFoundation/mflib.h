@@ -66,7 +66,7 @@ public:
 private:
     MediaFoundation();
 
-    MediaFoundation(const MediaFoundation&) = delete;
+    MediaFoundation(const MediaFoundation&)            = delete;
     MediaFoundation& operator=(const MediaFoundation&) = delete;
 
     Library mfplat;

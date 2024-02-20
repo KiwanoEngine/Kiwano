@@ -69,7 +69,7 @@ void Runner::InitSettings()
     // Create frame ticker
     if (!settings_.frame_interval.IsZero())
     {
-        frame_ticker_ =  MakePtr<Ticker>(settings_.frame_interval, -1);
+        frame_ticker_ = MakePtr<Ticker>(settings_.frame_interval, -1);
     }
 }
 

@@ -360,7 +360,7 @@ private:
     uint16_t     mask_bits_;
     int16_t      group_index_;
 
-    PhysicBody::Type   type_;
+    PhysicBody::Type        type_;
     Vector<RefPtr<Fixture>> fixtures_;
 
     Point offset_;

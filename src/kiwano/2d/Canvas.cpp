@@ -23,9 +23,7 @@
 
 namespace kiwano
 {
-Canvas::Canvas()
-{
-}
+Canvas::Canvas() {}
 
 Canvas::Canvas(const PixelSize& size)
 {
@@ -40,7 +38,7 @@ RefPtr<CanvasRenderContext> Canvas::GetContext2D() const
 
 void Canvas::ResizeAndClear(const PixelSize& size)
 {
-    texture_cached_ =  MakePtr<Texture>();
+    texture_cached_ = MakePtr<Texture>();
     render_ctx_     = RenderContext::Create(texture_cached_, size);
     if (render_ctx_)
     {
@@ -69,8 +67,6 @@ CanvasRenderContext::CanvasRenderContext(RefPtr<RenderContext> ctx)
     }
 }
 
-CanvasRenderContext::~CanvasRenderContext()
-{
-}
+CanvasRenderContext::~CanvasRenderContext() {}
 
 }  // namespace kiwano

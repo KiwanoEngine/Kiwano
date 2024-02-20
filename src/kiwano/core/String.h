@@ -51,7 +51,6 @@ using StringView = BasicStringView<char>;
 /// @brief ¿í×Ö·û´®ÊÓÍ¼
 using WideStringView = BasicStringView<wchar_t>;
 
-
 namespace strings
 {
 
@@ -87,8 +86,7 @@ String WideToUTF8(WideStringView str);
 /// @brief utf8 ×Ö·û´®×ª¿í×Ö·û´®
 WideString UTF8ToWide(StringView str);
 
-}
-
+}  // namespace strings
 
 /// \~chinese
 /// @brief »ù´¡³£×Ö·û´®ÊÓÍ¼
@@ -96,14 +94,14 @@ template <typename CharTy>
 class BasicStringView
 {
 public:
-    using value_type = CharTy;
-    using pointer = CharTy*;
-    using const_pointer = const CharTy*;
-    using reference = CharTy&;
+    using value_type      = CharTy;
+    using pointer         = CharTy*;
+    using const_pointer   = const CharTy*;
+    using reference       = CharTy&;
     using const_reference = const CharTy&;
-    using traits_type = std::char_traits<CharTy>;
-    using size_type = std::size_t;
-    using string_type = BasicString<CharTy>;
+    using traits_type     = std::char_traits<CharTy>;
+    using size_type       = std::size_t;
+    using string_type     = BasicString<CharTy>;
 
     BasicStringView()
         : ptr_(nullptr)
@@ -200,14 +198,15 @@ public:
 
     inline BasicStringView& operator=(const BasicStringView& rhs)
     {
-        ptr_ = rhs.ptr_;
+        ptr_   = rhs.ptr_;
         count_ = rhs.count_;
         return *this;
     }
 
     friend bool operator==(const BasicStringView& lhs, const BasicStringView& rhs)
     {
-        return lhs.size() == rhs.size() ? std::char_traits<value_type>::compare(lhs.data(), rhs.data(), lhs.size()) == 0 : false;
+        return lhs.size() == rhs.size() ? std::char_traits<value_type>::compare(lhs.data(), rhs.data(), lhs.size()) == 0
+                                        : false;
     }
 
     inline operator string_type() const
@@ -248,8 +247,8 @@ public:
 
         inline Iterator& operator=(const Iterator& rhs)
         {
-            ptr_ = rhs.ptr_;
-            pos_ = rhs.pos_;
+            ptr_   = rhs.ptr_;
+            pos_   = rhs.pos_;
             count_ = rhs.count_;
             return *this;
         }
@@ -452,4 +451,4 @@ struct hash<::kiwano::BasicStringView<_Char>>
     }
 };
 
-}
+}  // namespace std

@@ -39,7 +39,6 @@ namespace kiwano
  * @{
  */
 
-
 /**
  * \~chinese
  * @brief 渲染器
@@ -210,7 +209,8 @@ public:
     /// @param[in,out] texture 渲染输出的纹理
     /// @param[in] desired_size 期望的输出大小
     /// @return 纹理渲染上下文
-    virtual RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size) = 0;
+    virtual RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture>  texture,
+                                                             const PixelSize& desired_size) = 0;
 
 public:
     /// \~chinese
@@ -239,10 +239,10 @@ protected:
     Renderer();
 
 protected:
-    bool             vsync_;
-    bool             auto_reset_resolution_;
-    Color            clear_color_;
-    Size             output_size_;
+    bool                  vsync_;
+    bool                  auto_reset_resolution_;
+    Color                 clear_color_;
+    Size                  output_size_;
     RefPtr<RenderContext> render_ctx_;
 };
 

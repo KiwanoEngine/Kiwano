@@ -26,8 +26,7 @@
 namespace kiwano
 {
 
-class KGE_API RendererImpl
-    : public Renderer
+class KGE_API RendererImpl : public Renderer
 {
 public:
     static RendererImpl& GetInstance();
@@ -97,7 +96,6 @@ private:
 
     HMONITOR monitor_;
 };
-
 
 /** @} */
 

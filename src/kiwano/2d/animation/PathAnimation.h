@@ -29,7 +29,6 @@ namespace kiwano
  * @{
  */
 
-
 /// \~chinese
 /// @brief 路径行走动画
 class KGE_API PathAnimation : public TweenAnimation
@@ -90,11 +89,11 @@ protected:
     void UpdateTween(Actor* target, float percent) override;
 
 private:
-    bool     rotating_;
-    float    start_;
-    float    end_;
-    float    length_;
-    Point    start_pos_;
+    bool          rotating_;
+    float         start_;
+    float         end_;
+    float         length_;
+    Point         start_pos_;
     RefPtr<Shape> path_;
 };
 

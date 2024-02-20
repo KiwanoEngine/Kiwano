@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    Defer(const Defer&) = delete;
+    Defer(const Defer&)            = delete;
     Defer& operator=(const Defer&) = delete;
 
     Function<void()> func_;

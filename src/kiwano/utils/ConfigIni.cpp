@@ -20,9 +20,9 @@
 
 #include <kiwano/utils/ConfigIni.h>
 #include <kiwano/core/Exception.h>
-#include <fstream>  // std::ifstream, std::ofstream
+#include <fstream>    // std::ifstream, std::ofstream
 #include <algorithm>  // std::sort, std::for_each
-#include <cctype>  // std::isspace
+#include <cctype>     // std::isspace
 
 #define KGE_DEFAULT_INI_SECTION_NAME "default"
 
@@ -36,7 +36,7 @@ StringView Trim(StringView str)
         std::size_t start = 0, end = str.size();
         while (start < end && std::isspace(str[start]))
             ++start;
-        while (end > 0&& std ::isspace(str[end - 1]))
+        while (end > 0 && std ::isspace(str[end - 1]))
             --end;
 
         if (end > start)
@@ -48,6 +48,7 @@ StringView Trim(StringView str)
 class IniParser
 {
     StringView line_;
+
 public:
     IniParser(StringView line)
         : line_(line)
@@ -87,7 +88,7 @@ public:
         if (pos == String::npos)
             return false;
 
-        *key = Trim(line_.substr(0, pos));
+        *key   = Trim(line_.substr(0, pos));
         *value = Trim(line_.substr(pos + 1));
 
         return !(*key).empty() && !(*value).empty();
@@ -156,7 +157,8 @@ bool ConfigIni::Save(std::ostream& os)
     // Get all keys
     Vector<String> keys;
     keys.reserve(sections_.size());
-    std::for_each(sections_.begin(), sections_.end(), [&](SectionMap::value_type& pair) { keys.push_back(pair.first); });
+    std::for_each(sections_.begin(), sections_.end(),
+                  [&](SectionMap::value_type& pair) { keys.push_back(pair.first); });
 
     // Sort for keys
     std::sort(keys.begin(), keys.end());

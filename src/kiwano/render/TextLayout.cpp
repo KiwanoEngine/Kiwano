@@ -47,7 +47,7 @@ void TextLayout::Clear()
 }
 
 void TextLayout::Reset(StringView content, const TextStyle& style)
-    {
+{
     content_length_ = (uint32_t)content.size();
     if (content_length_)
     {
@@ -144,7 +144,7 @@ void TextLayout::SetFont(RefPtr<Font> font)
         }
     }
 #else
-    // not supported
+        // not supported
 #endif
 
     SetDirtyFlag(DirtyFlag::Dirty);

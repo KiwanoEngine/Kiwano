@@ -26,8 +26,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief ±¨Ê±Æ÷
-class KGE_API Ticker
-    : public ObjectBase
+class KGE_API Ticker : public ObjectBase
 {
 public:
     /// \~chinese
@@ -102,13 +101,13 @@ public:
     void Reset();
 
 private:
-    bool     is_paused_;
-    int      ticked_count_;
-    int      total_tick_count_;
-    Duration interval_;
-    Duration elapsed_time_;
-    Duration delta_time_;
-    Duration error_time_;
+    bool          is_paused_;
+    int           ticked_count_;
+    int           total_tick_count_;
+    Duration      interval_;
+    Duration      elapsed_time_;
+    Duration      delta_time_;
+    Duration      error_time_;
     RefPtr<Timer> timer_;
 };
 

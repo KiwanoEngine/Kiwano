@@ -53,8 +53,7 @@ SoundPlayer::SoundPlayer()
     callback_ = cb;
 }
 
-SoundPlayer::~SoundPlayer()
-{}
+SoundPlayer::~SoundPlayer() {}
 
 RefPtr<AudioData> SoundPlayer::Preload(StringView file_path)
 {
@@ -78,7 +77,7 @@ RefPtr<AudioData> SoundPlayer::Preload(const Resource& res, StringView ext)
     {
         return cache_.at(hash_code);
     }
-    RefPtr<AudioData>  ptr = AudioModule::GetInstance().Decode(res, ext);
+    RefPtr<AudioData> ptr = AudioModule::GetInstance().Decode(res, ext);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));
@@ -189,11 +188,11 @@ void SoundPlayer::SetCallback(Sound* sound)
 
 void SoundPlayer::RemoveCallback(Sound* sound)
 {
-    auto& cbs = sound->GetCallbacks();
+    auto& cbs  = sound->GetCallbacks();
     auto  iter = std::find(cbs.begin(), cbs.end(), callback_);
     if (iter != cbs.end())
     {
-        *iter = nullptr; // will be removed by sound
+        *iter = nullptr;  // will be removed by sound
     }
 }
 

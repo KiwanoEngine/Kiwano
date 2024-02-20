@@ -28,7 +28,6 @@ namespace kiwano
  * @{
  */
 
-
 /// \~chinese
 /// @brief ¶¯»­×éºÏ
 class KGE_API AnimationGroup : public Animation
@@ -72,9 +71,9 @@ protected:
     void Update(Actor* target, Duration dt) override;
 
 private:
-    bool            parallel_;
+    bool              parallel_;
     RefPtr<Animation> current_;
-    AnimationList      animations_;
+    AnimationList     animations_;
 };
 
 /** @} */

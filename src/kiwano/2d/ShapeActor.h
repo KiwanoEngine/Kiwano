@@ -128,7 +128,7 @@ private:
     RefPtr<Brush>       fill_brush_;
     RefPtr<Brush>       stroke_brush_;
     RefPtr<StrokeStyle> stroke_style_;
-    Rect           bounds_;
+    Rect                bounds_;
     RefPtr<Shape>       shape_;
 };
 
@@ -321,14 +321,13 @@ public:
     void SetVertices(const Vector<Point>& vertices);
 };
 
-
 /** @} */
 
 inline void ShapeActor::SetStrokeColor(const Color& color)
 {
     if (!stroke_brush_)
     {
-        stroke_brush_ =  MakePtr<Brush>();
+        stroke_brush_ = MakePtr<Brush>();
     }
     stroke_brush_->SetColor(color);
 }
@@ -337,7 +336,7 @@ inline void ShapeActor::SetFillColor(const Color& color)
 {
     if (!fill_brush_)
     {
-        fill_brush_ =  MakePtr<Brush>();
+        fill_brush_ = MakePtr<Brush>();
     }
     fill_brush_->SetColor(color);
 }

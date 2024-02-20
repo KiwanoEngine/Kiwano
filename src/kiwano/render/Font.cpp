@@ -21,7 +21,7 @@
 #include <kiwano/render/Font.h>
 #include <kiwano/render/Renderer.h>
 #include <functional>  // std::hash
-#include <cctype>  // std::tolower
+#include <cctype>      // std::tolower
 
 namespace kiwano
 {
@@ -34,7 +34,7 @@ RefPtr<Font> Font::Preload(StringView file)
         return ptr;
     }
 
-    RefPtr<Font> ptr =  MakePtr<Font>();
+    RefPtr<Font> ptr = MakePtr<Font>();
     if (ptr)
     {
         Vector<String> family_names;
@@ -63,7 +63,7 @@ RefPtr<Font> Font::Preload(const Resource& resource)
         return ptr;
     }
 
-    RefPtr<Font> ptr =  MakePtr<Font>();
+    RefPtr<Font> ptr = MakePtr<Font>();
     if (ptr)
     {
         Vector<String> family_names;
@@ -120,7 +120,7 @@ void FontCache::AddFont(size_t key, RefPtr<Font> font)
 
 void FontCache::AddFontByFamily(StringView font_family, RefPtr<Font> font)
 {
-    String family = TransformFamily(font_family);
+    String family              = TransformFamily(font_family);
     font_family_cache_[family] = font;
 }
 

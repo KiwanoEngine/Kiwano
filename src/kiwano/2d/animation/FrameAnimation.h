@@ -68,7 +68,7 @@ protected:
     void UpdateTween(Actor* target, float percent) override;
 
 private:
-    size_t           current_index_;
+    size_t                current_index_;
     RefPtr<FrameSequence> frame_seq_;
 };
 

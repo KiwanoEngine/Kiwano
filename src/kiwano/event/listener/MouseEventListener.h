@@ -34,8 +34,7 @@ namespace kiwano
  * \~chinese
  * @brief Êó±êÊÂ¼ş¼àÌıÆ÷
  */
-class KGE_API MouseEventListener
-    : public EventListener
+class KGE_API MouseEventListener : public EventListener
 {
 public:
     /// \~chinese

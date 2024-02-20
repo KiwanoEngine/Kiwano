@@ -105,7 +105,8 @@ public:
     /// @param mode 合并方式
     /// @param matrix 应用到输入形状B上的二维变换
     /// @return 返回合并后的形状
-    static RefPtr<Shape> Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode, const Matrix3x2* matrix = nullptr);
+    static RefPtr<Shape> Combine(RefPtr<Shape> shape_a, RefPtr<Shape> shape_b, CombineMode mode,
+                                 const Matrix3x2* matrix = nullptr);
 
     /// \~chinese
     /// @brief 设置生成的形状

@@ -47,7 +47,6 @@ public:
  * @}
  */
 
-
 /// \~chinese
 /// @brief 事件报时器
 class KGE_API EventTicker

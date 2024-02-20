@@ -38,7 +38,6 @@ namespace directx
 // Global pointer for Direct3D11 device resources
 static ComPtr<ID3D11DeviceResources> global_d3d11_device_resources;
 
-
 #if defined(KGE_DEBUG)
 inline bool SdkLayersAvailable()
 {
@@ -108,7 +107,6 @@ public:
     DXGI_FORMAT       desired_color_format_;
 };
 
-
 ComPtr<ID3D11DeviceResources> GetD3D11DeviceResources()
 {
     if (!global_d3d11_device_resources)
@@ -134,8 +132,8 @@ D3D11DeviceResources::~D3D11DeviceResources()
 
 HRESULT D3D11DeviceResources::Initialize(HWND hwnd, Size logical_size)
 {
-    this->hwnd_           = hwnd;
-    this->logical_size_   = logical_size;
+    this->hwnd_         = hwnd;
+    this->logical_size_ = logical_size;
 
     HRESULT hr = this->CreateDeviceResources();
 
@@ -295,14 +293,14 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
 #if defined(_WIN32_WINNT_WIN10) || defined(_WIN32_WINNT_WINBLUE)
             // DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL is supported starting with Windows 8.
             if (IsWindows8OrGreater())
-        {
-            swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-        }
-        else
+            {
+                swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+            }
+            else
 #endif
-        {
-            swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-        }
+            {
+                swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+            }
 
         hr = dxgi_factory_->CreateSwapChain(device_.Get(), &swap_chain_desc, &dxgi_swap_chain_);
     }

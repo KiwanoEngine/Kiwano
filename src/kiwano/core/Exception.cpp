@@ -45,7 +45,7 @@ inline std::unique_ptr<char[]> to_narrow(const wchar_t* msg)
     // ConvertBSTRToString internally uses _wcslen and WideCharToMultiByte;
     return to_narrow(const_cast<wchar_t*>(msg));
 }
-}
+}  // namespace detail
 
 class com_error_category : public std::error_category
 {
@@ -82,7 +82,6 @@ const std::error_category& com_category() noexcept
 }
 
 }  // namespace kiwano
-
 
 KGE_SUPPRESS_WARNING_PUSH
 KGE_SUPPRESS_WARNING(4091)

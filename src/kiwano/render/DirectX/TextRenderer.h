@@ -27,14 +27,13 @@ namespace graphics
 {
 namespace directx
 {
-interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64") ITextRenderer
-    : public IDWriteTextRenderer
+interface DWRITE_DECLARE_INTERFACE("b293e798-9916-4096-a3c1-e5d4039dfa64") ITextRenderer : public IDWriteTextRenderer
 {
 public:
-    static KGE_API HRESULT Create(_Out_ ITextRenderer** ppTextRenderer, _In_ ID2D1DeviceContext* pContext);
+    static KGE_API HRESULT Create(_Out_ ITextRenderer * *ppTextRenderer, _In_ ID2D1DeviceContext * pContext);
 
     STDMETHOD(DrawTextLayout)
-    (_In_ IDWriteTextLayout* pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
+    (_In_ IDWriteTextLayout * pTextLayout, float fOriginX, float fOriginY, _In_opt_ ID2D1Brush* pDefaultFillBrush,
      _In_opt_ ID2D1Brush* pDefaultOutlineBrush, float fDefaultOutlineWidth,
      _In_opt_ ID2D1StrokeStyle* pDefaultStrokeStyle) PURE;
 

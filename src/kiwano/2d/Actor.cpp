@@ -230,7 +230,7 @@ void Actor::DoDeserialize(Deserializer* deserializer)
 {
     ObjectBase::DoDeserialize(deserializer);
 
-    float opacity = 1.0f;
+    float     opacity = 1.0f;
     Transform transform;
     (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_
         >> transform;
@@ -541,7 +541,7 @@ Rect Actor::GetBoundingBox() const
 Vector<RefPtr<Actor>> Actor::GetChildren(StringView name) const
 {
     Vector<RefPtr<Actor>> children;
-    size_t           hash_code = std::hash<StringView>{}(name);
+    size_t                hash_code = std::hash<StringView>{}(name);
 
     for (const auto& child : children_)
     {

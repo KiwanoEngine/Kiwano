@@ -78,7 +78,7 @@ bool GifSprite::Load(RefPtr<GifImage> gif)
         frame_to_render_.Reset();
         frame_rt_.Reset();
 
-        frame_to_render_ =  MakePtr<Texture>();
+        frame_to_render_ = MakePtr<Texture>();
         frame_rt_        = RenderContext::Create(frame_to_render_, gif_->GetSizeInPixels());
 
         if (frame_rt_)
@@ -225,7 +225,7 @@ void GifSprite::SaveComposedFrame()
 
     if (!saved_frame_)
     {
-        saved_frame_ =  MakePtr<Texture>();
+        saved_frame_ = MakePtr<Texture>();
         frame_rt_->CreateTexture(*saved_frame_, frame_to_render_->GetSizeInPixels());
     }
     saved_frame_->CopyFrom(frame_to_render_);

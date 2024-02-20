@@ -41,7 +41,7 @@ Task::Task(const Callback& cb, Duration interval, int times)
     , removeable_(false)
     , callback_(cb)
 {
-    ticker_ =  MakePtr<Ticker>(interval, times);
+    ticker_ = MakePtr<Ticker>(interval, times);
 }
 
 Task::Task(StringView name, const Callback& cb, Duration interval, int times)

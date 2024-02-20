@@ -71,10 +71,10 @@ public:
     void SetMaskTransform(const Matrix3x2& matrix);
 
 private:
-    Rect      clip_rect_;
-    float     opacity_;
-    RefPtr<Shape>  mask_;
-    Matrix3x2 mask_transform_;
+    Rect          clip_rect_;
+    float         opacity_;
+    RefPtr<Shape> mask_;
+    Matrix3x2     mask_transform_;
 };
 
 /** @} */

@@ -149,15 +149,15 @@ private:
     void ClearCurrentFrameArea();
 
 private:
-    bool             animating_;
-    int              total_loop_count_;
-    int              loop_count_;
-    size_t           next_index_;
-    Duration         frame_elapsed_;
-    LoopDoneCallback loop_cb_;
-    DoneCallback     done_cb_;
+    bool                  animating_;
+    int                   total_loop_count_;
+    int                   loop_count_;
+    size_t                next_index_;
+    Duration              frame_elapsed_;
+    LoopDoneCallback      loop_cb_;
+    DoneCallback          done_cb_;
     RefPtr<GifImage>      gif_;
-    GifImage::Frame  frame_;
+    GifImage::Frame       frame_;
     RefPtr<Texture>       saved_frame_;
     RefPtr<Texture>       frame_to_render_;
     RefPtr<RenderContext> frame_rt_;

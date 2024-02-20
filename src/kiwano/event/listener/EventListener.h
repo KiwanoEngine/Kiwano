@@ -117,9 +117,9 @@ public:
     virtual void Handle(Event* evt) = 0;
 
 private:
-    bool      running_;
-    bool      removeable_;
-    bool      swallow_;
+    bool running_;
+    bool removeable_;
+    bool swallow_;
 };
 
 /** @} */

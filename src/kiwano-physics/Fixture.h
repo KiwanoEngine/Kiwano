@@ -71,7 +71,7 @@ public:
     /// @param offset 偏移量
     /// @param rotation 旋转角度
     static RefPtr<Fixture> CreateRect(const Param& param, const Size& size, const Point& offset = Point(),
-                                 float rotation = 0.f);
+                                      float rotation = 0.f);
 
     /// \~chinese
     /// @brief 创建多边形夹具

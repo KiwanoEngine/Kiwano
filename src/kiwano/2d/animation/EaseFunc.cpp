@@ -81,4 +81,4 @@ KGE_API EaseFunc Ease::QuintIn      = math::EaseQuintIn;
 KGE_API EaseFunc Ease::QuintOut     = math::EaseQuintOut;
 KGE_API EaseFunc Ease::QuintInOut   = math::EaseQuintInOut;
 
-}
+}  // namespace kiwano

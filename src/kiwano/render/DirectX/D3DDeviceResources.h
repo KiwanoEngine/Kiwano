@@ -34,19 +34,19 @@ namespace directx
 {
 
 #if defined(KGE_USE_DIRECTX10)
-    using ID3DDeviceResources = kiwano::graphics::directx::ID3D10DeviceResources;
+using ID3DDeviceResources = kiwano::graphics::directx::ID3D10DeviceResources;
 
-    inline ComPtr<ID3D10DeviceResources> GetD3DDeviceResources()
-    {
-        return kiwano::graphics::directx::GetD3D10DeviceResources();
-    }
+inline ComPtr<ID3D10DeviceResources> GetD3DDeviceResources()
+{
+    return kiwano::graphics::directx::GetD3D10DeviceResources();
+}
 #else
-    using ID3DDeviceResources = kiwano::graphics::directx::ID3D11DeviceResources;
+using ID3DDeviceResources = kiwano::graphics::directx::ID3D11DeviceResources;
 
-    inline ComPtr<ID3D11DeviceResources> GetD3DDeviceResources()
-    {
-        return kiwano::graphics::directx::GetD3D11DeviceResources();
-    }
+inline ComPtr<ID3D11DeviceResources> GetD3DDeviceResources()
+{
+    return kiwano::graphics::directx::GetD3D11DeviceResources();
+}
 #endif
 
 }  // namespace directx

@@ -28,9 +28,7 @@ ButtonBase::ButtonBase()
     SetName("__KGE_BUTTON__");
 }
 
-ButtonBase::~ButtonBase()
-{
-}
+ButtonBase::~ButtonBase() {}
 
 void ButtonBase::HandleEvent(kiwano::Event* evt)
 {

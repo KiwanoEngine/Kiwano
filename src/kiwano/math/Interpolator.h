@@ -29,7 +29,6 @@ namespace kiwano
 namespace math
 {
 
-
 template <typename _Method = void>
 struct InterpolateMethod;
 
@@ -106,10 +105,7 @@ public:
             return end;
 
         Interpolator<_Ty> fi;
-        return Vec2T<_Ty>{
-            fi.Interpolate(start.x, end.x, frac, method),
-            fi.Interpolate(start.y, end.y, frac, method)
-        };
+        return Vec2T<_Ty>{ fi.Interpolate(start.x, end.x, frac, method), fi.Interpolate(start.y, end.y, frac, method) };
     }
 };
 
@@ -125,10 +121,8 @@ public:
             return end;
 
         Interpolator<Vec2T<_Ty>> vi;
-        return RectT<_Ty>{
-            vi.Interpolate(start.left_top, end.left_top, frac, method),
-            vi.Interpolate(start.right_bottom, end.right_bottom, frac, method)
-        };
+        return RectT<_Ty>{ vi.Interpolate(start.left_top, end.left_top, frac, method),
+                           vi.Interpolate(start.right_bottom, end.right_bottom, frac, method) };
     }
 };
 

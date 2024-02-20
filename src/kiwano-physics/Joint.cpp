@@ -36,9 +36,7 @@ Joint::Joint()
 {
 }
 
-Joint::~Joint()
-{
-}
+Joint::~Joint() {}
 
 bool Joint::Init(PhysicWorld* world)
 {

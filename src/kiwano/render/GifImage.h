@@ -86,10 +86,10 @@ public:
     /// @brief GIFÖ¡
     struct Frame
     {
-        Duration     delay;          ///< Ö¡ÑÓ³Ù
-        RefPtr<Texture>   texture;        ///< Ö¡Í¼Ïñ
-        Rect         rect;           ///< »æÖÆÇøÓò
-        DisposalType disposal_type;  ///< ´¦ÖÃ·½Ê½
+        Duration        delay;          ///< Ö¡ÑÓ³Ù
+        RefPtr<Texture> texture;        ///< Ö¡Í¼Ïñ
+        Rect            rect;           ///< »æÖÆÇøÓò
+        DisposalType    disposal_type;  ///< ´¦ÖÃ·½Ê½
 
         Frame();
     };
@@ -103,7 +103,7 @@ private:
     bool GetGlobalMetadata();
 
 private:
-    uint32_t frames_count_;
+    uint32_t  frames_count_;
     PixelSize size_in_pixels_;
 };
 

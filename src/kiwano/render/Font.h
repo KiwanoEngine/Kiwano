@@ -72,11 +72,11 @@ enum class FontStretch
     Unknown,
     UltraCondensed,
     ExtraCondensed,
-    Condensed,       ///< 压缩
+    Condensed,  ///< 压缩
     SemiCondensed,
-    Normal,          ///< 正常
+    Normal,  ///< 正常
     SemiExpanded,
-    Expanded,        ///< 扩大
+    Expanded,  ///< 扩大
     ExtraExpanded,
     UltraExpanded,
 };

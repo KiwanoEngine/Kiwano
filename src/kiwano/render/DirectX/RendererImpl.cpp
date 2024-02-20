@@ -132,7 +132,7 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
     // Initialize other device resources
     if (SUCCEEDED(hr))
     {
-        RefPtr<RenderContextImpl> ctx =  MakePtr<RenderContextImpl>();
+        RefPtr<RenderContextImpl> ctx = MakePtr<RenderContextImpl>();
 
         hr = ctx->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
         if (SUCCEEDED(hr))
@@ -141,27 +141,27 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
         }
     }
 
-    //if (SUCCEEDED(hr))
+    // if (SUCCEEDED(hr))
     //{
-    //    IDWriteFactory* dwrite = d2d_res_->GetDWriteFactory();
-    //    if (dwrite)
-    //    {
-    //        ComPtr<IDWriteFontCollection> system_collection;
-    //        if (SUCCEEDED(dwrite->GetSystemFontCollection(&system_collection, FALSE)))
-    //        {
-    //            Vector<String> family_names;
-    //            if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
-    //            {
-    //                // dummy font
-    //                RefPtr<Font> font =  MakePtr<Font>();
-    //                for (const auto& name : family_names)
-    //                {
-    //                    FontCache::GetInstance().AddFontByFamily(name, font);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    //     IDWriteFactory* dwrite = d2d_res_->GetDWriteFactory();
+    //     if (dwrite)
+    //     {
+    //         ComPtr<IDWriteFontCollection> system_collection;
+    //         if (SUCCEEDED(dwrite->GetSystemFontCollection(&system_collection, FALSE)))
+    //         {
+    //             Vector<String> family_names;
+    //             if (SUCCEEDED(d2d_res_->GetFontFamilyNames(family_names, system_collection)))
+    //             {
+    //                 // dummy font
+    //                 RefPtr<Font> font =  MakePtr<Font>();
+    //                 for (const auto& name : family_names)
+    //                 {
+    //                     FontCache::GetInstance().AddFontByFamily(name, font);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
@@ -511,7 +511,7 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
 
                 if (SUCCEEDED(hr))
                 {
-                    frame.texture =  MakePtr<Texture>();
+                    frame.texture = MakePtr<Texture>();
                     ComPolicy::Set(frame.texture, bitmap);
 
                     frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
@@ -875,7 +875,7 @@ void RendererImpl::CreateShapeSink(ShapeMaker& maker)
 
         if (SUCCEEDED(hr))
         {
-            RefPtr<Shape> shape =  MakePtr<Shape>();
+            RefPtr<Shape> shape = MakePtr<Shape>();
             ComPolicy::Set(shape, geometry);
 
             maker.SetShape(shape);
@@ -1063,7 +1063,7 @@ RefPtr<RenderContext> RendererImpl::CreateTextureRenderContext(RefPtr<Texture> t
 
     if (SUCCEEDED(hr))
     {
-        RefPtr<RenderContextImpl> ptr =  MakePtr<RenderContextImpl>();
+        RefPtr<RenderContextImpl> ptr = MakePtr<RenderContextImpl>();
 
         ComPtr<ID2D1DeviceContext> render_ctx;
         hr = d2d_res_->GetDevice()->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,

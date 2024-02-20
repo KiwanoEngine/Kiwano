@@ -213,8 +213,8 @@ private:
     void Store(std::true_type, _Args&&... args)
     {
         storage_.is_small_ = true;
-        GetTypeinfo()         = &typeid(_Decayed);
-        GetSmallRTTI()       = SmallStorageRTTI::make<_Decayed>();
+        GetTypeinfo()      = &typeid(_Decayed);
+        GetSmallRTTI()     = SmallStorageRTTI::make<_Decayed>();
 
         ::new (GetSmallData()) _Decayed(std::forward<_Args>(args)...);
     }
@@ -223,8 +223,8 @@ private:
     void Store(std::false_type, _Args&&... args)
     {
         storage_.is_small_ = false;
-        GetTypeinfo()         = &typeid(_Decayed);
-        GetBigRTTI()         = BigStorageRTTI::make<_Decayed>();
+        GetTypeinfo()      = &typeid(_Decayed);
+        GetBigRTTI()       = BigStorageRTTI::make<_Decayed>();
 
         GetBigData() = ::new _Decayed(std::forward<_Args>(args)...);
     }
@@ -250,7 +250,7 @@ private:
     {
         if (rhs.HasValue())
         {
-            GetTypeinfo()         = rhs.GetTypeinfo();
+            GetTypeinfo()      = rhs.GetTypeinfo();
             storage_.is_small_ = rhs.storage_.is_small_;
 
             if (rhs.HasSmallType())
@@ -270,7 +270,7 @@ private:
     {
         if (rhs.HasValue())
         {
-            GetTypeinfo()         = rhs.GetTypeinfo();
+            GetTypeinfo()      = rhs.GetTypeinfo();
             storage_.is_small_ = rhs.storage_.is_small_;
 
             if (rhs.HasSmallType())
@@ -280,8 +280,8 @@ private:
             }
             else
             {
-                GetBigRTTI()     = rhs.GetBigRTTI();
-                GetBigData()     = rhs.GetBigData();
+                GetBigRTTI()      = rhs.GetBigRTTI();
+                GetBigData()      = rhs.GetBigData();
                 rhs.GetTypeinfo() = nullptr;
             }
         }
@@ -431,15 +431,15 @@ private:
     struct SmallStorage
     {
         const std::type_info* info_;
-        SmallStorageRTTI rtti_;
-        char             buffer_[ANY_SMALL_SPACE_SIZE];
+        SmallStorageRTTI      rtti_;
+        char                  buffer_[ANY_SMALL_SPACE_SIZE];
     };
 
     struct BigStorage
     {
         const std::type_info* info_;
-        BigStorageRTTI   rtti_;
-        void*            ptr_;
+        BigStorageRTTI        rtti_;
+        void*                 ptr_;
     };
 
     struct Storage

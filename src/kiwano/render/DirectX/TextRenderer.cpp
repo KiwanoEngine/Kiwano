@@ -246,8 +246,8 @@ STDMETHODIMP TextRenderer::DrawUnderline(__maybenull void* clientDrawingContext,
         {
             if (pDefaultOutlineBrush_)
             {
-                pContext_->DrawGeometry(pUnderlineGeometry.Get(), pDefaultOutlineBrush_.Get(),
-                                        fDefaultOutlineWidth_, pDefaultStrokeStyle_.Get());
+                pContext_->DrawGeometry(pUnderlineGeometry.Get(), pDefaultOutlineBrush_.Get(), fDefaultOutlineWidth_,
+                                        pDefaultStrokeStyle_.Get());
 
                 ++cPrimitivesCount_;
             }

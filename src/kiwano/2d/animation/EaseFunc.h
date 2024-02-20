@@ -66,4 +66,4 @@ struct Ease
     static KGE_API EaseFunc SineInOut;
 };
 
-}
+}  // namespace kiwano

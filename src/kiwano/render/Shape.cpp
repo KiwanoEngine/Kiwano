@@ -71,7 +71,7 @@ Rect Shape::GetBoundingBox(const Matrix3x2& transform) const
 float Shape::GetLength() const
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
-    float length = 0.f;
+    float length   = 0.f;
     auto  geometry = ComPolicy::Get<ID2D1Geometry>(this);
     if (geometry)
     {
@@ -91,7 +91,7 @@ bool Shape::ComputePointAtLength(float length, Point& point, Vec2& tangent) cons
     if (geometry)
     {
         HRESULT hr = geometry->ComputePointAtLength(length, D2D1::Matrix3x2F::Identity(), DX::ConvertToPoint2F(&point),
-                                                DX::ConvertToPoint2F(&tangent));
+                                                    DX::ConvertToPoint2F(&tangent));
 
         return SUCCEEDED(hr);
     }
@@ -127,7 +127,7 @@ bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
     BOOL ret = 0;
     // no matter it failed or not
     geometry->FillContainsPoint(DX::ConvertToPoint2F(point), DX::ConvertToMatrix3x2F(transform),
-                            D2D1_DEFAULT_FLATTENING_TOLERANCE, &ret);
+                                D2D1_DEFAULT_FLATTENING_TOLERANCE, &ret);
     return !!ret;
 #else
     return false;  // not supported
@@ -136,35 +136,35 @@ bool Shape::ContainsPoint(const Point& point, const Matrix3x2* transform) const
 
 RefPtr<Shape> Shape::CreateLine(const Point& begin, const Point& end)
 {
-    RefPtr<Shape> output =  MakePtr<Shape>();
+    RefPtr<Shape> output = MakePtr<Shape>();
     Renderer::GetInstance().CreateLineShape(*output, begin, end);
     return output;
 }
 
 RefPtr<Shape> Shape::CreateRect(const Rect& rect)
 {
-    RefPtr<Shape> output =  MakePtr<Shape>();
+    RefPtr<Shape> output = MakePtr<Shape>();
     Renderer::GetInstance().CreateRectShape(*output, rect);
     return output;
 }
 
 RefPtr<Shape> Shape::CreateRoundedRect(const Rect& rect, const Vec2& radius)
 {
-    RefPtr<Shape> output =  MakePtr<Shape>();
+    RefPtr<Shape> output = MakePtr<Shape>();
     Renderer::GetInstance().CreateRoundedRectShape(*output, rect, radius);
     return output;
 }
 
 RefPtr<Shape> Shape::CreateCircle(const Point& center, float radius)
 {
-    RefPtr<Shape> output =  MakePtr<Shape>();
+    RefPtr<Shape> output = MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, Vec2{ radius, radius });
     return output;
 }
 
 RefPtr<Shape> Shape::CreateEllipse(const Point& center, const Vec2& radius)
 {
-    RefPtr<Shape> output =  MakePtr<Shape>();
+    RefPtr<Shape> output = MakePtr<Shape>();
     Renderer::GetInstance().CreateEllipseShape(*output, center, radius);
     return output;
 }

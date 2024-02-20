@@ -25,7 +25,7 @@
 namespace kiwano
 {
 
- // 预留出描边的空间
+// 预留出描边的空间
 const Point cached_texture_offset = Point{ 5, 5 };
 
 TextActor::TextActor()
@@ -77,13 +77,13 @@ void TextActor::SetText(StringView text)
 {
     if (!layout_)
     {
-        layout_ =  MakePtr<TextLayout>();
+        layout_ = MakePtr<TextLayout>();
     }
 
     try
     {
         layout_->Reset(text, style_);
-        content_ = text;
+        content_        = text;
         is_cache_dirty_ = true;
     }
     catch (SystemError& e)
@@ -193,7 +193,7 @@ void TextActor::SetFillColor(const Color& color)
     }
     else
     {
-        SetFillBrush( MakePtr<Brush>(color));
+        SetFillBrush(MakePtr<Brush>(color));
     }
 }
 
@@ -206,7 +206,7 @@ void TextActor::SetOutlineColor(const Color& outline_color)
     }
     else
     {
-        SetOutlineBrush( MakePtr<Brush>(outline_color));
+        SetOutlineBrush(MakePtr<Brush>(outline_color));
     }
 }
 
@@ -227,7 +227,7 @@ void TextActor::SetPreRenderEnabled(bool enable)
     {
         if (enable)
         {
-            texture_cached_ =  MakePtr<Texture>();
+            texture_cached_ = MakePtr<Texture>();
         }
         else
         {
@@ -290,7 +290,7 @@ void TextActor::UpdateCachedTexture()
     if (!render_ctx_)
     {
         const auto pixelSize = PixelSize((uint32_t)math::Ceil(expectedSize.x), (uint32_t)math::Ceil(expectedSize.y));
-        render_ctx_ = RenderContext::Create(texture_cached_, pixelSize);
+        render_ctx_          = RenderContext::Create(texture_cached_, pixelSize);
     }
     else if (render_ctx_->GetSize() != expectedSize)
     {

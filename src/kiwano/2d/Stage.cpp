@@ -51,13 +51,13 @@ void Stage::RenderBorder(RenderContext& ctx)
 
     if (!border_fill_brush_)
     {
-        border_fill_brush_ =  MakePtr<Brush>();
+        border_fill_brush_ = MakePtr<Brush>();
         border_fill_brush_->SetColor(Color(Color::Red, .4f));
     }
 
     if (!border_stroke_brush_)
     {
-        border_stroke_brush_ =  MakePtr<Brush>();
+        border_stroke_brush_ = MakePtr<Brush>();
         border_stroke_brush_->SetColor(Color(Color::Red, .8f));
     }
 

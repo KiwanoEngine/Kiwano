@@ -183,13 +183,12 @@ struct GlobalData
     String path;
 };
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView type,
-                          StringView file)
+void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView type, StringView file)
 {
     if (type == "gif")
     {
         // GIF image
-        RefPtr<GifImage> gif =  MakePtr<GifImage>();
+        RefPtr<GifImage> gif = MakePtr<GifImage>();
         if (gif && gif->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, gif);
@@ -199,7 +198,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     else if (!file.empty())
     {
         // Simple image
-        RefPtr<Texture> texture =  MakePtr<Texture>();
+        RefPtr<Texture> texture = MakePtr<Texture>();
         if (texture && texture->Load(gdata->path + file.data()))
         {
             cache->AddObject(id, texture);
@@ -229,7 +228,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
 
     if (!frames.empty())
     {
-        RefPtr<FrameSequence> frame_seq =  MakePtr<FrameSequence>(frames);
+        RefPtr<FrameSequence> frame_seq = MakePtr<FrameSequence>(frames);
         if (frame_seq)
         {
             cache->AddObject(id, frame_seq);
@@ -240,8 +239,8 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file, int rows,
-                          int cols, int max_num, float padding_x, float padding_y)
+void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file, int rows, int cols,
+                          int max_num, float padding_x, float padding_y)
 {
     if (!file.empty())
     {
@@ -251,7 +250,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
             SpriteFrame frame;
             if (frame.Load(gdata->path + file.data()))
             {
-                RefPtr<FrameSequence> frame_seq =  MakePtr<FrameSequence>();
+                RefPtr<FrameSequence> frame_seq = MakePtr<FrameSequence>();
                 if (frame_seq)
                 {
                     frame_seq->AddFrames(frame.Split(cols, rows, max_num, padding_x, padding_y));
@@ -263,7 +262,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
         else
         {
             // Simple image
-            RefPtr<Texture> texture =  MakePtr<Texture>();
+            RefPtr<Texture> texture = MakePtr<Texture>();
             if (texture && texture->Load(gdata->path + file.data()))
             {
                 cache->AddObject(id, texture);

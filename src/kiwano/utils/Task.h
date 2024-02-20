@@ -121,10 +121,10 @@ private:
     void Reset();
 
 private:
-    bool      running_;
-    bool      removeable_;
+    bool           running_;
+    bool           removeable_;
     RefPtr<Ticker> ticker_;
-    Callback  callback_;
+    Callback       callback_;
 };
 
 inline void Task::Remove()

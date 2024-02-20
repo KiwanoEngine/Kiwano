@@ -200,7 +200,8 @@ public:
         {
         }
 
-        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor, float max_force = 0.f, float max_torque = 0.f)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& anchor, float max_force = 0.f,
+              float max_torque = 0.f)
             : ParamBase(body_a, body_b)
             , anchor(anchor)
             , max_force(max_force)
@@ -354,14 +355,14 @@ public:
     /// @brief 平移关节参数
     struct Param : public Joint::ParamBase
     {
-        Point anchor;        ///< 关节位置
-        Vec2  axis;          ///< 物体A滑动的方向
-        bool  enable_limit;  ///< 是否启用限制
+        Point anchor;             ///< 关节位置
+        Vec2  axis;               ///< 物体A滑动的方向
+        bool  enable_limit;       ///< 是否启用限制
         float lower_translation;  ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
         float upper_translation;  ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
-        bool  enable_motor;     ///< 是否启用马达
-        float max_motor_force;  ///< 最大马达力 [N]
-        float motor_speed;      ///< 马达转速 [degree/s]
+        bool  enable_motor;       ///< 是否启用马达
+        float max_motor_force;    ///< 最大马达力 [N]
+        float motor_speed;        ///< 马达转速 [degree/s]
 
         Param()
             : Param(nullptr, nullptr, Point(), Vec2())
@@ -535,10 +536,10 @@ public:
     /// @brief 旋转关节参数
     struct Param : public Joint::ParamBase
     {
-        Point anchor;        ///< 关节位置
-        bool  enable_limit;  ///< 是否启用限制
-        float lower_angle;  ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
-        float upper_angle;  ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
+        Point anchor;            ///< 关节位置
+        bool  enable_limit;      ///< 是否启用限制
+        float lower_angle;       ///< 移动的最小限制，与方向同向为正，反向为负，启用限制后才有效果
+        float upper_angle;       ///< 移动的最大限制，与方向同向为正，反向为负，启用限制后才有效果
         bool  enable_motor;      ///< 是否启用马达
         float max_motor_torque;  ///< 最大马达力 [N]
         float motor_speed;       ///< 马达转速 [degree/s]
@@ -649,7 +650,8 @@ public:
         {
         }
 
-        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& local_anchor_a, const Point& local_anchor_b)
+        Param(RefPtr<PhysicBody> body_a, RefPtr<PhysicBody> body_b, const Point& local_anchor_a,
+              const Point& local_anchor_b)
             : ParamBase(body_a, body_b)
             , local_anchor_a(local_anchor_a)
             , local_anchor_b(local_anchor_b)
