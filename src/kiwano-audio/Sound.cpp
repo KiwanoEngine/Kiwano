@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-audio/AudioModule.h>
+#include <kiwano-audio/Module.h>
 #include <kiwano-audio/Sound.h>
 #include <kiwano/utils/Logger.h>
 #include <xaudio2.h>
@@ -31,13 +31,13 @@ namespace audio
 Sound::Sound(StringView file_path)
     : Sound()
 {
-    Load(AudioModule::GetInstance().Decode(file_path));
+    Load(Module::GetInstance().Decode(file_path));
 }
 
 Sound::Sound(const Resource& res, StringView ext)
     : Sound()
 {
-    Load(AudioModule::GetInstance().Decode(res, ext));
+    Load(Module::GetInstance().Decode(res, ext));
 }
 
 Sound::Sound(RefPtr<AudioData> data)
@@ -69,7 +69,7 @@ bool Sound::Load(RefPtr<AudioData> data)
     {
         Close();
     }
-    if (!AudioModule::GetInstance().CreateSound(*this, data))
+    if (!Module::GetInstance().CreateSound(*this, data))
     {
         return false;
     }

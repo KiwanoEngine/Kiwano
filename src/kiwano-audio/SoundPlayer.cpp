@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-audio/SoundPlayer.h>
-#include <kiwano-audio/AudioModule.h>
+#include <kiwano-audio/Module.h>
 #include <kiwano/platform/Application.h>
 
 namespace kiwano
@@ -62,7 +62,7 @@ RefPtr<AudioData> SoundPlayer::Preload(StringView file_path)
     {
         return cache_.at(hash_code);
     }
-    RefPtr<AudioData> ptr = AudioModule::GetInstance().Decode(file_path);
+    RefPtr<AudioData> ptr = Module::GetInstance().Decode(file_path);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));
@@ -77,7 +77,7 @@ RefPtr<AudioData> SoundPlayer::Preload(const Resource& res, StringView ext)
     {
         return cache_.at(hash_code);
     }
-    RefPtr<AudioData> ptr = AudioModule::GetInstance().Decode(res, ext);
+    RefPtr<AudioData> ptr = Module::GetInstance().Decode(res, ext);
     if (ptr)
     {
         cache_.insert(std::make_pair(hash_code, ptr));

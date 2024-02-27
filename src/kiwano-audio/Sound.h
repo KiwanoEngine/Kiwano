@@ -26,7 +26,7 @@ namespace kiwano
 {
 namespace audio
 {
-class AudioModule;
+class Module;
 class Sound;
 class SoundPlayer;
 
@@ -84,7 +84,7 @@ public:
  */
 class KGE_API Sound : public NativeObject
 {
-    friend class AudioModule;
+    friend class Module;
     friend class SoundPlayer;
 
 public:

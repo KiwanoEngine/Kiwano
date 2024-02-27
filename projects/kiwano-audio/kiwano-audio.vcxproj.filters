@@ -5,7 +5,7 @@
     <ClInclude Include="..\..\src\kiwano-audio\Sound.h" />
     <ClInclude Include="..\..\src\kiwano-audio\SoundPlayer.h" />
     <ClInclude Include="..\..\src\kiwano-audio\Transcoder.h" />
-    <ClInclude Include="..\..\src\kiwano-audio\AudioModule.h" />
+    <ClInclude Include="..\..\src\kiwano-audio\Module.h" />
     <ClInclude Include="..\..\src\kiwano-audio\AudioData.h" />
     <ClInclude Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.h">
       <Filter>MediaFoundation</Filter>
@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano-audio\Sound.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\SoundPlayer.cpp" />
-    <ClCompile Include="..\..\src\kiwano-audio\AudioModule.cpp" />
+    <ClCompile Include="..\..\src\kiwano-audio\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\AudioData.cpp" />
     <ClCompile Include="..\..\src\kiwano-audio\MediaFoundation\MFTranscoder.cpp">
       <Filter>MediaFoundation</Filter>

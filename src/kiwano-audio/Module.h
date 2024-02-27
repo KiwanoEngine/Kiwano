@@ -44,11 +44,11 @@ namespace audio
  * \~chinese
  * @brief ÒôÆµÄ£¿é
  */
-class KGE_API AudioModule
-    : public Singleton<AudioModule>
-    , public Module
+class KGE_API Module
+    : public Singleton<Module>
+    , public kiwano::Module
 {
-    friend Singleton<AudioModule>;
+    friend Singleton<Module>;
 
 public:
     /// \~chinese
@@ -89,10 +89,10 @@ public:
 
     void DestroyModule() override;
 
-    ~AudioModule();
+    ~Module();
 
 private:
-    AudioModule();
+    Module();
 
 private:
     IXAudio2*               x_audio2_;
