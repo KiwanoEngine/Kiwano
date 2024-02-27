@@ -18,58 +18,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <kiwano/2d/LayerActor.h>
+#include <kiwano-imgui/Layer.h>
 
 namespace kiwano
 {
 namespace imgui
 {
 
-/// \~chinese
-/// @brief ImGui管道
-using ImGuiPipeline = Function<void()>;
-
-/**
- * \~chinese
- * @brief ImGui图层
- */
-class ImGuiLayer : public LayerActor
+Layer::Layer()
 {
-public:
-    ImGuiLayer();
+    SetSwallowEvents(true);
+}
 
-    /// \~chinese
-    /// @brief 创建ImGui图层
-    /// @param name 元素名称
-    /// @param item 管道
-    ImGuiLayer(StringView name, const ImGuiPipeline& item);
+Layer::Layer(StringView name, const Pipeline& item)
+    : Layer()
+{
+    AddItem(name, item);
+}
 
-    virtual ~ImGuiLayer();
+Layer::~Layer() {}
 
-    /// \~chinese
-    /// @brief 添加 ImGui 元素
-    /// @param name 元素名称
-    /// @param item 管道
-    void AddItem(StringView name, const ImGuiPipeline& item);
+void Layer::OnRender(RenderContext& ctx)
+{
+    for (const auto& pipeline : pipelines_)
+    {
+        pipeline.second();
+    }
+}
 
-    /// \~chinese
-    /// @brief 移除 ImGui 元素
-    /// @param name 元素名称
-    void RemoveItem(StringView name);
+bool Layer::CheckVisibility(RenderContext& ctx) const
+{
+    return true;
+}
 
-    // 移除所有元素
-    /// \~chinese
-    /// @brief 移除所有元素
-    void RemoveAllItems();
+void Layer::AddItem(StringView name, const Pipeline& item)
+{
+    pipelines_[name] = item;
+}
 
-public:
-    void OnRender(RenderContext& ctx) override;
+void Layer::RemoveItem(StringView name)
+{
+    auto iter = pipelines_.find(name);
+    if (iter != pipelines_.end())
+    {
+        pipelines_.erase(iter);
+    }
+}
 
-    bool CheckVisibility(RenderContext& ctx) const override;
-
-private:
-    Map<String, ImGuiPipeline> pipelines_;
-};
+void Layer::RemoveAllItems()
+{
+    pipelines_.clear();
+}
 }  // namespace imgui
 }  // namespace kiwano

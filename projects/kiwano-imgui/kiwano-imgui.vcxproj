@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano-imgui\ImGuiLayer.h" />
-    <ClInclude Include="..\..\src\kiwano-imgui\ImGuiModule.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\Layer.h" />
+    <ClInclude Include="..\..\src\kiwano-imgui\Module.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.h" />
     <ClInclude Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.h" />
@@ -27,8 +27,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-imgui\ImGuiLayer.cpp" />
-    <ClCompile Include="..\..\src\kiwano-imgui\ImGuiModule.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\Layer.cpp" />
+    <ClCompile Include="..\..\src\kiwano-imgui\Module.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx10.cpp" />
     <ClCompile Include="..\..\src\kiwano-imgui\imgui_impl\imgui_impl_dx11.cpp" />
   </ItemGroup>

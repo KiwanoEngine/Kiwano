@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include <kiwano-imgui/ImGuiLayer.h>
-#include <kiwano-imgui/ImGuiModule.h>
+#include <kiwano-imgui/Layer.h>
+#include <kiwano-imgui/Module.h>
 
 // ImGui
 #include <imgui/imgui.h>

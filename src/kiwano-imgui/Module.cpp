@@ -5,7 +5,7 @@
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano-imgui/ImGuiModule.h>
+#include <kiwano-imgui/Module.h>
 #include <kiwano-imgui/imgui_impl/imgui_impl.h>
 
 namespace kiwano
@@ -104,9 +104,9 @@ ImGuiKey KeyCodeToImGuiKey(const KeyCode code)
     }
 }
 
-ImGuiModule::ImGuiModule() {}
+Module::Module() {}
 
-void ImGuiModule::SetupModule()
+void Module::SetupModule()
 {
     window_ = Application::GetInstance().GetWindow();
 
@@ -123,7 +123,7 @@ void ImGuiModule::SetupModule()
     ImGui_Impl_Init();
 }
 
-void ImGuiModule::InitPlatform()
+void Module::InitPlatform()
 {
     ImGuiIO& io = ImGui::GetIO();
     IM_ASSERT(io.BackendPlatformUserData == nullptr && "Already initialized a platform backend!");
@@ -143,21 +143,21 @@ void ImGuiModule::InitPlatform()
     io.ImeWindowHandle     = window_->GetHandle();
 }
 
-void ImGuiModule::DestroyModule()
+void Module::DestroyModule()
 {
     ImGui_Impl_Shutdown();
     this->ShutdownPlatform();
     ImGui::DestroyContext();
 }
 
-void ImGuiModule::ShutdownPlatform()
+void Module::ShutdownPlatform()
 {
     ImGuiIO& io                = ImGui::GetIO();
     io.BackendPlatformName     = nullptr;
     io.BackendPlatformUserData = nullptr;
 }
 
-void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
+void Module::OnUpdate(UpdateModuleContext& ctx)
 {
     ImGuiIO& io = ImGui::GetIO();
 
@@ -182,7 +182,7 @@ void ImGuiModule::OnUpdate(UpdateModuleContext& ctx)
     ctx.Next();
 }
 
-void ImGuiModule::BeforeRender(RenderModuleContext& ctx)
+void Module::BeforeRender(RenderModuleContext& ctx)
 {
     ImGui_Impl_NewFrame();
 
@@ -195,14 +195,14 @@ void ImGuiModule::BeforeRender(RenderModuleContext& ctx)
     ImGui::NewFrame();
 }
 
-void ImGuiModule::AfterRender(RenderModuleContext& ctx)
+void Module::AfterRender(RenderModuleContext& ctx)
 {
     ImGui::Render();
 
     ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImGuiModule::HandleEvent(EventModuleContext& ctx)
+void Module::HandleEvent(EventModuleContext& ctx)
 {
     if (ImGui::GetCurrentContext() != NULL)
     {
@@ -283,7 +283,7 @@ void ImGuiModule::HandleEvent(EventModuleContext& ctx)
     ctx.Next();
 }
 
-void ImGuiModule::UpdateMouseCursor()
+void Module::UpdateMouseCursor()
 {
     if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange)
         return;

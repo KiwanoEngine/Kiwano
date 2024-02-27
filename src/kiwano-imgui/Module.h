@@ -18,56 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-imgui/ImGuiLayer.h>
+#pragma once
+#include <kiwano/core/Common.h>
+#include <kiwano/base/Module.h>
+#include <kiwano/platform/Window.h>
 
 namespace kiwano
 {
 namespace imgui
 {
 
-ImGuiLayer::ImGuiLayer()
+/**
+ * \~chinese
+ * @brief ImGuiÄ£¿é
+ */
+class Module
+    : public Singleton<Module>
+    , public kiwano::Module
 {
-    SetSwallowEvents(true);
-}
+    friend Singleton<Module>;
 
-ImGuiLayer::ImGuiLayer(StringView name, const ImGuiPipeline& item)
-    : ImGuiLayer()
-{
-    AddItem(name, item);
-}
+public:
+    Module();
 
-ImGuiLayer::~ImGuiLayer() {}
+    void SetupModule() override;
 
-void ImGuiLayer::OnRender(RenderContext& ctx)
-{
-    for (const auto& pipeline : pipelines_)
-    {
-        pipeline.second();
-    }
-}
+    void DestroyModule() override;
 
-bool ImGuiLayer::CheckVisibility(RenderContext& ctx) const
-{
-    return true;
-}
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
-void ImGuiLayer::AddItem(StringView name, const ImGuiPipeline& item)
-{
-    pipelines_[name] = item;
-}
+    void BeforeRender(RenderModuleContext& ctx) override;
 
-void ImGuiLayer::RemoveItem(StringView name)
-{
-    auto iter = pipelines_.find(name);
-    if (iter != pipelines_.end())
-    {
-        pipelines_.erase(iter);
-    }
-}
+    void AfterRender(RenderModuleContext& ctx) override;
 
-void ImGuiLayer::RemoveAllItems()
-{
-    pipelines_.clear();
-}
+    void HandleEvent(EventModuleContext& ctx) override;
+
+private:
+    void InitPlatform();
+
+    void ShutdownPlatform();
+
+    void UpdateMouseCursor();
+
+private:
+    RefPtr<Window> window_;
+};
+
 }  // namespace imgui
 }  // namespace kiwano

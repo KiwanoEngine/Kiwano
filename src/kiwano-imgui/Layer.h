@@ -19,50 +19,57 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Common.h>
-#include <kiwano/base/Module.h>
-#include <kiwano/platform/Window.h>
+#include <kiwano/2d/LayerActor.h>
 
 namespace kiwano
 {
 namespace imgui
 {
 
+/// \~chinese
+/// @brief ImGui管道
+using Pipeline = Function<void()>;
+
 /**
  * \~chinese
- * @brief ImGui模块
+ * @brief ImGui图层
  */
-class ImGuiModule
-    : public Singleton<ImGuiModule>
-    , public Module
+class Layer : public LayerActor
 {
-    friend Singleton<ImGuiModule>;
+public:
+    Layer();
+
+    /// \~chinese
+    /// @brief 创建ImGui图层
+    /// @param name 元素名称
+    /// @param item 管道
+    Layer(StringView name, const Pipeline& item);
+
+    virtual ~Layer();
+
+    /// \~chinese
+    /// @brief 添加 ImGui 元素
+    /// @param name 元素名称
+    /// @param item 管道
+    void AddItem(StringView name, const Pipeline& item);
+
+    /// \~chinese
+    /// @brief 移除 ImGui 元素
+    /// @param name 元素名称
+    void RemoveItem(StringView name);
+
+    // 移除所有元素
+    /// \~chinese
+    /// @brief 移除所有元素
+    void RemoveAllItems();
 
 public:
-    ImGuiModule();
+    void OnRender(RenderContext& ctx) override;
 
-    void SetupModule() override;
-
-    void DestroyModule() override;
-
-    void OnUpdate(UpdateModuleContext& ctx) override;
-
-    void BeforeRender(RenderModuleContext& ctx) override;
-
-    void AfterRender(RenderModuleContext& ctx) override;
-
-    void HandleEvent(EventModuleContext& ctx) override;
+    bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    void InitPlatform();
-
-    void ShutdownPlatform();
-
-    void UpdateMouseCursor();
-
-private:
-    RefPtr<Window> window_;
+    Map<String, Pipeline> pipelines_;
 };
-
 }  // namespace imgui
 }  // namespace kiwano
