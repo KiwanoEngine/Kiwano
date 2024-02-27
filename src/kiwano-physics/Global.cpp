@@ -24,8 +24,6 @@ namespace kiwano
 {
 namespace physics
 {
-namespace global
-{
 
 namespace
 {
@@ -52,6 +50,17 @@ Vec2 WorldToLocal(const b2Vec2& pos)
     return Point(WorldToLocal(pos.x), WorldToLocal(pos.y));
 }
 
+Vector<Vec2> WorldToLocal(const Vector<b2Vec2>& b2vertexs)
+{
+    Vector<Vec2> vertexs;
+    vertexs.reserve(b2vertexs.size());
+    for (const auto& v : b2vertexs)
+    {
+        vertexs.push_back(WorldToLocal(v));
+    }
+    return vertexs;
+}
+
 float LocalToWorld(float value)
 {
     return value / global_scale;
@@ -62,7 +71,16 @@ b2Vec2 LocalToWorld(const Vec2& pos)
     return b2Vec2(LocalToWorld(pos.x), LocalToWorld(pos.y));
 }
 
-}  // namespace global
+Vector<b2Vec2> LocalToWorld(const Vector<Vec2>& vertexs)
+{
+    Vector<b2Vec2> b2vertexs;
+    b2vertexs.reserve(vertexs.size());
+    for (const auto& v : vertexs)
+    {
+        b2vertexs.push_back(LocalToWorld(v));
+    }
+    return b2vertexs;
+}
 
 }  // namespace physics
 }  // namespace kiwano

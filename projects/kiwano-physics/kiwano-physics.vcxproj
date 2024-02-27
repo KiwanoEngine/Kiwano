@@ -19,25 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano-physics\PhysicBody.h" />
+    <ClInclude Include="..\..\src\kiwano-physics\Body.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Contact.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\ContactEdge.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\ContactEvent.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\Fixture.h" />
     <ClInclude Include="..\..\src\kiwano-physics\Global.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\Joint.h" />
     <ClInclude Include="..\..\src\kiwano-physics\kiwano-physics.h" />
-    <ClInclude Include="..\..\src\kiwano-physics\PhysicWorld.h" />
+    <ClInclude Include="..\..\src\kiwano-physics\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano-physics\PhysicBody.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\Contact.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\ContactEdge.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\ContactEvent.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\Fixture.cpp" />
+    <ClCompile Include="..\..\src\kiwano-physics\Body.cpp" />
     <ClCompile Include="..\..\src\kiwano-physics\Global.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\Joint.cpp" />
-    <ClCompile Include="..\..\src\kiwano-physics\PhysicWorld.cpp" />
+    <ClCompile Include="..\..\src\kiwano-physics\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DF599AFB-744F-41E5-AF0C-2146F90575C8}</ProjectGuid>

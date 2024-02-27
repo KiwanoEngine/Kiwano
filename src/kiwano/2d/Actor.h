@@ -33,11 +33,6 @@ class Stage;
 class Director;
 class RenderContext;
 
-namespace physics
-{
-class PhysicBody;
-}
-
 /// \~chinese
 /// @brief 角色列表
 typedef IntrusiveList<RefPtr<Actor>> ActorList;
@@ -425,10 +420,6 @@ public:
     void SetEventDispatchEnabled(bool enabled);
 
     /// \~chinese
-    /// @brief 获取物理身体
-    physics::PhysicBody* GetPhysicBody() const;
-
-    /// \~chinese
     /// @brief 序列化
     void DoSerialize(Serializer* serializer) const override;
 
@@ -482,12 +473,6 @@ protected:
     /// @brief 设置节点所在舞台
     void SetStage(Stage* stage);
 
-    /// \~chinese
-    /// @brief 设置物理身体
-    void SetPhysicBody(physics::PhysicBody* body);
-
-    friend physics::PhysicBody;
-
 private:
     bool         visible_;
     bool         update_pausing_;
@@ -506,18 +491,17 @@ private:
     };
     mutable Flag<uint8_t> dirty_flag_;
 
-    int                  z_order_;
-    float                opacity_;
-    float                displayed_opacity_;
-    Actor*               parent_;
-    Stage*               stage_;
-    physics::PhysicBody* physic_body_;
-    size_t               hash_name_;
-    Point                anchor_;
-    Size                 size_;
-    ActorList            children_;
-    UpdateCallback       cb_update_;
-    Transform            transform_;
+    int            z_order_;
+    float          opacity_;
+    float          displayed_opacity_;
+    Actor*         parent_;
+    Stage*         stage_;
+    size_t         hash_name_;
+    Point          anchor_;
+    Size           size_;
+    ActorList      children_;
+    UpdateCallback cb_update_;
+    Transform      transform_;
 
     mutable Matrix3x2 transform_matrix_;
     mutable Matrix3x2 transform_matrix_inverse_;
@@ -774,16 +758,6 @@ inline void Actor::SetHeight(float height)
 inline void Actor::SetSkew(float skewx, float skewy)
 {
     this->SetSkew(Vec2(skewx, skewy));
-}
-
-inline physics::PhysicBody* Actor::GetPhysicBody() const
-{
-    return physic_body_;
-}
-
-inline void Actor::SetPhysicBody(physics::PhysicBody* body)
-{
-    physic_body_ = body;
 }
 
 }  // namespace kiwano

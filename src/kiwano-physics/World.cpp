@@ -18,15 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano-physics/PhysicWorld.h>
-#include <kiwano-physics/ContactEvent.h>
+#include <kiwano-physics/World.h>
 
 namespace kiwano
 {
 namespace physics
 {
 
-class PhysicWorld::DebugDrawer : public b2Draw
+const float FIXED_TIMESTEP = 1.f / 60.f;
+
+class World::DebugDrawer : public b2Draw
 {
 public:
     DebugDrawer(const Size& size)
@@ -71,7 +72,7 @@ public:
         for (int32 i = 0; i < vertexCount; ++i)
         {
             b2Vec2 p2 = vertices[i];
-            ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+            ctx_->DrawLine(WorldToLocal(p1), WorldToLocal(p2));
             p1 = p2;
         }
     }
@@ -81,7 +82,7 @@ public:
         Vector<Point> local_vertices;
         for (int32 i = 0; i < vertexCount; ++i)
         {
-            local_vertices.push_back(global::WorldToLocal(vertices[i]));
+            local_vertices.push_back(WorldToLocal(vertices[i]));
         }
         RefPtr<Shape> polygon = Shape::CreatePolygon(local_vertices);
 
@@ -92,19 +93,19 @@ public:
     void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override
     {
         SetLineColor(color);
-        ctx_->DrawCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+        ctx_->DrawCircle(WorldToLocal(center), WorldToLocal(radius));
     }
 
     void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) override
     {
         SetFillColor(color);
-        ctx_->FillCircle(global::WorldToLocal(center), global::WorldToLocal(radius));
+        ctx_->FillCircle(WorldToLocal(center), WorldToLocal(radius));
     }
 
     void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override
     {
         SetLineColor(color);
-        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(WorldToLocal(p1), WorldToLocal(p2));
     }
 
     void DrawTransform(const b2Transform& xf) override
@@ -118,41 +119,23 @@ public:
         p2 = p1 + k_axisScale * xf.q.GetXAxis();
 
         SetLineColor(red);
-        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(WorldToLocal(p1), WorldToLocal(p2));
 
         p2 = p1 + k_axisScale * xf.q.GetYAxis();
 
         SetLineColor(green);
-        ctx_->DrawLine(global::WorldToLocal(p1), global::WorldToLocal(p2));
+        ctx_->DrawLine(WorldToLocal(p1), WorldToLocal(p2));
     }
 
     void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color) override
     {
         SetFillColor(color);
-        ctx_->FillCircle(global::WorldToLocal(p), global::WorldToLocal(size));
+        ctx_->FillCircle(WorldToLocal(p), WorldToLocal(size));
     }
 
 private:
     RefPtr<Canvas>              canvas_;
     RefPtr<CanvasRenderContext> ctx_;
-};
-
-class DestructionListener : public b2DestructionListener
-{
-    Function<void(b2Joint*)> joint_destruction_callback_;
-
-public:
-    DestructionListener(Function<void(b2Joint*)> callback)
-        : joint_destruction_callback_(callback)
-    {
-    }
-
-    void SayGoodbye(b2Joint* joint) override
-    {
-        joint_destruction_callback_(joint);
-    }
-
-    void SayGoodbye(b2Fixture* fixture) override {}
 };
 
 class ContactListener : public b2ContactListener
@@ -167,27 +150,21 @@ public:
 
     void BeginContact(b2Contact* b2contact) override
     {
-        Contact contact;
-        contact.SetB2Contact(b2contact);
-
-        RefPtr<ContactBeginEvent> evt = new ContactBeginEvent(contact);
+        RefPtr<ContactBeginEvent> evt = new ContactBeginEvent(b2contact);
         dispatcher_(evt.Get());
     }
 
     void EndContact(b2Contact* b2contact) override
     {
-        PhysicBody* body_a = static_cast<PhysicBody*>(b2contact->GetFixtureA()->GetBody()->GetUserData());
-        PhysicBody* body_b = static_cast<PhysicBody*>(b2contact->GetFixtureB()->GetBody()->GetUserData());
+        Body* body_a = static_cast<Body*>(b2contact->GetFixtureA()->GetBody()->GetUserData());
+        Body* body_b = static_cast<Body*>(b2contact->GetFixtureB()->GetBody()->GetUserData());
         if (!body_a || !body_b || !body_a->GetBoundActor() || !body_b->GetBoundActor())
         {
             // Don't dispatch contact event after the body has been detached
             return;
         }
 
-        Contact contact;
-        contact.SetB2Contact(b2contact);
-
-        RefPtr<ContactEndEvent> evt = new ContactEndEvent(contact);
+        RefPtr<ContactEndEvent> evt = new ContactEndEvent(b2contact);
         dispatcher_(evt.Get());
     }
 
@@ -204,138 +181,50 @@ public:
     }
 };
 
-PhysicWorld::PhysicWorld(const Vec2& gravity)
-    : PhysicWorld()
-{
-    SetGravity(gravity);
-}
-
-PhysicWorld::PhysicWorld()
-    : world_(b2Vec2(0, 10.0f))
+World::World(const b2Vec2& gravity)
+    : world_(gravity)
     , vel_iter_(6)
     , pos_iter_(2)
+    , fixed_acc_(0.f)
 {
-    SetName("KGE_PHYSIC_WORLD");
+    SetName(KGE_COMP_PHYSIC_WORLD);
 
-    destroy_listener_ = std::make_unique<DestructionListener>(Closure(this, &PhysicWorld::JointRemoved));
-    world_.SetDestructionListener(destroy_listener_.get());
-
-    contact_listener_ = std::make_unique<ContactListener>(Closure(this, &PhysicWorld::DispatchEvent));
+    contact_listener_ = std::make_unique<ContactListener>(Closure(this, &World::DispatchEvent));
     world_.SetContactListener(contact_listener_.get());
 }
 
-PhysicWorld::~PhysicWorld()
+World::~World()
 {
-    world_.SetDestructionListener(nullptr);
     world_.SetContactListener(nullptr);
-
-    // Make sure b2World was destroyed after b2Body
-    RemoveAllJoints();
-    RemoveAllBodies();
 }
 
-void PhysicWorld::AddBody(RefPtr<PhysicBody> body)
+RefPtr<Body> World::AddBody(b2BodyDef* def)
 {
-    if (body)
-    {
-        bodies_.push_back(body);
-    }
+    b2Body* body = world_.CreateBody(def);
+    return MakePtr<Body>(body, &world_);
 }
 
-void PhysicWorld::RemoveBody(RefPtr<PhysicBody> body)
+b2Joint* World::AddJoint(b2JointDef* def)
 {
-    if (body)
-    {
-        auto iter = std::find(bodies_.begin(), bodies_.end(), body);
-        if (iter != bodies_.end())
-        {
-            body->Destroy();
-            bodies_.erase(iter);
-        }
-    }
+    return world_.CreateJoint(def);
 }
 
-void PhysicWorld::RemoveAllBodies()
-{
-    for (auto body : bodies_)
-    {
-        body->Destroy();
-    }
-    bodies_.clear();
-}
-
-const List<RefPtr<PhysicBody>>& PhysicWorld::GetAllBodies() const
-{
-    return bodies_;
-}
-
-void PhysicWorld::AddJoint(RefPtr<Joint> joint)
-{
-    if (joint)
-    {
-        bool success = joint->Init(this);
-        KGE_ASSERT(success);
-
-        joints_.push_back(joint);
-    }
-}
-
-void PhysicWorld::RemoveJoint(RefPtr<Joint> joint)
-{
-    if (joint)
-    {
-        auto iter = std::find(joints_.begin(), joints_.end(), joint);
-        if (iter != joints_.end())
-        {
-            joint->Destroy();
-            joints_.erase(iter);
-        }
-    }
-}
-
-void PhysicWorld::RemoveAllJoints()
-{
-    for (auto joint : joints_)
-    {
-        joint->Destroy();
-    }
-    joints_.clear();
-}
-
-const List<RefPtr<Joint>>& PhysicWorld::GetAllJoints() const
-{
-    return joints_;
-}
-
-b2World* PhysicWorld::GetB2World()
+b2World* World::GetB2World()
 {
     return &world_;
 }
 
-const b2World* PhysicWorld::GetB2World() const
+const b2World* World::GetB2World() const
 {
     return &world_;
 }
 
-Vec2 PhysicWorld::GetGravity() const
+ContactList World::GetContactList()
 {
-    b2Vec2 g = world_.GetGravity();
-    return Vec2(g.x, g.y);
+    return ContactList(world_.GetContactList());
 }
 
-void PhysicWorld::SetGravity(Vec2 gravity)
-{
-    world_.SetGravity(b2Vec2(gravity.x, gravity.y));
-}
-
-ContactList PhysicWorld::GetContactList()
-{
-    Contact contact;
-    contact.SetB2Contact(world_.GetContactList());
-    return ContactList(contact);
-}
-
-void PhysicWorld::InitComponent(Actor* actor)
+void World::InitComponent(Actor* actor)
 {
     Component::InitComponent(actor);
 
@@ -344,19 +233,33 @@ void PhysicWorld::InitComponent(Actor* actor)
     BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
-void PhysicWorld::OnUpdate(Duration dt)
+void World::OnUpdate(Duration dt)
 {
     Actor* world_actor = GetBoundActor();
 
     BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
 
     // Update physic world
-    world_.Step(dt.GetSeconds(), vel_iter_, pos_iter_);
+    // The implementation referenced this article. https://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
+    const int MAX_STEPS = 5;
+
+    fixed_acc_ += dt.GetSeconds();
+    const int steps = static_cast<int>(std::floor(fixed_acc_ / FIXED_TIMESTEP));
+    if (steps > 0)
+    {
+        fixed_acc_ -= steps * FIXED_TIMESTEP;
+    }
+
+    const int steps_clamped = std::min(steps, MAX_STEPS);
+    for (int i = 0; i < steps_clamped; ++i)
+    {
+        world_.Step(FIXED_TIMESTEP, vel_iter_, pos_iter_);
+    }
 
     AfterSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
-void PhysicWorld::OnRender(RenderContext& ctx)
+void World::OnRender(RenderContext& ctx)
 {
     if (drawer_)
     {
@@ -368,7 +271,7 @@ void PhysicWorld::OnRender(RenderContext& ctx)
     }
 }
 
-void PhysicWorld::DispatchEvent(Event* evt)
+void World::DispatchEvent(Event* evt)
 {
     Actor* actor = GetBoundActor();
     if (actor)
@@ -377,26 +280,13 @@ void PhysicWorld::DispatchEvent(Event* evt)
     }
 }
 
-void PhysicWorld::JointRemoved(b2Joint* b2joint)
-{
-    Joint* joint = static_cast<Joint*>(b2joint->GetUserData());
-    if (joint)
-    {
-        auto iter = std::find(joints_.begin(), joints_.end(), joint);
-        if (iter != joints_.end())
-        {
-            joints_.erase(iter);
-        }
-    }
-}
-
-void PhysicWorld::BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
+void World::BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
 {
     for (auto child : parent->GetAllChildren())
     {
         Matrix3x2 child_to_world = child->GetTransformMatrixToParent() * parent_to_world;
 
-        PhysicBody* body = child->GetPhysicBody();
+        auto body = dynamic_cast<Body*>(child->GetComponent(KGE_COMP_PHYSIC_BODY));
         if (body)
         {
             body->BeforeSimulation(child.Get(), parent_to_world, child_to_world, parent_rotation);
@@ -407,11 +297,11 @@ void PhysicWorld::BeforeSimulation(Actor* parent, const Matrix3x2& parent_to_wor
     }
 }
 
-void PhysicWorld::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
+void World::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_world, float parent_rotation)
 {
     for (auto child : parent->GetAllChildren())
     {
-        PhysicBody* body = child->GetPhysicBody();
+        auto body = dynamic_cast<Body*>(child->GetComponent(KGE_COMP_PHYSIC_BODY));
         if (body)
         {
             body->AfterSimulation(child.Get(), parent_to_world, parent_rotation);
@@ -423,7 +313,7 @@ void PhysicWorld::AfterSimulation(Actor* parent, const Matrix3x2& parent_to_worl
     }
 }
 
-void PhysicWorld::ShowDebugInfo(bool show)
+void World::ShowDebugInfo(bool show)
 {
     if (show)
     {

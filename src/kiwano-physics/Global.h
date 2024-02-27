@@ -29,9 +29,6 @@ namespace kiwano
 namespace physics
 {
 
-namespace global
-{
-
 /// \~chinese
 /// @brief 获取全局缩放比例
 /// @details 缩放比例是指由物理世界的单位米转换到屏幕像素的比例，默认比例为1:100
@@ -53,6 +50,11 @@ float WorldToLocal(float value);
 Vec2 WorldToLocal(const b2Vec2& pos);
 
 /// \~chinese
+/// @brief 游戏世界单位转换为物理世界单位
+/// @details 根据全局缩放比例将物理世界的单位米转换为像素单位
+Vector<Vec2> WorldToLocal(const Vector<b2Vec2>& b2vertexs);
+
+/// \~chinese
 /// @brief 物理世界单位转换为游戏世界单位
 /// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
 float LocalToWorld(float value);
@@ -62,6 +64,10 @@ float LocalToWorld(float value);
 /// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
 b2Vec2 LocalToWorld(const Vec2& pos);
 
-}  // namespace global
+/// \~chinese
+/// @brief 物理世界单位转换为游戏世界单位
+/// @details 根据全局缩放比例将像素单位转换为物理世界的单位米
+Vector<b2Vec2> LocalToWorld(const Vector<Vec2>& vertexs);
+
 }  // namespace physics
 }  // namespace kiwano

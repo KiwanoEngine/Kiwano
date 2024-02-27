@@ -50,7 +50,6 @@ Actor::Actor()
     , dirty_flag_(DirtyFlag::DirtyVisibility)
     , parent_(nullptr)
     , stage_(nullptr)
-    , physic_body_(nullptr)
     , hash_name_(0)
     , z_order_(0)
     , opacity_(1.f)
@@ -61,8 +60,8 @@ Actor::Actor()
 
 Actor::~Actor()
 {
-    RemoveAllComponents();
     RemoveAllChildren();
+    RemoveAllComponents();
 }
 
 void Actor::Update(Duration dt)
