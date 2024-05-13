@@ -53,6 +53,10 @@ More docs and examples will be added later.
 5. Right-click `References` and choose `Add Reference`, select `kiwano` project
 6. Now you can build your own applications based on Kiwano source code !
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=kiwanoengine/kiwano&type=Date)](https://star-history.com/#kiwanoengine/kiwano&Date)
+
 ## Next plan
 * Cross-platform
 * Particle system
