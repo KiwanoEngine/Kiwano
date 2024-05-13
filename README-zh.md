@@ -55,6 +55,10 @@ Kiwano-Core 是一个提供了一系列实用工具的游戏无关库，它的�
 5. 右键你的项目 `引用` 并选择 `添加引用`, 选中 `kiwano` 项目和其他你需要的项目
 6. 开始使用 Kiwano 进行开发吧!
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=kiwanoengine/kiwano&type=Date)](https://star-history.com/#kiwanoengine/kiwano&Date)
+
 ## 开发计划
 
 * 跨平台支持
