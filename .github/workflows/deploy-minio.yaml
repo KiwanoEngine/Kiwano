@@ -1,0 +1,24 @@
+name: Deploy to minio
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: build
+      uses: mattnotmitt/doxygen-action@v1.9.4
+
+    - name: Upload to minio
+      uses: lovellfelix/minio-deploy-action@v1
+      with:
+        endpoint: ${{ vars.MINIO_ENDPOINT }}
+        access_key: ${{ secrets.MINIO_ACCESS_KEY }}
+        secret_key: ${{ secrets.MINIO_SECRET_KEY }}
+        bucket: ${{ vars.MINIO_BUCKET }}
+        source_dir: 'docs/html'
+        target_dir: '/'
