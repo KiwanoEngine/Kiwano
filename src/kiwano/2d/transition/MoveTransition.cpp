@@ -29,11 +29,6 @@ MoveTransition::MoveTransition(Duration duration, Type type)
     SetDuration(duration);
 }
 
-MoveTransition::MoveTransition()
-    : type_(Type::Left)
-{
-}
-
 void MoveTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);

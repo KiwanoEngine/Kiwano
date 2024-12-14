@@ -32,8 +32,8 @@ Transition::Transition()
     , window_size_()
     , out_stage_(nullptr)
     , in_stage_(nullptr)
-    , out_layer_()
-    , in_layer_()
+    , out_layer_(nullptr)
+    , in_layer_(nullptr)
 {
 }
 
@@ -55,12 +55,12 @@ void Transition::Init(Stage* prev, Stage* next)
 
     if (in_stage_)
     {
-        in_layer_.SetClipRect(Rect{ Point(), window_size_ });
+        in_layer_.bounds = Rect{ Point(), window_size_ };
     }
 
     if (out_stage_)
     {
-        out_layer_.SetClipRect(Rect{ Point(), window_size_ });
+        out_layer_.bounds = Rect{ Point(), window_size_ };
     }
 }
 
@@ -87,25 +87,21 @@ void Transition::Render(RenderContext& ctx)
     if (out_stage_)
     {
         out_stage_->PrepareToRender(ctx);
-        ctx.PushClipRect(Rect{ Point{}, window_size_ });
         ctx.PushLayer(out_layer_);
 
         out_stage_->Render(ctx);
 
         ctx.PopLayer();
-        ctx.PopClipRect();
     }
 
     if (in_stage_)
     {
         in_stage_->PrepareToRender(ctx);
-        ctx.PushClipRect(Rect{ Point{}, window_size_ });
         ctx.PushLayer(in_layer_);
 
         in_stage_->Render(ctx);
 
         ctx.PopLayer();
-        ctx.PopClipRect();
     }
 }
 

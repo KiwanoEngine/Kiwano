@@ -29,14 +29,12 @@ FadeTransition::FadeTransition(Duration duration, bool parallel)
     SetDuration(duration);
 }
 
-FadeTransition::FadeTransition() {}
-
 void FadeTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
 
-    out_layer_.SetOpacity(1.f);
-    in_layer_.SetOpacity(0.f);
+    out_layer_.opacity = 1.f;
+    in_layer_.opacity  = 0.f;
 }
 
 void FadeTransition::Update(Duration dt)
@@ -45,20 +43,20 @@ void FadeTransition::Update(Duration dt)
 
     if (parallel_)
     {
-        out_layer_.SetOpacity(1 - process_);
-        in_layer_.SetOpacity(process_);
+        out_layer_.opacity = 1 - process_;
+        in_layer_.opacity  = process_;
     }
     else
     {
         if (process_ < 0.5)
         {
-            out_layer_.SetOpacity(1 - process_ * 2);
-            in_layer_.SetOpacity(0.f);
+            out_layer_.opacity = 1 - process_ * 2;
+            in_layer_.opacity  = 0.f;
         }
         else
         {
-            out_layer_.SetOpacity(0.f);
-            in_layer_.SetOpacity((process_ - 0.5f) * 2);
+            out_layer_.opacity = 0.f;
+            in_layer_.opacity  = (process_ - 0.5f) * 2;
         }
     }
 }

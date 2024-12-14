@@ -38,32 +38,43 @@ namespace kiwano
 class KGE_API LayerActor : public Actor
 {
 public:
-    LayerActor();
+    /// \~chinese
+    /// @brief 创建矩形图层
+    /// @param bounds 图层边界
+    /// @param opacity 图层透明度
+    LayerActor(const Rect& bounds, float opacity = 1.f);
+
+    /// \~chinese
+    /// @brief 创建图层
+    /// @param mask 几何蒙层
+    /// @param mask_transform 几何蒙层变换
+    /// @param opacity 图层透明度
+    /// @param bounds 图层边界
+    LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform = Matrix3x2(), float opacity = 1.f,
+               const Rect& bounds = Rect::Infinite());
 
     virtual ~LayerActor();
+
+    /// \~chinese
+    /// @brief 获取图层
+    const Layer& GetLayer() const;
+
+    /// \~chinese
+    /// @brief 获取图层
+    Layer& GetLayer();
+
+    /// \~chinese
+    /// @brief 设置图层
+    void SetLayer(const Layer& layer);
 
     /// \~chinese
     /// @brief 是否开启消息吞没
     bool IsSwallowEventsEnabled() const;
 
     /// \~chinese
-    /// @brief 获取图层
-    RefPtr<Layer> GetLayer() const;
-
-    /// \~chinese
-    /// @brief 设置图层
-    /// @param layer 图层
-    void SetLayer(RefPtr<Layer> layer);
-
-    /// \~chinese
     /// @brief 设置消息吞没功能
     /// @param enabled 是否启用
     void SetSwallowEvents(bool enabled);
-
-    /// \~chinese
-    /// @brief 设置图层透明度
-    /// @param opacity 透明度
-    void SetOpacity(float opacity) override;
 
     bool DispatchEvent(Event* evt) override;
 
@@ -73,8 +84,8 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    bool          swallow_;
-    RefPtr<Layer> layer_;
+    bool  swallow_;
+    Layer layer_;
 };
 
 /** @} */
@@ -89,14 +100,19 @@ inline void LayerActor::SetSwallowEvents(bool enabled)
     swallow_ = enabled;
 }
 
-inline void LayerActor::SetLayer(RefPtr<Layer> layer)
-{
-    layer_ = layer;
-}
-
-inline RefPtr<Layer> LayerActor::GetLayer() const
+inline const Layer& LayerActor::GetLayer() const
 {
     return layer_;
+}
+
+inline Layer& LayerActor::GetLayer()
+{
+    return layer_;
+}
+
+inline void LayerActor::SetLayer(const Layer& layer)
+{
+    layer_ = layer;
 }
 
 }  // namespace kiwano

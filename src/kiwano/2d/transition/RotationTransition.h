@@ -45,8 +45,6 @@ public:
      */
     RotationTransition(Duration duration, float rotation = 360.0f);
 
-    RotationTransition();
-
 protected:
     void Update(Duration dt) override;
 

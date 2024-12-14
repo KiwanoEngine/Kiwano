@@ -45,8 +45,6 @@ public:
      */
     FadeTransition(Duration duration, bool parallel = false);
 
-    FadeTransition();
-
 protected:
     void Update(Duration dt) override;
 

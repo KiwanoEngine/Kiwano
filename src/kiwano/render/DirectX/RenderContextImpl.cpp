@@ -346,26 +346,13 @@ void RenderContextImpl::PushLayer(Layer& layer)
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
-    auto native = ComPolicy::Get<ID2D1Layer>(layer);
-    auto mask   = ComPolicy::Get<ID2D1Geometry>(layer.GetMaskShape());
+    auto mask   = ComPolicy::Get<ID2D1Geometry>(layer.mask);
+    auto params = D2D1::LayerParameters1(DX::ConvertToRectF(layer.bounds), mask.Get(),
+                                         antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
+                                         DX::ConvertToMatrix3x2F(layer.mask_transform), layer.opacity, nullptr,
+                                         D2D1_LAYER_OPTIONS1_NONE);
 
-    if (!native)
-    {
-        HRESULT hr = render_ctx_->CreateLayer(&native);
-
-        if (SUCCEEDED(hr))
-        {
-            ComPolicy::Set(layer, native);
-        }
-        KGE_THROW_IF_FAILED(hr, "Create ID2D1Layer failed");
-    }
-
-    auto params = D2D1::LayerParameters(DX::ConvertToRectF(layer.GetClipRect()), mask.Get(),
-                                        antialias_ ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE : D2D1_ANTIALIAS_MODE_ALIASED,
-                                        DX::ConvertToMatrix3x2F(layer.GetMaskTransform()), layer.GetOpacity(), nullptr,
-                                        D2D1_LAYER_OPTIONS_NONE);
-
-    render_ctx_->PushLayer(params, native.Get());
+    render_ctx_->PushLayer(params, nullptr);
 }
 
 void RenderContextImpl::PopLayer()

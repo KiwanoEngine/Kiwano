@@ -33,90 +33,31 @@ namespace kiwano
  * \~chinese
  * @brief 图层
  */
-class KGE_API Layer : public NativeObject
+class KGE_API Layer
 {
 public:
-    Layer();
+    Rect          bounds;
+    float         opacity;
+    RefPtr<Shape> mask;
+    Matrix3x2     mask_transform;
+
+public:
+    /// \~chinese
+    /// @brief 创建矩形图层
+    /// @param bounds 图层边界
+    /// @param opacity 图层透明度
+    Layer(const Rect& bounds, float opacity = 1.f);
 
     /// \~chinese
-    /// @brief 获取图层裁剪区域
-    const Rect& GetClipRect() const;
-
-    /// \~chinese
-    /// @brief 获取图层透明度
-    float GetOpacity() const;
-
-    /// \~chinese
-    /// @brief 获取几何蒙层
-    RefPtr<Shape> GetMaskShape() const;
-
-    /// \~chinese
-    /// @brief 获取几何蒙层变换
-    const Matrix3x2& GetMaskTransform() const;
-
-    /// \~chinese
-    /// @brief 设置图层裁剪区域
-    void SetClipRect(const Rect& rect);
-
-    /// \~chinese
-    /// @brief 设置图层透明度
-    void SetOpacity(float opacity);
-
-    /// \~chinese
-    /// @brief 设置几何蒙层
-    void SetMaskShape(RefPtr<Shape> mask);
-
-    /// \~chinese
-    /// @brief 设置几何蒙层变换
-    void SetMaskTransform(const Matrix3x2& matrix);
-
-private:
-    Rect          clip_rect_;
-    float         opacity_;
-    RefPtr<Shape> mask_;
-    Matrix3x2     mask_transform_;
+    /// @brief 创建图层
+    /// @param mask 几何蒙层
+    /// @param mask_transform 几何蒙层变换
+    /// @param opacity 图层透明度
+    /// @param bounds 图层边界
+    Layer(RefPtr<Shape> mask, const Matrix3x2& mask_transform = Matrix3x2(), float opacity = 1.f,
+          const Rect& bounds = Rect::Infinite());
 };
 
 /** @} */
-
-inline const Rect& Layer::GetClipRect() const
-{
-    return clip_rect_;
-}
-
-inline float Layer::GetOpacity() const
-{
-    return opacity_;
-}
-
-inline RefPtr<Shape> Layer::GetMaskShape() const
-{
-    return mask_;
-}
-
-inline const Matrix3x2& Layer::GetMaskTransform() const
-{
-    return mask_transform_;
-}
-
-inline void Layer::SetClipRect(const Rect& rect)
-{
-    clip_rect_ = rect;
-}
-
-inline void Layer::SetOpacity(float opacity)
-{
-    opacity_ = opacity;
-}
-
-inline void Layer::SetMaskShape(RefPtr<Shape> mask)
-{
-    mask_ = mask;
-}
-
-inline void Layer::SetMaskTransform(const Matrix3x2& matrix)
-{
-    mask_transform_ = matrix;
-}
 
 }  // namespace kiwano

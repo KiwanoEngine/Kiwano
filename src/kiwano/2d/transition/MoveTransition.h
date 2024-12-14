@@ -57,8 +57,6 @@ public:
      */
     MoveTransition(Duration duration, Type type);
 
-    MoveTransition();
-
 protected:
     void Update(Duration dt) override;
 

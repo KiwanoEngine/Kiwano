@@ -250,7 +250,7 @@ public:
     /// \~chinese
     /// @brief 添加一个图层
     /// @param layer 图层
-    void PushLayer(RefPtr<Layer> layer);
+    void PushLayer(Layer& layer);
 
     /// \~chinese
     /// @brief 删除最近添加的图层
@@ -531,13 +531,10 @@ inline void CanvasRenderContext::PopClipRect()
     ctx_->PopClipRect();
 }
 
-inline void CanvasRenderContext::PushLayer(RefPtr<Layer> layer)
+inline void CanvasRenderContext::PushLayer(Layer& layer)
 {
     KGE_ASSERT(ctx_);
-    if (layer)
-    {
-        ctx_->PushLayer(*layer);
-    }
+    ctx_->PushLayer(layer);
 }
 
 inline void CanvasRenderContext::PopLayer()

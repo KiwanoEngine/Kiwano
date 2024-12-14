@@ -26,6 +26,7 @@ namespace imgui
 {
 
 Layer::Layer()
+    : LayerActor(nullptr)
 {
     SetSwallowEvents(true);
 }

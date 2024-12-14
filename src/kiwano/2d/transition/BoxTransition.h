@@ -44,8 +44,6 @@ public:
      */
     BoxTransition(Duration duration);
 
-    BoxTransition();
-
 protected:
     void Update(Duration dt) override;
 

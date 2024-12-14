@@ -22,9 +22,17 @@
 
 namespace kiwano
 {
-Layer::Layer()
-    : opacity_(1.f)
-    , clip_rect_(Rect::Infinite())
+
+Layer::Layer(const Rect& bounds, float opacity)
+    : Layer(nullptr, Matrix3x2(), opacity, bounds)
+{
+}
+
+Layer::Layer(RefPtr<Shape> mask, const Matrix3x2& mask_transform, float opacity, const Rect& bounds)
+    : mask(mask)
+    , mask_transform(mask_transform)
+    , opacity(opacity)
+    , bounds(bounds)
 {
 }
 

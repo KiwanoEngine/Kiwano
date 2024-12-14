@@ -169,7 +169,7 @@ public:
 
     /// \~chinese
     /// @brief ÉèÖÃÍ¼²ãÇøÓò
-    /// @param layer Í¼²ãÇøÓò
+    /// @param layer Í¼²ã
     virtual void PushLayer(Layer& layer) = 0;
 
     /// \~chinese

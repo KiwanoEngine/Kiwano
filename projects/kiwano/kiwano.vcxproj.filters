@@ -204,9 +204,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\Layer.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Runner.h">
       <Filter>platform</Filter>
     </ClInclude>
@@ -408,6 +405,9 @@
     <ClInclude Include="..\..\src\kiwano\platform\NativeObject.hpp">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\Layer.h">
+      <Filter>render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -523,9 +523,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
-      <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Runner.cpp">
       <Filter>platform</Filter>
@@ -670,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextDrawingEffect.cpp">
       <Filter>render\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

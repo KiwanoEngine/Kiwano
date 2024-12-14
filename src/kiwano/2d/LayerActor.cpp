@@ -25,24 +25,19 @@
 namespace kiwano
 {
 
-LayerActor::LayerActor()
+LayerActor::LayerActor(const Rect& bounds, float opacity)
     : swallow_(false)
+    , layer_(bounds, opacity)
+{
+}
+
+LayerActor::LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform, float opacity, const Rect& bounds)
+    : swallow_(false)
+    , layer_(mask, mask_transform, opacity, bounds)
 {
 }
 
 LayerActor::~LayerActor() {}
-
-void LayerActor::SetOpacity(float opacity)
-{
-    if (layer_)
-    {
-        layer_->SetOpacity(opacity);
-    }
-    else
-    {
-        Actor::SetOpacity(opacity);
-    }
-}
 
 bool LayerActor::DispatchEvent(Event* evt)
 {
@@ -58,16 +53,10 @@ bool LayerActor::DispatchEvent(Event* evt)
 
 void LayerActor::Render(RenderContext& ctx)
 {
-    if (layer_)
-    {
-        ctx.PushLayer(*layer_);
-        Actor::Render(ctx);
-        ctx.PopLayer();
-    }
-    else
-    {
-        Actor::Render(ctx);
-    }
+    PrepareToRender(ctx);
+    ctx.PushLayer(layer_);
+    Actor::Render(ctx);
+    ctx.PopLayer();
 }
 
 bool LayerActor::CheckVisibility(RenderContext& ctx) const

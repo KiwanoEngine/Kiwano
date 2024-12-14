@@ -101,10 +101,10 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\RendererImpl.h" />
     <ClInclude Include="..\..\src\kiwano\render\DirectX\TextRenderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\Font.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Layer.h" />
     <ClInclude Include="..\..\src\kiwano\render\Shape.h" />
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h" />
     <ClInclude Include="..\..\src\kiwano\render\GifImage.h" />
-    <ClInclude Include="..\..\src\kiwano\render\Layer.h" />
     <ClInclude Include="..\..\src\kiwano\render\RenderContext.h" />
     <ClInclude Include="..\..\src\kiwano\render\Renderer.h" />
     <ClInclude Include="..\..\src\kiwano\render\StrokeStyle.h" />
@@ -192,10 +192,10 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\RendererImpl.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Font.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Shape.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\ShapeMaker.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\GifImage.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\Layer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\RenderContext.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\Renderer.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\StrokeStyle.cpp" />

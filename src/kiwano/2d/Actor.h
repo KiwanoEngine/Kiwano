@@ -109,7 +109,7 @@ public:
 
     /// \~chinese
     /// @brief 获取坐标
-    virtual Point GetPosition() const;
+    Point GetPosition() const;
 
     /// \~chinese
     /// @brief 获取 x 坐标
@@ -145,7 +145,7 @@ public:
 
     /// \~chinese
     /// @brief 获取锚点
-    virtual Point GetAnchor() const;
+    Point GetAnchor() const;
 
     /// \~chinese
     /// @brief 获取 x 方向锚点
@@ -157,7 +157,7 @@ public:
 
     /// \~chinese
     /// @brief 获取透明度
-    virtual float GetOpacity() const;
+    float GetOpacity() const;
 
     /// \~chinese
     /// @brief 获取显示透明度
@@ -165,11 +165,11 @@ public:
 
     /// \~chinese
     /// @brief 获取旋转角度
-    virtual float GetRotation() const;
+    float GetRotation() const;
 
     /// \~chinese
     /// @brief 获取缩放比例
-    virtual Point GetScale() const;
+    Point GetScale() const;
 
     /// \~chinese
     /// @brief 获取横向缩放比例
@@ -181,7 +181,7 @@ public:
 
     /// \~chinese
     /// @brief 获取错切角度
-    virtual Point GetSkew() const;
+    Point GetSkew() const;
 
     /// \~chinese
     /// @brief 获取横向错切角度
@@ -233,7 +233,7 @@ public:
 
     /// \~chinese
     /// @brief 设置坐标
-    virtual void SetPosition(const Point& point);
+    void SetPosition(const Point& point);
 
     /// \~chinese
     /// @brief 设置坐标
@@ -265,7 +265,7 @@ public:
 
     /// \~chinese
     /// @brief 设置缩放比例，默认为 (1.0, 1.0)
-    virtual void SetScale(const Vec2& scale);
+    void SetScale(const Vec2& scale);
 
     /// \~chinese
     /// @brief 设置缩放比例，默认为 (1.0, 1.0)
@@ -273,7 +273,7 @@ public:
 
     /// \~chinese
     /// @brief 设置错切角度，默认为 (0, 0)
-    virtual void SetSkew(const Vec2& skew);
+    void SetSkew(const Vec2& skew);
 
     /// \~chinese
     /// @brief 设置错切角度，默认为 (0, 0)
@@ -281,11 +281,11 @@ public:
 
     /// \~chinese
     /// @brief 设置旋转角度，默认为 0
-    virtual void SetRotation(float rotation);
+    void SetRotation(float rotation);
 
     /// \~chinese
     /// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
-    virtual void SetAnchor(const Vec2& anchor);
+    void SetAnchor(const Vec2& anchor);
 
     /// \~chinese
     /// @brief 设置锚点位置，默认为 (0, 0), 范围 [0, 1]
@@ -293,7 +293,7 @@ public:
 
     /// \~chinese
     /// @brief 修改大小
-    virtual void SetSize(const Size& size);
+    void SetSize(const Size& size);
 
     /// \~chinese
     /// @brief 修改大小
@@ -309,7 +309,7 @@ public:
 
     /// \~chinese
     /// @brief 设置透明度，默认为 1.0, 范围 [0, 1]
-    virtual void SetOpacity(float opacity);
+    void SetOpacity(float opacity);
 
     /// \~chinese
     /// @brief 启用或禁用级联透明度

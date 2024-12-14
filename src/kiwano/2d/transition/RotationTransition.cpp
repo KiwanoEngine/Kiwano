@@ -29,11 +29,6 @@ RotationTransition::RotationTransition(Duration duration, float rotation)
     SetDuration(duration);
 }
 
-RotationTransition::RotationTransition()
-    : rotation_(0.0f)
-{
-}
-
 void RotationTransition::Init(Stage* prev, Stage* next)
 {
     Transition::Init(prev, next);
@@ -53,7 +48,7 @@ void RotationTransition::Init(Stage* prev, Stage* next)
         in_stage_->SetAnchor(Vec2{ 0.5f, 0.5f });
     }
 
-    in_layer_.SetOpacity(0.f);
+    in_layer_.opacity = 0.f;
 }
 
 void RotationTransition::Update(Duration dt)
@@ -74,8 +69,8 @@ void RotationTransition::Update(Duration dt)
     {
         if (in_stage_)
         {
-            out_layer_.SetOpacity(0.f);
-            in_layer_.SetOpacity(1.f);
+            out_layer_.opacity = 0.f;
+            in_layer_.opacity  = 1.f;
 
             auto transform     = in_stage_->GetTransform();
             transform.scale    = Point{ (process_ - .5f) * 2, (process_ - .5f) * 2 };
