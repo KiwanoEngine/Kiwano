@@ -140,10 +140,6 @@ KGE_SUPPRESS_WARNING(4251)
 #define NTDDI_VERSION NTDDI_WIN7
 #endif
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
 // Exclude rarely-used items from Windows headers
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN

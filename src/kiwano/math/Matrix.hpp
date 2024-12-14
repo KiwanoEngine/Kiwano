@@ -172,10 +172,10 @@ struct Matrix3x2T
         Vec2Type bottom_left  = Transform(rect.GetLeftBottom());
         Vec2Type bottom_right = Transform(rect.GetRightBottom());
 
-        ValueType left   = std::min(std::min(top_left.x, top_right.x), std::min(bottom_left.x, bottom_right.x));
-        ValueType right  = std::max(std::max(top_left.x, top_right.x), std::max(bottom_left.x, bottom_right.x));
-        ValueType top    = std::min(std::min(top_left.y, top_right.y), std::min(bottom_left.y, bottom_right.y));
-        ValueType bottom = std::max(std::max(top_left.y, top_right.y), std::max(bottom_left.y, bottom_right.y));
+        ValueType left   = (std::min)((std::min)(top_left.x, top_right.x), (std::min)(bottom_left.x, bottom_right.x));
+        ValueType right  = (std::max)((std::max)(top_left.x, top_right.x), (std::max)(bottom_left.x, bottom_right.x));
+        ValueType top    = (std::min)((std::min)(top_left.y, top_right.y), (std::min)(bottom_left.y, bottom_right.y));
+        ValueType bottom = (std::max)((std::max)(top_left.y, top_right.y), (std::max)(bottom_left.y, bottom_right.y));
 
         return RectType{ left, top, right, bottom };
     }

@@ -87,12 +87,12 @@ private:
             if (total_size < 1024)
             {
                 size_t expected_size = size_t(std::floor(double(old_size) * 0.5));
-                bytes_.reserve(old_size + std::max(size, expected_size));
+                bytes_.reserve(old_size + (std::max)(size, expected_size));
             }
             else if (size < old_size * 2)
             {
                 size_t expected_size = size_t(std::floor(double(old_size) * 0.25));
-                bytes_.reserve(old_size + std::max(size, expected_size));
+                bytes_.reserve(old_size + (std::max)(size, expected_size));
             }
             else
             {

@@ -32,18 +32,23 @@ namespace kiwano
 // wide-to-ANSI string conversion helper
 namespace detail
 {
-inline std::unique_ptr<char[]> to_narrow(BSTR msg)
+static inline std::string to_narrow(BSTR msg)
 {
-    return std::unique_ptr<char[]>(_com_util::ConvertBSTRToString(msg));
+    return std::move(std::string(_com_util::ConvertBSTRToString(msg)));
 }
 
-inline std::unique_ptr<char[]> to_narrow(const wchar_t* msg)
+static inline std::string to_narrow(const wchar_t* msg)
 {
     static_assert(std::is_same<wchar_t*, BSTR>::value, "BSTR must be wchar_t*");
     // const_cast is fine:
     // BSTR is a wchar_t*;
     // ConvertBSTRToString internally uses _wcslen and WideCharToMultiByte;
-    return to_narrow(const_cast<wchar_t*>(msg));
+    return std::move(to_narrow(const_cast<wchar_t*>(msg)));
+}
+
+static inline std::string to_narrow(const char* msg)
+{
+    return std::move(std::string(msg));
 }
 }  // namespace detail
 
@@ -59,8 +64,7 @@ public:
 
     std::string message(int hr) const override
     {
-        auto narrow = detail::to_narrow(_com_error{ hr }.ErrorMessage());
-        return narrow.get();
+        return detail::to_narrow(_com_error{ hr }.ErrorMessage());
     }
 
     std::error_condition default_error_condition(int hr) const noexcept override
