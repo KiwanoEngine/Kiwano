@@ -83,27 +83,43 @@ enum class FontStretch
 
 /**
  * \~chinese
- * @brief 字体
+ * @brief 字体集合
  */
-class Font : public NativeObject
+class KGE_API FontCollection : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief 预加载字体
-    /// @param file 字体文件
-    static RefPtr<Font> Preload(StringView file);
+    /// @brief 预加载字体集合
+    /// @param files 字体文件列表
+    static RefPtr<FontCollection> Preload(const Vector<String>& files);
 
     /// \~chinese
-    /// @brief 预加载字体
-    /// @param resource 字体资源
-    static RefPtr<Font> Preload(const Resource& resource);
+    /// @brief 预加载字体集合
+    /// @param resources 字体资源列表
+    static RefPtr<FontCollection> Preload(const Vector<Resource>& resources);
+
+    const Vector<String>& GetFamilyNames() const;
+
+protected:
+    Vector<String> family_names_;
+};
+
+/**
+ * \~chinese
+ * @brief 字体
+ */
+class KGE_API Font
+{
+public:
+    float                  size;
+    uint32_t               weight;
+    FontPosture            posture;
+    FontStretch            stretch;
+    String                 family_name;
+    RefPtr<FontCollection> collection;
 
     /// \~chinese
-    /// @brief 创建系统默认字体
-    Font();
-
-    /// \~chinese
-    /// @brief 通过字体族创建字体
+    /// @brief 创建字体，根据字体族名称自动搜索已预加载的 FontCollection 缓存，查找失败时使用系统字体
     /// @param family_name 字体族
     /// @param size 字号
     /// @param weight 字体粗细
@@ -112,41 +128,18 @@ public:
          FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
 
     /// \~chinese
-    /// @brief 获取字体族
-    String GetFamilyName() const;
-
-    /// \~chinese
-    /// @brief 获取字号
-    float GetSize() const;
-
-    /// \~chinese
-    /// @brief 获取字体粗细值
-    uint32_t GetWeight() const;
-
-    /// \~chinese
-    /// @brief 获取字体形态
-    FontPosture GetPosture() const;
-
-    /// \~chinese
-    /// @brief 获取字体拉伸
-    FontStretch GetStretch() const;
-
-protected:
-    /// \~chinese
-    /// @brief 获取字体族
-    void SetFamilyName(StringView name);
-
-protected:
-    float       size_;
-    uint32_t    weight_;
-    FontPosture posture_;
-    FontStretch stretch_;
-    String      family_name_;
+    /// @brief 创建字体，使用字体集合中的第一个字体族名称
+    /// @param collection 字体集合
+    /// @param size 字号
+    /// @param weight 字体粗细
+    /// @param posture 字体形态
+    Font(RefPtr<FontCollection> collection, float size, uint32_t weight = FontWeight::Normal,
+         FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
 };
 
 /**
  * \~chinese
- * @brief 纹理缓存
+ * @brief 字体缓存
  */
 class KGE_API FontCache final : public Singleton<FontCache>
 {
@@ -154,28 +147,16 @@ class KGE_API FontCache final : public Singleton<FontCache>
 
 public:
     /// \~chinese
-    /// @brief 添加字体缓存
-    void AddFont(size_t key, RefPtr<Font> font);
+    /// @brief 添加字体集合缓存
+    void AddFontCollection(StringView font_family, RefPtr<FontCollection> collection);
 
     /// \~chinese
-    /// @brief 添加字体族映射字体缓存
-    void AddFontByFamily(StringView font_family, RefPtr<Font> font);
+    /// @brief 获取字体集合缓存
+    RefPtr<FontCollection> GetFontCollection(StringView font_family) const;
 
     /// \~chinese
-    /// @brief 获取字体缓存
-    RefPtr<Font> GetFont(size_t key) const;
-
-    /// \~chinese
-    /// @brief 获取字体族映射字体缓存
-    RefPtr<Font> GetFontByFamily(StringView font_family) const;
-
-    /// \~chinese
-    /// @brief 移除字体缓存
-    void RemoveFont(size_t key);
-
-    /// \~chinese
-    /// @brief 移除字体族映射字体缓存
-    void RemoveFontByFamily(StringView font_family);
+    /// @brief 移除字体集合缓存
+    void RemoveFontCollection(StringView font_family);
 
     /// \~chinese
     /// @brief 清空缓存
@@ -189,43 +170,14 @@ private:
     String TransformFamily(String family) const;
 
 private:
-    using FontMap = UnorderedMap<size_t, RefPtr<Font>>;
-    FontMap font_cache_;
-
-    using FontFamilyMap = UnorderedMap<String, RefPtr<Font>>;
-    FontFamilyMap font_family_cache_;
+    UnorderedMap<String, RefPtr<FontCollection>> collection_cache_;
 };
 
 /** @} */
 
-inline String Font::GetFamilyName() const
+inline const Vector<String>& FontCollection::GetFamilyNames() const
 {
-    return family_name_;
-}
-
-inline float Font::GetSize() const
-{
-    return size_;
-}
-
-inline uint32_t Font::GetWeight() const
-{
-    return weight_;
-}
-
-inline FontPosture Font::GetPosture() const
-{
-    return posture_;
-}
-
-inline FontStretch Font::GetStretch() const
-{
-    return stretch_;
-}
-
-inline void Font::SetFamilyName(StringView name)
-{
-    family_name_ = name;
+    return family_names_;
 }
 
 }  // namespace kiwano

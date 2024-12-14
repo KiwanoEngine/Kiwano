@@ -28,11 +28,14 @@ namespace graphics
 {
 namespace directx
 {
-interface DWRITE_DECLARE_INTERFACE("7EC7A55A-1964-4098-83E0-EFA7C12C6EF7") IFontCollectionLoader
+
+// Loaders for font files
+
+interface DWRITE_DECLARE_INTERFACE("7EC7A55A-1964-4098-83E0-EFA7C12C6EF7") IFontFileCollectionLoader
     : public IDWriteFontCollectionLoader
 {
 public:
-    static HRESULT Create(_Out_ IFontCollectionLoader * *ppCollectionLoader);
+    static HRESULT Create(_Out_ IFontFileCollectionLoader * *ppCollectionLoader);
 
     STDMETHOD(AddFilePaths)
     (const Vector<String>& filePaths, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
@@ -47,39 +50,40 @@ public:
     STDMETHOD(SetFilePaths)(const Vector<String>& filePaths) PURE;
 };
 
-interface DWRITE_DECLARE_INTERFACE("F2C411F0-2FB0-4D0E-8C73-D2B8F30137A4") IResourceFontCollectionLoader
+// Loaders for font resources
+
+interface DWRITE_DECLARE_INTERFACE("08D21408-6FC1-4E36-A4EB-4DA16BE3399E") IFontResourceLoader
+    : public IDWriteFontFileLoader
+{
+public:
+    static HRESULT Create(_Out_ IFontResourceLoader * *ppResLoader);
+};
+
+interface DWRITE_DECLARE_INTERFACE("F2C411F0-2FB0-4D0E-8C73-D2B8F30137A4") IFontResourceCollectionLoader
     : public IDWriteFontCollectionLoader
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontCollectionLoader * *ppCollectionLoader,
-                          IDWriteFontFileLoader * pFileLoader);
+    static HRESULT Create(_Out_ IFontResourceCollectionLoader * *ppCollectionLoader, IFontResourceLoader * pResLoader);
 
     STDMETHOD(AddResources)
     (const Vector<BinaryData>& data, _Out_ LPVOID* pCollectionKey, _Out_ uint32_t* pCollectionKeySize) PURE;
 };
 
-interface DWRITE_DECLARE_INTERFACE("08D21408-6FC1-4E36-A4EB-4DA16BE3399E") IResourceFontFileLoader
-    : public IDWriteFontFileLoader
-{
-public:
-    static HRESULT Create(_Out_ IResourceFontFileLoader * *ppFileLoader);
-};
-
-interface DWRITE_DECLARE_INTERFACE("0AD0EC74-7503-46E8-8899-520175ECCB4A") IResourceFontFileEnumerator
+interface DWRITE_DECLARE_INTERFACE("0AD0EC74-7503-46E8-8899-520175ECCB4A") IFontResourceEnumerator
     : public IDWriteFontFileEnumerator
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileEnumerator * *ppEnumerator, IDWriteFactory * pFactory,
-                          IDWriteFontFileLoader * pFileLoader);
+    static HRESULT Create(_Out_ IFontResourceEnumerator * *ppEnumerator, IDWriteFactory * pFactory,
+                          IFontResourceLoader * pResLoader);
 
     STDMETHOD(SetResources)(const Vector<BinaryData>& data) PURE;
 };
 
-interface DWRITE_DECLARE_INTERFACE("A6267450-27F3-4948-995F-FF8345A72F88") IResourceFontFileStream
+interface DWRITE_DECLARE_INTERFACE("A6267450-27F3-4948-995F-FF8345A72F88") IFontResourceStream
     : public IDWriteFontFileStream
 {
 public:
-    static HRESULT Create(_Out_ IResourceFontFileStream * *ppStream, const BinaryData& data);
+    static HRESULT Create(_Out_ IFontResourceStream * *ppStream, const BinaryData& data);
 };
 
 }  // namespace directx

@@ -274,12 +274,19 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file)
+void LoadFontsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, const Vector<String>& files)
 {
-    RefPtr<Font> font = Font::Preload(gdata->path + file.data());
-    if (font)
+    Vector<String> full_paths;
+    full_paths.reserve(files.size());
+    for (const auto& file : files)
     {
-        cache->AddObject(id, font);
+        full_paths.emplace_back(file);
+    }
+
+    RefPtr<FontCollection> collection = FontCollection::Preload(full_paths);
+    if (collection)
+    {
+        cache->AddObject(id, collection);
         return;
     }
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
@@ -345,14 +352,20 @@ void LoadJsonData(ResourceCache* cache, const Json& json_data)
     {
         for (const auto& font : json_data["fonts"])
         {
-            String id, file;
-
+            String id;
             if (font.count("id"))
                 id = font["id"].get<String>();
-            if (font.count("file"))
-                file = font["file"].get<String>();
 
-            LoadFontsFromData(cache, &global_data, id, file);
+            if (font.count("files"))
+            {
+                Vector<String> files;
+                files.reserve(font["files"].size());
+                for (const auto& file : font["files"])
+                {
+                    files.push_back(file.get<String>());
+                }
+                LoadFontsFromData(cache, &global_data, id, files);
+            }
         }
     }
 }
@@ -419,13 +432,19 @@ void LoadXmlData(ResourceCache* cache, const XmlNode& elem)
     {
         for (auto font : fonts.children())
         {
-            String id, file;
+            String id;
             if (auto attr = font.attribute("id"))
                 id = attr.value();
-            if (auto attr = font.attribute("file"))
-                file = attr.value();
 
-            LoadFontsFromData(cache, &global_data, id, file);
+            if (auto files_node = font.child("files"))
+            {
+                Vector<String> files;
+                for (auto file_node : files_node.children())
+                {
+                    files.push_back(file_node.value());
+                }
+                LoadFontsFromData(cache, &global_data, id, files);
+            }
         }
     }
 }

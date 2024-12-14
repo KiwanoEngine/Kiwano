@@ -43,13 +43,8 @@ public:
     /// \~chinese
     /// @brief 创建文本角色
     /// @param text 文字内容
-    TextActor(StringView text);
-
-    /// \~chinese
-    /// @brief 创建文本角色
-    /// @param text 文字内容
     /// @param style 文本样式
-    TextActor(StringView text, const TextStyle& style);
+    TextActor(StringView text, const TextStyle& style = TextStyle());
 
     virtual ~TextActor();
 
@@ -83,7 +78,7 @@ public:
 
     /// \~chinese
     /// @brief 获取字体
-    RefPtr<Font> GetFont() const;
+    const Font& GetFont() const;
 
     /// \~chinese
     /// @brief 设置文本
@@ -95,7 +90,7 @@ public:
 
     /// \~chinese
     /// @brief 设置字体
-    void SetFont(RefPtr<Font> font);
+    void SetFont(const Font& font);
 
     /// \~chinese
     /// @brief 设置文字填充画刷
@@ -183,7 +178,7 @@ inline StringView TextActor::GetText() const
     return content_;
 }
 
-inline RefPtr<Font> TextActor::GetFont() const
+inline const Font& TextActor::GetFont() const
 {
     return style_.font;
 }

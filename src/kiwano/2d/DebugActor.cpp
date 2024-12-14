@@ -60,7 +60,7 @@ DebugActor::DebugActor()
     background_brush_ = MakePtr<Brush>(Color::Rgba(0x000000, 0.7f));
     debug_text_brush_ = MakePtr<Brush>(Color::White);
 
-    debug_text_style_.font         = new Font("Arial", 16.0f, FontWeight::Normal);
+    debug_text_style_.font         = Font("Arial", 16.0f, FontWeight::Normal);
     debug_text_style_.line_spacing = 20.f;
 
     AddListener<MouseHoverEvent>([=](Event*) { SetOpacity(0.4f); });

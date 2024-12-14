@@ -83,11 +83,8 @@ uint32_t TextLayout::GetLineCount() const
     return line_count_;
 }
 
-void TextLayout::SetFont(RefPtr<Font> font)
+void TextLayout::SetFont(const Font& font)
 {
-    if (!font)
-        return;
-
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     auto native = ComPolicy::Get<IDWriteTextLayout>((const NativeObject*)(this));
     KGE_ASSERT(native);
@@ -98,7 +95,7 @@ void TextLayout::SetFont(RefPtr<Font> font)
 
         // reset font collection
         {
-            auto collection = ComPolicy::Get<IDWriteFontCollection>(font);
+            auto collection = ComPolicy::Get<IDWriteFontCollection>(font.collection);
 
             hr = native->SetFontCollection(collection.Get(), { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontCollection failed");
@@ -106,8 +103,7 @@ void TextLayout::SetFont(RefPtr<Font> font)
 
         // reset font family
         {
-            String     family      = font->GetFamilyName();
-            WideString font_family = family.empty() ? L"" : strings::NarrowToWide(family);
+            WideString font_family = font.family_name.empty() ? L"" : strings::NarrowToWide(font.family_name);
 
             hr = native->SetFontFamilyName(font_family.c_str(), { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontFamilyName failed");
@@ -115,13 +111,13 @@ void TextLayout::SetFont(RefPtr<Font> font)
 
         // reset font size
         {
-            hr = native->SetFontSize(font->GetSize(), { 0, content_length_ });
+            hr = native->SetFontSize(font.size, { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontSize failed");
         }
 
         // reset font weight
         {
-            auto font_weight = DWRITE_FONT_WEIGHT(font->GetWeight());
+            auto font_weight = DWRITE_FONT_WEIGHT(font.weight);
 
             hr = native->SetFontWeight(font_weight, { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontWeight failed");
@@ -129,7 +125,7 @@ void TextLayout::SetFont(RefPtr<Font> font)
 
         // reset font style
         {
-            auto font_style = DWRITE_FONT_STYLE(font->GetPosture());
+            auto font_style = DWRITE_FONT_STYLE(font.posture);
 
             hr = native->SetFontStyle(font_style, { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStyle failed");
@@ -137,14 +133,14 @@ void TextLayout::SetFont(RefPtr<Font> font)
 
         // reset font stretch
         {
-            auto font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
+            auto font_stretch = DWRITE_FONT_STRETCH(font.stretch);
 
             hr = native->SetFontStretch(font_stretch, { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStretch failed");
         }
     }
 #else
-        // not supported
+    // not supported
 #endif
 
     SetDirtyFlag(DirtyFlag::Dirty);

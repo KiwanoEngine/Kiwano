@@ -638,7 +638,8 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
     KGE_SET_STATUS_IF_FAILED(hr, const_cast<GifImage&>(gif), "Load GIF frame failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path)
+void RendererImpl::CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                                        const Vector<String>& file_paths)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -646,34 +647,41 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
         hr = E_UNEXPECTED;
     }
 
+    Vector<String> full_paths;
     if (SUCCEEDED(hr))
     {
-        if (!FileSystem::GetInstance().IsFileExists(file_path))
+        full_paths.reserve(file_paths.size());
+        for (const auto& file_path : file_paths)
         {
-            hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
-            KGE_SET_STATUS_IF_FAILED(hr, font, strings::Format("Font file '%s' not found!", file_path.data()).c_str());
-            return;
+            if (!FileSystem::GetInstance().IsFileExists(file_path))
+            {
+                hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+                KGE_SET_STATUS_IF_FAILED(hr, collection,
+                                         strings::Format("Font file '%s' not found!", file_path.data()).c_str());
+                return;
+            }
+
+            full_paths.emplace_back(FileSystem::GetInstance().GetFullPathForFile(file_path));
         }
     }
 
     if (SUCCEEDED(hr))
     {
-        String full_path = FileSystem::GetInstance().GetFullPathForFile(file_path);
-
         ComPtr<IDWriteFontCollection> font_collection;
-        hr = d2d_res_->CreateFontCollectionFromFiles(font_collection, { full_path });
+        hr = d2d_res_->CreateFontCollectionFromFiles(font_collection, full_paths);
 
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            ComPolicy::Set(font, font_collection);
+            ComPolicy::Set(collection, font_collection);
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
+    KGE_SET_STATUS_IF_FAILED(hr, collection, "Create font collection failed");
 }
 
-void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data)
+void RendererImpl::CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                                        const Vector<BinaryData>& datas)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -684,16 +692,16 @@ void RendererImpl::CreateFontCollection(Font& font, Vector<String>& family_names
     if (SUCCEEDED(hr))
     {
         ComPtr<IDWriteFontCollection> font_collection;
-        hr = d2d_res_->CreateFontCollectionFromBinaryData(font_collection, Vector<BinaryData>{ data });
+        hr = d2d_res_->CreateFontCollectionFromBinaryData(font_collection, datas);
 
         if (SUCCEEDED(hr))
         {
             d2d_res_->GetFontFamilyNames(family_names, font_collection);  // ignore the result
-            ComPolicy::Set(font, font_collection);
+            ComPolicy::Set(collection, font_collection);
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, font, "Create font collection failed");
+    KGE_SET_STATUS_IF_FAILED(hr, collection, "Create font collection failed");
 }
 
 void RendererImpl::CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style)
@@ -713,25 +721,13 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, StringView content, cons
 
     if (SUCCEEDED(hr))
     {
-        RefPtr<Font> font = style.font;
-        if (!font)
-        {
-            font = new Font;
-        }
+        float font_size    = style.font.size;
+        auto  font_weight  = DWRITE_FONT_WEIGHT(style.font.weight);
+        auto  font_style   = DWRITE_FONT_STYLE(style.font.posture);
+        auto  font_stretch = DWRITE_FONT_STRETCH(style.font.stretch);
+        auto  collection   = ComPolicy::Get<IDWriteFontCollection>(style.font.collection);
 
-        float font_size    = font->GetSize();
-        auto  font_weight  = DWRITE_FONT_WEIGHT(font->GetWeight());
-        auto  font_style   = DWRITE_FONT_STYLE(font->GetPosture());
-        auto  font_stretch = DWRITE_FONT_STRETCH(font->GetStretch());
-        auto  collection   = ComPolicy::Get<IDWriteFontCollection>(font);
-
-        WideString font_family;
-
-        String name = font->GetFamilyName();
-        if (!name.empty())
-        {
-            font_family = strings::NarrowToWide(name);
-        }
+        WideString font_family = style.font.family_name.empty() ? L"" : strings::NarrowToWide(style.font.family_name);
 
         ComPtr<IDWriteTextFormat> format;
         hr = d2d_res_->CreateTextFormat(format, font_family.c_str(), collection, font_weight, font_style, font_stretch,

@@ -33,11 +33,6 @@ TextActor::TextActor()
 {
 }
 
-TextActor::TextActor(StringView text)
-    : TextActor(text, TextStyle())
-{
-}
-
 TextActor::TextActor(StringView text, const TextStyle& style)
     : TextActor()
 {
@@ -100,15 +95,12 @@ void TextActor::SetStyle(const TextStyle& style)
         layout_->Reset(content_, style);
 }
 
-void TextActor::SetFont(RefPtr<Font> font)
+void TextActor::SetFont(const Font& font)
 {
-    if (style_.font != font)
-    {
-        is_cache_dirty_ = true;
-        style_.font     = font;
-        if (layout_)
-            layout_->SetFont(font);
-    }
+    is_cache_dirty_ = true;
+    style_.font     = font;
+    if (layout_)
+        layout_->SetFont(font);
 }
 
 void TextActor::SetUnderline(bool enable)

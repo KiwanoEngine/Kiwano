@@ -73,7 +73,7 @@ public:
     /// \~chinese
     /// @brief 设置字体
     /// @param font 字体
-    void SetFont(RefPtr<Font> font);
+    void SetFont(const Font& font);
 
     /// \~chinese
     /// @brief 设置下划线

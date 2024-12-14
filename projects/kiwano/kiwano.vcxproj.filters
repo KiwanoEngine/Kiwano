@@ -162,7 +162,7 @@
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D3DDeviceResourcesBase.h">
       <Filter>render\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.h">
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\FontLoader.h">
       <Filter>render\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\helper.h">
@@ -503,7 +503,7 @@
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D3D11DeviceResources.cpp">
       <Filter>render\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\DirectX\FontCollectionLoader.cpp">
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\FontLoader.cpp">
       <Filter>render\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\TextRenderer.cpp">

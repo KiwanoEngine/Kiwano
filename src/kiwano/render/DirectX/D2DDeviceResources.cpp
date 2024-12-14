@@ -107,9 +107,9 @@ private:
 
     ComPtr<IDXGISwapChain> dxgi_swap_chain_;
 
-    ComPtr<IFontCollectionLoader>         font_collection_loader_;
-    ComPtr<IResourceFontFileLoader>       res_font_file_loader_;
-    ComPtr<IResourceFontCollectionLoader> res_font_collection_loader_;
+    ComPtr<IFontFileCollectionLoader>     font_file_collection_loader_;
+    ComPtr<IFontResourceLoader>           font_res_loader_;
+    ComPtr<IFontResourceCollectionLoader> font_res_collection_loader_;
 };
 
 ComPtr<ID2DDeviceResources> GetD2DDeviceResources()
@@ -132,7 +132,8 @@ D2DDeviceResources::~D2DDeviceResources()
     DiscardResources();
 }
 
-HRESULT D2DDeviceResources::Initialize(ComPtr<IDXGIDevice> dxgi_device, ComPtr<IDXGISwapChain> dxgi_swap_chain)
+HRESULT D2DDeviceResources::Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device,
+                                       _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
 {
     HRESULT hr = this->CreateDeviceIndependentResources();
 
@@ -191,22 +192,22 @@ void D2DDeviceResources::DiscardResources()
 {
     if (dwrite_factory_)
     {
-        if (font_collection_loader_)
+        if (font_file_collection_loader_)
         {
-            dwrite_factory_->UnregisterFontCollectionLoader(font_collection_loader_.Get());
-            font_collection_loader_.Reset();
+            dwrite_factory_->UnregisterFontCollectionLoader(font_file_collection_loader_.Get());
+            font_file_collection_loader_.Reset();
         }
 
-        if (res_font_file_loader_)
+        if (font_res_loader_)
         {
-            dwrite_factory_->UnregisterFontFileLoader(res_font_file_loader_.Get());
-            res_font_file_loader_.Reset();
+            dwrite_factory_->UnregisterFontFileLoader(font_res_loader_.Get());
+            font_res_loader_.Reset();
         }
 
-        if (res_font_collection_loader_)
+        if (font_res_collection_loader_)
         {
-            dwrite_factory_->UnregisterFontCollectionLoader(res_font_collection_loader_.Get());
-            res_font_collection_loader_.Reset();
+            dwrite_factory_->UnregisterFontCollectionLoader(font_res_collection_loader_.Get());
+            font_res_collection_loader_.Reset();
         }
     }
 
@@ -262,34 +263,34 @@ HRESULT D2DDeviceResources::CreateDeviceIndependentResources()
         }
     }
 
-    // FontFileLoader and FontCollectionLoader
+    // FontFileLoader and FontFileCollectionLoader
     if (SUCCEEDED(hr))
     {
-        hr = IFontCollectionLoader::Create(&font_collection_loader_);
+        hr = IFontFileCollectionLoader::Create(&font_file_collection_loader_);
 
         if (SUCCEEDED(hr))
         {
-            hr = dwrite_factory->RegisterFontCollectionLoader(font_collection_loader_.Get());
+            hr = dwrite_factory->RegisterFontCollectionLoader(font_file_collection_loader_.Get());
         }
     }
 
-    // ResourceFontFileLoader and ResourceFontCollectionLoader
+    // ResourceFontFileLoader and FontResourceCollectionLoader
     if (SUCCEEDED(hr))
     {
-        hr = IResourceFontFileLoader::Create(&res_font_file_loader_);
+        hr = IFontResourceLoader::Create(&font_res_loader_);
 
         if (SUCCEEDED(hr))
         {
-            hr = dwrite_factory->RegisterFontFileLoader(res_font_file_loader_.Get());
+            hr = dwrite_factory->RegisterFontFileLoader(font_res_loader_.Get());
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = IResourceFontCollectionLoader::Create(&res_font_collection_loader_, res_font_file_loader_.Get());
+            hr = IFontResourceCollectionLoader::Create(&font_res_collection_loader_, font_res_loader_.Get());
 
             if (SUCCEEDED(hr))
             {
-                hr = dwrite_factory->RegisterFontCollectionLoader(res_font_collection_loader_.Get());
+                hr = dwrite_factory->RegisterFontCollectionLoader(font_res_collection_loader_.Get());
             }
         }
     }
@@ -380,7 +381,7 @@ HRESULT D2DDeviceResources::HandleDeviceLost(_In_ ComPtr<IDXGIDevice> dxgi_devic
     return hr;
 }
 
-void D2DDeviceResources::ResetTextRenderingParams(HMONITOR monitor)
+void D2DDeviceResources::ResetTextRenderingParams(_In_ HMONITOR monitor)
 {
     if (!dwrite_factory_ || device_context_)
         return;
@@ -551,80 +552,74 @@ HRESULT D2DDeviceResources::CreateTextLayout(_Out_ ComPtr<IDWriteTextLayout>& te
     return hr;
 }
 
-HRESULT D2DDeviceResources::CreateFontCollectionFromFiles(ComPtr<IDWriteFontCollection>& font_collection,
-                                                          const Vector<String>&          file_paths)
+HRESULT D2DDeviceResources::CreateFontCollectionFromFiles(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
+                                                          const Vector<String>&                file_paths)
 {
-    if (!dwrite_factory_ || !font_collection_loader_)
+    if (!dwrite_factory_ || !font_file_collection_loader_)
         return E_UNEXPECTED;
 
     LPVOID   key      = nullptr;
     uint32_t key_size = 0;
 
-    HRESULT hr = font_collection_loader_->AddFilePaths(file_paths, &key, &key_size);
-
+    HRESULT hr = font_file_collection_loader_->AddFilePaths(file_paths, &key, &key_size);
     if (SUCCEEDED(hr))
     {
-        hr =
-            dwrite_factory_->CreateCustomFontCollection(font_collection_loader_.Get(), key, key_size, &font_collection);
-    }
-    return hr;
-}
-
-HRESULT D2DDeviceResources::CreateFontCollectionFromBinaryData(ComPtr<IDWriteFontCollection>& font_collection,
-                                                               const Vector<BinaryData>&      data)
-{
-    if (!dwrite_factory_ || !res_font_collection_loader_)
-        return E_UNEXPECTED;
-
-    LPVOID   key      = nullptr;
-    uint32_t key_size = 0;
-
-    HRESULT hr = res_font_collection_loader_->AddResources(data, &key, &key_size);
-
-    if (SUCCEEDED(hr))
-    {
-        hr = dwrite_factory_->CreateCustomFontCollection(res_font_collection_loader_.Get(), key, key_size,
+        hr = dwrite_factory_->CreateCustomFontCollection(font_file_collection_loader_.Get(), key, key_size,
                                                          &font_collection);
     }
     return hr;
 }
 
-HRESULT D2DDeviceResources::GetFontFamilyNames(Vector<String>&               family_names,
-                                               ComPtr<IDWriteFontCollection> font_collection)
+HRESULT D2DDeviceResources::CreateFontCollectionFromBinaryData(_Out_ ComPtr<IDWriteFontCollection>& font_collection,
+                                                               const Vector<BinaryData>&            data)
 {
-    HRESULT hr = S_OK;
+    if (!dwrite_factory_ || !font_res_collection_loader_)
+        return E_UNEXPECTED;
 
-    if (!font_collection)
-        hr = E_FAIL;
+    LPVOID   key      = nullptr;
+    uint32_t key_size = 0;
 
+    HRESULT hr = font_res_collection_loader_->AddResources(data, &key, &key_size);
     if (SUCCEEDED(hr))
     {
-        UINT32 count = font_collection->GetFontFamilyCount();
-        for (UINT32 i = 0; i < count; i++)
+        hr = dwrite_factory_->CreateCustomFontCollection(font_res_collection_loader_.Get(), key, key_size,
+                                                         &font_collection);
+    }
+    return hr;
+}
+
+HRESULT D2DDeviceResources::GetFontFamilyNames(_Out_ Vector<String>& family_names,
+                                               _In_ ComPtr<IDWriteFontCollection> font_collection)
+{
+    if (!font_collection)
+        return E_FAIL;
+
+    HRESULT hr    = E_FAIL;
+    UINT32  count = font_collection->GetFontFamilyCount();
+    for (UINT32 i = 0; i < count; i++)
+    {
+        ComPtr<IDWriteFontFamily> family;
+        hr = font_collection->GetFontFamily(i, &family);
+
+        if (SUCCEEDED(hr))
         {
-            ComPtr<IDWriteFontFamily> family;
-            hr = font_collection->GetFontFamily(i, &family);
+            ComPtr<IDWriteLocalizedStrings> str;
+            hr = family->GetFamilyNames(&str);
 
             if (SUCCEEDED(hr))
             {
-                ComPtr<IDWriteLocalizedStrings> str;
-                hr = family->GetFamilyNames(&str);
+                UINT32 length;
+                hr = str->GetStringLength(0, &length);
 
                 if (SUCCEEDED(hr))
                 {
-                    UINT32 length;
-                    hr = str->GetStringLength(0, &length);
+                    WideString name;
+                    name.resize(length + 1);
+                    str->GetString(0, &name[0], UINT32(name.size()));
 
                     if (SUCCEEDED(hr))
                     {
-                        WideString name;
-                        name.resize(length + 1);
-                        str->GetString(0, &name[0], UINT32(name.size()));
-
-                        if (SUCCEEDED(hr))
-                        {
-                            family_names.emplace_back(strings::WideToNarrow(name));
-                        }
+                        family_names.emplace_back(strings::WideToNarrow(name));
                     }
                 }
             }

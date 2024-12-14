@@ -118,18 +118,20 @@ public:
     virtual void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) = 0;
 
     /// \~chinese
-    /// @brief 创建字体集内部资源
+    /// @brief 创建字体集合
     /// @param[out] font 字体
     /// @param[out] family_names 字体包含的字体族
     /// @param[in] file_paths 字体文件路径
-    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path) = 0;
+    virtual void CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                                      const Vector<String>& file_paths) = 0;
 
     /// \~chinese
-    /// @brief 创建字体集内部资源
-    /// @param[out] font 字体
+    /// @brief 创建字体集合
+    /// @param[out] collection 字体集合
     /// @param[out] family_names 字体包含的字体族
-    /// @param[in] data 字体二进制资源
-    virtual void CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data) = 0;
+    /// @param[in] resources 字体二进制资源
+    virtual void CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                                      const Vector<BinaryData>& datas) = 0;
 
     /// \~chinese
     /// @brief 创建文字布局内部资源

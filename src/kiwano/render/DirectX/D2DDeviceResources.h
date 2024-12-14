@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/render/DirectX/helper.h>
-#include <kiwano/render/DirectX/FontCollectionLoader.h>
+#include <kiwano/render/DirectX/FontLoader.h>
 
 namespace kiwano
 {

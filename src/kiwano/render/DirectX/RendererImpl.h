@@ -43,9 +43,11 @@ public:
 
     void CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index) override;
 
-    void CreateFontCollection(Font& font, Vector<String>& family_names, StringView file_path) override;
+    void CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                              const Vector<String>& file_paths) override;
 
-    void CreateFontCollection(Font& font, Vector<String>& family_names, const BinaryData& data) override;
+    void CreateFontCollection(FontCollection& collection, Vector<String>& family_names,
+                              const Vector<BinaryData>& datas) override;
 
     void CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style) override;
 

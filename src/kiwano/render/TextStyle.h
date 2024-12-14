@@ -50,12 +50,12 @@ enum class TextAlign
 class KGE_API TextStyle
 {
 public:
-    RefPtr<Font> font;                ///< 字体
-    TextAlign    alignment;           ///< 对齐方式
-    float        wrap_width;          ///< 自动换行宽度
-    float        line_spacing;        ///< 行间距
-    bool         show_underline;      ///< 显示下划线
-    bool         show_strikethrough;  ///< 显示删除线
+    bool      show_underline;      ///< 显示下划线
+    bool      show_strikethrough;  ///< 显示删除线
+    float     wrap_width;          ///< 自动换行宽度
+    float     line_spacing;        ///< 行间距
+    TextAlign alignment;           ///< 对齐方式
+    Font      font;                ///< 字体
 
 public:
     /**
@@ -69,7 +69,7 @@ public:
      * @brief 构建文本样式
      * @param font 字体
      */
-    TextStyle(RefPtr<Font> font);
+    TextStyle(Font font);
 
     /**
      * \~chinese
