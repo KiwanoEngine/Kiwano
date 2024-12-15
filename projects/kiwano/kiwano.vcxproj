@@ -40,7 +40,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Exception.h" />
     <ClInclude Include="..\..\src\kiwano\core\Flag.h" />
     <ClInclude Include="..\..\src\kiwano\core\Function.h" />
-    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h" />
+    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.hpp" />
     <ClInclude Include="..\..\src\kiwano\core\Library.h" />
     <ClInclude Include="..\..\src\kiwano\core\Serializable.h" />
     <ClInclude Include="..\..\src\kiwano\core\Singleton.h" />

@@ -33,6 +33,11 @@ Director::Director()
 
 Director::~Director() {}
 
+void Director::DestroyModule()
+{
+    ClearStages();
+}
+
 void Director::EnterStage(RefPtr<Stage> stage, RefPtr<Transition> transition)
 {
     KGE_ASSERT(stage && "Director::EnterStage failed, NULL pointer exception");
@@ -109,8 +114,8 @@ void Director::ShowDebugInfo(bool show)
 
 void Director::ClearStages()
 {
-    while (!stages_.empty())
-        stages_.pop();
+    dispatcher_list_.Clear();
+    stages_ = Stack<RefPtr<Stage>>();
 
     current_stage_.Reset();
     next_stage_.Reset();
@@ -118,8 +123,15 @@ void Director::ClearStages()
     debug_actor_.Reset();
 }
 
+void Director::PushEventDispatcher(EventDispatcher* dispatcher)
+{
+    dispatcher_list_.PushBack(dispatcher);
+}
+
 void Director::OnUpdate(UpdateModuleContext& ctx)
 {
+    dispatcher_list_.Clear();
+
     if (transition_)
     {
         transition_->Update(ctx.dt);
@@ -175,14 +187,10 @@ void Director::OnRender(RenderModuleContext& ctx)
 
 void Director::HandleEvent(EventModuleContext& ctx)
 {
-    if (current_stage_)
-        current_stage_->DispatchEvent(ctx.evt);
-
-    if (next_stage_)
-        next_stage_->DispatchEvent(ctx.evt);
-
-    if (debug_actor_)
-        debug_actor_->DispatchEvent(ctx.evt);
+    for (auto dispatcher : dispatcher_list_)
+    {
+        dispatcher->DispatchEvent(ctx.evt);
+    }
 }
 
 }  // namespace kiwano

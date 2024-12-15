@@ -216,7 +216,7 @@
     <ClInclude Include="..\..\src\kiwano\core\Any.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.h">
+    <ClInclude Include="..\..\src\kiwano\core\IntrusiveList.hpp">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\ShapeMaker.h">

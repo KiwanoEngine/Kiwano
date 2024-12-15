@@ -148,18 +148,4 @@ void ComponentManager::Render(RenderContext& ctx)
     }
 }
 
-void ComponentManager::DispatchToComponents(Event* evt)
-{
-    if (!components_.empty())
-    {
-        for (auto& p : components_)
-        {
-            if (p.second->IsEnable())
-            {
-                p.second->HandleEvent(evt);
-            }
-        }
-    }
-}
-
 }  // namespace kiwano

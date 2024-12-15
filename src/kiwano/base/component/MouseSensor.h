@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/base/component/Component.h>
 #include <kiwano/event/MouseEvent.h>
+#include <kiwano/event/listener/EventListener.h>
 
 namespace kiwano
 {
@@ -51,13 +52,17 @@ public:
     bool IsPressing() const;
 
 protected:
-    /// \~chinese
-    /// @brief 处理角色事件
-    void HandleEvent(Event* evt) override;
+    void InitComponent(Actor* actor) override;
+
+    void DestroyComponent() override;
+
+    virtual void HandleEvent(Event* evt);
 
 private:
     bool hover_;
     bool pressed_;
+
+    RefPtr<EventListener> listener_;
 };
 
 /** @} */

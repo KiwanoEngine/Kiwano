@@ -23,7 +23,7 @@
 #include <kiwano/core/Cloneable.h>
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/core/IntrusiveList.h>
+#include <kiwano/core/IntrusiveList.hpp>
 #include <kiwano/math/Math.h>
 
 namespace kiwano

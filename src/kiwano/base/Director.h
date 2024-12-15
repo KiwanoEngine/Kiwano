@@ -89,12 +89,21 @@ public:
      */
     void ClearStages();
 
+    /**
+     * \~chinese
+     * @brief 添加事件分发器（下一帧自动清除）
+     * @param dispatcher 事件分发器
+     */
+    void PushEventDispatcher(EventDispatcher* dispatcher);
+
 public:
     void OnUpdate(UpdateModuleContext& ctx) override;
 
     void OnRender(RenderModuleContext& ctx) override;
 
     void HandleEvent(EventModuleContext& ctx) override;
+
+    void DestroyModule() override;
 
     virtual ~Director();
 
@@ -108,5 +117,9 @@ private:
     RefPtr<Stage>        next_stage_;
     RefPtr<Actor>        debug_actor_;
     RefPtr<Transition>   transition_;
+
+    IntrusiveList<EventDispatcher*> dispatcher_list_;
 };
+
+
 }  // namespace kiwano

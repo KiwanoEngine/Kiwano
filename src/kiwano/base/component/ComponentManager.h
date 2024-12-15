@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/IntrusiveList.h>
+#include <kiwano/core/IntrusiveList.hpp>
 #include <kiwano/base/component/Component.h>
 
 namespace kiwano
@@ -93,10 +93,6 @@ public:
     /// \~chinese
     /// @brief 渲染组件
     void Render(RenderContext& ctx);
-
-    /// \~chinese
-    /// @brief 分发事件
-    void DispatchToComponents(Event* evt);
 
 protected:
     ComponentManager(Actor* target);

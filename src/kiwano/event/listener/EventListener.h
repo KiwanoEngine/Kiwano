@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/core/IntrusiveList.h>
+#include <kiwano/core/IntrusiveList.hpp>
 #include <kiwano/base/ObjectBase.h>
 #include <kiwano/event/Events.h>
 
@@ -66,7 +66,6 @@ public:
     /// \~chinese
     /// @brief 创建监听器
     /// @param name 监听器名称
-    /// @param type 监听的事件类型
     /// @param callback 回调函数
     static RefPtr<EventListener> Create(StringView name, const Callback& callback);
 

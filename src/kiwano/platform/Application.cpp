@@ -147,8 +147,6 @@ void Application::Destroy()
     }
 
     // Clear user resources
-    Director::GetInstance().ClearStages();
-
     for (auto iter = modules_.rbegin(); iter != modules_.rend(); ++iter)
     {
         (*iter)->DestroyModule();

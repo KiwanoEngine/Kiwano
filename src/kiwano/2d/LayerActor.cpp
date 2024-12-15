@@ -39,18 +39,6 @@ LayerActor::LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform, floa
 
 LayerActor::~LayerActor() {}
 
-bool LayerActor::DispatchEvent(Event* evt)
-{
-    if (!IsVisible())
-        return true;
-
-    if (swallow_)
-    {
-        return EventDispatcher::DispatchEvent(evt);
-    }
-    return Actor::DispatchEvent(evt);
-}
-
 void LayerActor::Render(RenderContext& ctx)
 {
     PrepareToRender(ctx);

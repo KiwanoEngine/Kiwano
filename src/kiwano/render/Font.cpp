@@ -34,10 +34,7 @@ RefPtr<FontCollection> FontCollection::Preload(const Vector<String>& files)
         Renderer::GetInstance().CreateFontCollection(*ptr, ptr->family_names_, files);
         if (ptr->IsValid())
         {
-            for (const auto& name : ptr->GetFamilyNames())
-            {
-                FontCache::GetInstance().AddFontCollection(name, ptr);
-            }
+            FontCache::GetInstance().AddFontCollection(ptr);
         }
     }
     return ptr;
@@ -58,10 +55,7 @@ RefPtr<FontCollection> FontCollection::Preload(const Vector<Resource>& resources
         Renderer::GetInstance().CreateFontCollection(*ptr, ptr->family_names_, datas);
         if (ptr->IsValid())
         {
-            for (const auto& name : ptr->GetFamilyNames())
-            {
-                FontCache::GetInstance().AddFontCollection(name, ptr);
-            }
+            FontCache::GetInstance().AddFontCollection(ptr);
         }
     }
     return ptr;
@@ -95,6 +89,14 @@ Font::Font(RefPtr<FontCollection> collection, float size, uint32_t weight, FontP
 FontCache::FontCache() {}
 
 FontCache::~FontCache() {}
+
+void FontCache::AddFontCollection(RefPtr<FontCollection> collection)
+{
+    for (const auto& name : collection->GetFamilyNames())
+    {
+        FontCache::GetInstance().AddFontCollection(name, collection);
+    }
+}
 
 void FontCache::AddFontCollection(StringView font_family, RefPtr<FontCollection> collection)
 {

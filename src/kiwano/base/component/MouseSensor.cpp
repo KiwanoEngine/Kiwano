@@ -31,6 +31,21 @@ MouseSensor::MouseSensor()
 
 MouseSensor::~MouseSensor() {}
 
+void MouseSensor::InitComponent(Actor* actor)
+{
+    Component::InitComponent(actor);
+
+    listener_ = EventListener::Create("__KGE_MOUSE_SENSOR_LISTENER__",
+                                      std::bind(&MouseSensor::HandleEvent, this, std::placeholders::_1));
+    actor->AddListener(listener_);
+}
+
+void MouseSensor::DestroyComponent()
+{
+    if (listener_)
+        listener_->Remove();
+}
+
 void MouseSensor::HandleEvent(Event* evt)
 {
     Actor* target = GetBoundActor();
@@ -44,7 +59,7 @@ void MouseSensor::HandleEvent(Event* evt)
 
             RefPtr<MouseHoverEvent> hover = new MouseHoverEvent;
             hover->pos                    = mouse_evt->pos;
-            target->HandleEvent(hover.Get());
+            GetBoundActor()->DispatchEvent(hover.Get());
         }
         else if (hover_ && !contains)
         {
@@ -53,7 +68,7 @@ void MouseSensor::HandleEvent(Event* evt)
 
             RefPtr<MouseOutEvent> out = new MouseOutEvent;
             out->pos                  = mouse_evt->pos;
-            target->HandleEvent(out.Get());
+            GetBoundActor()->DispatchEvent(out.Get());
         }
     }
 
@@ -71,7 +86,7 @@ void MouseSensor::HandleEvent(Event* evt)
         RefPtr<MouseClickEvent> click = new MouseClickEvent;
         click->pos                    = mouse_up_evt->pos;
         click->button                 = mouse_up_evt->button;
-        target->HandleEvent(click.Get());
+        GetBoundActor()->DispatchEvent(click.Get());
     }
 }
 

@@ -20,6 +20,7 @@
 
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
+#include <kiwano/base/Director.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 
@@ -46,7 +47,6 @@ Actor::Actor()
     , update_pausing_(false)
     , cascade_opacity_(true)
     , show_border_(false)
-    , evt_dispatch_enabled_(true)
     , dirty_flag_(DirtyFlag::DirtyVisibility)
     , parent_(nullptr)
     , stage_(nullptr)
@@ -66,6 +66,34 @@ Actor::~Actor()
 
 void Actor::Update(Duration dt)
 {
+    if (children_.IsEmpty())
+    {
+        UpdateSelf(dt);
+        return;
+    }
+
+    // update children those are less than 0 in Z-Order
+    RefPtr<Actor> child = children_.GetFirst();
+    while (child)
+    {
+        if (child->GetZOrder() >= 0)
+            break;
+
+        child->Update(dt);
+        child = child->GetNext();
+    }
+
+    UpdateSelf(dt);
+
+    while (child)
+    {
+        child->Update(dt);
+        child = child->GetNext();
+    }
+}
+
+void Actor::UpdateSelf(Duration dt)
+{
     Animator::Update(this, dt);
     TaskScheduler::Update(dt);
     ComponentManager::Update(dt);
@@ -78,14 +106,9 @@ void Actor::Update(Duration dt)
         OnUpdate(dt);
     }
 
-    if (!children_.IsEmpty())
+    if (!GetAllListeners().IsEmpty())
     {
-        RefPtr<Actor> next;
-        for (auto child = children_.GetFirst(); child; child = next)
-        {
-            next = child->GetNext();
-            child->Update(dt);
-        }
+        Director::GetInstance().PushEventDispatcher(this);
     }
 }
 
@@ -182,42 +205,6 @@ bool Actor::CheckVisibility(RenderContext& ctx) const
     return visible_in_rt_;
 }
 
-bool Actor::DispatchEvent(Event* evt)
-{
-    if (!visible_ || !evt_dispatch_enabled_)
-        return true;
-
-    // Dispatch to children those are greater than 0 in Z-Order
-    RefPtr<Actor> child = children_.GetLast();
-    while (child)
-    {
-        if (child->GetZOrder() < 0)
-            break;
-
-        if (!child->DispatchEvent(evt))
-            return false;
-
-        child = child->GetPrev();
-    }
-
-    if (!HandleEvent(evt))
-        return false;
-
-    while (child)
-    {
-        if (!child->DispatchEvent(evt))
-            return false;
-
-        child = child->GetPrev();
-    }
-    return true;
-}
-
-void Actor::SetEventDispatchEnabled(bool enabled)
-{
-    evt_dispatch_enabled_ = enabled;
-}
-
 void Actor::DoSerialize(Serializer* serializer) const
 {
     ObjectBase::DoSerialize(serializer);
@@ -236,15 +223,6 @@ void Actor::DoDeserialize(Deserializer* deserializer)
 
     SetOpacity(opacity);
     SetTransform(transform);
-}
-
-bool Actor::HandleEvent(Event* evt)
-{
-    ComponentManager::DispatchToComponents(evt);
-
-    if (!EventDispatcher::DispatchEvent(evt))
-        return false;
-    return true;
 }
 
 const Matrix3x2& Actor::GetTransformMatrix() const

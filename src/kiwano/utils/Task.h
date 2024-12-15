@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/utils/Ticker.h>
-#include <kiwano/core/IntrusiveList.h>
+#include <kiwano/core/IntrusiveList.hpp>
 
 namespace kiwano
 {

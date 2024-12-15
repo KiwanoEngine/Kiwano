@@ -87,17 +87,17 @@ public:
     /// @brief 在链表尾部添加对象
     void PushBack(reference child)
     {
-        if (child->prev_)
-            child->prev_->next_ = child->next_;
-        if (child->next_)
-            child->next_->prev_ = child->prev_;
+        if (child->GetPrev())
+            child->GetPrev()->GetNext() = child->GetNext();
+        if (child->GetNext())
+            child->GetNext()->GetPrev() = child->GetPrev();
 
-        child->prev_ = last_;
-        child->next_ = nullptr;
+        child->GetPrev() = last_;
+        child->GetNext() = nullptr;
 
         if (first_)
         {
-            last_->next_ = child;
+            last_->GetNext() = child;
         }
         else
         {
@@ -111,17 +111,17 @@ public:
     /// @brief 在链表头部添加对象
     void PushFront(reference child)
     {
-        if (child->prev_)
-            child->prev_->next_ = child->next_;
-        if (child->next_)
-            child->next_->prev_ = child->prev_;
+        if (child->GetPrev())
+            child->GetPrev()->GetNext() = child->GetNext();
+        if (child->GetNext())
+            child->GetNext()->GetPrev() = child->GetPrev();
 
-        child->prev_ = nullptr;
-        child->next_ = first_;
+        child->GetPrev() = nullptr;
+        child->GetNext() = first_;
 
         if (first_)
         {
-            first_->prev_ = child;
+            first_->GetPrev() = child;
         }
         else
         {
@@ -135,64 +135,64 @@ public:
     /// @brief 在链表的对象前插入新对象
     void InsertBefore(reference child, reference before)
     {
-        if (child->prev_)
-            child->prev_->next_ = child->next_;
-        if (child->next_)
-            child->next_->prev_ = child->prev_;
+        if (child->GetPrev())
+            child->GetPrev()->GetNext() = child->GetNext();
+        if (child->GetNext())
+            child->GetNext()->GetPrev() = child->GetPrev();
 
-        if (before->prev_)
-            before->prev_->next_ = child;
+        if (before->GetPrev())
+            before->GetPrev()->GetNext() = child;
         else
             first_ = child;
 
-        child->prev_  = before->prev_;
-        child->next_  = before;
-        before->prev_ = child;
+        child->GetPrev()  = before->GetPrev();
+        child->GetNext()  = before;
+        before->GetPrev() = child;
     }
 
     /// \~chinese
     /// @brief 在链表的对象后插入新对象
     void InsertAfter(reference child, reference after)
     {
-        if (child->prev_)
-            child->prev_->next_ = child->next_;
-        if (child->next_)
-            child->next_->prev_ = child->prev_;
+        if (child->GetPrev())
+            child->GetPrev()->GetNext() = child->GetNext();
+        if (child->GetNext())
+            child->GetNext()->GetPrev() = child->GetPrev();
 
-        if (after->next_)
-            after->next_->prev_ = child;
+        if (after->GetNext())
+            after->GetNext()->GetPrev() = child;
         else
             last_ = child;
 
-        child->next_ = after->next_;
-        child->prev_ = after;
-        after->next_ = child;
+        child->GetNext() = after->GetNext();
+        child->GetPrev() = after;
+        after->GetNext() = child;
     }
 
     /// \~chinese
     /// @brief 移除对象
     void Remove(reference child)
     {
-        if (child->next_)
+        if (child->GetNext())
         {
-            child->next_->prev_ = child->prev_;
+            child->GetNext()->GetPrev() = child->GetPrev();
         }
         else
         {
-            last_ = child->prev_;
+            last_ = child->GetPrev();
         }
 
-        if (child->prev_)
+        if (child->GetPrev())
         {
-            child->prev_->next_ = child->next_;
+            child->GetPrev()->GetNext() = child->GetNext();
         }
         else
         {
-            first_ = child->next_;
+            first_ = child->GetNext();
         }
 
-        child->prev_ = nullptr;
-        child->next_ = nullptr;
+        child->GetPrev() = nullptr;
+        child->GetNext() = nullptr;
     }
 
     /// \~chinese
@@ -203,11 +203,11 @@ public:
         while (p)
         {
             value_type tmp = p;
-            p              = p->next_;
+            p              = p->GetNext();
             if (tmp)
             {
-                tmp->next_ = nullptr;
-                tmp->prev_ = nullptr;
+                tmp->GetNext() = nullptr;
+                tmp->GetPrev() = nullptr;
             }
         }
         first_ = nullptr;
@@ -228,12 +228,12 @@ public:
         do
         {
             tmp = p;
-            p   = p->next_;
+            p   = p->GetNext();
             ++pos;
 
             if (p)
             {
-                if (p->prev_ != tmp)
+                if (p->GetPrev() != tmp)
                     return false;
             }
             else
@@ -449,8 +449,8 @@ public:
     {
         if (rhs)
         {
-            prev_ = rhs->prev_;
-            next_ = rhs->next_;
+            prev_ = rhs->GetPrev();
+            next_ = rhs->GetNext();
         }
     }
 

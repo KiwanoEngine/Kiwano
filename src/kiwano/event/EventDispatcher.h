@@ -32,8 +32,10 @@ typedef IntrusiveList<RefPtr<EventListener>> ListenerList;
  * \~chinese
  * @brief 事件分发器
  */
-class KGE_API EventDispatcher
+class KGE_API EventDispatcher : protected IntrusiveListValue<EventDispatcher*>
 {
+    friend IntrusiveList<EventDispatcher*>;
+
 public:
     /// \~chinese
     /// @brief 添加监听器
@@ -110,7 +112,7 @@ public:
     /// @brief 分发事件
     /// @param evt 事件
     /// @return 是否继续分发该事件
-    bool DispatchEvent(Event* evt);
+    virtual bool DispatchEvent(Event* evt);
 
 private:
     ListenerList listeners_;

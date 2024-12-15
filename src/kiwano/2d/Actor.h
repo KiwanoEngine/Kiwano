@@ -66,6 +66,9 @@ class KGE_API Actor
     friend IntrusiveList<RefPtr<Actor>>;
 
 public:
+    using IntrusiveListValue<RefPtr<Actor>>::GetNext;
+    using IntrusiveListValue<RefPtr<Actor>>::GetPrev;
+
     /// \~chinese
     /// @brief 角色更新回调函数
     typedef Function<void(Duration)> UpdateCallback;
@@ -94,10 +97,6 @@ public:
     /// \~chinese
     /// @brief 是否启用级联透明度
     bool IsCascadeOpacityEnabled() const;
-
-    /// \~chinese
-    /// @brief 是否启用事件分发
-    bool IsEventDispatchEnabled() const;
 
     /// \~chinese
     /// @brief 获取名称的 Hash 值
@@ -404,22 +403,6 @@ public:
     void ShowBorder(bool show);
 
     /// \~chinese
-    /// @brief 分发事件
-    /// @param evt 事件
-    /// @return 是否继续分发该事件
-    virtual bool DispatchEvent(Event* evt);
-
-    /// \~chinese
-    /// @brief 处理事件且不分发
-    /// @param evt 事件
-    bool HandleEvent(Event* evt);
-
-    /// \~chinese
-    /// @brief 开启或关闭事件分发功能
-    /// @param enabled 是否开启
-    void SetEventDispatchEnabled(bool enabled);
-
-    /// \~chinese
     /// @brief 序列化
     void DoSerialize(Serializer* serializer) const override;
 
@@ -435,6 +418,8 @@ protected:
     /// \~chinese
     /// @brief 更新自身和所有子角色
     virtual void Update(Duration dt);
+
+    void UpdateSelf(Duration dt);
 
     /// \~chinese
     /// @brief 渲染自身和所有子角色
@@ -478,7 +463,6 @@ private:
     bool         update_pausing_;
     bool         cascade_opacity_;
     bool         show_border_;
-    bool         evt_dispatch_enabled_;
     mutable bool visible_in_rt_;
 
     enum DirtyFlag : uint8_t
@@ -528,11 +512,6 @@ inline bool Actor::IsVisible() const
 inline bool Actor::IsCascadeOpacityEnabled() const
 {
     return cascade_opacity_;
-}
-
-inline bool Actor::IsEventDispatchEnabled() const
-{
-    return evt_dispatch_enabled_;
 }
 
 inline size_t Actor::GetHashName() const

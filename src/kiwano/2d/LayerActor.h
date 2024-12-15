@@ -67,17 +67,6 @@ public:
     /// @brief 设置图层
     void SetLayer(const Layer& layer);
 
-    /// \~chinese
-    /// @brief 是否开启消息吞没
-    bool IsSwallowEventsEnabled() const;
-
-    /// \~chinese
-    /// @brief 设置消息吞没功能
-    /// @param enabled 是否启用
-    void SetSwallowEvents(bool enabled);
-
-    bool DispatchEvent(Event* evt) override;
-
 protected:
     void Render(RenderContext& ctx) override;
 
@@ -89,16 +78,6 @@ private:
 };
 
 /** @} */
-
-inline bool LayerActor::IsSwallowEventsEnabled() const
-{
-    return swallow_;
-}
-
-inline void LayerActor::SetSwallowEvents(bool enabled)
-{
-    swallow_ = enabled;
-}
 
 inline const Layer& LayerActor::GetLayer() const
 {

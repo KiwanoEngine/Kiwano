@@ -28,7 +28,6 @@ namespace imgui
 Layer::Layer()
     : LayerActor(nullptr)
 {
-    SetSwallowEvents(true);
 }
 
 Layer::Layer(StringView name, const Pipeline& item)

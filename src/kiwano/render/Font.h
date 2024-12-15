@@ -148,6 +148,10 @@ class KGE_API FontCache final : public Singleton<FontCache>
 public:
     /// \~chinese
     /// @brief 添加字体集合缓存
+    void AddFontCollection(RefPtr<FontCollection> collection);
+
+    /// \~chinese
+    /// @brief 添加字体集合缓存
     void AddFontCollection(StringView font_family, RefPtr<FontCollection> collection);
 
     /// \~chinese
