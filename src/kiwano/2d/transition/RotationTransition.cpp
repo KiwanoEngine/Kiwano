@@ -51,10 +51,8 @@ void RotationTransition::Init(Stage* prev, Stage* next)
     in_layer_.opacity = 0.f;
 }
 
-void RotationTransition::Update(Duration dt)
+void RotationTransition::UpdateSelf(Duration dt)
 {
-    Transition::Update(dt);
-
     if (process_ < .5f)
     {
         if (out_stage_)

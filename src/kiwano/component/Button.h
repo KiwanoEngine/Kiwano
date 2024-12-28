@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/component/MouseSensor.h>
+#include <kiwano/component/MouseSensor.h>
 
 namespace kiwano
 {

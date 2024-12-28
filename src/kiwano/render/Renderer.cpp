@@ -23,7 +23,6 @@
 
 namespace kiwano
 {
-
 Renderer::Renderer()
     : vsync_(true)
     , auto_reset_resolution_(true)
@@ -48,6 +47,8 @@ void Renderer::ResetResolutionWhenWindowResized(bool enabled)
 
 void Renderer::Destroy()
 {
+    default_render_group_.Clear();
+    render_group_stack_ = Stack<RenderGroup*>();
     FontCache::GetInstance().Clear();
 }
 
@@ -61,6 +62,35 @@ void Renderer::HandleEvent(EventModuleContext& ctx)
             Resize(evt->width, evt->height);
         }
     }
+}
+
+void Renderer::PushRenderObject(RenderObject* render_object)
+{
+    auto current_group = render_group_stack_.size() ? render_group_stack_.top() : &default_render_group_;
+    current_group->PushRenderObject(render_object);
+}
+
+void Renderer::PushRenderGroup(RenderGroup& render_group)
+{
+    RenderObject* render_object = &render_group;
+    PushRenderObject(render_object);
+    render_group_stack_.push(&render_group);
+}
+
+void Renderer::PopRenderGroup()
+{
+    render_group_stack_.pop();
+}
+
+void Renderer::OnRender(RenderModuleContext& ctx)
+{
+    default_render_group_.OnRender(ctx.render_ctx);
+}
+
+void Renderer::AfterRender(RenderModuleContext& ctx)
+{
+    default_render_group_.AfterRender(ctx.render_ctx);
+    render_group_stack_ = Stack<RenderGroup*>();
 }
 
 }  // namespace kiwano

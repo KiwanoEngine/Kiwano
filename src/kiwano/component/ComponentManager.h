@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/IntrusiveList.hpp>
-#include <kiwano/base/component/Component.h>
+#include <kiwano/component/Component.h>
 
 namespace kiwano
 {
@@ -89,10 +89,6 @@ public:
     /// \~chinese
     /// @brief 更新组件
     void Update(Duration dt);
-
-    /// \~chinese
-    /// @brief 渲染组件
-    void Render(RenderContext& ctx);
 
 protected:
     ComponentManager(Actor* target);

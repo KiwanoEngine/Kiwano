@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/BinaryData.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/platform/NativeObject.hpp>
 
 namespace kiwano

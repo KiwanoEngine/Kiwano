@@ -20,7 +20,7 @@
 
 #include <typeinfo>
 #include <atomic>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/utils/Json.h>
 
@@ -30,13 +30,13 @@ namespace
 {
 
 bool                  tracing_leaks = false;
-Vector<ObjectBase*>   tracing_objects;
+Vector<BaseObject*>   tracing_objects;
 std::atomic<uint64_t> last_object_id = 0;
 ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
 
 }  // namespace
 
-ObjectFailException::ObjectFailException(ObjectBase* obj, const ObjectStatus& status)
+ObjectFailException::ObjectFailException(BaseObject* obj, const ObjectStatus& status)
     : obj_(obj)
     , status_(status)
 {
@@ -49,7 +49,7 @@ char const* ObjectFailException::what() const
 
 ObjectPolicyFunc ObjectPolicy::WarnLog(int threshold)
 {
-    return [=](ObjectBase* obj, const ObjectStatus& status)
+    return [=](BaseObject* obj, const ObjectStatus& status)
     {
         if (!obj->IsValid() || status.code <= threshold)
         {
@@ -60,7 +60,7 @@ ObjectPolicyFunc ObjectPolicy::WarnLog(int threshold)
 
 ObjectPolicyFunc ObjectPolicy::ErrorLog(int threshold)
 {
-    return [=](ObjectBase* obj, const ObjectStatus& status)
+    return [=](BaseObject* obj, const ObjectStatus& status)
     {
         if (!obj->IsValid() || status.code <= threshold)
         {
@@ -71,7 +71,7 @@ ObjectPolicyFunc ObjectPolicy::ErrorLog(int threshold)
 
 ObjectPolicyFunc ObjectPolicy::Exception(int threshold)
 {
-    return [=](ObjectBase* obj, const ObjectStatus& status)
+    return [=](BaseObject* obj, const ObjectStatus& status)
     {
         if (!obj->IsValid() || status.code <= threshold)
         {
@@ -80,7 +80,7 @@ ObjectPolicyFunc ObjectPolicy::Exception(int threshold)
     };
 }
 
-ObjectBase::ObjectBase()
+BaseObject::BaseObject()
     : tracing_leak_(false)
     , name_(nullptr)
     , user_data_(nullptr)
@@ -89,11 +89,11 @@ ObjectBase::ObjectBase()
     , id_(++last_object_id)
 {
 #ifdef KGE_DEBUG
-    ObjectBase::AddObjectToTracingList(this);
+    BaseObject::AddObjectToTracingList(this);
 #endif
 }
 
-ObjectBase::~ObjectBase()
+BaseObject::~BaseObject()
 {
     if (name_)
     {
@@ -110,30 +110,30 @@ ObjectBase::~ObjectBase()
     }
 
 #ifdef KGE_DEBUG
-    ObjectBase::RemoveObjectFromTracingList(this);
+    BaseObject::RemoveObjectFromTracingList(this);
 #endif
 }
 
-void* ObjectBase::GetUserData() const
+void* BaseObject::GetUserData() const
 {
     return user_data_;
 }
 
-void ObjectBase::SetUserData(void* data)
+void BaseObject::SetUserData(void* data)
 {
     user_data_ = data;
 }
 
-void ObjectBase::Hold(RefPtr<ObjectBase> other)
+void BaseObject::Hold(RefPtr<BaseObject> other)
 {
     if (!holdings_)
     {
-        holdings_ = new Set<RefPtr<ObjectBase>>;
+        holdings_ = new Set<RefPtr<BaseObject>>;
     }
     holdings_->insert(other);
 }
 
-void ObjectBase::Unhold(RefPtr<ObjectBase> other)
+void BaseObject::Unhold(RefPtr<BaseObject> other)
 {
     if (holdings_)
     {
@@ -141,7 +141,7 @@ void ObjectBase::Unhold(RefPtr<ObjectBase> other)
     }
 }
 
-void ObjectBase::SetName(StringView name)
+void BaseObject::SetName(StringView name)
 {
     if (IsName(name))
         return;
@@ -162,29 +162,29 @@ void ObjectBase::SetName(StringView name)
     *name_ = name;
 }
 
-void ObjectBase::DoSerialize(Serializer* serializer) const
+void BaseObject::DoSerialize(Serializer* serializer) const
 {
     (*serializer) << GetName();
 }
 
-void ObjectBase::DoDeserialize(Deserializer* deserializer)
+void BaseObject::DoDeserialize(Deserializer* deserializer)
 {
     String name;
     (*deserializer) >> name;
     SetName(name);
 }
 
-bool ObjectBase::IsValid() const
+bool BaseObject::IsValid() const
 {
     return status_ ? status_->Success() : true;
 }
 
-ObjectStatus* ObjectBase::GetStatus() const
+ObjectStatus* BaseObject::GetStatus() const
 {
     return status_;
 }
 
-void ObjectBase::SetStatus(const ObjectStatus& status)
+void BaseObject::SetStatus(const ObjectStatus& status)
 {
     if (!status_)
     {
@@ -203,12 +203,12 @@ void ObjectBase::SetStatus(const ObjectStatus& status)
     }
 }
 
-void ObjectBase::Fail(StringView msg, int code)
+void BaseObject::Fail(StringView msg, int code)
 {
     SetStatus(ObjectStatus(code, msg));
 }
 
-void ObjectBase::ClearStatus()
+void BaseObject::ClearStatus()
 {
     if (status_)
     {
@@ -217,27 +217,27 @@ void ObjectBase::ClearStatus()
     }
 }
 
-void ObjectBase::SetObjectPolicy(const ObjectPolicyFunc& policy)
+void BaseObject::SetObjectPolicy(const ObjectPolicyFunc& policy)
 {
     object_policy_ = policy;
 }
 
-bool ObjectBase::IsTracingLeaks()
+bool BaseObject::IsTracingLeaks()
 {
     return tracing_leaks;
 }
 
-void ObjectBase::StartTracingLeaks()
+void BaseObject::StartTracingLeaks()
 {
     tracing_leaks = true;
 }
 
-void ObjectBase::StopTracingLeaks()
+void BaseObject::StopTracingLeaks()
 {
     tracing_leaks = false;
 }
 
-void ObjectBase::DumpTracingObjects()
+void BaseObject::DumpTracingObjects()
 {
     KGE_DEBUG_LOGF("-------------------------- All Objects --------------------------");
     for (const auto object : tracing_objects)
@@ -248,12 +248,12 @@ void ObjectBase::DumpTracingObjects()
     KGE_DEBUG_LOGF("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }
 
-Vector<ObjectBase*>& ObjectBase::GetTracingObjects()
+Vector<BaseObject*>& BaseObject::GetTracingObjects()
 {
     return tracing_objects;
 }
 
-void ObjectBase::AddObjectToTracingList(ObjectBase* obj)
+void BaseObject::AddObjectToTracingList(BaseObject* obj)
 {
 #ifdef KGE_DEBUG
     if (tracing_leaks && !obj->tracing_leak_)
@@ -264,7 +264,7 @@ void ObjectBase::AddObjectToTracingList(ObjectBase* obj)
 #endif
 }
 
-void ObjectBase::RemoveObjectFromTracingList(ObjectBase* obj)
+void BaseObject::RemoveObjectFromTracingList(BaseObject* obj)
 {
 #ifdef KGE_DEBUG
     if (tracing_leaks && obj->tracing_leak_)

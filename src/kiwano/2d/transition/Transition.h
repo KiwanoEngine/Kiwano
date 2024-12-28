@@ -20,7 +20,9 @@
 
 #pragma once
 #include <kiwano/2d/Stage.h>
+#include <kiwano/render/RenderObject.h>
 #include <kiwano/render/Layer.h>
+#include <array>
 
 namespace kiwano
 {
@@ -41,7 +43,7 @@ class RenderContext;
  * \~chinese
  * @brief 舞台过渡动画
  */
-class KGE_API Transition : public ObjectBase
+class KGE_API Transition : public BaseObject
 {
     friend class Director;
 
@@ -60,7 +62,7 @@ public:
      * \~chinese
      * @brief 场景过渡动画是否已结束
      */
-    bool IsDone();
+    bool IsDone() const;
 
 protected:
     /**
@@ -76,14 +78,7 @@ protected:
      * @brief 更新过渡动画
      * @param dt 距上一次更新的时间间隔
      */
-    virtual void Update(Duration dt);
-
-    /**
-     * \~chinese
-     * @brief 渲染过度动画
-     * @param[in] ctx 渲染上下文
-     */
-    virtual void Render(RenderContext& ctx);
+    virtual void UpdateSelf(Duration dt);
 
     /**
      * \~chinese
@@ -96,6 +91,9 @@ protected:
      * @brief 重置动画
      */
     virtual void Reset() {}
+
+private:
+    void Update(Duration dt);
 
 protected:
     bool          done_;

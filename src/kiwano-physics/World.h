@@ -43,7 +43,7 @@ namespace physics
  * \~chinese
  * @brief 物理世界
  */
-class KGE_API World : public Component
+class KGE_API World : public RenderComponent
 {
     friend class Body;
     friend class Joint;
@@ -100,6 +100,10 @@ protected:
     /// \~chinese
     /// @brief 渲染组件
     void OnRender(RenderContext& ctx) override;
+
+    /// \~chinese
+    /// @brief 检查可见性
+    bool CheckVisibility(RenderContext& ctx) override;
 
     /// \~chinese
     /// @brief 分发物理世界事件

@@ -18,51 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
-#include <atomic>
-#include <kiwano/core/Common.h>
+#include <kiwano/render/RenderObject.h>
 
 namespace kiwano
 {
 
-/**
- * \~chinese
- * @brief 引用计数器
- */
-class KGE_API RefObject : protected Noncopyable
+void RenderGroup::PushRenderObject(RenderObject* render_object)
 {
-public:
-    /// \~chinese
-    /// @brief 增加引用计数
-    void Retain();
+    render_list_.PushBack(render_object);
+}
 
-    /// \~chinese
-    /// @brief 减少引用计数
-    void Release();
+void RenderGroup::Clear()
+{
+    render_list_.Clear(false);
+}
 
-    /// \~chinese
-    /// @brief 获取引用计数
-    uint32_t GetRefCount() const;
+void RenderGroup::OnRender(RenderContext& ctx)
+{
+    for (const auto& render_object : render_list_)
+    {
+        render_object->OnRender(ctx);
+    }
+}
 
-    static void* operator new(size_t size);
+void RenderGroup::AfterRender(RenderContext& ctx)
+{
+    for (const auto& render_object : render_list_)
+    {
+        render_object->AfterRender(ctx);
+    }
 
-    static void operator delete(void* ptr);
-
-    static void* operator new(size_t size, std::nothrow_t const&) noexcept;
-
-    static void operator delete(void* ptr, std::nothrow_t const&) noexcept;
-
-    static void* operator new(size_t size, void* ptr) noexcept;
-
-    static void operator delete(void* ptr, void* place) noexcept;
-
-    virtual ~RefObject();
-
-protected:
-    RefObject();
-
-private:
-    std::atomic<uint32_t> ref_count_;
-};
+    Clear();
+}
 
 }  // namespace kiwano

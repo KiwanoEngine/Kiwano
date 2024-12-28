@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Common.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/RingBuffer.hpp>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/event/Event.h>
 #include <kiwano/math/Math.h>
 
@@ -111,7 +111,7 @@ typedef HWND WindowHandle;
  * \~chinese
  * @brief 窗口类，控制窗口标题、大小、图标等
  */
-class KGE_API Window : public ObjectBase
+class KGE_API Window : public BaseObject
 {
 public:
     /**
@@ -285,7 +285,7 @@ protected:
     Resolution                resolution_;
     WindowHandle              handle_;
     String                    title_;
-    std::queue<RefPtr<Event>> event_queue_;
+    RingBuffer<RefPtr<Event>> event_buffer_;
 };
 
 }  // namespace kiwano

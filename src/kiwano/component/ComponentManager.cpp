@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/component/ComponentManager.h>
+#include <kiwano/component/ComponentManager.h>
 #include <functional>
 
 namespace kiwano
@@ -129,20 +129,6 @@ void ComponentManager::Update(Duration dt)
             if (p.second->IsEnable())
             {
                 p.second->OnUpdate(dt);
-            }
-        }
-    }
-}
-
-void ComponentManager::Render(RenderContext& ctx)
-{
-    if (!components_.empty())
-    {
-        for (auto& p : components_)
-        {
-            if (p.second->IsEnable())
-            {
-                p.second->OnRender(ctx);
             }
         }
     }

@@ -23,6 +23,7 @@
 #include <kiwano/core/Resource.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -111,8 +112,6 @@ public:
     /// @brief ªÒ»° GIF Õº∆¨
     RefPtr<GifImage> GetGifImage() const;
 
-    void OnRender(RenderContext& ctx) override;
-
 private:
     void Update(Duration dt) override;
 
@@ -161,6 +160,8 @@ private:
     RefPtr<Texture>       saved_frame_;
     RefPtr<Texture>       frame_to_render_;
     RefPtr<RenderContext> frame_rt_;
+
+    RefPtr<TextureRenderComponent> render_comp_;
 };
 
 /** @} */

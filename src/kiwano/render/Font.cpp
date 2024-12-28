@@ -61,22 +61,20 @@ RefPtr<FontCollection> FontCollection::Preload(const Vector<Resource>& resources
     return ptr;
 }
 
-Font::Font(StringView family_name, float size, uint32_t weight, FontPosture posture, FontStretch stretch)
+Font::Font(StringView family_name, float size, uint32_t weight, FontPosture posture)
     : size(size)
     , weight(weight)
     , posture(posture)
-    , stretch(stretch)
     , family_name(family_name)
 {
     collection = FontCache::GetInstance().GetFontCollection(family_name);
 }
 
-Font::Font(RefPtr<FontCollection> collection, float size, uint32_t weight, FontPosture posture, FontStretch stretch)
+Font::Font(RefPtr<FontCollection> collection, float size, uint32_t weight, FontPosture posture)
     : collection(collection)
     , size(size)
     , weight(weight)
     , posture(posture)
-    , stretch(stretch)
     , family_name()
 {
     const auto& names = collection->GetFamilyNames();

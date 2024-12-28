@@ -25,7 +25,7 @@
 #include <fstream>
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 
 #ifndef KGE_DEBUG_LOG
 #ifdef KGE_DEBUG
@@ -133,7 +133,7 @@ enum class LogLevel
  * \~chinese
  * @brief 日志格式化
  */
-class KGE_API LogFormater : public ObjectBase
+class KGE_API LogFormater : public BaseObject
 {
 public:
     virtual void FormatHeader(std::ostream& out, LogLevel level, ClockTime time) = 0;
@@ -181,7 +181,7 @@ private:
  * \~chinese
  * @brief 日志生产者
  */
-class KGE_API LogProvider : public ObjectBase
+class KGE_API LogProvider : public BaseObject
 {
 public:
     virtual ~LogProvider();

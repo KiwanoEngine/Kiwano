@@ -24,16 +24,14 @@
 
 namespace kiwano
 {
-class TaskScheduler;
 
 /// \~chinese
 /// @brief 任务
 /// @details 任务用于每隔一段时间执行一次回调函数，且可以指定执行总次数
 class KGE_API Task
-    : public ObjectBase
+    : public BaseObject
     , protected IntrusiveListValue<RefPtr<Task>>
 {
-    friend class TaskScheduler;
     friend IntrusiveList<RefPtr<Task>>;
 
 public:
@@ -111,7 +109,6 @@ public:
     /// @brief 设置任务的报时器
     void SetTicker(RefPtr<Ticker> ticker);
 
-private:
     /// \~chinese
     /// @brief 更新任务
     void Update(Duration dt);

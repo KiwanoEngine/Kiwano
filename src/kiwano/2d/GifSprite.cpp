@@ -32,6 +32,8 @@ GifSprite::GifSprite()
     , total_loop_count_(1)
     , loop_count_(0)
 {
+    render_comp_ = new TextureRenderComponent;
+    AddComponent(render_comp_);
 }
 
 GifSprite::GifSprite(StringView file_path)
@@ -81,6 +83,7 @@ bool GifSprite::Load(RefPtr<GifImage> gif)
         frame_to_render_ = MakePtr<Texture>();
         frame_rt_        = RenderContext::Create(frame_to_render_, gif_->GetSizeInPixels());
 
+        render_comp_->SetTexture(frame_to_render_);
         if (frame_rt_)
         {
             SetSize(frame_rt_->GetSize());
@@ -100,14 +103,6 @@ bool GifSprite::Load(RefPtr<GifImage> gif)
 
     Fail("GifSprite::Load failed: GifImage is invalid");
     return false;
-}
-
-void GifSprite::OnRender(RenderContext& ctx)
-{
-    if (frame_to_render_ && CheckVisibility(ctx))
-    {
-        ctx.DrawTexture(*frame_to_render_, nullptr, &GetBounds());
-    }
 }
 
 void GifSprite::Update(Duration dt)

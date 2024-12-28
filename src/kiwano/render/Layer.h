@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/render/RenderObject.h>
 #include <kiwano/render/Shape.h>
 
 namespace kiwano
@@ -33,13 +34,14 @@ namespace kiwano
  * \~chinese
  * @brief Í¼²ã
  */
-class KGE_API Layer
+class KGE_API Layer : public RenderGroup
 {
 public:
     Rect          bounds;
     float         opacity;
     RefPtr<Shape> mask;
     Matrix3x2     mask_transform;
+    Matrix3x2     transform;
 
 public:
     /// \~chinese
@@ -56,6 +58,8 @@ public:
     /// @param bounds Í¼²ã±ß½ç
     Layer(RefPtr<Shape> mask, const Matrix3x2& mask_transform = Matrix3x2(), float opacity = 1.f,
           const Rect& bounds = Rect::Infinite());
+
+    void OnRender(RenderContext& ctx) override;
 };
 
 /** @} */

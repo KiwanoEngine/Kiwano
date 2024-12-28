@@ -25,14 +25,8 @@
     <Filter Include="render\DirectX">
       <UniqueIdentifier>{fd281702-0006-46d2-8fd1-28c502464164}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base">
-      <UniqueIdentifier>{f514ae4f-2f6a-4d47-aa38-245628d6e01c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="event">
       <UniqueIdentifier>{b0d28d20-bfaf-4816-8415-28c20ecf9fac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\component">
-      <UniqueIdentifier>{d15f4de1-7c2c-40d6-a3ce-68860b95a61e}</UniqueIdentifier>
     </Filter>
     <Filter Include="2d\animation">
       <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
@@ -42,6 +36,12 @@
     </Filter>
     <Filter Include="event\listener">
       <UniqueIdentifier>{554a3b32-ec18-4123-a12e-b176ec10fbdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{b6abc6eb-1e2f-4525-b108-1c98d368a3de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component">
+      <UniqueIdentifier>{40fd918d-b0e2-467c-913e-d0859e05ae6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +77,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\DebugActor.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h">
       <Filter>2d</Filter>
@@ -258,15 +255,6 @@
     <ClInclude Include="..\..\src\kiwano\utils\Logger.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\Director.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\Module.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\ObjectBase.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\event\Event.h">
       <Filter>event</Filter>
     </ClInclude>
@@ -291,29 +279,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\component\Button.h">
-      <Filter>base\component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\component\Component.h">
-      <Filter>base\component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\component\ComponentManager.h">
-      <Filter>base\component</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Defer.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\RefObject.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\core\RefBasePtr.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\RefPtr.h">
-      <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ResourceLoader.h">
       <Filter>utils</Filter>
@@ -384,9 +354,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\transition\BoxTransition.h">
       <Filter>2d\transition</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\base\component\MouseSensor.h">
-      <Filter>base\component</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\event\listener\EventListener.h">
       <Filter>event\listener</Filter>
     </ClInclude>
@@ -407,6 +374,45 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\Layer.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\RenderObject.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RingBuffer.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\Button.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\Component.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\ComponentManager.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\DebugComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\MouseSensor.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\component\RenderComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\Director.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\Module.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\BaseObject.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RefObject.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\RefPtr.hpp">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -430,9 +436,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp">
       <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\DebugActor.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp">
       <Filter>2d</Filter>
@@ -554,15 +557,6 @@
     <ClCompile Include="..\..\src\kiwano\utils\Logger.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\Director.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\Module.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\ObjectBase.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\Event.cpp">
       <Filter>event</Filter>
     </ClCompile>
@@ -581,20 +575,8 @@
     <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\component\Button.cpp">
-      <Filter>base\component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\component\Component.cpp">
-      <Filter>base\component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\component\ComponentManager.cpp">
-      <Filter>base\component</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp">
       <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\RefObject.cpp">
-      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ResourceLoader.cpp">
       <Filter>utils</Filter>
@@ -653,9 +635,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\transition\BoxTransition.cpp">
       <Filter>2d\transition</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\base\component\MouseSensor.cpp">
-      <Filter>base\component</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\listener\EventListener.cpp">
       <Filter>event\listener</Filter>
     </ClCompile>
@@ -670,6 +649,36 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\RenderObject.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\Button.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\Component.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\ComponentManager.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\DebugComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\MouseSensor.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\component\RenderComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\Director.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\Module.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\BaseObject.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -144,7 +144,36 @@ public:
     virtual void AfterRender(RenderModuleContext& ctx);
 
 protected:
-    Module();
+    Module() = default;
 };
+
+inline void Module::SetupModule() {}
+
+inline void Module::DestroyModule() {}
+
+inline void Module::OnRender(RenderModuleContext& ctx)
+{
+    KGE_NOT_USED(ctx);
+}
+
+inline void Module::OnUpdate(UpdateModuleContext& ctx)
+{
+    KGE_NOT_USED(ctx);
+}
+
+inline void Module::HandleEvent(EventModuleContext& ctx)
+{
+    KGE_NOT_USED(ctx);
+}
+
+inline void Module::BeforeRender(RenderModuleContext& ctx)
+{
+    KGE_NOT_USED(ctx);
+}
+
+inline void Module::AfterRender(RenderModuleContext& ctx)
+{
+    KGE_NOT_USED(ctx);
+}
 
 }  // namespace kiwano

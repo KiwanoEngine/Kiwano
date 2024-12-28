@@ -20,6 +20,7 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
+#include <kiwano/component/RenderComponent.h>
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/ShapeMaker.h>
@@ -119,17 +120,10 @@ public:
     /// @brief …Ë÷√–Œ◊¥
     void SetShape(RefPtr<Shape> shape);
 
-    void OnRender(RenderContext& ctx) override;
-
-protected:
-    bool CheckVisibility(RenderContext& ctx) const override;
-
 private:
-    RefPtr<Brush>       fill_brush_;
-    RefPtr<Brush>       stroke_brush_;
-    RefPtr<StrokeStyle> stroke_style_;
-    Rect                bounds_;
-    RefPtr<Shape>       shape_;
+    Rect bounds_;
+
+    RefPtr<ShapeRenderComponent> render_comp_;
 };
 
 /// \~chinese
@@ -325,55 +319,47 @@ public:
 
 inline void ShapeActor::SetStrokeColor(const Color& color)
 {
-    if (!stroke_brush_)
-    {
-        stroke_brush_ = MakePtr<Brush>();
-    }
-    stroke_brush_->SetColor(color);
+    render_comp_->SetStrokeColor(color);
 }
 
 inline void ShapeActor::SetFillColor(const Color& color)
 {
-    if (!fill_brush_)
-    {
-        fill_brush_ = MakePtr<Brush>();
-    }
-    fill_brush_->SetColor(color);
+    render_comp_->SetFillColor(color);
 }
 
 inline void ShapeActor::SetFillBrush(RefPtr<Brush> brush)
 {
-    fill_brush_ = brush;
+    render_comp_->SetFillBrush(brush);
 }
 
 inline void ShapeActor::SetStrokeBrush(RefPtr<Brush> brush)
 {
-    stroke_brush_ = brush;
-}
-
-inline RefPtr<Brush> ShapeActor::GetFillBrush() const
-{
-    return fill_brush_;
-}
-
-inline RefPtr<Brush> ShapeActor::GetStrokeBrush() const
-{
-    return stroke_brush_;
-}
-
-inline RefPtr<StrokeStyle> ShapeActor::GetStrokeStyle() const
-{
-    return stroke_style_;
-}
-
-inline RefPtr<Shape> ShapeActor::GetShape() const
-{
-    return shape_;
+    render_comp_->SetStrokeBrush(brush);
 }
 
 inline void ShapeActor::SetStrokeStyle(RefPtr<StrokeStyle> stroke_style)
 {
-    stroke_style_ = stroke_style;
+    render_comp_->SetStrokeStyle(stroke_style);
+}
+
+inline RefPtr<Brush> ShapeActor::GetFillBrush() const
+{
+    return render_comp_->GetFillBrush();
+}
+
+inline RefPtr<Brush> ShapeActor::GetStrokeBrush() const
+{
+    return render_comp_->GetStrokeBrush();
+}
+
+inline RefPtr<StrokeStyle> ShapeActor::GetStrokeStyle() const
+{
+    return render_comp_->GetStrokeStyle();
+}
+
+inline RefPtr<Shape> ShapeActor::GetShape() const
+{
+    return render_comp_->GetShape();
 }
 
 inline const Point& LineActor::GetBeginPoint() const

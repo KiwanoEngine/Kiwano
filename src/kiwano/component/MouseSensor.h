@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/component/Component.h>
+#include <kiwano/component/Component.h>
 #include <kiwano/event/MouseEvent.h>
 #include <kiwano/event/listener/EventListener.h>
 

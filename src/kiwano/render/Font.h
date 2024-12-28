@@ -65,24 +65,6 @@ enum class FontPosture
 
 /**
  * \~chinese
- * @brief 字体拉伸
- */
-enum class FontStretch
-{
-    Unknown,
-    UltraCondensed,
-    ExtraCondensed,
-    Condensed,  ///< 压缩
-    SemiCondensed,
-    Normal,  ///< 正常
-    SemiExpanded,
-    Expanded,  ///< 扩大
-    ExtraExpanded,
-    UltraExpanded,
-};
-
-/**
- * \~chinese
  * @brief 字体集合
  */
 class KGE_API FontCollection : public NativeObject
@@ -114,7 +96,6 @@ public:
     float                  size;
     uint32_t               weight;
     FontPosture            posture;
-    FontStretch            stretch;
     String                 family_name;
     RefPtr<FontCollection> collection;
 
@@ -125,7 +106,7 @@ public:
     /// @param weight 字体粗细
     /// @param posture 字体形态
     Font(StringView family_name, float size, uint32_t weight = FontWeight::Normal,
-         FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
+         FontPosture posture = FontPosture::Normal);
 
     /// \~chinese
     /// @brief 创建字体，使用字体集合中的第一个字体族名称
@@ -134,7 +115,7 @@ public:
     /// @param weight 字体粗细
     /// @param posture 字体形态
     Font(RefPtr<FontCollection> collection, float size, uint32_t weight = FontWeight::Normal,
-         FontPosture posture = FontPosture::Normal, FontStretch stretch = FontStretch::Normal);
+         FontPosture posture = FontPosture::Normal);
 };
 
 /**

@@ -30,10 +30,9 @@ void Animator::Update(Actor* target, Duration dt)
     if (animations_.IsEmpty() || !target)
         return;
 
-    RefPtr<Animation> next;
-    for (auto animation = animations_.GetFirst(); animation; animation = next)
+    for (auto iter = animations_.begin(); iter != animations_.end();)
     {
-        next = animation->GetNext();
+        RefPtr<Animation> animation = *(iter++);
 
         if (animation->IsRunning())
             animation->UpdateStep(target, dt);

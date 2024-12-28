@@ -23,7 +23,7 @@
 #include <kiwano/platform/Input.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/base/Director.h>
+#include <kiwano/module/Director.h>
 
 namespace kiwano
 {

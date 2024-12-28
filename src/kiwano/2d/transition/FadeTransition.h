@@ -46,7 +46,7 @@ public:
     FadeTransition(Duration duration, bool parallel = false);
 
 protected:
-    void Update(Duration dt) override;
+    void UpdateSelf(Duration dt) override;
 
     virtual void Init(Stage* prev, Stage* next) override;
 

@@ -22,6 +22,7 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/render/TextLayout.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -146,29 +147,18 @@ public:
     /// @details 文字布局是懒更新的，手动更新文字布局以更新节点状态
     void ForceUpdateLayout();
 
-    void OnRender(RenderContext& ctx) override;
-
 protected:
     void Update(Duration dt) override;
 
-    bool CheckVisibility(RenderContext& ctx) const override;
-
     void UpdateCachedTexture();
 
-    /// \~chinese
-    /// @brief 设置预渲染模式，在描边等情况下会有更好的性能
-    void SetPreRenderEnabled(bool enable);
+    void ResetLayout(StringView content, const TextStyle& style);
 
 private:
-    bool                  is_cache_dirty_;
-    String                content_;
-    TextStyle             style_;
-    RefPtr<TextLayout>    layout_;
-    RefPtr<Brush>         fill_brush_;
-    RefPtr<Brush>         outline_brush_;
-    RefPtr<StrokeStyle>   outline_stroke_;
-    RefPtr<Texture>       texture_cached_;
-    RefPtr<RenderContext> render_ctx_;
+    String    content_;
+    TextStyle style_;
+
+    RefPtr<TextRenderComponent> render_comp_;
 };
 
 /** @} */
@@ -190,22 +180,22 @@ inline TextStyle TextActor::GetStyle() const
 
 inline RefPtr<TextLayout> TextActor::GetLayout() const
 {
-    return layout_;
+    return render_comp_->GetTextLayout();
 }
 
 inline RefPtr<Brush> TextActor::GetFillBrush() const
 {
-    return fill_brush_;
+    return render_comp_->GetFillBrush();
 }
 
 inline RefPtr<Brush> TextActor::GetOutlineBrush() const
 {
-    return outline_brush_;
+    return render_comp_->GetOutlineBrush();
 }
 
 inline RefPtr<StrokeStyle> TextActor::GetOutlineStrokeStyle() const
 {
-    return outline_stroke_;
+    return render_comp_->GetOutlineStrokeStyle();
 }
 
 }  // namespace kiwano

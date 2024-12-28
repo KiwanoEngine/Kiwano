@@ -35,10 +35,8 @@ void BoxTransition::Init(Stage* prev, Stage* next)
     in_layer_.opacity = 0.f;
 }
 
-void BoxTransition::Update(Duration dt)
+void BoxTransition::UpdateSelf(Duration dt)
 {
-    Transition::Update(dt);
-
     if (process_ < .5f)
     {
         out_layer_.bounds = Rect(window_size_.x * process_, window_size_.y * process_, window_size_.x * (1 - process_),

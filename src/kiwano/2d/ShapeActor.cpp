@@ -25,9 +25,14 @@
 namespace kiwano
 {
 
-ShapeActor::ShapeActor() {}
+ShapeActor::ShapeActor()
+{
+    render_comp_ = new ShapeRenderComponent;
+    AddComponent(render_comp_);
+}
 
 ShapeActor::ShapeActor(RefPtr<Shape> shape)
+    : ShapeActor()
 {
     SetShape(shape);
 }
@@ -55,26 +60,28 @@ Rect ShapeActor::GetBounds() const
 
 Rect ShapeActor::GetBoundingBox() const
 {
-    if (!shape_)
+    auto shape = render_comp_->GetShape();
+    if (!shape)
         return Rect{};
 
-    return shape_->GetBoundingBox(GetTransformMatrix());
+    return shape->GetBoundingBox(GetTransformMatrix());
 }
 
 bool ShapeActor::ContainsPoint(const Point& point) const
 {
-    if (!shape_)
+    auto shape = render_comp_->GetShape();
+    if (!shape)
         return false;
 
-    return shape_->ContainsPoint(point, &GetTransformMatrix());
+    return shape->ContainsPoint(point, &GetTransformMatrix());
 }
 
 void ShapeActor::SetShape(RefPtr<Shape> shape)
 {
-    shape_ = shape;
-    if (shape_)
+    render_comp_->SetShape(shape);
+    if (shape)
     {
-        bounds_ = shape_->GetBoundingBox();
+        bounds_ = shape->GetBoundingBox();
         SetSize(bounds_.GetSize());
     }
     else
@@ -82,30 +89,6 @@ void ShapeActor::SetShape(RefPtr<Shape> shape)
         bounds_ = Rect{};
         SetSize(0.f, 0.f);
     }
-}
-
-void ShapeActor::OnRender(RenderContext& ctx)
-{
-    if (shape_)
-    {
-        if (stroke_brush_)
-        {
-            ctx.SetCurrentBrush(stroke_brush_);
-            ctx.SetCurrentStrokeStyle(stroke_style_);
-            ctx.DrawShape(*shape_);
-        }
-
-        if (fill_brush_)
-        {
-            ctx.SetCurrentBrush(fill_brush_);
-            ctx.FillShape(*shape_);
-        }
-    }
-}
-
-bool ShapeActor::CheckVisibility(RenderContext& ctx) const
-{
-    return shape_ && Actor::CheckVisibility(ctx);
 }
 
 //-------------------------------------------------------

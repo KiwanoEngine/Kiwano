@@ -39,18 +39,14 @@ LayerActor::LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform, floa
 
 LayerActor::~LayerActor() {}
 
-void LayerActor::Render(RenderContext& ctx)
+void LayerActor::Update(Duration dt)
 {
-    PrepareToRender(ctx);
-    ctx.PushLayer(layer_);
-    Actor::Render(ctx);
-    ctx.PopLayer();
-}
+    layer_.transform = GetTransformMatrix(); // TODO: refactor
+    Renderer::GetInstance().PushRenderGroup(layer_);
 
-bool LayerActor::CheckVisibility(RenderContext& ctx) const
-{
-    // Do not need to render LayerActor
-    return false;
+    Actor::Update(dt);
+
+    Renderer::GetInstance().PopRenderGroup();
 }
 
 }  // namespace kiwano

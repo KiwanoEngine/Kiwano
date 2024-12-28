@@ -308,11 +308,9 @@ public:
         return (*this);
     }
 
-    inline Function& operator=(Function&& rhs)
+    inline Function& operator=(Function&& rhs) noexcept
     {
-        SetCallable(nullptr);
-        callable_     = rhs.callable_;
-        rhs.callable_ = nullptr;
+        std::swap(callable_, rhs.callable_);
         return (*this);
     }
 

@@ -21,7 +21,7 @@
 #pragma once
 #include <type_traits>
 #include <kiwano/core/Common.h>
-#include <kiwano/core/RefBasePtr.hpp>
+#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/platform/NativeObject.hpp>
 #include <Unknwnbase.h>
 
@@ -44,7 +44,7 @@ struct ComRefPolicy
 
 // ComPtr<> is a smart pointer for COM
 template <typename _Ty, typename = typename std::enable_if<std::is_base_of<IUnknown, _Ty>::value, int>::type>
-using ComPtr = RefBasePtr<_Ty, ComRefPolicy>;
+using ComPtr = RefPtr<_Ty, ComRefPolicy>;
 
 struct ComPolicy
 {

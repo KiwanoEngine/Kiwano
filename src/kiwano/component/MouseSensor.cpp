@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/component/MouseSensor.h>
+#include <kiwano/component/MouseSensor.h>
 #include <kiwano/2d/Actor.h>
 
 namespace kiwano
@@ -27,6 +27,7 @@ MouseSensor::MouseSensor()
     : hover_(false)
     , pressed_(false)
 {
+    SetName("__KGE_MOUSE_SENSOR_COMPONENT__");
 }
 
 MouseSensor::~MouseSensor() {}
@@ -44,6 +45,8 @@ void MouseSensor::DestroyComponent()
 {
     if (listener_)
         listener_->Remove();
+
+    Component::DestroyComponent();
 }
 
 void MouseSensor::HandleEvent(Event* evt)

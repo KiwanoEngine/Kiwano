@@ -19,17 +19,18 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Actor.h>
-#include <kiwano/render/TextLayout.h>
+#include <kiwano/core/Common.h>
 
 namespace kiwano
 {
 
+/// \~chinese
+/// @brief 环形数组
 template <typename T>
-class SimpleRingBuffer
+class RingBuffer
 {
 public:
-    SimpleRingBuffer(size_t capcity)
+    inline RingBuffer(size_t capcity)
     {
         Reserve(capcity);
     }
@@ -42,70 +43,69 @@ public:
         IncreaseRear();
     }
 
-    void PopFront()
+    inline void PopFront()
     {
         IncreaseFront();
     }
 
-    const T& Front() const
+    inline const T& Front() const
     {
         return buffer_[front_];
     }
 
-    T& Front()
+    inline T& Front()
     {
         return buffer_[front_];
     }
 
-    const T& Back() const
+    inline const T& Back() const
     {
         return buffer_[ClampCursor(rear_, 1)];
     }
 
-    T& Back()
+    inline T& Back()
     {
         return buffer_[ClampCursor(rear_, 1)];
     }
 
-    bool IsEmpty() const noexcept
+    inline bool IsEmpty() const noexcept
     {
-        return front_ = rear_;
+        return front_ == rear_;
     }
 
-    bool IsFull() const noexcept
+    inline bool IsFull() const noexcept
     {
         return front_ == (rear_ + 1) % Capacity();
     }
 
-    size_t Size() const
+    inline size_t Size() const
     {
         return ClampCursor(rear_, front_);
     }
 
-    size_t Capacity() const
+    inline size_t Capacity() const
     {
         return buffer_.size();
     }
 
-    void Reserve(size_t capacity)
+    inline void Reserve(size_t capacity)
     {
-        buffer_.resize(capacity);
+        if (capacity > Capacity())
+            buffer_.resize(capacity);
     }
 
 private:
-    void IncreaseFront()
+    inline void IncreaseFront()
     {
-        if (buffer_.empty())
-            return;
-        front_ = (front_ + 1) % Capacity();
+        front_ = buffer_.empty() ? front_ : (front_ + 1) % Capacity();
     }
 
-    void IncreaseRear()
+    inline void IncreaseRear()
     {
         rear_ = (rear_ + 1) % Capacity();
     }
 
-    size_t ClampCursor(size_t cursor, size_t off) const
+    inline size_t ClampCursor(size_t cursor, size_t off) const
     {
         return (cursor + Capacity() - off) % Capacity();
     }
@@ -116,38 +116,4 @@ private:
     size_t    rear_  = 0;
 };
 
-/**
- * \addtogroup Actors
- * @{
- */
-
-/**
- * \~chinese
- * @brief 调试节点
- */
-class KGE_API DebugActor : public Actor
-{
-public:
-    DebugActor();
-
-    virtual ~DebugActor();
-
-    void OnRender(RenderContext& ctx) override;
-
-    void OnUpdate(Duration dt) override;
-
-protected:
-    bool CheckVisibility(RenderContext& ctx) const override;
-
-private:
-    std::locale   comma_locale_;
-    RefPtr<Brush> background_brush_;
-    RefPtr<Brush> debug_text_brush_;
-    TextStyle     debug_text_style_;
-    TextLayout    debug_text_;
-
-    SimpleRingBuffer<Time> frame_buffer_;
-};
-
-/** @} */
 }  // namespace kiwano

@@ -197,17 +197,20 @@ public:
 
     /// \~chinese
     /// @brief 清空所有对象
-    void Clear()
+    void Clear(bool deep = true)
     {
-        value_type p = first_;
-        while (p)
+        if (deep)
         {
-            value_type tmp = p;
-            p              = p->GetNext();
-            if (tmp)
+            value_type p = first_;
+            while (p)
             {
-                tmp->GetNext() = nullptr;
-                tmp->GetPrev() = nullptr;
+                value_type tmp = p;
+                p              = p->GetNext();
+                if (tmp)
+                {
+                    tmp->GetNext() = nullptr;
+                    tmp->GetPrev() = nullptr;
+                }
             }
         }
         first_ = nullptr;
@@ -257,7 +260,7 @@ public:
 
         inline Iterator(value_type ptr = nullptr, bool is_end = false)
             : base_(ptr)
-            , is_end_(is_end)
+            , is_end_(is_end || !ptr)
         {
         }
 
@@ -309,7 +312,7 @@ public:
 
         inline bool operator==(const Iterator& other) const
         {
-            return base_ == other.base_ && is_end_ == other.is_end_;
+            return (base_ == other.base_ && is_end_ == other.is_end_) || (is_end_ && other.is_end_);
         }
 
         inline bool operator!=(const Iterator& other) const

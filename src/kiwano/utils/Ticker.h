@@ -26,7 +26,7 @@ namespace kiwano
 
 /// \~chinese
 /// @brief ±¨Ê±Æ÷
-class KGE_API Ticker : public ObjectBase
+class KGE_API Ticker : public BaseObject
 {
 public:
     /// \~chinese

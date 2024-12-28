@@ -22,7 +22,8 @@
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
 #include <kiwano/2d/transition/Transition.h>
-#include <kiwano/base/Module.h>
+#include <kiwano/module/Module.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -99,8 +100,6 @@ public:
 public:
     void OnUpdate(UpdateModuleContext& ctx) override;
 
-    void OnRender(RenderModuleContext& ctx) override;
-
     void HandleEvent(EventModuleContext& ctx) override;
 
     void DestroyModule() override;
@@ -120,6 +119,5 @@ private:
 
     IntrusiveList<EventDispatcher*> dispatcher_list_;
 };
-
 
 }  // namespace kiwano

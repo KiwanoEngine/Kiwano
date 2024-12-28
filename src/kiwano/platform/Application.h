@@ -21,7 +21,7 @@
 #pragma once
 #include <mutex>
 #include <kiwano/core/Common.h>
-#include <kiwano/base/Module.h>
+#include <kiwano/module/Module.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/Singleton.h>
 #include <kiwano/event/Event.h>

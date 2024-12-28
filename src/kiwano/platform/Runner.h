@@ -56,7 +56,7 @@ struct Settings
  * \~chinese
  * @brief ³ÌĞòÔËĞĞÆ÷
  */
-class KGE_API Runner : public ObjectBase
+class KGE_API Runner : public BaseObject
 {
 public:
     Runner();

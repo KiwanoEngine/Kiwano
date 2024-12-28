@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
@@ -44,7 +44,7 @@ class ComponentManager;
  * \~chinese
  * @brief 组件
  */
-class KGE_API Component : public ObjectBase
+class KGE_API Component : public BaseObject
 {
     friend class ComponentManager;
 
@@ -82,10 +82,6 @@ protected:
     /// @brief 更新组件
     virtual void OnUpdate(Duration dt);
 
-    /// \~chinese
-    /// @brief 渲染组件
-    virtual void OnRender(RenderContext& ctx);
-
 private:
     bool   enabled_;
     Actor* actor_;
@@ -111,11 +107,6 @@ inline Actor* Component::GetBoundActor() const
 inline void Component::OnUpdate(Duration dt)
 {
     KGE_NOT_USED(dt);
-}
-
-inline void Component::OnRender(RenderContext& ctx)
-{
-    KGE_NOT_USED(ctx);
 }
 
 }  // namespace kiwano

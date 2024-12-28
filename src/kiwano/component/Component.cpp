@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/component/Component.h>
+#include <kiwano/component/Component.h>
 #include <kiwano/2d/Actor.h>
 
 namespace kiwano

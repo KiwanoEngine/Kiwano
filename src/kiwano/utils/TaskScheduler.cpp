@@ -29,13 +29,11 @@ void TaskScheduler::Update(Duration dt)
     if (tasks_.IsEmpty())
         return;
 
-    RefPtr<Task> next;
-    for (auto task = tasks_.GetFirst(); task; task = next)
+    for (auto iter = tasks_.begin(); iter != tasks_.end();)
     {
-        next = task->GetNext();
+        RefPtr<Task> task = *(iter++);
 
         task->Update(dt);
-
         if (task->IsRemoveable())
             tasks_.Remove(task);
     }

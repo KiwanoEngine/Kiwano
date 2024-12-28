@@ -23,13 +23,13 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Exception.h>
 #include <kiwano/core/Serializable.h>
-#include <kiwano/base/RefObject.h>
-#include <kiwano/base/RefPtr.h>
+#include <kiwano/core/RefObject.hpp>
+#include <kiwano/core/RefPtr.hpp>
 
 namespace kiwano
 {
 
-class ObjectBase;
+class BaseObject;
 
 /**
  * \~chinese
@@ -67,11 +67,11 @@ struct ObjectStatus
 class ObjectFailException : public Exception
 {
 public:
-    ObjectFailException(ObjectBase* obj, const ObjectStatus& status);
+    ObjectFailException(BaseObject* obj, const ObjectStatus& status);
 
     /// \~chinese
     /// @brief 获取失败的对象指针
-    inline ObjectBase* GetObj() const
+    inline BaseObject* GetObj() const
     {
         return obj_;
     }
@@ -86,7 +86,7 @@ public:
     virtual char const* what() const override;
 
 private:
-    ObjectBase*  obj_;
+    BaseObject*  obj_;
     ObjectStatus status_;
 };
 
@@ -94,7 +94,7 @@ private:
  * \~chinese
  * @brief 对象处理策略方法
  */
-typedef Function<void(ObjectBase*, const ObjectStatus&)> ObjectPolicyFunc;
+typedef Function<void(BaseObject*, const ObjectStatus&)> ObjectPolicyFunc;
 
 /**
  * \~chinese
@@ -132,16 +132,16 @@ struct ObjectPolicy
  * \~chinese
  * @brief 基础对象
  */
-class KGE_API ObjectBase
+class KGE_API BaseObject
     : public RefObject
     , public Serializable
 {
 public:
     /// \~chinese
     /// @brief 构造基础对象
-    ObjectBase();
+    BaseObject();
 
-    virtual ~ObjectBase();
+    virtual ~BaseObject();
 
     /// \~chinese
     /// @brief 设置对象名
@@ -168,12 +168,12 @@ public:
     /// \~chinese
     /// @brief 持有一个对象并管理其生命周期
     /// @param other 对象指针
-    void Hold(RefPtr<ObjectBase> other);
+    void Hold(RefPtr<BaseObject> other);
 
     /// \~chinese
     /// @brief 放弃持有的对象
     /// @param other 对象指针
-    void Unhold(RefPtr<ObjectBase> other);
+    void Unhold(RefPtr<BaseObject> other);
 
     /// \~chinese
     /// @brief 获取对象ID
@@ -230,12 +230,12 @@ public:
 
     /// \~chinese
     /// @brief 获取所有追踪中的对象
-    static Vector<ObjectBase*>& GetTracingObjects();
+    static Vector<BaseObject*>& GetTracingObjects();
 
 private:
-    static void AddObjectToTracingList(ObjectBase*);
+    static void AddObjectToTracingList(BaseObject*);
 
-    static void RemoveObjectFromTracingList(ObjectBase*);
+    static void RemoveObjectFromTracingList(BaseObject*);
 
 private:
     const uint64_t id_;
@@ -245,22 +245,22 @@ private:
     void*   user_data_;
 
     ObjectStatus*            status_;
-    Set<RefPtr<ObjectBase>>* holdings_;
+    Set<RefPtr<BaseObject>>* holdings_;
 };
 
-inline StringView ObjectBase::GetName() const
+inline StringView BaseObject::GetName() const
 {
     if (name_)
         return StringView(*name_);
     return StringView();
 }
 
-inline bool ObjectBase::IsName(StringView name) const
+inline bool BaseObject::IsName(StringView name) const
 {
     return name_ ? (*name_ == name) : name.empty();
 }
 
-inline uint64_t ObjectBase::GetObjectID() const
+inline uint64_t BaseObject::GetObjectID() const
 {
     return id_;
 }

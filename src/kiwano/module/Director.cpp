@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/DebugActor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/base/Director.h>
+#include <kiwano/module/Director.h>
+#include <kiwano/component/DebugComponent.h>
 
 namespace kiwano
 {
@@ -104,7 +104,10 @@ void Director::ShowDebugInfo(bool show)
     if (show)
     {
         if (!debug_actor_)
-            debug_actor_ = MakePtr<DebugActor>();
+        {
+            debug_actor_ = MakePtr<Actor>();
+            debug_actor_->AddComponent(new DebugComponent);
+        }
     }
     else
     {
@@ -114,7 +117,7 @@ void Director::ShowDebugInfo(bool show)
 
 void Director::ClearStages()
 {
-    dispatcher_list_.Clear();
+    dispatcher_list_.Clear(false);
     stages_ = Stack<RefPtr<Stage>>();
 
     current_stage_.Reset();
@@ -130,7 +133,7 @@ void Director::PushEventDispatcher(EventDispatcher* dispatcher)
 
 void Director::OnUpdate(UpdateModuleContext& ctx)
 {
-    dispatcher_list_.Clear();
+    dispatcher_list_.Clear(false);
 
     if (transition_)
     {
@@ -140,7 +143,7 @@ void Director::OnUpdate(UpdateModuleContext& ctx)
             transition_ = nullptr;
     }
 
-    if (next_stage_ && !transition_)
+    if (!transition_ && next_stage_)
     {
         if (current_stage_)
         {
@@ -153,36 +156,17 @@ void Director::OnUpdate(UpdateModuleContext& ctx)
         next_stage_    = nullptr;
     }
 
-    if (current_stage_)
-        current_stage_->Update(ctx.dt);
+    if (!transition_)
+    {
+        if (current_stage_)
+            current_stage_->Update(ctx.dt);
 
-    if (next_stage_)
-        next_stage_->Update(ctx.dt);
+        if (next_stage_)
+            next_stage_->Update(ctx.dt);
+    }
 
     if (debug_actor_)
         debug_actor_->Update(ctx.dt);
-}
-
-void Director::OnRender(RenderModuleContext& ctx)
-{
-    if (transition_)
-    {
-        transition_->Render(ctx.render_ctx);
-    }
-    else if (current_stage_)
-    {
-        current_stage_->Render(ctx.render_ctx);
-
-        if (render_border_enabled_)
-        {
-            current_stage_->RenderBorder(ctx.render_ctx);
-        }
-    }
-
-    if (debug_actor_)
-    {
-        debug_actor_->Render(ctx.render_ctx);
-    }
 }
 
 void Director::HandleEvent(EventModuleContext& ctx)

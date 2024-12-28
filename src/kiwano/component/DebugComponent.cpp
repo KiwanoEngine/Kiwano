@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/DebugActor.h>
+#include <kiwano/component/DebugComponent.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/base/component/MouseSensor.h>
+#include <kiwano/component/MouseSensor.h>
 #include <psapi.h>
 
 #pragma comment(lib, "psapi.lib")
@@ -45,15 +45,10 @@ private:
 };
 }  // namespace
 
-DebugActor::DebugActor()
+DebugComponent::DebugComponent()
     : frame_buffer_(70 /* pre-alloc for 70 frames */)
 {
-    SetName("kiwano-debug-actor");
-    SetPosition(Point{ 10, 10 });
-    SetCascadeOpacityEnabled(true);
-
-    RefPtr<MouseSensor> sensor = new MouseSensor;
-    this->AddComponent(sensor);
+    SetName("__KGE_DEBUG_COMPONENT__");
 
     comma_locale_ = std::locale(std::locale(), new comma_numpunct);
 
@@ -62,31 +57,24 @@ DebugActor::DebugActor()
 
     debug_text_style_.font         = Font("Arial", 16.0f, FontWeight::Normal);
     debug_text_style_.line_spacing = 20.f;
-
-    AddListener<MouseHoverEvent>([=](Event*) { SetOpacity(0.4f); });
-    AddListener<MouseOutEvent>([=](Event*) { SetOpacity(1.f); });
 }
 
-DebugActor::~DebugActor() {}
-
-void DebugActor::OnRender(RenderContext& ctx)
+void DebugComponent::InitComponent(Actor* actor)
 {
-    ctx.SetCurrentBrush(background_brush_);
-    ctx.FillRoundedRectangle(GetBounds(), Vec2{ 5.f, 5.f });
+    RenderComponent::InitComponent(actor);
 
-    ctx.SetCurrentBrush(debug_text_brush_);
-    ctx.DrawTextLayout(debug_text_, Point(10, 10), nullptr);
+    actor->SetPosition(Point{ 10, 10 });
 
-    frame_buffer_.PushBack(Time::Now());
-    while (frame_buffer_.Back() - frame_buffer_.Front() >= time::Second)
-    {
-        frame_buffer_.PopFront();
-    }
+    RefPtr<MouseSensor> sensor = new MouseSensor;
+    actor->AddComponent(sensor);
+
+    actor->AddListener<MouseHoverEvent>([=](Event*) { actor->SetOpacity(0.4f); });
+    actor->AddListener<MouseOutEvent>([=](Event*) { actor->SetOpacity(1.f); });
 }
 
-void DebugActor::OnUpdate(Duration dt)
+void DebugComponent::OnUpdate(Duration dt)
 {
-    KGE_NOT_USED(dt);
+    RenderComponent::OnUpdate(dt);
 
     StringStream ss;
 
@@ -96,9 +84,9 @@ void DebugActor::OnUpdate(Duration dt)
     ss << "Fps: " << frame_buffer_.Size() << std::endl;
 
 #if defined(KGE_DEBUG)
-    if (ObjectBase::IsTracingLeaks())
+    if (BaseObject::IsTracingLeaks())
     {
-        ss << "Objects: " << ObjectBase::GetTracingObjects().size() << std::endl;
+        ss << "Objects: " << BaseObject::GetTracingObjects().size() << std::endl;
     }
 #endif
 
@@ -124,21 +112,35 @@ void DebugActor::OnUpdate(Duration dt)
 
     debug_text_.Reset(ss.str(), debug_text_style_);
 
+    auto actor       = GetBoundActor();
     Size layout_size = debug_text_.GetSize();
-    if (layout_size.x > GetWidth() - 20)
+    if (layout_size.x > actor->GetWidth() - 20)
     {
-        SetWidth(20 + layout_size.x);
+        actor->SetWidth(20 + layout_size.x);
     }
 
-    if (layout_size.y > GetHeight() - 20)
+    if (layout_size.y > actor->GetHeight() - 20)
     {
-        SetHeight(20 + layout_size.y);
+        actor->SetHeight(20 + layout_size.y);
     }
 }
 
-bool DebugActor::CheckVisibility(RenderContext& ctx) const
+void DebugComponent::OnRender(RenderContext& ctx)
 {
-    return true;
+    RenderComponent::OnRender(ctx);
+
+    auto actor = GetBoundActor();
+    ctx.SetCurrentBrush(background_brush_);
+    ctx.FillRoundedRectangle(actor->GetBounds(), Vec2{ 5.f, 5.f });
+
+    ctx.SetCurrentBrush(debug_text_brush_);
+    ctx.DrawTextLayout(debug_text_, Point(10, 10), nullptr);
+
+    frame_buffer_.PushBack(Time::Now());
+    while (frame_buffer_.Back() - frame_buffer_.Front() >= time::Second)
+    {
+        frame_buffer_.PopFront();
+    }
 }
 
 }  // namespace kiwano

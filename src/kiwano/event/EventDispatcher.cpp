@@ -28,10 +28,9 @@ bool EventDispatcher::DispatchEvent(Event* evt)
     if (listeners_.IsEmpty())
         return true;
 
-    RefPtr<EventListener> next;
-    for (auto listener = listeners_.GetFirst(); listener; listener = next)
+    for (auto iter = listeners_.begin(); iter != listeners_.end();)
     {
-        next = listener->GetNext();
+        RefPtr<EventListener> listener = *(iter++);
 
         if (listener->IsRunning())
             listener->Handle(evt);

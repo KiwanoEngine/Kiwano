@@ -47,8 +47,16 @@
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Defer.h>
 #include <kiwano/core/Resource.h>
-#include <kiwano/core/RefBasePtr.hpp>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/RefObject.hpp>
+#include <kiwano/core/BaseObject.h>
+
+//
+// modules
+//
+
+#include <kiwano/module/Module.h>
+#include <kiwano/module/Director.h>
 
 //
 // event
@@ -64,17 +72,14 @@
 #include <kiwano/event/EventDispatcher.h>
 
 //
-// base
+// components
 //
 
-#include <kiwano/base/RefObject.h>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/Director.h>
-#include <kiwano/base/Module.h>
-#include <kiwano/base/component/Component.h>
-#include <kiwano/base/component/ComponentManager.h>
-#include <kiwano/base/component/MouseSensor.h>
-#include <kiwano/base/component/Button.h>
+#include <kiwano/component/Component.h>
+#include <kiwano/component/ComponentManager.h>
+#include <kiwano/component/RenderComponent.h>
+#include <kiwano/component/MouseSensor.h>
+#include <kiwano/component/Button.h>
 
 //
 // renderer
@@ -97,7 +102,6 @@
 
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Canvas.h>
-#include <kiwano/2d/DebugActor.h>
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/2d/LayerActor.h>
 #include <kiwano/2d/ShapeActor.h>

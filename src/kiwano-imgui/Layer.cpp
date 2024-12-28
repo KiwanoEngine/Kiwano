@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-imgui/Layer.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -28,6 +29,26 @@ namespace imgui
 Layer::Layer()
     : LayerActor(nullptr)
 {
+    class LayerRenderComponent : public RenderComponent
+    {
+    public:
+        Layer* layer;
+
+        LayerRenderComponent(Layer* layer)
+            : layer(layer)
+        {
+        }
+
+        void OnRender(RenderContext& ctx)
+        {
+            for (const auto& pipeline : layer->pipelines_)
+            {
+                pipeline.second();
+            }
+        }
+    };
+
+    AddComponent(new LayerRenderComponent(this));
 }
 
 Layer::Layer(StringView name, const Pipeline& item)
@@ -37,19 +58,6 @@ Layer::Layer(StringView name, const Pipeline& item)
 }
 
 Layer::~Layer() {}
-
-void Layer::OnRender(RenderContext& ctx)
-{
-    for (const auto& pipeline : pipelines_)
-    {
-        pipeline.second();
-    }
-}
-
-bool Layer::CheckVisibility(RenderContext& ctx) const
-{
-    return true;
-}
 
 void Layer::AddItem(StringView name, const Pipeline& item)
 {

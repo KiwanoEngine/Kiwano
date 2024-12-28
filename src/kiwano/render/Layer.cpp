@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Layer.h>
+#include <kiwano/render/RenderContext.h>
 
 namespace kiwano
 {
@@ -33,7 +34,16 @@ Layer::Layer(RefPtr<Shape> mask, const Matrix3x2& mask_transform, float opacity,
     , mask_transform(mask_transform)
     , opacity(opacity)
     , bounds(bounds)
+    , transform()
 {
+}
+
+void Layer::OnRender(RenderContext& ctx)
+{
+    ctx.SetTransform(transform);
+    ctx.PushLayer(*this);
+    RenderGroup::OnRender(ctx);
+    ctx.PopLayer();
 }
 
 }  // namespace kiwano

@@ -35,7 +35,7 @@ namespace audio
  * \~chinese
  * @brief ÒôÆµ²¥·ÅÆ÷
  */
-class KGE_API SoundPlayer : public ObjectBase
+class KGE_API SoundPlayer : public BaseObject
 {
 public:
     using SoundList = List<RefPtr<Sound>>;

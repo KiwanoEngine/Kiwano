@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/base/Module.h>
+#include <kiwano/module/Module.h>
 #include <kiwano/render/RenderContext.h>
 
 namespace kiwano
@@ -106,21 +106,5 @@ void EventModuleContext::Handle(Module* m)
 {
     m->HandleEvent(*this);
 }
-
-Module::Module() {}
-
-void Module::SetupModule() {}
-
-void Module::DestroyModule() {}
-
-void Module::OnRender(RenderModuleContext& ctx) {}
-
-void Module::OnUpdate(UpdateModuleContext& ctx) {}
-
-void Module::HandleEvent(EventModuleContext& ctx) {}
-
-void Module::BeforeRender(RenderModuleContext& ctx) {}
-
-void Module::AfterRender(RenderModuleContext& ctx) {}
 
 }  // namespace kiwano

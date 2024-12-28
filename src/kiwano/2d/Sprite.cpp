@@ -92,23 +92,27 @@ void Sprite::SetFrame(const SpriteFrame& frame)
     frame_ = frame;
     SetSize(frame_.GetSize());
 
-    if (!frame_.IsValid())
+    if (frame_.IsValid())
+    {
+        if (!render_comp_)
+        {
+            render_comp_ = new TextureRenderComponent();
+            AddComponent(render_comp_);
+        }
+
+        render_comp_->SetTexture(frame_.GetTexture());
+        render_comp_->SetSourceRect(frame_.GetCropRect());
+    }
+    else
     {
         Fail("Sprite::SetFrame failed");
     }
 }
 
-void Sprite::OnRender(RenderContext& ctx)
+void Sprite::SetCropRect(const Rect& crop_rect)
 {
-    if (frame_.IsValid())
-    {
-        ctx.DrawTexture(*frame_.GetTexture(), &frame_.GetCropRect(), &GetBounds());
-    }
-}
-
-bool Sprite::CheckVisibility(RenderContext& ctx) const
-{
-    return frame_.IsValid() && Actor::CheckVisibility(ctx);
+    frame_.SetCropRect(crop_rect);
+    render_comp_->SetSourceRect(crop_rect);
 }
 
 }  // namespace kiwano

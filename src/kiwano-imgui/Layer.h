@@ -63,11 +63,6 @@ public:
     /// @brief ÒÆ³ıËùÓĞÔªËØ
     void RemoveAllItems();
 
-public:
-    void OnRender(RenderContext& ctx) override;
-
-    bool CheckVisibility(RenderContext& ctx) const override;
-
 private:
     Map<String, Pipeline> pipelines_;
 };

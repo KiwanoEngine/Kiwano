@@ -23,9 +23,14 @@
 
 namespace kiwano
 {
-Canvas::Canvas() {}
+Canvas::Canvas()
+{
+    render_comp_ = new TextureRenderComponent;
+    AddComponent(render_comp_);
+}
 
 Canvas::Canvas(const PixelSize& size)
+    : Canvas()
 {
     ResizeAndClear(size);
 }
@@ -40,6 +45,8 @@ void Canvas::ResizeAndClear(const PixelSize& size)
 {
     texture_cached_ = MakePtr<Texture>();
     render_ctx_     = RenderContext::Create(texture_cached_, size);
+
+    render_comp_->SetTexture(texture_cached_);
     if (render_ctx_)
     {
         SetSize(render_ctx_->GetSize());
@@ -47,14 +54,6 @@ void Canvas::ResizeAndClear(const PixelSize& size)
     else
     {
         Fail("Canvas::ResizeAndClear failed");
-    }
-}
-
-void Canvas::OnRender(RenderContext& ctx)
-{
-    if (texture_cached_)
-    {
-        ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
     }
 }
 

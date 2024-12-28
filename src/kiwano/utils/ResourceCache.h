@@ -20,14 +20,14 @@
 
 #pragma once
 #include <kiwano/core/Resource.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 
 namespace kiwano
 {
 
 /// \~chinese
 /// @brief 资源缓存
-class KGE_API ResourceCache final : public ObjectBase
+class KGE_API ResourceCache final : public BaseObject
 {
 public:
     ResourceCache();
@@ -47,7 +47,7 @@ public:
     /// \~chinese
     /// @brief 获取资源
     /// @param id 对象ID
-    RefPtr<ObjectBase> Get(StringView id) const;
+    RefPtr<BaseObject> Get(StringView id) const;
 
     /// \~chinese
     /// @brief 获取资源
@@ -64,7 +64,7 @@ public:
     /// @brief 将对象放入缓存
     /// @param id 对象ID
     /// @param obj 对象
-    void AddObject(StringView id, RefPtr<ObjectBase> obj);
+    void AddObject(StringView id, RefPtr<BaseObject> obj);
 
     /// \~chinese
     /// @brief 删除指定资源
@@ -76,7 +76,7 @@ public:
     void Clear();
 
 private:
-    UnorderedMap<String, RefPtr<ObjectBase>> object_cache_;
+    UnorderedMap<String, RefPtr<BaseObject>> object_cache_;
 };
 
 }  // namespace kiwano

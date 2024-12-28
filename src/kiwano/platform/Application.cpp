@@ -20,7 +20,7 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/core/Defer.h>
-#include <kiwano/base/Director.h>
+#include <kiwano/module/Director.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/utils/Logger.h>
 
@@ -35,7 +35,7 @@ int GetVersion()
 Application::Application()
     : running_(false)
     , is_paused_(false)
-    , time_scale_(1.f)
+    , time_scale_(-1.f)
 {
 }
 
@@ -105,8 +105,11 @@ void Application::Run(RefPtr<Runner> runner)
     {
         timer_->Tick();
 
-        // Execute main loop
-        if (!runner->MainLoop(timer_->GetDeltaTime()))
+        Duration dt = timer_->GetDeltaTime();
+        if (time_scale_ > 0)
+            dt *= time_scale_;
+
+        if (!runner->MainLoop(dt))
             running_ = false;
     }
 }
@@ -162,7 +165,7 @@ void Application::Use(Module& m)
 #if defined(KGE_DEBUG)
     if (std::find(modules_.begin(), modules_.end(), &m) != modules_.end())
     {
-        KGE_ASSERT(false && "Module already exists!");
+        KGE_ASSERT(false && "Module already existed!");
     }
 #endif
 
@@ -171,6 +174,7 @@ void Application::Use(Module& m)
 
 void Application::SetTimeScale(float scale_factor)
 {
+    // TODO
     time_scale_ = scale_factor;
 }
 
@@ -200,7 +204,7 @@ void Application::Update(Duration dt)
     if (!functions_to_perform_.empty())
     {
         perform_mutex_.lock();
-        auto functions = std::move(functions_to_perform_);
+        Queue<Function<void()>> functions = std::move(functions_to_perform_);
         perform_mutex_.unlock();
 
         while (!functions.empty())

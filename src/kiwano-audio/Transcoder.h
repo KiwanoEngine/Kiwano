@@ -36,7 +36,7 @@ namespace audio
  * \~chinese
  * @brief ÒôÆµ½âÂëÆ÷
  */
-class KGE_API Transcoder : public ObjectBase
+class KGE_API Transcoder : public BaseObject
 {
 public:
     Transcoder() = default;

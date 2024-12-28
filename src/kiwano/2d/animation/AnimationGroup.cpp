@@ -45,9 +45,9 @@ void AnimationGroup::Init(Actor* target)
     }
 
     // reset all animations
-    for (current_ = animations_.GetFirst(); current_; current_ = current_->GetNext())
+    for (auto& anim : animations_)
     {
-        current_->Reset();
+        anim->Reset();
     }
 
     if (!parallel_)
@@ -76,12 +76,12 @@ void AnimationGroup::Update(Actor* target, Duration dt)
     else
     {
         bool done = true;
-        for (current_ = animations_.GetFirst(); current_; current_ = current_->GetNext())
+        for (auto& anim : animations_)
         {
-            if (!current_->IsDone())
+            if (!anim->IsDone())
             {
                 done = false;
-                current_->UpdateStep(target, dt);
+                anim->UpdateStep(target, dt);
             }
         }
 

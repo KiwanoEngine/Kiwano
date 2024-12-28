@@ -21,6 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/SpriteFrame.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -111,13 +112,9 @@ public:
     /// @param[in] frame ¾«ÁéÖ¡
     void SetFrame(const SpriteFrame& frame);
 
-    void OnRender(RenderContext& ctx) override;
-
-protected:
-    bool CheckVisibility(RenderContext& ctx) const override;
-
 private:
-    SpriteFrame frame_;
+    SpriteFrame                    frame_;
+    RefPtr<TextureRenderComponent> render_comp_;
 };
 
 /** @} */
@@ -135,11 +132,6 @@ inline Rect Sprite::GetCropRect() const
 inline SpriteFrame Sprite::GetFrame() const
 {
     return frame_;
-}
-
-inline void Sprite::SetCropRect(const Rect& crop_rect)
-{
-    frame_.SetCropRect(crop_rect);
 }
 
 }  // namespace kiwano

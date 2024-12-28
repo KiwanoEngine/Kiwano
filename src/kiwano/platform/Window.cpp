@@ -35,6 +35,7 @@ Window::Window()
     , min_height_(0)
     , max_width_(0)
     , max_height_(0)
+    , event_buffer_(24)
 {
 }
 
@@ -43,10 +44,10 @@ Window::~Window() {}
 RefPtr<Event> Window::PollEvent()
 {
     RefPtr<Event> evt;
-    if (!event_queue_.empty())
+    if (!event_buffer_.IsEmpty())
     {
-        evt = event_queue_.front();
-        event_queue_.pop();
+        evt = event_buffer_.Front();
+        event_buffer_.PopFront();
     }
     return evt;
 }
@@ -103,7 +104,7 @@ void Window::SetShouldClose(bool should)
 
 void Window::PushEvent(RefPtr<Event> evt)
 {
-    event_queue_.push(evt);
+    event_buffer_.PushBack(evt);
 }
 
 }  // namespace kiwano

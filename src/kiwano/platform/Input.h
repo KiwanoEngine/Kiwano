@@ -21,7 +21,7 @@
 #pragma once
 #include <array>
 #include <kiwano/core/Common.h>
-#include <kiwano/base/Module.h>
+#include <kiwano/module/Module.h>
 #include <kiwano/platform/Keys.h>
 #include <kiwano/event/Event.h>
 #include <kiwano/macros.h>

@@ -117,4 +117,5 @@ public:
 private:
     ListenerList listeners_;
 };
+
 }  // namespace kiwano

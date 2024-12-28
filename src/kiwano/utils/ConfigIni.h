@@ -20,14 +20,14 @@
 
 #pragma once
 #include <kiwano/core/Common.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 
 namespace kiwano
 {
 
 /// \~chinese
 /// @brief ini格式文件
-class KGE_API ConfigIni : public ObjectBase
+class KGE_API ConfigIni : public BaseObject
 {
 public:
     /// \~chinese

@@ -68,9 +68,7 @@ public:
     void SetLayer(const Layer& layer);
 
 protected:
-    void Render(RenderContext& ctx) override;
-
-    bool CheckVisibility(RenderContext& ctx) const override;
+    void Update(Duration dt) override;
 
 private:
     bool  swallow_;

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 
 namespace kiwano
 {
@@ -28,7 +28,7 @@ namespace kiwano
  * \~chinese
  * @brief 含有本地指针的对象
  */
-class KGE_API NativeObject : public ObjectBase
+class KGE_API NativeObject : public BaseObject
 {
 public:
     NativeObject() = default;
@@ -75,7 +75,7 @@ inline void NativeObject::ResetNative()
 
 inline bool NativeObject::IsValid() const
 {
-    return native_.HasValue() && ObjectBase::IsValid();
+    return native_.HasValue() && BaseObject::IsValid();
 }
 
 }  // namespace kiwano

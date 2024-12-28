@@ -20,14 +20,14 @@
 
 #pragma once
 #include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 
 namespace kiwano
 {
 
 /// \~chinese
 /// @brief ¼ÆÊ±Æ÷
-class KGE_API Timer : public ObjectBase
+class KGE_API Timer : public BaseObject
 {
 public:
     Timer();

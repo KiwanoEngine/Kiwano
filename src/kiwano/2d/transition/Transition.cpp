@@ -39,7 +39,7 @@ Transition::Transition()
 
 Transition::~Transition() {}
 
-bool Transition::IsDone()
+bool Transition::IsDone() const
 {
     return done_;
 }
@@ -76,34 +76,30 @@ void Transition::Update(Duration dt)
         process_ = std::min(delta_ / duration_, 1.f);
     }
 
+    UpdateSelf(dt);
+
     if (process_ >= 1)
     {
         this->Stop();
+        return;
     }
-}
 
-void Transition::Render(RenderContext& ctx)
-{
     if (out_stage_)
     {
-        out_stage_->PrepareToRender(ctx);
-        ctx.PushLayer(out_layer_);
-
-        out_stage_->Render(ctx);
-
-        ctx.PopLayer();
+        Renderer::GetInstance().PushRenderGroup(out_layer_);
+        out_stage_->Update(dt);
+        Renderer::GetInstance().PopRenderGroup();
     }
 
     if (in_stage_)
     {
-        in_stage_->PrepareToRender(ctx);
-        ctx.PushLayer(in_layer_);
-
-        in_stage_->Render(ctx);
-
-        ctx.PopLayer();
+        Renderer::GetInstance().PushRenderGroup(in_layer_);
+        in_stage_->Update(dt);
+        Renderer::GetInstance().PopRenderGroup();
     }
 }
+
+void Transition::UpdateSelf(Duration dt) {}
 
 void Transition::Stop()
 {

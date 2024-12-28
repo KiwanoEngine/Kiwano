@@ -20,7 +20,7 @@
 
 #include <kiwano/2d/Actor.h>
 #include <kiwano/2d/Stage.h>
-#include <kiwano/base/Director.h>
+#include <kiwano/module/Director.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Renderer.h>
 
@@ -42,8 +42,6 @@ void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 
 Actor::Actor()
     : ComponentManager(this)
-    , visible_(true)
-    , visible_in_rt_(true)
     , update_pausing_(false)
     , cascade_opacity_(true)
     , show_border_(false)
@@ -73,31 +71,28 @@ void Actor::Update(Duration dt)
     }
 
     // update children those are less than 0 in Z-Order
-    RefPtr<Actor> child = children_.GetFirst();
-    while (child)
+    auto iter = children_.begin();
+    while (iter != children_.end())
     {
+        RefPtr<Actor> child = *iter;
         if (child->GetZOrder() >= 0)
             break;
 
         child->Update(dt);
-        child = child->GetNext();
+        ++iter;
     }
 
     UpdateSelf(dt);
 
-    while (child)
+    while (iter != children_.end())
     {
+        RefPtr<Actor> child = *(iter++);
         child->Update(dt);
-        child = child->GetNext();
     }
 }
 
 void Actor::UpdateSelf(Duration dt)
 {
-    Animator::Update(this, dt);
-    TaskScheduler::Update(dt);
-    ComponentManager::Update(dt);
-
     if (!update_pausing_)
     {
         if (cb_update_)
@@ -106,68 +101,19 @@ void Actor::UpdateSelf(Duration dt)
         OnUpdate(dt);
     }
 
+    Animator::Update(this, dt);
+    TaskScheduler::Update(dt);
+    ComponentManager::Update(dt);
+
     if (!GetAllListeners().IsEmpty())
     {
         Director::GetInstance().PushEventDispatcher(this);
     }
 }
 
-void Actor::Render(RenderContext& ctx)
-{
-    if (!visible_)
-        return;
-
-    UpdateTransform();
-    UpdateOpacity();
-
-    if (children_.IsEmpty())
-    {
-        if (CheckVisibility(ctx))
-        {
-            PrepareToRender(ctx);
-            ComponentManager::Render(ctx);
-            OnRender(ctx);
-        }
-    }
-    else
-    {
-        // render children those are less than 0 in Z-Order
-        RefPtr<Actor> child = children_.GetFirst();
-        while (child)
-        {
-            if (child->GetZOrder() >= 0)
-                break;
-
-            child->Render(ctx);
-            child = child->GetNext();
-        }
-
-        if (CheckVisibility(ctx))
-        {
-            PrepareToRender(ctx);
-            ComponentManager::Render(ctx);
-            OnRender(ctx);
-        }
-
-        while (child)
-        {
-            child->Render(ctx);
-            child = child->GetNext();
-        }
-    }
-}
-
-void Actor::PrepareToRender(RenderContext& ctx)
-{
-    ctx.SetTransform(transform_matrix_);
-    ctx.SetBrushOpacity(GetDisplayedOpacity());
-}
-
 void Actor::RenderBorder(RenderContext& ctx)
 {
-    if (!visible_)
-        return;
-
+    // TODO: ÐÞ¸Ä³É Component
     if (show_border_ && !size_.IsOrigin())
     {
         Rect bounds = GetBounds();
@@ -187,39 +133,19 @@ void Actor::RenderBorder(RenderContext& ctx)
     }
 }
 
-bool Actor::CheckVisibility(RenderContext& ctx) const
-{
-    if (dirty_flag_.Has(DirtyFlag::DirtyVisibility))
-    {
-        dirty_flag_.Unset(DirtyFlag::DirtyVisibility);
-
-        if (size_.IsOrigin())
-        {
-            visible_in_rt_ = false;
-        }
-        else
-        {
-            visible_in_rt_ = ctx.CheckVisibility(GetBounds(), transform_matrix_ /* GetTransformMatrix() */);
-        }
-    }
-    return visible_in_rt_;
-}
-
 void Actor::DoSerialize(Serializer* serializer) const
 {
-    ObjectBase::DoSerialize(serializer);
-    (*serializer) << visible_ << update_pausing_ << cascade_opacity_ << z_order_ << opacity_ << anchor_ << size_
-                  << transform_;
+    BaseObject::DoSerialize(serializer);
+    (*serializer) << update_pausing_ << cascade_opacity_ << z_order_ << opacity_ << anchor_ << size_ << transform_;
 }
 
 void Actor::DoDeserialize(Deserializer* deserializer)
 {
-    ObjectBase::DoDeserialize(deserializer);
+    BaseObject::DoDeserialize(deserializer);
 
     float     opacity = 1.0f;
     Transform transform;
-    (*deserializer) >> visible_ >> update_pausing_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_
-        >> transform;
+    (*deserializer) >> update_pausing_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_ >> transform;
 
     SetOpacity(opacity);
     SetTransform(transform);
@@ -411,14 +337,9 @@ void Actor::SetTransform(const Transform& transform)
     dirty_flag_.Set(DirtyFlag::DirtyTransform);
 }
 
-void Actor::SetVisible(bool val)
-{
-    visible_ = val;
-}
-
 void Actor::SetName(StringView name)
 {
-    ObjectBase::SetName(name);
+    BaseObject::SetName(name);
     hash_name_ = std::hash<StringView>{}(name);
 }
 
@@ -589,11 +510,9 @@ void Actor::RemoveChildren(StringView child_name)
 
     size_t hash_code = std::hash<StringView>{}(child_name);
 
-    RefPtr<Actor> next;
-    for (RefPtr<Actor> child = children_.GetFirst(); child; child = next)
+    for (auto iter = children_.begin(); iter != children_.end();)
     {
-        next = child->GetNext();
-
+        RefPtr<Actor> child = *(iter++);
         if (child->hash_name_ == hash_code && child->IsName(child_name))
         {
             RemoveChild(child);
@@ -603,10 +522,9 @@ void Actor::RemoveChildren(StringView child_name)
 
 void Actor::RemoveAllChildren()
 {
-    RefPtr<Actor> next;
-    for (RefPtr<Actor> child = children_.GetFirst(); child; child = next)
+    for (auto iter = children_.begin(); iter != children_.end();)
     {
-        next = child->GetNext();
+        RefPtr<Actor> child = *(iter++);
         RemoveChild(child);
     }
 }

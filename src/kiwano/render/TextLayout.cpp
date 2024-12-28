@@ -130,14 +130,6 @@ void TextLayout::SetFont(const Font& font)
             hr = native->SetFontStyle(font_style, { 0, content_length_ });
             KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStyle failed");
         }
-
-        // reset font stretch
-        {
-            auto font_stretch = DWRITE_FONT_STRETCH(font.stretch);
-
-            hr = native->SetFontStretch(font_stretch, { 0, content_length_ });
-            KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetFontStretch failed");
-        }
     }
 #else
     // not supported

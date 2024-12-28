@@ -724,7 +724,7 @@ void RendererImpl::CreateTextLayout(TextLayout& layout, StringView content, cons
         float font_size    = style.font.size;
         auto  font_weight  = DWRITE_FONT_WEIGHT(style.font.weight);
         auto  font_style   = DWRITE_FONT_STYLE(style.font.posture);
-        auto  font_stretch = DWRITE_FONT_STRETCH(style.font.stretch);
+        auto  font_stretch = DWRITE_FONT_STRETCH::DWRITE_FONT_STRETCH_NORMAL;
         auto  collection   = ComPolicy::Get<IDWriteFontCollection>(style.font.collection);
 
         WideString font_family = style.font.family_name.empty() ? L"" : strings::NarrowToWide(style.font.family_name);

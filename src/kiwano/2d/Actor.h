@@ -21,8 +21,8 @@
 #pragma once
 #include <kiwano/math/Math.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/base/ObjectBase.h>
-#include <kiwano/base/component/ComponentManager.h>
+#include <kiwano/core/BaseObject.h>
+#include <kiwano/component/ComponentManager.h>
 #include <kiwano/event/EventDispatcher.h>
 #include <kiwano/utils/TaskScheduler.h>
 #include <kiwano/2d/animation/Animator.h>
@@ -32,6 +32,7 @@ namespace kiwano
 class Stage;
 class Director;
 class RenderContext;
+class RenderComponent;
 
 /// \~chinese
 /// @brief 角色列表
@@ -54,7 +55,7 @@ typedef IntrusiveList<RefPtr<Actor>> ActorList;
  * 角色是舞台上最基本的元素，是完成渲染、更新、事件分发等功能的最小单位，也是动画、任务、事件监听等功能的载体
  */
 class KGE_API Actor
-    : public ObjectBase
+    : public BaseObject
     , public Animator
     , public TaskScheduler
     , public EventDispatcher
@@ -63,6 +64,7 @@ class KGE_API Actor
 {
     friend class Director;
     friend class Transition;
+    friend class RenderComponent;
     friend IntrusiveList<RefPtr<Actor>>;
 
 public:
@@ -82,17 +84,6 @@ public:
     /// @details 每帧画面刷新前调用该函数，重载该函数以实现角色的更新处理
     /// @param dt 距上一次更新的时间间隔
     virtual void OnUpdate(Duration dt);
-
-    /// \~chinese
-    /// @brief 渲染角色
-    /// @details
-    /// 每帧画面刷新时调用该函数，默认不进行渲染，重载该函数以实现具体渲染过程
-    /// @param ctx 渲染上下文
-    virtual void OnRender(RenderContext& ctx);
-
-    /// \~chinese
-    /// @brief 获取显示状态
-    bool IsVisible() const;
 
     /// \~chinese
     /// @brief 是否启用级联透明度
@@ -221,10 +212,6 @@ public:
     /// \~chinese
     /// @brief 获取变换到父角色的二维变换矩阵
     const Matrix3x2& GetTransformMatrixToParent() const;
-
-    /// \~chinese
-    /// @brief 设置角色是否可见
-    void SetVisible(bool val);
 
     /// \~chinese
     /// @brief 设置名称
@@ -422,20 +409,8 @@ protected:
     void UpdateSelf(Duration dt);
 
     /// \~chinese
-    /// @brief 渲染自身和所有子角色
-    virtual void Render(RenderContext& ctx);
-
-    /// \~chinese
     /// @brief 绘制自身和所有子角色的边界
     virtual void RenderBorder(RenderContext& ctx);
-
-    /// \~chinese
-    /// @brief 检查是否在渲染上下文的视区内
-    virtual bool CheckVisibility(RenderContext& ctx) const;
-
-    /// \~chinese
-    /// @brief 渲染前初始化渲染上下文状态，仅当 CheckVisibility 返回真时调用该函数
-    virtual void PrepareToRender(RenderContext& ctx);
 
     /// \~chinese
     /// @brief 更新自己的二维变换，并通知所有子角色
@@ -459,11 +434,9 @@ protected:
     void SetStage(Stage* stage);
 
 private:
-    bool         visible_;
-    bool         update_pausing_;
-    bool         cascade_opacity_;
-    bool         show_border_;
-    mutable bool visible_in_rt_;
+    bool update_pausing_;
+    bool cascade_opacity_;
+    bool show_border_;
 
     enum DirtyFlag : uint8_t
     {
@@ -497,16 +470,6 @@ private:
 inline void Actor::OnUpdate(Duration dt)
 {
     KGE_NOT_USED(dt);
-}
-
-inline void Actor::OnRender(RenderContext& ctx)
-{
-    KGE_NOT_USED(ctx);
-}
-
-inline bool Actor::IsVisible() const
-{
-    return visible_;
 }
 
 inline bool Actor::IsCascadeOpacityEnabled() const

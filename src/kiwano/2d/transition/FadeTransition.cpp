@@ -37,10 +37,8 @@ void FadeTransition::Init(Stage* prev, Stage* next)
     in_layer_.opacity  = 0.f;
 }
 
-void FadeTransition::Update(Duration dt)
+void FadeTransition::UpdateSelf(Duration dt)
 {
-    Transition::Update(dt);
-
     if (parallel_)
     {
         out_layer_.opacity = 1 - process_;

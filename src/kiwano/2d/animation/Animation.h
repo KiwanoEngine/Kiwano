@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Cloneable.h>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/core/Time.h>
 #include <kiwano/core/IntrusiveList.hpp>
 #include <kiwano/math/Math.h>
@@ -97,7 +97,7 @@ typedef IntrusiveList<RefPtr<Animation>> AnimationList;
 /// \~chinese
 /// @brief ¶¯»­
 class KGE_API Animation
-    : public ObjectBase
+    : public BaseObject
     , public Cloneable<Animation>
     , protected IntrusiveListValue<RefPtr<Animation>>
 {

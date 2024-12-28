@@ -25,12 +25,10 @@
 namespace kiwano
 {
 
-// 预留出描边的空间
-const Point cached_texture_offset = Point{ 5, 5 };
-
 TextActor::TextActor()
-    : is_cache_dirty_(false)
 {
+    render_comp_ = new TextRenderComponent;
+    AddComponent(render_comp_);
 }
 
 TextActor::TextActor(StringView text, const TextStyle& style)
@@ -42,26 +40,6 @@ TextActor::TextActor(StringView text, const TextStyle& style)
 
 TextActor::~TextActor() {}
 
-void TextActor::OnRender(RenderContext& ctx)
-{
-    if (layout_)
-    {
-        if (texture_cached_)
-        {
-            Rect dest_rect = GetBounds();
-            dest_rect.left_top -= cached_texture_offset;
-            dest_rect.right_bottom += cached_texture_offset;
-            ctx.DrawTexture(*texture_cached_, nullptr, &dest_rect);
-        }
-        else
-        {
-            ctx.SetCurrentBrush(fill_brush_);
-            ctx.SetCurrentStrokeStyle(outline_stroke_);
-            ctx.DrawTextLayout(*layout_, Point{}, outline_brush_);
-        }
-    }
-}
-
 Size TextActor::GetSize() const
 {
     const_cast<TextActor*>(this)->UpdateDirtyLayout();
@@ -70,47 +48,27 @@ Size TextActor::GetSize() const
 
 void TextActor::SetText(StringView text)
 {
-    if (!layout_)
-    {
-        layout_ = MakePtr<TextLayout>();
-    }
-
-    try
-    {
-        layout_->Reset(text, style_);
-        content_        = text;
-        is_cache_dirty_ = true;
-    }
-    catch (SystemError& e)
-    {
-        Fail(String("TextActor::SetText failed: ") + e.what());
-    }
+    ResetLayout(text, style_);
 }
 
 void TextActor::SetStyle(const TextStyle& style)
 {
-    is_cache_dirty_ = true;
-    style_          = style;
-    if (layout_)
-        layout_->Reset(content_, style);
+    style_ = style;
+    ResetLayout(content_, style_);
 }
 
 void TextActor::SetFont(const Font& font)
 {
-    is_cache_dirty_ = true;
-    style_.font     = font;
-    if (layout_)
-        layout_->SetFont(font);
+    style_.font = font;
+    ResetLayout(content_, style_);
 }
 
 void TextActor::SetUnderline(bool enable)
 {
     if (style_.show_underline != enable)
     {
-        is_cache_dirty_       = true;
         style_.show_underline = enable;
-        if (layout_)
-            layout_->SetUnderline(enable);
+        ResetLayout(content_, style_);
     }
 }
 
@@ -118,10 +76,8 @@ void TextActor::SetStrikethrough(bool enable)
 {
     if (style_.show_strikethrough != enable)
     {
-        is_cache_dirty_           = true;
         style_.show_strikethrough = enable;
-        if (layout_)
-            layout_->SetStrikethrough(enable);
+        ResetLayout(content_, style_);
     }
 }
 
@@ -129,10 +85,8 @@ void TextActor::SetWrapWidth(float wrap_width)
 {
     if (style_.wrap_width != wrap_width)
     {
-        is_cache_dirty_   = true;
         style_.wrap_width = wrap_width;
-        if (layout_)
-            layout_->SetWrapWidth(wrap_width);
+        ResetLayout(content_, style_);
     }
 }
 
@@ -140,10 +94,8 @@ void TextActor::SetLineSpacing(float line_spacing)
 {
     if (style_.line_spacing != line_spacing)
     {
-        is_cache_dirty_     = true;
         style_.line_spacing = line_spacing;
-        if (layout_)
-            layout_->SetLineSpacing(line_spacing);
+        ResetLayout(content_, style_);
     }
 }
 
@@ -151,83 +103,40 @@ void TextActor::SetAlignment(TextAlign align)
 {
     if (style_.alignment != align)
     {
-        is_cache_dirty_  = true;
         style_.alignment = align;
-        if (layout_)
-            layout_->SetAlignment(align);
+        ResetLayout(content_, style_);
     }
 }
 
 void TextActor::SetFillBrush(RefPtr<Brush> brush)
 {
-    fill_brush_     = brush;
-    is_cache_dirty_ = true;
+    render_comp_->SetFillBrush(brush);
 }
 
 void TextActor::SetOutlineBrush(RefPtr<Brush> brush)
 {
-    outline_brush_  = brush;
-    is_cache_dirty_ = true;
+    render_comp_->SetOutlineBrush(brush);
 }
 
 void TextActor::SetOutlineStrokeStyle(RefPtr<StrokeStyle> stroke)
 {
-    outline_stroke_ = stroke;
-    is_cache_dirty_ = true;
+    render_comp_->SetOutlineStrokeStyle(stroke);
 }
 
 void TextActor::SetFillColor(const Color& color)
 {
-    if (fill_brush_)
-    {
-        is_cache_dirty_ = true;
-        fill_brush_->SetColor(color);
-    }
-    else
-    {
-        SetFillBrush(MakePtr<Brush>(color));
-    }
+    SetFillBrush(MakePtr<Brush>(color));
 }
 
 void TextActor::SetOutlineColor(const Color& outline_color)
 {
-    if (outline_brush_)
-    {
-        is_cache_dirty_ = true;
-        outline_brush_->SetColor(outline_color);
-    }
-    else
-    {
-        SetOutlineBrush(MakePtr<Brush>(outline_color));
-    }
+    SetOutlineBrush(MakePtr<Brush>(outline_color));
 }
 
 void TextActor::SetTextLayout(RefPtr<TextLayout> layout)
 {
-    if (layout_ != layout)
-    {
-        is_cache_dirty_ = true;
-        layout_         = layout;
-        ForceUpdateLayout();
-    }
-}
-
-void TextActor::SetPreRenderEnabled(bool enable)
-{
-    const bool enabled = texture_cached_ != nullptr;
-    if (enabled != enable)
-    {
-        if (enable)
-        {
-            texture_cached_ = MakePtr<Texture>();
-        }
-        else
-        {
-            texture_cached_ = nullptr;
-        }
-        render_ctx_     = nullptr;
-        is_cache_dirty_ = true;
-    }
+    render_comp_->SetTextLayout(layout);
+    ForceUpdateLayout();
 }
 
 void TextActor::Update(Duration dt)
@@ -236,18 +145,14 @@ void TextActor::Update(Duration dt)
     Actor::Update(dt);
 }
 
-bool TextActor::CheckVisibility(RenderContext& ctx) const
-{
-    return layout_ && layout_->IsValid() && Actor::CheckVisibility(ctx);
-}
-
 void TextActor::UpdateDirtyLayout()
 {
-    if (layout_ && layout_->UpdateIfDirty())
+    auto layout = render_comp_->GetTextLayout();
+    if (layout && layout->UpdateIfDirty())
     {
         ForceUpdateLayout();
     }
-    else if (is_cache_dirty_)
+    else
     {
         UpdateCachedTexture();
     }
@@ -255,10 +160,11 @@ void TextActor::UpdateDirtyLayout()
 
 void TextActor::ForceUpdateLayout()
 {
-    if (layout_)
+    auto layout = render_comp_->GetTextLayout();
+    if (layout)
     {
-        layout_->UpdateIfDirty();
-        SetSize(layout_->GetSize());
+        layout->UpdateIfDirty();
+        SetSize(layout->GetSize());
         UpdateCachedTexture();
     }
     else
@@ -270,32 +176,34 @@ void TextActor::ForceUpdateLayout()
 void TextActor::UpdateCachedTexture()
 {
     // 有文字描边或其他额外渲染时，需要开启预渲染以提升性能
-    this->SetPreRenderEnabled(outline_brush_ || style_.show_strikethrough || style_.show_underline
-                              || (layout_ && layout_->GetContentLength() > 30));
+    auto layout = render_comp_->GetTextLayout();
+    render_comp_->SetPreRenderEnabled(render_comp_->GetOutlineBrush() || style_.show_strikethrough
+                                      || style_.show_underline || (layout && layout->GetContentLength() > 30));
+    render_comp_->UpdateCachedTexture();
+}
 
-    if (!texture_cached_)
+void TextActor::ResetLayout(StringView content, const TextStyle& style)
+{
+    if (!render_comp_->GetTextLayout())
     {
-        return;
+        render_comp_->SetTextLayout(MakePtr<TextLayout>());
     }
 
-    const auto expectedSize = layout_->GetSize() + cached_texture_offset * 2;
-    if (!render_ctx_)
+    try
     {
-        const auto pixelSize = PixelSize((uint32_t)math::Ceil(expectedSize.x), (uint32_t)math::Ceil(expectedSize.y));
-        render_ctx_          = RenderContext::Create(texture_cached_, pixelSize);
-    }
-    else if (render_ctx_->GetSize() != expectedSize)
-    {
-        render_ctx_->Resize(expectedSize);
-    }
+        if (content_.c_str() != content.data())
+            content_ = content;
+        if (&style_ != &style)
+            style_ = style;
 
-    render_ctx_->BeginDraw();
-    render_ctx_->Clear();
-    render_ctx_->SetCurrentBrush(fill_brush_);
-    render_ctx_->SetCurrentStrokeStyle(outline_stroke_);
-    render_ctx_->DrawTextLayout(*layout_, cached_texture_offset, outline_brush_);
-    render_ctx_->EndDraw();
-    is_cache_dirty_ = false;
+        auto layout = render_comp_->GetTextLayout();
+        layout->Reset(content, style);
+        render_comp_->SetTextLayout(layout);
+    }
+    catch (SystemError& e)
+    {
+        Fail(String("TextActor::ResetLayout failed: ") + e.what());
+    }
 }
 
 }  // namespace kiwano

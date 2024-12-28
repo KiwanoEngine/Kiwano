@@ -23,6 +23,7 @@
 #include <kiwano/2d/SpriteFrame.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/RenderContext.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -64,16 +65,16 @@ public:
     /// @brief 导出纹理
     RefPtr<Texture> GetTexture() const;
 
-    void OnRender(RenderContext& ctx) override;
-
 private:
     RefPtr<Texture>       texture_cached_;
     RefPtr<RenderContext> render_ctx_;
+
+    RefPtr<TextureRenderComponent> render_comp_;
 };
 
 /// \~chinese
 /// @brief 画布渲染上下文
-class KGE_API CanvasRenderContext : public ObjectBase
+class KGE_API CanvasRenderContext : public BaseObject
 {
 public:
     /// \~chinese
@@ -83,11 +84,6 @@ public:
     /// \~chinese
     /// @brief 结束渲染
     void EndDraw();
-
-    /// \~chinese
-    /// @brief 画角色
-    /// @param actor 角色
-    void DrawActor(RefPtr<Actor> actor);
 
     /// \~chinese
     /// @brief 画形状轮廓
@@ -303,15 +299,6 @@ inline void CanvasRenderContext::EndDraw()
 {
     KGE_ASSERT(ctx_);
     ctx_->EndDraw();
-}
-
-inline void CanvasRenderContext::DrawActor(RefPtr<Actor> actor)
-{
-    KGE_ASSERT(ctx_);
-    if (actor)
-    {
-        actor->OnRender(*ctx_);
-    }
 }
 
 inline void CanvasRenderContext::DrawShape(RefPtr<Shape> shape)

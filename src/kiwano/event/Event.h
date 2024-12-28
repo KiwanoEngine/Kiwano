@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/RefObject.h>
-#include <kiwano/base/RefPtr.h>
+#include <kiwano/core/RefObject.hpp>
+#include <kiwano/core/RefPtr.hpp>
 #include <kiwano/event/EventType.h>
 #include <kiwano/math/Math.h>
 

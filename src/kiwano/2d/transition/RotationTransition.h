@@ -46,7 +46,7 @@ public:
     RotationTransition(Duration duration, float rotation = 360.0f);
 
 protected:
-    void Update(Duration dt) override;
+    void UpdateSelf(Duration dt) override;
 
     virtual void Init(Stage* prev, Stage* next) override;
 

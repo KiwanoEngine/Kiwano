@@ -19,7 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/base/Module.h>
+#include <kiwano/module/Module.h>
+#include <kiwano/render/RenderObject.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.h>
@@ -237,8 +238,33 @@ public:
     /// @brief 处理事件
     void HandleEvent(EventModuleContext& ctx) override;
 
+    /**
+     * \~chinese
+     * @brief 添加渲染对象（下一帧自动清除）
+     * @param render_object 渲染对象
+     */
+    void PushRenderObject(RenderObject* render_object);
+
+    /**
+     * \~chinese
+     * @brief 添加渲染组
+     * @param render_group 渲染组
+     */
+    void PushRenderGroup(RenderGroup& render_group);
+
+    /**
+     * \~chinese
+     * @brief 推出上一个渲染组
+     * @param render_group 渲染组
+     */
+    void PopRenderGroup();
+
 protected:
     Renderer();
+
+    void OnRender(RenderModuleContext& ctx) override;
+
+    void AfterRender(RenderModuleContext& ctx) override;
 
 protected:
     bool                  vsync_;
@@ -246,6 +272,8 @@ protected:
     Color                 clear_color_;
     Size                  output_size_;
     RefPtr<RenderContext> render_ctx_;
+    RenderGroup           default_render_group_;
+    Stack<RenderGroup*>   render_group_stack_;
 };
 
 /** @} */

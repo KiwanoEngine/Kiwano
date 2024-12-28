@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/IntrusiveList.hpp>
-#include <kiwano/base/ObjectBase.h>
+#include <kiwano/core/BaseObject.h>
 #include <kiwano/event/Events.h>
 
 namespace kiwano
@@ -43,7 +43,7 @@ class EventDispatcher;
  * @brief ÊÂ¼þ¼àÌýÆ÷
  */
 class KGE_API EventListener
-    : public ObjectBase
+    : public BaseObject
     , protected IntrusiveListValue<RefPtr<EventListener>>
 {
     friend class EventDispatcher;

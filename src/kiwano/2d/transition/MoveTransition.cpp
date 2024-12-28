@@ -66,10 +66,8 @@ void MoveTransition::Init(Stage* prev, Stage* next)
     }
 }
 
-void MoveTransition::Update(Duration dt)
+void MoveTransition::UpdateSelf(Duration dt)
 {
-    Transition::Update(dt);
-
     if (out_stage_)
     {
         auto transform     = Transform{};

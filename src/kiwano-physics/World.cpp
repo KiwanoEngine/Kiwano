@@ -51,7 +51,8 @@ public:
 
     void Render(RenderContext& ctx)
     {
-        canvas_->OnRender(ctx);
+        // TODO
+        //canvas_->OnRender(ctx);
     }
 
     void SetFillColor(const b2Color& color)
@@ -259,8 +260,14 @@ void World::OnUpdate(Duration dt)
     AfterSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
+bool World::CheckVisibility(RenderContext& ctx)
+{
+    return !!drawer_;
+}
+
 void World::OnRender(RenderContext& ctx)
 {
+    RenderComponent::OnRender(ctx);
     if (drawer_)
     {
         drawer_->BeginDraw();
