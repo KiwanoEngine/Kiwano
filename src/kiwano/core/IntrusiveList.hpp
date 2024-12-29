@@ -197,20 +197,17 @@ public:
 
     /// \~chinese
     /// @brief 清空所有对象
-    void Clear(bool deep = true)
+    void Clear()
     {
-        if (deep)
+        value_type p = first_;
+        while (p)
         {
-            value_type p = first_;
-            while (p)
+            value_type tmp = p;
+            p              = p->GetNext();
+            if (tmp)
             {
-                value_type tmp = p;
-                p              = p->GetNext();
-                if (tmp)
-                {
-                    tmp->GetNext() = nullptr;
-                    tmp->GetPrev() = nullptr;
-                }
+                tmp->GetNext() = nullptr;
+                tmp->GetPrev() = nullptr;
             }
         }
         first_ = nullptr;

@@ -20,7 +20,7 @@
 
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
-#include <kiwano/platform/Input.h>
+#include <kiwano/module/Input.h>
 
 namespace kiwano
 {
@@ -133,7 +133,7 @@ void Input::OnUpdate(UpdateModuleContext& ctx)
 
 void Input::HandleEvent(EventModuleContext& ctx)
 {
-    Event* evt = ctx.evt;
+    Event* evt = ctx.evt.Get();
 
     if (evt->IsType<MouseEvent>())
     {

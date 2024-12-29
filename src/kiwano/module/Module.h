@@ -19,89 +19,10 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Time.h>
+#include <kiwano/module/ModuleContext.h>
 
 namespace kiwano
 {
-class RenderContext;
-class Event;
-class Module;
-
-/// \~chinese
-/// @brief 模块列表
-typedef Vector<Module*> ModuleList;
-
-/// \~chinese
-/// @brief 模块上下文
-class KGE_API ModuleContext
-{
-public:
-    void Next();
-
-protected:
-    ModuleContext(ModuleList& modules);
-
-    virtual ~ModuleContext();
-
-    virtual void Handle(Module* m) = 0;
-
-    void ResetIndex();
-
-private:
-    int         index_;
-    ModuleList& modules_;
-};
-
-/// \~chinese
-/// @brief 渲染模块上下文
-class KGE_API RenderModuleContext : public ModuleContext
-{
-public:
-    RenderContext& render_ctx;
-
-    RenderModuleContext(ModuleList& modules, RenderContext& ctx);
-
-    virtual ~RenderModuleContext();
-
-protected:
-    void Handle(Module* m) override;
-
-private:
-    enum class Step
-    {
-        Before,
-        Rendering,
-        After,
-    };
-
-    Step step_;
-};
-
-/// \~chinese
-/// @brief 更新模块上下文
-class KGE_API UpdateModuleContext : public ModuleContext
-{
-public:
-    Duration dt;
-
-    UpdateModuleContext(ModuleList& modules, Duration dt);
-
-protected:
-    void Handle(Module* m) override;
-};
-
-/// \~chinese
-/// @brief 时间模块上下文
-class KGE_API EventModuleContext : public ModuleContext
-{
-public:
-    Event* evt;
-
-    EventModuleContext(ModuleList& modules, Event* evt);
-
-protected:
-    void Handle(Module* m) override;
-};
 
 /**
  * \~chinese

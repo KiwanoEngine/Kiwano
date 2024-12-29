@@ -37,8 +37,14 @@ RenderComponent::RenderComponent()
 
 bool RenderComponent::CheckVisibility(RenderContext& ctx)
 {
-    // TODO: friend class 的侵入设计不太好
     auto actor = GetBoundActor();
+    if (!actor)
+    {
+        visible_ = false;
+        return visible_;
+    }
+
+    // TODO: friend class 的侵入设计不太好
     if (actor->dirty_flag_.Has(Actor::DirtyFlag::DirtyVisibility))
     {
         actor->dirty_flag_.Unset(Actor::DirtyFlag::DirtyVisibility);
@@ -244,6 +250,32 @@ void ShapeRenderComponent::OnRender(RenderContext& ctx)
 bool ShapeRenderComponent::CheckVisibility(RenderContext& ctx)
 {
     return shape_ && RenderComponent::CheckVisibility(ctx);
+}
+
+//
+// LayerRenderComponent
+//
+
+LayerRenderComponent::LayerRenderComponent(const Layer& layer)
+    : layer_(layer)
+{
+}
+
+void LayerRenderComponent::OnRender(RenderContext& ctx)
+{
+    auto actor       = GetBoundActor();
+    layer_.transform = actor->GetTransformMatrix();  // TODO: refactor
+    Renderer::GetInstance().PushRenderGroup(layer_);
+}
+
+void LayerRenderComponent::AfterRender(RenderContext& ctx)
+{
+    Renderer::GetInstance().PopRenderGroup();
+}
+
+bool LayerRenderComponent::CheckVisibility(RenderContext& ctx)
+{
+    return true;
 }
 
 }  // namespace kiwano

@@ -42,7 +42,7 @@ void Actor::SetDefaultAnchor(float anchor_x, float anchor_y)
 
 Actor::Actor()
     : ComponentManager(this)
-    , update_pausing_(false)
+    , updating_enabled_(true)
     , cascade_opacity_(true)
     , show_border_(false)
     , dirty_flag_(DirtyFlag::DirtyVisibility)
@@ -64,6 +64,9 @@ Actor::~Actor()
 
 void Actor::Update(Duration dt)
 {
+    if (!updating_enabled_)
+        return;
+
     if (children_.IsEmpty())
     {
         UpdateSelf(dt);
@@ -93,13 +96,10 @@ void Actor::Update(Duration dt)
 
 void Actor::UpdateSelf(Duration dt)
 {
-    if (!update_pausing_)
-    {
-        if (cb_update_)
-            cb_update_(dt);
+    if (cb_update_)
+        cb_update_(dt);
 
-        OnUpdate(dt);
-    }
+    OnUpdate(dt);
 
     Animator::Update(this, dt);
     TaskScheduler::Update(dt);
@@ -136,7 +136,7 @@ void Actor::RenderBorder(RenderContext& ctx)
 void Actor::DoSerialize(Serializer* serializer) const
 {
     BaseObject::DoSerialize(serializer);
-    (*serializer) << update_pausing_ << cascade_opacity_ << z_order_ << opacity_ << anchor_ << size_ << transform_;
+    (*serializer) << updating_enabled_ << cascade_opacity_ << z_order_ << opacity_ << anchor_ << size_ << transform_;
 }
 
 void Actor::DoDeserialize(Deserializer* deserializer)
@@ -145,7 +145,7 @@ void Actor::DoDeserialize(Deserializer* deserializer)
 
     float     opacity = 1.0f;
     Transform transform;
-    (*deserializer) >> update_pausing_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_ >> transform;
+    (*deserializer) >> updating_enabled_ >> cascade_opacity_ >> z_order_ >> opacity >> anchor_ >> size_ >> transform;
 
     SetOpacity(opacity);
     SetTransform(transform);

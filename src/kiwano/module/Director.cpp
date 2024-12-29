@@ -117,7 +117,7 @@ void Director::ShowDebugInfo(bool show)
 
 void Director::ClearStages()
 {
-    dispatcher_list_.Clear(false);
+    dispatcher_list_.Clear();
     stages_ = Stack<RefPtr<Stage>>();
 
     current_stage_.Reset();
@@ -133,7 +133,7 @@ void Director::PushEventDispatcher(EventDispatcher* dispatcher)
 
 void Director::OnUpdate(UpdateModuleContext& ctx)
 {
-    dispatcher_list_.Clear(false);
+    dispatcher_list_.Clear();
 
     if (transition_)
     {
@@ -173,7 +173,7 @@ void Director::HandleEvent(EventModuleContext& ctx)
 {
     for (auto dispatcher : dispatcher_list_)
     {
-        dispatcher->DispatchEvent(ctx.evt);
+        dispatcher->DispatchEvent(ctx.evt.Get());
     }
 }
 

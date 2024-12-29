@@ -30,7 +30,7 @@ void RenderGroup::PushRenderObject(RenderObject* render_object)
 
 void RenderGroup::Clear()
 {
-    render_list_.Clear(false);
+    render_list_.Clear();
 }
 
 void RenderGroup::OnRender(RenderContext& ctx)

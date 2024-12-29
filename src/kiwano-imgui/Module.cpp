@@ -2,7 +2,7 @@
 
 #include <kiwano/core/Common.h>
 #include <kiwano/event/Events.h>
-#include <kiwano/platform/Input.h>
+#include <kiwano/module/Input.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano-imgui/Module.h>
@@ -206,7 +206,7 @@ void Module::HandleEvent(EventModuleContext& ctx)
 {
     if (ImGui::GetCurrentContext() != NULL)
     {
-        Event* evt = ctx.evt;
+        Event* evt = ctx.evt.Get();
 
         ImGuiIO& io = ImGui::GetIO();
         if (evt->IsType<MouseEvent>())

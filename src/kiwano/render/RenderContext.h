@@ -198,10 +198,6 @@ public:
     virtual RefPtr<Brush> GetCurrentBrush() const;
 
     /// \~chinese
-    /// @brief 获取全局二维变换
-    virtual const Matrix3x2& GetGlobalTransform() const;
-
-    /// \~chinese
     /// @brief 设置画刷透明度
     virtual void SetBrushOpacity(float opacity);
 
@@ -234,16 +230,12 @@ public:
     virtual void Resize(const Size& size) = 0;
 
     /// \~chinese
+    /// @brief 获取上下文的二维变换
+    virtual Matrix3x2 GetTransform() const = 0;
+
+    /// \~chinese
     /// @brief 设置上下文的二维变换
     virtual void SetTransform(const Matrix3x2& matrix) = 0;
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    virtual void SetGlobalTransform(const Matrix3x2& matrix);
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    virtual void SetGlobalTransform(const Matrix3x2* matrix);
 
     /// \~chinese
     /// @brief 获取渲染目标
@@ -278,14 +270,12 @@ protected:
 
 protected:
     bool                antialias_;
-    bool                fast_global_transform_;
     mutable bool        collecting_status_;
     float               brush_opacity_;
     TextAntialiasMode   text_antialias_;
     RefPtr<Brush>       current_brush_;
     RefPtr<StrokeStyle> current_stroke_;
     Rect                visible_size_;
-    Matrix3x2           global_transform_;
     mutable Status      status_;
 };
 

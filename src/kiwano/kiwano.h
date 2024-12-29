@@ -52,13 +52,6 @@
 #include <kiwano/core/BaseObject.h>
 
 //
-// modules
-//
-
-#include <kiwano/module/Module.h>
-#include <kiwano/module/Director.h>
-
-//
 // event
 //
 
@@ -70,6 +63,13 @@
 #include <kiwano/event/listener/MouseEventListener.h>
 #include <kiwano/event/listener/KeyEventListener.h>
 #include <kiwano/event/EventDispatcher.h>
+
+//
+// modules
+//
+
+#include <kiwano/module/Module.h>
+#include <kiwano/module/Director.h>
 
 //
 // components
@@ -138,11 +138,11 @@
 // platform
 //
 
-#include <kiwano/platform/Window.h>
-#include <kiwano/platform/Runner.h>
+#include <kiwano/module/Window.h>
+#include <kiwano/module/Runner.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/platform/FileSystem.h>
-#include <kiwano/platform/Input.h>
+#include <kiwano/module/Input.h>
 
 //
 // utils

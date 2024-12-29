@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#include <kiwano/module/Window.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -41,15 +42,20 @@ Window::Window()
 
 Window::~Window() {}
 
-RefPtr<Event> Window::PollEvent()
+void Window::OnUpdate(UpdateModuleContext& ctx)
 {
-    RefPtr<Event> evt;
-    if (!event_buffer_.IsEmpty())
+    // Poll events
+    PumpEvents();
+
+    auto& app = Application::GetInstance();
+    while (!event_buffer_.IsEmpty())
     {
-        evt = event_buffer_.Front();
+        RefPtr<Event> evt = event_buffer_.Front();
         event_buffer_.PopFront();
+
+        auto ctx = EventModuleContext(app.GetModules(), evt);
+        ctx.Next();
     }
-    return evt;
 }
 
 String Window::GetTitle() const
@@ -92,7 +98,7 @@ WindowHandle Window::GetHandle() const
     return handle_;
 }
 
-bool Window::ShouldClose()
+bool Window::ShouldClose() const
 {
     return should_close_;
 }

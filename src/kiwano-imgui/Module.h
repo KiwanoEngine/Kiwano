@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/module/Module.h>
-#include <kiwano/platform/Window.h>
+#include <kiwano/module/Window.h>
 
 namespace kiwano
 {

@@ -166,11 +166,11 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
     KGE_THROW_IF_FAILED(hr, "Create render resources failed");
 }
 
-void RendererImpl::Destroy()
+void RendererImpl::DestroyModule()
 {
     KGE_DEBUG_LOGF("Destroying device resources");
 
-    Renderer::Destroy();
+    Renderer::DestroyModule();
 
     if (d2d_res_)
     {
@@ -219,6 +219,7 @@ void RendererImpl::Present()
 {
     KGE_ASSERT(d3d_res_);
 
+    // TODO
     HRESULT hr = d3d_res_->Present(vsync_);
     if (FAILED(hr) && hr != DXGI_ERROR_WAS_STILL_DRAWING)
     {

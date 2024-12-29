@@ -82,7 +82,7 @@ public:
 
     void MakeContextForWindow(RefPtr<Window> window) override;
 
-    void Destroy() override;
+    void DestroyModule() override;
 
     void HandleEvent(EventModuleContext& ctx) override;
 

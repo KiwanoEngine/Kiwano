@@ -20,9 +20,9 @@
 
 #pragma once
 #include <kiwano/core/RingBuffer.hpp>
-#include <kiwano/core/BaseObject.h>
 #include <kiwano/event/Event.h>
 #include <kiwano/math/Math.h>
+#include <kiwano/module/Module.h>
 
 namespace kiwano
 {
@@ -111,7 +111,9 @@ typedef HWND WindowHandle;
  * \~chinese
  * @brief 窗口类，控制窗口标题、大小、图标等
  */
-class KGE_API Window : public BaseObject
+class KGE_API Window
+    : public Module
+    , public RefObject
 {
 public:
     /**
@@ -230,13 +232,6 @@ public:
 
     /**
      * \~chinese
-     * @brief 轮询窗口事件
-     * @return 返回事件队列中的第一个事件并将其从队列中移除, 若队列为空则返回空指针
-     */
-    RefPtr<Event> PollEvent();
-
-    /**
-     * \~chinese
      * @brief 将事件放入队列
      * @param evt 事件
      */
@@ -244,15 +239,9 @@ public:
 
     /**
      * \~chinese
-     * @brief 抽取窗口事件
-     */
-    virtual void PumpEvents() = 0;
-
-    /**
-     * \~chinese
      * @brief 窗口是否需要关闭
      */
-    bool ShouldClose();
+    bool ShouldClose() const;
 
     /**
      * \~chinese
@@ -270,6 +259,14 @@ protected:
     Window();
 
     virtual ~Window();
+
+    void OnUpdate(UpdateModuleContext& ctx) override;
+
+    /**
+     * \~chinese
+     * @brief 抽取窗口事件
+     */
+    virtual void PumpEvents() = 0;
 
 protected:
     bool                      should_close_;

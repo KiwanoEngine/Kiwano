@@ -31,7 +31,6 @@ RefPtr<RenderContext> RenderContext::Create(RefPtr<Texture> texture, const Pixel
 
 RenderContext::RenderContext()
     : collecting_status_(false)
-    , fast_global_transform_(true)
     , brush_opacity_(1.0f)
     , antialias_(true)
     , text_antialias_(TextAntialiasMode::GrayScale)
@@ -52,19 +51,6 @@ void RenderContext::EndDraw()
     if (collecting_status_)
     {
         status_.duration = Time::Now() - status_.start;
-    }
-}
-
-void RenderContext::SetGlobalTransform(const Matrix3x2* matrix)
-{
-    if (matrix)
-    {
-        global_transform_      = *matrix;
-        fast_global_transform_ = false;
-    }
-    else
-    {
-        fast_global_transform_ = true;
     }
 }
 
@@ -91,19 +77,9 @@ RefPtr<Brush> RenderContext::GetCurrentBrush() const
     return current_brush_;
 }
 
-const Matrix3x2& RenderContext::GetGlobalTransform() const
-{
-    return global_transform_;
-}
-
 void RenderContext::SetBrushOpacity(float opacity)
 {
     brush_opacity_ = opacity;
-}
-
-void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
-{
-    SetGlobalTransform(&matrix);
 }
 
 void RenderContext::SetCurrentBrush(RefPtr<Brush> brush)

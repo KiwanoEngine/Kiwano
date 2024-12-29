@@ -20,6 +20,7 @@
 
 #include <kiwano/render/Renderer.h>
 #include <kiwano/event/WindowEvent.h>
+#include <kiwano/platform/Application.h>
 
 namespace kiwano
 {
@@ -28,6 +29,13 @@ Renderer::Renderer()
     , auto_reset_resolution_(true)
     , clear_color_(Color::Black)
 {
+}
+
+void Renderer::DestroyModule()
+{
+    default_render_group_.Clear();
+    render_group_stack_ = Stack<RenderGroup*>();
+    FontCache::GetInstance().Clear();
 }
 
 void Renderer::SetClearColor(const Color& color)
@@ -43,13 +51,6 @@ void Renderer::SetVSyncEnabled(bool enabled)
 void Renderer::ResetResolutionWhenWindowResized(bool enabled)
 {
     auto_reset_resolution_ = enabled;
-}
-
-void Renderer::Destroy()
-{
-    default_render_group_.Clear();
-    render_group_stack_ = Stack<RenderGroup*>();
-    FontCache::GetInstance().Clear();
 }
 
 void Renderer::HandleEvent(EventModuleContext& ctx)
@@ -80,6 +81,21 @@ void Renderer::PushRenderGroup(RenderGroup& render_group)
 void Renderer::PopRenderGroup()
 {
     render_group_stack_.pop();
+}
+
+void Renderer::OnUpdate(UpdateModuleContext& ctx)
+{
+    ctx.Next();
+
+    // All modules completed updating.
+
+    this->Clear();
+    {
+        auto& app = Application::GetInstance();
+        auto  render_ctx = RenderModuleContext(app.GetModules(), this->GetContext());
+        render_ctx.Next();
+    }
+    this->Present();
 }
 
 void Renderer::OnRender(RenderModuleContext& ctx)

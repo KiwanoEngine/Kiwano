@@ -26,27 +26,15 @@ namespace kiwano
 {
 
 LayerActor::LayerActor(const Rect& bounds, float opacity)
-    : swallow_(false)
-    , layer_(bounds, opacity)
 {
+    render_comp_ = new LayerRenderComponent(Layer(bounds, opacity));
+    AddComponent(render_comp_);
 }
 
 LayerActor::LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform, float opacity, const Rect& bounds)
-    : swallow_(false)
-    , layer_(mask, mask_transform, opacity, bounds)
 {
-}
-
-LayerActor::~LayerActor() {}
-
-void LayerActor::Update(Duration dt)
-{
-    layer_.transform = GetTransformMatrix(); // TODO: refactor
-    Renderer::GetInstance().PushRenderGroup(layer_);
-
-    Actor::Update(dt);
-
-    Renderer::GetInstance().PopRenderGroup();
+    render_comp_ = new LayerRenderComponent(Layer(mask, mask_transform, opacity, bounds));
+    AddComponent(render_comp_);
 }
 
 }  // namespace kiwano

@@ -19,75 +19,91 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/core/Keys.h>
+#include <kiwano/core/Time.h>
 #include <kiwano/event/Event.h>
 
 namespace kiwano
 {
-
-/**
- * \addtogroup Event
- * @{
- */
+class RenderContext;
+class Event;
+class Module;
 
 /// \~chinese
-/// @brief 键盘事件
-class KGE_API KeyEvent : public Event
+/// @brief 模块列表
+typedef Vector<Module*> ModuleList;
+
+/// \~chinese
+/// @brief 模块上下文
+class KGE_API ModuleContext
 {
 public:
-    KeyEvent(const EventType& type);
+    void Next();
+
+    void Abort();
+
+protected:
+    ModuleContext(const ModuleList& modules);
+
+    virtual ~ModuleContext();
+
+    virtual void Handle(Module* m) = 0;
+
+    void ResetIndex();
+
+private:
+    int               index_;
+    const ModuleList& modules_;
 };
 
 /// \~chinese
-/// @brief 键盘按下事件
-class KGE_API KeyDownEvent : public KeyEvent
+/// @brief 渲染模块上下文
+class KGE_API RenderModuleContext : public ModuleContext
 {
 public:
-    KeyCode code;  ///< 键值
+    RenderContext& render_ctx;
 
-    KeyDownEvent();
-};
+    RenderModuleContext(const ModuleList& modules, RenderContext& ctx);
 
-/// \~chinese
-/// @brief 键盘抬起事件
-class KGE_API KeyUpEvent : public KeyEvent
-{
-public:
-    KeyCode code;  ///< 键值
+    virtual ~RenderModuleContext();
 
-    KeyUpEvent();
-};
+protected:
+    void Handle(Module* m) override;
 
-/// \~chinese
-/// @brief 键盘字符事件
-class KGE_API KeyCharEvent : public KeyEvent
-{
-public:
-    char value;  ///< 字符
-
-    KeyCharEvent();
-};
-
-/// \~chinese
-/// @brief 输入法输入事件
-class KGE_API IMEInputEvent : public KeyEvent
-{
-public:
-    String value;  ///< 输入内容
-
-    IMEInputEvent();
-};
-
-template <>
-struct IsSameEventType<KeyEvent>
-{
-    inline bool operator()(const Event* evt) const
+private:
+    enum class Step
     {
-        return evt->GetType() == KGE_EVENT(KeyDownEvent) || evt->GetType() == KGE_EVENT(KeyUpEvent)
-               || evt->GetType() == KGE_EVENT(KeyCharEvent) || evt->GetType() == KGE_EVENT(IMEInputEvent);
-    }
+        Before,
+        Rendering,
+        After,
+    };
+
+    Step step_;
 };
 
-/** @} */
+/// \~chinese
+/// @brief 更新模块上下文
+class KGE_API UpdateModuleContext : public ModuleContext
+{
+public:
+    Duration dt;
+
+    UpdateModuleContext(const ModuleList& modules, Duration dt);
+
+protected:
+    void Handle(Module* m) override;
+};
+
+/// \~chinese
+/// @brief 时间模块上下文
+class KGE_API EventModuleContext : public ModuleContext
+{
+public:
+    RefPtr<Event> evt;
+
+    EventModuleContext(const ModuleList& modules, RefPtr<Event> evt);
+
+protected:
+    void Handle(Module* m) override;
+};
 
 }  // namespace kiwano

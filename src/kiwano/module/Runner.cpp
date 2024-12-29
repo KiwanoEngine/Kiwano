@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #include <kiwano/utils/Logger.h>
-#include <kiwano/platform/Runner.h>
-#include <kiwano/platform/Input.h>
+#include <kiwano/module/Runner.h>
+#include <kiwano/module/Input.h>
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/Renderer.h>
 #include <kiwano/module/Director.h>
@@ -28,16 +28,37 @@
 namespace kiwano
 {
 
+Runner::Runner() {}
+
 Runner::Runner(const Settings& settings)
     : settings_(settings)
 {
 }
 
-Runner::Runner() {}
+RefPtr<Runner> Runner::Create(const Settings& settings, const Function<void()>& on_ready)
+{
+    KGE_ASSERT(on_ready);
+    class CallbackRunner : public Runner
+    {
+    public:
+        Function<void()> on_ready;
 
-Runner::~Runner() {}
+        CallbackRunner(const Function<void()>& on_ready)
+            : on_ready(on_ready)
+        {
+        }
 
-void Runner::InitSettings()
+        void OnReady() override
+        {
+            on_ready();
+        }
+    };
+
+    RefPtr<Runner> runner = new CallbackRunner(on_ready);
+    return runner;
+}
+
+void Runner::SetupModule()
 {
     if (settings_.debug_mode)
     {
@@ -55,6 +76,7 @@ void Runner::InitSettings()
     Renderer::GetInstance().SetVSyncEnabled(settings_.vsync_enabled);
 
     // Use defaut modules
+    Application::GetInstance().Use(*window);
     Application::GetInstance().Use(Renderer::GetInstance());
     Application::GetInstance().Use(Input::GetInstance());
     Application::GetInstance().Use(Director::GetInstance());
@@ -73,51 +95,54 @@ void Runner::InitSettings()
     }
 }
 
-bool Runner::MainLoop(Duration dt)
+void Runner::DestroyModule()
 {
+    this->OnDestroy();
+}
+
+void Runner::OnUpdate(UpdateModuleContext& ctx)
+{
+    Application& app = Application::GetInstance();
     if (!main_window_)
-        return false;
+    {
+        app.Quit();
+        return;
+    }
 
     if (main_window_->ShouldClose())
     {
         if (this->OnClose())
-            return false;
+        {
+            app.Quit();
+            return;
+        }
 
         main_window_->SetShouldClose(false);
     }
 
-    Application& app = Application::GetInstance();
-
-    // Poll events
-    main_window_->PumpEvents();
-    while (RefPtr<Event> evt = main_window_->PollEvent())
+    if (!frame_ticker_)
     {
-        app.DispatchEvent(evt.Get());
+        ctx.Next();
+        return;
     }
 
-    if (frame_ticker_)
+    // Update frame ticker
+    if (frame_ticker_->Tick(ctx.dt))
     {
-        // Update frame ticker
-        if (frame_ticker_->Tick(dt))
-        {
-            app.UpdateFrame(frame_ticker_->GetDeltaTime());
-        }
-        else
-        {
-            // Releases CPU
-            Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
-            Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
-            if (sleep_dt.GetMilliseconds() > 1LL)
-            {
-                sleep_dt.Sleep();
-            }
-        }
+        ctx.dt = frame_ticker_->GetDeltaTime();
+        ctx.Next();
     }
     else
     {
-        app.UpdateFrame(dt);
+        // Releases CPU
+        Duration total_dt = frame_ticker_->GetDeltaTime() + frame_ticker_->GetErrorTime();
+        Duration sleep_dt = frame_ticker_->GetInterval() - total_dt;
+        if (sleep_dt.GetMilliseconds() > 1LL)
+        {
+            sleep_dt.Sleep();
+        }
+        ctx.Abort();
     }
-    return true;
 }
 
 }  // namespace kiwano

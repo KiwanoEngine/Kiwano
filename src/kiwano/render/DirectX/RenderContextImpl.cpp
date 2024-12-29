@@ -402,19 +402,18 @@ void RenderContextImpl::SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke_style)
     }
 }
 
+Matrix3x2 RenderContextImpl::GetTransform() const
+{
+    Matrix3x2 transform;
+    render_ctx_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(&transform));
+    return std::move(transform);
+}
+
 void RenderContextImpl::SetTransform(const Matrix3x2& matrix)
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
-    if (fast_global_transform_)
-    {
-        render_ctx_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
-    }
-    else
-    {
-        Matrix3x2 result = matrix * global_transform_;
-        render_ctx_->SetTransform(DX::ConvertToMatrix3x2F(&result));
-    }
+    render_ctx_->SetTransform(DX::ConvertToMatrix3x2F(&matrix));
 }
 
 void RenderContextImpl::SetBlendMode(BlendMode blend)
@@ -462,11 +461,7 @@ bool RenderContextImpl::CheckVisibility(const Rect& bounds, const Matrix3x2& tra
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");
 
-    if (fast_global_transform_)
-    {
-        return visible_size_.Intersects(transform.Transform(bounds));
-    }
-    return visible_size_.Intersects(Matrix3x2(transform * global_transform_).Transform(bounds));
+    return visible_size_.Intersects(transform.Transform(bounds));
 }
 
 void RenderContextImpl::Resize(const Size& size)

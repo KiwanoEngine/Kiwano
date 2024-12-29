@@ -43,6 +43,9 @@
     <Filter Include="component">
       <UniqueIdentifier>{40fd918d-b0e2-467c-913e-d0859e05ae6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="module\win32">
+      <UniqueIdentifier>{4c7b9c05-fb7b-4a1b-b50f-286d5ee983bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
@@ -88,12 +91,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\Input.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\Window.h">
       <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
@@ -200,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h">
       <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\Runner.h">
-      <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Function.h">
       <Filter>core</Filter>
@@ -336,9 +330,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\SpriteFrame.h">
       <Filter>2d</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\platform\Keys.h">
-      <Filter>platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\transition\Transition.h">
       <Filter>2d\transition</Filter>
     </ClInclude>
@@ -414,6 +405,21 @@
     <ClInclude Include="..\..\src\kiwano\core\RefPtr.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\Runner.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\Window.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\ModuleContext.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\module\Input.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\Keys.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -449,19 +455,10 @@
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\Input.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\Window.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
       <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
-      <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\win32\WindowImpl.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Time.cpp">
@@ -526,9 +523,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp">
       <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\platform\Runner.cpp">
-      <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\String.cpp">
       <Filter>core</Filter>
@@ -674,11 +668,23 @@
     <ClCompile Include="..\..\src\kiwano\module\Director.cpp">
       <Filter>module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\module\Module.cpp">
-      <Filter>module</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\BaseObject.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\Runner.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\Window.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\win32\WindowImpl.cpp">
+      <Filter>module\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\ModuleContext.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\module\Input.cpp">
+      <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

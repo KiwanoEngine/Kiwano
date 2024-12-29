@@ -354,16 +354,12 @@ public:
     void RemoveFromParent();
 
     /// \~chinese
-    /// @brief 暂停角色更新
-    void PauseUpdating();
-
-    /// \~chinese
-    /// @brief 继续角色更新
-    void ResumeUpdating();
+    /// @brief 启用或关闭角色更新
+    void EnableUpdating(bool enable = true);
 
     /// \~chinese
     /// @brief 角色更新是否暂停
-    bool IsUpdatePausing() const;
+    bool IsUpdatingEnabled() const;
 
     /// \~chinese
     /// @brief 设置更新时的回调函数
@@ -434,7 +430,7 @@ protected:
     void SetStage(Stage* stage);
 
 private:
-    bool update_pausing_;
+    bool updating_enabled_;
     bool cascade_opacity_;
     bool show_border_;
 
@@ -607,19 +603,14 @@ inline Stage* Actor::GetStage() const
     return stage_;
 }
 
-inline void Actor::PauseUpdating()
+inline void Actor::EnableUpdating(bool enable)
 {
-    update_pausing_ = true;
+    updating_enabled_ = enable;
 }
 
-inline void Actor::ResumeUpdating()
+inline bool Actor::IsUpdatingEnabled() const
 {
-    update_pausing_ = false;
-}
-
-inline bool Actor::IsUpdatePausing() const
-{
-    return update_pausing_;
+    return updating_enabled_;
 }
 
 inline void Actor::SetCallbackOnUpdate(const UpdateCallback& cb)

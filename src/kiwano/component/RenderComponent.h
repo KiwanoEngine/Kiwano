@@ -248,6 +248,38 @@ protected:
     RefPtr<Shape>       shape_;
 };
 
+/**
+ * \~chinese
+ * @brief 图层渲染组件
+ */
+class KGE_API LayerRenderComponent : public RenderComponent
+{
+public:
+    LayerRenderComponent(const Layer& layer);
+
+    /// \~chinese
+    /// @brief 获取图层
+    const Layer& GetLayer() const;
+
+    /// \~chinese
+    /// @brief 获取图层
+    Layer& GetLayer();
+
+    /// \~chinese
+    /// @brief 设置图层
+    void SetLayer(const Layer& layer);
+
+public:
+    void OnRender(RenderContext& ctx) override;
+
+    void AfterRender(RenderContext& ctx) override;
+
+    bool CheckVisibility(RenderContext& ctx) override;
+
+protected:
+    Layer layer_;
+};
+
 /** @} */
 
 inline bool RenderComponent::IsVisible() const
@@ -375,6 +407,21 @@ inline void ShapeRenderComponent::SetShape(RefPtr<Shape> shape)
 inline void ShapeRenderComponent::SetStrokeStyle(RefPtr<StrokeStyle> stroke_style)
 {
     stroke_style_ = stroke_style;
+}
+
+inline const Layer& LayerRenderComponent::GetLayer() const
+{
+    return layer_;
+}
+
+inline Layer& LayerRenderComponent::GetLayer()
+{
+    return layer_;
+}
+
+inline void LayerRenderComponent::SetLayer(const Layer& layer)
+{
+    layer_ = layer;
 }
 
 }  // namespace kiwano

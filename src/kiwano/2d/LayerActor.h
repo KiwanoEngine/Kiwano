@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/2d/Actor.h>
 #include <kiwano/render/Layer.h>
-#include <kiwano/render/RenderContext.h>
+#include <kiwano/component/RenderComponent.h>
 
 namespace kiwano
 {
@@ -53,8 +53,6 @@ public:
     LayerActor(RefPtr<Shape> mask, const Matrix3x2& mask_transform = Matrix3x2(), float opacity = 1.f,
                const Rect& bounds = Rect::Infinite());
 
-    virtual ~LayerActor();
-
     /// \~chinese
     /// @brief ªÒ»°Õº≤„
     const Layer& GetLayer() const;
@@ -67,29 +65,25 @@ public:
     /// @brief …Ë÷√Õº≤„
     void SetLayer(const Layer& layer);
 
-protected:
-    void Update(Duration dt) override;
-
 private:
-    bool  swallow_;
-    Layer layer_;
+    RefPtr<LayerRenderComponent> render_comp_;
 };
 
 /** @} */
 
 inline const Layer& LayerActor::GetLayer() const
 {
-    return layer_;
+    return render_comp_->GetLayer();
 }
 
 inline Layer& LayerActor::GetLayer()
 {
-    return layer_;
+    return render_comp_->GetLayer();
 }
 
 inline void LayerActor::SetLayer(const Layer& layer)
 {
-    layer_ = layer;
+    render_comp_->SetLayer(layer);
 }
 
 }  // namespace kiwano

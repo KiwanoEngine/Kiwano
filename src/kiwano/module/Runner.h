@@ -21,15 +21,13 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/core/Time.h>
-#include <kiwano/platform/Window.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/render/Texture.h>
+#include <kiwano/module/Window.h>
 #include <kiwano/utils/Ticker.h>
 
 namespace kiwano
 {
-
-class Application;
 
 /**
  * \~chinese
@@ -56,7 +54,9 @@ struct Settings
  * \~chinese
  * @brief 程序运行器
  */
-class KGE_API Runner : public BaseObject
+class KGE_API Runner
+    : public Module
+    , public RefObject
 {
 public:
     Runner();
@@ -66,30 +66,32 @@ public:
     /// @param main_window 主窗口
     Runner(const Settings& settings);
 
-    virtual ~Runner();
+    /**
+     * \~chinese
+     * @brief 创建程序运行器
+     * @param settings 游戏设置
+     * @param on_ready 启动函数
+     */
+    static RefPtr<Runner> Create(const Settings& settings, const Function<void()>& on_ready);
 
     /// \~chinese
     /// @brief 初始化完成处理
     /// @details 重载该函数以在应用程序初始化完成后自动执行
-    virtual void OnReady();
+    virtual inline void OnReady() {}
 
     /// \~chinese
     /// @brief 应用程序销毁处理
     /// @details 重载该函数以处理应用程序销毁时的行为，如完成资源回收等
-    virtual void OnDestroy();
+    virtual inline void OnDestroy() {}
 
     /// \~chinese
     /// @brief 应用程序关闭处理
     /// @details 重载该函数以处理用户关闭应用程序时的行为，如保存用户数据等
     /// @return 返回true允许用户关闭程序，否则阻止程序关闭
-    virtual bool OnClose();
-
-    /// \~chinese
-    /// @brief 应用程序主循环
-    /// @param dt 时间间隔
-    /// @details 重载该函数以控制程序主循环
-    /// @return 返回false退出主循环，否则继续运行主循环
-    bool MainLoop(Duration dt);
+    virtual inline bool OnClose()
+    {
+        return true;
+    }
 
     /// \~chinese
     /// @brief 获取窗口
@@ -116,25 +118,17 @@ protected:
     /// @brief 设置窗口
     void SetWindow(RefPtr<Window> window);
 
-private:
-    friend class Application;
+    void SetupModule() override;
 
-    void InitSettings();
+    void DestroyModule() override;
+
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
 private:
     Settings       settings_;
     RefPtr<Window> main_window_;
     RefPtr<Ticker> frame_ticker_;
 };
-
-inline void Runner::OnReady() {}
-
-inline void Runner::OnDestroy() {}
-
-inline bool Runner::OnClose()
-{
-    return true;
-}
 
 inline RefPtr<Window> Runner::GetWindow() const
 {

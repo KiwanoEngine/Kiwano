@@ -20,8 +20,6 @@
 
 #include <kiwano/platform/Application.h>
 #include <kiwano/core/Defer.h>
-#include <kiwano/module/Director.h>
-#include <kiwano/render/Renderer.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
@@ -35,58 +33,16 @@ int GetVersion()
 Application::Application()
     : running_(false)
     , is_paused_(false)
-    , time_scale_(-1.f)
+    , runner_(nullptr)
 {
 }
 
-Application::~Application() {}
-
-void Application::Run(const Settings& settings, const Function<void()>& setup, std::initializer_list<Module*> modules)
+void Application::Run(Runner& runner)
 {
-    KGE_ASSERT(setup);
-    class CallbackRunner : public Runner
-    {
-    public:
-        Function<void()> setup;
-
-        CallbackRunner(const Function<void()>& setup)
-            : setup(setup)
-        {
-        }
-
-        void OnReady() override
-        {
-            setup();
-        }
-    };
-
-    RefPtr<Runner> runner = new CallbackRunner(setup);
-    runner->SetName("__KGE_CALLBACK_RUNNER__");
-    runner->SetSettings(settings);
-
-    for (auto m : modules)
-    {
-        Use(*m);
-    }
-    Run(runner);
-}
-
-void Application::Run(RefPtr<Runner> runner)
-{
-    KGE_ASSERT(runner);
     running_   = true;
     is_paused_ = false;
-    runner_    = runner;
+    runner_    = &runner;
     timer_     = MakePtr<Timer>();
-
-    // Initialize runner
-    runner->InitSettings();
-
-    // Setup all modules
-    for (auto c : modules_)
-    {
-        c->SetupModule();
-    }
 
     // Ensure resources are destroyed before exiting
     KGE_DEFER[=]()
@@ -94,23 +50,22 @@ void Application::Run(RefPtr<Runner> runner)
         this->Destroy();
     };
 
-    // Everything is ready
-    runner->OnReady();
+    Use(runner, 0);
 
-    // Update everything
-    this->Update(0);
+    // Setup all modules
+    for (size_t i = 0; i < modules_.size(); ++i)
+    {
+        modules_[i]->SetupModule();
+    }
+
+    // Everything is ready
+    runner_->OnReady();
 
     // Start the loop
     while (running_)
     {
         timer_->Tick();
-
-        Duration dt = timer_->GetDeltaTime();
-        if (time_scale_ > 0)
-            dt *= time_scale_;
-
-        if (!runner->MainLoop(dt))
-            running_ = false;
+        this->Update(timer_->GetDeltaTime());
     }
 }
 
@@ -135,20 +90,8 @@ void Application::Quit()
     running_ = false;
 }
 
-void Application::UpdateFrame(Duration dt)
-{
-    this->Render();
-    this->Update(dt);
-}
-
 void Application::Destroy()
 {
-    if (runner_)
-    {
-        runner_->OnDestroy();
-        runner_ = nullptr;
-    }
-
     // Clear user resources
     for (auto iter = modules_.rbegin(); iter != modules_.rend(); ++iter)
     {
@@ -156,11 +99,10 @@ void Application::Destroy()
     }
     modules_.clear();
 
-    // Clear device resources
-    Renderer::GetInstance().Destroy();
+    runner_ = nullptr;
 }
 
-void Application::Use(Module& m)
+void Application::Use(Module& m, int index)
 {
 #if defined(KGE_DEBUG)
     if (std::find(modules_.begin(), modules_.end(), &m) != modules_.end())
@@ -169,27 +111,15 @@ void Application::Use(Module& m)
     }
 #endif
 
-    modules_.push_back(&m);
+    if (index < 0)
+        modules_.push_back(&m);
+    else
+        modules_.insert(modules_.begin() + index, &m);
 }
 
-void Application::SetTimeScale(float scale_factor)
+const ModuleList& Application::GetModules() const
 {
-    // TODO
-    time_scale_ = scale_factor;
-}
-
-void Application::DispatchEvent(RefPtr<Event> evt)
-{
-    this->DispatchEvent(evt.Get());
-}
-
-void Application::DispatchEvent(Event* evt)
-{
-    if (!running_ /* Dispatch events even if application is paused */)
-        return;
-
-    auto ctx = EventModuleContext(modules_, evt);
-    ctx.Next();
+    return modules_;
 }
 
 void Application::Update(Duration dt)
@@ -217,22 +147,6 @@ void Application::Update(Duration dt)
             functions.pop();
         }
     }
-}
-
-void Application::Render()
-{
-    if (!running_ /* Render even if application is paused */)
-        return;
-
-    Renderer& renderer = Renderer::GetInstance();
-    renderer.Clear();
-
-    {
-        auto ctx = RenderModuleContext(modules_, renderer.GetContext());
-        ctx.Next();
-    }
-
-    renderer.Present();
 }
 
 void Application::PerformInMainThread(Function<void()> func)

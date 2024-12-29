@@ -24,7 +24,7 @@
 namespace kiwano
 {
 
-ModuleContext::ModuleContext(ModuleList& modules)
+ModuleContext::ModuleContext(const ModuleList& modules)
     : index_(-1)
     , modules_(modules)
 {
@@ -46,7 +46,12 @@ void ModuleContext::Next()
     }
 }
 
-RenderModuleContext::RenderModuleContext(ModuleList& modules, RenderContext& ctx)
+void ModuleContext::Abort()
+{
+    index_ = (int)modules_.size();
+}
+
+RenderModuleContext::RenderModuleContext(const ModuleList& modules, RenderContext& ctx)
     : ModuleContext(modules)
     , step_(Step::Before)
     , render_ctx(ctx)
@@ -85,7 +90,7 @@ void RenderModuleContext::Handle(Module* m)
     }
 }
 
-UpdateModuleContext::UpdateModuleContext(ModuleList& modules, Duration dt)
+UpdateModuleContext::UpdateModuleContext(const ModuleList& modules, Duration dt)
     : ModuleContext(modules)
     , dt(dt)
 {
@@ -96,7 +101,7 @@ void UpdateModuleContext::Handle(Module* m)
     m->OnUpdate(*this);
 }
 
-EventModuleContext::EventModuleContext(ModuleList& modules, Event* evt)
+EventModuleContext::EventModuleContext(const ModuleList& modules, RefPtr<Event> evt)
     : ModuleContext(modules)
     , evt(evt)
 {

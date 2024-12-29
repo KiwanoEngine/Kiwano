@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/platform/Window.h>
+#include <kiwano/module/Window.h>
 
 #if defined(KGE_PLATFORM_WINDOWS)
 
 #include <memory>
 #include <array>
-#include <kiwano/platform/Keys.h>
+#include <kiwano/core/Keys.h>
 #include <kiwano/utils/Logger.h>
 #include <kiwano/event/Events.h>
 #include <kiwano/platform/Application.h>

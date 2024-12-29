@@ -25,7 +25,7 @@
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.h>
 #include <kiwano/render/RenderContext.h>
-#include <kiwano/platform/Window.h>
+#include <kiwano/module/Window.h>
 
 namespace kiwano
 {
@@ -231,10 +231,6 @@ public:
     virtual void MakeContextForWindow(RefPtr<Window> window) = 0;
 
     /// \~chinese
-    /// @brief 销毁渲染器资源
-    virtual void Destroy();
-
-    /// \~chinese
     /// @brief 处理事件
     void HandleEvent(EventModuleContext& ctx) override;
 
@@ -261,6 +257,10 @@ public:
 
 protected:
     Renderer();
+
+    void DestroyModule() override;
+
+    void OnUpdate(UpdateModuleContext& ctx) override;
 
     void OnRender(RenderModuleContext& ctx) override;
 
