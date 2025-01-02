@@ -458,13 +458,6 @@ protected:
     /// @brief 设置节点所在舞台
     void SetStage(Stage* stage);
 
-private:
-    bool         visible_;
-    bool         update_pausing_;
-    bool         cascade_opacity_;
-    bool         show_border_;
-    mutable bool visible_in_rt_;
-
     enum DirtyFlag : uint8_t
     {
         Clean                 = 0,
@@ -473,6 +466,16 @@ private:
         DirtyOpacity          = 1 << 2,
         DirtyVisibility       = 1 << 3
     };
+
+    Flag<uint8_t>& GetDirtyFlag() const;
+
+private:
+    bool         visible_;
+    bool         update_pausing_;
+    bool         cascade_opacity_;
+    bool         show_border_;
+    mutable bool visible_in_rt_;
+
     mutable Flag<uint8_t> dirty_flag_;
 
     int            z_order_;
@@ -502,6 +505,11 @@ inline void Actor::OnUpdate(Duration dt)
 inline void Actor::OnRender(RenderContext& ctx)
 {
     KGE_NOT_USED(ctx);
+}
+
+inline Flag<uint8_t>& Actor::GetDirtyFlag() const
+{
+    return dirty_flag_;
 }
 
 inline bool Actor::IsVisible() const
