@@ -402,6 +402,13 @@ void RenderContextImpl::SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke_style)
     }
 }
 
+Matrix3x2 RenderContextImpl::GetTransform() const
+{
+    Matrix3x2 transform;
+    render_ctx_->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(&transform));
+    return std::move(transform);
+}
+
 void RenderContextImpl::SetTransform(const Matrix3x2& matrix)
 {
     KGE_ASSERT(render_ctx_ && "Render target has not been initialized!");

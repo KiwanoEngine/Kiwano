@@ -84,6 +84,8 @@ public:
 
     void SetCurrentStrokeStyle(RefPtr<StrokeStyle> stroke_style) override;
 
+    Matrix3x2 GetTransform() const override;
+
     void SetTransform(const Matrix3x2& matrix) override;
 
     void SetBlendMode(BlendMode blend) override;

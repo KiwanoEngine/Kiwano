@@ -235,15 +235,11 @@ public:
 
     /// \~chinese
     /// @brief 设置上下文的二维变换
+    virtual Matrix3x2 GetTransform() const = 0;
+
+    /// \~chinese
+    /// @brief 设置上下文的二维变换
     virtual void SetTransform(const Matrix3x2& matrix) = 0;
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    virtual void SetGlobalTransform(const Matrix3x2& matrix);
-
-    /// \~chinese
-    /// @brief 设置全局二维变换
-    virtual void SetGlobalTransform(const Matrix3x2* matrix);
 
     /// \~chinese
     /// @brief 获取渲染目标

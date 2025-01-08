@@ -55,19 +55,6 @@ void RenderContext::EndDraw()
     }
 }
 
-void RenderContext::SetGlobalTransform(const Matrix3x2* matrix)
-{
-    if (matrix)
-    {
-        global_transform_      = *matrix;
-        fast_global_transform_ = false;
-    }
-    else
-    {
-        fast_global_transform_ = true;
-    }
-}
-
 void RenderContext::SetCollectingStatus(bool enable)
 {
     collecting_status_ = enable;
@@ -99,11 +86,6 @@ const Matrix3x2& RenderContext::GetGlobalTransform() const
 void RenderContext::SetBrushOpacity(float opacity)
 {
     brush_opacity_ = opacity;
-}
-
-void RenderContext::SetGlobalTransform(const Matrix3x2& matrix)
-{
-    SetGlobalTransform(&matrix);
 }
 
 void RenderContext::SetCurrentBrush(RefPtr<Brush> brush)
