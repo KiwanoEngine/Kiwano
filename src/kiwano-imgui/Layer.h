@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/LayerActor.h>
+#include <kiwano/actor/LayerActor.h>
 
 namespace kiwano
 {

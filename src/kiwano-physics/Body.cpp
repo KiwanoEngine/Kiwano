@@ -37,17 +37,17 @@ Body::Body(b2Body* body, b2World* world)
 
 Body::~Body() {}
 
-void Body::InitComponent(Actor* actor)
+void Body::OnAttached(Actor* actor)
 {
-    Component::InitComponent(actor);
+    Ability::OnAttached(actor);
 
     UpdateFromActor(actor);
 }
 
-void Body::DestroyComponent()
+void Body::OnDetached()
 {
     // Detach from actor first
-    Component::DestroyComponent();
+    Ability::OnDetached();
 
     if (b2body_ && b2world_)
     {

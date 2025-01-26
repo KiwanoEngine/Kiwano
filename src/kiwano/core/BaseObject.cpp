@@ -29,10 +29,12 @@ namespace kiwano
 namespace
 {
 
-bool                  tracing_leaks = false;
-Vector<BaseObject*>   tracing_objects;
-std::atomic<uint64_t> last_object_id = 0;
-ObjectPolicyFunc      object_policy_ = ObjectPolicy::ErrorLog();
+#ifdef KGE_DEBUG
+bool                      tracing_leaks = false;
+UnorderedSet<BaseObject*> tracing_objects;
+#endif
+
+ObjectPolicyFunc object_policy_ = ObjectPolicy::ErrorLog();
 
 }  // namespace
 
@@ -81,12 +83,9 @@ ObjectPolicyFunc ObjectPolicy::Exception(int threshold)
 }
 
 BaseObject::BaseObject()
-    : tracing_leak_(false)
-    , name_(nullptr)
-    , user_data_(nullptr)
+    : name_(nullptr)
     , status_(nullptr)
-    , holdings_(nullptr)
-    , id_(++last_object_id)
+    , user_data_(nullptr)
 {
 #ifdef KGE_DEBUG
     BaseObject::AddObjectToTracingList(this);
@@ -103,11 +102,7 @@ BaseObject::~BaseObject()
 
     ClearStatus();
 
-    if (holdings_)
-    {
-        delete holdings_;
-        holdings_ = nullptr;
-    }
+    user_data_ = nullptr;
 
 #ifdef KGE_DEBUG
     BaseObject::RemoveObjectFromTracingList(this);
@@ -122,23 +117,6 @@ void* BaseObject::GetUserData() const
 void BaseObject::SetUserData(void* data)
 {
     user_data_ = data;
-}
-
-void BaseObject::Hold(RefPtr<BaseObject> other)
-{
-    if (!holdings_)
-    {
-        holdings_ = new Set<RefPtr<BaseObject>>;
-    }
-    holdings_->insert(other);
-}
-
-void BaseObject::Unhold(RefPtr<BaseObject> other)
-{
-    if (holdings_)
-    {
-        holdings_->erase(other);
-    }
 }
 
 void BaseObject::SetName(StringView name)
@@ -162,12 +140,12 @@ void BaseObject::SetName(StringView name)
     *name_ = name;
 }
 
-void BaseObject::DoSerialize(Serializer* serializer) const
+void BaseObject::OnSerialize(Serializer* serializer) const
 {
     (*serializer) << GetName();
 }
 
-void BaseObject::DoDeserialize(Deserializer* deserializer)
+void BaseObject::OnDeserialize(Deserializer* deserializer)
 {
     String name;
     (*deserializer) >> name;
@@ -222,6 +200,8 @@ void BaseObject::SetObjectPolicy(const ObjectPolicyFunc& policy)
     object_policy_ = policy;
 }
 
+#ifdef KGE_DEBUG
+
 bool BaseObject::IsTracingLeaks()
 {
     return tracing_leaks;
@@ -242,42 +222,30 @@ void BaseObject::DumpTracingObjects()
     KGE_DEBUG_LOGF("-------------------------- All Objects --------------------------");
     for (const auto object : tracing_objects)
     {
-        KGE_DEBUG_LOGF("{ class=\"%s\" id=%d refcount=%d name=\"%s\" }", typeid(*object).name(), object->GetObjectID(),
+        KGE_DEBUG_LOGF("{ class=\"%s\" addr=%p refcount=%d name=\"%s\" }", typeid(*object).name(), object,
                        object->GetRefCount(), object->GetName().data());
     }
     KGE_DEBUG_LOGF("------------------------- Total size: %d -------------------------", tracing_objects.size());
 }
 
-Vector<BaseObject*>& BaseObject::GetTracingObjects()
+const UnorderedSet<BaseObject*>& BaseObject::GetTracingObjects()
 {
     return tracing_objects;
 }
 
 void BaseObject::AddObjectToTracingList(BaseObject* obj)
 {
-#ifdef KGE_DEBUG
-    if (tracing_leaks && !obj->tracing_leak_)
+    if (tracing_leaks)
     {
-        obj->tracing_leak_ = true;
-        tracing_objects.push_back(obj);
+        tracing_objects.insert(obj);
     }
-#endif
 }
 
 void BaseObject::RemoveObjectFromTracingList(BaseObject* obj)
 {
-#ifdef KGE_DEBUG
-    if (tracing_leaks && obj->tracing_leak_)
-    {
-        obj->tracing_leak_ = false;
-
-        auto iter = std::find(tracing_objects.begin(), tracing_objects.end(), obj);
-        if (iter != tracing_objects.end())
-        {
-            tracing_objects.erase(iter);
-        }
-    }
-#endif
+    tracing_objects.erase(obj);
 }
+
+#endif  // KGE_DEBUG
 
 }  // namespace kiwano

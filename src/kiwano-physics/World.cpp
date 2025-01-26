@@ -159,7 +159,7 @@ public:
     {
         Body* body_a = static_cast<Body*>(b2contact->GetFixtureA()->GetBody()->GetUserData());
         Body* body_b = static_cast<Body*>(b2contact->GetFixtureB()->GetBody()->GetUserData());
-        if (!body_a || !body_b || !body_a->GetBoundActor() || !body_b->GetBoundActor())
+        if (!body_a || !body_b || !body_a->GetAttachedActor() || !body_b->GetAttachedActor())
         {
             // Don't dispatch contact event after the body has been detached
             return;
@@ -225,18 +225,18 @@ ContactList World::GetContactList()
     return ContactList(world_.GetContactList());
 }
 
-void World::InitComponent(Actor* actor)
+void World::OnAttached(Actor* actor)
 {
-    Component::InitComponent(actor);
+    Ability::OnAttached(actor);
 
     // Update body status
-    Actor* world_actor = GetBoundActor();
+    Actor* world_actor = GetAttachedActor();
     BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
 }
 
 void World::OnUpdate(Duration dt)
 {
-    Actor* world_actor = GetBoundActor();
+    Actor* world_actor = GetAttachedActor();
 
     BeforeSimulation(world_actor, Matrix3x2(), 0.0f);
 
@@ -267,7 +267,7 @@ bool World::CheckVisibility(RenderContext& ctx)
 
 void World::OnRender(RenderContext& ctx)
 {
-    RenderComponent::OnRender(ctx);
+    RenderAbility::OnRender(ctx);
     if (drawer_)
     {
         drawer_->BeginDraw();
@@ -280,7 +280,7 @@ void World::OnRender(RenderContext& ctx)
 
 void World::DispatchEvent(Event* evt)
 {
-    Actor* actor = GetBoundActor();
+    Actor* actor = GetAttachedActor();
     if (actor)
     {
         actor->DispatchEvent(evt);

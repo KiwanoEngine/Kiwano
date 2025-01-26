@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/2d/Actor.h>
-#include <kiwano/2d/Stage.h>
+#include <kiwano/actor/Actor.h>
+#include <kiwano/actor/Stage.h>
 #include <kiwano/module/Director.h>
-#include <kiwano/component/DebugComponent.h>
+#include <kiwano/ability/DebugComponent.h>
 
 namespace kiwano
 {
@@ -117,8 +117,10 @@ void Director::ShowDebugInfo(bool show)
 
 void Director::ClearStages()
 {
-    dispatcher_list_.Clear();
     stages_ = Stack<RefPtr<Stage>>();
+
+    DestroyAbilitiesInQueue();
+    init_queue_.clear();
 
     current_stage_.Reset();
     next_stage_.Reset();
@@ -126,14 +128,46 @@ void Director::ClearStages()
     debug_actor_.Reset();
 }
 
-void Director::PushEventDispatcher(EventDispatcher* dispatcher)
+void Director::PushToInitQueue(RefPtr<Ability> ability)
 {
-    dispatcher_list_.PushBack(dispatcher);
+    init_queue_.push_back(ability);
+}
+
+void Director::PushToDestroyQueue(RefPtr<Ability> ability)
+{
+    destroy_queue_.push_back(ability);
+}
+
+void Director::InitAbilitiesInQueue()
+{
+    if (!init_queue_.empty())
+    {
+        for (auto& ptr : init_queue_)
+        {
+            ptr->OnInit();
+        }
+        init_queue_.clear();
+        // TODO resize
+    }
+}
+
+void Director::DestroyAbilitiesInQueue()
+{
+    if (!destroy_queue_.empty())
+    {
+        for (auto& ptr : destroy_queue_)
+        {
+            ptr->Detach(true);
+        }
+        destroy_queue_.clear();
+
+        // TODO resize
+    }
 }
 
 void Director::OnUpdate(UpdateModuleContext& ctx)
 {
-    dispatcher_list_.Clear();
+    InitAbilitiesInQueue();
 
     if (transition_)
     {
@@ -167,14 +201,8 @@ void Director::OnUpdate(UpdateModuleContext& ctx)
 
     if (debug_actor_)
         debug_actor_->Update(ctx.dt);
-}
 
-void Director::HandleEvent(EventModuleContext& ctx)
-{
-    for (auto dispatcher : dispatcher_list_)
-    {
-        dispatcher->DispatchEvent(ctx.evt.Get());
-    }
+    DestroyAbilitiesInQueue();
 }
 
 }  // namespace kiwano

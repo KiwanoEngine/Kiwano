@@ -36,8 +36,8 @@ class World;
  */
 
 /// \~chinese
-/// @brief 物体
-class KGE_API Body : public Component
+/// @brief 物理身体
+class KGE_API Body : public Ability
 {
     friend class World;
 
@@ -71,13 +71,9 @@ public:
     Vec2 GetWorldVector(const Vec2& local) const;
 
 protected:
-    /// \~chinese
-    /// @brief 初始化组件
-    void InitComponent(Actor* actor) override;
+    void OnAttached(Actor* actor) override;
 
-    /// \~chinese
-    /// @brief 销毁组件
-    void DestroyComponent() override;
+    void OnDetached() override;
 
     /// \~chinese
     /// @brief 更新物体状态

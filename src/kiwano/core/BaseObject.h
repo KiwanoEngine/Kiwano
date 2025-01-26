@@ -166,26 +166,12 @@ public:
     void SetUserData(void* data);
 
     /// \~chinese
-    /// @brief 持有一个对象并管理其生命周期
-    /// @param other 对象指针
-    void Hold(RefPtr<BaseObject> other);
-
-    /// \~chinese
-    /// @brief 放弃持有的对象
-    /// @param other 对象指针
-    void Unhold(RefPtr<BaseObject> other);
-
-    /// \~chinese
-    /// @brief 获取对象ID
-    uint64_t GetObjectID() const;
-
-    /// \~chinese
     /// @brief 序列化
-    void DoSerialize(Serializer* serializer) const override;
+    void OnSerialize(Serializer* serializer) const override;
 
     /// \~chinese
     /// @brief 反序列化
-    void DoDeserialize(Deserializer* deserializer) override;
+    void OnDeserialize(Deserializer* deserializer) override;
 
     /// \~chinese
     /// @brief 判断对象是否有效
@@ -211,6 +197,7 @@ public:
     /// @brief 设置对象处理策略
     static void SetObjectPolicy(const ObjectPolicyFunc& policy);
 
+#ifdef KGE_DEBUG
 public:
     /// \~chinese
     /// @brief 是否启用了内存泄漏追踪
@@ -230,22 +217,18 @@ public:
 
     /// \~chinese
     /// @brief 获取所有追踪中的对象
-    static Vector<BaseObject*>& GetTracingObjects();
+    static const UnorderedSet<BaseObject*>& GetTracingObjects();
 
 private:
     static void AddObjectToTracingList(BaseObject*);
 
     static void RemoveObjectFromTracingList(BaseObject*);
+#endif
 
 private:
-    const uint64_t id_;
-
-    bool    tracing_leak_;
-    String* name_;
-    void*   user_data_;
-
-    ObjectStatus*            status_;
-    Set<RefPtr<BaseObject>>* holdings_;
+    String*       name_;
+    ObjectStatus* status_;
+    void*         user_data_;
 };
 
 inline StringView BaseObject::GetName() const
@@ -260,8 +243,4 @@ inline bool BaseObject::IsName(StringView name) const
     return name_ ? (*name_ == name) : name.empty();
 }
 
-inline uint64_t BaseObject::GetObjectID() const
-{
-    return id_;
-}
 }  // namespace kiwano

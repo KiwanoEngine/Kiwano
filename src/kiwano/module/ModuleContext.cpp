@@ -101,15 +101,4 @@ void UpdateModuleContext::Handle(Module* m)
     m->OnUpdate(*this);
 }
 
-EventModuleContext::EventModuleContext(const ModuleList& modules, RefPtr<Event> evt)
-    : ModuleContext(modules)
-    , evt(evt)
-{
-}
-
-void EventModuleContext::Handle(Module* m)
-{
-    m->HandleEvent(*this);
-}
-
 }  // namespace kiwano

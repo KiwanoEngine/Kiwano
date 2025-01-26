@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano-imgui/Layer.h>
-#include <kiwano/component/RenderComponent.h>
+#include <kiwano/ability/RenderAbility.h>
 
 namespace kiwano
 {
@@ -29,12 +29,12 @@ namespace imgui
 Layer::Layer()
     : LayerActor(nullptr)
 {
-    class LayerRenderComponent : public RenderComponent
+    class LayerRenderAbility : public RenderAbility
     {
     public:
         Layer* layer;
 
-        LayerRenderComponent(Layer* layer)
+        LayerRenderAbility(Layer* layer)
             : layer(layer)
         {
         }
@@ -48,7 +48,7 @@ Layer::Layer()
         }
     };
 
-    AddComponent(new LayerRenderComponent(this));
+    AddComponent(new LayerRenderAbility(this));
 }
 
 Layer::Layer(StringView name, const Pipeline& item)

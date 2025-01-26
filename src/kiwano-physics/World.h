@@ -43,7 +43,7 @@ namespace physics
  * \~chinese
  * @brief 物理世界
  */
-class KGE_API World : public RenderComponent
+class KGE_API World : public RenderAbility
 {
     friend class Body;
     friend class Joint;
@@ -89,20 +89,12 @@ public:
     const b2World* GetB2World() const;
 
 protected:
-    /// \~chinese
-    /// @brief 初始化组件
-    void InitComponent(Actor* actor) override;
+    void OnAttached(Actor* actor) override;
 
-    /// \~chinese
-    /// @brief 更新组件
     void OnUpdate(Duration dt) override;
 
-    /// \~chinese
-    /// @brief 渲染组件
     void OnRender(RenderContext& ctx) override;
 
-    /// \~chinese
-    /// @brief 检查可见性
     bool CheckVisibility(RenderContext& ctx) override;
 
     /// \~chinese

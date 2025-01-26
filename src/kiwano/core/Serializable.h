@@ -244,7 +244,7 @@ public:
     {
         Vector<uint8_t> data;
         ByteSerializer  serializer(data);
-        this->DoSerialize(&serializer);
+        this->OnSerialize(&serializer);
         return data;
     }
 
@@ -253,16 +253,16 @@ public:
     inline void Deserialize(const Vector<uint8_t>& data)
     {
         ByteDeserializer deserializer(data);
-        this->DoDeserialize(&deserializer);
+        this->OnDeserialize(&deserializer);
     }
 
     /// \~chinese
     /// @brief 执行序列化
-    virtual void DoSerialize(Serializer* serializer) const = 0;
+    virtual void OnSerialize(Serializer* serializer) const = 0;
 
     /// \~chinese
     /// @brief 执行反序列化
-    virtual void DoDeserialize(Deserializer* deserializer) = 0;
+    virtual void OnDeserialize(Deserializer* deserializer) = 0;
 };
 
 //

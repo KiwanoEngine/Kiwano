@@ -51,8 +51,13 @@ struct Settings
 };
 
 /**
+ * \addtogroup Module
+ * @{
+ */
+
+/**
  * \~chinese
- * @brief 程序运行器
+ * @brief 程序启动器
  */
 class KGE_API Runner
     : public Module
@@ -62,13 +67,13 @@ public:
     Runner();
 
     /// \~chinese
-    /// @brief 创建程序运行器
+    /// @brief 创建程序启动器
     /// @param main_window 主窗口
     Runner(const Settings& settings);
 
     /**
      * \~chinese
-     * @brief 创建程序运行器
+     * @brief 创建程序启动器
      * @param settings 游戏设置
      * @param on_ready 启动函数
      */
@@ -129,6 +134,8 @@ private:
     RefPtr<Window> main_window_;
     RefPtr<Ticker> frame_ticker_;
 };
+
+/** @} */
 
 inline RefPtr<Window> Runner::GetWindow() const
 {

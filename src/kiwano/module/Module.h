@@ -26,6 +26,16 @@ namespace kiwano
 
 /**
  * \~chinese
+ * \defgroup Module 模块
+ */
+
+/**
+ * \addtogroup Module
+ * @{
+ */
+
+/**
+ * \~chinese
  * @brief 基础模块
  */
 class KGE_API Module : Noncopyable
@@ -43,11 +53,6 @@ public:
     /// @brief 更新时
     /// @param ctx 更新上下文
     virtual void OnUpdate(UpdateModuleContext& ctx);
-
-    /// \~chinese
-    /// @brief 事件处理
-    /// @param ctx 事件上下文
-    virtual void HandleEvent(EventModuleContext& ctx);
 
     /// \~chinese
     /// @brief 渲染前
@@ -68,6 +73,8 @@ protected:
     Module() = default;
 };
 
+/** @} */
+
 inline void Module::SetupModule() {}
 
 inline void Module::DestroyModule() {}
@@ -78,11 +85,6 @@ inline void Module::OnRender(RenderModuleContext& ctx)
 }
 
 inline void Module::OnUpdate(UpdateModuleContext& ctx)
-{
-    KGE_NOT_USED(ctx);
-}
-
-inline void Module::HandleEvent(EventModuleContext& ctx)
 {
     KGE_NOT_USED(ctx);
 }

@@ -19,14 +19,21 @@
 // THE SOFTWARE.
 
 #pragma once
-#include <kiwano/2d/Actor.h>
-#include <kiwano/2d/Stage.h>
-#include <kiwano/2d/transition/Transition.h>
+#include <kiwano/actor/Actor.h>
+#include <kiwano/actor/Stage.h>
+#include <kiwano/transition/Transition.h>
 #include <kiwano/module/Module.h>
-#include <kiwano/component/RenderComponent.h>
+#include <kiwano/ability/RenderAbility.h>
 
 namespace kiwano
 {
+class Actor;
+
+/**
+ * \addtogroup Module
+ * @{
+ */
+
 /**
  * \~chinese
  * @brief 导演
@@ -37,6 +44,7 @@ class KGE_API Director
     : public Singleton<Director>
     , public Module
 {
+    friend class Actor;
     friend Singleton<Director>;
 
 public:
@@ -90,17 +98,8 @@ public:
      */
     void ClearStages();
 
-    /**
-     * \~chinese
-     * @brief 添加事件分发器（下一帧自动清除）
-     * @param dispatcher 事件分发器
-     */
-    void PushEventDispatcher(EventDispatcher* dispatcher);
-
 public:
     void OnUpdate(UpdateModuleContext& ctx) override;
-
-    void HandleEvent(EventModuleContext& ctx) override;
 
     void DestroyModule() override;
 
@@ -109,15 +108,43 @@ public:
 private:
     Director();
 
-private:
-    bool                 render_border_enabled_;
-    Stack<RefPtr<Stage>> stages_;
-    RefPtr<Stage>        current_stage_;
-    RefPtr<Stage>        next_stage_;
-    RefPtr<Actor>        debug_actor_;
-    RefPtr<Transition>   transition_;
+    /**
+     * \~chinese
+     * @brief 添加到初始化队列
+     * @details 下一帧开始时，会对队列中的所有对象初始化
+     */
+    void PushToInitQueue(RefPtr<Ability> ability);
 
-    IntrusiveList<EventDispatcher*> dispatcher_list_;
+    /**
+     * \~chinese
+     * @brief 添加到待销毁队列
+     * @details 当前帧结束时，会销毁队列中的所有对象
+     */
+    void PushToDestroyQueue(RefPtr<Ability> ability);
+
+    /**
+     * \~chinese
+     * @brief 初始化所有初始化队列中的对象
+     */
+    void InitAbilitiesInQueue();
+
+    /**
+     * \~chinese
+     * @brief 销毁所有待销毁队列中的对象
+     */
+    void DestroyAbilitiesInQueue();
+
+private:
+    bool                   render_border_enabled_;
+    Stack<RefPtr<Stage>>   stages_;
+    RefPtr<Stage>          current_stage_;
+    RefPtr<Stage>          next_stage_;
+    RefPtr<Actor>          debug_actor_;
+    RefPtr<Transition>     transition_;
+    Deque<RefPtr<Ability>> init_queue_;
+    Deque<RefPtr<Ability>> destroy_queue_;
 };
+
+/** @} */
 
 }  // namespace kiwano

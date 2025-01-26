@@ -10,9 +10,6 @@
     <Filter Include="platform">
       <UniqueIdentifier>{c2654ccc-59f6-4c17-bb6b-99b07fc78702}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2d">
-      <UniqueIdentifier>{896bdedf-6e82-449b-9b6e-0bc69f3699b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="core">
       <UniqueIdentifier>{2e18d99a-e906-499a-9e29-4e0783202644}</UniqueIdentifier>
     </Filter>
@@ -28,32 +25,29 @@
     <Filter Include="event">
       <UniqueIdentifier>{b0d28d20-bfaf-4816-8415-28c20ecf9fac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2d\animation">
-      <UniqueIdentifier>{9314f30d-5742-48b6-94e5-e3b4284106f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2d\transition">
-      <UniqueIdentifier>{f70cecd8-6d5b-405d-8466-d3ca2db9b806}</UniqueIdentifier>
-    </Filter>
     <Filter Include="event\listener">
       <UniqueIdentifier>{554a3b32-ec18-4123-a12e-b176ec10fbdc}</UniqueIdentifier>
     </Filter>
     <Filter Include="module">
       <UniqueIdentifier>{b6abc6eb-1e2f-4525-b108-1c98d368a3de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="component">
-      <UniqueIdentifier>{40fd918d-b0e2-467c-913e-d0859e05ae6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="module\win32">
       <UniqueIdentifier>{4c7b9c05-fb7b-4a1b-b50f-286d5ee983bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ability">
+      <UniqueIdentifier>{40fd918d-b0e2-467c-913e-d0859e05ae6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ability\animation">
+      <UniqueIdentifier>{49c36904-9e2e-4730-ad3e-7b4430e492cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="transition">
+      <UniqueIdentifier>{f70cecd8-6d5b-405d-8466-d3ca2db9b806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor">
+      <UniqueIdentifier>{896bdedf-6e82-449b-9b6e-0bc69f3699b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\kiwano\2d\Canvas.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Sprite.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Resource.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -72,17 +66,8 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\kiwano.h" />
-    <ClInclude Include="..\..\src\kiwano\2d\GifSprite.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Stage.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h">
       <Filter>utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\ShapeActor.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\UserData.h">
       <Filter>utils</Filter>
@@ -92,9 +77,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\FileSystem.h">
       <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\TextActor.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\win32\ComPtr.hpp">
       <Filter>platform\win32</Filter>
@@ -195,9 +177,6 @@
     <ClInclude Include="..\..\src\kiwano\core\Exception.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\LayerActor.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\Function.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -270,9 +249,6 @@
     <ClInclude Include="..\..\src\kiwano\event\WindowEvent.h">
       <Filter>event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\Actor.h">
-      <Filter>2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h">
       <Filter>utils</Filter>
     </ClInclude>
@@ -291,59 +267,8 @@
     <ClInclude Include="..\..\src\kiwano\core\Flag.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\CustomAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\Animation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\DelayAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\AnimationGroup.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\TweenAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\PathAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\Animator.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameSequence.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\AnimationWrapper.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\BinaryData.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\SpriteFrame.h">
-      <Filter>2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\transition\Transition.h">
-      <Filter>2d\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\transition\FadeTransition.h">
-      <Filter>2d\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\transition\MoveTransition.h">
-      <Filter>2d\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\transition\RotationTransition.h">
-      <Filter>2d\transition</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\transition\BoxTransition.h">
-      <Filter>2d\transition</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\event\listener\EventListener.h">
       <Filter>event\listener</Filter>
@@ -371,24 +296,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\RingBuffer.hpp">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\Button.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\Component.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\ComponentManager.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\DebugComponent.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\MouseSensor.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\component\RenderComponent.h">
-      <Filter>component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\module\Director.h">
       <Filter>module</Filter>
@@ -420,31 +327,112 @@
     <ClInclude Include="..\..\src\kiwano\core\Keys.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\Ability.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\Button.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\ComponentManager.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\DebugComponent.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\MouseSensor.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\RenderAbility.h">
+      <Filter>ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\Animation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\AnimationGroup.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\AnimationWrapper.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\Animator.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\CustomAnimation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\DelayAnimation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\EaseFunc.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\FrameAnimation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\FrameSequence.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\PathAnimation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\animation\TweenAnimation.h">
+      <Filter>ability\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\transition\BoxTransition.h">
+      <Filter>transition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\transition\FadeTransition.h">
+      <Filter>transition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\transition\MoveTransition.h">
+      <Filter>transition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\transition\RotationTransition.h">
+      <Filter>transition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\transition\Transition.h">
+      <Filter>transition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\Actor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\Canvas.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\GifSprite.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\LayerActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\ShapeActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\Sprite.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\SpriteFrame.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\Stage.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\actor\TextActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\ability\TransformAbility.h">
+      <Filter>ability</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Sprite.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Resource.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\Application.cpp">
       <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\GifSprite.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Stage.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp">
       <Filter>utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\ShapeActor.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\UserData.cpp">
       <Filter>utils</Filter>
@@ -454,9 +442,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\FileSystem.cpp">
       <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\TextActor.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\platform\win32\libraries.cpp">
       <Filter>platform\win32</Filter>
@@ -521,9 +506,6 @@
     <ClCompile Include="..\..\src\kiwano\core\Exception.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\LayerActor.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\String.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -566,9 +548,6 @@
     <ClCompile Include="..\..\src\kiwano\event\WindowEvent.cpp">
       <Filter>event</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\Actor.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -580,54 +559,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\core\Duration.cpp">
       <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\EaseFunc.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\CustomAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\Animation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\DelayAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\AnimationGroup.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\TweenAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\PathAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\Animator.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameSequence.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.cpp">
-      <Filter>2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\transition\Transition.cpp">
-      <Filter>2d\transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\transition\FadeTransition.cpp">
-      <Filter>2d\transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\transition\MoveTransition.cpp">
-      <Filter>2d\transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\transition\RotationTransition.cpp">
-      <Filter>2d\transition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\transition\BoxTransition.cpp">
-      <Filter>2d\transition</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\event\listener\EventListener.cpp">
       <Filter>event\listener</Filter>
@@ -646,24 +577,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\RenderObject.cpp">
       <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\Button.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\Component.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\ComponentManager.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\DebugComponent.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\MouseSensor.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\component\RenderComponent.cpp">
-      <Filter>component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\module\Director.cpp">
       <Filter>module</Filter>
@@ -685,6 +598,99 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\module\Input.cpp">
       <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\Ability.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\Button.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\ComponentManager.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\DebugComponent.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\MouseSensor.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\RenderAbility.cpp">
+      <Filter>ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\Animation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\AnimationGroup.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\Animator.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\CustomAnimation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\DelayAnimation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\EaseFunc.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\FrameAnimation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\FrameSequence.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\PathAnimation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\animation\TweenAnimation.cpp">
+      <Filter>ability\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\transition\BoxTransition.cpp">
+      <Filter>transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\transition\FadeTransition.cpp">
+      <Filter>transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\transition\MoveTransition.cpp">
+      <Filter>transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\transition\RotationTransition.cpp">
+      <Filter>transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\transition\Transition.cpp">
+      <Filter>transition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\Actor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\Canvas.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\GifSprite.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\LayerActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\ShapeActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\Sprite.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\SpriteFrame.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\Stage.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\actor\TextActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\ability\TransformAbility.cpp">
+      <Filter>ability</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

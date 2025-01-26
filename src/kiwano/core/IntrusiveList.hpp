@@ -171,7 +171,7 @@ public:
 
     /// \~chinese
     /// @brief ÒÆ³ý¶ÔÏó
-    void Remove(reference child)
+    void Remove(const value_type& child)
     {
         if (child->GetNext())
         {

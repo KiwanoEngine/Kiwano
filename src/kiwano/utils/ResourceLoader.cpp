@@ -25,8 +25,8 @@
 #include <kiwano/utils/ResourceCache.h>
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/2d/SpriteFrame.h>
-#include <kiwano/2d/animation/FrameSequence.h>
+#include <kiwano/actor/SpriteFrame.h>
+#include <kiwano/ability/animation/FrameSequence.h>
 
 namespace kiwano
 {

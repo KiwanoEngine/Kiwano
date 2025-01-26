@@ -70,32 +70,6 @@ public:
 };
 
 /// \~chinese
-/// @brief 鼠标点击事件
-class KGE_API MouseClickEvent : public MouseEvent
-{
-public:
-    MouseButton button;  ///< 鼠标键值
-
-    MouseClickEvent();
-};
-
-/// \~chinese
-/// @brief 鼠标移入事件
-class KGE_API MouseHoverEvent : public MouseEvent
-{
-public:
-    MouseHoverEvent();
-};
-
-/// \~chinese
-/// @brief 鼠标移出事件
-class KGE_API MouseOutEvent : public MouseEvent
-{
-public:
-    MouseOutEvent();
-};
-
-/// \~chinese
 /// @brief 鼠标滚轮事件
 class KGE_API MouseWheelEvent : public MouseEvent
 {
@@ -110,10 +84,9 @@ struct IsSameEventType<MouseEvent>
 {
     inline bool operator()(const Event* evt) const
     {
+        // TODO filter out
         return evt->GetType() == KGE_EVENT(MouseMoveEvent) || evt->GetType() == KGE_EVENT(MouseDownEvent)
-               || evt->GetType() == KGE_EVENT(MouseUpEvent) || evt->GetType() == KGE_EVENT(MouseClickEvent)
-               || evt->GetType() == KGE_EVENT(MouseHoverEvent) || evt->GetType() == KGE_EVENT(MouseOutEvent)
-               || evt->GetType() == KGE_EVENT(MouseWheelEvent);
+               || evt->GetType() == KGE_EVENT(MouseUpEvent) || evt->GetType() == KGE_EVENT(MouseWheelEvent);
     }
 };
 

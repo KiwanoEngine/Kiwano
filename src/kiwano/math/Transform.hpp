@@ -66,6 +66,10 @@ inline TransformT<_Ty>::TransformT()
 template <typename _Ty>
 Matrix3x2T<_Ty> TransformT<_Ty>::ToMatrix() const
 {
+    if (IsFast())
+    {
+        return Matrix3x2T<_Ty>::Translation(position)
+    }
     if (!skew.IsOrigin())
     {
         return Matrix3x2T<_Ty>::Skewing(skew) * Matrix3x2T<_Ty>::SRT(position, scale, rotation);

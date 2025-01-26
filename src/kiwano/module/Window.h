@@ -108,6 +108,11 @@ typedef HWND WindowHandle;
 #endif
 
 /**
+ * \addtogroup Module
+ * @{
+ */
+
+/**
  * \~chinese
  * @brief 窗口类，控制窗口标题、大小、图标等
  */
@@ -284,5 +289,7 @@ protected:
     String                    title_;
     RingBuffer<RefPtr<Event>> event_buffer_;
 };
+
+/** @} */
 
 }  // namespace kiwano

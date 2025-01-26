@@ -20,17 +20,20 @@
 
 #pragma once
 #include <kiwano/core/Time.h>
-#include <kiwano/event/Event.h>
 
 namespace kiwano
 {
 class RenderContext;
-class Event;
 class Module;
 
 /// \~chinese
 /// @brief 模块列表
 typedef Vector<Module*> ModuleList;
+
+/**
+ * \addtogroup Module
+ * @{
+ */
 
 /// \~chinese
 /// @brief 模块上下文
@@ -53,6 +56,19 @@ protected:
 private:
     int               index_;
     const ModuleList& modules_;
+};
+
+/// \~chinese
+/// @brief 更新模块上下文
+class KGE_API UpdateModuleContext : public ModuleContext
+{
+public:
+    Duration dt;
+
+    UpdateModuleContext(const ModuleList& modules, Duration dt);
+
+protected:
+    void Handle(Module* m) override;
 };
 
 /// \~chinese
@@ -80,30 +96,6 @@ private:
     Step step_;
 };
 
-/// \~chinese
-/// @brief 更新模块上下文
-class KGE_API UpdateModuleContext : public ModuleContext
-{
-public:
-    Duration dt;
-
-    UpdateModuleContext(const ModuleList& modules, Duration dt);
-
-protected:
-    void Handle(Module* m) override;
-};
-
-/// \~chinese
-/// @brief 时间模块上下文
-class KGE_API EventModuleContext : public ModuleContext
-{
-public:
-    RefPtr<Event> evt;
-
-    EventModuleContext(const ModuleList& modules, RefPtr<Event> evt);
-
-protected:
-    void Handle(Module* m) override;
-};
+/** @} */
 
 }  // namespace kiwano
