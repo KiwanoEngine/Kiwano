@@ -3,6 +3,7 @@ name: Deploy to minio
 on:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
