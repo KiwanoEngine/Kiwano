@@ -42,6 +42,18 @@ enum class TextAlign
     Center,    ///< 居中对齐
     Justified  ///< 两端对齐
 };
+/**
+ * \~chinese
+ * @brief 换行模式
+ */
+enum class TextWordWrapping
+{
+    WRAPPING_WRAP,              ///< 在单词边界处换行，这是实现自动换行的常用模式
+    WRAPPING_NO_WRAP,           ///< 不进行换行，文本将超出布局边界
+    WRAPPING_EMERGENCY_BREAK,   ///< 在必要时在任意字符处换行，即使不在单词边界
+    WRAPPING_WHOLE_WORD,        ///< 仅在完整的单词边界处进行换行
+    WRAPPING_CHARACTER,         ///< 可以在任意字符处进行换行
+};
 
 /**
  * \~chinese
@@ -54,6 +66,7 @@ public:
     bool      show_strikethrough;  ///< 显示删除线
     float     wrap_width;          ///< 自动换行宽度
     float     line_spacing;        ///< 行间距
+    TextWordWrapping word_wrapping;///< 换行模式
     TextAlign alignment;           ///< 对齐方式
     Font      font;                ///< 字体
 
