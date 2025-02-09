@@ -95,6 +95,10 @@ public:
     void SetWrapWidth(float wrap_width);
 
     /// \~chinese
+    /// @brief 设置文本自动换行方式
+    void SetWordWrapping(TextWordWrapping word_wrapping);
+
+    /// \~chinese
     /// @brief 设置行间距（默认为 0）
     void SetLineSpacing(float line_spacing);
 

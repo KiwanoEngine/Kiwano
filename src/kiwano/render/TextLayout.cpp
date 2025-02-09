@@ -55,6 +55,7 @@ void TextLayout::Reset(StringView content, const TextStyle& style)
 
         SetAlignment(style.alignment);
         SetWrapWidth(style.wrap_width);
+        SetWordWrapping(style.word_wrapping);
         SetLineSpacing(style.line_spacing);
 
         if (style.show_underline)
@@ -225,19 +226,46 @@ void TextLayout::SetWrapWidth(float wrap_width)
 
     if (native)
     {
-        HRESULT hr = S_OK;
-        if (wrap_width > 0)
+        HRESULT hr = native->SetMaxWidth(wrap_width);
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetMaxWidth failed");
+    }
+#else
+    // not supported
+#endif
+
+
+    SetDirtyFlag(DirtyFlag::Dirty);
+}
+
+void TextLayout::SetWordWrapping(TextWordWrapping word_wrapping)
+{
+#if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
+    auto native = ComPolicy::Get<IDWriteTextLayout>(this);
+    KGE_ASSERT(native);
+
+    if (native)
+    {
+        DWRITE_WORD_WRAPPING wrapping = DWRITE_WORD_WRAPPING();
+        switch (word_wrapping)
         {
-            hr = native->SetWordWrapping(DWRITE_WORD_WRAPPING_WRAP);
-            if (SUCCEEDED(hr))
-            {
-                hr = native->SetMaxWidth(wrap_width);
-            }
+        case TextWordWrapping::Wrap:
+            wrapping = DWRITE_WORD_WRAPPING_WRAP;
+            break;
+        case TextWordWrapping::NoWrap:
+            wrapping = DWRITE_WORD_WRAPPING_NO_WRAP;
+            break;
+        case TextWordWrapping::EmergencyBreak:
+            wrapping = DWRITE_WORD_WRAPPING_EMERGENCY_BREAK;
+            break;
+        case TextWordWrapping::WholeWord:
+            wrapping = DWRITE_WORD_WRAPPING_WHOLE_WORD;
+            break;
+        case TextWordWrapping::Character:
+            wrapping = DWRITE_WORD_WRAPPING_CHARACTER;
+            break;
         }
-        else
-        {
-            hr = native->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-        }
+
+        HRESULT hr = native->SetWordWrapping(wrapping);
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetWordWrapping failed");
     }
 #else
