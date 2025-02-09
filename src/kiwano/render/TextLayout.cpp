@@ -226,15 +226,8 @@ void TextLayout::SetWrapWidth(float wrap_width)
 
     if (native)
     {
-        HRESULT hr = S_OK;
-        if (wrap_width > 0)
-        {
-            if (SUCCEEDED(hr))
-            {
-                hr = native->SetMaxWidth(wrap_width);
-            }
-        }
-        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetWordWrapping failed");
+        HRESULT hr = native->SetMaxWidth(wrap_width);
+        KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetMaxWidth failed");
     }
 #else
     // not supported
@@ -252,27 +245,27 @@ void TextLayout::SetWordWrapping(TextWordWrapping word_wrapping)
 
     if (native)
     {
-        HRESULT hr = S_OK;
         DWRITE_WORD_WRAPPING wrapping = DWRITE_WORD_WRAPPING();
         switch (word_wrapping)
         {
-        case TextWordWrapping::WRAPPING_WRAP:
+        case TextWordWrapping::Wrap:
             wrapping = DWRITE_WORD_WRAPPING_WRAP;
             break;
-        case TextWordWrapping::WRAPPING_NO_WRAP:
+        case TextWordWrapping::NoWrap:
             wrapping = DWRITE_WORD_WRAPPING_NO_WRAP;
             break;
-        case TextWordWrapping::WRAPPING_EMERGENCY_BREAK:
+        case TextWordWrapping::EmergencyBreak:
             wrapping = DWRITE_WORD_WRAPPING_EMERGENCY_BREAK;
             break;
-        case TextWordWrapping::WRAPPING_WHOLE_WORD:
+        case TextWordWrapping::WholeWord:
             wrapping = DWRITE_WORD_WRAPPING_WHOLE_WORD;
             break;
-        case TextWordWrapping::WRAPPING_CHARACTER:
+        case TextWordWrapping::Character:
             wrapping = DWRITE_WORD_WRAPPING_CHARACTER;
             break;
         }
-        hr = native->SetWordWrapping(wrapping);
+
+        HRESULT hr = native->SetWordWrapping(wrapping);
         KGE_THROW_IF_FAILED(hr, "IDWriteTextLayout::SetWordWrapping failed");
     }
 #else

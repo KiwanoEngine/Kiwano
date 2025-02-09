@@ -37,22 +37,23 @@ namespace kiwano
  */
 enum class TextAlign
 {
-    Left,      ///< 左对齐
+    Left,      ///< 左对齐（默认）
     Right,     ///< 右对齐
     Center,    ///< 居中对齐
     Justified  ///< 两端对齐
 };
+
 /**
  * \~chinese
- * @brief 换行模式
+ * @brief 换行方式
  */
 enum class TextWordWrapping
 {
-    WRAPPING_WRAP,              ///< 在单词边界处换行，这是实现自动换行的常用模式
-    WRAPPING_NO_WRAP,           ///< 不进行换行，文本将超出布局边界
-    WRAPPING_EMERGENCY_BREAK,   ///< 在必要时在任意字符处换行，即使不在单词边界
-    WRAPPING_WHOLE_WORD,        ///< 仅在完整的单词边界处进行换行
-    WRAPPING_CHARACTER,         ///< 可以在任意字符处进行换行
+    NoWrap,         ///< 不进行换行，文本将超出布局边界（默认）
+    Wrap,           ///< 在单词边界处换行
+    EmergencyBreak, ///< 必要时在任意字符处换行，即使不在单词边界
+    WholeWord,      ///< 仅在完整的单词边界处进行换行
+    Character,      ///< 允许在任意字符处进行换行
 };
 
 /**
@@ -62,13 +63,13 @@ enum class TextWordWrapping
 class KGE_API TextStyle
 {
 public:
-    bool      show_underline;      ///< 显示下划线
-    bool      show_strikethrough;  ///< 显示删除线
-    float     wrap_width;          ///< 自动换行宽度
-    float     line_spacing;        ///< 行间距
-    TextWordWrapping word_wrapping;///< 换行模式
-    TextAlign alignment;           ///< 对齐方式
-    Font      font;                ///< 字体
+    bool                show_underline;     ///< 显示下划线
+    bool                show_strikethrough; ///< 显示删除线
+    float               line_spacing;       ///< 行间距
+    float               wrap_width;         ///< 自动换行宽度
+    TextWordWrapping    word_wrapping;      ///< 换行模式
+    TextAlign           alignment;          ///< 对齐方式
+    Font                font;               ///< 字体
 
 public:
     /**
