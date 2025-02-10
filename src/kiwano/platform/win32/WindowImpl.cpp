@@ -656,8 +656,11 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_MOUSEWHEEL:
     {
+        POINT pt = { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+        ::ScreenToClient(hwnd, &pt);
+
         RefPtr<MouseWheelEvent> evt = new MouseWheelEvent;
-        evt->pos                    = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
+        evt->pos                    = Point((float)pt.x, (float)pt.y);
         evt->wheel                  = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
         this->PushEvent(evt);
     }
