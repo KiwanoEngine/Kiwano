@@ -20,6 +20,7 @@
 
 #include <kiwano/render/DirectX/D2DDeviceResources.h>
 #include <kiwano/render/DirectX/TextDrawingEffect.h>
+#include <kiwano/platform/Window.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -103,7 +104,6 @@ public:
 
 private:
     unsigned long ref_count_;
-    float         dpi_;
 
     ComPtr<IDXGISwapChain> dxgi_swap_chain_;
 
@@ -123,7 +123,6 @@ ComPtr<ID2DDeviceResources> GetD2DDeviceResources()
 
 D2DDeviceResources::D2DDeviceResources()
     : ref_count_(0)
-    , dpi_(96.f)
 {
 }
 
@@ -140,11 +139,6 @@ HRESULT D2DDeviceResources::Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device,
     if (SUCCEEDED(hr))
     {
         hr = this->CreateDeviceResources(dxgi_device, dxgi_swap_chain);
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        hr = this->CreateWindowSizeDependentResources();
     }
     return hr;
 }
@@ -316,9 +310,8 @@ HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_
 
         if (SUCCEEDED(hr))
         {
-            device_         = device;
-            device_context_ = device_ctx;
-            device_context_->SetDpi(dpi_, dpi_);
+            device_          = device;
+            device_context_  = device_ctx;
             dxgi_swap_chain_ = dxgi_swap_chain;
         }
     }
@@ -338,11 +331,15 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
 
     if (SUCCEEDED(hr))
     {
+        FLOAT dpi_x = 0.f, dpi_y = 0.f;
+        device_context_->GetDpi(&dpi_x, &dpi_y);
+
         ComPtr<ID2D1Bitmap1> target;
         hr = device_context_->CreateBitmapFromDxgiSurface(
             dxgi_back_buffer.Get(),
             D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-                                    D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi_, dpi_),
+                                    D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi_x,
+                                    dpi_y),
             &target);
 
         if (SUCCEEDED(hr))

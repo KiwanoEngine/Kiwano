@@ -81,6 +81,11 @@ uint32_t Window::GetHeight() const
     return height_;
 }
 
+float Window::GetDPI() const
+{
+    return dpi_;
+}
+
 Resolution Window::GetCurrentResolution() const
 {
     return resolution_;

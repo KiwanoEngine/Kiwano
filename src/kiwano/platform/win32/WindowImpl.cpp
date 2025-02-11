@@ -274,14 +274,28 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     resizable_     = config.resizable;
     is_fullscreen_ = config.fullscreen;
 
-    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", config.title.c_str(), GetStyle(), left, top, width_, height_,
-                                nullptr, nullptr, hinst, nullptr);
+    // In terms of using the correct DPI, to create a window at a specific size
+    // like this, the procedure is to first create the window hidden. Then we get
+    // the actual DPI from the HWND (which will be assigned by whichever monitor
+    // the window is created on). Then we use SetWindowPos to resize it to the
+    // correct DPI-scaled size, then we use ShowWindow to show it.
+    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", config.title.c_str(), GetStyle(), left, top, 0, 0, nullptr, nullptr,
+                                hinst, nullptr);
 
     if (handle_ == nullptr)
     {
         ::UnregisterClassA("KiwanoAppWnd", hinst);
         KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
+
+    dpi_ = (float)::GetDpiForWindow(handle_);
+
+    // Because the SetWindowPos function takes its size in pixels, we
+    // obtain the window's DPI, and use it to scale the window size.
+    ::SetWindowPos(handle_, NULL, NULL, NULL, static_cast<int>(ceil((float)width_ * dpi_ / 96.f)),
+                   static_cast<int>(ceil((float)height_ * dpi_ / 96.f)), SWP_NOMOVE);
+    ::ShowWindow(handle_, SW_SHOWNORMAL);
+    ::UpdateWindow(handle_);
 
     // disable imm
     SetImmEnabled(false);

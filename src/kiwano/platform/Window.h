@@ -166,6 +166,12 @@ public:
 
     /**
      * \~chinese
+     * @brief 获取 DPI
+     */
+    float GetDPI() const;
+
+    /**
+     * \~chinese
      * @brief 获取当前分辨率
      */
     Resolution GetCurrentResolution() const;
@@ -282,6 +288,7 @@ protected:
     uint32_t                  min_height_;
     uint32_t                  max_width_;
     uint32_t                  max_height_;
+    float                     dpi_;
     Resolution                resolution_;
     WindowHandle              handle_;
     String                    title_;

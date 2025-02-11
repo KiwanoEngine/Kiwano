@@ -119,13 +119,14 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
         auto d2d_res = graphics::directx::GetD2DDeviceResources();
 
         hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
-        if (FAILED(hr))
+        if (SUCCEEDED(hr))
         {
-            d2d_res->DiscardResources();
+            d2d_res->SetDpi(window->GetDPI());
+            d2d_res_ = d2d_res;
         }
         else
         {
-            d2d_res_ = d2d_res;
+            d2d_res->DiscardResources();
         }
     }
 
