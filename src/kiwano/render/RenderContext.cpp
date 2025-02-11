@@ -31,7 +31,6 @@ RefPtr<RenderContext> RenderContext::Create(RefPtr<Texture> texture, const Pixel
 
 RenderContext::RenderContext()
     : collecting_status_(false)
-    , fast_global_transform_(true)
     , brush_opacity_(1.0f)
     , antialias_(true)
     , text_antialias_(TextAntialiasMode::GrayScale)
@@ -76,11 +75,6 @@ float RenderContext::GetBrushOpacity() const
 RefPtr<Brush> RenderContext::GetCurrentBrush() const
 {
     return current_brush_;
-}
-
-const Matrix3x2& RenderContext::GetGlobalTransform() const
-{
-    return global_transform_;
 }
 
 void RenderContext::SetBrushOpacity(float opacity)

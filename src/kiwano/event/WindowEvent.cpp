@@ -18,8 +18,8 @@ WindowMovedEvent::WindowMovedEvent()
 
 WindowResizedEvent::WindowResizedEvent()
     : WindowEvent(KGE_EVENT(WindowResizedEvent))
-    , width(0)
-    , height(0)
+    , real_width(0)
+    , real_height(0)
 {
 }
 

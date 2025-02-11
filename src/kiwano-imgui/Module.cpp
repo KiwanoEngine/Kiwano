@@ -13,7 +13,7 @@ namespace kiwano
 namespace imgui
 {
 
-ImGuiKey KeyCodeToImGuiKey(const KeyCode code)
+static ImGuiKey KeyCodeToImGuiKey(const KeyCode code)
 {
     switch (code)
     {
@@ -119,6 +119,16 @@ void Module::SetupModule()
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
+    // Handle DPI scaling
+    // Note that ScaleAllSizes() only handles things like spacing of elements.
+    // Fonts are not handled, so a global font scale factor is set.
+    // There appears to be no multi-monitor solution so use the primary monitor for now.
+    float scale = window_->GetDPIScale();
+
+    io.FontGlobalScale         = scale;
+    io.DisplayFramebufferScale = ImVec2(scale, scale);
+    ImGui::GetStyle().ScaleAllSizes(scale);
+
     this->InitPlatform();
     ImGui_Impl_Init();
 }
@@ -131,16 +141,15 @@ void Module::InitPlatform()
     // Setup backend capabilities flags
     io.BackendPlatformUserData = (void*)this;
     io.BackendPlatformName     = "imgui_impl_win32";
-    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 
     // Set platform dependent data in viewport
-    ImGui::GetMainViewport()->PlatformHandleRaw = (void*)window_->GetHandle();
+    ImGuiViewport* main_viewport  = ImGui::GetMainViewport();
+    main_viewport->PlatformHandle = main_viewport->PlatformHandleRaw = (void*)window_->GetHandle();
 
     // Setup Platform/Renderer bindings
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
     io.BackendPlatformName = "imgui_impl_win32";
-    io.ImeWindowHandle     = window_->GetHandle();
 }
 
 void Module::DestroyModule()

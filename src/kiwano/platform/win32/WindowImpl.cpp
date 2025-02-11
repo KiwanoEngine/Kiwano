@@ -39,6 +39,9 @@
 namespace kiwano
 {
 
+void  EnableDpiAwareness();
+float GetDpiForHwnd(HWND hwnd);
+
 class KGE_API WindowWin32Impl : public Window
 {
 public:
@@ -232,6 +235,8 @@ WindowWin32Impl::~WindowWin32Impl()
 
 void WindowWin32Impl::Init(const WindowConfig& config)
 {
+    EnableDpiAwareness();
+
     HINSTANCE   hinst  = GetModuleHandle(nullptr);
     WNDCLASSEXA wcex   = { 0 };
     wcex.cbSize        = sizeof(WNDCLASSEX);
@@ -260,17 +265,7 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     // Save the device name
     device_name_ = monitor_info.szDevice;
 
-    uint32_t screenw = monitor_info.rcWork.right - monitor_info.rcWork.left;
-    uint32_t screenh = monitor_info.rcWork.bottom - monitor_info.rcWork.top;
-
-    uint32_t win_width, win_height;
-    AdjustWindow(config.width, config.height, GetStyle(), &win_width, &win_height);
-
-    int left = monitor_info.rcWork.left + (screenw - win_width) / 2;
-    int top  = monitor_info.rcWork.top + (screenh - win_height) / 2;
-
-    width_         = win_width;
-    height_        = win_height;
+    logical_size_  = Size((float)config.width, (float)config.height);
     resizable_     = config.resizable;
     is_fullscreen_ = config.fullscreen;
 
@@ -279,7 +274,7 @@ void WindowWin32Impl::Init(const WindowConfig& config)
     // the actual DPI from the HWND (which will be assigned by whichever monitor
     // the window is created on). Then we use SetWindowPos to resize it to the
     // correct DPI-scaled size, then we use ShowWindow to show it.
-    handle_ = ::CreateWindowExA(0, "KiwanoAppWnd", config.title.c_str(), GetStyle(), left, top, 0, 0, nullptr, nullptr,
+    handle_ = ::CreateWindowExA(NULL, "KiwanoAppWnd", config.title.c_str(), GetStyle(), 0, 0, 0, 0, nullptr, nullptr,
                                 hinst, nullptr);
 
     if (handle_ == nullptr)
@@ -288,47 +283,17 @@ void WindowWin32Impl::Init(const WindowConfig& config)
         KGE_THROW_SYSTEM_ERROR(HRESULT_FROM_WIN32(GetLastError()), "Create window failed");
     }
 
-    dpi_ = (float)::GetDpiForWindow(handle_);
-
-    // Because the SetWindowPos function takes its size in pixels, we
-    // obtain the window's DPI, and use it to scale the window size.
-    ::SetWindowPos(handle_, NULL, NULL, NULL, static_cast<int>(ceil((float)width_ * dpi_ / 96.f)),
-                   static_cast<int>(ceil((float)height_ * dpi_ / 96.f)), SWP_NOMOVE);
-    ::ShowWindow(handle_, SW_SHOWNORMAL);
-    ::UpdateWindow(handle_);
-
-    // disable imm
-    SetImmEnabled(false);
+    dpi_ = GetDpiForHwnd(handle_);
 
     // use Application instance in message loop
     ::SetWindowLongPtrA(handle_, GWLP_USERDATA, LONG_PTR(this));
 
-    ::ShowWindow(handle_, SW_SHOWNORMAL);
+    SetResolution(config.width, config.height, config.fullscreen);
+
     ::UpdateWindow(handle_);
 
-    if (is_fullscreen_)
-    {
-        MONITORINFOEXA info = GetMoniterInfoEx(handle_);
-
-        int x  = (int)info.rcMonitor.left;
-        int y  = (int)info.rcMonitor.top;
-        int cx = (int)(info.rcMonitor.right - info.rcMonitor.left);
-        int cy = (int)(info.rcMonitor.bottom - info.rcMonitor.top);
-
-        // Top the window
-        ::SetWindowPos(handle_, HWND_TOPMOST, x, y, cx, cy, SWP_NOACTIVATE);
-        ::ShowWindow(handle_, SW_SHOWNORMAL);
-
-        resolution_.width  = config.width;
-        resolution_.height = config.height;
-    }
-    else
-    {
-        RECT client_area;
-        ::GetClientRect(handle_, &client_area);
-        resolution_.width  = uint32_t(client_area.right - client_area.left);
-        resolution_.height = uint32_t(client_area.bottom - client_area.top);
-    }
+    // disable imm
+    SetImmEnabled(false);
 }
 
 void WindowWin32Impl::PumpEvents()
@@ -408,35 +373,30 @@ void WindowWin32Impl::SetResolution(uint32_t width, uint32_t height, bool fullsc
 
         // Top the window
         ::SetWindowPos(handle_, HWND_TOPMOST, x, y, cx, cy, SWP_NOACTIVATE);
-        ::ShowWindow(handle_, SW_SHOWNORMAL);
     }
     else
     {
         // Adjust the rect of client area
-        RECT rc = { 0, 0, LONG(width), LONG(height) };
-        ::AdjustWindowRect(&rc, GetStyle(), false);
+        RECT rc = { 0, 0, LONG(float(width) * GetDPIScale()), LONG(float(height) * GetDPIScale()) };
+        ::AdjustWindowRectExForDpi(&rc, GetStyle(), FALSE, NULL, UINT(dpi_));
 
-        width  = uint32_t(rc.right - rc.left);
-        height = uint32_t(rc.bottom - rc.top);
+        auto client_width  = uint32_t(rc.right - rc.left);
+        auto client_height = uint32_t(rc.bottom - rc.top);
 
         MONITORINFOEXA info    = GetMoniterInfoEx(handle_);
         uint32_t       screenw = uint32_t(info.rcWork.right - info.rcWork.left);
         uint32_t       screenh = uint32_t(info.rcWork.bottom - info.rcWork.top);
-        int            left    = screenw > width ? ((screenw - width) / 2) : 0;
-        int            top     = screenh > height ? ((screenh - height) / 2) : 0;
-
-        // Reset window style
-        ::SetWindowLongPtrA(handle_, GWL_STYLE, GetStyle());
+        int            left    = screenw > client_width ? ((screenw - client_width) / 2) : 0;
+        int            top     = screenh > client_height ? ((screenh - client_height) / 2) : 0;
 
         // Unpin the window
-        ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, width, height, SWP_DRAWFRAME | SWP_FRAMECHANGED);
-        ::ShowWindow(handle_, SW_SHOWNORMAL);
+        ::SetWindowPos(handle_, HWND_NOTOPMOST, left, top, client_width, client_height,
+                       SWP_DRAWFRAME | SWP_FRAMECHANGED);
     }
 
-    resolution_ = Resolution{ width, height, 0 };
+    ::ShowWindow(handle_, SW_SHOWNORMAL);
 
-    // Resize render target
-    Renderer::GetInstance().Resize(width, height);
+    resolution_ = Resolution{ width, height, 0 };
 }
 
 Vector<Resolution> WindowWin32Impl::GetResolutions()
@@ -609,7 +569,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_MBUTTONDBLCLK:
     {
         RefPtr<MouseDownEvent> evt = new MouseDownEvent;
-        evt->pos                   = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
+        evt->pos                   = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam)) / GetDPIScale();
 
         if (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONDBLCLK)
         {
@@ -637,7 +597,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_RBUTTONUP:
     {
         RefPtr<MouseUpEvent> evt = new MouseUpEvent;
-        evt->pos                 = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
+        evt->pos                 = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam)) / GetDPIScale();
 
         if (msg == WM_LBUTTONUP)
         {
@@ -663,7 +623,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_MOUSEMOVE:
     {
         RefPtr<MouseMoveEvent> evt = new MouseMoveEvent;
-        evt->pos                   = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
+        evt->pos                   = Point((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam)) / GetDPIScale();
         this->PushEvent(evt);
     }
     break;
@@ -674,7 +634,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         ::ScreenToClient(hwnd, &pt);
 
         RefPtr<MouseWheelEvent> evt = new MouseWheelEvent;
-        evt->pos                    = Point((float)pt.x, (float)pt.y);
+        evt->pos                    = Point((float)pt.x, (float)pt.y) / GetDPIScale();
         evt->wheel                  = GET_WHEEL_DELTA_WPARAM(wparam) / (float)WHEEL_DELTA;
         this->PushEvent(evt);
     }
@@ -726,16 +686,16 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
         }
         if (resized)
         {
-            this->width_  = ((uint32_t)(short)LOWORD(lparam));
-            this->height_ = ((uint32_t)(short)HIWORD(lparam));
+            this->real_width_  = ((uint32_t)(short)LOWORD(lparam));
+            this->real_height_ = ((uint32_t)(short)HIWORD(lparam));
 
             RefPtr<WindowResizedEvent> evt = new WindowResizedEvent;
             evt->window                    = this;
-            evt->width                     = this->GetWidth();
-            evt->height                    = this->GetHeight();
+            evt->real_width                = this->GetRealWidth();
+            evt->real_height               = this->GetRealHeight();
             this->PushEvent(evt);
 
-            KGE_DEBUG_LOGF("Window resized to (%d, %d)", this->width_, this->height_);
+            KGE_DEBUG_LOGF("Window resized to (%d, %d)", this->real_width_, this->real_height_);
         }
     }
     break;
@@ -758,17 +718,17 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
         uint32_t client_width  = uint32_t(client_rect.right - client_rect.left);
         uint32_t client_height = uint32_t(client_rect.bottom - client_rect.top);
-        if (client_width != this->GetWidth() || client_height != this->GetHeight())
+        if (client_width != this->GetRealWidth() || client_height != this->GetRealHeight())
         {
             KGE_DEBUG_LOGF("Window resized to (%d, %d)", client_width, client_height);
 
-            this->width_  = client_width;
-            this->height_ = client_height;
+            this->real_width_  = client_width;
+            this->real_height_ = client_height;
 
             RefPtr<WindowResizedEvent> evt = new WindowResizedEvent;
             evt->window                    = this;
-            evt->width                     = client_width;
-            evt->height                    = client_height;
+            evt->real_width                = client_width;
+            evt->real_height               = client_height;
             this->PushEvent(evt);
         }
 
@@ -933,6 +893,116 @@ LRESULT CALLBACK WindowWin32Impl::StaticWndProc(HWND hwnd, UINT32 msg, WPARAM wp
         return window->MessageProc(hwnd, msg, wparam, lparam);
     }
     return ::DefWindowProcA(hwnd, msg, wparam, lparam);
+}
+
+//
+// DPI-related helpers
+//
+
+typedef enum
+{
+    PROCESS_DPI_UNAWARE           = 0,
+    PROCESS_SYSTEM_DPI_AWARE      = 1,
+    PROCESS_PER_MONITOR_DPI_AWARE = 2
+} PROCESS_DPI_AWARENESS;
+
+typedef enum
+{
+    MDT_EFFECTIVE_DPI = 0,
+    MDT_ANGULAR_DPI   = 1,
+    MDT_RAW_DPI       = 2,
+    MDT_DEFAULT       = MDT_EFFECTIVE_DPI
+} MONITOR_DPI_TYPE;
+
+typedef HRESULT(WINAPI* PFN_SetProcessDpiAwareness)(PROCESS_DPI_AWARENESS);  // Shcore.lib + dll, Windows 8.1+
+typedef HRESULT(WINAPI* PFN_GetDpiForMonitor)(HMONITOR, MONITOR_DPI_TYPE, UINT*,
+                                              UINT*);  // Shcore.lib + dll, Windows 8.1+
+typedef DPI_AWARENESS_CONTEXT(WINAPI* PFN_SetThreadDpiAwarenessContext)(
+    DPI_AWARENESS_CONTEXT);  // User32.lib + dll, Windows 10 v1607+ (Creators Update)
+
+static BOOL _IsWindowsVersionOrGreater(WORD major, WORD minor, WORD)
+{
+    typedef LONG(WINAPI * PFN_RtlVerifyVersionInfo)(OSVERSIONINFOEXW*, ULONG, ULONGLONG);
+    static PFN_RtlVerifyVersionInfo RtlVerifyVersionInfoFn = nullptr;
+    if (RtlVerifyVersionInfoFn == nullptr)
+        if (HMODULE ntdllModule = ::GetModuleHandleA("ntdll.dll"))
+            RtlVerifyVersionInfoFn = (PFN_RtlVerifyVersionInfo)GetProcAddress(ntdllModule, "RtlVerifyVersionInfo");
+    if (RtlVerifyVersionInfoFn == nullptr)
+        return FALSE;
+
+    RTL_OSVERSIONINFOEXW versionInfo   = {};
+    ULONGLONG            conditionMask = 0;
+    versionInfo.dwOSVersionInfoSize    = sizeof(RTL_OSVERSIONINFOEXW);
+    versionInfo.dwMajorVersion         = major;
+    versionInfo.dwMinorVersion         = minor;
+    VER_SET_CONDITION(conditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+    VER_SET_CONDITION(conditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
+    return (RtlVerifyVersionInfoFn(&versionInfo, VER_MAJORVERSION | VER_MINORVERSION, conditionMask) == 0) ? TRUE
+                                                                                                           : FALSE;
+}
+
+#define _IsWindowsVistaOrGreater() _IsWindowsVersionOrGreater(HIBYTE(0x0600), LOBYTE(0x0600), 0)  // _WIN32_WINNT_VISTA
+#define _IsWindows8OrGreater() _IsWindowsVersionOrGreater(HIBYTE(0x0602), LOBYTE(0x0602), 0)      // _WIN32_WINNT_WIN8
+#define _IsWindows8Point1OrGreater() \
+    _IsWindowsVersionOrGreater(HIBYTE(0x0603), LOBYTE(0x0603), 0)  // _WIN32_WINNT_WINBLUE
+#define _IsWindows10OrGreater() \
+    _IsWindowsVersionOrGreater(HIBYTE(0x0A00), LOBYTE(0x0A00), 0)  // _WIN32_WINNT_WINTHRESHOLD / _WIN32_WINNT_WIN10
+
+// Helper function to enable DPI awareness without setting up a manifest
+static void EnableDpiAwareness()
+{
+    if (_IsWindows10OrGreater())
+    {
+        static HINSTANCE user32_dll = ::LoadLibraryA("user32.dll");  // Reference counted per-process
+        if (PFN_SetThreadDpiAwarenessContext SetThreadDpiAwarenessContextFn =
+                (PFN_SetThreadDpiAwarenessContext)::GetProcAddress(user32_dll, "SetThreadDpiAwarenessContext"))
+        {
+            SetThreadDpiAwarenessContextFn(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+            return;
+        }
+    }
+    if (_IsWindows8Point1OrGreater())
+    {
+        static HINSTANCE shcore_dll = ::LoadLibraryA("shcore.dll");  // Reference counted per-process
+        if (PFN_SetProcessDpiAwareness SetProcessDpiAwarenessFn =
+                (PFN_SetProcessDpiAwareness)::GetProcAddress(shcore_dll, "SetProcessDpiAwareness"))
+        {
+            SetProcessDpiAwarenessFn(PROCESS_PER_MONITOR_DPI_AWARE);
+            return;
+        }
+    }
+#if _WIN32_WINNT >= 0x0600
+    ::SetProcessDPIAware();
+#endif
+}
+
+static float GetDpiForMonitor(HMONITOR monitor)
+{
+    UINT xdpi = 96, ydpi = 96;
+    if (_IsWindows8Point1OrGreater())
+    {
+        static HINSTANCE            shcore_dll         = ::LoadLibraryA("shcore.dll");  // Reference counted per-process
+        static PFN_GetDpiForMonitor GetDpiForMonitorFn = nullptr;
+        if (GetDpiForMonitorFn == nullptr && shcore_dll != nullptr)
+            GetDpiForMonitorFn = (PFN_GetDpiForMonitor)::GetProcAddress(shcore_dll, "GetDpiForMonitor");
+        if (GetDpiForMonitorFn != nullptr)
+        {
+            GetDpiForMonitorFn(monitor, MDT_EFFECTIVE_DPI, &xdpi, &ydpi);
+            return (float)xdpi;
+        }
+    }
+
+    const HDC dc = ::GetDC(nullptr);
+    xdpi         = ::GetDeviceCaps(dc, LOGPIXELSX);
+    ydpi         = ::GetDeviceCaps(dc, LOGPIXELSY);
+    ::ReleaseDC(nullptr, dc);
+    return (float)xdpi;
+}
+
+static float GetDpiForHwnd(HWND hwnd)
+{
+    HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+    return GetDpiForMonitor(monitor);
 }
 
 }  // namespace kiwano

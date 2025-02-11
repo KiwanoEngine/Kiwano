@@ -145,30 +145,33 @@ public:
 
     /**
      * \~chinese
-     * @brief 获取窗口大小
-     * @return 窗口大小
+     * @brief 获取窗口逻辑大小
      */
-    Size GetSize() const;
+    Size GetLogicalSize() const;
 
     /**
      * \~chinese
-     * @brief 获取窗口宽度
-     * @return 窗口宽度
+     * @brief 获取窗口实际宽度
      */
-    uint32_t GetWidth() const;
+    uint32_t GetRealWidth() const;
 
     /**
      * \~chinese
-     * @brief 获取窗口高度
-     * @return 窗口高度
+     * @brief 获取窗口实际高度
      */
-    uint32_t GetHeight() const;
+    uint32_t GetRealHeight() const;
 
     /**
      * \~chinese
      * @brief 获取 DPI
      */
     float GetDPI() const;
+
+    /**
+     * \~chinese
+     * @brief 获取 DPI 缩放系数
+     */
+    float GetDPIScale() const;
 
     /**
      * \~chinese
@@ -282,13 +285,14 @@ protected:
     bool                      is_fullscreen_;
     int                       pos_x_;
     int                       pos_y_;
-    uint32_t                  width_;
-    uint32_t                  height_;
+    uint32_t                  real_width_;
+    uint32_t                  real_height_;
     uint32_t                  min_width_;
     uint32_t                  min_height_;
     uint32_t                  max_width_;
     uint32_t                  max_height_;
     float                     dpi_;
+    Size                      logical_size_;
     Resolution                resolution_;
     WindowHandle              handle_;
     String                    title_;

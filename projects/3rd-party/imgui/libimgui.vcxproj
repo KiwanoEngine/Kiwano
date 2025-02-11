@@ -4,7 +4,6 @@
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imconfig.h" />
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imgui.h" />
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imgui_internal.h" />
-    <ClInclude Include="..\..\..\src\3rd-party\imgui\imgui_stdlib.h" />
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imstb_truetype.h" />
@@ -12,7 +11,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui.cpp" />
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_widgets.cpp" />
   </ItemGroup>

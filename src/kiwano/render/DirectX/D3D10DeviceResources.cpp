@@ -127,9 +127,9 @@ ComPtr<ID3D10DeviceResources> GetD3D10DeviceResources()
 D3D10DeviceResources::D3D10DeviceResources()
     : ref_count_(0)
     , hwnd_(nullptr)
+    , dpi_(96.f)  // GetDpiForWindow(hwnd)
     , desired_color_format_(DXGI_FORMAT_B8G8R8A8_UNORM)
 {
-    dpi_ = 96.f;  // dpi_ = (float)GetDpiForWindow(hwnd);
 }
 
 D3D10DeviceResources::~D3D10DeviceResources()

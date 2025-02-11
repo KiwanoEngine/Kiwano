@@ -57,8 +57,8 @@ public:
 class KGE_API WindowResizedEvent : public WindowEvent
 {
 public:
-    uint32_t width;   ///< 窗口宽度
-    uint32_t height;  ///< 窗口高度
+    uint32_t real_width;   ///< 窗口实际宽度
+    uint32_t real_height;  ///< 窗口实际高度
 
     WindowResizedEvent();
 };

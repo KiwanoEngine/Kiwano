@@ -103,13 +103,14 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
         auto d3d_res = graphics::directx::GetD3DDeviceResources();
 
         hr = d3d_res->Initialize(target_window, output_size_);
-        if (FAILED(hr))
+        if (SUCCEEDED(hr))
         {
-            d3d_res->DiscardResources();
+            d3d_res->SetDpi(window->GetDPI());
+            d3d_res_ = d3d_res;
         }
         else
         {
-            d3d_res_ = d3d_res;
+            d3d_res->DiscardResources();
         }
     }
 

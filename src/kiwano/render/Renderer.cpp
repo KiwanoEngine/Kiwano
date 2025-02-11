@@ -58,7 +58,8 @@ void Renderer::HandleEvent(EventModuleContext& ctx)
         auto evt = ctx.evt->Cast<WindowResizedEvent>();
         if (evt)
         {
-            Resize(evt->width, evt->height);
+            auto size = evt->window->GetLogicalSize();
+            Resize((uint32_t)size.x, (uint32_t)size.y);
         }
     }
 }

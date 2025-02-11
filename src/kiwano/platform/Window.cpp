@@ -29,8 +29,8 @@ Window::Window()
     , is_fullscreen_(false)
     , pos_x_(0)
     , pos_y_(0)
-    , width_(0)
-    , height_(0)
+    , real_width_(0)
+    , real_height_(0)
     , min_width_(0)
     , min_height_(0)
     , max_width_(0)
@@ -66,24 +66,29 @@ int Window::GetPosY() const
     return pos_y_;
 }
 
-Size Window::GetSize() const
+Size Window::GetLogicalSize() const
 {
-    return Size(float(width_), float(height_));
+    return logical_size_;
 }
 
-uint32_t Window::GetWidth() const
+uint32_t Window::GetRealWidth() const
 {
-    return width_;
+    return real_width_;
 }
 
-uint32_t Window::GetHeight() const
+uint32_t Window::GetRealHeight() const
 {
-    return height_;
+    return real_height_;
 }
 
 float Window::GetDPI() const
 {
     return dpi_;
+}
+
+float Window::GetDPIScale() const
+{
+    return dpi_ / 96.f;
 }
 
 Resolution Window::GetCurrentResolution() const

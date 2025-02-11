@@ -27,9 +27,6 @@
     <ClInclude Include="..\..\..\src\3rd-party\imgui\imstb_truetype.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\3rd-party\imgui\imgui_stdlib.h">
-      <Filter>include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui.cpp">
@@ -42,9 +39,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_tables.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\3rd-party\imgui\imgui_stdlib.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
