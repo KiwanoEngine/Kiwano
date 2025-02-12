@@ -48,10 +48,10 @@ for:
     matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    # - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     global:
-      job_to_deploy: 16 # 4(images) * 1(platform) * 4(configuration)
+      job_to_deploy: 8 # 2(images) * 1(platform) * 4(configuration)
 -
   branches:
     except:
