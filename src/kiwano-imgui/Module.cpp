@@ -198,8 +198,9 @@ void Module::BeforeRender(RenderModuleContext& ctx)
     ImGuiIO& io = ImGui::GetIO();
 
     // Setup display size (every frame to accommodate for window resizing)
-    Size display_size = Renderer::GetInstance().GetOutputSize();
-    io.DisplaySize    = ImVec2(display_size.x, display_size.y);
+    float scale        = window_->GetDPIScale();
+    Size  display_size = Renderer::GetInstance().GetOutputSize();
+    io.DisplaySize     = ImVec2(display_size.x * scale, display_size.y * scale);
 
     ImGui::NewFrame();
 }
@@ -222,8 +223,9 @@ void Module::HandleEvent(EventModuleContext& ctx)
         {
             if (evt->IsType<MouseMoveEvent>())
             {
-                const auto& pos = dynamic_cast<MouseMoveEvent*>(evt)->pos;
-                io.AddMousePosEvent(pos.x, pos.y);
+                float       scale = window_->GetDPIScale();
+                const auto& pos   = dynamic_cast<MouseMoveEvent*>(evt)->pos;
+                io.AddMousePosEvent(pos.x * scale, pos.y * scale);
             }
             else if (evt->IsType<MouseDownEvent>())
             {
