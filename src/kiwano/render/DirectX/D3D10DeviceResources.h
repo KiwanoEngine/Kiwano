@@ -80,7 +80,7 @@ protected:
     ComPtr<IDXGISwapChain>         dxgi_swap_chain_;
 };
 
-extern ComPtr<ID3D10DeviceResources> GetD3D11DeviceResources();
+extern ComPtr<ID3D10DeviceResources> GetD3D10DeviceResources();
 
 }  // namespace directx
 }  // namespace graphics
