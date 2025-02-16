@@ -32,7 +32,7 @@ MIDL_INTERFACE("fb99fa64-d9cf-4e0e-9c75-90514797b01d")
 ID3DDeviceResourcesBase : public IUnknown
 {
 public:
-    virtual HRESULT Initialize(HWND hwnd, Size logical_size) = 0;
+    virtual HRESULT Initialize(HWND hwnd, Size logical_size, float dpi) = 0;
 
     virtual HRESULT Present(bool vsync) = 0;
 
@@ -41,8 +41,6 @@ public:
     virtual HRESULT HandleDeviceLost() = 0;
 
     virtual HRESULT SetLogicalSize(Size logical_size) = 0;
-
-    virtual HRESULT SetDpi(float dpi) = 0;
 
     virtual HRESULT SetFullscreenState(bool fullscreen) = 0;
 

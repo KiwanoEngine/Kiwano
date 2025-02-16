@@ -18,49 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/BitmapCache.h>
 
 namespace kiwano
 {
 
-TextureCache::TextureCache() {}
+BitmapCache::BitmapCache() {}
 
-TextureCache::~TextureCache()
+BitmapCache::~BitmapCache()
 {
     Clear();
 }
 
-RefPtr<Texture> TextureCache::Preload(StringView file_path)
+RefPtr<Bitmap> BitmapCache::Preload(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
-    if (RefPtr<Texture> ptr = this->GetTexture(hash_code))
+    if (RefPtr<Bitmap> ptr = this->GetBitmap(hash_code))
     {
         return ptr;
     }
-    RefPtr<Texture> ptr = MakePtr<Texture>();
+    RefPtr<Bitmap> ptr = MakePtr<Bitmap>();
     if (ptr && ptr->Load(file_path))
     {
-        this->AddTexture(hash_code, ptr);
+        this->AddBitmap(hash_code, ptr);
     }
     return ptr;
 }
 
-RefPtr<Texture> TextureCache::Preload(const Resource& res)
+RefPtr<Bitmap> BitmapCache::Preload(const Resource& res)
 {
     size_t hash_code = res.GetId();
-    if (RefPtr<Texture> ptr = this->GetTexture(hash_code))
+    if (RefPtr<Bitmap> ptr = this->GetBitmap(hash_code))
     {
         return ptr;
     }
-    RefPtr<Texture> ptr = MakePtr<Texture>();
+    RefPtr<Bitmap> ptr = MakePtr<Bitmap>();
     if (ptr && ptr->Load(res))
     {
-        this->AddTexture(hash_code, ptr);
+        this->AddBitmap(hash_code, ptr);
     }
     return ptr;
 }
 
-RefPtr<GifImage> TextureCache::PreloadGif(StringView file_path)
+RefPtr<GifImage> BitmapCache::PreloadGif(StringView file_path)
 {
     size_t hash_code = std::hash<String>{}(file_path);
     if (RefPtr<GifImage> ptr = this->GetGifImage(hash_code))
@@ -75,7 +75,7 @@ RefPtr<GifImage> TextureCache::PreloadGif(StringView file_path)
     return ptr;
 }
 
-RefPtr<GifImage> TextureCache::PreloadGif(const Resource& res)
+RefPtr<GifImage> BitmapCache::PreloadGif(const Resource& res)
 {
     size_t hash_code = res.GetId();
     if (RefPtr<GifImage> ptr = this->GetGifImage(hash_code))
@@ -90,48 +90,48 @@ RefPtr<GifImage> TextureCache::PreloadGif(const Resource& res)
     return ptr;
 }
 
-void TextureCache::AddTexture(size_t key, RefPtr<Texture> texture)
+void BitmapCache::AddBitmap(size_t key, RefPtr<Bitmap> Bitmap)
 {
-    texture_cache_[key] = texture;
+    Bitmap_cache_[key] = Bitmap;
 }
 
-void TextureCache::AddGifImage(size_t key, RefPtr<GifImage> gif)
+void BitmapCache::AddGifImage(size_t key, RefPtr<GifImage> gif)
 {
-    gif_texture_cache_[key] = gif;
+    gif_Bitmap_cache_[key] = gif;
 }
 
-RefPtr<Texture> TextureCache::GetTexture(size_t key) const
+RefPtr<Bitmap> BitmapCache::GetBitmap(size_t key) const
 {
-    if (texture_cache_.count(key))
+    if (Bitmap_cache_.count(key))
     {
-        return texture_cache_.at(key);
+        return Bitmap_cache_.at(key);
     }
-    return RefPtr<Texture>();
+    return RefPtr<Bitmap>();
 }
 
-RefPtr<GifImage> TextureCache::GetGifImage(size_t key) const
+RefPtr<GifImage> BitmapCache::GetGifImage(size_t key) const
 {
-    if (gif_texture_cache_.count(key))
+    if (gif_Bitmap_cache_.count(key))
     {
-        return gif_texture_cache_.at(key);
+        return gif_Bitmap_cache_.at(key);
     }
     return RefPtr<GifImage>();
 }
 
-void TextureCache::RemoveTexture(size_t key)
+void BitmapCache::RemoveBitmap(size_t key)
 {
-    texture_cache_.erase(key);
+    Bitmap_cache_.erase(key);
 }
 
-void TextureCache::RemoveGifImage(size_t key)
+void BitmapCache::RemoveGifImage(size_t key)
 {
-    gif_texture_cache_.erase(key);
+    gif_Bitmap_cache_.erase(key);
 }
 
-void TextureCache::Clear()
+void BitmapCache::Clear()
 {
-    texture_cache_.clear();
-    gif_texture_cache_.clear();
+    Bitmap_cache_.clear();
+    gif_Bitmap_cache_.clear();
 }
 
 }  // namespace kiwano

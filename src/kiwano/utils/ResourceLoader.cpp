@@ -183,7 +183,7 @@ struct GlobalData
     String path;
 };
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView type, StringView file)
+void LoadBitmapsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView type, StringView file)
 {
     if (type == "gif")
     {
@@ -198,10 +198,10 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     else if (!file.empty())
     {
         // Simple image
-        RefPtr<Texture> texture = MakePtr<Texture>();
-        if (texture && texture->Load(gdata->path + file.data()))
+        RefPtr<Bitmap> bitmap = MakePtr<Bitmap>();
+        if (bitmap && bitmap->Load(gdata->path + file.data()))
         {
-            cache->AddObject(id, texture);
+            cache->AddObject(id, bitmap);
             return;
         }
     }
@@ -209,7 +209,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, const Vector<String>& files)
+void LoadBitmapsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, const Vector<String>& files)
 {
     if (files.empty())
         return;
@@ -239,7 +239,7 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
     cache->Fail(strings::Format("%s failed", __FUNCTION__));
 }
 
-void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file, int rows, int cols,
+void LoadBitmapsFromData(ResourceCache* cache, GlobalData* gdata, StringView id, StringView file, int rows, int cols,
                           int max_num, float padding_x, float padding_y)
 {
     if (!file.empty())
@@ -262,10 +262,10 @@ void LoadTexturesFromData(ResourceCache* cache, GlobalData* gdata, StringView id
         else
         {
             // Simple image
-            RefPtr<Texture> texture = MakePtr<Texture>();
-            if (texture && texture->Load(gdata->path + file.data()))
+            RefPtr<Bitmap> bitmap = MakePtr<Bitmap>();
+            if (bitmap && bitmap->Load(gdata->path + file.data()))
             {
-                cache->AddObject(id, texture);
+                cache->AddObject(id, bitmap);
                 return;
             }
         }
@@ -328,7 +328,7 @@ void LoadJsonData(ResourceCache* cache, const Json& json_data)
                 if (image.count("padding-y"))
                     padding_y = image["padding-y"].get<float>();
 
-                LoadTexturesFromData(cache, &global_data, id, file, rows, cols, max_num, padding_x, padding_y);
+                LoadBitmapsFromData(cache, &global_data, id, file, rows, cols, max_num, padding_x, padding_y);
             }
 
             if (image.count("files"))
@@ -339,11 +339,11 @@ void LoadJsonData(ResourceCache* cache, const Json& json_data)
                 {
                     files.push_back(file.get<String>());
                 }
-                LoadTexturesFromData(cache, &global_data, id, files);
+                LoadBitmapsFromData(cache, &global_data, id, files);
             }
             else
             {
-                LoadTexturesFromData(cache, &global_data, id, type, file);
+                LoadBitmapsFromData(cache, &global_data, id, type, file);
             }
         }
     }
@@ -406,7 +406,7 @@ void LoadXmlData(ResourceCache* cache, const XmlNode& elem)
                 if (auto attr = image.attribute("padding-y"))
                     padding_y = attr.as_float(0.0f);
 
-                LoadTexturesFromData(cache, &global_data, id, file, rows, cols, max_num, padding_x, padding_y);
+                LoadBitmapsFromData(cache, &global_data, id, file, rows, cols, max_num, padding_x, padding_y);
             }
 
             if (file.empty() && !image.empty())
@@ -419,11 +419,11 @@ void LoadXmlData(ResourceCache* cache, const XmlNode& elem)
                         files_arr.push_back(path.value());
                     }
                 }
-                LoadTexturesFromData(cache, &global_data, id, files_arr);
+                LoadBitmapsFromData(cache, &global_data, id, files_arr);
             }
             else
             {
-                LoadTexturesFromData(cache, &global_data, id, type, file);
+                LoadBitmapsFromData(cache, &global_data, id, type, file);
             }
         }
     }

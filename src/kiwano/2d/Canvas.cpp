@@ -19,13 +19,18 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/Canvas.h>
+#include <kiwano/render/Renderer.h>
 #include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
-Canvas::Canvas() {}
+Canvas::Canvas()
+    : cmd_list_mode_(false)
+{
+}
 
-Canvas::Canvas(const PixelSize& size)
+Canvas::Canvas(const Size& size)
+    : cmd_list_mode_(false)
 {
     ResizeAndClear(size);
 }
@@ -36,10 +41,19 @@ RefPtr<CanvasRenderContext> Canvas::GetContext2D() const
     return ctx;
 }
 
-void Canvas::ResizeAndClear(const PixelSize& size)
+void Canvas::ResizeAndClear(const Size& size)
 {
-    texture_cached_ = MakePtr<Texture>();
-    render_ctx_     = RenderContext::Create(texture_cached_, size);
+    cached_bitmap_ = MakePtr<Bitmap>();
+
+    if (cmd_list_mode_)
+    {
+        render_ctx_ = Renderer::GetInstance().CreateContextForCommandList(cached_bitmap_);
+    }
+    else
+    {
+        render_ctx_ = Renderer::GetInstance().CreateContextForBitmap(cached_bitmap_, size);
+    }
+
     if (render_ctx_)
     {
         SetSize(render_ctx_->GetSize());
@@ -50,11 +64,27 @@ void Canvas::ResizeAndClear(const PixelSize& size)
     }
 }
 
+void Canvas::EnableCommandListMode(bool enable)
+{
+    if (cmd_list_mode_ != enable)
+    {
+        cmd_list_mode_ = enable;
+        ResizeAndClear(GetSize());
+    }
+}
+
 void Canvas::OnRender(RenderContext& ctx)
 {
-    if (texture_cached_)
+    if (cached_bitmap_)
     {
-        ctx.DrawTexture(*texture_cached_, nullptr, &GetBounds());
+        if (cmd_list_mode_)
+        {
+            ctx.DrawCommandList(*cached_bitmap_);
+        }
+        else
+        {
+            ctx.DrawBitmap(*cached_bitmap_, nullptr, &GetBounds());
+        }
     }
 }
 

@@ -23,8 +23,8 @@
 #include <kiwano/render/Brush.h>
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/Layer.h>
+#include <kiwano/render/Bitmap.h>
 #include <kiwano/render/TextLayout.h>
-#include <kiwano/render/Texture.h>
 
 namespace kiwano
 {
@@ -62,12 +62,6 @@ class KGE_API RenderContext : public NativeObject
 {
 public:
     /// \~chinese
-    /// @brief 创建纹理渲染上下文，将绘制结果输出到纹理中
-    /// @param texture 保存绘制结果的纹理
-    /// @param size 渲染输出大小
-    static RefPtr<RenderContext> Create(RefPtr<Texture> texture, const PixelSize& size);
-
-    /// \~chinese
     /// @brief 开始渲染
     virtual void BeginDraw();
 
@@ -76,18 +70,23 @@ public:
     virtual void EndDraw();
 
     /// \~chinese
-    /// @brief 创建空纹理
-    /// @param[out] texture 输出纹理
-    /// @param[in] size 纹理像素大小
-    virtual void CreateTexture(Texture& texture, const PixelSize& size) = 0;
+    /// @brief 创建空位图
+    /// @param[out] bitmap 输出位图
+    /// @param[in] size 位图像素大小
+    virtual void CreateBitmap(Bitmap& bitmap, const PixelSize& size) = 0;
 
     /// \~chinese
-    /// @brief 绘制纹理
-    /// @param texture 纹理
-    /// @param src_rect 源纹理裁剪矩形
+    /// @brief 绘制位图
+    /// @param bitmap 位图
+    /// @param src_rect 源位图裁剪矩形
     /// @param dest_rect 绘制的目标区域
-    virtual void DrawTexture(const Texture& texture, const Rect* src_rect = nullptr,
+    virtual void DrawBitmap(const Bitmap& bitmap, const Rect* src_rect = nullptr,
                              const Rect* dest_rect = nullptr) = 0;
+
+    /// \~chinese
+    /// @brief 绘制命令集
+    /// @param cmd_list 命令集
+    virtual void DrawCommandList(const Image& cmd_list) = 0;
 
     /// \~chinese
     /// @brief 绘制文本布局
@@ -239,7 +238,9 @@ public:
 
     /// \~chinese
     /// @brief 获取渲染目标
-    virtual RefPtr<Texture> GetTarget() const = 0;
+    virtual RefPtr<Image> GetTarget() const = 0;
+
+    virtual void SetTarget(const Image& target) = 0;
 
 public:
     /// \~chinese

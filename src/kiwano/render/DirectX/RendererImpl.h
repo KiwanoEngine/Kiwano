@@ -31,11 +31,11 @@ class KGE_API RendererImpl : public Renderer
 public:
     static RendererImpl& GetInstance();
 
-    void CreateTexture(Texture& texture, StringView file_path) override;
+    void CreateBitmap(Bitmap& bitmap, StringView file_path) override;
 
-    void CreateTexture(Texture& texture, const BinaryData& data) override;
+    void CreateBitmap(Bitmap& bitmap, const BinaryData& data) override;
 
-    void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format) override;
+    void CreateBitmap(Bitmap& bitmap, const PixelSize& size, const BinaryData& data, PixelFormat format) override;
 
     void CreateGifImage(GifImage& gif, StringView file_path) override;
 
@@ -67,11 +67,15 @@ public:
 
     void CreateBrush(Brush& brush, const RadialGradientStyle& style) override;
 
-    void CreateBrush(Brush& brush, RefPtr<Texture> texture) override;
+    void CreateBrush(Brush& brush, RefPtr<Image> image, const Rect& src_rect) override;
 
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
-    RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size) override;
+    RefPtr<RenderContext> CreateContextForBitmap(RefPtr<Bitmap> bitmap, const Size& desired_size) override;
+
+    RefPtr<RenderContext> CreateContextForBitmapInPixels(RefPtr<Bitmap> bitmap, const PixelSize& desired_size) override;
+
+    RefPtr<RenderContext> CreateContextForCommandList(RefPtr<Image> cmd_list) override;
 
 public:
     void Clear() override;

@@ -52,8 +52,8 @@ void FrameSequence::AddFrames(const Vector<SpriteFrame>& frames)
     else
     {
         frames_.reserve(frames_.size() + frames.size());
-        for (const auto& texture : frames)
-            AddFrame(texture);
+        for (const auto& frame : frames)
+            AddFrame(frame);
     }
 }
 

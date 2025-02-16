@@ -68,7 +68,7 @@ inline bool SdkLayersAvailable()
 struct D3D10DeviceResources : public ID3D10DeviceResources
 {
 public:
-    HRESULT Initialize(HWND hwnd, Size logical_size) override;
+    HRESULT Initialize(HWND hwnd, Size logical_size, float dpi) override;
 
     HRESULT Present(bool vsync) override;
 
@@ -77,8 +77,6 @@ public:
     HRESULT HandleDeviceLost() override;
 
     HRESULT SetLogicalSize(Size logical_size) override;
-
-    HRESULT SetDpi(float dpi) override;
 
     HRESULT SetFullscreenState(bool fullscreen) override;
 
@@ -107,12 +105,12 @@ public:
     HRESULT CreateWindowSizeDependentResources();
 
 public:
-    HWND          hwnd_;
-    float         dpi_;
-    Size          logical_size_;
-    Size          output_size_;
-    unsigned long ref_count_;
-    DXGI_FORMAT   desired_color_format_;
+    unsigned long     ref_count_;
+    HWND              hwnd_;
+    DXGI_FORMAT       desired_color_format_;
+    float             dpi_;
+    Size              dip_size_;
+    math::Vec2T<UINT> output_size_;
 };
 
 ComPtr<ID3D10DeviceResources> GetD3D10DeviceResources()
@@ -137,10 +135,11 @@ D3D10DeviceResources::~D3D10DeviceResources()
     DiscardResources();
 }
 
-HRESULT D3D10DeviceResources::Initialize(HWND hwnd, Size logical_size)
+HRESULT D3D10DeviceResources::Initialize(HWND hwnd, Size logical_size, float dpi)
 {
-    this->hwnd_         = hwnd;
-    this->logical_size_ = logical_size;
+    this->hwnd_     = hwnd;
+    this->dpi_      = dpi;
+    this->dip_size_ = logical_size;
 
     HRESULT hr = this->CreateDeviceResources();
 
@@ -246,8 +245,8 @@ HRESULT D3D10DeviceResources::CreateDeviceResources()
         DXGI_SWAP_CHAIN_DESC swap_chain_desc = { 0 };
 
         swap_chain_desc.BufferCount                        = 2;
-        swap_chain_desc.BufferDesc.Width                   = ::lround(output_size_.x);
-        swap_chain_desc.BufferDesc.Height                  = ::lround(output_size_.y);
+        swap_chain_desc.BufferDesc.Width                   = (UINT)output_size_.x;
+        swap_chain_desc.BufferDesc.Height                  = (UINT)output_size_.y;
         swap_chain_desc.BufferDesc.Format                  = desired_color_format_;
         swap_chain_desc.BufferDesc.RefreshRate.Numerator   = 60;
         swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
@@ -281,15 +280,10 @@ HRESULT D3D10DeviceResources::CreateWindowSizeDependentResources()
     device_->Flush();
 
     // Calculate the necessary render target size in pixels.
-    output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
-    output_size_.y = DX::ConvertDipsToPixels(logical_size_.y, dpi_);
+    output_size_.x = (UINT)::lround(DX::ConvertDipsToPixels(dip_size_.x, dpi_));
+    output_size_.y = (UINT)::lround(DX::ConvertDipsToPixels(dip_size_.y, dpi_));
 
-    // Prevent zero size DirectX content from being created.
-    output_size_.x = std::max(output_size_.x, 1.f);
-    output_size_.y = std::max(output_size_.y, 1.f);
-
-    hr = dxgi_swap_chain_->ResizeBuffers(2,  // Double-buffered swap chain.
-                                         ::lround(output_size_.x), ::lround(output_size_.y), DXGI_FORMAT_UNKNOWN, 0);
+    hr = dxgi_swap_chain_->ResizeBuffers(2, output_size_.x, output_size_.y, DXGI_FORMAT_UNKNOWN, NULL);
 
     if (SUCCEEDED(hr))
     {
@@ -319,8 +313,8 @@ HRESULT D3D10DeviceResources::CreateWindowSizeDependentResources()
         tex_desc.BindFlags          = D3D10_BIND_DEPTH_STENCIL;
         tex_desc.CPUAccessFlags     = 0;
         tex_desc.Format             = DXGI_FORMAT_D16_UNORM;
-        tex_desc.Width              = static_cast<uint32_t>(output_size_.x);
-        tex_desc.Height             = static_cast<uint32_t>(output_size_.y);
+        tex_desc.Width              = output_size_.x;
+        tex_desc.Height             = output_size_.y;
         tex_desc.MipLevels          = 1;
         tex_desc.MiscFlags          = 0;
         tex_desc.SampleDesc.Count   = 1;
@@ -351,8 +345,8 @@ HRESULT D3D10DeviceResources::CreateWindowSizeDependentResources()
     {
         // Set a new viewport based on the new dimensions
         D3D10_VIEWPORT viewport;
-        viewport.Width    = static_cast<uint32_t>(output_size_.x);
-        viewport.Height   = static_cast<uint32_t>(output_size_.y);
+        viewport.Width    = output_size_.x;
+        viewport.Height   = output_size_.y;
         viewport.TopLeftX = 0;
         viewport.TopLeftY = 0;
         viewport.MinDepth = 0;
@@ -378,26 +372,9 @@ HRESULT D3D10DeviceResources::HandleDeviceLost()
 
 HRESULT D3D10DeviceResources::SetLogicalSize(Size logical_size)
 {
-    if (logical_size_ != logical_size)
+    if (dip_size_ != logical_size)
     {
-        logical_size_ = logical_size;
-
-        return CreateWindowSizeDependentResources();
-    }
-    return S_OK;
-}
-
-HRESULT D3D10DeviceResources::SetDpi(float dpi)
-{
-    if (dpi != dpi_)
-    {
-        dpi_ = dpi;
-
-        RECT rc;
-        GetClientRect(hwnd_, &rc);
-
-        logical_size_.x = float(rc.right - rc.left);
-        logical_size_.y = float(rc.bottom - rc.top);
+        dip_size_ = logical_size;
 
         return CreateWindowSizeDependentResources();
     }

@@ -153,7 +153,7 @@ protected:
 
     bool CheckVisibility(RenderContext& ctx) const override;
 
-    void UpdateCachedTexture();
+    void UpdateCachedBitmap();
 
     /// \~chinese
     /// @brief 设置预渲染模式，在描边等情况下会有更好的性能
@@ -167,7 +167,7 @@ private:
     RefPtr<Brush>         fill_brush_;
     RefPtr<Brush>         outline_brush_;
     RefPtr<StrokeStyle>   outline_stroke_;
-    RefPtr<Texture>       texture_cached_;
+    RefPtr<Bitmap>        cached_bitmap_;
     RefPtr<RenderContext> render_ctx_;
 };
 

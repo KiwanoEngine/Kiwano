@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 #pragma once
+#include <kiwano/render/Bitmap.h>
 #include <kiwano/render/GifImage.h>
-#include <kiwano/render/Texture.h>
 
 namespace kiwano
 {
@@ -31,18 +31,18 @@ namespace kiwano
 
 /**
  * \~chinese
- * @brief Œ∆¿Ìª∫¥Ê
+ * @brief ŒªÕºª∫¥Ê
  */
-class KGE_API TextureCache final
+class KGE_API BitmapCache final
 {
 public:
     /// \~chinese
     /// @brief ‘§º”‘ÿ±æµÿÕº∆¨
-    RefPtr<Texture> Preload(StringView file_path);
+    RefPtr<Bitmap> Preload(StringView file_path);
 
     /// \~chinese
     /// @brief ‘§º”‘ÿÕº∆¨◊ ‘¥
-    RefPtr<Texture> Preload(const Resource& res);
+    RefPtr<Bitmap> Preload(const Resource& res);
 
     /// \~chinese
     /// @brief ‘§º”‘ÿ±æµÿGIFÕº∆¨
@@ -53,24 +53,24 @@ public:
     RefPtr<GifImage> PreloadGif(const Resource& res);
 
     /// \~chinese
-    /// @brief ÃÌº”Œ∆¿Ìª∫¥Ê
-    void AddTexture(size_t key, RefPtr<Texture> texture);
+    /// @brief ÃÌº”ŒªÕºª∫¥Ê
+    void AddBitmap(size_t key, RefPtr<Bitmap> Bitmap);
 
     /// \~chinese
     /// @brief ÃÌº”GIFÕºœÒª∫¥Ê
     void AddGifImage(size_t key, RefPtr<GifImage> gif);
 
     /// \~chinese
-    /// @brief ªÒ»°Œ∆¿Ìª∫¥Ê
-    RefPtr<Texture> GetTexture(size_t key) const;
+    /// @brief ªÒ»°ŒªÕºª∫¥Ê
+    RefPtr<Bitmap> GetBitmap(size_t key) const;
 
     /// \~chinese
     /// @brief ªÒ»°GIFÕºœÒª∫¥Ê
     RefPtr<GifImage> GetGifImage(size_t key) const;
 
     /// \~chinese
-    /// @brief “∆≥˝Œ∆¿Ìª∫¥Ê
-    void RemoveTexture(size_t key);
+    /// @brief “∆≥˝ŒªÕºª∫¥Ê
+    void RemoveBitmap(size_t key);
 
     /// \~chinese
     /// @brief “∆≥˝GIFÕºœÒª∫¥Ê
@@ -80,17 +80,17 @@ public:
     /// @brief «Âø’ª∫¥Ê
     void Clear();
 
-    ~TextureCache();
+    ~BitmapCache();
 
 private:
-    TextureCache();
+    BitmapCache();
 
 private:
-    using TextureMap = UnorderedMap<size_t, RefPtr<Texture>>;
-    TextureMap texture_cache_;
+    using BitmapMap = UnorderedMap<size_t, RefPtr<Bitmap>>;
+    BitmapMap Bitmap_cache_;
 
     using GifImageMap = UnorderedMap<size_t, RefPtr<GifImage>>;
-    GifImageMap gif_texture_cache_;
+    GifImageMap gif_Bitmap_cache_;
 };
 
 /** @} */

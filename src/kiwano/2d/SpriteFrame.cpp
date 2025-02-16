@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/2d/SpriteFrame.h>
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/BitmapCache.h>
 
 namespace kiwano
 {
@@ -36,9 +36,9 @@ SpriteFrame::SpriteFrame(const Resource& res)
     Load(res);
 }
 
-SpriteFrame::SpriteFrame(RefPtr<Texture> texture)
+SpriteFrame::SpriteFrame(RefPtr<Bitmap> bitmap)
 {
-    SetTexture(texture);
+    SetBitmap(bitmap);
 }
 
 SpriteFrame::SpriteFrame(StringView file_path, const Rect& crop_rect)
@@ -53,18 +53,18 @@ SpriteFrame::SpriteFrame(const Resource& res, const Rect& crop_rect)
     SetCropRect(crop_rect);
 }
 
-SpriteFrame::SpriteFrame(RefPtr<Texture> texture, const Rect& crop_rect)
-    : SpriteFrame(texture)
+SpriteFrame::SpriteFrame(RefPtr<Bitmap> bitmap, const Rect& crop_rect)
+    : SpriteFrame(bitmap)
 {
     SetCropRect(crop_rect);
 }
 
 bool SpriteFrame::Load(StringView file_path)
 {
-    RefPtr<Texture> texture = new Texture(file_path);
-    if (texture->IsValid())
+    RefPtr<Bitmap> bitmap = new Bitmap(file_path);
+    if (bitmap->IsValid())
     {
-        SetTexture(texture);
+        SetBitmap(bitmap);
         return true;
     }
     return false;
@@ -72,10 +72,10 @@ bool SpriteFrame::Load(StringView file_path)
 
 bool SpriteFrame::Load(const Resource& res)
 {
-    RefPtr<Texture> texture = new Texture(res);
-    if (texture->IsValid())
+    RefPtr<Bitmap> bitmap = new Bitmap(res);
+    if (bitmap->IsValid())
     {
-        SetTexture(texture);
+        SetBitmap(bitmap);
         return true;
     }
     return false;
@@ -86,16 +86,16 @@ void SpriteFrame::SetCropRect(const Rect& crop_rect)
     crop_rect_ = crop_rect;
 }
 
-void SpriteFrame::SetTexture(RefPtr<Texture> texture)
+void SpriteFrame::SetBitmap(RefPtr<Bitmap> bitmap)
 {
-    texture_ = texture;
+    bitmap_ = bitmap;
 
-    Size texture_size;
-    if (texture_)
+    Size bitmap_size;
+    if (bitmap_)
     {
-        texture_size = texture_->GetSize();
+        bitmap_size = bitmap_->GetSize();
     }
-    SetCropRect(Rect(Point(), texture_size));
+    SetCropRect(Rect(Point(), bitmap_size));
 }
 
 Vector<SpriteFrame> SpriteFrame::Split(int cols, int rows, int max_num, float padding_x, float padding_y)
@@ -123,7 +123,7 @@ Vector<SpriteFrame> SpriteFrame::Split(int cols, int rows, int max_num, float pa
 
         for (int j = 0; j < cols; j++)
         {
-            frames.emplace_back(texture_, Rect{ dtx, dty, dtx + width, dty + height });
+            frames.emplace_back(bitmap_, Rect{ dtx, dty, dtx + width, dty + height });
             ++current_num;
 
             dtx += (width + padding_x);

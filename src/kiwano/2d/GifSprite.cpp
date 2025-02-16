@@ -21,7 +21,7 @@
 #include <kiwano/2d/GifSprite.h>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/render/Renderer.h>
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/BitmapCache.h>
 
 namespace kiwano
 {
@@ -78,8 +78,10 @@ bool GifSprite::Load(RefPtr<GifImage> gif)
         frame_to_render_.Reset();
         frame_rt_.Reset();
 
-        frame_to_render_ = MakePtr<Texture>();
-        frame_rt_        = RenderContext::Create(frame_to_render_, gif_->GetSizeInPixels());
+        frame_to_render_ = MakePtr<Bitmap>();
+        frame_rt_        = Renderer::GetInstance().CreateContextForBitmap(
+            frame_to_render_,
+            Size((float)gif_->GetWidthInPixels(), (float)gif_->GetHeightInPixels()) /* 将像素大小按 DIP 处理 */);
 
         if (frame_rt_)
         {
@@ -106,7 +108,7 @@ void GifSprite::OnRender(RenderContext& ctx)
 {
     if (frame_to_render_ && CheckVisibility(ctx))
     {
-        ctx.DrawTexture(*frame_to_render_, nullptr, &GetBounds());
+        ctx.DrawBitmap(*frame_to_render_, nullptr, &GetBounds());
     }
 }
 
@@ -197,9 +199,9 @@ void GifSprite::OverlayNextFrame()
             loop_count_++;
         }
 
-        if (frame_.texture)
+        if (frame_.bitmap)
         {
-            frame_rt_->DrawTexture(*frame_.texture, nullptr, &frame_.rect);
+            frame_rt_->DrawBitmap(*frame_.bitmap, nullptr, &frame_.rect);
         }
 
         frame_rt_->EndDraw();
@@ -225,8 +227,8 @@ void GifSprite::SaveComposedFrame()
 
     if (!saved_frame_)
     {
-        saved_frame_ = MakePtr<Texture>();
-        frame_rt_->CreateTexture(*saved_frame_, frame_to_render_->GetSizeInPixels());
+        saved_frame_ = MakePtr<Bitmap>();
+        frame_rt_->CreateBitmap(*saved_frame_, frame_to_render_->GetSizeInPixels());
     }
     saved_frame_->CopyFrom(frame_to_render_);
 }

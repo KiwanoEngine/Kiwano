@@ -35,6 +35,7 @@ Window::Window()
     , min_height_(0)
     , max_width_(0)
     , max_height_(0)
+    , dpi_(96.f)
 {
 }
 
@@ -101,7 +102,7 @@ WindowHandle Window::GetHandle() const
     return handle_;
 }
 
-bool Window::ShouldClose()
+bool Window::ShouldClose() const
 {
     return should_close_;
 }

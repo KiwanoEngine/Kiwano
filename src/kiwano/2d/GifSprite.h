@@ -158,8 +158,8 @@ private:
     DoneCallback          done_cb_;
     RefPtr<GifImage>      gif_;
     GifImage::Frame       frame_;
-    RefPtr<Texture>       saved_frame_;
-    RefPtr<Texture>       frame_to_render_;
+    RefPtr<Bitmap>        saved_frame_;
+    RefPtr<Bitmap>        frame_to_render_;
     RefPtr<RenderContext> frame_rt_;
 };
 

@@ -79,39 +79,39 @@ public:
     void ResetResolutionWhenWindowResized(bool enabled);
 
     /// \~chinese
-    /// @brief 创建纹理内部资源
-    /// @param[out] texture 纹理
+    /// @brief 创建位图
+    /// @param[out] bitmap 位图
     /// @param[in] file_path 图片路径
-    virtual void CreateTexture(Texture& texture, StringView file_path) = 0;
+    virtual void CreateBitmap(Bitmap& bitmap, StringView file_path) = 0;
 
     /// \~chinese
-    /// @brief 创建纹理内部资源
-    /// @param[out] texture 纹理
+    /// @brief 创建位图
+    /// @param[out] bitmap 位图
     /// @param[in] data 图片二进制数据
-    virtual void CreateTexture(Texture& texture, const BinaryData& data) = 0;
+    virtual void CreateBitmap(Bitmap& bitmap, const BinaryData& data) = 0;
 
     /// \~chinese
-    /// @brief 从内存加载位图纹理资源
-    /// @param[out] texture 纹理
+    /// @brief 从内存加载位图位图资源
+    /// @param[out] bitmap 位图
     /// @param[in] size 位图大小
     /// @param[in] data 位图二进制数据
     /// @param[in] format 像素格式
-    virtual void CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format) = 0;
+    virtual void CreateBitmap(Bitmap& bitmap, const PixelSize& size, const BinaryData& data, PixelFormat format) = 0;
 
     /// \~chinese
-    /// @brief 创建GIF图像内部资源
+    /// @brief 创建GIF图像
     /// @param[out] gif GIF图像
     /// @param[in] file_path 图片路径
     virtual void CreateGifImage(GifImage& gif, StringView file_path) = 0;
 
     /// \~chinese
-    /// @brief 创建GIF图像内部资源
+    /// @brief 创建GIF图像
     /// @param[out] gif GIF图像
     /// @param[in] data 图片二进制数据
     virtual void CreateGifImage(GifImage& gif, const BinaryData& data) = 0;
 
     /// \~chinese
-    /// @brief 创建GIF关键帧内部资源
+    /// @brief 创建GIF关键帧
     /// @param[out] frame GIF关键帧
     /// @param[in] gif GIF图像
     /// @param[in] frame_index 帧下标
@@ -134,70 +134,70 @@ public:
                                       const Vector<BinaryData>& datas) = 0;
 
     /// \~chinese
-    /// @brief 创建文字布局内部资源
+    /// @brief 创建文字布局
     /// @param[out] layout 字体布局
     /// @param text 文字内容
     /// @param style 文本样式
     virtual void CreateTextLayout(TextLayout& layout, StringView content, const TextStyle& style) = 0;
 
     /// \~chinese
-    /// @brief 创建线段形状内部资源
+    /// @brief 创建线段形状
     /// @param[out] shape 形状
     /// @param[in] begin_pos 线段起点
     /// @param[in] end_pos 线段终点
     virtual void CreateLineShape(Shape& shape, const Point& begin_pos, const Point& end_pos) = 0;
 
     /// \~chinese
-    /// @brief 创建矩形形状内部资源
+    /// @brief 创建矩形形状
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
     virtual void CreateRectShape(Shape& shape, const Rect& rect) = 0;
 
     /// \~chinese
-    /// @brief 创建圆角矩形形状内部资源
+    /// @brief 创建圆角矩形形状
     /// @param[out] shape 形状
     /// @param[in] rect 矩形大小
     /// @param[in] radius 圆角半径
     virtual void CreateRoundedRectShape(Shape& shape, const Rect& rect, const Vec2& radius) = 0;
 
     /// \~chinese
-    /// @brief 创建椭圆形状内部资源
+    /// @brief 创建椭圆形状
     /// @param[out] shape 形状
     /// @param[in] center 椭圆圆心
     /// @param[in] radius 椭圆半径
     virtual void CreateEllipseShape(Shape& shape, const Point& center, const Vec2& radius) = 0;
 
     /// \~chinese
-    /// @brief 创建几何图形生成器内部资源
+    /// @brief 创建几何图形生成器
     /// @param[out] maker 形状生成器
     virtual void CreateShapeSink(ShapeMaker& maker) = 0;
 
     /// \~chinese
-    /// @brief 创建纯色画刷内部资源
+    /// @brief 创建纯色画刷
     /// @param[out] brush 画刷
     /// @param[in] color 颜色
     virtual void CreateBrush(Brush& brush, const Color& color) = 0;
 
     /// \~chinese
-    /// @brief 创建线性渐变画刷内部资源
+    /// @brief 创建线性渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 线性渐变样式
     virtual void CreateBrush(Brush& brush, const LinearGradientStyle& style) = 0;
 
     /// \~chinese
-    /// @brief 创建径向渐变画刷内部资源
+    /// @brief 创建径向渐变画刷
     /// @param[out] brush 画刷
     /// @param[in] style 径向渐变样式
     virtual void CreateBrush(Brush& brush, const RadialGradientStyle& style) = 0;
 
     /// \~chinese
-    /// @brief 创建纹理画刷内部资源
+    /// @brief 创建图像画刷
     /// @param[out] brush 画刷
-    /// @param[in] texture 纹理
-    virtual void CreateBrush(Brush& brush, RefPtr<Texture> texture) = 0;
+    /// @param[in] image 图像
+    virtual void CreateBrush(Brush& brush, RefPtr<Image> image, const Rect& src_rect) = 0;
 
     /// \~chinese
-    /// @brief 创建线条样式内部资源
+    /// @brief 创建线条样式
     /// @param[out] stroke_style 线条样式
     /// @param[in] cap 线段端点样式
     /// @param[in] line_join 线段相交样式
@@ -207,12 +207,24 @@ public:
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
 
     /// \~chinese
-    /// @brief 创建纹理渲染上下文，将上下文的渲染输出到纹理中
-    /// @param[in,out] texture 渲染输出的纹理
-    /// @param[in] desired_size 期望的输出大小
-    /// @return 纹理渲染上下文
-    virtual RefPtr<RenderContext> CreateTextureRenderContext(RefPtr<Texture>  texture,
-                                                             const PixelSize& desired_size) = 0;
+    /// @brief 创建渲染上下文，将上下文的渲染输出到位图中
+    /// @param[in,out] bitmap 渲染输出的位图
+    /// @param[in] desired_size 期望的位图大小
+    /// @return 渲染上下文
+    virtual RefPtr<RenderContext> CreateContextForBitmap(RefPtr<Bitmap> bitmap, const Size& desired_size) = 0;
+
+    /// \~chinese
+    /// @brief 创建渲染上下文，将上下文的渲染输出到位图中
+    /// @param[in,out] bitmap 渲染输出的位图
+    /// @param[in] desired_size 期望的位图大小
+    /// @return 渲染上下文
+    virtual RefPtr<RenderContext> CreateContextForBitmapInPixels(RefPtr<Bitmap> bitmap, const PixelSize& desired_size) = 0;
+
+    /// \~chinese
+    /// @brief 创建渲染上下文，将上下文的渲染输出到命令集中
+    /// @param[in,out] cmd_list 渲染输出的命令集
+    /// @return 渲染上下文
+    virtual RefPtr<RenderContext> CreateContextForCommandList(RefPtr<Image> cmd_list) = 0;
 
 public:
     /// \~chinese
@@ -244,7 +256,7 @@ protected:
     bool                  vsync_;
     bool                  auto_reset_resolution_;
     Color                 clear_color_;
-    Size                  output_size_;
+    Size                  dip_size_;
     RefPtr<RenderContext> render_ctx_;
 };
 
@@ -257,7 +269,7 @@ inline RenderContext& Renderer::GetContext()
 
 inline Size Renderer::GetOutputSize() const
 {
-    return output_size_;
+    return dip_size_;
 }
 
 inline Color Renderer::GetClearColor() const

@@ -42,13 +42,16 @@ public:
 
     virtual ~D2DDeviceResources();
 
-    HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) override;
+    HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain,
+                       FLOAT dpi) override;
 
     HRESULT CreateDeviceIndependentResources();
 
     HRESULT CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain);
 
     HRESULT CreateWindowSizeDependentResources();
+
+    HRESULT CreateDeviceContext(_Out_ ComPtr<ID2D1DeviceContext>& device_ctx) override;
 
     HRESULT CreateBitmapConverter(_Out_ ComPtr<IWICFormatConverter>& converter,
                                   _In_opt_ ComPtr<IWICBitmapSource> source, _In_ REFWICPixelFormatGUID format,
@@ -84,7 +87,9 @@ public:
     HRESULT GetFontFamilyNames(_Out_ Vector<String>& family_names,
                                _In_ ComPtr<IDWriteFontCollection> font_collection) override;
 
-    HRESULT SetDpi(float dpi) override;
+    FLOAT GetDpi() const override;
+
+    HRESULT SetDpi(FLOAT dpi) override;
 
     HRESULT SetLogicalSize(float width, float height) override;
 
@@ -104,6 +109,7 @@ public:
 
 private:
     unsigned long ref_count_;
+    FLOAT         dpi_;
 
     ComPtr<IDXGISwapChain> dxgi_swap_chain_;
 
@@ -123,6 +129,7 @@ ComPtr<ID2DDeviceResources> GetD2DDeviceResources()
 
 D2DDeviceResources::D2DDeviceResources()
     : ref_count_(0)
+    , dpi_(96.f)
 {
 }
 
@@ -132,13 +139,18 @@ D2DDeviceResources::~D2DDeviceResources()
 }
 
 HRESULT D2DDeviceResources::Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device,
-                                       _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain)
+                                       _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain, FLOAT dpi)
 {
     HRESULT hr = this->CreateDeviceIndependentResources();
 
     if (SUCCEEDED(hr))
     {
         hr = this->CreateDeviceResources(dxgi_device, dxgi_swap_chain);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        SetDpi(dpi);
     }
     return hr;
 }
@@ -304,16 +316,10 @@ HRESULT D2DDeviceResources::CreateDeviceResources(_In_ ComPtr<IDXGIDevice> dxgi_
 
     if (SUCCEEDED(hr))
     {
-        ComPtr<ID2D1DeviceContext> device_ctx;
+        device_          = device;
+        dxgi_swap_chain_ = dxgi_swap_chain;
 
-        hr = device->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS, &device_ctx);
-
-        if (SUCCEEDED(hr))
-        {
-            device_          = device;
-            device_context_  = device_ctx;
-            dxgi_swap_chain_ = dxgi_swap_chain;
-        }
+        hr = CreateDeviceContext(device_context_);
     }
     return hr;
 }
@@ -328,18 +334,15 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
     ComPtr<IDXGISurface> dxgi_back_buffer;
 
     HRESULT hr = dxgi_swap_chain_->GetBuffer(0, IID_PPV_ARGS(&dxgi_back_buffer));
-
     if (SUCCEEDED(hr))
     {
-        FLOAT dpi_x = 0.f, dpi_y = 0.f;
-        device_context_->GetDpi(&dpi_x, &dpi_y);
+        FLOAT dpi = GetDpi();
 
         ComPtr<ID2D1Bitmap1> target;
         hr = device_context_->CreateBitmapFromDxgiSurface(
             dxgi_back_buffer.Get(),
             D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-                                    D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi_x,
-                                    dpi_y),
+                                    D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), dpi, dpi),
             &target);
 
         if (SUCCEEDED(hr))
@@ -350,11 +353,29 @@ HRESULT D2DDeviceResources::CreateWindowSizeDependentResources()
     return hr;
 }
 
-HRESULT D2DDeviceResources::SetDpi(float dpi)
+HRESULT D2DDeviceResources::CreateDeviceContext(_Out_ ComPtr<ID2D1DeviceContext>& device_ctx)
+{
+    HRESULT hr =
+        device_->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS, &device_ctx);
+    if (SUCCEEDED(hr))
+    {
+        FLOAT dpi = GetDpi();
+        device_ctx->SetDpi(dpi, dpi);
+    }
+    return hr;
+}
+
+FLOAT D2DDeviceResources::GetDpi() const
+{
+    return dpi_;
+}
+
+HRESULT D2DDeviceResources::SetDpi(FLOAT dpi)
 {
     if (!device_context_)
         return E_UNEXPECTED;
 
+    dpi_ = dpi;
     device_context_->SetDpi(dpi, dpi);
     return CreateWindowSizeDependentResources();
 }

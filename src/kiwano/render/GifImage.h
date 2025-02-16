@@ -20,7 +20,7 @@
 
 #pragma once
 #include <kiwano/core/Time.h>
-#include <kiwano/render/Texture.h>
+#include <kiwano/render/Bitmap.h>
 
 namespace kiwano
 {
@@ -86,10 +86,10 @@ public:
     /// @brief GIFÖ¡
     struct Frame
     {
-        Duration        delay;          ///< Ö¡ÑÓ³Ù
-        RefPtr<Texture> texture;        ///< Ö¡Í¼Ïñ
-        Rect            rect;           ///< »æÖÆÇøÓò
-        DisposalType    disposal_type;  ///< ´¦ÖÃ·½Ê½
+        Duration       delay;          ///< Ö¡ÑÓ³Ù
+        RefPtr<Bitmap> bitmap;         ///< Ö¡Í¼Ïñ
+        Rect           rect;           ///< »æÖÆÇøÓò
+        DisposalType   disposal_type;  ///< ´¦ÖÃ·½Ê½
 
         Frame();
     };

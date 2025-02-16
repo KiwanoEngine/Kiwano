@@ -51,8 +51,8 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵
-    /// @param texture 图像
-    Sprite(RefPtr<Texture> texture);
+    /// @param bitmap 图像
+    Sprite(RefPtr<Bitmap> bitmap);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -68,9 +68,9 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵
-    /// @param texture 图像
+    /// @param bitmap 图像
     /// @param crop_rect 裁剪矩形
-    Sprite(RefPtr<Texture> texture, const Rect& crop_rect);
+    Sprite(RefPtr<Bitmap> bitmap, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 创建精灵
@@ -91,7 +91,7 @@ public:
 
     /// \~chinese
     /// @brief 获取图像
-    RefPtr<Texture> GetTexture() const;
+    RefPtr<Bitmap> GetBitmap() const;
 
     /// \~chinese
     /// @brief 获取裁剪矩形
@@ -122,9 +122,9 @@ private:
 
 /** @} */
 
-inline RefPtr<Texture> Sprite::GetTexture() const
+inline RefPtr<Bitmap> Sprite::GetBitmap() const
 {
-    return frame_.GetTexture();
+    return frame_.GetBitmap();
 }
 
 inline Rect Sprite::GetCropRect() const

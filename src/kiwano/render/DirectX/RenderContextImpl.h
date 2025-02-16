@@ -36,15 +36,17 @@ public:
 
     virtual ~RenderContextImpl();
 
-    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1DeviceContext> ctx);
+    virtual HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1DeviceContext> ctx);
 
     void BeginDraw() override;
 
     void EndDraw() override;
 
-    void CreateTexture(Texture& texture, const PixelSize& size) override;
+    void DrawCommandList(const Image& cmd_list) override;
 
-    void DrawTexture(const Texture& texture, const Rect* src_rect, const Rect* dest_rect) override;
+    void CreateBitmap(Bitmap& bitmap, const PixelSize& size) override;
+
+    void DrawBitmap(const Bitmap& bitmap, const Rect* src_rect, const Rect* dest_rect) override;
 
     void DrawTextLayout(const TextLayout& layout, const Point& offset, RefPtr<Brush> outline_brush) override;
 
@@ -98,19 +100,39 @@ public:
 
     void Resize(const Size& size) override;
 
-    RefPtr<Texture> GetTarget() const override;
+    RefPtr<Image> GetTarget() const override;
 
-private:
+    void SetTarget(const Image& target) override;
+
+protected:
     void DiscardDeviceResources();
 
     void SaveDrawingState();
 
     void RestoreDrawingState();
 
-private:
+protected:
     ComPtr<ITextRenderer>          text_renderer_;
-    ComPtr<ID2D1DeviceContext>     render_ctx_;
+    ComPtr<ID2D1DeviceContext>     device_ctx_;
     ComPtr<ID2D1DrawingStateBlock> drawing_state_;
+};
+
+class KGE_API CommandListRenderContextImpl : public RenderContextImpl
+{
+public:
+    HRESULT CreateDeviceResources(ComPtr<ID2D1Factory> factory, ComPtr<ID2D1DeviceContext> ctx) override;
+
+    RefPtr<Image> GetTarget() const override;
+
+    void SetTarget(const Image& target) override;
+
+    void BeginDraw() override;
+
+    void EndDraw() override;
+
+private:
+    ComPtr<ID2D1CommandList> cmd_list_;
+    ComPtr<ID2D1Image>       original_target_;
 };
 
 }  // namespace directx

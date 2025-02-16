@@ -74,6 +74,7 @@ private:
     bool                       bOutlineRendering_;
     unsigned long              cRefCount_;
     uint32_t                   cPrimitivesCount_;
+    float                      fDpi_;
     float                      fDefaultOutlineWidth_;
     ComPtr<ID2D1Factory>       pFactory_;
     ComPtr<ID2D1DeviceContext> pContext_;
@@ -115,6 +116,7 @@ TextRenderer::TextRenderer()
     : bOutlineRendering_(false)
     , cRefCount_(0)
     , cPrimitivesCount_(0)
+    , fDpi_(96.f)
     , fDefaultOutlineWidth_(1)
 {
 }
@@ -132,6 +134,8 @@ STDMETHODIMP TextRenderer::CreateDeviceResources(_In_ ID2D1DeviceContext* pConte
     {
         pContext_ = pContext;
         pContext_->GetFactory(&pFactory_);
+        pContext_->GetDpi(&fDpi_, &fDpi_);
+
         hr = S_OK;
     }
     return hr;
@@ -332,11 +336,7 @@ STDMETHODIMP TextRenderer::GetPixelsPerDip(__maybenull void* clientDrawingContex
 {
     KGE_NOT_USED(clientDrawingContext);
 
-    float x, yUnused;
-
-    pContext_->GetDpi(&x, &yUnused);
-    *pixelsPerDip = x / 96;
-
+    *pixelsPerDip = fDpi_ / 96.f;
     return S_OK;
 }
 
@@ -359,7 +359,6 @@ STDMETHODIMP_(unsigned long) TextRenderer::Release()
         delete this;
         return 0;
     }
-
     return newCount;
 }
 

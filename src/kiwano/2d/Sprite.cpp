@@ -36,9 +36,9 @@ Sprite::Sprite(const Resource& res)
     Load(res);
 }
 
-Sprite::Sprite(RefPtr<Texture> texture)
+Sprite::Sprite(RefPtr<Bitmap> bitmap)
 {
-    SetFrame(SpriteFrame(texture));
+    SetFrame(SpriteFrame(bitmap));
 }
 
 Sprite::Sprite(StringView file_path, const Rect& crop_rect)
@@ -51,9 +51,9 @@ Sprite::Sprite(const Resource& res, const Rect& crop_rect)
     SetFrame(SpriteFrame(res, crop_rect));
 }
 
-Sprite::Sprite(RefPtr<Texture> texture, const Rect& crop_rect)
+Sprite::Sprite(RefPtr<Bitmap> bitmap, const Rect& crop_rect)
 {
-    SetFrame(SpriteFrame(texture, crop_rect));
+    SetFrame(SpriteFrame(bitmap, crop_rect));
 }
 
 Sprite::Sprite(const SpriteFrame& frame)
@@ -102,7 +102,7 @@ void Sprite::OnRender(RenderContext& ctx)
 {
     if (frame_.IsValid())
     {
-        ctx.DrawTexture(*frame_.GetTexture(), &frame_.GetCropRect(), &GetBounds());
+        ctx.DrawBitmap(*frame_.GetBitmap(), &frame_.GetCropRect(), &GetBounds());
     }
 }
 

@@ -58,7 +58,7 @@ inline bool SdkLayersAvailable()
 struct D3D11DeviceResources : public ID3D11DeviceResources
 {
 public:
-    HRESULT Initialize(HWND hwnd, Size logical_size) override;
+    HRESULT Initialize(HWND hwnd, Size logical_size, float dpi) override;
 
     HRESULT Present(bool vsync) override;
 
@@ -67,8 +67,6 @@ public:
     HRESULT HandleDeviceLost() override;
 
     HRESULT SetLogicalSize(Size logical_size) override;
-
-    HRESULT SetDpi(float dpi) override;
 
     HRESULT SetFullscreenState(bool fullscreen) override;
 
@@ -97,14 +95,13 @@ public:
     HRESULT CreateWindowSizeDependentResources();
 
 public:
-    HWND          hwnd_;
-    float         dpi_;
-    Size          logical_size_;
-    Size          output_size_;
-    unsigned long ref_count_;
-
+    unsigned long     ref_count_;
+    HWND              hwnd_;
     D3D_FEATURE_LEVEL d3d_feature_level_;
     DXGI_FORMAT       desired_color_format_;
+    float             dpi_;
+    Size              dip_size_;
+    math::Vec2T<UINT> output_size_;
 };
 
 ComPtr<ID3D11DeviceResources> GetD3D11DeviceResources()
@@ -130,10 +127,11 @@ D3D11DeviceResources::~D3D11DeviceResources()
     DiscardResources();
 }
 
-HRESULT D3D11DeviceResources::Initialize(HWND hwnd, Size logical_size)
+HRESULT D3D11DeviceResources::Initialize(HWND hwnd, Size logical_size, float dpi)
 {
-    this->hwnd_         = hwnd;
-    this->logical_size_ = logical_size;
+    this->hwnd_     = hwnd;
+    this->dpi_      = dpi;
+    this->dip_size_ = logical_size;
 
     HRESULT hr = this->CreateDeviceResources();
 
@@ -269,12 +267,12 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
         DXGI_SWAP_CHAIN_DESC swap_chain_desc = { 0 };
 
         swap_chain_desc.BufferCount                        = 2;
-        swap_chain_desc.BufferDesc.Width                   = ::lround(output_size_.x);
-        swap_chain_desc.BufferDesc.Height                  = ::lround(output_size_.y);
+        swap_chain_desc.BufferDesc.Width                   = output_size_.x;
+        swap_chain_desc.BufferDesc.Height                  = output_size_.y;
         swap_chain_desc.BufferDesc.Format                  = desired_color_format_;
         swap_chain_desc.BufferDesc.RefreshRate.Numerator   = 60;
         swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
-        swap_chain_desc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_CENTERED;
+        swap_chain_desc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_STRETCHED;
         swap_chain_desc.Flags                              = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         swap_chain_desc.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swap_chain_desc.OutputWindow                       = hwnd_;
@@ -322,15 +320,10 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
     device_context_->Flush();
 
     // Calculate the necessary render target size in pixels.
-    output_size_.x = DX::ConvertDipsToPixels(logical_size_.x, dpi_);
-    output_size_.y = DX::ConvertDipsToPixels(logical_size_.y, dpi_);
+    output_size_.x = (UINT)::lround(DX::ConvertDipsToPixels(dip_size_.x, dpi_));
+    output_size_.y = (UINT)::lround(DX::ConvertDipsToPixels(dip_size_.y, dpi_));
 
-    // Prevent zero size DirectX content from being created.
-    output_size_.x = std::max(output_size_.x, 1.f);
-    output_size_.y = std::max(output_size_.y, 1.f);
-
-    hr = dxgi_swap_chain_->ResizeBuffers(2, /* Double-buffered swap chain */
-                                         ::lround(output_size_.x), ::lround(output_size_.y), DXGI_FORMAT_UNKNOWN,
+    hr = dxgi_swap_chain_->ResizeBuffers(2, output_size_.x, output_size_.y, DXGI_FORMAT_UNKNOWN,
                                          DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 
     if (SUCCEEDED(hr))
@@ -351,8 +344,7 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
     {
         ComPtr<ID3D11Texture2D> depth_stencil;
 
-        CD3D11_TEXTURE2D_DESC tex_desc(DXGI_FORMAT_D24_UNORM_S8_UINT, static_cast<uint32_t>(output_size_.x),
-                                       static_cast<uint32_t>(output_size_.y),
+        CD3D11_TEXTURE2D_DESC tex_desc(DXGI_FORMAT_D24_UNORM_S8_UINT, output_size_.x, output_size_.y,
                                        1,  // This depth stencil view has only one texture.
                                        1,  // Use a single mipmap level.
                                        D3D11_BIND_DEPTH_STENCIL);
@@ -377,7 +369,7 @@ HRESULT D3D11DeviceResources::CreateWindowSizeDependentResources()
     if (SUCCEEDED(hr))
     {
         // Set the 3D rendering viewport to target the entire window.
-        CD3D11_VIEWPORT screen_viewport(0.0f, 0.0f, output_size_.x, output_size_.y);
+        CD3D11_VIEWPORT screen_viewport(0.0f, 0.0f, (float)output_size_.x, (float)output_size_.y);
 
         device_context_->RSSetViewports(1, &screen_viewport);
     }
@@ -399,26 +391,9 @@ HRESULT D3D11DeviceResources::HandleDeviceLost()
 
 HRESULT D3D11DeviceResources::SetLogicalSize(Size logical_size)
 {
-    if (logical_size_ != logical_size)
+    if (dip_size_ != logical_size)
     {
-        logical_size_ = logical_size;
-
-        return CreateWindowSizeDependentResources();
-    }
-    return S_OK;
-}
-
-HRESULT D3D11DeviceResources::SetDpi(float dpi)
-{
-    if (dpi != dpi_)
-    {
-        dpi_ = dpi;
-
-        RECT rc;
-        GetClientRect(hwnd_, &rc);
-
-        logical_size_.x = float(rc.right - rc.left);
-        logical_size_.y = float(rc.bottom - rc.top);
+        dip_size_ = logical_size;
 
         return CreateWindowSizeDependentResources();
     }

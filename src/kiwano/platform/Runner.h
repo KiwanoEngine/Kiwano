@@ -23,7 +23,6 @@
 #include <kiwano/core/Time.h>
 #include <kiwano/platform/Window.h>
 #include <kiwano/render/Color.h>
-#include <kiwano/render/Texture.h>
 #include <kiwano/utils/Ticker.h>
 
 namespace kiwano

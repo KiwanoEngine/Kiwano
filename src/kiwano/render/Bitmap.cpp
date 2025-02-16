@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #include <kiwano/render/Renderer.h>
-#include <kiwano/render/Texture.h>
+#include <kiwano/render/Bitmap.h>
 #include <functional>  // std::hash
 
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
@@ -29,55 +29,72 @@
 namespace kiwano
 {
 
-InterpolationMode Texture::default_interpolation_mode_ = InterpolationMode::Linear;
+InterpolationMode Image::default_interpolation_mode_ = InterpolationMode::Linear;
 
-Texture::Texture(StringView file_path)
-    : Texture()
-{
-    Load(file_path);
-}
-
-Texture::Texture(const Resource& res)
-    : Texture()
-{
-    Load(res);
-}
-
-Texture::Texture(const PixelSize& size, const BinaryData& data, PixelFormat format)
-    : Texture()
-{
-    Load(size, data, format);
-}
-
-Texture::Texture()
+Image::Image()
     : interpolation_mode_(default_interpolation_mode_)
 {
 }
 
-Texture::~Texture() {}
+void Image::SetInterpolationMode(InterpolationMode mode)
+{
+    interpolation_mode_ = mode;
+}
 
-bool Texture::Load(StringView file_path)
+void Image::SetDefaultInterpolationMode(InterpolationMode mode)
+{
+    default_interpolation_mode_ = mode;
+}
+
+InterpolationMode Image::GetDefaultInterpolationMode()
+{
+    return default_interpolation_mode_;
+}
+
+Bitmap::Bitmap(StringView file_path)
+    : Bitmap()
+{
+    Load(file_path);
+}
+
+Bitmap::Bitmap(const Resource& res)
+    : Bitmap()
+{
+    Load(res);
+}
+
+Bitmap::Bitmap(const PixelSize& size, const BinaryData& data, PixelFormat format)
+    : Bitmap()
+{
+    Load(size, data, format);
+}
+
+Bitmap::Bitmap() {}
+
+Bitmap::~Bitmap() {}
+
+bool Bitmap::Load(StringView file_path)
 {
     ResetNative();
-    Renderer::GetInstance().CreateTexture(*this, file_path);
+    Renderer::GetInstance().CreateBitmap(*this, file_path);
     return IsValid();
 }
 
-bool Texture::Load(const Resource& res)
+bool Bitmap::Load(const Resource& res)
 {
     ResetNative();
-    Renderer::GetInstance().CreateTexture(*this, res.GetData());
+    Renderer::GetInstance().CreateBitmap(*this, res.GetData());
     return IsValid();
 }
 
-bool Texture::Load(const PixelSize& size, const BinaryData& data, PixelFormat format)
+bool Bitmap::Load(const PixelSize& size, const BinaryData& data, PixelFormat format)
 {
     ResetNative();
-    Renderer::GetInstance().CreateTexture(*this, size, data, format);
+    Renderer::GetInstance().CreateBitmap(*this, size, data, format);
     return IsValid();
 }
 
-void Texture::CopyFrom(RefPtr<Texture> copy_from)
+void Bitmap::CopyFrom(RefPtr<Bitmap> copy_from)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
@@ -87,14 +104,14 @@ void Texture::CopyFrom(RefPtr<Texture> copy_from)
 
         HRESULT hr = native->CopyFromBitmap(nullptr, native_to_copy.Get(), nullptr);
 
-        KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
+        KGE_THROW_IF_FAILED(hr, "Copy bitmap data failed");
     }
 #else
     return;  // not supported
 #endif
 }
 
-void Texture::CopyFrom(RefPtr<Texture> copy_from, const Rect& src_rect, const Point& dest_point)
+void Bitmap::CopyFrom(RefPtr<Bitmap> copy_from, const Rect& src_rect, const Point& dest_point)
 {
 #if KGE_RENDER_ENGINE == KGE_RENDER_ENGINE_DIRECTX
     if (IsValid() && copy_from)
@@ -107,35 +124,11 @@ void Texture::CopyFrom(RefPtr<Texture> copy_from, const Rect& src_rect, const Po
                                    &D2D1::RectU(uint32_t(src_rect.GetLeft()), uint32_t(src_rect.GetTop()),
                                                 uint32_t(src_rect.GetRight()), uint32_t(src_rect.GetBottom())));
 
-        KGE_THROW_IF_FAILED(hr, "Copy texture data failed");
+        KGE_THROW_IF_FAILED(hr, "Copy bitmap data failed");
     }
 #else
     return;  // not supported
 #endif
-}
-
-void Texture::SetInterpolationMode(InterpolationMode mode)
-{
-    interpolation_mode_ = mode;
-    switch (mode)
-    {
-    case InterpolationMode::Linear:
-        break;
-    case InterpolationMode::Nearest:
-        break;
-    default:
-        break;
-    }
-}
-
-void Texture::SetDefaultInterpolationMode(InterpolationMode mode)
-{
-    default_interpolation_mode_ = mode;
-}
-
-InterpolationMode Texture::GetDefaultInterpolationMode()
-{
-    return default_interpolation_mode_;
 }
 
 }  // namespace kiwano

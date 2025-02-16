@@ -26,7 +26,7 @@ namespace kiwano
 {
 
 // 预留出描边的空间
-const Point cached_texture_offset = Point{ 5, 5 };
+const Point cached_bitmap_offset = Point{ 5, 5 };
 
 TextActor::TextActor()
     : is_cache_dirty_(false)
@@ -46,12 +46,12 @@ void TextActor::OnRender(RenderContext& ctx)
 {
     if (layout_)
     {
-        if (texture_cached_)
+        if (cached_bitmap_)
         {
             Rect dest_rect = GetBounds();
-            dest_rect.left_top -= cached_texture_offset;
-            dest_rect.right_bottom += cached_texture_offset;
-            ctx.DrawTexture(*texture_cached_, nullptr, &dest_rect);
+            dest_rect.left_top -= cached_bitmap_offset;
+            dest_rect.right_bottom += cached_bitmap_offset;
+            ctx.DrawBitmap(*cached_bitmap_, nullptr, &dest_rect);
         }
         else
         {
@@ -214,16 +214,16 @@ void TextActor::SetTextLayout(RefPtr<TextLayout> layout)
 
 void TextActor::SetPreRenderEnabled(bool enable)
 {
-    const bool enabled = texture_cached_ != nullptr;
+    const bool enabled = cached_bitmap_ != nullptr;
     if (enabled != enable)
     {
         if (enable)
         {
-            texture_cached_ = MakePtr<Texture>();
+            cached_bitmap_ = MakePtr<Bitmap>();
         }
         else
         {
-            texture_cached_ = nullptr;
+            cached_bitmap_ = nullptr;
         }
         render_ctx_     = nullptr;
         is_cache_dirty_ = true;
@@ -249,7 +249,7 @@ void TextActor::UpdateDirtyLayout()
     }
     else if (is_cache_dirty_)
     {
-        UpdateCachedTexture();
+        UpdateCachedBitmap();
     }
 }
 
@@ -259,7 +259,7 @@ void TextActor::ForceUpdateLayout()
     {
         layout_->UpdateIfDirty();
         SetSize(layout_->GetSize());
-        UpdateCachedTexture();
+        UpdateCachedBitmap();
     }
     else
     {
@@ -267,22 +267,21 @@ void TextActor::ForceUpdateLayout()
     }
 }
 
-void TextActor::UpdateCachedTexture()
+void TextActor::UpdateCachedBitmap()
 {
     // 有文字描边或其他额外渲染时，需要开启预渲染以提升性能
     this->SetPreRenderEnabled(outline_brush_ || style_.show_strikethrough || style_.show_underline
                               || (layout_ && layout_->GetContentLength() > 30));
 
-    if (!texture_cached_)
+    if (!cached_bitmap_)
     {
         return;
     }
 
-    const auto expectedSize = layout_->GetSize() + cached_texture_offset * 2;
+    const auto expectedSize = layout_->GetSize() + cached_bitmap_offset * 2;
     if (!render_ctx_)
     {
-        const auto pixelSize = PixelSize((uint32_t)math::Ceil(expectedSize.x), (uint32_t)math::Ceil(expectedSize.y));
-        render_ctx_          = RenderContext::Create(texture_cached_, pixelSize);
+        render_ctx_ = Renderer::GetInstance().CreateContextForBitmap(cached_bitmap_, expectedSize);
     }
     else if (render_ctx_->GetSize() != expectedSize)
     {
@@ -293,7 +292,7 @@ void TextActor::UpdateCachedTexture()
     render_ctx_->Clear();
     render_ctx_->SetCurrentBrush(fill_brush_);
     render_ctx_->SetCurrentStrokeStyle(outline_stroke_);
-    render_ctx_->DrawTextLayout(*layout_, cached_texture_offset, outline_brush_);
+    render_ctx_->DrawTextLayout(*layout_, cached_bitmap_offset, outline_brush_);
     render_ctx_->EndDraw();
     is_cache_dirty_ = false;
 }

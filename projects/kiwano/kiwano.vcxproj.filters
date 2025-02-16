@@ -144,10 +144,10 @@
     <ClInclude Include="..\..\src\kiwano\render\TextLayout.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\Texture.h">
+    <ClInclude Include="..\..\src\kiwano\render\Bitmap.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\render\TextureCache.h">
+    <ClInclude Include="..\..\src\kiwano\render\BitmapCache.h">
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.h">
@@ -488,10 +488,7 @@
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\Texture.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp">
+    <ClCompile Include="..\..\src\kiwano\render\BitmapCache.cpp">
       <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\DirectX\D2DDeviceResources.cpp">
@@ -669,6 +666,9 @@
       <Filter>render\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\Layer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Bitmap.cpp">
       <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>

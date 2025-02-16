@@ -93,7 +93,7 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
     Resolution resolution    = window->GetCurrentResolution();
     HRESULT    hr            = target_window ? S_OK : E_FAIL;
 
-    output_size_ = Size{ float(resolution.width), float(resolution.height) };
+    dip_size_ = Size{ float(resolution.width), float(resolution.height) };
 
     // Initialize Direct3D resources
     if (SUCCEEDED(hr))
@@ -102,10 +102,9 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
 
         auto d3d_res = graphics::directx::GetD3DDeviceResources();
 
-        hr = d3d_res->Initialize(target_window, output_size_);
+        hr = d3d_res->Initialize(target_window, dip_size_, window->GetDPI());
         if (SUCCEEDED(hr))
         {
-            d3d_res->SetDpi(window->GetDPI());
             d3d_res_ = d3d_res;
         }
         else
@@ -119,10 +118,9 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
     {
         auto d2d_res = graphics::directx::GetD2DDeviceResources();
 
-        hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain());
+        hr = d2d_res->Initialize(d3d_res_->GetDXGIDevice(), d3d_res_->GetDXGISwapChain(), window->GetDPI());
         if (SUCCEEDED(hr))
         {
-            d2d_res->SetDpi(window->GetDPI());
             d2d_res_ = d2d_res;
         }
         else
@@ -228,7 +226,7 @@ void RendererImpl::Present()
     }
 }
 
-void RendererImpl::CreateTexture(Texture& texture, StringView file_path)
+void RendererImpl::CreateBitmap(Bitmap& bitmap, StringView file_path)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -239,8 +237,7 @@ void RendererImpl::CreateTexture(Texture& texture, StringView file_path)
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
-        KGE_SET_STATUS_IF_FAILED(hr, texture,
-                                 strings::Format("Texture file '%s' not found!", file_path.data()).c_str());
+        KGE_SET_STATUS_IF_FAILED(hr, bitmap, strings::Format("Bitmap file '%s' not found!", file_path.data()).c_str());
         return;
     }
 
@@ -265,25 +262,25 @@ void RendererImpl::CreateTexture(Texture& texture, StringView file_path)
 
                 if (SUCCEEDED(hr))
                 {
-                    ComPtr<ID2D1Bitmap> bitmap;
-                    hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+                    ComPtr<ID2D1Bitmap> d2d_bitmap;
+                    hr = d2d_res_->CreateBitmapFromConverter(d2d_bitmap, nullptr, converter);
 
                     if (SUCCEEDED(hr))
                     {
-                        ComPolicy::Set(texture, bitmap);
+                        ComPolicy::Set(bitmap, d2d_bitmap);
 
-                        texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
-                        texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
+                        bitmap.SetSize(reinterpret_cast<const Size&>(d2d_bitmap->GetSize()));
+                        bitmap.SetSizeInPixels(reinterpret_cast<const PixelSize&>(d2d_bitmap->GetPixelSize()));
                     }
                 }
             }
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture failed");
+    KGE_SET_STATUS_IF_FAILED(hr, bitmap, "Load bitmap failed");
 }
 
-void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
+void RendererImpl::CreateBitmap(Bitmap& bitmap, const BinaryData& data)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -314,15 +311,15 @@ void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
 
                     if (SUCCEEDED(hr))
                     {
-                        ComPtr<ID2D1Bitmap> bitmap;
-                        hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+                        ComPtr<ID2D1Bitmap> d2d_bitmap;
+                        hr = d2d_res_->CreateBitmapFromConverter(d2d_bitmap, nullptr, converter);
 
                         if (SUCCEEDED(hr))
                         {
-                            ComPolicy::Set(texture, bitmap);
+                            ComPolicy::Set(bitmap, d2d_bitmap);
 
-                            texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
-                            texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
+                            bitmap.SetSize(reinterpret_cast<const Size&>(d2d_bitmap->GetSize()));
+                            bitmap.SetSizeInPixels(reinterpret_cast<const PixelSize&>(d2d_bitmap->GetPixelSize()));
                         }
                     }
                 }
@@ -330,10 +327,10 @@ void RendererImpl::CreateTexture(Texture& texture, const BinaryData& data)
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture failed");
+    KGE_SET_STATUS_IF_FAILED(hr, bitmap, "Load bitmap failed");
 }
 
-void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format)
+void RendererImpl::CreateBitmap(Bitmap& bitmap, const PixelSize& size, const BinaryData& data, PixelFormat format)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -364,61 +361,23 @@ void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const 
 
                 if (SUCCEEDED(hr))
                 {
-                    ComPtr<ID2D1Bitmap> bitmap;
-                    hr = d2d_res_->CreateBitmapFromConverter(bitmap, nullptr, converter);
+                    ComPtr<ID2D1Bitmap> d2d_bitmap;
+                    hr = d2d_res_->CreateBitmapFromConverter(d2d_bitmap, nullptr, converter);
 
                     if (SUCCEEDED(hr))
                     {
-                        ComPolicy::Set(texture, bitmap);
+                        ComPolicy::Set(bitmap, d2d_bitmap);
 
-                        texture.SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
-                        texture.SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
+                        bitmap.SetSize(reinterpret_cast<const Size&>(d2d_bitmap->GetSize()));
+                        bitmap.SetSizeInPixels(reinterpret_cast<const PixelSize&>(d2d_bitmap->GetPixelSize()));
                     }
                 }
             }
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture from memory failed");
+    KGE_SET_STATUS_IF_FAILED(hr, bitmap, "Load bitmap from memory failed");
 }
-
-/*
-void RendererImpl::CreateTexture(Texture& texture, const PixelSize& size, const BinaryData& data, PixelFormat format)
-{
-    HRESULT hr = S_OK;
-    if (!d2d_res_)
-    {
-        hr = E_UNEXPECTED;
-    }
-
-    if (SUCCEEDED(hr))
-    {
-        hr = data.IsValid() ? S_OK : E_FAIL;
-
-        if (SUCCEEDED(hr))
-        {
-            ComPtr<ID2D1Bitmap1> output;
-            UINT32               pitch       = 0;
-            const auto           dxgi_format = ConvertPixelFormat(format, pitch);
-
-            hr = d2d_res_->GetDeviceContext()->CreateBitmap(
-                DX::ConvertToSizeU(size), data.buffer, UINT(size.x) * pitch,
-                D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET,
-                                        D2D1::PixelFormat(dxgi_format, D2D1_ALPHA_MODE_PREMULTIPLIED)),
-                &output);
-            if (SUCCEEDED(hr))
-            {
-                ComPolicy::Set(texture, output);
-
-                texture.SetSize({ output->GetSize().width, output->GetSize().height });
-                texture.SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
-            }
-        }
-    }
-
-    KGE_SET_STATUS_IF_FAILED(hr, texture, "Load texture from memory failed");
-}
-*/
 
 void RendererImpl::CreateGifImage(GifImage& gif, StringView file_path)
 {
@@ -431,8 +390,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, StringView file_path)
     if (!FileSystem::GetInstance().IsFileExists(file_path))
     {
         hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
-        KGE_SET_STATUS_IF_FAILED(hr, gif,
-                                 strings::Format("Gif texture file '%s' not found!", file_path.data()).c_str());
+        KGE_SET_STATUS_IF_FAILED(hr, gif, strings::Format("Gif bitmap file '%s' not found!", file_path.data()).c_str());
         return;
     }
 
@@ -449,7 +407,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, StringView file_path)
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF texture failed");
+    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF bitmap failed");
 }
 
 void RendererImpl::CreateGifImage(GifImage& gif, const BinaryData& data)
@@ -476,7 +434,7 @@ void RendererImpl::CreateGifImage(GifImage& gif, const BinaryData& data)
         }
     }
 
-    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF texture failed");
+    KGE_SET_STATUS_IF_FAILED(hr, gif, "Load GIF bitmap failed");
 }
 
 void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& gif, size_t frame_index)
@@ -513,11 +471,11 @@ void RendererImpl::CreateGifImageFrame(GifImage::Frame& frame, const GifImage& g
 
                 if (SUCCEEDED(hr))
                 {
-                    frame.texture = MakePtr<Texture>();
-                    ComPolicy::Set(frame.texture, bitmap);
+                    frame.bitmap = MakePtr<Bitmap>();
+                    ComPolicy::Set(frame.bitmap, bitmap);
 
-                    frame.texture->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
-                    frame.texture->SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
+                    frame.bitmap->SetSize({ bitmap->GetSize().width, bitmap->GetSize().height });
+                    frame.bitmap->SetSizeInPixels({ bitmap->GetPixelSize().width, bitmap->GetPixelSize().height });
                 }
             }
         }
@@ -981,7 +939,7 @@ void RendererImpl::CreateBrush(Brush& brush, const RadialGradientStyle& style)
     KGE_SET_STATUS_IF_FAILED(hr, brush, "Create ID2D1RadialGradientBrush failed");
 }
 
-void RendererImpl::CreateBrush(Brush& brush, RefPtr<Texture> texture)
+void RendererImpl::CreateBrush(Brush& brush, RefPtr<Image> image, const Rect& src_rect)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
@@ -991,12 +949,13 @@ void RendererImpl::CreateBrush(Brush& brush, RefPtr<Texture> texture)
 
     if (SUCCEEDED(hr))
     {
-        auto bitmap = ComPolicy::Get<ID2D1Bitmap>(texture);
+        auto d2d_image = ComPolicy::Get<ID2D1Image>(image);
 
         if (SUCCEEDED(hr))
         {
-            ComPtr<ID2D1BitmapBrush> output;
-            hr = d2d_res_->GetDeviceContext()->CreateBitmapBrush(bitmap.Get(), &output);
+            ComPtr<ID2D1ImageBrush> output;
+            hr = d2d_res_->GetDeviceContext()->CreateImageBrush(
+                d2d_image.Get(), D2D1::ImageBrushProperties(DX::ConvertToRectF(src_rect)), &output);
 
             if (SUCCEEDED(hr))
             {
@@ -1047,14 +1006,22 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
     KGE_SET_STATUS_IF_FAILED(hr, stroke_style, "Create ID2D1StrokeStyle failed");
 }
 
-RefPtr<RenderContext> RendererImpl::CreateTextureRenderContext(RefPtr<Texture> texture, const PixelSize& desired_size)
+RefPtr<RenderContext> RendererImpl::CreateContextForBitmap(RefPtr<Bitmap> bitmap, const Size& desired_size)
+{
+    FLOAT dpi        = d2d_res_->GetDpi();
+    auto  pixel_size = PixelSize((uint32_t)DX::ConvertDipsToPixels(desired_size.x, dpi),
+                                 (uint32_t)DX::ConvertDipsToPixels(desired_size.y, dpi));
+    return CreateContextForBitmapInPixels(bitmap, pixel_size);
+}
+
+RefPtr<RenderContext> RendererImpl::CreateContextForBitmapInPixels(RefPtr<Bitmap> bitmap, const PixelSize& desired_size)
 {
     HRESULT hr = S_OK;
     if (!d2d_res_)
     {
         hr = E_UNEXPECTED;
     }
-    else if (texture == nullptr)
+    else if (bitmap == nullptr)
     {
         hr = E_INVALIDARG;
     }
@@ -1064,8 +1031,7 @@ RefPtr<RenderContext> RendererImpl::CreateTextureRenderContext(RefPtr<Texture> t
         RefPtr<RenderContextImpl> ptr = MakePtr<RenderContextImpl>();
 
         ComPtr<ID2D1DeviceContext> render_ctx;
-        hr = d2d_res_->GetDevice()->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
-                                                        &render_ctx);
+        hr = d2d_res_->CreateDeviceContext(render_ctx);
 
         if (SUCCEEDED(hr))
         {
@@ -1074,22 +1040,54 @@ RefPtr<RenderContext> RendererImpl::CreateTextureRenderContext(RefPtr<Texture> t
 
         if (SUCCEEDED(hr))
         {
+            FLOAT dpi = d2d_res_->GetDpi();
+
             ComPtr<ID2D1Bitmap1> output;
             hr = render_ctx->CreateBitmap(
                 DX::ConvertToSizeU(desired_size), nullptr, 0,
                 D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET,
-                                        D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)),
+                                        D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+                                        dpi, dpi),
                 &output);
 
             if (SUCCEEDED(hr))
             {
                 render_ctx->SetTarget(output.Get());
-                ComPolicy::Set(texture, output);
+                ComPolicy::Set(bitmap, output);
 
-                texture->SetSize({ output->GetSize().width, output->GetSize().height });
-                texture->SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
+                bitmap->SetSize({ output->GetSize().width, output->GetSize().height });
+                bitmap->SetSizeInPixels({ output->GetPixelSize().width, output->GetPixelSize().height });
                 return ptr;
             }
+        }
+    }
+
+    KGE_THROW_IF_FAILED(hr, "Create render context failed");
+    return nullptr;
+}
+
+RefPtr<RenderContext> RendererImpl::CreateContextForCommandList(RefPtr<Image> cmd_list)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+    else if (cmd_list == nullptr)
+    {
+        hr = E_INVALIDARG;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        RefPtr<CommandListRenderContextImpl> ptr = MakePtr<CommandListRenderContextImpl>();
+        hr = ptr->CreateDeviceResources(d2d_res_->GetFactory(), d2d_res_->GetDeviceContext());
+
+        if (SUCCEEDED(hr))
+        {
+            auto target = ptr->GetTarget();
+            ComPolicy::Set(cmd_list, ComPolicy::Get<ID2D1Image>(target));
+            return ptr;
         }
     }
 
@@ -1104,6 +1102,10 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
     if (!d3d_res_)
         hr = E_UNEXPECTED;
 
+    Size new_output_size = Size(static_cast<float>(width), static_cast<float>(height));
+    if (new_output_size == dip_size_)
+        return;
+
     if (SUCCEEDED(hr))
     {
         // Clear resources
@@ -1112,20 +1114,18 @@ void RendererImpl::Resize(uint32_t width, uint32_t height)
 
     if (SUCCEEDED(hr))
     {
-        output_size_.x = static_cast<float>(width);
-        output_size_.y = static_cast<float>(height);
-
-        hr = d3d_res_->SetLogicalSize(output_size_);
+        hr = d3d_res_->SetLogicalSize(new_output_size);
     }
 
     if (SUCCEEDED(hr))
     {
-        hr = d2d_res_->SetLogicalSize(output_size_.x, output_size_.y);
+        hr = d2d_res_->SetLogicalSize(new_output_size.x, new_output_size.y);
     }
 
     if (SUCCEEDED(hr))
     {
-        render_ctx_->Resize(output_size_);
+        dip_size_ = new_output_size;
+        render_ctx_->Resize(dip_size_);
     }
 
     KGE_THROW_IF_FAILED(hr, "Resize render target failed");

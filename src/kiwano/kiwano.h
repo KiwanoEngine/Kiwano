@@ -84,11 +84,11 @@
 #include <kiwano/render/Font.h>
 #include <kiwano/render/Shape.h>
 #include <kiwano/render/ShapeMaker.h>
-#include <kiwano/render/Texture.h>
+#include <kiwano/render/Bitmap.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
-#include <kiwano/render/TextureCache.h>
+#include <kiwano/render/BitmapCache.h>
 #include <kiwano/render/Renderer.h>
 
 //

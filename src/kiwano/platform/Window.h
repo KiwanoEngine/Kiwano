@@ -261,7 +261,7 @@ public:
      * \~chinese
      * @brief 窗口是否需要关闭
      */
-    bool ShouldClose();
+    bool ShouldClose() const;
 
     /**
      * \~chinese

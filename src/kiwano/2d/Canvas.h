@@ -36,7 +36,7 @@ class CanvasRenderContext;
 /**
  * \~chinese
  * @brief 画布
- * @details 用于绘制图形、图像、文字等各种类型的图元，同时可以将绘制内容导出至图像
+ * @details 用于绘制图形、图像、文字等各种类型的图元，同时可以将绘制内容导出至位图
  */
 class KGE_API Canvas : public Actor
 {
@@ -49,7 +49,7 @@ public:
     /// \~chinese
     /// @brief 创建画布
     /// @param size 画布大小
-    Canvas(const PixelSize& size);
+    Canvas(const Size& size);
 
     /// \~chinese
     /// @brief 获取2D绘图上下文
@@ -58,16 +58,22 @@ public:
     /// \~chinese
     /// @brief 清空画布大小并重设画布大小
     /// @warning 该函数会导致原绘图上下文失效
-    void ResizeAndClear(const PixelSize& size);
+    void ResizeAndClear(const Size& size);
 
     /// \~chinese
-    /// @brief 导出纹理
-    RefPtr<Texture> GetTexture() const;
+    /// @brief 获取输出目标
+    RefPtr<Bitmap> GetTarget() const;
+
+    /// \~chinese
+    /// @brief 使用渲染命令集模式
+    /// @warning 该函数会导致原绘图上下文失效
+    void EnableCommandListMode(bool enable);
 
     void OnRender(RenderContext& ctx) override;
 
 private:
-    RefPtr<Texture>       texture_cached_;
+    bool                  cmd_list_mode_;
+    RefPtr<Bitmap>        cached_bitmap_;
     RefPtr<RenderContext> render_ctx_;
 };
 
@@ -152,19 +158,19 @@ public:
     void FillRoundedRect(const Rect& rect, const Vec2& radius);
 
     /// \~chinese
-    /// @brief 绘制纹理
-    /// @param texture 纹理
+    /// @brief 绘制位图
+    /// @param bitmap 位图
     /// @param pos 绘制的目标位置
-    /// @param crop_rect 纹理裁剪矩形
-    void DrawTexture(RefPtr<Texture> texture, const Point& pos, const Rect* crop_rect = nullptr);
+    /// @param crop_rect 位图裁剪矩形
+    void DrawBitmap(RefPtr<Bitmap> bitmap, const Point& pos, const Rect* crop_rect = nullptr);
 
     /// \~chinese
-    /// @brief 绘制纹理
-    /// @param texture 纹理
+    /// @brief 绘制位图
+    /// @param bitmap 位图
     /// @param pos 绘制的目标位置
     /// @param size 绘制的目标大小
-    /// @param crop_rect 纹理裁剪矩形
-    void DrawTexture(RefPtr<Texture> texture, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
+    /// @param crop_rect 位图裁剪矩形
+    void DrawBitmap(RefPtr<Bitmap> bitmap, const Point& pos, const Size& size, const Rect* crop_rect = nullptr);
 
     /// \~chinese
     /// @brief 绘制精灵帧
@@ -288,9 +294,9 @@ private:
 
 /** @} */
 
-inline RefPtr<Texture> Canvas::GetTexture() const
+inline RefPtr<Bitmap> Canvas::GetTarget() const
 {
-    return texture_cached_;
+    return cached_bitmap_;
 }
 
 inline void CanvasRenderContext::BeginDraw()
@@ -412,23 +418,23 @@ inline void CanvasRenderContext::FillRoundedRect(const Rect& rect, const Vec2& r
     ctx_->FillRoundedRectangle(rect, radius);
 }
 
-inline void CanvasRenderContext::DrawTexture(RefPtr<Texture> texture, const Point& pos, const Rect* crop_rect)
+inline void CanvasRenderContext::DrawBitmap(RefPtr<Bitmap> bitmap, const Point& pos, const Rect* crop_rect)
 {
-    if (texture)
+    if (bitmap)
     {
-        this->DrawTexture(texture, pos, texture->GetSize(), crop_rect);
+        this->DrawBitmap(bitmap, pos, bitmap->GetSize(), crop_rect);
     }
 }
 
-inline void CanvasRenderContext::DrawTexture(RefPtr<Texture> texture, const Point& pos, const Size& size,
+inline void CanvasRenderContext::DrawBitmap(RefPtr<Bitmap> bitmap, const Point& pos, const Size& size,
                                              const Rect* crop_rect)
 {
     KGE_ASSERT(ctx_);
 
-    if (texture)
+    if (bitmap)
     {
         Rect dest_rect(pos, pos + size);
-        ctx_->DrawTexture(*texture, crop_rect, &dest_rect);
+        ctx_->DrawBitmap(*bitmap, crop_rect, &dest_rect);
     }
 }
 
@@ -439,7 +445,7 @@ inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const
 
 inline void CanvasRenderContext::DrawSpriteFrame(const SpriteFrame& frame, const Point& pos, const Size& size)
 {
-    this->DrawTexture(frame.GetTexture(), pos, size, &frame.GetCropRect());
+    this->DrawBitmap(frame.GetBitmap(), pos, size, &frame.GetCropRect());
 }
 
 inline void CanvasRenderContext::DrawTextLayout(StringView text, const TextStyle& style, const Point& point)

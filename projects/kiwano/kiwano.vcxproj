@@ -110,8 +110,8 @@
     <ClInclude Include="..\..\src\kiwano\render\StrokeStyle.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextLayout.h" />
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.h" />
-    <ClInclude Include="..\..\src\kiwano\render\Texture.h" />
-    <ClInclude Include="..\..\src\kiwano\render\TextureCache.h" />
+    <ClInclude Include="..\..\src\kiwano\render\Bitmap.h" />
+    <ClInclude Include="..\..\src\kiwano\render\BitmapCache.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ConfigIni.h" />
     <ClInclude Include="..\..\src\kiwano\utils\EventTicker.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Json.h" />
@@ -201,8 +201,8 @@
     <ClCompile Include="..\..\src\kiwano\render\StrokeStyle.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextLayout.cpp" />
     <ClCompile Include="..\..\src\kiwano\render\TextStyle.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\Texture.cpp" />
-    <ClCompile Include="..\..\src\kiwano\render\TextureCache.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\Bitmap.cpp" />
+    <ClCompile Include="..\..\src\kiwano\render\BitmapCache.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ConfigIni.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Logger.cpp" />

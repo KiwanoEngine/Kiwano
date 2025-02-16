@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/core/Common.h>
 #include <kiwano/math/Math.h>
-#include <kiwano/render/Texture.h>
+#include <kiwano/render/Bitmap.h>
 
 namespace kiwano
 {
@@ -47,8 +47,8 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵帧
-    /// @param texture 纹理
-    SpriteFrame(RefPtr<Texture> texture);
+    /// @param bitmap 位图
+    SpriteFrame(RefPtr<Bitmap> bitmap);
 
     /// \~chinese
     /// @brief 创建精灵帧
@@ -64,9 +64,9 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵帧
-    /// @param texture 纹理
+    /// @param bitmap 位图
     /// @param crop_rect 裁剪矩形
-    SpriteFrame(RefPtr<Texture> texture, const Rect& crop_rect);
+    SpriteFrame(RefPtr<Bitmap> bitmap, const Rect& crop_rect);
 
     /// \~chinese
     /// @brief 加载图像
@@ -87,8 +87,8 @@ public:
     const Rect& GetCropRect() const;
 
     /// \~chinese
-    /// @brief 获取纹理
-    RefPtr<Texture> GetTexture() const;
+    /// @brief 获取位图
+    RefPtr<Bitmap> GetBitmap() const;
 
     /// \~chinese
     /// @brief 获取精灵帧大小
@@ -100,9 +100,9 @@ public:
     void SetCropRect(const Rect& crop_rect);
 
     /// \~chinese
-    /// @brief 设置纹理并重置裁剪矩形
-    /// @param texture 纹理
-    void SetTexture(RefPtr<Texture> texture);
+    /// @brief 设置位图并重置裁剪矩形
+    /// @param bitmap 位图
+    void SetBitmap(RefPtr<Bitmap> bitmap);
 
     /// \~chinese
     /// @brief 按行列分割精灵帧
@@ -114,13 +114,13 @@ public:
     Vector<SpriteFrame> Split(int cols, int rows, int max_num = -1, float padding_x = 0, float padding_y = 0);
 
 private:
-    RefPtr<Texture> texture_;
+    RefPtr<Bitmap> bitmap_;
     Rect            crop_rect_;
 };
 
 inline bool SpriteFrame::IsValid() const
 {
-    return texture_ && texture_->IsValid();
+    return bitmap_ && bitmap_->IsValid();
 }
 
 inline const Rect& SpriteFrame::GetCropRect() const
@@ -128,9 +128,9 @@ inline const Rect& SpriteFrame::GetCropRect() const
     return crop_rect_;
 }
 
-inline RefPtr<Texture> SpriteFrame::GetTexture() const
+inline RefPtr<Bitmap> SpriteFrame::GetBitmap() const
 {
-    return texture_;
+    return bitmap_;
 }
 
 inline Size SpriteFrame::GetSize() const

@@ -33,7 +33,10 @@ MIDL_INTERFACE("5706684a-bf6d-4b03-b627-094758a33032")
 KGE_API ID2DDeviceResources : public IUnknown
 {
 public:
-    virtual HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain) = 0;
+    virtual HRESULT Initialize(_In_ ComPtr<IDXGIDevice> dxgi_device, _In_ ComPtr<IDXGISwapChain> dxgi_swap_chain,
+                               FLOAT dpi) = 0;
+
+    virtual HRESULT CreateDeviceContext(_Out_ ComPtr<ID2D1DeviceContext> & device_ctx) = 0;
 
     virtual HRESULT CreateBitmapSourceFromMemory(_Out_ ComPtr<IWICBitmapSource> & source, _In_ UINT width,
                                                  _In_ UINT height, _In_ UINT cbStride, _In_ UINT cbBufferSize,
@@ -69,7 +72,9 @@ public:
     virtual HRESULT GetFontFamilyNames(_Out_ Vector<String> & family_names,
                                        _In_ ComPtr<IDWriteFontCollection> font_collection) = 0;
 
-    virtual HRESULT SetDpi(float dpi) = 0;
+    virtual FLOAT GetDpi() const = 0;
+
+    virtual HRESULT SetDpi(FLOAT dpi) = 0;
 
     virtual HRESULT SetLogicalSize(float width, float height) = 0;
 

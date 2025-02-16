@@ -21,7 +21,7 @@
 #pragma once
 #include <kiwano/platform/NativeObject.hpp>
 #include <kiwano/render/Color.h>
-#include <kiwano/render/Texture.h>
+#include <kiwano/render/Bitmap.h>
 
 namespace kiwano
 {
@@ -121,8 +121,12 @@ public:
     void SetStyle(const RadialGradientStyle& style);
 
     /// \~chinese
-    /// @brief …Ë÷√Œ∆¿Ì
-    void SetTexture(RefPtr<Texture> texture);
+    /// @brief …Ë÷√ÕºœÒ
+    void SetImage(RefPtr<Image> image, const Rect& src_rect);
+
+    /// \~chinese
+    /// @brief …Ë÷√ŒªÕº
+    void SetBitmap(RefPtr<Bitmap> bitmap);
 
     /// \~chinese
     /// @brief …Ë÷√∂˛Œ¨±‰ªª
@@ -141,7 +145,7 @@ public:
         SolidColor,      ///< ¥ø…´ÃÓ≥‰ª≠À¢
         LinearGradient,  ///< œﬂ–‘Ω•±‰ª≠À¢
         RadialGradient,  ///< æ∂œÚΩ•±‰ª≠À¢
-        Texture          ///< Œ∆¿Ìª≠À¢
+        Image            ///< ÕºœÒª≠À¢
     };
 
     /// \~chinese

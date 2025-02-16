@@ -32,7 +32,7 @@ class World::DebugDrawer : public b2Draw
 public:
     DebugDrawer(const Size& size)
     {
-        canvas_ = MakePtr<Canvas>(PixelSize(uint32_t(size.x), uint32_t(size.y)));
+        canvas_ = MakePtr<Canvas>(size);
         ctx_    = canvas_->GetContext2D();
 
         b2Draw::SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);

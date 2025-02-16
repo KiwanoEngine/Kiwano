@@ -110,10 +110,15 @@ void Brush::SetStyle(const RadialGradientStyle& style)
     type_ = Brush::Type::RadialGradient;
 }
 
-void Brush::SetTexture(RefPtr<Texture> texture)
+void Brush::SetImage(RefPtr<Image> image, const Rect& src_rect)
 {
-    Renderer::GetInstance().CreateBrush(*this, texture);
-    type_ = Brush::Type::Texture;
+    Renderer::GetInstance().CreateBrush(*this, image, src_rect);
+    type_ = Brush::Type::Image;
+}
+
+void Brush::SetBitmap(RefPtr<Bitmap> bitmap)
+{
+    SetImage(bitmap, Rect(Point(), bitmap->GetSize()));
 }
 
 void Brush::SetTransform(const Transform& transform)
