@@ -26,89 +26,61 @@ namespace kiwano
 
 Sprite::Sprite() {}
 
-Sprite::Sprite(StringView file_path)
+Sprite::Sprite(RefPtr<Image> image, const Rect& src_rect)
 {
-    Load(file_path);
-}
-
-Sprite::Sprite(const Resource& res)
-{
-    Load(res);
-}
-
-Sprite::Sprite(RefPtr<Bitmap> bitmap)
-{
-    SetFrame(SpriteFrame(bitmap));
-}
-
-Sprite::Sprite(StringView file_path, const Rect& crop_rect)
-{
-    SetFrame(SpriteFrame(file_path, crop_rect));
-}
-
-Sprite::Sprite(const Resource& res, const Rect& crop_rect)
-{
-    SetFrame(SpriteFrame(res, crop_rect));
-}
-
-Sprite::Sprite(RefPtr<Bitmap> bitmap, const Rect& crop_rect)
-{
-    SetFrame(SpriteFrame(bitmap, crop_rect));
-}
-
-Sprite::Sprite(const SpriteFrame& frame)
-{
-    SetFrame(frame);
-}
-
-Sprite::~Sprite() {}
-
-bool Sprite::Load(StringView file_path)
-{
-    SpriteFrame frame(file_path);
-    if (frame.IsValid())
+    auto bitmap = RefPtr<Bitmap>(dynamic_cast<Bitmap*>(image.Get()));
+    if (bitmap)
     {
-        SetFrame(frame);
-        return true;
+        SetBitmap(bitmap, src_rect);
     }
-    Fail("Sprite::Load failed");
-    return false;
+    else
+    {
+        SetImage(image, src_rect);
+    }
 }
 
-bool Sprite::Load(const Resource& res)
+void Sprite::SetImage(RefPtr<Image> image, const Rect& src_rect, bool reset_size)
 {
-    SpriteFrame frame(res);
-    if (frame.IsValid())
+    image_    = image;
+    src_rect_ = src_rect;
+    if (reset_size && !src_rect.IsEmpty())
     {
-        SetFrame(frame);
-        return true;
+        SetSize(src_rect.GetSize());
     }
-    Fail("Sprite::Load failed");
-    return false;
+    is_bitmap_ = false;
 }
 
-void Sprite::SetFrame(const SpriteFrame& frame)
+void Sprite::SetBitmap(RefPtr<Bitmap> bitmap, const Rect& src_rect, bool reset_size)
 {
-    frame_ = frame;
-    SetSize(frame_.GetSize());
-
-    if (!frame_.IsValid())
+    image_    = bitmap;
+    src_rect_ = src_rect;
+    if (reset_size)
     {
-        Fail("Sprite::SetFrame failed");
+        SetSize(src_rect.IsEmpty() ? bitmap->GetSize() : src_rect.GetSize());
     }
+    is_bitmap_ = true;
 }
 
 void Sprite::OnRender(RenderContext& ctx)
 {
-    if (frame_.IsValid())
+    if (image_ && image_->IsValid())
     {
-        ctx.DrawBitmap(*frame_.GetBitmap(), &frame_.GetCropRect(), &GetBounds());
+        auto src_rect = src_rect_.IsEmpty() ? nullptr : &src_rect_;
+        if (is_bitmap_)
+        {
+            auto& bitmap = dynamic_cast<Bitmap&>(*image_);
+            ctx.DrawBitmap(bitmap, src_rect, &GetBounds());
+        }
+        else
+        {
+            ctx.DrawImage(*image_, src_rect);
+        }
     }
 }
 
 bool Sprite::CheckVisibility(RenderContext& ctx) const
 {
-    return frame_.IsValid() && Actor::CheckVisibility(ctx);
+    return image_ && image_->IsValid() && Actor::CheckVisibility(ctx);
 }
 
 }  // namespace kiwano

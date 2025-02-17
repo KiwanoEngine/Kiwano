@@ -20,7 +20,6 @@
 
 #pragma once
 #include <kiwano/2d/Actor.h>
-#include <kiwano/2d/SpriteFrame.h>
 
 namespace kiwano
 {
@@ -41,75 +40,40 @@ public:
 
     /// \~chinese
     /// @brief 创建精灵
-    /// @param file_path 本地图片路径
-    Sprite(StringView file_path);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param res 图片资源
-    Sprite(const Resource& res);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param bitmap 图像
-    Sprite(RefPtr<Bitmap> bitmap);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param file_path 本地图片路径
-    /// @param crop_rect 裁剪矩形
-    Sprite(StringView file_path, const Rect& crop_rect);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param res 图片资源
-    /// @param crop_rect 裁剪矩形
-    Sprite(const Resource& res, const Rect& crop_rect);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param bitmap 图像
-    /// @param crop_rect 裁剪矩形
-    Sprite(RefPtr<Bitmap> bitmap, const Rect& crop_rect);
-
-    /// \~chinese
-    /// @brief 创建精灵
-    /// @param frame 精灵帧
-    Sprite(const SpriteFrame& frame);
-
-    virtual ~Sprite();
-
-    /// \~chinese
-    /// @brief 加载本地图片并重置裁剪矩形
-    /// @param file_path 本地图片路径
-    bool Load(StringView file_path);
-
-    /// \~chinese
-    /// @brief 加载图像资源并重置裁剪矩形
-    /// @param res 图片资源
-    bool Load(const Resource& res);
+    /// @param image 图像
+    /// @param src_rect 源矩形（裁剪矩形）
+    Sprite(RefPtr<Image> image, const Rect& src_rect = Rect());
 
     /// \~chinese
     /// @brief 获取图像
+    RefPtr<Image> GetImage() const;
+
+    /// \~chinese
+    /// @brief 获取位图（仅当设置为位图时生效）
     RefPtr<Bitmap> GetBitmap() const;
 
     /// \~chinese
-    /// @brief 获取裁剪矩形
-    Rect GetCropRect() const;
+    /// @brief 设置精灵图像
+    /// @param image 图像
+    /// @param src_rect 源矩形（裁剪矩形）
+    /// @param reset_size 修正自身大小（目的矩形）
+    void SetImage(RefPtr<Image> image, const Rect& src_rect = Rect(), bool reset_size = true);
 
     /// \~chinese
-    /// @brief 获取精灵帧
-    SpriteFrame GetFrame() const;
+    /// @brief 设置精灵图像
+    /// @param bitmap 位图
+    /// @param src_rect 源矩形（裁剪矩形）
+    /// @param reset_size 修正自身大小（目的矩形）
+    void SetBitmap(RefPtr<Bitmap> bitmap, const Rect& src_rect = Rect(), bool reset_size = true);
 
     /// \~chinese
-    /// @brief 使用矩形区域裁剪精灵
-    /// @param crop_rect 裁剪矩形
-    void SetCropRect(const Rect& crop_rect);
+    /// @brief 获取源矩形
+    Rect GetSourceRect() const;
 
     /// \~chinese
-    /// @brief 设置精灵帧
-    /// @param[in] frame 精灵帧
-    void SetFrame(const SpriteFrame& frame);
+    /// @brief 设置源矩形
+    /// @param src_rect 源矩形（裁剪矩形）
+    void SetSourceRect(const Rect& src_rect);
 
     void OnRender(RenderContext& ctx) override;
 
@@ -117,29 +81,31 @@ protected:
     bool CheckVisibility(RenderContext& ctx) const override;
 
 private:
-    SpriteFrame frame_;
+    bool          is_bitmap_ = false;
+    RefPtr<Image> image_;
+    Rect          src_rect_;
 };
 
 /** @} */
 
+inline RefPtr<Image> Sprite::GetImage() const
+{
+    return image_;
+}
+
 inline RefPtr<Bitmap> Sprite::GetBitmap() const
 {
-    return frame_.GetBitmap();
+    return is_bitmap_ ? RefPtr<Bitmap>(dynamic_cast<Bitmap*>(image_.Get())) : nullptr;
 }
 
-inline Rect Sprite::GetCropRect() const
+inline Rect Sprite::GetSourceRect() const
 {
-    return frame_.GetCropRect();
+    return src_rect_;
 }
 
-inline SpriteFrame Sprite::GetFrame() const
+inline void Sprite::SetSourceRect(const Rect& src_rect)
 {
-    return frame_;
-}
-
-inline void Sprite::SetCropRect(const Rect& crop_rect)
-{
-    frame_.SetCropRect(crop_rect);
+    src_rect_ = src_rect;
 }
 
 }  // namespace kiwano

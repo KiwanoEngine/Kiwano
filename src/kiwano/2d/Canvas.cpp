@@ -79,7 +79,7 @@ void Canvas::OnRender(RenderContext& ctx)
     {
         if (cmd_list_mode_)
         {
-            ctx.DrawCommandList(*cached_bitmap_);
+            ctx.DrawImage(*cached_bitmap_);
         }
         else
         {

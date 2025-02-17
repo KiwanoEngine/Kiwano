@@ -84,9 +84,10 @@ public:
                              const Rect* dest_rect = nullptr) = 0;
 
     /// \~chinese
-    /// @brief 绘制命令集
-    /// @param cmd_list 命令集
-    virtual void DrawCommandList(const Image& cmd_list) = 0;
+    /// @brief 绘制图像
+    /// @param image 图像
+    /// @param src_rect 源矩形
+    virtual void DrawImage(const Image& image, const Rect* src_rect = nullptr) = 0;
 
     /// \~chinese
     /// @brief 绘制文本布局

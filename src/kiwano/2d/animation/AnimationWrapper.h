@@ -298,9 +298,9 @@ inline AnimationWrapper Delay(kiwano::Duration delay)
 /// @brief 创建帧动画
 /// @param duration 动画时长
 /// @param frame_seq 序列帧
-inline AnimationWrapper Frames(kiwano::Duration duration, RefPtr<FrameSequence> frame_seq)
+inline AnimationWrapper Frames(const Vector<FrameSequence>& frame_seq_list)
 {
-    return AnimationWrapper(new FrameAnimation(duration, frame_seq));
+    return AnimationWrapper(new FrameAnimation(frame_seq_list));
 }
 
 /// \~chinese

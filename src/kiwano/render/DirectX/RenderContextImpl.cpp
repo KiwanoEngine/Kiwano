@@ -120,14 +120,14 @@ void RenderContextImpl::EndDraw()
     RestoreDrawingState();
 }
 
-void RenderContextImpl::DrawCommandList(const Image& cmd_list)
+void RenderContextImpl::DrawImage(const Image& image, const Rect* src_rect)
 {
     KGE_ASSERT(device_ctx_ && "Render target has not been initialized!");
 
-    if (cmd_list.IsValid())
+    if (image.IsValid())
     {
         D2D1_INTERPOLATION_MODE mode;
-        if (cmd_list.GetInterpolationMode() == InterpolationMode::Linear)
+        if (image.GetInterpolationMode() == InterpolationMode::Linear)
         {
             mode = D2D1_INTERPOLATION_MODE_LINEAR;
         }
@@ -136,8 +136,8 @@ void RenderContextImpl::DrawCommandList(const Image& cmd_list)
             mode = D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
         }
 
-        auto image = ComPolicy::Get<ID2D1Image>(cmd_list);
-        device_ctx_->DrawImage(image.Get(), nullptr, nullptr, mode);
+        auto d2d_image = ComPolicy::Get<ID2D1Image>(image);
+        device_ctx_->DrawImage(d2d_image.Get(), nullptr, DX::ConvertToRectF(src_rect), mode);
 
         IncreasePrimitivesCount();
     }

@@ -330,9 +330,6 @@
     <ClInclude Include="..\..\src\kiwano\2d\animation\EaseFunc.h">
       <Filter>2d\animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\animation\CustomAnimation.h">
       <Filter>2d\animation</Filter>
     </ClInclude>
@@ -354,17 +351,11 @@
     <ClInclude Include="..\..\src\kiwano\2d\animation\Animator.h">
       <Filter>2d\animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameSequence.h">
-      <Filter>2d\animation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\2d\animation\AnimationWrapper.h">
       <Filter>2d\animation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\core\BinaryData.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\2d\SpriteFrame.h">
-      <Filter>2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\platform\Keys.h">
       <Filter>platform</Filter>
@@ -407,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\Layer.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h">
+      <Filter>2d\animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -605,9 +599,6 @@
     <ClCompile Include="..\..\src\kiwano\2d\animation\EaseFunc.cpp">
       <Filter>2d\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\animation\CustomAnimation.cpp">
       <Filter>2d\animation</Filter>
     </ClCompile>
@@ -628,12 +619,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\animation\Animator.cpp">
       <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameSequence.cpp">
-      <Filter>2d\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\2d\SpriteFrame.cpp">
-      <Filter>2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\transition\Transition.cpp">
       <Filter>2d\transition</Filter>
@@ -670,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\Bitmap.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp">
+      <Filter>2d\animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

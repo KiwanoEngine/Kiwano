@@ -42,7 +42,7 @@ public:
 
     void EndDraw() override;
 
-    void DrawCommandList(const Image& cmd_list) override;
+    void DrawImage(const Image& image, const Rect* src_rect) override;
 
     void CreateBitmap(Bitmap& bitmap, const PixelSize& size) override;
 
