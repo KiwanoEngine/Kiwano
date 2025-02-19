@@ -115,7 +115,6 @@
     <ClInclude Include="..\..\src\kiwano\utils\Json.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Logger.h" />
     <ClInclude Include="..\..\src\kiwano\utils\ResourceCache.h" />
-    <ClInclude Include="..\..\src\kiwano\utils\ResourceLoader.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Task.h" />
     <ClInclude Include="..\..\src\kiwano\utils\TaskScheduler.h" />
     <ClInclude Include="..\..\src\kiwano\utils\Ticker.h" />
@@ -203,7 +202,6 @@
     <ClCompile Include="..\..\src\kiwano\utils\EventTicker.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Logger.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\ResourceCache.cpp" />
-    <ClCompile Include="..\..\src\kiwano\utils\ResourceLoader.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Task.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\TaskScheduler.cpp" />
     <ClCompile Include="..\..\src\kiwano\utils\Ticker.cpp" />

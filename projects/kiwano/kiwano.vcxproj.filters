@@ -315,9 +315,6 @@
     <ClInclude Include="..\..\src\kiwano\base\RefPtr.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\kiwano\utils\ResourceLoader.h">
-      <Filter>utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\kiwano\render\TextStyle.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -586,9 +583,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\base\RefObject.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\kiwano\utils\ResourceLoader.cpp">
-      <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\render\TextStyle.cpp">
       <Filter>render</Filter>
