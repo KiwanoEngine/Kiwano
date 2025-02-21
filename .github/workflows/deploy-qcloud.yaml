@@ -22,7 +22,7 @@ jobs:
     - name: Upload
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
-        args: upload -rf --sync -y ./docs/html /
+        args: upload -rf --sync -y ./docs/html/ /
         secret_id: ${{ secrets.QCLOUD_SECRET_ID }}
         secret_key: ${{ secrets.QCLOUD_SECRET_KEY }}
         bucket: kiwano-web-1252696634
