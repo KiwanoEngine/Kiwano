@@ -149,8 +149,16 @@ HRESULT D3D11DeviceResources::Present(bool vsync)
     if (dxgi_swap_chain_)
     {
         // The first argument instructs DXGI to block until VSync.
-        hr = dxgi_swap_chain_->Present(vsync ? 1 : 0, DXGI_PRESENT_DO_NOT_WAIT);
+        hr = dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
     }
+
+    // Discard the contents of the render target.
+    // This is a valid operation only when the existing contents will be entirely
+    // overwritten. If dirty or scroll rects are used, this call should be removed.
+    device_context_->DiscardView(rt_view_.Get());
+
+    // Discard the contents of the depth stencil.
+    device_context_->DiscardView(ds_view_.Get());
     return hr;
 }
 
@@ -224,12 +232,19 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
 
     if (SUCCEEDED(hr))
     {
-        device_         = device;
-        device_context_ = context;
+        hr = device->QueryInterface(IID_PPV_ARGS(&device_));
+    }
 
+    if (SUCCEEDED(hr))
+    {
+        hr = context->QueryInterface(IID_PPV_ARGS(&device_context_));
+    }
+
+    if (SUCCEEDED(hr))
+    {
         if (SUCCEEDED(hr))
         {
-            ComPtr<IDXGIDevice> dxgi_device;
+            ComPtr<IDXGIDevice3> dxgi_device;
             hr = device_->QueryInterface(IID_PPV_ARGS(&dxgi_device));
 
             if (SUCCEEDED(hr))
@@ -245,7 +260,7 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
 
             if (SUCCEEDED(hr))
             {
-                ComPtr<IDXGIFactory> dxgi_factory;
+                ComPtr<IDXGIFactory2> dxgi_factory;
                 hr = dxgi_adapter->GetParent(IID_PPV_ARGS(&dxgi_factory));
 
                 if (SUCCEEDED(hr))
@@ -264,21 +279,19 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
     if (SUCCEEDED(hr))
     {
         // Setup swap chain
-        DXGI_SWAP_CHAIN_DESC swap_chain_desc = { 0 };
+        DXGI_SWAP_CHAIN_DESC1 swap_chain_desc = { 0 };
 
-        swap_chain_desc.BufferCount                        = 2;
-        swap_chain_desc.BufferDesc.Width                   = output_size_.x;
-        swap_chain_desc.BufferDesc.Height                  = output_size_.y;
-        swap_chain_desc.BufferDesc.Format                  = desired_color_format_;
-        swap_chain_desc.BufferDesc.RefreshRate.Numerator   = 60;
-        swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;
-        swap_chain_desc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_STRETCHED;
-        swap_chain_desc.Flags                              = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-        swap_chain_desc.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swap_chain_desc.OutputWindow                       = hwnd_;
-        swap_chain_desc.SampleDesc.Count                   = 1;
-        swap_chain_desc.SampleDesc.Quality                 = 0;
-        swap_chain_desc.Windowed                           = TRUE;
+        swap_chain_desc.Width              = output_size_.x;
+        swap_chain_desc.Height             = output_size_.y;
+        swap_chain_desc.Format             = desired_color_format_;
+        swap_chain_desc.Stereo             = false;
+        swap_chain_desc.SampleDesc.Count   = 1;  // Don't use multi-sampling.
+        swap_chain_desc.SampleDesc.Quality = 0;
+        swap_chain_desc.BufferUsage        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swap_chain_desc.BufferCount        = 2;  // Use double-buffering to minimize latency.
+        swap_chain_desc.Flags              = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+        swap_chain_desc.Scaling            = DXGI_SCALING_STRETCH;
+        swap_chain_desc.AlphaMode          = DXGI_ALPHA_MODE_IGNORE;
 
 #if defined(_WIN32_WINNT_WIN10)
         // DXGI_SWAP_EFFECT_FLIP_DISCARD is supported starting with Windows 10.
@@ -300,7 +313,8 @@ HRESULT D3D11DeviceResources::CreateDeviceResources()
                 swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
             }
 
-        hr = dxgi_factory_->CreateSwapChain(device_.Get(), &swap_chain_desc, &dxgi_swap_chain_);
+        hr = dxgi_factory_->CreateSwapChainForHwnd(device_.Get(), hwnd_, &swap_chain_desc, nullptr, nullptr,
+                                                   &dxgi_swap_chain_);
     }
     return hr;
 }

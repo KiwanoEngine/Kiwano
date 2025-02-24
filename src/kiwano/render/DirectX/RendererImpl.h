@@ -71,6 +71,8 @@ public:
 
     void CreateStrokeStyle(StrokeStyle& stroke_style) override;
 
+    void CreatePixelShader(PixelShader& shader, const BinaryData& cso_data) override;
+
     RefPtr<RenderContext> CreateContextForBitmap(RefPtr<Bitmap> bitmap, const Size& desired_size) override;
 
     RefPtr<RenderContext> CreateContextForBitmapInPixels(RefPtr<Bitmap> bitmap, const PixelSize& desired_size) override;

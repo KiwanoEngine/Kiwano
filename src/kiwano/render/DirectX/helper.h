@@ -23,8 +23,8 @@
 #include <kiwano/utils/Logger.h>
 #include <kiwano/render/Color.h>
 #include <kiwano/platform/win32/ComPtr.hpp>
-#include <d2d1_1.h>
-#include <dwrite.h>
+#include <d2d1_3.h>
+#include <dwrite_3.h>
 
 namespace kiwano
 {
@@ -73,6 +73,30 @@ inline const D2D1_POINT_2F* ConvertToPoint2F(const Vec2* vec2)
 inline D2D1_POINT_2F* ConvertToPoint2F(Vec2* vec2)
 {
     return reinterpret_cast<D2D1_POINT_2F*>(vec2);
+}
+
+//
+// Vector2F
+//
+
+inline const D2D1_VECTOR_2F& ConvertToVector2F(const Vec2& vec2)
+{
+    return reinterpret_cast<const D2D1_VECTOR_2F&>(vec2);
+}
+
+inline D2D1_VECTOR_2F& ConvertToVector2F(Vec2& vec2)
+{
+    return reinterpret_cast<D2D1_VECTOR_2F&>(vec2);
+}
+
+inline const D2D1_VECTOR_2F* ConvertToVector2F(const Vec2* vec2)
+{
+    return reinterpret_cast<const D2D1_VECTOR_2F*>(vec2);
+}
+
+inline D2D1_VECTOR_2F* ConvertToVector2F(Vec2* vec2)
+{
+    return reinterpret_cast<D2D1_VECTOR_2F*>(vec2);
 }
 
 //

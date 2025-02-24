@@ -137,7 +137,8 @@ void RenderContextImpl::DrawImage(const Image& image, const Rect* src_rect)
         }
 
         auto d2d_image = ComPolicy::Get<ID2D1Image>(image);
-        device_ctx_->DrawImage(d2d_image.Get(), nullptr, DX::ConvertToRectF(src_rect), mode);
+        device_ctx_->DrawImage(d2d_image.Get(), nullptr, DX::ConvertToRectF(src_rect), mode,
+                               D2D1_COMPOSITE_MODE_SOURCE_OVER);
 
         IncreasePrimitivesCount();
     }

@@ -23,6 +23,7 @@
 #include <kiwano/render/Font.h>
 #include <kiwano/render/GifImage.h>
 #include <kiwano/render/TextStyle.h>
+#include <kiwano/render/Shader.h>
 #include <kiwano/render/RenderContext.h>
 #include <kiwano/platform/Window.h>
 
@@ -205,6 +206,12 @@ public:
     /// @param[in] dash_size 虚线数组大小
     /// @param[in] dash_offset 虚线偏移量
     virtual void CreateStrokeStyle(StrokeStyle& stroke_style) = 0;
+
+    /// \~chinese
+    /// @brief 创建像素着色器
+    /// @param[in,out] shader 着色器
+    /// @param[in] cso_data 着色器可执行文件
+    virtual void CreatePixelShader(PixelShader& shader, const BinaryData& cso_data) = 0;
 
     /// \~chinese
     /// @brief 创建渲染上下文，将上下文的渲染输出到位图中

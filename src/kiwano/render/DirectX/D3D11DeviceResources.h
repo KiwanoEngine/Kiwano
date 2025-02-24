@@ -22,7 +22,7 @@
 #include <kiwano/macros.h>
 #include <kiwano/render/DirectX/helper.h>
 #include <kiwano/render/DirectX/D3DDeviceResourcesBase.h>
-#include <d3d11.h>
+#include <d3d11_3.h>
 
 namespace kiwano
 {
@@ -41,7 +41,7 @@ public:
         return device_.Get();
     }
 
-    inline ID3D11DeviceContext* GetDeviceContext()
+    inline ID3D11DeviceContext3* GetDeviceContext()
     {
         KGE_ASSERT(device_context_);
         return device_context_.Get();
@@ -59,19 +59,19 @@ public:
         return ds_view_.Get();
     }
 
-    inline IDXGIFactory* GetDXGIFactory()
+    inline IDXGIFactory2* GetDXGIFactory()
     {
         KGE_ASSERT(dxgi_factory_);
         return dxgi_factory_.Get();
     }
 
-    inline IDXGIDevice* GetDXGIDevice()
+    inline IDXGIDevice3* GetDXGIDevice()
     {
         KGE_ASSERT(dxgi_device_);
         return dxgi_device_.Get();
     }
 
-    inline IDXGISwapChain* GetDXGISwapChain()
+    inline IDXGISwapChain1* GetDXGISwapChain()
     {
         KGE_ASSERT(dxgi_swap_chain_);
         return dxgi_swap_chain_.Get();
@@ -79,12 +79,12 @@ public:
 
 protected:
     ComPtr<ID3D11Device>           device_;
-    ComPtr<ID3D11DeviceContext>    device_context_;
+    ComPtr<ID3D11DeviceContext3>   device_context_;
     ComPtr<ID3D11RenderTargetView> rt_view_;
     ComPtr<ID3D11DepthStencilView> ds_view_;
-    ComPtr<IDXGIFactory>           dxgi_factory_;
-    ComPtr<IDXGIDevice>            dxgi_device_;
-    ComPtr<IDXGISwapChain>         dxgi_swap_chain_;
+    ComPtr<IDXGIFactory2>          dxgi_factory_;
+    ComPtr<IDXGIDevice3>           dxgi_device_;
+    ComPtr<IDXGISwapChain1>        dxgi_swap_chain_;
 };
 
 extern ComPtr<ID3D11DeviceResources> GetD3D11DeviceResources();

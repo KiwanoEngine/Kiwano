@@ -25,6 +25,7 @@
 #include <kiwano/platform/Application.h>
 #include <kiwano/render/ShapeMaker.h>
 #include <kiwano/render/DirectX/RendererImpl.h>
+#include <kiwano/render/DirectX/Effect.h>
 
 #define KGE_SET_STATUS_IF_FAILED(ERRCODE, OBJ, MESSAGE)                                   \
     if (FAILED(ERRCODE))                                                                  \
@@ -139,6 +140,11 @@ void RendererImpl::MakeContextForWindow(RefPtr<Window> window)
         {
             render_ctx_ = ctx;
         }
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = graphics::directx::CustomPixelEffect::Register(d2d_res_->GetFactory());
     }
 
     // if (SUCCEEDED(hr))
@@ -1004,6 +1010,31 @@ void RendererImpl::CreateStrokeStyle(StrokeStyle& stroke_style)
     }
 
     KGE_SET_STATUS_IF_FAILED(hr, stroke_style, "Create ID2D1StrokeStyle failed");
+}
+
+void RendererImpl::CreatePixelShader(PixelShader& shader, const BinaryData& cso_data)
+{
+    HRESULT hr = S_OK;
+    if (!d2d_res_)
+    {
+        hr = E_UNEXPECTED;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        graphics::directx::CustomPixelEffect::RegisterShader(reinterpret_cast<const CLSID&>(shader.GetUUID()),
+                                                             static_cast<BYTE*>(cso_data.buffer), cso_data.size);
+
+        ComPtr<ID2D1Effect> output;
+        hr = d2d_res_->GetDeviceContext()->CreateEffect(CLSID_CustomPixelEffect, &output);
+
+        if (SUCCEEDED(hr))
+        {
+            ComPolicy::Set(shader, output);
+        }
+    }
+
+    KGE_SET_STATUS_IF_FAILED(hr, shader, "Create ID2D1Effect failed");
 }
 
 RefPtr<RenderContext> RendererImpl::CreateContextForBitmap(RefPtr<Bitmap> bitmap, const Size& desired_size)

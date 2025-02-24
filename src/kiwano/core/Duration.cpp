@@ -47,21 +47,21 @@ float Duration::GetSeconds() const
 {
     auto sec = milliseconds_ / time::Second.milliseconds_;
     auto ms  = milliseconds_ % time::Second.milliseconds_;
-    return static_cast<float>(sec + ms) / 1000.f;
+    return static_cast<float>(sec) + static_cast<float>(ms) / 1000.f;
 }
 
 float Duration::GetMinutes() const
 {
     auto min = milliseconds_ / time::Minute.milliseconds_;
     auto ms  = milliseconds_ % time::Minute.milliseconds_;
-    return static_cast<float>(min + ms) / (60 * 1000.f);
+    return static_cast<float>(min) + static_cast<float>(ms) / (60 * 1000.f);
 }
 
 float Duration::GetHours() const
 {
     auto hour = milliseconds_ / time::Hour.milliseconds_;
     auto ms   = milliseconds_ % time::Hour.milliseconds_;
-    return static_cast<float>(hour + ms) / (60 * 60 * 1000.f);
+    return static_cast<float>(hour) + static_cast<float>(ms) / (60 * 60 * 1000.f);
 }
 
 void Duration::Sleep() const

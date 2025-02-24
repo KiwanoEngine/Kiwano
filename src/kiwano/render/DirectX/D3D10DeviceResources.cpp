@@ -157,7 +157,7 @@ HRESULT D3D10DeviceResources::Present(bool vsync)
     if (dxgi_swap_chain_)
     {
         // The first argument instructs DXGI to block until VSync.
-        hr = dxgi_swap_chain_->Present(vsync ? 1 : 0, DXGI_PRESENT_DO_NOT_WAIT);
+        hr = dxgi_swap_chain_->Present(vsync ? 1 : 0, 0);
     }
     return hr;
 }

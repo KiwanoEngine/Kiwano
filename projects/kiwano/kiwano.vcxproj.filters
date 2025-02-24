@@ -396,6 +396,15 @@
     <ClInclude Include="..\..\src\kiwano\2d\animation\FrameAnimation.h">
       <Filter>2d\animation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\Shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\core\UUID.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kiwano\render\DirectX\Effect.h">
+      <Filter>render\DirectX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\kiwano\2d\Canvas.cpp">
@@ -646,6 +655,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\kiwano\2d\animation\FrameAnimation.cpp">
       <Filter>2d\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\Shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\core\UUID.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kiwano\render\DirectX\Effect.cpp">
+      <Filter>render\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

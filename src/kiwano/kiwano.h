@@ -49,6 +49,7 @@
 #include <kiwano/core/Resource.h>
 #include <kiwano/core/RefBasePtr.hpp>
 #include <kiwano/core/Time.h>
+#include <kiwano/core/UUID.h>
 
 //
 // event
@@ -89,6 +90,7 @@
 #include <kiwano/render/Layer.h>
 #include <kiwano/render/TextLayout.h>
 #include <kiwano/render/BitmapCache.h>
+#include <kiwano/render/Shader.h>
 #include <kiwano/render/Renderer.h>
 
 //

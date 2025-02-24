@@ -79,6 +79,12 @@ public:
 
     /**
      * \~chinese
+     * @brief 读取文件内容
+     */
+    void ReadFile(StringView file_path, std::vector<uint8_t>& output);
+
+    /**
+     * \~chinese
      * @brief 文件是否存在
      * @param file_path 文件路径
      * @return 若文件存在，返回 true

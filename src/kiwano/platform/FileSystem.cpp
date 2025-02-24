@@ -20,6 +20,7 @@
 
 #include <cctype>
 #include <kiwano/platform/FileSystem.h>
+#include <kiwano/utils/Logger.h>
 
 namespace kiwano
 {
@@ -161,6 +162,37 @@ void FileSystem::SetFileLookupDictionary(const UnorderedMap<String, String>& dic
     file_lookup_cache_.clear();
 
     file_lookup_dict_ = dict;
+}
+
+void FileSystem::ReadFile(StringView file_path, std::vector<uint8_t>& output)
+{
+    String full_path = GetFullPathForFile(file_path);
+    HANDLE hFile     = ::CreateFileA(full_path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+                                     FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        KGE_WARN("Failed to open file:", file_path.data());
+        return;
+    }
+
+    LARGE_INTEGER fileSize;
+    if (!::GetFileSizeEx(hFile, &fileSize))
+    {
+        KGE_WARN("Failed to get file size:", file_path.data());
+        ::CloseHandle(hFile);
+        return;
+    }
+
+    output.resize(static_cast<size_t>(fileSize.QuadPart));
+
+    DWORD bytesRead;
+    if (!::ReadFile(hFile, output.data(), static_cast<DWORD>(output.size()), &bytesRead, nullptr))
+    {
+        KGE_WARN("Failed to get read file:", file_path.data());
+        output.clear();
+    }
+
+    ::CloseHandle(hFile);
 }
 
 bool FileSystem::IsFileExists(StringView file_path) const
