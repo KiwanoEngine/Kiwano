@@ -46,7 +46,7 @@ public:
     };
 
     static HRESULT Register(_In_ ID2D1Factory1* pFactory);
-    static HRESULT CreateEffect(_Outptr_ IUnknown** ppEffectImpl);
+    static HRESULT __stdcall CreateEffect(_Outptr_ IUnknown** ppEffectImpl);
 
     static void RegisterShader(_In_ const CLSID& shaderId, _In_ const BYTE* data, _In_ UINT32 dataSize);
 

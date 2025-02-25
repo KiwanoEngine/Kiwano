@@ -54,7 +54,7 @@ CustomPixelEffect::~CustomPixelEffect()
     m_effectContext = nullptr;
 }
 
-IFACEMETHODIMP_(HRESULT) CustomPixelEffect::Register(_In_ ID2D1Factory1* pFactory)
+HRESULT CustomPixelEffect::Register(_In_ ID2D1Factory1* pFactory)
 {
     PCWSTR pszXml =
         XML(
@@ -89,7 +89,7 @@ IFACEMETHODIMP_(HRESULT) CustomPixelEffect::Register(_In_ ID2D1Factory1* pFactor
                                               CustomPixelEffect::CreateEffect);
 }
 
-IFACEMETHODIMP_(HRESULT) CustomPixelEffect::CreateEffect(_Outptr_ IUnknown** ppEffectImpl)
+HRESULT __stdcall CustomPixelEffect::CreateEffect(_Outptr_ IUnknown** ppEffectImpl)
 {
     *ppEffectImpl = static_cast<ID2D1EffectImpl*>(new CustomPixelEffect());
     if (*ppEffectImpl == nullptr)
