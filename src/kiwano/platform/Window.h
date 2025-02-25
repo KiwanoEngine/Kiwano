@@ -275,6 +275,12 @@ public:
      */
     virtual void SetImmEnabled(bool enable) = 0;
 
+    /**
+     * \~chinese
+     * @brief ºöÂÔ¼üÅÌÊÂ¼þ
+     */
+    void SetKeyEventsIgnored(bool ignored);
+
 protected:
     Window();
 
@@ -283,6 +289,7 @@ protected:
 protected:
     bool                      should_close_;
     bool                      is_fullscreen_;
+    bool                      ignore_key_events_;
     int                       pos_x_;
     int                       pos_y_;
     uint32_t                  real_width_;

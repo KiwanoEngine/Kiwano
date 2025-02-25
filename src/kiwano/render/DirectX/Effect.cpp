@@ -21,7 +21,8 @@
 #include <kiwano/render/DirectX/Effect.h>
 #include <kiwano/core/UUID.h>
 
-#define XML(X) TEXT(#X)
+#define WIDE(X) L##X
+#define XML(X) WIDE(#X)
 
 namespace kiwano
 {
@@ -79,9 +80,9 @@ IFACEMETHODIMP_(HRESULT) CustomPixelEffect::Register(_In_ ID2D1Factory1* pFactor
         );
 
     const D2D1_PROPERTY_BINDING bindings[] = {
-        D2D1_BLOB_TYPE_BINDING(TEXT("Constants"), &SetConstants, &GetConstants),
-        D2D1_VALUE_TYPE_BINDING(TEXT("LeftTopExpansion"), &SetLeftTopExpansion, &GetLeftTopExpansion),
-        D2D1_VALUE_TYPE_BINDING(TEXT("RightBottomExpansion"), &SetRightBottomExpansion, &GetRightBottomExpansion),
+        D2D1_BLOB_TYPE_BINDING(L"Constants", &SetConstants, &GetConstants),
+        D2D1_VALUE_TYPE_BINDING(L"LeftTopExpansion", &SetLeftTopExpansion, &GetLeftTopExpansion),
+        D2D1_VALUE_TYPE_BINDING(L"RightBottomExpansion", &SetRightBottomExpansion, &GetRightBottomExpansion),
     };
 
     return pFactory->RegisterEffectFromString(CLSID_CustomPixelEffect, pszXml, bindings, ARRAYSIZE(bindings),

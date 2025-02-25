@@ -499,7 +499,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_SYSKEYDOWN:
     {
         KeyCode key = this->key_map_[size_t(wparam)];
-        if (key != KeyCode::Unknown)
+        if (key != KeyCode::Unknown && !ignore_key_events_)
         {
             RefPtr<KeyDownEvent> evt = new KeyDownEvent;
             evt->code                = key;
@@ -512,7 +512,7 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
     case WM_SYSKEYUP:
     {
         KeyCode key = this->key_map_[size_t(wparam)];
-        if (key != KeyCode::Unknown)
+        if (key != KeyCode::Unknown && !ignore_key_events_)
         {
             RefPtr<KeyUpEvent> evt = new KeyUpEvent;
             evt->code              = key;
@@ -523,9 +523,12 @@ LRESULT WindowWin32Impl::MessageProc(HWND hwnd, UINT32 msg, WPARAM wparam, LPARA
 
     case WM_CHAR:
     {
-        RefPtr<KeyCharEvent> evt = new KeyCharEvent;
-        evt->value               = char(wparam);
-        this->PushEvent(evt);
+        if (!ignore_key_events_)
+        {
+            RefPtr<KeyCharEvent> evt = new KeyCharEvent;
+            evt->value               = char(wparam);
+            this->PushEvent(evt);
+        }
     }
     break;
 

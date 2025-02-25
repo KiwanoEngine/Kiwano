@@ -22,11 +22,11 @@
 
 namespace kiwano
 {
-
 Window::Window()
     : handle_(nullptr)
     , should_close_(false)
     , is_fullscreen_(false)
+    , ignore_key_events_(false)
     , pos_x_(0)
     , pos_y_(0)
     , real_width_(0)
@@ -110,6 +110,11 @@ bool Window::ShouldClose() const
 void Window::SetShouldClose(bool should)
 {
     should_close_ = should;
+}
+
+void Window::SetKeyEventsIgnored(bool ignored)
+{
+    ignore_key_events_ = ignored;
 }
 
 void Window::PushEvent(RefPtr<Event> evt)
