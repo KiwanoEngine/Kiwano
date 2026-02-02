@@ -2,9 +2,9 @@
 
 # Kiwano Game Engine
 
-[![Build status](https://ci.appveyor.com/api/projects/status/frqh09om9ldaklr9/branch/master?svg=true)](https://ci.appveyor.com/project/Nomango/kiwano/branch/master)
-[![GitHub release](https://img.shields.io/github/release/nomango/kiwano)](https://github.com/Nomango/Kiwano/releases/latest)
-[![GitHub license](https://img.shields.io/github/license/nomango/kiwano)](https://github.com/Nomango/Kiwano/blob/master/LICENSE)
+[![Build status](https://ci.appveyor.com/api/projects/status/frqh09om9ldaklr9?svg=true)](https://ci.appveyor.com/project/Nomango/kiwano)
+[![GitHub release](https://img.shields.io/github/release/kiwanoengine/kiwano)](https://github.com/kiwanoengine/kiwano/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/kiwanoengine/kiwano)](https://github.com/kiwanoengine/kiwano/blob/master/LICENSE)
 
 English | [简体中文](./README-zh.md)
 
